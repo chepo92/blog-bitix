@@ -1,0 +1,1663 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://picodotdev.github.io/blog-bitix/tags/programacion/</id>
+    <title type="text">Blog Bitix</title>
+    <subtitle>Recent content on Blog Bitix</subtitle>
+    <updated>2016-08-13T01:00:00+02:00</updated>
+    <author><name>pico.dev</name></author>
+    <generator>Hugo</generator>
+    <icon>https://picodotdev.github.io/blog-bitix//assets/images/custom/logotipos/hugo.png</icon>
+    <logo>https://picodotdev.github.io/blog-bitix//assets/images/custom/logotipos/hugo.png</logo>
+    <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2016/08/por-que-guardar-las-fechas-en-utc-en-la-base-de-datos/</id>
+        <title>Por qué guardar las fechas en UTC en la base de datos</title>        
+        <updated>2016-08-14T02:30:00+02:00</updated>
+        <published>2016-08-13T01:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/08/por-que-guardar-las-fechas-en-utc-en-la-base-de-datos/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/postgresql.png&#34; class=&#34;right&#34; alt=&#34;PostgreSQL&#34; title=&#34;PostgreSQL&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Es rara la aplicación que trabajado con bases de datos no maneje fechas, quizá es menos habitual aplicaciones que trabajan con fechas y diferentes horarias, esto es haciendo alguna conversión entre zonas horarias. Si se nos presenta el caso de trabajar con fechas y diferentes zonas horarias haremos bien en hacer que las fechas que guardemos en la base de datos estén en la misma zona horaria al menos y convertirla posteriormente a la zona horaria que necesite la aplicación. &lt;abbr title=&#34;Coordinated Universal Time&#34;&gt;UTC&lt;/abbr&gt; además de ser una zona horaria neutra evita el problema de que algunas bases de datos o lenguajes de programación para los campos fecha no guarda las zonas horarias con lo que puede ocurrirnos que guardemos la fecha en una zona horaria y la recuperemos en otra produciendo posiblemente incoherencias en las fechas por una hora.&lt;/p&gt;
+
+&lt;h3 id=&#34;por-qué-elegir-utc&#34;&gt;¿Por qué elegir UTC?&lt;/h3&gt;
+
+&lt;p&gt;Principalmente porque es una zona horaria neutra, universal y que elimina ambigüedades ya que que no tiene &lt;abbr title=&#34;Daily Saving Time&#34;&gt;DST&lt;/abbr&gt; o horario de verano y podremos guardar las fechas sin temor a que al recuperarlas estén en otra zona horaria si la base de datos o el lenguaje de programación para guardarlas no las soporta.&lt;/p&gt;
+
+&lt;p&gt;Otros motivos que se mencionan en un comentario en inglés &lt;a href=&#34;http://ideas.kentico.com/forums/239189-kentico-product-ideas/suggestions/6825844-always-store-dates-times-in-utc-in-the-database&#34;&gt;Always store dates/times in UTC (in the database)&lt;/a&gt; y algún otro en &lt;a href=&#34;http://blog.abodit.com/2010/02/datetime-values-should-always-be-stored-in-utc/&#34;&gt;DateTime values should always be stored in UTC&lt;/a&gt; son que:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Calcular duraciones de tiempo es simple. El periodo de tiempo entre la 2:30 AM UTC y las 3:30 AM UTC es siempre una hora cosa que no ocurre en las horas que hay cambio de horario pudiendo ser el periodo entre cero y dos horas.&lt;/li&gt;
+&lt;li&gt;No hay fechas inválidas cuando se adelanta la hora por ejemplo de las 2:00 AM a las 3:00 AM, pudiendo ser que las 2:30 AM en esa zona horaria no exista.&lt;/li&gt;
+&lt;li&gt;Se evitan problemas al ordenar o agrupar fechas pudiendo ser el caso de que una fecha con tiempo 2:59 AM sea antes que las 2:01 AM por causa del cambio horario.&lt;/li&gt;
+&lt;li&gt;Los cambios horarios están sujetos a cambios nada predecibles y varían a lo largo del tiempo con relativa frecuencia con lo para calcular de forma fiable cuantas horas hay entre dos fechas se necesita guardar las variaciones históricas de DST. Ni las fechas de cambios DST son constantes ni las zonas horarias se mantienen fijas para las localizaciones.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Una vez recuperada la fecha en UTC podemos &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/01/convertir-fechas-y-husos-horarios-en-java/&#34;&gt;convertir de diferentes formas una fecha de una zona horaria a otra en Java&lt;/a&gt; y en cualquier otro lenguaje con las facilidades que proporcione según la zona horaria a visualizar la fecha.&lt;/p&gt;
+
+&lt;h3 id=&#34;cúal-es-el-caso-que-puede-dar-problemas&#34;&gt;¿Cúal es el caso que puede dar problemas?&lt;/h3&gt;
+
+&lt;p&gt;Uno en el que la hora a guardar coincida con un cambio de hora de la zona horaria en la que guardemos las fechas. Por ejemplo, en España el año 2016 el cambio de horario de verano (DST/CEST) a horario de invierno (CET) se hará el 30 de octubre momento en el que a las 3:00 (CEST) volverán a ser las 02:00 pero con diferente zona horaria (CET).&lt;/p&gt;
+
+&lt;h3 id=&#34;ejemplo&#34;&gt;Ejemplo&lt;/h3&gt;
+
+&lt;p&gt;Supongamos que tenemos la fecha 30 de octubre a las 02:30 CEST y la guardamos en la base de datos pero sin la zona horaria pasando a estar implícita. En esta fecha y hora se produce un cambio horario de horario de verano a horario de invierno en España. Al recuperar la fecha será 30 de octubre a las 02:30 CET, la diferencia está entre el &lt;abbr title=&#34;Central European Summer Time&#34;&gt;CEST&lt;/abbr&gt; y &lt;abbr title=&#34;Central European Time&#34;&gt;CET&lt;/abbr&gt; o la diferencia horaria +02:00 y +01:00. Una hora de diferencia entre la original y la que recuperamos de la base de datos después de hacer la conversión.&lt;/p&gt;
+
+&lt;p&gt;Esto puede probarse con el siguiente ejemplo de código de un programa Java que guarda y recupera de una base de datos &lt;a href=&#34;http://www.postgresql.org/&#34;&gt;PostgreSQL&lt;/a&gt; una fecha que está en el intervalo de cambio horario. En el ejemplo utilizaré &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/series/docker/&#34;&gt;Docker&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/795512b5f0cb61bf88b16dfff519f4e7.js?file=Main.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/795512b5f0cb61bf88b16dfff519f4e7/raw/Main.java&#34;&gt;Main.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/795512b5f0cb61bf88b16dfff519f4e7.js?file=System.out&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/795512b5f0cb61bf88b16dfff519f4e7/raw/System.out&#34;&gt;System.out&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/795512b5f0cb61bf88b16dfff519f4e7.js?file=docker-compose.yml&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/795512b5f0cb61bf88b16dfff519f4e7/raw/docker-compose.yml&#34;&gt;docker-compose.yml&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Tabajar con fechas no es simple, es muy curioso y no debemos hacer &lt;a href=&#34;http://infiniteundo.com/post/25509354022/more-falsehoods-programmers-believe-about-time&#34;&gt;suposiciones sobre las fechas que son incorrectas&lt;/a&gt; en las aplicaciones.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/DateTimeDatabase&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;cd misc/docker/postgresql/ &amp;amp;&amp;amp; docker-compose up &amp;amp;&amp;amp; ./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/01/convertir-fechas-y-husos-horarios-en-java/&#34;&gt;Convertir fechas y husos horarios en Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://ideas.kentico.com/forums/239189-kentico-product-ideas/suggestions/6825844-always-store-dates-times-in-utc-in-the-database&#34;&gt;Always store dates/times in UTC (in the database)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2016/07/no-un-tag-jsp-o-un-tag-de-grails-no-es-equivalente-a-un-componente-de-tapestry/</id>
+        <title>No, un tag JSP o un tag de Grails no es equivalente a un componente de Tapestry</title>        
+        <updated>2016-07-25T12:00:00+02:00</updated>
+        <published>2016-07-25T12:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/07/no-un-tag-jsp-o-un-tag-de-grails-no-es-equivalente-a-un-componente-de-tapestry/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Alguna vez que he dado una presentación sobre Apache Tapestry después de la misma me comentaron que eso mismo que explicaba se podía hacer con el &lt;em&gt;framework&lt;/em&gt; que esa persona usaba. En un proyecto la tecnología no es es lo más importante pero es una herramienta que puede facilitar en gran medida el desarrollo. Respecto a los componentes de Tapestry alguien puede pensar que son iguales a los &lt;em&gt;tag&lt;/em&gt; que existen en las tecnologías de presentación como JSP o Grails. En este artículo comentaré algunas diferencias importantes que los hace más y muy interesantes junto con otras características de &lt;em&gt;framework&lt;/em&gt;.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/tapestry.png&#34; class=&#34;right&#34; alt=&#34;Apache Tapestry&#34; title=&#34;Apache Tapestry&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Viendo el panel &lt;a href=&#34;https://es.wikipedia.org/wiki/Kanban_(desarrollo)&#34;&gt;Kanban&lt;/a&gt; de la herramienta de peticiones &lt;a href=&#34;https://www.atlassian.com/software/jira&#34;&gt;JIRA&lt;/a&gt; que usamos para registrar y priorizar las siguiente tareas en la empresa que trabajo hay unas cuantas que consisten en dado un listado de compras poder realizar operaciones sobre múltiples filas sin salir de la pantalla del listado. La necesidad es evitar que los usuarios de la aplicación hagan las acciones de forma individual de forma repetitiva, evitarles esto harán que sean más productivos y podrán desarrollar su trabajo mejor y más rápido. Así de sencillo, aparentemente.&lt;/p&gt;
+
+&lt;p&gt;Esta necesidad que en la realidad será implementada con &lt;a href=&#34;https://grails.org/&#34;&gt;Grails&lt;/a&gt; quería compararla con una implementación equivalente usando &lt;a href=&#34;http://tapestry.apache.org&#34;&gt;Apache Tapestry&lt;/a&gt; porque como en muchas otras necesidades intuyo que con Tapestry implementarlas es significativamente más sencillo y con un resultado de implementación como en este caso con el que quedo más a gusto.&lt;/p&gt;
+
+&lt;h3 id=&#34;la-necesidad&#34;&gt;La necesidad&lt;/h3&gt;
+
+&lt;p&gt;Definiendo más la necesidad hasta ahora cada fila del listado tiene un conjunto de botones para realizar acciones individuales y ahora se quiere al final del listado otro conjunto de botones para realizar acciones sobre las compras que se seleccionen de forma múltiple. Para seleccionar las compras se usará un &lt;em&gt;checkbox&lt;/em&gt; colocado al inicio de cada fila. Para algunas acciones el usuario ha de introducir información adicional cosa que hará con un diálogo modal que ya existe pero que hasta ahora solo permitía hacer la acción de forma individual. Las mismas acciones se realizarán en varias páginas de la aplicación (después de la acción se deberá volver a la página en la que se estaba), solo se podrán hacer las acciones múltiples si en todas las compras seleccionadas es posible realizar esa acción y el contenido de los diálogos solicitando información adicional podrán depender de las compras seleccionadas. Las acciones en el ejemplo serán habilitar o deshabilitar. Determinar las acciones posibles de una compra es compleja y saber si una acción es posible no depende solo de información en la propia compra sino de otras entidades del sistema, en el ejemplo no será así pero se tendrá en cuenta en la implementación.&lt;/p&gt;
+
+&lt;p&gt;Esta sería una imagen del prototipo de los botones para hacer acciones múltiples, seleccionar compras y el diálogo modal para introducir información adicional.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/164/listado.png&#34; title=&#34;Listado de productos&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/164/listado-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/164/modal.png&#34; title=&#34;Modal solicitando información adicional&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/164/modal-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;Listado y modal de la necesidad expuesta&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En la necesidad real las filas son compras pero en el ejemplo usaré la entidad &lt;em&gt;Product&lt;/em&gt;. Las acciones en el ejemplo serán habilitar para la que no será necesaria información adicional, la otra acción será deshabilitar para la que se necesitará introducir una razón con un modal.&lt;/p&gt;
+
+&lt;h3 id=&#34;las-posibilidades&#34;&gt;Las posibilidades&lt;/h3&gt;
+
+&lt;p&gt;Para implementar técnicamente el que solo se puedan hacer las acciones múltiples según los productos seleccionadas se habilitarán o deshabilitarán los botones con JavaScript sin peticiones AJAX adicionales al servidor para ello toda la información necesaria deberá estar en el cliente. En este caso bastará habilitar o deshabilitar cada botón según si esa acción es posible en todas los productos seleccionadas pero eso podría no bastar ya que se podría requerir que productos fuesen del mismo vendedor. En el ejemplo con un atributo en un elemento HTML de la fila que contenga las acciones posibles separadas por comas bastará. De esta forma no habrá que hacer consultas adicionales al servidor mediante peticiones AJAX en cada nueva selección.&lt;/p&gt;
+
+&lt;p&gt;Sin embargo, como el contenido de los diálogos depende del producto o productos seleccionadas se hará una petición AJAX para obtener su contenido. De esta forma el contenido de los diálogos no tendrá que estar precargado (el número de acciones podría ser una decena) en el cliente ni generarlo con JavaScript en cliente que sería algo más complicado que usar la propia tecnología para generar contenido que está presente en el servidor y posiblemente más propenso a errores por usar JavaScript.&lt;/p&gt;
+
+&lt;h3 id=&#34;la-implementación-con-apache-tapestry&#34;&gt;La implementación con Apache Tapestry&lt;/h3&gt;
+
+&lt;p&gt;Definida la necesidad y unas pocas notas voy a poner el código de como con Apache Tapestry implementar la solución. La página del listado será la siguiente. En el &lt;em&gt;checkbox&lt;/em&gt; de selección se añade el atributo &lt;em&gt;data-product-actions&lt;/em&gt; con las acciones posibles que se obtienen del servicio &lt;em&gt;AppService&lt;/em&gt; con el método &lt;em&gt;getAvaliableActions&lt;/em&gt;. El componente de Tapestry &lt;em&gt;actions&lt;/em&gt; generará el código de los botones tanto para los individuales en su uso &lt;em&gt;&amp;lt;t:actions&amp;gt;&lt;/em&gt; con el parámetro &lt;em&gt;product&lt;/em&gt; como múltiples en su uso con el parámetro &lt;em&gt;type&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=Index.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/11715e0799339d0335a30ce30a17ee58/raw/Index.java&#34;&gt;Index.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=Index.tml&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/11715e0799339d0335a30ce30a17ee58/raw/Index.tml&#34;&gt;Index.tml&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;El código para mostrar las acciones con botones para un determinado producto o para los productos es el siguiente. El mismo componente se encargará de realizar en el servidor la acción habilitar que no necesita modal. Con un poco de &lt;a href=&#34;http://es.wikipedia.org/wiki/JavaScript&#34;&gt;JavaScript&lt;/a&gt;, &lt;a href=&#34;http://jquery.com/&#34;&gt;jQuery&lt;/a&gt; y &lt;a href=&#34;http://underscorejs.org/&#34;&gt;Underscore&lt;/a&gt; se habilitarán o deshabilitarán los botones y se mostrará el diálogo para la acción deshabilitar.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=Actions.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/11715e0799339d0335a30ce30a17ee58/raw/Actions.java&#34;&gt;Actions.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=Actions.tml&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/11715e0799339d0335a30ce30a17ee58/raw/Actions.tml&#34;&gt;Actions.tml&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=actions.js&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/11715e0799339d0335a30ce30a17ee58/raw/actions.js&#34;&gt;actions.js&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;El código del modal para deshabilitar sería el siguiente. En el método &lt;em&gt;show&lt;/em&gt; recibe los &lt;em&gt;ids&lt;/em&gt; de los productos a deshabilitar y recupera del servidor el contenido de diálogo con una petición AJAX. El componente del modal se encargará de hacer el deshabilitado de los productos y la recarga de la página si finaliza correctamente o de mostar los errores de validación que se produzcan si no se ha introducido el motivo.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=DisableProductsModal.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/11715e0799339d0335a30ce30a17ee58/raw/DisableProductsModal.java&#34;&gt;DisableProductsModal.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=DisableProductsModal.tml&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/11715e0799339d0335a30ce30a17ee58/raw/DisableProductsModal.tml&#34;&gt;DisableProductsModal.tml&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=modals.js&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/11715e0799339d0335a30ce30a17ee58/raw/modals.js&#34;&gt;modals.js&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/TapestryMultipleActions&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;h3 id=&#34;algunas-diferencias-con-servlets-jsp-y-grails&#34;&gt;Algunas diferencias con Servlets/JSP y Grails&lt;/h3&gt;
+
+&lt;p&gt;La tecnología de presentación de páginas web Java con &lt;em&gt;Java Server Pages&lt;/em&gt; o JSP permiten encapsular con un &lt;em&gt;tag&lt;/em&gt; la generación de un trozo de HTML no en el propio JSP sino en ese &lt;em&gt;tag&lt;/em&gt; que en código Java pudiendo incluir la llamada a un JSP. Los &lt;em&gt;tags&lt;/em&gt; y librerías de &lt;em&gt;tags&lt;/em&gt; son una forma de reutilizar esas partes de generación de código en el mismo proyecto y entre proyectos. Los &lt;em&gt;tags&lt;/em&gt; además son una forma de abstraernos del funcionamiento interno del &lt;em&gt;tag&lt;/em&gt; haciendo que solo necesitemos conocer sus parámetros.&lt;/p&gt;
+
+&lt;p&gt;Si usamos JSP usar librerías de &lt;em&gt;tags&lt;/em&gt; es una buena idea, sin embargo, tiene algunas limitaciones como que requieren un archivo descriptor en formato XML que las defina y aunque pudiendo saber que parámetros definen y cuáles son requeridos no define el tipo de los parámetros que requiere. Los archivos XML en la época actual han caído en desuso porque son propensos a errores, errores que no son detectados hasta tiempo de ejecución, de los peores tipos de errores. Por otro lado, que los &lt;em&gt;tags&lt;/em&gt; no especifiquen el tipo de parámetro que requiere cada uno hace que debamos inspeccionar el código fuente del &lt;em&gt;tag&lt;/em&gt; con lo que la ventaja de abstraerse del funcionamiento no es del todo completa. Si por algún cambio el tipo de parámetro cambia hay que adaptar todos los usos del &lt;em&gt;tag&lt;/em&gt;, si alguno no se hace nuevamente se producirán errores en tiempo de ejecución.&lt;/p&gt;
+
+&lt;p&gt;Grails usa GSP, una tecnología de presentación similar a los JSP. También dispone de &lt;em&gt;tags&lt;/em&gt; que no requieren definir los &lt;em&gt;tags&lt;/em&gt; en un archivo XML simplificando su uso pero que igualmente adolecen de algunos problemas como los JSP. Por un lado, los &lt;em&gt;tags&lt;/em&gt; de Grails no disponen un mecanismo para hacer requerido un determinado parámetro con lo que deberemos incluir la comprobación con código nosotros, tampoco define el tipo de parámetros que requiere. También aunque hacer más simple su desarrollo al no tener un descriptor XML como en los &lt;em&gt;tag&lt;/em&gt; JSP hace que haya que inspeccionar el código fuente para saber qué parámetros tiene, si son requeridos y cuál es el tipo del parámetro. Todo esto hace que puedan producirse errores en tiempo de ejecución y errores que no son producidos hasta que se ejercita el &lt;em&gt;tag&lt;/em&gt; con un mal uso o un uso desactualizado al igual que usando los &lt;em&gt;tag&lt;/em&gt; JSP.&lt;/p&gt;
+
+&lt;p&gt;En Apache Tapestry todo son componentes, las páginas también son componentes con la característica de que no están embebidos en otro componente. Un componente de Apache Tapestry sería similar a un &lt;em&gt;tag&lt;/em&gt; de JSP o un &lt;em&gt;tag&lt;/em&gt; de Grails, con ciertas similitudes pero no iguales en aspectos importantes. De pronto, un componente de Tapestry define los parámetros que necesita y si son requeridos pero también define el tipo del parámetro. Como se aprecia en las páginas de documentación de los &lt;a href=&#34;http://tapestry.apache.org/component-reference.html&#34;&gt;componentes integrados de serie en Apache Tapestry&lt;/a&gt; se puede conocer esta información sin necesidad de conocer el código fuente del componente, documentación que podemos generar para los componentes que nosotros desarrollemos. Los parámetros, si son requeridos y sus tipos forman el contrato del componente y es lo único que deberemos conocer para usarlos, su funcionamiento interno nos es irrelevante que incluye el código JavaScript que necesite, podría que CSS y literales internacionalizados.&lt;/p&gt;
+
+&lt;p&gt;Pero esas no son las únicas diferencias con los &lt;em&gt;tags&lt;/em&gt; de JSP o de Grails y es que estas son solo tecnologías de presentación, la V del &lt;a href=&#34;https://es.wikipedia.org/wiki/Modelo%E2%80%93vista%E2%80%93controlador&#34;&gt;patrón MVC&lt;/a&gt;. Los componentes de Tapestry aparte de encapsular la lógica de presentación también pueden encapsular lógica de controlador, en el conocido patrón MVC además de V pueden ser C con lo que encapsulan aún más funcionalidad. La lógica de presentación y controlador en los JSP y Grails está separada pero ambas lógicas no son independientes, están relacionadas, en Tapestry está encapsulada en el mismo componente.&lt;/p&gt;
+
+&lt;p&gt;Los componentes de Tapestry usan el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/07/modelo-push-contra-modelo-pull-en-frameworks-web/&#34;&gt;modelo pull en vez del modelo push&lt;/a&gt; haciendo innecesario construir un objeto &lt;em&gt;Map&lt;/em&gt; que pasar a la vista, haciendo que sea la plantilla la que solicite al controlador los datos que necesita y haciendo que el controlador no sepa que datos necesita la vista. El controlador solo deberá tener las propiedades y métodos que necesite la vista. Dado que en las plantillas &lt;em&gt;tml&lt;/em&gt; de la vista no se pueden incluir expresiones complejas hace que no contengan lógica que estará en el controlador asociado que es código Java donde tendremos la ayuda del compilador para detectar errores.&lt;/p&gt;
+
+&lt;p&gt;Para volver a la misma página en &lt;a href=&#34;https://spring.io/&#34;&gt;Spring MVC&lt;/a&gt;, &lt;a href=&#34;https://struts.apache.org/&#34;&gt;Struts&lt;/a&gt; o &lt;a href=&#34;https://grails.org/&#34;&gt;Grails&lt;/a&gt; posiblemente deberíamos recibir además información para retornar a la misma página en la que estabamos cosa que es innecesaria en Tapestry por su &lt;a href=&#34;http://tapestry.apache.org/page-navigation.html&#34;&gt;concepto de contexto de activación de página&lt;/a&gt; y el patrón &lt;em&gt;Redirect-After-Post&lt;/em&gt; hará que al recargar la página por código con &lt;code&gt;window.localtion.reload();&lt;/code&gt; después de una petición POST el navegador no muestre un diálogo modal informando al usuario de que se reenviarán datos.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/164/dialogo-recargar.png&#34; title=&#34;Diálogo recargar después de petición POST en Firefox&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/164/dialogo-recargar-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Diálogo recargar después de petición POST en Firefox&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://facebook.github.io/react/&#34;&gt;React&lt;/a&gt; y &lt;a href=&#34;https://www.polymer-project.org/1.0/&#34;&gt;Polymer&lt;/a&gt; son tecnologías de cliente en algunos aspectos similares a los componentes de Apache Tapestry pero con la diferencia de que unos son para el navegador del cliente y otros para el servidor, nada nos impide en la misma aplicación usar en el cliente React y Polymer y en el servidor Apache Tapestry. Nótese en el código del caso anterior que Tapestry ofrece integración con JavaScript de un modo que no existe ni en Spring MVC, Struts o Grails e incorpora de serie &lt;a href=&#34;http://requirejs.org/&#34;&gt;RequireJS&lt;/a&gt;, Undercore y jQuery, un componente de Tapestry puede requerir la cargar de un recurso de JavaScript y desde el componente es posible pasar datos al JavaScript usando el servicio &lt;a href=&#34;http://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/services/javascript/JavaScriptSupport.html&#34;&gt;JavaScriptSupport&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Esto es solo un pequeño ejemplo de las posibilidades de Apache Tapestry me dejo muchas otras como los eventos, &lt;em&gt;translators&lt;/em&gt;, &lt;em&gt;encoders&lt;/em&gt;, &lt;em&gt;coerces&lt;/em&gt;, librerías de componentes, &lt;em&gt;inversion of control&lt;/em&gt;, AJAX, validaciones de formularios, &amp;hellip; En un proyecto las herrramientas no son lo más importante pero &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/06/el-lenguaje-de-programacion-framework-y-librerias-importan/&#34;&gt;el lenguaje de programación, framework y librerías importan&lt;/a&gt;, hay &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/05/10-razones-para-seguir-usando-java/&#34;&gt;10 razones para seguir usando Java&lt;/a&gt; y varios &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2011/08/motivos-para-elegir-apache-tapestry.html&#34;&gt;motivos para elegir Apache Tapestry&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;finalizando&#34;&gt;Finalizando&lt;/h3&gt;
+
+&lt;p&gt;Lamentablemente hasta el momento no he tenido una oportunidad laboral de comprobar y demostrar que como en este ejemplo pero basado en una necesidad real que con Tapestry la implementación de la solución es más sencilla, menos propensa a errores y que la productividad no está relacionado con escribir unas pocas líneas de código menos con un lenguaje menos verboso o dejar de escribir puntos y comas al final de las líneas, más aún con las &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/&#34;&gt;novedades de Java 8&lt;/a&gt;. Quizá un día llegue esa oportunidad :|.&lt;/p&gt;
+
+&lt;div class=&#34;alert alert-warning&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/12/portada-PugInTapestry-thumb.png&#34; alt=&#34;Portada libro: PlugIn Tapestry&#34; title=&#34;Portada libro: PlugIn Tapestry&#34; style=&#34;float: left; margin-right: 1.5em;&#34;&gt;
+    &lt;h3&gt;Libro PlugIn Tapestry&lt;/h3&gt;
+    &lt;p&gt;Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este &lt;i&gt;framework&lt;/i&gt; en el formato que prefieras, &lt;a href=&#34;http://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/&#34;&gt;PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry&lt;/a&gt;, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.&lt;/p&gt;
+    &lt;br style=&#34;clear: both;&#34;&gt;
+    &lt;div class=&#34;buttons&#34;&gt;
+        &lt;a href=&#34;http://goo.gl/dfySZ1&#34; class=&#34;btn btn-lg btn-success&#34;&gt;PDF&lt;/a&gt;
+        &lt;a href=&#34;http://goo.gl/bs7Rtu&#34; class=&#34;btn btn-lg btn-success&#34;&gt;EPUB&lt;/a&gt;
+        &lt;a href=&#34;http://goo.gl/lxOZMT&#34; class=&#34;btn btn-lg btn-success&#34;&gt;MOBI&lt;/a&gt;
+        &lt;a href=&#34;http://goo.gl/MJJiPV&#34; class=&#34;btn btn-lg btn-success&#34;&gt;HTML&lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;buttons&#34;&gt;
+        &lt;a href=&#34;http://goo.gl/Qv1Ym&#34; class=&#34;btn btn-lg btn-success&#34;&gt;Código fuente ejemplos&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="opinion"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="tapestry"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2016/07/hemeroteca-9/</id>
+        <title>Hemeroteca #9</title>        
+        <updated>2016-07-02T12:00:00+02:00</updated>
+        <published>2016-07-01T13:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/07/hemeroteca-9/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;6 meses más y 35 nuevos artículos escritos sobre temas de programación, java, software libre y opinión. No son muchos artículos pero tampoco son artículos breves sobre noticias efímeras, en cada artículo trato de compartir no solo información sino conocimiento en los que además suelo incluir el código completo de un ejemplo totalmente funcional.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;p&gt;Como cada seis meses en Blog Bitix hago una recopilación de los artículos que he publicado durante este tiempo, comento sobre que he escrito y comparto cómo ha evolucionado esta bitácora. Durante estas 26 primeras semanas del año he escrito 35 nuevos artículos siguiendo mi ritmo de publicación no muy prolífico pero muy constante al ritmo de uno por semana, algunas publicando dos artículos casi siempre durante el fin de semana.&lt;/p&gt;
+
+&lt;p&gt;Los temas de los artículos han sido los habituales programación, GNU/Linux, Java, JavaScript, unos pocos de opinión y algún desempaquetado de producto que he comprado y he usado.&lt;/p&gt;
+
+&lt;p&gt;En la categoría de programación están los siguientes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/01/introduccion-y-ejemplo-basico-sobre-vertx/&#34;&gt;Introducción y ejemplo básico sobre Vert.x&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/01/aplicacion-web-con-spark-framework-y-java/&#34;&gt;Aplicación web con Spark Framework y Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/02/introduccion-al-protocolo-http-2/&#34;&gt;Introducción al protocolo HTTP/2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/&#34;&gt;Configurar HTTP/2 en nginx, Apache HTTPD, WildFly o Jetty&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/03/introduccion-y-nuevas-caracteristicas-de-java-ee-7/&#34;&gt;Introducción y nuevas características de Java EE 7&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/03/como-ejecutar-un-proceso-del-sistema-con-java/&#34;&gt;Cómo ejecutar un proceso del sistema con Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/03/como-firmar-correos-electronicos-con-gpg-y-javamail/&#34;&gt;Cómo firmar correos electrónicos con GPG y JavaMail&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/04/aplicacion-de-ejemplo-usando-varias-especificaciones-de-java-ee-7/&#34;&gt;Aplicación de ejemplo usando varias especificaciones de Java EE 7&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/04/usar-twitter-desde-java-con-twitter4j/&#34;&gt;Usar Twitter desde Java con twitter4j&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/04/el-componente-grid-de-apache-tapestry/&#34;&gt;El componente Grid de Apache Tapestry&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/05/extraer-elementos-de-una-cadena-con-una-expresion-regular/&#34;&gt;Extraer elementos de una cadena con una expresión regular&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/05/que-es-el-concepto-de-heap-pollution-en-java/&#34;&gt;Qué es el concepto de Heap Pollution en Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/05/la-clase-threadlocal-de-java-y-usos-practicos/&#34;&gt;La clase ThreadLocal de Java y usos prácticos&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/05/incluir-informacion-de-la-version-en-el-artefacto-distribuible-con-gradle/&#34;&gt;Incluir información de la versión en el artefacto distribuible con Gradle&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/05/ejemplo-sencillo-de-como-crear-un-excel-en-java-con-apache-poi/&#34;&gt;Ejemplo sencillo de como crear un excel en Java con Apache POI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/06/ofrecer-contenido-personalizado-al-usuario-basado-en-su-ubicacion/&#34;&gt;Ofrecer contenido personalizado al usuario basado en su ubicación&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/06/moment-js-libreria-javascript-para-fechas/&#34;&gt;Moment.js, librería JavaScript para fechas&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/06/como-redirigir-peticiones-de-http-a-https-en-nginx-apache-tomcat-jetty-y-wildfly/&#34;&gt;Cómo redirigir peticiones de HTTP a HTTPS en Nginx, Apache, Tomcat, Jetty y WildFly&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;En la categoría de GNU/Linux y software libre están los siguientes artículos:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/02/como-recuperar-archivos-eliminados-o-de-una-unidad-corrupta-en-gnu-linux/&#34;&gt;Cómo recuperar archivos eliminados o de una unidad corrupta en GNU/Linux&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/02/cifrar-unidad-usb-completamente-con-dm-crypt-y-luks-en-gnu-linux/&#34;&gt;Cifrar unidad USB completamente con dm-crypt y LUKS en GNU/Linux&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/02/cifrar-archivos-con-encfs-en-gnu-linux/&#34;&gt;Cifrar archivos con EncFS en GNU/Linux&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/03/como-eliminar-de-forma-segura-archivos-con-wipe-y-dd-en-gnu-linux/&#34;&gt;Cómo eliminar de forma segura archivos con wipe y dd en GNU/Linux&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/03/cambiar-el-formato-de-archivos-de-musica-o-audio-en-gnu-linux/&#34;&gt;Cambiar el formato de archivos de música o audio en GNU/Linux&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/04/cambiar-el-formato-de-archivos-de-video-o-peliculas-en-gnu-linux/&#34;&gt;Cambiar el formato de archivos de vídeo o películas en GNU/Linux&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/05/3-opciones-ofimaticas-alternativas-a-microsoft-office/&#34;&gt;3 opciones ofimáticas alternativas a Microsoft Office&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/05/como-realizar-copias-de-seguridad-en-windows-con-freefilesync/&#34;&gt;Cómo realizar copias de seguridad en Windows con FreeFileSync&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/06/atajos-de-teclado-basicos-de-la-terminal-en-gnu-linux/&#34;&gt;Atajos de teclado básicos de la terminal en GNU/Linux&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/06/combinacion-de-teclas-para-copiar-y-pegar-en-la-terminal/&#34;&gt;Combinación de teclas para copiar y pegar en la terminal&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Un trío de artículos de opinión:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/01/windows-10-y-office-2016-tan-faciles-de-usar-sin-licencia-como-siempre/&#34;&gt;Windows 10 y Office 2016 tan fáciles de usar sin licencia como siempre&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/06/la-siguiente-disrupcion-tecnologica-la-convergencia/&#34;&gt;La siguiente disrupción tecnológica, la convergencia&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/06/el-lenguaje-de-programacion-framework-y-librerias-importan/&#34;&gt;El lenguaje de programación, framework y librerías importan&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Finalmente, un desempaquetado de una aspiradora que compré, un resumen de las presentaciones a las que asistí de la conferencia BilboStack y el sexto aniversario desde que empecé la bitácora:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/01/desempaquetado-y-analisis-de-aspiradora-dyson-dc37c-advanced-allergy/&#34;&gt;Desempaquetado y análisis de aspiradora Dyson DC37c Advanced Allergy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/01/conferencia-bilbostack-2016/&#34;&gt;Conferencia BilboStack 2016&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/02/6o-aniversario-del-blog/&#34;&gt;6º aniversario del blog&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Acabo de empezar dos series de artículos una &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/series/terminal/&#34;&gt;serie sobre la terminal de GNU/Linux&lt;/a&gt; y completando con otros cuantos artículos otra serie sobre varios temas de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/series/web/&#34;&gt;servidores y desarrollo web&lt;/a&gt; que aún tengo pendiente de continuar con algunos más. Además y aunque no he escrito ningún artículo hablando sobre ellos publiqué una nueva actualización del &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/&#34;&gt;libro PlugIn Tapestry&lt;/a&gt; con nuevo contenido y otro tanto revisado y actualizado.&lt;/p&gt;
+
+&lt;p&gt;Con algunos artículos he quedado bastante satisfecho como en los que he hablado de Microsoft Windows y Microsoft Office pero también varios sobre Java, Java EE y HTTP/2. Sin embargo, algo que no falla es escribir algo de JavaScript y recibir unos cuantos &lt;em&gt;retweets&lt;/em&gt; y favoritos cuando lo publico en Twitter aunque tenga la sensación de no ser lo de lo mejor que haya escrito parece que es lo que más llama la atención posiblemente ya que la mayoría de la gente lo usa de una u otra forma. Por otro lado tengo la sensación de que escribo para Google ya que recibo pocos comentarios seguramente por la forma en la que escribo ya que no suelo personalizar los artículos poniendo información personal o intercalando algunos chistes, más bien me centro en el aspecto técnico del que estoy escribiendo pero tampoco pasa nada, compartir el poco o más conocimiento que tengo y otro que voy aprendiendo ya es suficiente recompensa para mi si además veo que cuanto más tiempo pasa el número de visitas crecen algo me mantiene con motivación para seguir escribiendo y publicando contenido.&lt;/p&gt;
+
+&lt;p&gt;En cuanto a como han evolucionado las visitas siempre es motivante ver que con el nuevo contenido añadido y poco a poco las visitas y número de páginas vistas aumentan algo, en cualquier caso siguen siendo pocas con las que seguramente tengan otras bitácoras de temática similar pero también seguramente más que otros cuantas. De casi aproximadamente 7000 sesiones al mes que tenía en enero ahora en junio Analytics me contabiliza unas 11000, en el mismo periodo de tiempo he pasado de 9000 páginas vistas a casi 13500. La mayor parte de esta mejora ha sido por unos pocos artículos que se habrán posicionado bien en los primeros meses del año en el buscador Google fuente de la que provienen la mayor parte de las visitas.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/154/analytics.png&#34; title=&#34;Evolución de sesiones mensuales en Blog Bitix&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/154/analytics-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Evolución de sesiones mensuales en Blog Bitix&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Durante este tiempo en la bitácora he realizado algunos cambios haciendo el tamaño de letra más pequeña de las secciones de referencia y series de artículos así como en las series de artículos numerar los artículos. He añadido publicidad a nivel de página para los dispositivos móviles soportados que desde no hace mucho ofrece Google AdSense. He añadido un buscador con la tecnología de Google para buscar contenido en Blog Bitix y he minimizado el HTML con la intención de que la cantidad de datos descargados al acceder al &lt;em&gt;blog&lt;/em&gt; sean unos cuantos kilobytes menos. También he añadido un mensaje para aquellos usuarios que usen AdBlock y lo tengan activado instándolos a considerar que lo desactiven en Blog Bitix ya que la publicidad que incluyo en el &lt;em&gt;blog&lt;/em&gt; es amable y poco intrusiva.&lt;/p&gt;
+
+&lt;p&gt;Con la publicidad que incluyo y los enlaces de afiliación para Amazon de mayoritariamente libros haré alguna nueva donación a algún proyecto de software libre que use o me resulte de interés. Con las enlaces de Amazon recibí una nueva transferencia de unos 25€ y con la publicidad de AdSense estoy a punto de recibir la correspondiente transferencia de aproximadamente 70€ al superar el límite mínimo, cuando la reciba me plantearé hacer la o las donaciones. No serán muy elevadas pero con ellas espero contribuir y devolver algo al software libre que uso a diario tanto de forma personal como en el trabajo. La primera donación que hice fue &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/&#34;&gt;comprando una par de camisetas a la FSFE&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Tengo muchos artículos escritos pero pendientes de publicar y muchas ideas de artículos que me permitirían seguir escribiendo a mi ritmo de publicación durante más de un año o dos sin ocurrírseme ninguna nueva idea de artículo aunque algunas ideas que he apuntado más tarde las deseche. Más que tiempo para escribir me falta tiempo para editar y publicar los artículos, compaginarlo con el trabajo me absorbe gran parte del tiempo libre que me queda.&lt;/p&gt;
+
+&lt;p&gt;Y por mi esto ha sido todo durante estos seis meses pasados. ¡A por los siguientes 6 meses con nuevos artículos!&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog"/>
+            
+                <category term="blog-stack"/>
+            
+                <category term="hemeroteca"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+                <category term="software"/>
+            
+                <category term="software-libre"/>
+            
+                <category term="tapestry"/>
+            
+                <category term="gnu-linux"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2016/06/el-lenguaje-de-programacion-framework-y-librerias-importan/</id>
+        <title>El lenguaje de programación, framework y librerías importan</title>        
+        <updated>2016-06-26T12:00:00+02:00</updated>
+        <published>2016-06-25T12:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/06/el-lenguaje-de-programacion-framework-y-librerias-importan/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;p&gt;Para programar hay una abundancia tremenda de lenguajes, librerías, &lt;em&gt;frameworks&lt;/em&gt;, tecnologías, etc&amp;hellip; disponibles para desarrollar un proyecto. Esto es muy bueno ya que podremos elegir la combinación de cualquiera de ellas que más se ajuste a las necesidades del proyecto, las que mejor conozcamos ya o según nuestras preferencias en base a sus características incluyendo su comunidad, documentación, si tiene un desarrollo activo, fecha de la última versión u otros motivos que consideremos. El lado malo de esta abundancia es que requiere analizar seguramente no todas pero al menos las más nombradas, más usadas, con mejor documentación o con un mantenimiento activo. Por la cantidad de opciones dicha tarea de análisis requiere tiempo y esfuerzo que no debe abrumarnos considerando que cualquiera de ellas vale.&lt;/p&gt;
+
+&lt;p&gt;Algunas personas piensan que las herramientas no son importantes quizá creen que hay tantas que da igual cualquiera de ellas o que solo importan las personas, «lo que hay entre el teclado y la silla». Entre varias herramientas adecuadas ciertamente en un proyecto no serán lo más importante ni usar alguna en concreto es un fin pero eso no quiere decir que no sean importantes. Son importantes porque afectan de forma notable al desarrollo del proyecto, por poner un ejemplo no es lo mismo un lenguaje o &lt;em&gt;framework&lt;/em&gt; que evita errores de compilación en producción, un &lt;abbr title=&#34;Integrated Development Environment&#34;&gt;IDE&lt;/abbr&gt; que los detecta según se escribe el código o que permite hacer &lt;em&gt;refactors&lt;/em&gt; con más garantías de no introducir errores que un lenguaje en el que necesitas teses que cubran la totalidad del código simplemente para detectarlos, no es lo mismo el número de lineas necesarias o su verbosidad pero es más importante la legibilidad si va a ser mantenido durante mucho tiempo, no es lo mismo elegir una herramienta ampliamente probada que una implementada por nosotros con el tiempo necesario a dedicar a desarrollarla y que probablemente finalmente sea menos flexible que otra existente, no es lo mismo una base de datos relacional que garantiza la integridad de los datos que una base de datos NoSQL sin validación de esquema. Yendo a un extremo creo que nadie considera siquiera usar ensamblador para hacer una aplicación web o usar Java, hasta el momento, para programar un sistema operativo de alto rendimiento que exprima el máximo potencial del hardware. Pero entre algunas opciones equivalentes cualquiera, con matices, nos servirá, por ejemplo, usar el lenguaje &lt;a href=&#34;http://php.net/&#34;&gt;PHP&lt;/a&gt;, &lt;a href=&#34;http://www.microsoft.com/net&#34;&gt;C#&lt;/a&gt; o &lt;a href=&#34;http://www.oracle.com/technetwork/es/java/javase/downloads/index.html&#34;&gt;Java&lt;/a&gt; para hacer una aplicación web usando para cada opción los &lt;em&gt;frameworks&lt;/em&gt; &lt;a href=&#34;http://symfony.com/&#34;&gt;Symfony&lt;/a&gt;, &lt;a href=&#34;http://www.asp.net/mvc&#34;&gt;ASP.NET MVC&lt;/a&gt; o &lt;a href=&#34;http://tapestry.apache.org&#34;&gt;Apache Tapestry&lt;/a&gt;. Hay grados de lo adecuado que es una herramienta para una necesidad.&lt;/p&gt;
+
+&lt;p&gt;Por otro lado las herramientas consideradas en el inicio de un proyecto no son inmutables durante toda su existencia y cambian en la medida que las necesidades del proyecto cambian. En una &lt;em&gt;startup&lt;/em&gt; al principio se necesitará una combinación de herramientas que permita probar la viabilidad del proyecto y evolucionar rápidamente el producto o servicio. Más tarde según se estabiliza el proyecto y crece surgirán nuevas necesidades como mayor fiabilidad, menos errores y escalabilidad tanto en cantidad de código y número de personas trabajando al mismo tiempo en el mismo código fuente.&lt;/p&gt;
+
+&lt;p&gt;También suele haber alguna discusión en si utilizar &lt;em&gt;frameworks&lt;/em&gt; o no utilizarlos, usarlos evita tener que desarrollar nosotros mismos mucho código, nos ahorrará tiempo, tendremos mayor flexibilidad y menos errores pero usándolos el proyecto tendrá esa dependencia lo que implica que el código se deberá adaptar a él que aún así igual es algo que queremos para estructurar correctamente el código según el marco de trabajo ofrecido. Por otro lado he presenciado comentarios desfavoreciendo el uso de &lt;em&gt;frameworks&lt;/em&gt;, la mayoría de programadores no tienen los conocimientos y tiempo de implementar su propia alternativa con la misma calidad y en la mayoría de los casos basta con reutilizar alguna que cubra la necesidad y más importante esté ampliamente probada.&lt;/p&gt;
+
+&lt;p&gt;Para mi lo importante es que para cualquier librería o &lt;em&gt;framework&lt;/em&gt; que elijamos tengamos en un futuro la posibilidad de reemplazarlo sin estar encadenados a él y sin tener que reescribir el proyecto entero, esto forma parte de las más básicas buenas prácticas de desarrollo, precisamente las aplicaciones que se desarrollan en capas y los &lt;em&gt;frameworks&lt;/em&gt; que separan modelo, de vista, de controlador tratan de minimizar ese impacto.&lt;/p&gt;
+
+&lt;p&gt;Cada proyecto es distinto y hay que conocer sus requerimientos para seleccionar las herramientas que contribuyan al éxito o a la menor cantidad de dificultades, si se tratan de un proyecto en la plataforma Java probablemente varias herramientas serán las que indico en el artículo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/06/nueva-visita-a-herramientas-para-un-proyecto-java/&#34;&gt;herramientas para un proyecto Java&lt;/a&gt;. Si no está clara la plataforma también puedes echarle un vistazo a &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/05/10-razones-para-seguir-usando-java/&#34;&gt;10 razones para seguir usando Java&lt;/a&gt; y &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/&#34;&gt;novedades y nuevas características de Java 8&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;La tecnologías, lenguajes, librerías, &lt;em&gt;frameworks&lt;/em&gt;, &amp;hellip; son herramientas a usar para conseguir un fin que es hacer realidad el proyecto, producto o servicio con un componente informático, las herramientas no son un fin en si mismo, no son lo más importante, lo más importante es resolver la necesidad de alguien normalmente con restricciones de tiempo y coste, pero desde luego no son irrelevantes y no da igual usar cualquiera. Son las herramientas equivalentes de un fontanero, pintor, carpintero u otros profesionales que tienen cantidad de ellas para realizar multitud de tareas específicas de forma efectiva y rápida junto con su conocimiento y experiencia. Los lenguajes de programación, &lt;em&gt;frameworks&lt;/em&gt; y librerías de no ser importantes no existirían tantas incluso varias con diferentes propiedades para la misma necesidad.&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="opinion"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+                <category term="software"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2016/06/moment-js-libreria-javascript-para-fechas/</id>
+        <title>Moment.js, librería JavaScript para fechas</title>        
+        <updated>2016-06-05T17:00:00+02:00</updated>
+        <published>2016-06-05T13:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/06/moment-js-libreria-javascript-para-fechas/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/javascript.png&#34; class=&#34;right&#34; alt=&#34;JavaScript&#34; title=&#34;JavaScript&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Hace un tiempo escribí una serie de artículos mostrando el uso de varias de la librerías de JavaScript, el primer artículo fue sobre una &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2013/03/introduccion-y-ejemplo-de-requirejs.html&#34;&gt;introducción sobre RequireJS&lt;/a&gt; hasta un &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/04/ejemplo-lista-de-tareas-con-backbone-y-react/&#34;&gt;Ejemplo lista de tareas con Backbone y React&lt;/a&gt; pasando por otra serie de herramientas útiles en una aplicación que tiene una parte importante en el navegador como:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2013/03/introduccion-y-ejemplo-de-mustache.htmlf&#34;&gt;Plantillas con Mustache&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2013/03/logging-en-javascript-con-log4javascript.html&#34;&gt;&lt;em&gt;Logging&lt;/em&gt; log4javascript&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2013/04/capturar-errores-de-javascript.html&#34;&gt;Capturar errores de JavaScript&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2013/04/introduccion-y-ejemplo-de-backbonejs.html&#34;&gt;Modelos con Backbone&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2013/04/ejemplo-lista-de-tareas-con-backbone.html&#34;&gt;Ejemplo de lista de tareas con Backbone, RESTEasy y Tapestry&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2013/05/ejemplo-de-pruebas-unitarias-en.html&#34;&gt;Pruebas unitarias con Jasmine y Sinon&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;El mismo &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2013/08/ejemplo-lista-de-tareas-con-marionette.html&#34;&gt;ejemplo de lista de tareas con Marionette&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Una vez más el mismo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/04/ejemplo-lista-de-tareas-con-backbone-y-react/&#34;&gt;ejemplo de lista de tareas con Backbone y React&lt;/a&gt; opción que me gustó más que con &lt;a href=&#34;http://marionettejs.com/&#34;&gt;Marionette&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/01/internacionalizacion-i18n-en-javascript/&#34;&gt;Internacionalización (i18n) en JavaScript&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;En este artículo comentaré otra librería de JavaScript que nos será de utilidad para el trabajo con datos de tipo fecha en el navegador, la librería es &lt;a href=&#34;http://momentjs.com/&#34;&gt;Moment.js&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;La librería Moment.js permite en el lado del cliente formatear fechas según un patrón, manipular fechas añadiendo o restando días, comparar fechas, hacer consultas como si es un año bisiesto o la fecha está usando una zona horaria de verano o según calendario, soporta diferentes lenguajes además de permitirnos trabajar con diferentes zonas horarias y periodos de tiempo. En la propia &lt;a href=&#34;http://momentjs.com/&#34;&gt;página de inicio del proyecto&lt;/a&gt; y la &lt;a href=&#34;http://momentjs.com/timezone/&#34;&gt;sección de zonas horarias&lt;/a&gt; están incluidos diferentes ejemplos de cada una de estas posibilidades. El la &lt;a href=&#34;http://momentjs.com/docs/&#34;&gt;documentación&lt;/a&gt; están explicadas más detalladamente todas las opciones, como usarlo con &lt;a href=&#34;http://requirejs.org/&#34;&gt;Require.js&lt;/a&gt; y el gestor de paquetes &lt;a href=&#34;http://bower.io/&#34;&gt;Bower&lt;/a&gt; o con &lt;a href=&#34;https://www.npmjs.com/&#34;&gt;npm&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;En este artículo no incluiré un ejemplo de código ya que en la página de inicio del proyecto está muy bien explicado, la documentación parece bastante completa.&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://momentjs.com/&#34;&gt;Moment.js&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="javascript"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2016/06/ofrecer-contenido-personalizado-al-usuario-basado-en-su-ubicacion/</id>
+        <title>Ofrecer contenido personalizado al usuario basado en su ubicación</title>        
+        <updated>2016-06-06T19:00:00+02:00</updated>
+        <published>2016-06-03T19:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/06/ofrecer-contenido-personalizado-al-usuario-basado-en-su-ubicacion/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Cuando navegamos por internet el navegador envía mútiple información sobre nosotros y algunas páginas web recopilan esa información y la procesan para ofrecer contenido personalizado que creen nos resultaría de interés. Contenido con mayor relevancia para el usuario mejora la experiencia de usuario y la páginas web mejorarán su ratio de conversión y facturación. La información que proporcionamos sin ser conscientes son las &lt;em&gt;cookies&lt;/em&gt;, la dirección IP, el navegador que usamos, el sistema operativo, nuestra resolución de pantalla, la hora a la que accedemos a la página, &amp;hellip; en base a ella y aunque la información está impersonalizada sirve para identificarnos como inequivocamente usuarios. Con la dirección IP y usando una base de datos es posible obtener al menos el país desde el que se accede a una web y muy posiblemente la ciudad.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/linux.png&#34; class=&#34;right&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/gnu.png&#34; class=&#34;right&#34; alt=&#34;GNU&#34; title=&#34;GNU&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Un usuario cuando navega por internet proporciona diversa información que las páginas web pueden utilizar para personalizar el contenido que le muestran. La información que el usuario proporciona es el navegador que utiliza, sistema operativo y dirección IP. Con las &lt;em&gt;cookies&lt;/em&gt; las páginas web pueden almacenar información en su navegador que persista en varias sesiones. Amazon por ejemplo personaliza el contenido que ve el usuario cuando accede a la página de inicio mostrando diferentes categorías de productos en los que puede estar más interesado, por ejemplo, productos visitados en anteriores sesiones, relacionados o similares. Si el usuario ha visitado un producto con anterioridad es muy posible que esté interesado en comprar ese producto con lo que Amazon se lo muestra de nuevo en la siguiente sesión o le envía un correo electrónico al día siguiente como recordatorio. Una página de eventos, viajes, hoteles, restaurantes, museos, el tiempo, &amp;hellip; puede mostrar información basada en la localización, por ejemplo, si alguien está en Madrid quizá esté interesando dependiendo de la búsqueda que haga en eventos, hoteles o museos en esa ciudad.&lt;/p&gt;
+
+&lt;p&gt;En &lt;a href=&#34;https://wiki.archlinux.org&#34;&gt;Arch Linux&lt;/a&gt; al igual que en muchas otras distribuciones &lt;a href=&#34;http://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;http://www.linux.com/&#34;&gt;Linux&lt;/a&gt; hay unos comandos y unos paquetes que contienen una base de datos que en base a la dirección IP proporciona el país, ciudad, código postal y coordenadas geográficas de latitud y longitud, son &lt;a href=&#34;https://www.archlinux.org/packages/extra/x86_64/geoip/&#34;&gt;geoip&lt;/a&gt; con información del país y &lt;a href=&#34;https://www.archlinux.org/packages/extra/any/geoip-database-extra/&#34;&gt;geoip-database-extra&lt;/a&gt; para obtener información de la ciudad. La localización de un usuario también puede obtenerse usando una consulta que implique red de datos hacia algún servicio y si el usuario en su navegador lo permite proporcionar la información de su geoposicionamiento, la diferencia es que la petición que haga uso de red añade algo de latencia a la respuesta de la aplicación tampoco requieren pedir permisos al usuario para activar su geoposicionamiento. La información proporcionada por &lt;em&gt;geoip&lt;/em&gt; quizá no sea tan exacta en todos los casos que los anteriores métodos pero más que suficiente en la mayoría. En caso de querer la mejor precisión se puede optar primeramente pedir al usuario que comparta su localizacion mediante el navegador, luego o en la primera petición hasta que el usuario comparta su posición por usar la base de datos de &lt;em&gt;geoip&lt;/em&gt;, si esta no es exacta aunque seguramente proporcione al menos el país pero no proporciona la ciudad se puede optar por usar algún servicio que implique red.&lt;/p&gt;
+
+&lt;p&gt;Instalados los paquetes con las bases de datos de geoposicionamiento en la distribución GNU/Linux su uso desde la línea de comandos es el siguiente, indicando la dirección IP o nombre de dominio de la que queramos conocer su ubicación:&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c521d486dd5740b5c9fa6144bde3bbc4.js?file=geoiplookup-85.84.77.93.sh&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c521d486dd5740b5c9fa6144bde3bbc4/raw/geoiplookup-85.84.77.93.sh&#34;&gt;geoiplookup-85.84.77.93.sh&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c521d486dd5740b5c9fa6144bde3bbc4.js?file=geoiplookup-8.8.8.8.sh&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c521d486dd5740b5c9fa6144bde3bbc4/raw/geoiplookup-8.8.8.8.sh&#34;&gt;geoiplookup-8.8.8.8.sh&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c521d486dd5740b5c9fa6144bde3bbc4.js?file=geoiplookup-marca.es.sh&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c521d486dd5740b5c9fa6144bde3bbc4/raw/geoiplookup-marca.es.sh&#34;&gt;geoiplookup-marca.es.sh&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/147/geoiplookup.png&#34; title=&#34;Comando para obtener información de geoposicionamiento en base a la dirección IP&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/147/geoiplookup-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Comando para obtener información de geoposicionamiento en base a la dirección IP&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Otra opción es usar otra base de datos de geolocalización para direcciones IP, en vez de instalar un paquete en el sistema y usar el comando &lt;em&gt;geoiplookup&lt;/em&gt; y procesar su salida con las bases de datos de &lt;a href=&#34;http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz&#34;&gt;MaxMind GeoLite2 para paises&lt;/a&gt; y &lt;a href=&#34;http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz&#34;&gt;ciudades&lt;/a&gt; dispondremos de una API accessible desde el lenguaje de programación que prefiramos. En este ejemplo usaré Java pero hay &lt;em&gt;bindings&lt;/em&gt; para los lenguajes más populares.&lt;/p&gt;
+
+&lt;p&gt;Este sería el código para obtener la información de forma más sencilla que lanzar un proceso del sistema y &lt;em&gt;parsear&lt;/em&gt; su resultado, además con GeoLite2 la aplicación no necesitará que el sistema tenga un paquete instalado y será más autocontenida. La base de datos de geolocalización se proporciona en un archivo que es posible distribuir con la aplicación.&lt;/p&gt;
+
+&lt;p&gt;En el siguiente ejemplo no incluyo la base de datos en el código fuente del proyecto ya que ocupa casi 65MiB. Descargada, descomprimida y ubicada en el directorio &lt;em&gt;src/main/resources&lt;/em&gt; la aplicación se iniciar con el comando &lt;code&gt;./gradlew run&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/74bd3f93225874e9fa35918515f5ec06.js?file=Main.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/74bd3f93225874e9fa35918515f5ec06/raw/Main.java&#34;&gt;Main.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/74bd3f93225874e9fa35918515f5ec06.js?file=build.gradle&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/74bd3f93225874e9fa35918515f5ec06/raw/build.gradle&#34;&gt;build.gradle&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/147/geolite2.png&#34; title=&#34;Información de geoposicionamiento en base a la dirección IP con GeoLite2&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/147/geolite2-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Información de geoposicionamiento en base a la dirección IP con GeoLite2&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;GeoLite2 tiene una &lt;a href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;licencia Creative Commons Attribution-ShareAlike&lt;/a&gt; y no tiene coste, MaxMind proporciona además otras bases de datos más completas pero con un coste, 50$ para la base de datos de paises más 24$ para las actualizaciones y 370$ para la base de datos de ciudades más 100$ para las actualizaciones.&lt;/p&gt;
+
+&lt;p&gt;En una aplicación web Java en la interfaz &lt;a href=&#34;http://docs.oracle.com/javaee/7/api/javax/servlet/ServletRequest.html&#34;&gt;ServletResquest&lt;/a&gt; y con el método &lt;a href=&#34;http://docs.oracle.com/javaee/7/api/javax/servlet/ServletRequest.html#getRemoteAddr--&#34;&gt;getRemoteAddr()&lt;/a&gt; obtenemos la dirección IP del usuario, ya solo nos queda &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/03/como-ejecutar-un-proceso-del-sistema-con-java/&#34;&gt;lanzar un proceso del sistema desde Java&lt;/a&gt; que invoque al comando &lt;em&gt;geoiplookup&lt;/em&gt; con la dirección IP obtenida o usar la API Java u de otro lenguaje de MaxMind GeoLite2, obtener la salida del proceso, interpretarla y hacer con ella lo que queramos hacer en la aplicación. En una aplicación web adicionalmente somos libres de usar la &lt;a href=&#34;https://en.wikipedia.org/wiki/W3C_Geolocation_API&#34;&gt;API de geoposicionamiento&lt;/a&gt; implementada en los navegadores.&lt;/p&gt;
+
+&lt;p&gt;Proporcionar contenido personalizado al usuario probablemente ayuda a mejorar la conversión de un sitio de comercio electrónico y la experiencia del usuario ofreciéndole productos o servicios en los que de alguna forma esté interesado ya sea como en este caso basado en su ubicación, pero como en el caso de Amazon según las visitas anteriores y en otros podría ser en base al sistema operativo o navegador como hace Google cuando accedemos a su buscador indicándonos que nos instalemos &lt;a href=&#34;https://www.google.es/chrome/browser/desktop/&#34;&gt;Chrome&lt;/a&gt; si usamos &lt;a href=&#34;https://www.mozilla.org/es-ES/firefox/new/&#34;&gt;Firefox&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaGeolocation/&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/03/como-ejecutar-un-proceso-del-sistema-con-java/&#34;&gt;Lanzar proceso del sistema con Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Geolocation_software&#34;&gt;Geolocation software&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/W3C_Geolocation_API&#34;&gt;W3C Geolocation API&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+                <category term="software"/>
+            
+                <category term="software-libre"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2016/05/ejemplo-sencillo-de-como-crear-un-excel-en-java-con-apache-poi/</id>
+        <title>Ejemplo sencillo de como crear un excel en Java con Apache POI</title>        
+        <updated>2016-05-29T13:00:00+01:00</updated>
+        <published>2016-05-29T13:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/05/ejemplo-sencillo-de-como-crear-un-excel-en-java-con-apache-poi/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;La librería &lt;a href=&#34;https://poi.apache.org/&#34;&gt;Apache POI&lt;/a&gt; nos permite acceder y crear documentos del producto ofimático &lt;a href=&#34;https://products.office.com/es-es/home&#34;&gt;Microsoft Office&lt;/a&gt; utilizando el lenguaje de programación Java y otros del ecosistema de la &lt;abbr title=&#34;Java Virtual Machine&#34;&gt;JVM&lt;/abbr&gt;. Los archivos que podemos crear y leer son documentos Word, Excel y Powerpoint.&lt;/p&gt;
+
+&lt;p&gt;En casi todas las aplicaciones hay necesidad de exportar los datos que maneja la aplicación a algún tipo de documento, un formato muy utilizado es el PDF sobre todo si el documento está destinado a imprimirse pero que no es el más adecuado si requiere modificaciones posteriores o contiene datos numéricos con cálculos. El formato de Excel también es muy utilizado por sus posibilidades para agrupar los datos, agregar, filtrar, hacer cálculos con funciones matemáticas, financieras o de otro tipo. Aunque si es posible es mejor utilizar un formato de documento abierto para no quitarle libertad al usuario para elegir el software que prefiera, el programa ofimático Microsoft Office sigue estando muy extendido con lo que puede que no tengamos otro remedio que utilizar como formato para exportar los datos uno propietario. En este artículo comentaré como crear un documento excel sencillo usando la librería Apache POI y el lenguaje Java.&lt;/p&gt;
+
+&lt;p&gt;Para trabajar con archivos &lt;em&gt;xls&lt;/em&gt; de Excel debemos usar las clases &lt;a href=&#34;https://poi.apache.org/apidocs/org/apache/poi/hssf/usermodel/HSSFWorkbook.html&#34;&gt;HSSFWorkbook&lt;/a&gt;, &lt;a href=&#34;https://poi.apache.org/apidocs/org/apache/poi/hssf/usermodel/HSSFSheet.html&#34;&gt;HSSFSheet&lt;/a&gt;, &lt;a href=&#34;https://poi.apache.org/apidocs/org/apache/poi/hssf/usermodel/HSSFRow.html&#34;&gt;HSSFRow&lt;/a&gt;, &lt;a href=&#34;https://poi.apache.org/apidocs/org/apache/poi/hssf/usermodel/HSSFCell.html&#34;&gt;HSSFCell&lt;/a&gt; ofrecidas en la API de Apache PIO. Para crear el excel se crea una instancia de &lt;em&gt;HSSFWorkbook&lt;/em&gt;, una o varias hojas que se corresponden con las instancias de &lt;em&gt;HSSFSheet&lt;/em&gt; y en cada hoja se pueden acceder a las filas y celdas con [createRow](&lt;a href=&#34;https://poi.apache.org/apidocs/org/apache/poi/hssf/usermodel/HSSFSheet.html#createRow(int)&#34;&gt;https://poi.apache.org/apidocs/org/apache/poi/hssf/usermodel/HSSFSheet.html#createRow(int)&lt;/a&gt;) en la hoja y con [createCell](&lt;a href=&#34;https://poi.apache.org/apidocs/org/apache/poi/hssf/usermodel/HSSFRow.html#createCell(int)&#34;&gt;https://poi.apache.org/apidocs/org/apache/poi/hssf/usermodel/HSSFRow.html#createCell(int)&lt;/a&gt;) en la fila. Con el método [setCellValue](&lt;a href=&#34;https://poi.apache.org/apidocs/org/apache/poi/hssf/usermodel/HSSFCell.html#setCellValue(java.lang.String)&#34;&gt;https://poi.apache.org/apidocs/org/apache/poi/hssf/usermodel/HSSFCell.html#setCellValue(java.lang.String)&lt;/a&gt;) establecemos el valor de la celda, este método está sobrecargado y podemos establecer valores &lt;em&gt;boolean&lt;/em&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Calendar.html&#34;&gt;Calendar&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Date.html&#34;&gt;Date&lt;/a&gt;, &lt;em&gt;double&lt;/em&gt;, &lt;a href=&#34;https://poi.apache.org/apidocs/org/apache/poi/ss/usermodel/RichTextString.html&#34;&gt;RichTextString&lt;/a&gt; o &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/String.html&#34;&gt;String&lt;/a&gt;. Hay otros métodos para cambiar los estilos de la celda con [setCellStyle](&lt;a href=&#34;https://poi.apache.org/apidocs/org/apache/poi/hssf/usermodel/HSSFCell.html#setCellStyle(org.apache.poi.hssf.usermodel.HSSFCellStyle)&#34;&gt;https://poi.apache.org/apidocs/org/apache/poi/hssf/usermodel/HSSFCell.html#setCellStyle(org.apache.poi.hssf.usermodel.HSSFCellStyle)&lt;/a&gt;), [setHyperlink](&lt;a href=&#34;https://poi.apache.org/apidocs/org/apache/poi/hssf/usermodel/HSSFCell.html#setHyperlink(org.apache.poi.ss.usermodel.Hyperlink)&#34;&gt;https://poi.apache.org/apidocs/org/apache/poi/hssf/usermodel/HSSFCell.html#setHyperlink(org.apache.poi.ss.usermodel.Hyperlink)&lt;/a&gt;) para insertar un enlace o [setCellFormula](&lt;a href=&#34;https://poi.apache.org/apidocs/org/apache/poi/hssf/usermodel/HSSFCell.html#setCellFormula(java.lang.String)&#34;&gt;https://poi.apache.org/apidocs/org/apache/poi/hssf/usermodel/HSSFCell.html#setCellFormula(java.lang.String)&lt;/a&gt;) para crear una fórmula que realice algún cálculo con los datos de las celdas.&lt;/p&gt;
+
+&lt;p&gt;El siguiente ejemplo crea documento excel con varios datos, aplicando estilos a las cabeceras y una fórmula con el total de los precios de una lista de productos, al final escribe el excel en un archivo. En el archivo de construcción, en este caso de &lt;a href=&#34;http://gradle.org/&#34;&gt;Gradle&lt;/a&gt;, debemos incluir la dependencia de la librería de Apache POI.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/f9e91dfa722118ccff134d97273ba64e.js?file=Main.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/f9e91dfa722118ccff134d97273ba64e/raw/Main.java&#34;&gt;Main.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/f9e91dfa722118ccff134d97273ba64e.js?file=build.gradle&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/f9e91dfa722118ccff134d97273ba64e/raw/build.gradle&#34;&gt;build.gradle&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.libreoffice.org/&#34;&gt;LibreOffice&lt;/a&gt; tiene la capacidad de abrir documentos excel, en la siguiente imagen se ve el documento abierto con LibreOffice Calc creado en el ejemplo.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/146/libreoffice.png&#34; title=&#34;Excel generado con Apache POI abierto con LibreOffice&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/146/libreoffice-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Excel generado con Apache POI abierto con LibreOffice&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En la &lt;a href=&#34;http://poi.apache.org/spreadsheet/quick-guide.html&#34;&gt;guía de iniciación a las características de los documentos HSSF y XSSF&lt;/a&gt; hay ejemplos pequeños sobre varias de las funcionalidades más comunes que necesitaremos al generar documentos.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/HolaMundoApachePOI/&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://poi.apache.org/spreadsheet/quick-guide.html&#34;&gt;Busy Developers&amp;rsquo; Guide to HSSF and XSSF Features&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2016/05/incluir-informacion-de-la-version-en-el-artefacto-distribuible-con-gradle/</id>
+        <title>Incluir información de la versión en el artefacto distribuible con Gradle</title>        
+        <updated>2016-05-27T21:00:00+02:00</updated>
+        <published>2016-05-27T18:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/05/incluir-informacion-de-la-version-en-el-artefacto-distribuible-con-gradle/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Tener trazabilidad entre el código fuente y el código que se está ejecutando en el entorno de producción es importante para saber cual es el origen de alguna excepción o error que se produzca. Con Gradle podemos conseguir esta trazabilidad haciendo unas pocas modificaciones al &lt;em&gt;script&lt;/em&gt; de construcción.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/gradle.png&#34; class=&#34;right&#34; alt=&#34;Gradle&#34; title=&#34;Gradle&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Toda aplicación en último término genera un artefacto destinado a ejecutarse en el entorno de producción o un entregable a su destinatario. En Java según el tipo de aplicación el artefacto es un archivo &lt;em&gt;jar&lt;/em&gt; ejecutable, un archivo &lt;em&gt;war&lt;/em&gt; si es una aplicación web, un archivo &lt;em&gt;zip&lt;/em&gt; si proporcionamos el código fuente o la documentación en formato Javadoc de las clases del proyecto. Un aspecto importante que tarde o temprano nos interesará conocer es que versión de la aplicación y por tanto que código está desplegada en el entorno de producción. Con &lt;a href=&#34;http://gradle.org/&#34;&gt;Gradle&lt;/a&gt; no es muy complicado añadir la suficiente información para conseguir esta trazabilidad.&lt;/p&gt;
+
+&lt;p&gt;La forma tradicional es dar un número de versión al proyecto, hay diferentes nomenclaturas dependiendo del grado de precisión que necesitemos, suele bastar versión mayor, versión menor, y corrección de errores, los tres números que se van incrementando. Si usamos &lt;a href=&#34;http://jenkins-ci.org/&#34;&gt;Jenkins&lt;/a&gt; para construir los artefactos nos puede interesar conocer el número de &lt;em&gt;build&lt;/em&gt; que lo produjo o la fecha de creación. También nos puede interesar conocer el &lt;em&gt;hash&lt;/em&gt; del último &lt;em&gt;commit&lt;/em&gt; del código fuente del artefacto. Por otro lado puede que queramos que la aplicación nos informe de la versión que se está ejecutando ya que en algunas corporaciones el acesso al entorno de producción está restringido a sus administradores.&lt;/p&gt;
+
+&lt;p&gt;Para conseguir esta trazabilidad haremos dos modificaciones al archivo de construcción de Gradle, modificar el nombre del artefacto con el nombre de la &lt;em&gt;build&lt;/em&gt; y el &lt;em&gt;hash&lt;/em&gt; del &lt;em&gt;commit&lt;/em&gt; e incluir en él un archivo &lt;em&gt;properties&lt;/em&gt; con la información de la versión con el que la aplicación sea capaz de informar que versión es la que se está ejecutando. El &lt;em&gt;hash&lt;/em&gt; del &lt;em&gt;commit&lt;/em&gt; de &lt;a href=&#34;https://git-scm.com/&#34;&gt;Git&lt;/a&gt; se obtiene con el comando &lt;code&gt;git log -n 1 &amp;ndash;format=%h&lt;/code&gt; ejecutando con las facilidades que proporciona &lt;a href=&#34;http://www.groovy-lang.org/&#34;&gt;Groovy&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;El nombre del artefacto se modifica con una clase cuyo método &lt;em&gt;toString()&lt;/em&gt; proporciona la versión que podemos asignar a la propiedad &lt;em&gt;version&lt;/em&gt; de la clase &lt;a href=&#34;https://docs.gradle.org/current/javadoc/org/gradle/api/Project.html&#34;&gt;Project&lt;/a&gt; definida con el archivo de construcción Gradle. Para proporcionar la información de la versión en la aplicación se incluye un archivo al construir el artefacto modificando la tarea &lt;em&gt;jar&lt;/em&gt; y generando el archivo con la tarea &lt;em&gt;createBuildInfoFile&lt;/em&gt;. Este es el archivo de construcción de Gradle y la clase que contiene la información de la versión que se coloca en el directorio &lt;em&gt;buildSrc&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/32f538f675ec91a88dac1178ab20c402.js?file=build.gradle&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/32f538f675ec91a88dac1178ab20c402/raw/build.gradle&#34;&gt;build.gradle&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/32f538f675ec91a88dac1178ab20c402.js?file=ProjectVersion.groovy&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/32f538f675ec91a88dac1178ab20c402/raw/ProjectVersion.groovy&#34;&gt;ProjectVersion.groovy&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En el caso de un artefacto &lt;em&gt;jar&lt;/em&gt; Gradle lo genera en &lt;em&gt;build/libs/GradleVersion-1.0.b42.fea4d2f.jar&lt;/em&gt;. Ejecutando el &lt;em&gt;jar&lt;/em&gt; con &lt;code&gt;java -jar build/libs/GradleVersion-1.0.b42.77c083e.jar&lt;/code&gt; cuya clase con el método &lt;em&gt;main&lt;/em&gt; informa de la versión leyendo el archivo &lt;em&gt;properties&lt;/em&gt; incluído en el &lt;em&gt;jar&lt;/em&gt; obtenemos la siguiente salida en la terminal.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/32f538f675ec91a88dac1178ab20c402.js?file=Main.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/32f538f675ec91a88dac1178ab20c402/raw/Main.java&#34;&gt;Main.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/145/gradle-version.png&#34; title=&#34;Artefacto distribuible con información de versión&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/145/gradle-version-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En este caso el artefacto que he usado ha sido un archivo &lt;em&gt;jar&lt;/em&gt; si se tratase de una aplicación web y de un archivo &lt;em&gt;war&lt;/em&gt; en el archivo de construcción de Grade se puede aplicar esto de forma similar. La aplicación podría devolver la versión como una cabecera &lt;abbr title=&#34;HyperText Transfer Protocol&#34;&gt;HTTP&lt;/abbr&gt; o el en código fuente de &lt;abbr title=&#34;HyperText Markup Language&#34;&gt;HTML&lt;/abbr&gt; como un comentario que genere sus páginas web.&lt;/p&gt;
+
+&lt;p&gt;El libro &lt;a rel=&#34;nofollow&#34; href=&#34;https://www.amazon.es/gp/product/1617291307/ref=as_li_ss_tl?ie=UTF8&amp;camp=3626&amp;creative=24822&amp;creativeASIN=1617291307&amp;linkCode=as2&amp;tag=blobit-21&#34;&gt;Gradle in Action&lt;/a&gt;&lt;img src=&#34;https://ir-es.amazon-adsystem.com/e/ir?t=blobit-21&amp;l=as2&amp;o=30&amp;a=1617291307&#34; width=&#34;1&#34; height=&#34;1&#34; border=&#34;0&#34; alt=&#34;&#34; style=&#34;border:none !important; margin:0px !important;&#34; /&gt; proporciona una aplicación más detallada de muchos conceptos de Gradle, otro buen punto de partida es la propia &lt;a href=&#34;https://docs.gradle.org/current/userguide/userguide.html&#34;&gt;documentación de Gradle&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;iframe src=&#34;https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=ss_til&amp;asins=1617291307&amp;internal=1&#34; style=&#34;width:120px;height:240px;&#34; scrolling=&#34;no&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; frameborder=&#34;0&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/GradleVersion/&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;export BUILD_NUMBER=42 &amp;amp;&amp;amp; ./gradlew build&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2012/03/herramienta-de-construccion-gradle.html&#34;&gt;Herramienta de construcción Gradle&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2012/04/usar-gradle-mediante-gradle-wrapper.html&#34;&gt;Usar Gradle mediante Gradle wrapper&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/&#34;&gt;Ejemplo de multiproyecto con Gradle&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2016/05/la-clase-threadlocal-de-java-y-usos-practicos/</id>
+        <title>La clase ThreadLocal de Java y usos prácticos</title>        
+        <updated>2016-05-14T13:00:00+02:00</updated>
+        <published>2016-05-13T17:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/05/la-clase-threadlocal-de-java-y-usos-practicos/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;En Java existe una clase con la que podemos asociar un dato al hilo o &lt;em&gt;thread&lt;/em&gt; que ejecuta el código. Podemos usar esta clase para evitar incluir en cada método el parámetro de ese dato si es usado en multitud de métodos simplificando en gran medida el código. En las aplicaciones web este dato puede ser el usuario que se ha autenticado, el dominio por el que se ha accedido a la aplicación, el dispositivo móvil, el idioma del usuario o cualquier otra información que queramos esté disponible de forma global en el hilo de ejecución.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En algunos casos nos encontramos con que un determinado dato lo pasamos como parámetro en sucesivas llamadas a métodos, obligándonos a declararlo en cada uno de ellos. En una aplicación web el dato podría ser el usuario autenticado, el dominio por el que se ha accedido a la aplicación, el dispositivo móvil, el idioma del usuario, su preferencia de divisa o cualquier otra información no relativa al usuario pero que igualmente la aplicación necesita en muchos sitios y usa esta información contextual para variar su funcionalidad. En una aplicación web podemos obtener el dominio por el que es accedido la aplicación con la clase &lt;a href=&#34;http://docs.oracle.com/javaee/7/api/javax/servlet/ServletRequest.html&#34;&gt;Request&lt;/a&gt;, asociando el dato como un atributo de la petición lo tendremos disponible de forma global en la capa de presentación. Sin embargo, este objeto &lt;em&gt;request&lt;/em&gt; solo estará disponible en la capa de presentación de la aplicación con la intención de que la capa de lógica de negocio sea independiente de la tecnología o &lt;em&gt;framework&lt;/em&gt; web. Para hacer que algún dato global también esté disponible en la capa de lógica de negocio podemos usar la clase &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/api/java/lang/ThreadLocal.html&#34;&gt;ThreadLocal&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;La clase &lt;em&gt;ThreadLocal&lt;/em&gt; básicamente asocia un dato con el &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html&#34;&gt;Thread&lt;/a&gt; que ejecuta el código, teniendo una variable global en la aplicación con la referencia a la clase &lt;em&gt;ThreadLocal&lt;/em&gt; podemos acceder al dato desde cualquier punto de la aplicación. Si necesitásemos varios datos tendríamos varias instancias globales de &lt;em&gt;ThreadLocal&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Las variables globales es algo a evitar pero para algunos datos podemos hacer una excepción ya que entendemos que las ventajas son mayores que las desventajas, uno de los mayores peligros de las variables globales es la concurrencia si varios hilos modifican el dato global, como el dato asociado a &lt;em&gt;ThreadLocal&lt;/em&gt; es local al hilo no hay peligro, simplemente deberemos asegurarnos de que una vez el hilo de ejecución termine limpiar el dato para que la siguiente petición en una aplicación web que procese ese hilo no use una dato anterior de otra petición.&lt;/p&gt;
+
+&lt;p&gt;La clase &lt;em&gt;ThreadLocal&lt;/em&gt; es bastante simple tiene un método para establecer el dato con &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/api/java/lang/ThreadLocal.html#set-T-&#34;&gt;set&lt;/a&gt;, para obtenerlo con &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/api/java/lang/ThreadLocal.html#get--&#34;&gt;&lt;em&gt;get&lt;/em&gt;&lt;/a&gt;, para eliminarlo con &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/api/java/lang/ThreadLocal.html#remove--&#34;&gt;&lt;em&gt;remove&lt;/em&gt;&lt;/a&gt; y desde Java 8 para establecer el valor inicial con una interfaz funcional &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html&#34;&gt;Supplier&lt;/a&gt; con el método &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/api/java/lang/ThreadLocal.html#withInitial-java.util.function.Supplier-&#34;&gt;withInitial&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Veamos un ejemplo en el que crearemos un filtro que detecte el dominio por el que se accede a la aplicación y lo deje disponible en una variable &lt;em&gt;ThreadLocal&lt;/em&gt; de modo que la aplicación lo tenga disponible desde cualquier capa de la aplicación. Primero crearemos una clase con variables estáticas globales que contendrá la referencia a la instancia &lt;em&gt;ThreadLocal&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c8af01d1fb19ee3b266c01e0256ff3bc.js?file=Globals.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c8af01d1fb19ee3b266c01e0256ff3bc/raw/Globals.java&#34;&gt;Globals.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;A continuación el filtro que obtiene el dominio de la &lt;em&gt;request&lt;/em&gt; y lo deja en el &lt;em&gt;ThreadLocal&lt;/em&gt; de forma global. Al usar una clase &lt;em&gt;ThreadLocal&lt;/em&gt; es importante limpiar el dato correctamente, en este caso usando un bloque &lt;em&gt;try&lt;/em&gt; con su &lt;em&gt;finally&lt;/em&gt; para que aunque se produzca una excepción el dato acabe desasociado del &lt;em&gt;thread&lt;/em&gt; al finalizar la petición, de lo contrario tendremos una fuga de memoria.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c8af01d1fb19ee3b266c01e0256ff3bc.js?file=AppFilter.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c8af01d1fb19ee3b266c01e0256ff3bc/raw/AppFilter.java&#34;&gt;AppFilter.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Finalmente, podemos acceder al dato desde cualquier punto de la aplicación, en este caso desde la capa de presentación en la página &lt;em&gt;Index&lt;/em&gt; de una aplicación usando &lt;a href=&#34;http://tapestry.apache.org&#34;&gt;Apache Tapestry&lt;/a&gt; y desde la capa de lógica de negocio o servicios que es independiente de la capa de presentación.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c8af01d1fb19ee3b266c01e0256ff3bc.js?file=Index.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c8af01d1fb19ee3b266c01e0256ff3bc/raw/Index.java&#34;&gt;Index.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c8af01d1fb19ee3b266c01e0256ff3bc.js?file=DefaultJooqProductoDAO.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c8af01d1fb19ee3b266c01e0256ff3bc/raw/DefaultJooqProductoDAO.java&#34;&gt;DefaultJooqProductoDAO.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Con el filtro y las anteriores clases en la consola se imprimirán los mensajes con el dominio por el que ha sido accedida la aplicación, en este caso &lt;em&gt;localhost&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c8af01d1fb19ee3b266c01e0256ff3bc.js?file=System.out&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c8af01d1fb19ee3b266c01e0256ff3bc/raw/System.out&#34;&gt;System.out&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En definitiva, en ciertos casos el uso selectivo de &lt;em&gt;ThreadLocal&lt;/em&gt; simplifica el código evitando incluir un parámetro en multitud de métodos y si el dato ha de recuperarse de la base de datos evita realizar la misma consulta varias veces haciendo el programa más eficiente.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/PlugInTapestry/&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://dzone.com/articles/alternatives-to-global-variables&#34;&gt;Alternatives to Global Variables &lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2016/05/que-es-el-concepto-de-heap-pollution-en-java/</id>
+        <title>Qué es el concepto de Heap Pollution en Java</title>        
+        <updated>2016-05-14T13:15:00+02:00</updated>
+        <published>2016-05-07T13:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/05/que-es-el-concepto-de-heap-pollution-en-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Al trabajar con referencias de tipos genéricos, &lt;em&gt;raw&lt;/em&gt; y arrays debemos conocer el concepto de &lt;em&gt;Heap Pollution&lt;/em&gt; si no queremos que en algún punto del programa Java se produzca una excepción no esperada del tipo &lt;em&gt;ClassCastException&lt;/em&gt;. No teniéndolo en cuenta nos encontraremos con un error de los más difíciles de depurar ya que la excepción solo nos dirá donde se produjo no donde se encuentra el código erróneo que lo provocó.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;La introducción de los &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/04/tutorial-sobre-los-tipos-genericos-de-java/&#34;&gt;tipos genéricos al lenguaje Java&lt;/a&gt; en la versión 5 hizo posible que pudiesemos parametrizar los tipos y que el compilador hiciese validaciones sobre ellos, también se permitieron eliminar muchos &lt;em&gt;cast&lt;/em&gt; que hasta entonces eran necesarios al usar el &lt;em&gt;framework&lt;/em&gt; de colecciones. Los tipos genéricos permiten evitar errores en tiempo de compilación, al mismo tiempo la eliminación de los &lt;em&gt;cast&lt;/em&gt; hace el código más legible y más fácilmente refactorizable. Sin embargo, para mantener la compatibilidad con versiones anteriores se optó por hacer algunos sacrificios en la implementación de genéricos en pos de otros beneficios. Una situación potencialmente problemática es el denominado &lt;a href=&#34;https://en.wikipedia.org/wiki/Heap_pollution&#34;&gt;Heap Pollution&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;El concepto de &lt;em&gt;Heap Pollution&lt;/em&gt; consiste de forma breve (quizá inexacta) en que un tipo genérico contiene un objeto con un tipo que no le corresponde según su tipo genérico, con un ejemplo, que una lista del tipo &lt;em&gt;List&amp;lt;String&amp;gt;&lt;/em&gt; contenga un &lt;em&gt;Number&lt;/em&gt; entre sus elementos. Que un tipo genérico pueda contener un objeto que no sea de su tipo genérico es detectado en tiempo de compilación con los &lt;em&gt;unchecked warning&lt;/em&gt; pero bajo algunas circunstancias se produce en tiempo de ejecución una excepción de tipo &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/ClassCastException.html&#34;&gt;ClassCastException&lt;/a&gt;, si ignoramos las advertencias y nuestro código no es cuidadoso. Esto es posible porque en Java el tipado de los genéricos sólo está disponible en tiempo de compilación lo que significa que no son &lt;em&gt;reified&lt;/em&gt;, el tipado genérico no está disponible en tiempo de ejecución como consecuencia del proceso conocido como &lt;em&gt;erasure&lt;/em&gt;, al trabajar con referencias de tipo &lt;em&gt;raw&lt;/em&gt; y genéricas hay que tener cuidado en las asignaciones y las advertencias del compilador.&lt;/p&gt;
+
+&lt;p&gt;Veamos en código las circunstancias bajo las cuales se pueden producir &lt;em&gt;Heap Pollution&lt;/em&gt;. Un tipo &lt;em&gt;List&amp;lt;String&amp;gt;&lt;/em&gt; puede asignarse a un &lt;em&gt;List&lt;/em&gt; y luego añadir a esa &lt;em&gt;List&lt;/em&gt; un &lt;em&gt;Integer&lt;/em&gt; momento en el que el compilador nos avisa con un &lt;em&gt;unchecked warning&lt;/em&gt; indicando que no puede validar que la lista &lt;em&gt;raw&lt;/em&gt; siendo &lt;em&gt;List&lt;/em&gt; un tipo genérico se le está añadiendo una referencia del tipo que debería tener, el compilador nos informa de que esa responsabilidad la tenemos nosotros. También podemos asignar un &lt;em&gt;List&lt;/em&gt; a un &lt;em&gt;List&amp;lt;Number&amp;gt;&lt;/em&gt;, en este caso el compilador tampoco puede validar que la &lt;em&gt;List&lt;/em&gt; sea realmente un &lt;em&gt;List&amp;lt;Number&amp;gt;&lt;/em&gt; y lo indica también con un &lt;em&gt;unchecked warning&lt;/em&gt;. Ignorando estas adevertencias se produce un &lt;em&gt;ClassCastException&lt;/em&gt; al acceder al elemento &lt;em&gt;Integer&lt;/em&gt; que contiene la &lt;em&gt;List&amp;lt;String&amp;gt;&lt;/em&gt; como se comprueba en los teses.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/51c3db8facfc286f2e87d908caf018d8.js?file=MainTest-generics.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/51c3db8facfc286f2e87d908caf018d8/raw/MainTest-generics.java&#34;&gt;MainTest-generics.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Por otra parte en Java los arrays en tiempo de ejecución necesitan conocer el tipo &lt;em&gt;reified&lt;/em&gt; que contendrá. Esto unido a que los &lt;em&gt;varargs&lt;/em&gt; realmente se transforman en un array, el posible &lt;em&gt;Heap Pollution&lt;/em&gt; se da también en los métodos que soportan &lt;em&gt;varargs&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;El compilador convierte los &lt;em&gt;varargs&lt;/em&gt; de tipos genéricos de la siguiente forma:&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/51c3db8facfc286f2e87d908caf018d8.js?file=Erasure-varargs.txt&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/51c3db8facfc286f2e87d908caf018d8/raw/Erasure-varargs.txt&#34;&gt;Erasure-varargs.txt&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En un método cuyo último argumento es un &lt;em&gt;vararg&lt;/em&gt; y de tipo genérico puede producirse &lt;em&gt;Heap Pollution&lt;/em&gt; como indica el compilaror, si estamos seguros de que no se puede dar este caso en el código del método podemos eliminar la advertencia del compilador añadiendo la anotación &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/SafeVarargs.html&#34;&gt;@SafeVarargs&lt;/a&gt; en el método. Añadir la anotación solo implica que el compilador eliminará la advertencia pero aún con ella puede seguir produciéndose la excepción &lt;em&gt;ClassCastException&lt;/em&gt; si el método no ha sido cuidadoso.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/51c3db8facfc286f2e87d908caf018d8.js?file=MainTest-varargs.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/51c3db8facfc286f2e87d908caf018d8/raw/MainTest-varargs.java&#34;&gt;MainTest-varargs.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Tener en cuenta el &lt;em&gt;Heap Pollution&lt;/em&gt; es importante ya que la excepción &lt;em&gt;ClassCastException&lt;/em&gt; se produce más tarde y en un punto diferente de donde realmente está el error, mucho más tarde si el tipo genérico es serializado e incluso en otra &lt;abbr title=&#34;Java Virtual Machine&#34;&gt;JVM&lt;/abbr&gt; diferente. Estos errores son de los peores de depurar por la poca información que proporcionan ya que la traza de la excepción solo dice quien la lanzó no donde se introdujo el fallo.&lt;/p&gt;
+
+&lt;p&gt;La implementación de los &lt;em&gt;generics&lt;/em&gt; en Java viene con la garantía conocida como &lt;em&gt;cast-iron&lt;/em&gt; que consiste en que mientras el compilador no produzca una &lt;em&gt;unchecked warning&lt;/em&gt; en tiempo de compilación se garantiza que en tiempo de ejecución no se producirá una &lt;em&gt;ClassCastException&lt;/em&gt; por los &lt;em&gt;cast&lt;/em&gt; introducidos en el proceso de &lt;em&gt;erasure&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Si nos encontramos con una de estas excepciones con los genéricos en una colección una buena alternativa es hacer uso de los métodos &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#checkedCollection-java.util.Collection-java.lang.Class-&#34;&gt;Collections.checkedCollection&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#checkedSet-java.util.Set-java.lang.Class-&#34;&gt;Collections.checkedSet&lt;/a&gt;,  &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#checkedMap-java.util.Map-java.lang.Class-java.lang.Class-&#34;&gt;Collections.checkedMap&lt;/a&gt; y alguno más similar que evitará que en una colección se produzca &lt;em&gt;Heap Pollution&lt;/em&gt;, la excepción &lt;em&gt;ClassCastException&lt;/em&gt; se lanzará en el momento de añadir a la colección la referencia que provocaría el &lt;em&gt;Heap Pollution&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Relacionados con casos de combinar genéricos y arrays y &lt;em&gt;ClassCastException&lt;/em&gt; en el libro &lt;a rel=&#34;nofollow&#34; href=&#34;http://www.amazon.es/gp/product/0596527756/ref=as_li_ss_tl?ie=UTF8&amp;camp=3626&amp;creative=24822&amp;creativeASIN=0596527756&amp;linkCode=as2&amp;tag=blobit-21&#34;&gt;Java Generics and Collections&lt;/a&gt;&lt;img src=&#34;https://ir-es.amazon-adsystem.com/e/ir?t=blobit-21&amp;l=as2&amp;o=30&amp;a=0596527756&#34; width=&#34;1&#34; height=&#34;1&#34; border=&#34;0&#34; alt=&#34;&#34; style=&#34;border:none !important; margin:0px !important;&#34; /&gt; se definen dos principios a seguir para evitar excepciones: &lt;em&gt;The Principle of Truth in Advertising&lt;/em&gt; y &lt;em&gt;The Principle of Indecent Exposure&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
+        &lt;iframe src=&#34;https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=ss_til&amp;asins=0596527756&amp;internal=1&#34; style=&#34;width:120px;height:240px;&#34; scrolling=&#34;no&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; frameborder=&#34;0&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Salvo que hagamos operaciones complicadas entre genéricos de diferentes tipos no será muy habitual que nos encontremos &lt;em&gt;ClassCastException&lt;/em&gt; por &lt;em&gt;Heap Pollution&lt;/em&gt;, pero es un concepto interesante conocer, en cualquier caso el compilador nos informará con los &lt;em&gt;unchecked warnings&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaHeapPollution&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew test&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/04/tutorial-sobre-los-tipos-genericos-de-java/&#34;&gt;Tutorial sobre los tipos genéricos de Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/&#34;&gt;Novedades y nuevas características de Java 8&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/03/introduccion-y-nuevas-caracteristicas-de-java-ee-7/&#34;&gt;Introducción y nuevas características de Java EE 7&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Heap_pollution&#34;&gt;Heap Pollution&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2016/05/extraer-elementos-de-una-cadena-con-una-expresion-regular/</id>
+        <title>Extraer elementos de una cadena con una expresión regular</title>        
+        <updated>2016-05-06T18:00:00+02:00</updated>
+        <published>2016-05-06T18:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/05/extraer-elementos-de-una-cadena-con-una-expresion-regular/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Las expresiones regulares son muy útiles para comprobar si una cadena de texto o un subconjunto de ella cumple un determinado patrón. Un uso común de las expresiones regulares es para validar cadenas de texto pero también pueden usarse para obtener coincidencias de la cadena, esto se hace con los grupos de captura.&lt;/p&gt;
+
+&lt;p&gt;Por ejemplo, supongamos que tenemos un código de un producto formateado de la siguiente forma &lt;em&gt;123-123456&amp;#47;1&lt;/em&gt;, usando guiones y una barra para separar tres grupos de números. Y ahora aparte de validar el formato correcto del código del producto nos interesa obtener los tres grupos de números. En vez de separar la cadena con un &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/String.html#split-java.lang.String-&#34;&gt;split&lt;/a&gt; por el caracter guión y barra de una forma que sería más laboriosa y difícil de mantener si hay algún cambio, vamos a usar los grupos de captura para obtener los tres grupos de números que forman el código.&lt;/p&gt;
+
+&lt;p&gt;Los grupos de captura se especifican mediante paréntesis, «(» y «)», en la expresión regular. En el caso del código usaremos la siguiente expresión regular:&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/fa0408b7ffbddc8cd3c93725db845cf6.js?file=regex.txt&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/fa0408b7ffbddc8cd3c93725db845cf6/raw/regex.txt&#34;&gt;regex.txt&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En Java con la clase &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html&#34;&gt;Pattern&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/regex/Matcher.html&#34;&gt;Matcher&lt;/a&gt; podemos hacer las validaciones y obtener los grupos de captura de la usando el método &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/regex/Matcher.html#group-int-&#34;&gt;group&lt;/a&gt; de la clase Matcher:&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/fa0408b7ffbddc8cd3c93725db845cf6.js?file=Main.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/fa0408b7ffbddc8cd3c93725db845cf6/raw/Main.java&#34;&gt;Main.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/140/java-regex.png&#34; title=&#34;Extracción de valores de una cadena usando una expresión regular&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/140/java-regex-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Extracción de valores de una cadena usando una expresión regular&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Esto simplifica el extraer los valores de un cadena, de una manera menos frágil y más fácil de leer posteriormente el código fuente que usar la función &lt;em&gt;split&lt;/em&gt; por uno o varios determinados caracteres, esta es una cadena bastante sencilla si el patrón es más complejo el código usando &lt;em&gt;split&lt;/em&gt; puede complicarse notablemente.&lt;/p&gt;
+
+&lt;p&gt;La clase Matcher contiene más métodos útiles, por ejemplo, con los métodos &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/regex/Matcher.html#start-int-&#34;&gt;start&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/regex/Matcher.html#end-int-&#34;&gt;end&lt;/a&gt; nos es posible conocer la posición inicial y final de cada grupo de captura. En el caso del código de este ejemplo ya los conocemos de antemano pero usando alguna expresión que capture un número varible de caracteres como «X+», «X*», «X{n,}» o «{X{n,m}}» nos permitirá conocer las posiciones inicial y final.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRegex&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/237061/using-regular-expressions-to-extract-a-value-in-java&#34;&gt;Using Regular Expressions to Extract a Value in Java&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2016/04/el-componente-grid-de-apache-tapestry/</id>
+        <title>El componente Grid de Apache Tapestry</title>        
+        <updated>2016-04-30T12:00:00+02:00</updated>
+        <published>2016-04-30T12:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/04/el-componente-grid-de-apache-tapestry/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;En la mayoría de aplicaciones no solo es habitual sino algo muy usado el mostrar listados de elementos de forma tabular con paginación y columnas ordenables. En estos listados el complejo componente internamente &lt;em&gt;Grid&lt;/em&gt; de Apache Tapestry pero a la vez muy sencillo de usar puede marcar una diferencia significativa en el número de líneas de código necesarias a escribir, la flexibilidad, funcionalidad ofrecida, la productividad al hacer la implementación o modificarla comparándolo con lo necesario en otros &lt;em&gt;frameworks&lt;/em&gt; web en los que no hay nada comparable de serie.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/tapestry.png&#34; class=&#34;right&#34; alt=&#34;Apache Tapstry&#34; title=&#34;Apache Tapstry&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://tapestry.apache.org&#34;&gt;Apache Tapestry&lt;/a&gt; es uno de los muchos &lt;em&gt;frameworks&lt;/em&gt; disponibles en Java para el desarrollo de aplicaciones y páginas web. A diferencia de la mayoría se basa en componentes y proporciona una larga lista de ellos listos para usar de serie, pero también se pueden crear componentes nuevos basados en los propios de Tapestry o los que desarrollemos nosotros muy fácilmente. Los componentes son piezas reusables de código que se pueden reutilizar bien directamente o para formar nuevos componentes y es uno de los motivos por los que en Tapestry se consigue una alta productividad además de otros beneficios como la encapsulación.&lt;/p&gt;
+
+&lt;p&gt;Uno de los componentes más complejos pero al mismo tiempo muy simple de usar ofrecidos por el &lt;em&gt;framework&lt;/em&gt; es el &lt;a href=&#34;http://tapestry.apache.org/current/apidocs/org/apache/tapestry5/corelib/components/Grid.html&#34;&gt;componente Grid&lt;/a&gt;. El componente &lt;em&gt;Grid&lt;/em&gt; muestra en una tabla un listado de datos ofreciendo las funcionalidades de paginación, ordenación, personalización de columnas, filtrado de columnas, personalización en caso de estar vacío y algunas cosas más. Lo único que debemos tener en cuenta para aprovechar al máximo el componente &lt;em&gt;Grid&lt;/em&gt; son los parámetros que declara en su documentación su funcionamiento interno nos es irrelevante, será de los componentes más complejos y no por ello no es más difícil de utilizar basta decir que solo tiene un parámetro requerido y que es lo único imprescindible que es la lista de datos a mostrar.&lt;/p&gt;
+
+&lt;p&gt;Aunque el componente tiene un buen número de parámetros para personalizar según queramos su comportamiento basta que hagamos uso únicamente del parámetro &lt;em&gt;source&lt;/em&gt; que es la fuente de datos del &lt;em&gt;Grid&lt;/em&gt;, puede ser un objeto de tipo &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html&#34;&gt;Collection&lt;/a&gt; o un &lt;a href=&#34;http://tapestry.apache.org/current/apidocs/org/apache/tapestry5/grid/GridDataSource.html&#34;&gt;GridDataSource&lt;/a&gt; que proporciona métodos para hacer la paginación y ordenación eficientemente recuperando de la base de datos o fuente de datos únicamente los registros a mostrar realizando paginación.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/cddb3bbca6ad09c4d602b7b252ef0e35.js?file=ProductoAdmin.tml&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/cddb3bbca6ad09c4d602b7b252ef0e35/raw/ProductoAdmin.tml&#34;&gt;ProductoAdmin.tml&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/cddb3bbca6ad09c4d602b7b252ef0e35.js?file=ProductoAdmin.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/cddb3bbca6ad09c4d602b7b252ef0e35/raw/ProductoAdmin.java&#34;&gt;ProductoAdmin.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/139/grid.png&#34; title=&#34;Componente Grid de Tapestry&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/139/grid-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Componente Grid de Tapestry&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;source&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Con los parámetros &lt;em&gt;include&lt;/em&gt; y &lt;em&gt;exclude&lt;/em&gt; podemos determinar que propiedades de los objetos o &lt;em&gt;beans&lt;/em&gt; de la fuente de datos se incluyen en el Grid, con el parámetro &lt;em&gt;add&lt;/em&gt; podemos añadir nuevas columnas y personalizarlas con los datos que necesitemos como sería el caso de añadir una columna con un &lt;a href=&#34;http://tapestry.apache.org/current/apidocs/org/apache/tapestry5/corelib/components/Checkbox.html&#34;&gt;Checkbox&lt;/a&gt; por fila para realizar una selección múltiple o de una columna con botones para realizar acciones. Para ambas cosas en el cuerpo del componente_Grid_definimos subcomponentes con la siguiente nomenclatura &lt;em&gt;&amp;lt;p:[nombreColumna]Cell&amp;gt;&lt;/em&gt;, en en ejemplo usando &lt;em&gt;&amp;lt;p:nombreCell&amp;gt;&lt;/em&gt; y &lt;em&gt;&amp;lt;p:actionCell&amp;gt;&lt;/em&gt;. Las celdas de las columnas por defecto hacen un &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--&#34;&gt;toString()&lt;/a&gt; de la propiedad del &lt;em&gt;bean&lt;/em&gt; de la fila a mostrar, si queremos cambiar este comportamiento como en la columna nombre definimos la etiqueta &lt;em&gt;&amp;lt;p:nombreCell&amp;gt;&lt;/em&gt; y dentro incluimos el contenido que deseemos que puede contener otros componentes en este caso el nombre con un enlace.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;include&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;exclude&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;add&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&amp;lt;p:[nombreColumna]Cell&amp;gt;&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Con el parámetro &lt;em&gt;rowsPerPage&lt;/em&gt; podemos cambiar el número de filas por página del &lt;em&gt;Grid&lt;/em&gt;, en el ejemplo son 2 pero puede ser la cifra que deseemos y tampoco tiene por que ser una constante, el número de filas a mostrar puede provenir de una expresión y cambiar según alguna lógica. Los parámetros &lt;em&gt;columnIndex&lt;/em&gt;, &lt;em&gt;rowIndex&lt;/em&gt; y &lt;em&gt;row&lt;/em&gt; nos proporcionan información del índice de la columna actual, índice de la fila actual y el objeto actual de la fila respectivamente que podemos usar al personalizar las celdas del &lt;em&gt;Grid&lt;/em&gt;. Son parámetros de salida que el &lt;em&gt;Grid&lt;/em&gt; se encarga de proporcionarnos según procesa las filas y celdas, en base a ellos podremos implementar alguna funcionalidad.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;rowsPerPage&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;columnIndex&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;rowIndex&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;row&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Los parámetros informales (denominados así para aquellos que le pasamos al &lt;em&gt;Grid&lt;/em&gt; que no están declarados explícitamente en su interfaz o contrato y que no proporcionan alguna funcionalidad) son incluidos en la etiqueta &lt;em&gt;table&lt;/em&gt; del &lt;abbr title=&#34;HyperText Markup Language&#34;&gt;HTML&lt;/abbr&gt; que genera el &lt;em&gt;Grid&lt;/em&gt;. Igualmente el parámetro informal &lt;em&gt;class&lt;/em&gt; se incluye tal cual se indica en el atributo en &lt;em&gt;class&lt;/em&gt; de la tabla para personalizar los estilos y usando el parámetro &lt;em&gt;rowClass&lt;/em&gt; se incluye en cada fila en su etiqueta &lt;em&gt;tr&lt;/em&gt; de HTML. Además de estas clases que podemos el componente añade algunas clases más a ciertas filas: &lt;em&gt;t-first&lt;/em&gt; para la primera fila, &lt;em&gt;t-last&lt;/em&gt; para la última, &lt;em&gt;t-sort-column-ascending&lt;/em&gt; y &lt;em&gt;t-sort-column-descending&lt;/em&gt; para las columnas que estén ordenadas ascendentemente y descendentemente de forma que con &lt;abbr title=&#34;&#34;&gt;CSS&lt;/abbr&gt; tengamos la posibilidad de cambiar sus estilos.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;class&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;rowClass&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Con el parámetro &lt;em&gt;empty&lt;/em&gt; definimos un componente &lt;a href=&#34;http://tapestry.apache.org/current/apidocs/org/apache/tapestry5/Block.html&#34;&gt;Block&lt;/a&gt; que se usará cuando el &lt;em&gt;Grid&lt;/em&gt; no tenga filas que mostrar, lo que es útil para mostrar un mensaje indicando que la tabla no tiene filas como cuando no hay elementos.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/139/grid-sin-elementos.png&#34; title=&#34;Mensaje de un Grid sin elementos&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/139/grid-sin-elementos-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Mensaje de un Grid sin elementos&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;empty&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Con &lt;em&gt;pagerPosition&lt;/em&gt; indicaremos si queremos la barra de paginación situada encima de la tabla, abajo, en ambas posiciones o no queremos.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;pagerPosition&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Por si fuera poco con el parámetro &lt;em&gt;inPlace&lt;/em&gt; podemos hacer que la paginación y ordenación funcione usando &lt;abbr title=&#34;Asynchronous JavaScript And XML&#34;&gt;AJAX&lt;/abbr&gt; de modo que no se recargue toda la página en cada pulsación de un enlace. No será necesario que añadamos nada de JavaScript, el componente se encargará de hacer la petición AJAX y con el resultado que sea devuelto actualizar la tabla.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;inPlace&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Finalmente, comentaré el parámetro &lt;em&gt;encoder&lt;/em&gt; con el que podemos hacer que el componente &lt;em&gt;Grid&lt;/em&gt; funcione cuando se usa dentro de un componente &lt;em&gt;Form&lt;/em&gt;. La clase &lt;a href=&#34;http://tapestry.apache.org/current/apidocs/org/apache/tapestry5/ValueEncoder.html&#34;&gt;ValueEncoder&lt;/a&gt; transforma un objeto a un &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/String.html&#34;&gt;String&lt;/a&gt; que lo identifique en el cliente y a partir del identificador del cliente los transforme al objeto cuando se envíe de nuevo al servidor. Podemos indicar el &lt;em&gt;ValueEncoder&lt;/em&gt; en cada &lt;em&gt;Grid&lt;/em&gt; o definirlo como una configuración del contenedor &lt;abbr title=&#34;Inversion of Control&#34;&gt;IoC&lt;/abbr&gt;.&lt;/p&gt;
+
+&lt;p&gt;Hay algún parámetro más como &lt;em&gt;sortModel&lt;/em&gt; y &lt;em&gt;paginationModel&lt;/em&gt; para mantener la información de ordenación y paginación pero los anteriores son los que más habitualmente usaremos y probablemente con &lt;em&gt;source&lt;/em&gt;, &lt;em&gt;include&lt;/em&gt;, &lt;em&gt;exclude&lt;/em&gt; y &lt;em&gt;add&lt;/em&gt; tengamos suficiente para muchos casos.&lt;/p&gt;
+
+&lt;p&gt;Es sorprendentemente lo sencillo que es usar el componente &lt;em&gt;Grid&lt;/em&gt; para toda la funcionalidad que proporciona. En ciertos casos este componente por si solo puede reducir drásticamente la cantidad de código necesario a escribir en las plantillas que producen HTML y aumentar notablemente la productividad al crear o modificar páginas con listados de elementos. En el artículo &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2013/06/mantenimiento-crud-en-apache-tapestry.html&#34;&gt;Mantenimiento CRUD en Apache Tapestry&lt;/a&gt; comento como conseguir un &lt;abbr title=&#34;Create, Read, Update and Delete&#34;&gt;CRUD&lt;/abbr&gt; completo usando el componente &lt;em&gt;Grid&lt;/em&gt; entre otras cosas.&lt;/p&gt;
+
+&lt;div class=&#34;alert alert-warning&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/12/portada-PugInTapestry-thumb.png&#34; alt=&#34;Portada libro: PlugIn Tapestry&#34; title=&#34;Portada libro: PlugIn Tapestry&#34; style=&#34;float: left; margin-right: 1.5em;&#34;&gt;
+    &lt;h3&gt;Libro PlugIn Tapestry&lt;/h3&gt;
+    &lt;p&gt;Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este &lt;i&gt;framework&lt;/i&gt; en el formato que prefieras, &lt;a href=&#34;http://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/&#34;&gt;PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry&lt;/a&gt;, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.&lt;/p&gt;
+    &lt;br style=&#34;clear: both;&#34;&gt;
+    &lt;div class=&#34;buttons&#34;&gt;
+        &lt;a href=&#34;http://goo.gl/dfySZ1&#34; class=&#34;btn btn-lg btn-success&#34;&gt;PDF&lt;/a&gt;
+        &lt;a href=&#34;http://goo.gl/bs7Rtu&#34; class=&#34;btn btn-lg btn-success&#34;&gt;EPUB&lt;/a&gt;
+        &lt;a href=&#34;http://goo.gl/lxOZMT&#34; class=&#34;btn btn-lg btn-success&#34;&gt;MOBI&lt;/a&gt;
+        &lt;a href=&#34;http://goo.gl/MJJiPV&#34; class=&#34;btn btn-lg btn-success&#34;&gt;HTML&lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;buttons&#34;&gt;
+        &lt;a href=&#34;http://goo.gl/Qv1Ym&#34; class=&#34;btn btn-lg btn-success&#34;&gt;Código fuente ejemplos&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2013/06/mantenimiento-crud-en-apache-tapestry.html&#34;&gt;Mantenimiento CRUD en Apache Tapestry&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/tags/tapestry/&#34;&gt;Artículos sobre Tapestry en Blog Bitix&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/search/label/tapestry&#34;&gt;Artículos sobre Tapestry en El blog de pico.dev&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="tapestry"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2016/04/tutorial-sobre-los-tipos-genericos-de-java/</id>
+        <title>Tutorial sobre los tipos genéricos de Java</title>        
+        <updated>2016-04-24T13:00:00+02:00</updated>
+        <published>2016-04-23T00:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/04/tutorial-sobre-los-tipos-genericos-de-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Hace ya más de una década que en Java 5 se introdujeron los &lt;em&gt;generics&lt;/em&gt; para dotar al lenguaje de una mejor comprobación de tipos en tiempo de compilación y al mismo tiempo eliminar los &lt;em&gt;cast&lt;/em&gt; que hasta entonces eran necesarios al usar las colecciones. Dada la lentitud de adopción que suele haber en la plataforma Java en los grandes entornos empresariales puede que aún no los hayamos usado extensamente o tengamos alguna duda en su uso. Hay unos cuantos conceptos sobre los &lt;em&gt;generics&lt;/em&gt; que son convenientes conocer.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Los &lt;em&gt;generics&lt;/em&gt; fueron introducidos en la versión 5 de Java en 2004 junto con otras muchas novedades suponiendo en su historia una de las mayores modificaciones o al mismo nivel de las &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/&#34;&gt;novedades introducidas con Java 8&lt;/a&gt; más recientemente al lenguaje Java. Los &lt;em&gt;generics&lt;/em&gt; son importantes ya que permiten al compilador informar de muchos errores de compilación que hasta el momento solo se descubrirían en tiempo de ejecución, al mismo tiempo permiten eliminar los &lt;em&gt;cast&lt;/em&gt; simplificando, reduciendo la repetición y aumentando la legibilidad el código. Los errores por &lt;em&gt;cast&lt;/em&gt; inválido son especialmente problemáticos de &lt;em&gt;debuggear&lt;/em&gt; ya que el error se suele producir en un sitio alejado del de la causa.&lt;/p&gt;
+
+&lt;p&gt;Los &lt;em&gt;generics&lt;/em&gt; permiten usar tipos para parametrizar las clases, interfaces y métodos al definirlas. Los beneficios son:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Comprobación de tipos más fuerte en tiempo de compilación.&lt;/li&gt;
+&lt;li&gt;Eliminación de &lt;em&gt;casts&lt;/em&gt; aumentando la legibilidad del código.&lt;/li&gt;
+&lt;li&gt;Posibilidad de implementar algoritmos genéricos, con tipado seguro.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Un tipo usando &lt;em&gt;generics&lt;/em&gt; tiene el siguiente aspecto, por ejemplo usando una clase &lt;em&gt;Box&lt;/em&gt; contenedor de una referencia a un tipo no determinado en la definición de la clase pero que lo será en su uso. Una clase genérica puede tener múltiples argumentos de tipos y los argumentos pueden ser a su vez tipos genéricos. Después del nombre de la clase se puede indicar la lista de parámetros de tipos con el formato &lt;code&gt;&amp;lt;T1, T2, T3, &amp;hellip;&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62.js?file=Box.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62/raw/Box.java&#34;&gt;Box.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62.js?file=Pair.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62/raw/Pair.java&#34;&gt;Pair.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62.js?file=OrderedPair.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62/raw/OrderedPair.java&#34;&gt;OrderedPair.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Según las convenciones los nombres de los parámetros de tipo usados comúnmente son los siguientes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;E: elemento de una colección.&lt;/li&gt;
+&lt;li&gt;K: clave.&lt;/li&gt;
+&lt;li&gt;N: número.&lt;/li&gt;
+&lt;li&gt;T: tipo.&lt;/li&gt;
+&lt;li&gt;V: valor.&lt;/li&gt;
+&lt;li&gt;S, U, V etc: para segundos, terceros y cuartos tipos.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;En el momento de la instanciación de un tipo genérico indicaremos el argumento para el tipo, en este caso &lt;em&gt;Box&lt;/em&gt; contendrá una referencia a un tipo &lt;em&gt;Integer&lt;/em&gt;. Con Java 7 se puede usar el operador &lt;em&gt;diamond&lt;/em&gt; y el compilador inferirá el tipo según su definición para mayor claridad en el código. Podemos usar cualquiera de esta dos maneras prefiriendo usar el operador &lt;em&gt;diamond&lt;/em&gt; por ser más clara.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62.js?file=Instantation.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62/raw/Instantation.java&#34;&gt;Instantation.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Para mantener la compatibilidad con versiones anteriores a Java 5 los tipos genéricos que al usarse no indican argumentos de tipo se denominan &lt;em&gt;raw&lt;/em&gt;. El compilador indicará una advertencia como un uso potencialmente peligroso ya que no podrá validar los tipos.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62.js?file=Raw.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62/raw/Raw.java&#34;&gt;Raw.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Además de las clases los métodos también pueden tener su propia definición de tipos genéricos.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62.js?file=Method.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62/raw/Method.java&#34;&gt;Method.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;La sintaxis completa de uso sería:&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62.js?file=MethodUsage.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62/raw/MethodUsage.java&#34;&gt;MethodUsage.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Aunque puede abreviarse ya que el compilador puede inferir los tipos:&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62.js?file=MethodUsageInference.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62/raw/MethodUsageInference.java&#34;&gt;MethodUsageInference.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;A veces querremos limitar los tipos que pueden ser usados empleando lo que se denomina &lt;em&gt;bounded type&lt;/em&gt;. Con &lt;code&gt;&amp;lt;U extends Number&amp;gt;&lt;/code&gt; el tipo &lt;em&gt;U&lt;/em&gt; debe extender la clase &lt;em&gt;Number&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62.js?file=BoxBounds.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62/raw/BoxBounds.java&#34;&gt;BoxBounds.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Una clase puede tener múltiples limitaciones, si una es una clase debe ser la primera y el resto de argumentos interfaces.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62.js?file=Bounds.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62/raw/Bounds.java&#34;&gt;Bounds.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En Java un tipo puede ser asignado a otro mientras el primero sea compatible con el segundo, es decir tengan una «relación es un». Una referencia de &lt;em&gt;Object&lt;/em&gt; puede referenciar una instancia de &lt;em&gt;Integer&lt;/em&gt; (un &lt;em&gt;Integer&lt;/em&gt; es un &lt;em&gt;Object&lt;/em&gt;).&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62.js?file=IsA.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62/raw/IsA.java&#34;&gt;IsA.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Sin embargo, en el caso de los &lt;em&gt;generics&lt;/em&gt;, ¿una referencia de &lt;em&gt;Box&amp;lt;Number&amp;gt;&lt;/em&gt; puede aceptar una instancia &lt;em&gt;Box&amp;lt;Integer&amp;gt;&lt;/em&gt; or &lt;em&gt;Box&amp;lt;Double&amp;gt;&lt;/em&gt; aun siendo &lt;em&gt;Integer&lt;/em&gt; y &lt;em&gt;Double&lt;/em&gt; subtipos de &lt;em&gt;Number&lt;/em&gt;?. La respuesta es no, ya que &lt;em&gt;Box&amp;lt;Integer&amp;gt;&lt;/em&gt; y &lt;em&gt;Box&amp;lt;Double&amp;gt;&lt;/em&gt; en Java no son subtipos de &lt;em&gt;Box&amp;lt;Number&amp;gt;&lt;/em&gt;. La jerarquía de tipos es la siguiente:&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/138/generics-subtypeRelationship.gif&#34; title=&#34;&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/138/generics-subtypeRelationship.gif&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Los tipos genéricos pueden extenderse o implementarse y mientras no se cambie el tipo del argumento la «relación es un» se preserva. De modo que &lt;em&gt;ArrayList&amp;lt;String&amp;gt;&lt;/em&gt; es un subtipo de &lt;em&gt;List&amp;lt;String&amp;gt;&lt;/em&gt; que a su vez es un subtipo de &lt;em&gt;Collection&amp;lt;String&amp;gt;&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/138/generics-sampleHierarchy.gif&#34; title=&#34;&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/138/generics-sampleHierarchy.gif&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62.js?file=PayloadList.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62/raw/PayloadList.java&#34;&gt;PayloadList.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/138/generics-payloadListHierarchy.gif&#34; title=&#34;&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/138/generics-payloadListHierarchy.gif&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En los &lt;em&gt;generics&lt;/em&gt; un parámetro para un tipo &lt;em&gt;?&lt;/em&gt; se denomina &lt;em&gt;wildcard&lt;/em&gt; siendo este un tipo desconocido. Son usados para reducir las restricciones de un tipo de modo que un método pueda funcionar con una lista de &lt;em&gt;List&amp;lt;Integer&amp;gt;&lt;/em&gt;, &lt;em&gt;List&amp;lt;Double&amp;gt;&lt;/em&gt; y &lt;em&gt;List&amp;lt;Number&amp;gt;&lt;/em&gt;. El término &lt;em&gt;List&amp;lt;Number&amp;gt;&lt;/em&gt; es más restrictivo que &lt;em&gt;List&amp;lt;? extends Number&amp;gt;&lt;/em&gt; porque el primero solo acepta una lista de &lt;em&gt;Number&lt;/em&gt; y el segundo una lista de &lt;em&gt;Number&lt;/em&gt; o de sus subtipos. &lt;em&gt;List&amp;lt;? extends Number&amp;gt;&lt;/em&gt; es un &lt;em&gt;upper bounded wildcard&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62.js?file=BoundedWildcard.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62/raw/BoundedWildcard.java&#34;&gt;BoundedWildcard.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Se puede definir una lista de un tipo desconocido, &lt;em&gt;List&amp;lt;?&amp;gt;&lt;/em&gt;, en casos en los que:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;La funcionalidad se puede implementar usando un tipo &lt;em&gt;Object&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;Cuando el código usa métodos que no dependen del tipo de parámetro. Por ejemplo, &lt;em&gt;List.size&lt;/em&gt; o &lt;em&gt;List.clear&lt;/em&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Digamos que queremos definir un método que inserte objetos &lt;em&gt;Integer&lt;/em&gt; en un &lt;em&gt;List&lt;/em&gt;. Para mayor flexibilidad queremos que ese método pueda trabajar con cualquier tipo de lista que permita contener &lt;em&gt;Integer&lt;/em&gt;, ya sea &lt;em&gt;List&amp;lt;Integer&amp;gt;&lt;/em&gt;, &lt;em&gt;List&amp;lt;Number&amp;gt;&lt;/em&gt; y &lt;em&gt;List&amp;lt;Object&amp;gt;.&lt;/em&gt; Lo podemos conseguir definiendo &lt;em&gt;List&amp;lt;? super Integer&amp;gt;&lt;/em&gt; que se conoce como &lt;em&gt;Lower Bounded Wildcard&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Las clases genéricas no tienen relación alguna aunque sus tipos los tengan, pero usando &lt;em&gt;wildcads&lt;/em&gt; podemos crearlas.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62.js?file=WildcardList.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62/raw/WildcardList.java&#34;&gt;WildcardList.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/138/generics-listParent.gif&#34; title=&#34;&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/138/generics-listParent.gif&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/138/generics-wildcardSubtyping.gif&#34; title=&#34;&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/138/generics-wildcardSubtyping.gif&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Uno de las mayores confusiones al usar generics es cuando usar &lt;em&gt;upper bounded wildcards&lt;/em&gt; o cuando usar &lt;em&gt;lower bounded wildcards&lt;/em&gt;. Podemos usar las siguientes reglas:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Una variable &lt;em&gt;generic&lt;/em&gt; que se usa como fuente de datos (&lt;em&gt;in&lt;/em&gt;), por ejemplo &lt;em&gt;src&lt;/em&gt; en &lt;em&gt;&amp;lt;U&amp;gt; copy(List&amp;lt;? extends U&amp;gt; src, List&amp;lt;? super U&amp;gt; dest)&lt;/em&gt; se define usando &lt;em&gt;upper bounded wildcard&lt;/em&gt; con la palabra clave &lt;em&gt;extends&lt;/em&gt;. De modo que la lista del parámetro &lt;em&gt;src&lt;/em&gt; pueda ser una lista de un tipo &lt;em&gt;U&lt;/em&gt; o de un subtipo de &lt;em&gt;U&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;Un variable &lt;em&gt;generic&lt;/em&gt; que se usa como destino de datos (&lt;em&gt;out&lt;/em&gt;), por ejemplo &lt;em&gt;dest&lt;/em&gt; en &lt;em&gt;&amp;lt;U&amp;gt; copy(List&amp;lt;? extends U&amp;gt; src, List&amp;lt;? super U&amp;gt; dest)&lt;/em&gt; se define usando &lt;em&gt;lower bounded wildcard&lt;/em&gt; con la palabra clave &lt;em&gt;super&lt;/em&gt;. De modo que la lista del parámetro &lt;em&gt;dest&lt;/em&gt; pueda ser una lista de un tipo &lt;em&gt;U&lt;/em&gt; o de un supertipo de &lt;em&gt;U&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;En caso de que la variable pueda ser usando mediante métodos definidos en la clase &lt;em&gt;Object&lt;/em&gt; se recomienda usar un &lt;em&gt;unbounded wildcard (?)&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;En caso de que la variable se necesite usar como fuente de datos y como destino (&lt;em&gt;in&lt;/em&gt; y &lt;em&gt;out&lt;/em&gt;) no usar &lt;em&gt;wildcard&lt;/em&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Los &lt;em&gt;generics&lt;/em&gt; son un mecanismo para proporcionar comprobaciones en tiempo de compilación, sin embargo, el compilador aplica &lt;em&gt;type erasure&lt;/em&gt; que implica:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Reemplazar todos los tipos con sus &lt;em&gt;bounds&lt;/em&gt; o por Object si son &lt;em&gt;unbounded&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;Insertar &lt;em&gt;casts&lt;/em&gt; para preservar el tipado seguro.&lt;/li&gt;
+&lt;li&gt;Generar métodos puente para preservar el polimorfismo en &lt;em&gt;generics&lt;/em&gt; en los que son extendidos.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Un tipo &lt;em&gt;non reifiable&lt;/em&gt; son aquellos cuya información de tipo ha sido eliminada en tiempo de compilación por el &lt;em&gt;type erasure&lt;/em&gt;, para la JVM no hay ninguna diferencia en tiempo de ejecución entre &lt;em&gt;List&amp;lt;String&amp;gt;&lt;/em&gt; y &lt;em&gt;List&amp;lt;Number&amp;gt;&lt;/em&gt;. No se crean nuevas clases para los tipos parametrizados de modo que no hay ninguna penalización en tiempo de ejecución. Una clase genérica al compilarla se transforma aplicando &lt;em&gt;type erasure&lt;/em&gt;:&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62.js?file=TypeErasure.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62/raw/TypeErasure.java&#34;&gt;TypeErasure.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Los &lt;em&gt;generics&lt;/em&gt; tiene algunas restricciones:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;No se pueden instanciar tipos genéricos con tipos primitivos.&lt;/li&gt;
+&lt;li&gt;No se pueden crear instancias de los parámetros de tipo.&lt;/li&gt;
+&lt;li&gt;No se pueden declarar campos &lt;em&gt;static&lt;/em&gt; cuyos tipos son parámetros de tipo.&lt;/li&gt;
+&lt;li&gt;No se pueden usar &lt;em&gt;casts&lt;/em&gt; o &lt;em&gt;instanceof&lt;/em&gt; con tipos parametrizados.&lt;/li&gt;
+&lt;li&gt;No se pueden crear arrays de tipos parametrizados.&lt;/li&gt;
+&lt;li&gt;No se pueden crear, capturar o lanzar tipos parametrizados que extiendan de &lt;em&gt;Throwable&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;No se puede sobrecargar un método que tengan la misma firma que otro después del &lt;em&gt;type erasure&lt;/em&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Este artículo es gran medida una traducción del &lt;a href=&#34;https://docs.oracle.com/javase/tutorial/java/generics/index.html&#34;&gt;tutorial de Java sobre Generics&lt;/a&gt;, que también es recomendable echarle un vistazo incluso leerlo varias veces por la cantidad de información que contiene, en algunos puntos todo lo comentado en este artículo está explicado de forma más extensa.&lt;/p&gt;
+
+&lt;p&gt;Para profundizar más en este importante tema de genéricos de Java tenemos a nuestra disposición varios libros, alguno como  &lt;a rel=&#34;nofollow&#34; href=&#34;http://www.amazon.es/gp/product/0596527756/ref=as_li_ss_tl?ie=UTF8&amp;camp=3626&amp;creative=24822&amp;creativeASIN=0596527756&amp;linkCode=as2&amp;tag=blobit-21&#34;&gt;Java Generics and Collections&lt;/a&gt;&lt;img src=&#34;https://ir-es.amazon-adsystem.com/e/ir?t=blobit-21&amp;l=as2&amp;o=30&amp;a=0596527756&#34; width=&#34;1&#34; height=&#34;1&#34; border=&#34;0&#34; alt=&#34;&#34; style=&#34;border:none !important; margin:0px !important;&#34; /&gt; dedicado en gran parte a él, no importa que se un libro del 2006 ya que desde entonces los genéricos no han tenido grandes cambios y su contenido sigue siendo válido. Los &lt;em&gt;generics&lt;/em&gt; de Java no son perfectos, por el &lt;em&gt;type erasure&lt;/em&gt; y ser &lt;em&gt;non reifiables&lt;/em&gt;, pero tampoco débiles y hay buenos motivos para que sean así como se dice en el libro.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a rel=&#34;nofollow&#34; href=&#34;http://www.amazon.es/gp/product/0596527756/ref=as_li_ss_tl?ie=UTF8&amp;camp=3626&amp;creative=24822&amp;creativeASIN=0596527756&amp;linkCode=as2&amp;tag=blobit-21&#34;&gt;Java Generics and Collections&lt;/a&gt;&lt;img src=&#34;https://ir-es.amazon-adsystem.com/e/ir?t=blobit-21&amp;l=as2&amp;o=30&amp;a=0596527756&#34; width=&#34;1&#34; height=&#34;1&#34; border=&#34;0&#34; alt=&#34;&#34; style=&#34;border:none !important; margin:0px !important;&#34; /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a rel=&#34;nofollow&#34; href=&#34;http://www.amazon.es/gp/product/0321356683/ref=as_li_ss_tl?ie=UTF8&amp;camp=3626&amp;creative=24822&amp;creativeASIN=0321356683&amp;linkCode=as2&amp;tag=blobit-21&#34;&gt;Effective Java (2nd Edition): A Programming Language Guide&lt;/a&gt;&lt;img src=&#34;https://ir-es.amazon-adsystem.com/e/ir?t=blobit-21&amp;l=as2&amp;o=30&amp;a=0321356683&#34; width=&#34;1&#34; height=&#34;1&#34; border=&#34;0&#34; alt=&#34;&#34; style=&#34;border:none !important; margin:0px !important;&#34; /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
+        &lt;iframe src=&#34;https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=ss_til&amp;asins=0596527756&amp;internal=1&#34; style=&#34;width:120px;height:240px;&#34; scrolling=&#34;no&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; frameborder=&#34;0&#34;&gt;&lt;/iframe&gt;
+        &lt;iframe src=&#34;https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=ss_til&amp;asins=0321356683&amp;internal=1&#34; style=&#34;width:120px;height:240px;&#34; scrolling=&#34;no&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; frameborder=&#34;0&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;A pesar de los &lt;em&gt;generics&lt;/em&gt; y el compilador es posible poner en un &lt;em&gt;String&lt;/em&gt; en un &lt;em&gt;HashSet&amp;lt;Integer&amp;gt;&lt;/em&gt; usando el tipo &lt;em&gt;raw&lt;/em&gt; de &lt;em&gt;HashSet&lt;/em&gt;, cosa que se denomina &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/05/que-es-el-concepto-de-heap-pollution-en-java/&#34;&gt;Heap Pollution&lt;/a&gt; y que provoca exepciones &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/ClassCastException.html&#34;&gt;ClassCastException&lt;/a&gt; en tiempo de ejecución. Usando colecciones envueltas por los métodos &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#checkedSet-java.util.Set-java.lang.Class-&#34;&gt;Collections.checkedSet&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#checkedList-java.util.List-java.lang.Class-&#34;&gt;checkedList&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#checkedMap-java.util.Map-java.lang.Class-java.lang.Class-&#34;&gt;checkedMap&lt;/a&gt; evitaremos el &lt;em&gt;Heap Pollution&lt;/em&gt; produciendo una excepción no en el momento de extraer el objeto de la colección sino en el momento de insertarlo.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62.js?file=HeapPollution.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c5360a2d848a594c4dba518d6f1cfd62/raw/HeapPollution.java&#34;&gt;HeapPollution.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En resumen, los genéricos en Java son un añadido muy útil al lenguaje.&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/&#34;&gt;Novedades y nuevas características de Java 8&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/03/introduccion-y-nuevas-caracteristicas-de-java-ee-7/&#34;&gt;Introducción y nuevas características de Java EE 7&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/05/10-razones-para-seguir-usando-java/&#34;&gt;10 razones para seguir usando Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/05/que-es-el-concepto-de-heap-pollution-en-java/&#34;&gt;Qué es el concepto de Heap Pollution en Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/tutorial/java/generics/index.html&#34;&gt;Java Tutorials: Lesson: Generics&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://javarevisited.blogspot.com.es/2011/09/generics-java-example-tutorial.html&#34;&gt;Java 1.5 Generics Tutorial&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2016/04/usar-twitter-desde-java-con-twitter4j/</id>
+        <title>Usar Twitter desde Java con twitter4j</title>        
+        <updated>2016-04-16T12:30:00+02:00</updated>
+        <published>2016-04-16T12:30:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/04/usar-twitter-desde-java-con-twitter4j/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://twitter.com/&#34;&gt;Twitter&lt;/a&gt; ofrece una API para realizar las mismas acciones que como usuarios hacemos con su cliente web, desde publicar &lt;em&gt;tweets&lt;/em&gt;, hacer &lt;em&gt;retweets&lt;/em&gt;, enviar mensajes directos, leer &lt;em&gt;timelines&lt;/em&gt;, &amp;hellip; Con la &lt;a href=&#34;https://dev.twitter.com/rest/public&#34;&gt;API REST de twitter&lt;/a&gt; podemos desde un programa de forma automatizada realizar cualquiera de las anteriores acciones. Por ejemplo, en &lt;a href=&#34;http://www.blogstack.info&#34;&gt;Blog Stack&lt;/a&gt; cada vez que agrega un artículo de cualquiera de las fuentes se publica un &lt;em&gt;tweet&lt;/em&gt; con el título del artículo y el enlace al mismo en la &lt;a href=&#34;https://twitter.com/blogstackinfo&#34;&gt;cuenta de Twitter de Blog Stack&lt;/a&gt;. En este artículo mostraré como desde lenguaje de programación Java podemos usar la API de Twitter para realizar las acciones que deseemos con la librería &lt;a href=&#34;http://twitter4j.org/en/index.html&#34;&gt;twitter4j&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;twitter4j nos ofrece una API Java para acceder a la API REST de Twitter de forma más cómoda. Primeramente deberemos crear y registrar una aplicación, esto nos proporcionará varios datos que identificarán a la aplicación y &lt;em&gt;tokens&lt;/em&gt; privados para que solo nuestra aplicación en nuestra cuenta pueda realizar las acciones, básicamente son unos datos para autenticar al cliente. La creación de la aplicación se realiza desde la &lt;a href=&#34;https://apps.twitter.com/&#34;&gt;sección de desarrolladores de twitter&lt;/a&gt;, también veremos las aplicaciones con acceso a la cuenta.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/137/twitter-apps.png&#34; title=&#34;Twitter Apps&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/137/twitter-apps-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Twitter Apps&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Un a vez creada la aplicación y obtenidos los tokens en la sección &lt;em&gt;Keys and Access Tokens&lt;/em&gt; para que la aplicación tenga acceso a la cuenta podemos usar twitter4j. Para publicar un tweet usamos el siguiente código. Creamos el objeto de configuración &lt;a href=&#34;http://twitter4j.org/javadoc/twitter4j/conf/ConfigurationBuilder.html&#34;&gt;ConfigurationBuilder&lt;/a&gt; en el que establecemos los datos de acceso a la API para la aplicacion y la cuenta en la que se realizarán las publicaciones y posteriormente con &lt;a href=&#34;http://twitter4j.org/javadoc/twitter4j/TwitterFactory.html&#34;&gt;TwitterFactory&lt;/a&gt; obtenemos la clase &lt;a href=&#34;http://twitter4j.org/javadoc/twitter4j/Twitter.html&#34;&gt;Twitter&lt;/a&gt; con la que realizaremos las operaciones que deseemos.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/1ffd00f5ef7941a0f91b4fa2a39c5795.js?file=ShareServiceImpl.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/1ffd00f5ef7941a0f91b4fa2a39c5795/raw/ShareServiceImpl.java&#34;&gt;ShareServiceImpl.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Este ejemplo publica un tweet de solo texto pero puede incluir enlaces e imágenes o posición de geolocalización. Los tweets que publiquemos deberán respetar el límite de 140 caracteres como máximo teniendo presente que los enlaces cuentan como 22 independientemente de la longitud del enlace. En la &lt;a href=&#34;http://twitter4j.org/en/code-examples.html&#34;&gt;sección de ejemplos de twitter4j&lt;/a&gt; se puede consultar como &lt;a href=&#34;http://twitter4j.org/en/code-examples.html#gettingTimeline&#34;&gt;leer el timeline de un usuario&lt;/a&gt;, &lt;a href=&#34;http://twitter4j.org/en/code-examples.html#directMessage&#34;&gt;enviar mensajes directos&lt;/a&gt;, &lt;a href=&#34;http://twitter4j.org/en/code-examples.html#directMessage&#34;&gt;buscar tweets&lt;/a&gt; y algunas cosas más, en en &lt;a href=&#34;http://twitter4j.org/javadoc/twitter4j/Twitter.html&#34;&gt;javadoc de la clase Twitter&lt;/a&gt; están documentados los métodos para acceder a los recursos e información de la cuenta  (mensajes directos, favoritos, seguidores, listas, geolocalización, búsquedas, &lt;em&gt;spam&lt;/em&gt;, seguidores sugeridos, línea de tiempo, menciones, &lt;em&gt;retweets&lt;/em&gt;, tendencias, tweets y usuarios).&lt;/p&gt;
+
+&lt;p&gt;Tener acceso de escritura en la aplicación requiere que introduzcamos nuestro número de teléfono cosa que desde la web no se puede realizar en ciertos países, pero podemos &lt;a href=&#34;https://support.twitter.com/articles/365327#&#34;&gt;añadir el número de telefono desde el cliente de Twitter para el móvil&lt;/a&gt;, en el siguiente enlace se comenta un &lt;a href=&#34;http://meberhard.me/workaround-twitter-application-write-access-mobile-number-accepted-twitter-website/&#34;&gt;rodeo para insetar el teléfono móvil&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Teniendo a nuestra disposición la API de Twitter en nuestra aplicación solo nos queda darle un uso útil.&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://twitter4j.org/en/index.html&#34;&gt;Twitter4j&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://java.dzone.com/articles/java-twitter-integration&#34;&gt;Java Twitter Integration&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://dev.twitter.com/apps&#34;&gt;Twitter Apps&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://support.twitter.com/articles/365327#&#34;&gt;Añadir tu número de teléfono a tu cuenta de Twitter&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://meberhard.me/workaround-twitter-application-write-access-mobile-number-accepted-twitter-website/&#34;&gt;Workaround Twitter application write access mobile number accepted Twitter website&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2016/04/aplicacion-de-ejemplo-usando-varias-especificaciones-de-java-ee-7/</id>
+        <title>Aplicación de ejemplo usando varias especificaciones de Java EE 7</title>        
+        <updated>2016-04-10T12:00:00+02:00</updated>
+        <published>2016-04-08T17:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/04/aplicacion-de-ejemplo-usando-varias-especificaciones-de-java-ee-7/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Más lentamente que otras tecnologías Java EE en cada nueva versión sigue adaptándose a las nuevas tendencias en el desarrollo y facilitando la programación de aplicaciones de entidad empresarial. Java EE está formado por un conjunto de especificaciones que resuelven en gran medida muchas de las necesidades funcionales de las aplicaciones ya sean de persistencia, seguridad, mensajería, lógica de negocio, transaccionalidad, inyección de dependencias, presentación HTML, JSON, WebSockets, conexión a base de datos, envío de correos electrónicos o concurrencia. En este artículo mostraré un ejemplo usando varias de estas especificaciones y proporcionaré el código fuente completo.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java-ee.png&#34; class=&#34;right&#34; alt=&#34;Java EE&#34; title=&#34;Java EE&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Comentaba las &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/03/introduccion-y-nuevas-caracteristicas-de-java-ee-7/&#34;&gt;novedades y nuevas características de Java EE 7&lt;/a&gt; que en el 2013 trajo esta nueva versión para el desarrollo de aplicaciones empresariales con el lenguaje Java. Hacía una descripción y cuáles eran las especificaciones y versiones de las mismas que proporcionan la funcionalidades comunes a muchas aplicaciones. En este artículo mostraré un ejemplo con código con la implementación de una aplicación usando varias de las especificaciones de Java EE.&lt;/p&gt;
+
+&lt;p&gt;El ejemplo consistirá en una supuesta aplicación sencilla para hacer la lista de la compra de un supermercado usando las siguientes especificaciones &lt;abbr title=&#34;Java Server Faces&#34;&gt;JSF&lt;/abbr&gt;, &lt;abbr title=&#34;Java Persistence API&#34;&gt;JPA&lt;/abbr&gt;, &lt;abbr title=&#34;Java Transactions API&#34;&gt;JTA&lt;/abbr&gt;, Security, &lt;abbr title=&#34;Contexts and Dependency Injection&#34;&gt;CDI&lt;/abbr&gt;, &lt;abbr title=&#34;Enterprise Java Bean&#34;&gt;EJB&lt;/abbr&gt;, &lt;abbr title=&#34;Representational State Transfer&#34;&gt;REST&lt;/abbr&gt;, &lt;abbr title=&#34;Java API for RESTful Web Services&#34;&gt;JAX-RS&lt;/abbr&gt;, &lt;abbr title=&#34;JavaScript Object Notation&#34;&gt;JSON&lt;/abbr&gt;, eventos CDI y WebSockets. El comprador irá seleccionando productos y la cantidad de los mismos de su compra, la aplicación le informará del precio de los productos seleccionados hasta el momento y finalmente para hacer la compra iniciará sesión. En el momento que se realice una compra el &lt;em&gt;stock&lt;/em&gt; de productos se actualizará en todos los clientes conectados al supermercado.&lt;/p&gt;
+
+&lt;p&gt;Este ejemplo está relacionado con otros artículos que he escrito como &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/&#34;&gt;Ejemplo de multiproyecto con Gradle&lt;/a&gt;, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/&#34;&gt;Novedades y nuevas características de Java 8&lt;/a&gt; y alguno quizá considere de la misma forma que sigue habiendo más de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/05/10-razones-para-seguir-usando-java/&#34;&gt;10 razones para seguir usando Java&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Para facilitar el desarrollo de la aplicación en el lado cliente usaré algunas librerías JavaScript de forma similar al ejemplo de la &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/04/ejemplo-lista-de-tareas-con-backbone-y-react/&#34;&gt;lista de tareas con Backbone y React junto con RequireJS&lt;/a&gt;. Seleccionados los productos, la compra se realizará usando una API REST intercambiando los datos con formato JSON, se persistirá en la base de datos con JPA actualizándose en ese momento el &lt;em&gt;stock&lt;/em&gt; de los productos de lo que se encargará un EJB para controlar esta pequeña lógica de negocio, si no hay &lt;em&gt;stock&lt;/em&gt; suficiente de un producto se producirá una excepción y devolverá un código de estado adecuado en la petición HTTP, al realizar la compra se generará un mensaje evento CDI que desencadenará la actualización del &lt;em&gt;stock&lt;/em&gt; de los usuarios conectados usando WebSockets. La página del listado de productos y el formulario de autenticación se generará usando la tecnología de presentación JSF.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/136/supermarket-java-ee-7.png&#34; title=&#34;Supermarket con Java EE 7&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/136/supermarket-java-ee-7-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Supermarket con Java EE 7&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Veamos primero la página inicial índice con el listado de productos generada con JSF. Obtiene el listado de productos y genera el HTML del mismo, además carga los JavaScripts necesarios para que la aplicación funcione en el navegador del cliente.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa.js?file=index.html&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa/raw/index.html&#34;&gt;index.html&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa.js?file=template.html&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa/raw/template.html&#34;&gt;template.html&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa.js?file=IndexBean.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa/raw/IndexBean.java&#34;&gt;IndexBean.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;El JavaScript añade la lógica en el cliente para ir realizando la lista de la compra usando poco más que &lt;a href=&#34;http://jquery.com/&#34;&gt;jQuery&lt;/a&gt; y &lt;a href=&#34;http://requirejs.org/&#34;&gt;Require JS&lt;/a&gt;, además, inicializa el WebSocket para recibir los mensajes desde el servidor con la actualizaciones del stock de los productos. Realizada la lista de productos se enviará un petición REST al servidor para formalizar la compra.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa.js?file=main-index.js&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa/raw/main-index.js&#34;&gt;main-index.js&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Las peticiones de compras en el servidor se procesarán por un &lt;em&gt;endpoint&lt;/em&gt; de una interfaz REST que usando un EJB con la lógica de negocio para persistir la compra en una base de datos relacional y actualizar los &lt;em&gt;stocks&lt;/em&gt;. Actualizados los &lt;em&gt;stocks&lt;/em&gt; y persistida la compra se genera un evento CDI con el hecho de que se ha producido una compra.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa.js?file=PurchasesResource.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa/raw/PurchasesResource.java&#34;&gt;PurchasesResource.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa.js?file=ApplicationConfig.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa/raw/ApplicationConfig.java&#34;&gt;ApplicationConfig.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa.js?file=NoStockExceptionHandler.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa/raw/NoStockExceptionHandler.java&#34;&gt;NoStockExceptionHandler.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;La aplicación irá registrando los usuarios conectados a la aplicación con el objetivo de enviarles las actualizaciones de &lt;em&gt;stock&lt;/em&gt; de los productos y con un evento CDI con la notificación de que se ha producido una compra que ha actualizado el &lt;em&gt;stock&lt;/em&gt; de algunos productos enviará los nuevos &lt;em&gt;stocks&lt;/em&gt; a los clientes con la tecnología WebSocket en un mensaje con datos en JSON que soportan los navegadores y Java EE.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa.js?file=Supermarket.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa/raw/Supermarket.java&#34;&gt;Supermarket.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa.js?file=SupermarketLocal.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa/raw/SupermarketLocal.java&#34;&gt;SupermarketLocal.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Usando la API de seguridad de Java EE autenticaremos al comprador o vendedor, la página se personalizará según el rol del usuario y en el servidor con la anotación &lt;a href=&#34;https://docs.oracle.com/javaee/7/api/javax/annotation/security/RolesAllowed.html&#34;&gt;RolesAllowed&lt;/a&gt; y métodos &lt;em&gt;post&lt;/em&gt;, &lt;em&gt;get&lt;/em&gt;, &lt;em&gt;list&lt;/em&gt; se limitarán las acciones que pueden realizar según sus roles, su uso se puede ver en los listados de código anteriores. Con la página de inicio de sesión se autenticará al usuario de forma programática usando &lt;code&gt;request.login(username, password);&lt;/code&gt;. Esta acción es recomendable hacerla usando el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/02/configurar-ssl-en-un-servidor-tomcat-jboss-wildfly-lighttpd-nginx-apache/&#34;&gt;protocolo seguro HTTPS con TLS a configurar en el servidor&lt;/a&gt; para que la contraseña se transmita cifrada entre el cliente y el servidor.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa.js?file=login.html&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa/raw/login.html&#34;&gt;login.html&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa.js?file=LoginBean.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa/raw/LoginBean.java&#34;&gt;LoginBean.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;La aplicación está dividida en varios módulos construidos con la &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2012/03/herramienta-de-construccion-gradle.html&#34;&gt;herramienta de automatización Gradle&lt;/a&gt; siendo una aplicación &lt;abbr title=&#34;Enterprise ARchive&#34;&gt;EAR&lt;/abbr&gt; estándar estando constituida por un módulo para los EJB, otro para la aplicación web con un &lt;abbr title=&#34;Web  ARchive&#34;&gt;WAR&lt;/abbr&gt;. Un cliente podría conectarse directamente a la aplicación sin mediación de un navegador web, esto último sería lo que emplearíamos si fuese una &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/10/introduccion-a-javafx-aplicaciones-de-escritorio-en-java/&#34;&gt;aplicación de escritorio empleando Java FX&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa.js?file=SupermarketClient.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/cf3678d2eaa7006290c24bba68b513fa/raw/SupermarketClient.java&#34;&gt;SupermarketClient.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/136/aplicacion-cliente.png&#34; title=&#34;Aplicación cliente Supermarket&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/136/aplicacion-cliente-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Aplicación cliente Supermarket&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;El conjunto de especificaciones de Java EE proporciona una solución para la mayoría de funcionalidades que necesita una aplicación pero también podemos sustituir alguna y combinarlas con otras de las muchas librerías o &lt;em&gt;frameworks&lt;/em&gt; disponibles en la plataforma Java. Por ejemplo, como &lt;em&gt;framework&lt;/em&gt; en vez de usar Servlet y JSP o JSF podemos usar &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/&#34;&gt;Apache Tapestry&lt;/a&gt;, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/01/introduccion-y-ejemplo-basico-sobre-vertx/&#34;&gt;Vert.x&lt;/a&gt;, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/01/aplicacion-web-con-spark-framework-y-java/&#34;&gt;Spark&lt;/a&gt;, &lt;a href=&#34;https://struts.apache.org/&#34;&gt;Struts&lt;/a&gt;, &lt;a href=&#34;https://grails.org/&#34;&gt;Grails&lt;/a&gt;, &amp;hellip; dependiendo de las necesidades de la aplicación, su complejidad y nuestras preferencias. Como &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/05/alternativa-a-hibernate-u-orm-y-ejemplo-de-jooq/&#34;&gt;alternativa al ORM de JPA o JDBC se puede usar jOOQ&lt;/a&gt;. &lt;a href=&#34;https://www.rabbitmq.com/&#34;&gt;RabbitMQ&lt;/a&gt; en vez de JMS o &lt;a href=&#34;https://spring.io/&#34;&gt;Spring&lt;/a&gt; en vez de CDI, EJB y JTA.&lt;/p&gt;
+
+&lt;p&gt;Algunos libros sobre Java EE que he leído y que me han gustado han sido los siguientes, &lt;a rel=&#34;nofollow&#34; href=&#34;http://www.amazon.es/gp/product/1449370179/ref=as_li_ss_tl?ie=UTF8&amp;camp=3626&amp;creative=24822&amp;creativeASIN=1449370179&amp;linkCode=as2&amp;tag=blobit-21&#34;&gt;Java EE 7 Essentials&lt;/a&gt;&lt;img src=&#34;https://ir-es.amazon-adsystem.com/e/ir?t=blobit-21&amp;l=as2&amp;o=30&amp;a=1449370179&#34; width=&#34;1&#34; height=&#34;1&#34; border=&#34;0&#34; alt=&#34;&#34; style=&#34;border:none !important; margin:0px !important;&#34; /&gt; hace un repaso detallado pero no muy profundo para hacerse una idea bastante buena del conjunto de especificaciones de Java EE. Otro buen libro es &lt;a rel=&#34;nofollow&#34; href=&#34;http://www.amazon.es/gp/product/1782171983/ref=as_li_ss_tl?ie=UTF8&amp;camp=3626&amp;creative=24822&amp;creativeASIN=1782171983&amp;linkCode=as2&amp;tag=blobit-21&#34;&gt;Java EE 7 Development with WildFly&lt;/a&gt;&lt;img src=&#34;https://ir-es.amazon-adsystem.com/e/ir?t=blobit-21&amp;l=as2&amp;o=30&amp;a=1782171983&#34; width=&#34;1&#34; height=&#34;1&#34; border=&#34;0&#34; alt=&#34;&#34; style=&#34;border:none !important; margin:0px !important;&#34; /&gt; que entra más en detalle en cada una de las especificaciones. El &lt;a href=&#34;https://docs.oracle.com/javaee/7/tutorial/&#34;&gt;tutorial oficial de Java EE 7&lt;/a&gt; también es un buen punto de partida. &lt;a target=&#34;_blank&#34; href=&#34;https://www.amazon.es/s/ref=as_li_ss_tl?_encoding=UTF8&amp;camp=3626&amp;creative=24822&amp;field-keywords=libros%20java%20ee%207&amp;linkCode=ur2&amp;tag=blobit-21&amp;url=search-alias%3Daps&#34;&gt;Libros sobre Java EE 7&lt;/a&gt;&lt;img src=&#34;https://ir-es.amazon-adsystem.com/e/ir?t=blobit-21&amp;l=ur2&amp;o=30&#34; width=&#34;1&#34; height=&#34;1&#34; border=&#34;0&#34; alt=&#34;&#34; style=&#34;border:none !important; margin:0px !important;&#34; /&gt; hay muchos por la cantidad de tiempo que ya tiene, es recomendable leer alguno que esté actualizado a las últimas versiones.&lt;/p&gt;
+
+&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;iframe src=&#34;https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=ss_til&amp;asins=1449370179&amp;internal=1&#34; style=&#34;width:120px;height:240px;&#34; scrolling=&#34;no&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; frameborder=&#34;0&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe src=&#34;https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=ss_til&amp;asins=1782171983&amp;internal=1&#34; style=&#34;width:120px;height:240px;&#34; scrolling=&#34;no&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; frameborder=&#34;0&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Con Java EE 6 y 7 ciertas partes de configuración se pueden realizar con anotaciones en vez de con XML sin embargo aún no ha desaparecido completamente aunque si reducido considerablemente.&lt;/p&gt;
+
+&lt;p&gt;Ejecutar este ejemplo require instalar previamente el servidor de aplicaciones &lt;a href=&#34;http://wildfly.org/&#34;&gt;WildFly&lt;/a&gt; e iniciarlo con &lt;code&gt;./standalone.sh -c standalone-full.xml&lt;/code&gt;. Iniciado el servidor y desplegada la aplicación con el siguiente comando de Gradle se puede acceder a ella con el navegador en la dirección &lt;em&gt;&lt;a href=&#34;https://localhost:8443/war/&#34;&gt;https://localhost:8443/war/&lt;/a&gt;&lt;/em&gt; teniendo el protocolo seguro configurado.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaEE7&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew build deploy&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;p&gt;En el futuro Java EE 8 está planificado un &lt;em&gt;framework&lt;/em&gt; basado en acciones en vez de componentes como en JSF, también el soporte para &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/02/introduccion-al-protocolo-http-2/&#34;&gt;el protocolo HTTP/2&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/03/introduccion-y-nuevas-caracteristicas-de-java-ee-7/&#34;&gt;Introducción y nuevas características de Java EE 7&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javaee/7/tutorial/&#34;&gt;Tutorial Java EE 7&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/&#34;&gt;Novedades y nuevas características de Java 8&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/05/10-razones-para-seguir-usando-java/&#34;&gt;10 razones para seguir usando Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/&#34;&gt;Libro sobre desarrollo de aplicaciones con Apache Tapestry&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/04/ejemplo-lista-de-tareas-con-backbone-y-react/&#34;&gt;Ejemplo lista de tareas con Backbone y React&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/05/alternativa-a-hibernate-u-orm-y-ejemplo-de-jooq/&#34;&gt;Alternativa a Hibernate u ORM y ejemplo de jOOQ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/10/introduccion-a-javafx-aplicaciones-de-escritorio-en-java/&#34;&gt;Introducción a JavaFX, aplicaciones de escritorio en Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2012/03/herramienta-de-construccion-gradle.html&#34;&gt;Herramienta de construcción Gradle&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/&#34;&gt;Ejemplo de multiproyecto con Gradle&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+</feed>

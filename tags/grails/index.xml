@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://picodotdev.github.io/blog-bitix/tags/grails/</id>
+    <title type="text">Blog Bitix</title>
+    <subtitle>Recent content on Blog Bitix</subtitle>
+    <updated>2014-05-30T20:30:00+02:00</updated>
+    <author><name>pico.dev</name></author>
+    <generator>Hugo</generator>
+    <icon>https://picodotdev.github.io/blog-bitix//assets/images/custom/logotipos/hugo.png</icon>
+    <logo>https://picodotdev.github.io/blog-bitix//assets/images/custom/logotipos/hugo.png</logo>
+    <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2014/05/detectar-problema-n-plus-1-y-obtener-estadisticas-de-hibernate-con-grails/</id>
+        <title>Detectar problema N&#43;1 y obtener estadísticas de Hibernate con Grails</title>        
+        <updated>2014-06-13T16:00:00+02:00</updated>
+        <published>2014-05-30T20:30:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2014/05/detectar-problema-n-plus-1-y-obtener-estadisticas-de-hibernate-con-grails/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/grails.png&#34; class=&#34;right&#34; alt=&#34;Grails&#34; title=&#34;Grails&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Una base de datos relacional guarda los datos de forma diferente al modelo orientado a objetos que utilizamos en lenguajes como &lt;a href=&#34;http://www.oracle.com/us/technologies/java/overview/index.html&#34;&gt;Java&lt;/a&gt;, &lt;a href=&#34;http://www.microsoft.com/net&#34;&gt;C#&lt;/a&gt; o &lt;a href=&#34;https://www.python.org/&#34;&gt;Python&lt;/a&gt;. Los &lt;a href=&#34;https://en.wikipedia.org/wiki/Object-relational_mapping&#34;&gt;ORM (Object-relational mapping)&lt;/a&gt; tratan de hacer una correspondencia entre los dos modelos, el relacional de las bases de datos y el orientado a objetos de los lenguajes. Una de las ventajas de usar en una aplicación un ORM para acceder a la base de datos es que podemos hacer una correspondencia entre los datos de una base de datos relacional y trabajar con esos datos utilizando el modelo orientado a objetos del lenguaje de programación que usemos.&lt;/p&gt;
+
+&lt;p&gt;Sin embargo, el ORM envía sentencias SQL para recuperar los datos de la base de datos relacional según vamos navegando con los métodos de acceso a otros objetos y sus relaciones. Depende de como el ORM haga las consultas para recuperar los datos de la base de datos relacional puede generar muchas SQL, producir un bajo rendimiento en la aplicación y una carga de trabajo considerable para la base de datos.&lt;/p&gt;
+
+&lt;p&gt;En los ORM es conocido el &lt;a href=&#34;http://stackoverflow.com/questions/97197/what-is-the-n1-selects-issue&#34;&gt;problema N+1&lt;/a&gt;. Consiste en lo siguiente, supongamos que tenemos dos tablas relacionadas autores y libros, y que la relación entre estas dos tablas es de 1 a N, de modo que un autor puede tener varios libros y un libro ha sido escrito por un único autor. Para recuperar todos los autores necesitaríamos una consulta y si no hacemos una join con la tabla de libros para recuperar los libros de cada autor tendríamos que hacer otra consulta  con lo que tendríamos el problema N+1 al hacer un bucle sobre los autores (1 consulta para los autores y N para los libros de cada autor).&lt;/p&gt;
+
+&lt;p&gt;El problema está en que el ORM lanza las consultas de forma automática según necesita los datos de modo que si para un autor no tiene los libros lanza una SQL para recuperarlos, como programadores llamar a un método para acceder a los libros es muy cómodo y transparente para nosotros (trabajamos solo con objetos) pero hemos de ser conscientes de las consultas que lanza el ORM porque podemos producir una situación de N+1.&lt;/p&gt;
+
+&lt;p&gt;Para evitar el problema N+1 hemos de recuperar todos los datos haciendo una única consulta, haciendo una join entre las tablas autor y libro. En &lt;a href=&#34;http://hibernate.org/&#34;&gt;Hibernate&lt;/a&gt; podemos resolverlo con una consulta HQL como la siguiente:&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/87ae5e7c184c5b51844d.js?file=hql.txt&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/87ae5e7c184c5b51844d/raw/hql.txt&#34;&gt;hql.txt&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;O con una criteria en Grails:&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/87ae5e7c184c5b51844d.js?file=Criteria.groovy&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/87ae5e7c184c5b51844d/raw/Criteria.groovy&#34;&gt;Criteria.groovy&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Pero para saber en que sitios de nuestro código debemos establecer los métodos de búsqueda EAGER necesitamos detectar los problemas N+1, con la experiencia conoceremos donde se pueden producir, otros casos se nos pueden pasar por alto y necesitaremos detectarlos. Para detectar estos problemas N+1 o para determinar si una página es muy lenta porque hace muchas consultas a la base de datos Hibernate dispone de unas estadísticas mediante las cuales podemos conocer cuantas consultas select, update, insert, conexiones, y más datos por entidad y relación&amp;hellip; se han lanzado por haber accedido a una página. Podemos acceder a las estadísticas de Hibernate mediante el objeto &lt;a href=&#34;https://docs.jboss.org/hibernate/orm/4.3/javadocs/org/hibernate/SessionFactory.html&#34;&gt;SessionFactory&lt;/a&gt; y el método &lt;a href=&#34;https://docs.jboss.org/hibernate/orm/4.3/javadocs/org/hibernate/SessionFactory.html#getStatistics%28%29&#34;&gt;getStatistics&lt;/a&gt;, con ese objeto y método podemos obtener estadísticas globales y para cada una de las entidades persistidas por Hibernate.&lt;/p&gt;
+
+&lt;p&gt;En Grails podemos hacer un controlador y gsp que nos muestre esa información que podrían ser de la siguiente forma:&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/87ae5e7c184c5b51844d.js?file=HibernateController.groovy&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/87ae5e7c184c5b51844d/raw/HibernateController.groovy&#34;&gt;HibernateController.groovy&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/87ae5e7c184c5b51844d.js?file=index.gsp&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/87ae5e7c184c5b51844d/raw/index.gsp&#34;&gt;index.gsp&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Si además queremos ver las consultas HQL de Hibernate y parámetros que se están lanzando en cada acceso a una página podemos modificar el archivo Config.goovy y añadir la siguiente configuración en el apartado log4j:&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/87ae5e7c184c5b51844d.js?file=Config.groovy&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/87ae5e7c184c5b51844d/raw/Config.groovy&#34;&gt;Config.groovy&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;La implementación de appender para capturar las HQL que lanza grails es la siguiente:&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/87ae5e7c184c5b51844d.js?file=HibernateAppender.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/87ae5e7c184c5b51844d/raw/HibernateAppender.java&#34;&gt;HibernateAppender.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/87ae5e7c184c5b51844d.js?file=HibernateLogger.java&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/87ae5e7c184c5b51844d/raw/HibernateLogger.java&#34;&gt;HibernateLogger.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;El resultado es el siguiente:&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/26/grails-hibernate-statistics.png&#34; title=&#34;Estadísticas de Hibernate en Grails&#34;&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/26/grails-hibernate-statistics.png&#34;&gt;&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En la imagen se puede apreciar las consultas lanzadas y que parámetros se han empleado. El método doTest del controlador HibernateController cada vez que es ejecutado persiste una entidad de dominio Autor y posteriormente la borra lanzando una sentencia insert y otra delete, cada vez que es ejecutado las estadísticas cambian acordemente.&lt;/p&gt;
+
+&lt;p&gt;Obtener información de lo que sucede en la aplicación es importante y el framework debería ayudar, también podemos &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/05/pagina-de-excepcion-de-grails/&#34;&gt;mejorar lo que ofrece Grails con una página de excepción más informativa&lt;/a&gt;. En &lt;a href=&#34;http://tapestry.apache.org/&#34;&gt;Tapestry&lt;/a&gt; es más sencillo aún ya que incluyendo la dependencia de tapestry-hibernate ya se añade a la &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/06/pagina-dashboard-de-apache-tapestry/&#34;&gt;página Dashboard y un apartado con estas estadísticas&lt;/a&gt;, pero esto último será tema para otro artículo.&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/05/pagina-de-excepcion-de-grails/&#34;&gt;Página de excepción de Grails&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/11621495/how-can-i-obtain-grails-hibernate-l2-cache-statistics&#34;&gt;http://stackoverflow.com/questions/11621495/how-can-i-obtain-grails-hibernate-l2-cache-statistics&lt;/a&gt;&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/2568507/how-to-log-sql-statements-in-grails&#34;&gt;http://stackoverflow.com/questions/2568507/how-to-log-sql-statements-in-grails&lt;/a&gt;&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://hibernate.atlassian.net/browse/HHH-3659&#34;&gt;https://hibernate.atlassian.net/browse/HHH-3659&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="software"/>
+            
+                <category term="java"/>
+            
+                <category term="programacion"/>
+            
+                <category term="grails"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="blog-stack"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2014/05/pagina-de-excepcion-de-grails/</id>
+        <title>Página de excepción de Grails</title>        
+        <updated>2014-05-30T20:00:00+02:00</updated>
+        <published>2014-05-23T20:00:19+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2014/05/pagina-de-excepcion-de-grails/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/grails.png&#34; class=&#34;right&#34; alt=&#34;Grails&#34; title=&#34;Grails&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;No es la primera vez que comento algo similar (&lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2012/08/paginas-pagecatalog-servicestatus-e.html&#34;&gt;I&lt;/a&gt;, &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2011/08/motivos-para-elegir-apache-tapestry.html&#34;&gt;II&lt;/a&gt;) disponer de la mayor cantidad de información cuando se produce una excepción o un error en la aplicación es vital para determinar rápidamente la causa del error y para solucionarlo correctamente. Para disponer de esta información podemos generar un archivo de log que nos permita revisar lo que pasó en la aplicación en un determinado momento. En el momento de desarrollo también nos puede interesar tener una página de excepción informativa.&lt;/p&gt;
+
+&lt;p&gt;La página de error de &lt;a href=&#34;http://grails.org/&#34;&gt;Grails&lt;/a&gt; por defecto da poca información, a poco más da la traza de la excepción y un extracto de los archivos relacionados donde se ha producido, podría ser mejor. Podría informar de los parámetros que se enviaron en la petición, las cabeceras http o las cookies además de los parámetros de sesión, a veces esta información nos puede servir para identificar la causa más rápidamente ya que la excepción puede estar produciéndose con el valor de un determinado parámetro o un determinado navegador, esta información no la tenemos en una simple traza de la excepción.&lt;/p&gt;
+
+&lt;p&gt;En este artículo crearé una página de excepción para Grails con los parámetros de la petición y sesión, cabeceras HTTP y las cookies enviadas además de la traza de la excepción. Los parámetros, las cookies y cabeceras HTTP se pueden obtener de la request y los atributos de la sesión del objeto session. El código del ejemplo de página de excepción es el siguiente.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/f5cab0c3b1affe5bb213.js?file=exception.gsp&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/f5cab0c3b1affe5bb213/raw/exception.gsp&#34;&gt;exception.gsp&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Para hacer uso de la página de excepción deberemos configurar el archivo UrlMappings para que Grails use esta página de excepción.&lt;/p&gt;
+
+&lt;div&gt;
+  &lt;script src=&#34;https://gist.github.com/picodotdev/f5cab0c3b1affe5bb213.js?file=UrlMappings.groovy&#34;&gt;&lt;/script&gt;
+  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/f5cab0c3b1affe5bb213/raw/UrlMappings.groovy&#34;&gt;UrlMappings.groovy&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
+&lt;/div&gt;
+
+&lt;p&gt;El resultado se puede ver en la siguiente captura de pantalla.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/25/pagina-excepcion-grails-por-defecto.png&#34; title=&#34;Página de error por defecto de Grails&#34;&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/25/pagina-excepcion-grails-por-defecto-thumb.png&#34;&gt;&lt;/a&gt;
+    &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/25/pagina-excepcion-grails-personalizada.png&#34; title=&#34;Página de error personalizada de Grails&#34;&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/25/pagina-excepcion-grails-personalizada-thumb.png&#34;&gt;&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Los estilos mostrados en las capturas de pantalla podrían ser mejores pero la esencia está en la información que se muestra. En otro artículo publicaré como &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/05/detectar-problema-n-plus-1-y-obtener-estadisticas-de-hibernate-con-grails/&#34;&gt;obtener estadísticas de Hibernate para detectar problemas de N+1 u obtener las consultas sql que se están realizando en cada página de una aplicación Grails&lt;/a&gt;, esta información nos puede ayudar bastante y no es excesivamente complicado hacerla. Con ambas conseguiremos que las aplicaciones que desarrollemos con Grails sean un poco más informativas.&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;p&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/05/detectar-problema-n-plus-1-y-obtener-estadisticas-de-hibernate-con-grails/&#34;&gt;Detectar problema N+1 y obtener estadísticas de Hibernate con Grails&lt;/a&gt;&lt;/p&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="software"/>
+            
+                <category term="java"/>
+            
+                <category term="programacion"/>
+            
+                <category term="grails"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="blog-stack"/>
+            
+        
+    </entry>
+    
+</feed>
