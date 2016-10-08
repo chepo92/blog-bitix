@@ -33,35 +33,20 @@
 
 &lt;p&gt;Con Spring Validation tenemos diferentes formas de realizar las validaciones, dos de ellas son con las anotaciones de la &lt;a href=&#34;http://beanvalidation.org/&#34;&gt;especificación de validación&lt;/a&gt; JSR-303 o implementando una clase de la interfaz &lt;a href=&#34;http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/validation/Validator.html&#34;&gt;Validator&lt;/a&gt;. En el siguiente ejemplo se muestra una combinación de ambos, un Validator que valida primeramente las anotaciones de JSR-303 para una clase &lt;em&gt;record&lt;/em&gt; de jOOQ y posteriormente unas validaciones adicionales propias de la aplicación u en otro caso para campos campos dependientes. A través de las clases &lt;a href=&#34;https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/validation/DataBinder.html&#34;&gt;DataBinder&lt;/a&gt; y el &lt;a href=&#34;https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/validation/beanvalidation/SpringValidatorAdapter.html&#34;&gt;SpringValidationAdapter&lt;/a&gt; validaremos un objeto con las anotaciones de &lt;a href=&#34;https://docs.oracle.com/javaee/7/api/javax/validation/package-summary.html&#34;&gt;javax.validation&lt;/a&gt; y las propias de Spring además de adaptar los errores a la interfaz &lt;a href=&#34;http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/validation/Errors.html&#34;&gt;Errors&lt;/a&gt; con la que inspeccionaremos los errores. Perfectamente podemos usar únicamente los &lt;em&gt;Validator&lt;/em&gt; de Spring sin tener en cuenta las anotaciones de &lt;em&gt;javax.validation&lt;/em&gt;, nótese también que podemos implementar múltiples validadores de Spring con diferentes criterios de validación.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=EmployeeValidator.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/e5d6b0adc0c24eb5dfce/raw/EmployeeValidator.java&#34;&gt;EmployeeValidator.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=EmployeeValidator.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;En un determinado servicio donde implementaremos la lógica de negocio realizaremos la validación de forma explícita antes de guardar el registro, para ello inyectaremos en el servicio la referencia al validador de Spring con la &lt;a href=&#34;https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/beans/factory/annotation/Autowired.html&#34;&gt;anotación Autowired&lt;/a&gt; y usaremos uno de sus métodos sobrecargados &lt;a href=&#34;http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/validation/beanvalidation/SpringValidatorAdapter.html#validate-java.lang.Object-org.springframework.validation.Errors-&#34;&gt;&lt;em&gt;validate&lt;/em&gt;&lt;/a&gt; para que compruebe las validaciones que haya definidas para ese registro.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=%20DefaultAppService.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/e5d6b0adc0c24eb5dfce/raw/%20DefaultAppService.java&#34;&gt; DefaultAppService.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=%20DefaultAppService.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Realmente aunque el ejemplo muestra como validar un objeto de tipo &lt;a href=&#34;http://www.jooq.org/javadoc/latest/org/jooq/Record.html&#34;&gt;Record&lt;/a&gt; de jOOQ lo mismo puede ser aplicado para validar cualquier otro tipo de objeto Java con Spring Validation. Las clases &lt;em&gt;record&lt;/em&gt; generadas por jOOQ implementan una interfaz en la que se exponen los métodos &lt;em&gt;get&lt;/em&gt; y &lt;em&gt;set&lt;/em&gt; con las columnas de la tabla.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=IEmployee.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/e5d6b0adc0c24eb5dfce/raw/IEmployee.java&#34;&gt;IEmployee.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=IEmployee.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;En la salida en al terminal de la &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/10/aplicacion-java-autocontenida-con-spring-boot/&#34;&gt;aplicación de ejemplo con Spring Boot&lt;/a&gt; se observa que se producen varios errores de validación para un objeto empleado, al validarlo le falta un valor para los campos &lt;em&gt;id&lt;/em&gt;, &lt;em&gt;name&lt;/em&gt; por restricciones de base de datos detectadas con las anotaciones @NotNull y al tener una fecha posterior a la actual también falla una validación propia de la aplicación. El campo &lt;em&gt;id&lt;/em&gt; lo asignará jOOQ cuando se guarde en base de datos por lo que esta validación no deberemos tenerla en cuenta al guardar registros nuevos.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=Main.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/e5d6b0adc0c24eb5dfce/raw/Main.java&#34;&gt;Main.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=System.out&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/e5d6b0adc0c24eb5dfce/raw/System.out&#34;&gt;System.out&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=Main.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=System.out&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;
     El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/SpringBoot&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew updateDatabase &amp;amp;&amp;amp; ./gradlew generateModels &amp;amp;&amp;amp; ./gradlew run&lt;/code&gt;.
@@ -102,49 +87,28 @@
 
 &lt;p&gt;Por el contrario &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/05/alternativa-a-hibernate-u-orm-y-ejemplo-de-jooq/&#34;&gt;jOOQ se postula como alternativa a Hibernate&lt;/a&gt; para proporcionar persistencia en base de datos relacionales. Se basa en proporcionar un acceso usando un DSL más cercano al lenguaje SQL de la base de datos en vez de proporcionar una capa de abstracción para el modelo de objetos, la forma de acceder a la base de datos es muy flexible pudiéndose emplear para generar consultas SQL en forma de &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/String.html&#34;&gt;String&lt;/a&gt; que lanzaremos con &lt;abbr title=&#34;Java Database Connectivity&#34;&gt;JDBC&lt;/abbr&gt; o con la clase &lt;a href=&#34;https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/jdbc/core/JdbcTemplate.html&#34;&gt;JdbcTemplate&lt;/a&gt; de &lt;a href=&#34;https://spring.io/&#34;&gt;Spring&lt;/a&gt;. Las SQL son construidas con una &lt;abbr title=&#34;Application Programming Interface&#34;&gt;API&lt;/abbr&gt; en forma de &lt;abrr title=&#34;Domain-specific language&#34;&gt;DSL&lt;/abbr&gt; o usando el patrón ActiveRecord con la posibilidad de que el compilador realice la validación de tipos tanto para los parámetros como para los resultados.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=SnippetQueries.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/63dcc9d0d6c2b2b459fb/raw/SnippetQueries.java&#34;&gt;SnippetQueries.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=SnippetQueries.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Sin embargo, aunque jOOQ permite también navegar las relaciones entre las entidades implementadas con el patrón ActiveRecord puede sucedernos que se nos presente el mismo problema 1+N de Hibernate si por ejemplo obtenemos una lista departamentos con 1 SQL y posteriormente 1 consulta más para obtener los empleados según se itera cada departamento en un bucle, en total 1+N consultas para los departamentos y sus empleados. Como sería el siguiente caso.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=SnippetRelations.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/63dcc9d0d6c2b2b459fb/raw/SnippetRelations.java&#34;&gt;SnippetRelations.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=SnippetRelations.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Si sabemos que vamos a necesitar una entidad y las relacionadas, como en un departamento y sus empleados, es mejor obtener todos los datos en una única consulta. Una de las formas en que jOOQ devuelve resultados es a través de objetos &lt;em&gt;Record&lt;/em&gt; que representa a los datos de resultado de la SQL, por otro lado jOOQ genera un objeto &lt;em&gt;Record&lt;/em&gt; por cada tabla de la base de datos. Si en una consulta necesitamos únicamente los datos de una tabla podemos obtener los datos en el ActiveRecord que jOOQ genera para esa tabla. Si queremos obtener datos de múltiples tablas deberemos emplear otra forma, por ejemplo, podemos recoger los resultados en un objeto de tipo &lt;em&gt;Record&lt;/em&gt; genérico y posteriormente extraer los datos a los diferentes &lt;em&gt;Record&lt;/em&gt; concretos de la aplicación.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=SnippetMultipletables.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/63dcc9d0d6c2b2b459fb/raw/SnippetMultipletables.java&#34;&gt;SnippetMultipletables.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=SnippetMultipletables.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;El objeto &lt;em&gt;RecordContainer&lt;/em&gt; es el siguiente, con una propiedad por cada posible &lt;em&gt;Record&lt;/em&gt; que pudiese recuperar. Solo necesitaremos crear uno que incluya una propiedad con todos los posibles &lt;em&gt;Record&lt;/em&gt; que necesitemos.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=RecordContainer.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/63dcc9d0d6c2b2b459fb/raw/RecordContainer.java&#34;&gt;RecordContainer.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=RecordContainer.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Las clases completas &lt;em&gt;Main.java&lt;/em&gt; y &lt;em&gt;AppServiceImpl.java&lt;/em&gt; son las siguientes.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=Main.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/63dcc9d0d6c2b2b459fb/raw/Main.java&#34;&gt;Main.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=AppServiceImpl.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/63dcc9d0d6c2b2b459fb/raw/AppServiceImpl.java&#34;&gt;AppServiceImpl.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=Main.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=AppServiceImpl.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;La salida en la terminal de esta aplicación al iniciarse es la siguiente:&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=System.out&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/63dcc9d0d6c2b2b459fb/raw/System.out&#34;&gt;System.out&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=System.out&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;jOOQ presenta varias cosas interesantes sobre Hibernate, ya es en una alternativa con un enfoque diferente, con ideas interesantes, algunas ventajas y el tiempo dirá si se convierte en el nuevo estándar para la persistencia en las aplicaciones Java. Otra de las cosas comunes que necesitaremos en una aplicación es validar los objetos &lt;em&gt;Record&lt;/em&gt;, una posibilidad es usando Spring Validation.&lt;/p&gt;
 
@@ -189,58 +153,28 @@
 
 &lt;p&gt;Siguiendo el ejemplo de la empresa expuesta tendríamos dos bases de datos: &lt;em&gt;inventory&lt;/em&gt; y &lt;em&gt;purchases&lt;/em&gt;. Podemos tener un servicio que sea &lt;em&gt;InventoryService&lt;/em&gt; y otro servicio que sea &lt;em&gt;PurchasesService&lt;/em&gt; que contengan la lógica de negocio de cada área de negocio.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=InventoryService.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/247d4c1189e851d89d85/raw/InventoryService.java&#34;&gt;InventoryService.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=DefaultInventoryService.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/247d4c1189e851d89d85/raw/DefaultInventoryService.java&#34;&gt;DefaultInventoryService.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=InventoryService.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=DefaultInventoryService.java&#34;&gt;&lt;/script&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=PurchasesService.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/247d4c1189e851d89d85/raw/PurchasesService.java&#34;&gt;PurchasesService.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=DefaultPurchasesService.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/247d4c1189e851d89d85/raw/DefaultPurchasesService.java&#34;&gt;DefaultPurchasesService.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=PurchasesService.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=DefaultPurchasesService.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Al realizarse una compra a través del servicio &lt;em&gt;PurchasesService&lt;/em&gt; se ha de modificar el inventario del producto cosa que no se hace en el propio servicio de compras sino que se llama al servicio &lt;em&gt;InventoryService&lt;/em&gt; para que haga lo que deba, en el ejemplo modificar el inventario pero en un futuro podría ser enviar además una notificación o correo electrónico indicando que el &lt;em&gt;stock&lt;/em&gt; es bajo si cae por debajo de determinado número, el servicio de compras no debe conocer nada de esto ya que el inventario no forma parte de su nicho de información. En el ejemplo es una llamada usando un método de una clase pero podría ser una llamada a una &lt;abbr title=&#34;Application Programming Interface&#34;&gt;API&lt;/abbr&gt; &lt;abbr title=&#34;Representational State Transfer&#34;&gt;REST&lt;/abbr&gt; o &lt;abbr title=&#34;Remote Procedure Call&#34;&gt;RPC&lt;/abbr&gt; si realmente fueran microservicios.&lt;/p&gt;
 
 &lt;p&gt;Las sencillas clases &lt;em&gt;Item&lt;/em&gt; y &lt;em&gt;Purchase&lt;/em&gt; generadas con jOOQ implementan las siguientes interfaces:&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=IItem.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/247d4c1189e851d89d85/raw/IItem.java&#34;&gt;IItem.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=IPurchase.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/247d4c1189e851d89d85/raw/IPurchase.java&#34;&gt;IPurchase.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=IItem.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=IPurchase.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;El acceso a una base de datos usando jOOQ se consigue a través de la clase &lt;a href=&#34;http://www.jooq.org/javadoc/latest/org/jooq/DSLContext.html&#34;&gt;DSLContext&lt;/a&gt;, cada servicio recibe uno diferente que debemos definir en el contenedor de dependencias de Spring. Si fuesen dos bases de datos diferentes realmente debería haber definidos dos &lt;em&gt;bean&lt;/em&gt; &lt;em&gt;DataSource&lt;/em&gt; uno para cada servicio pero solo hay uno porque en el ejemplo se usa la base de datos &lt;a href=&#34;http://www.h2database.com/html/main.html&#34;&gt;H2&lt;/a&gt; y se accede no con un servidor sino al fichero directamente. También en el ejemplo realmente no son necesarios dos (uno para cada servicio) &lt;em&gt;TransactionManager&lt;/em&gt;, &lt;em&gt;TransactionAwareDataSourceProxy&lt;/em&gt;, &lt;em&gt;ConnectionProvider&lt;/em&gt;, &lt;em&gt;Config&lt;/em&gt; y &lt;em&gt;DSLContext&lt;/em&gt; pues solo hay una base de datos pero por mostrar más fielmente como sería el caso siendo dos bases de datos completamente diferentes lo he puesto así.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=AppConfiguration.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/247d4c1189e851d89d85/raw/AppConfiguration.java&#34;&gt;AppConfiguration.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=AppConfiguration.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Podemos crear la base de datos y los dos esquemas con una tarea de &lt;a href=&#34;http://gradle.org/&#34;&gt;Gradle&lt;/a&gt; y con &lt;a href=&#34;http://www.liquibase.org/&#34;&gt;Liquibase&lt;/a&gt;, con el comando &lt;code&gt;./gradlew updateDatabase&lt;/code&gt;, a continuación solo una parte del &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/blob/master/Multidatabase/build.gradle&#34;&gt;archivo &lt;em&gt;build.gradle&lt;/em&gt; completo&lt;/a&gt; y los archivos XML de actualización de los esquemas.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=build-liquibase.gradle&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/247d4c1189e851d89d85/raw/build-liquibase.gradle&#34;&gt;build-liquibase.gradle&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=inventory-changelog.xml&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/247d4c1189e851d89d85/raw/inventory-changelog.xml&#34;&gt;inventory-changelog.xml&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=purchases-changelog.xml&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/247d4c1189e851d89d85/raw/purchases-changelog.xml&#34;&gt;purchases-changelog.xml&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=build-liquibase.gradle&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=inventory-changelog.xml&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=purchases-changelog.xml&#34;&gt;&lt;/script&gt;
 
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
@@ -251,30 +185,23 @@
 
 &lt;p&gt;Como en jOOQ la fuente de la verdad es la base de datos los modelos se generan a partir de ella usando otra tarea de Gradle, generará las clases con las que trabajaremos en la aplicación con el comando &lt;code&gt;./gradlew generateModels&lt;/code&gt;. Las clases son las del paquete &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/Multidatabase/src/main/java/io/github/picodotdev/blogbitix/multidatabase/jooq&#34;&gt;io.github.picodotdev.blogbitix.multidatabase.jooq&lt;/a&gt;.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=build-jooq.gradle&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/247d4c1189e851d89d85/raw/build-jooq.gradle&#34;&gt;build-jooq.gradle&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=build-jooq.gradle&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Este sería el programa de ejemplo iniciado con &lt;a href=&#34;http://projects.spring.io/spring-boot/&#34;&gt;Spring Boot&lt;/a&gt; que usa ambos servicios, el de inventario y el de compras, creando un producto y haciendo una compra junto con su salida en la terminal. Ejecutándolo repetidamente con &lt;code&gt;./gradlew run&lt;/code&gt; veremos aumenta el número de productos y compras guardados en cada tabla de los dos esquemas.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=Main.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/247d4c1189e851d89d85/raw/Main.java&#34;&gt;Main.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=System.out&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/247d4c1189e851d89d85/raw/System.out&#34;&gt;System.out&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;p&gt;&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=Main.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=System.out&#34;&gt;&lt;/script&gt;
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
         &lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/28856.js&#34; id=&#34;asciicast-28856&#34; async&gt;&lt;/script&gt;
-        &lt;noscript&gt;&lt;a href=&#34;https://asciinema.org/a/28856&#34; target=&#34;_blank&#34;&gt;&lt;img src=&#34;https://asciinema.org/a/28856.png&#34; width=&#34;734&#34;/&gt;&lt;/a&gt;&lt;/noscript&gt;
-        
-        &lt;figcaption&gt;Ejecución del ejemplo multidatabase&lt;/figcaption&gt;
-        
-    &lt;/figure&gt;
-&lt;/div&gt;
+        &lt;noscript&gt;&lt;a href=&#34;https://asciinema.org/a/28856&#34; target=&#34;_blank&#34;&gt;&lt;img src=&#34;https://asciinema.org/a/28856.png&#34; width=&#34;734&#34;/&gt;&lt;/a&gt;&lt;/noscript&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    &amp;lt;figcaption&amp;gt;Ejecución del ejemplo multidatabase&amp;lt;/figcaption&amp;gt;
+
+&amp;lt;/figure&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;/div&gt;&lt;/p&gt;
 
 &lt;p&gt;Si quieres obtener más información sobre varias de las herramientas como jOOQ, Liquibase, Gradle o Spring Boot que forman en el momento de escribir este artículo el actual estado del arte en Java puedes leer los diferentes artículos que he he escrito sobre ellos de forma específica:&lt;/p&gt;
 
@@ -342,37 +269,22 @@
 
 &lt;p&gt;En el siguiente ejemplo mostraré como usar jOOQ y la configuración necesaria para emplearlo junto con &lt;a href=&#34;https://spring.io/&#34;&gt;Spring&lt;/a&gt;. En la siguiente configuración de Spring usando únicamente código Java se construye un &lt;em&gt;DataSource&lt;/em&gt;, un &lt;em&gt;Datasource&lt;/em&gt; con soporte de transacciones para el acceso a la base de datos,  un &lt;a href=&#34;http://www.jooq.org/javadoc/latest/org/jooq/ConnectionProvider.html&#34;&gt;&lt;em&gt;ConnectionProvider&lt;/em&gt;&lt;/a&gt; de jOOQ usará el &lt;em&gt;DataSource&lt;/em&gt; para obtener las conexiones a la base de datos, con la clase &lt;a href=&#34;http://www.jooq.org/javadoc/latest/org/jooq/Configuration.html&#34;&gt;&lt;em&gt;Configuration&lt;/em&gt;&lt;/a&gt; realizamos la configuración de jOOQ y finalmente &lt;a href=&#34;http://www.jooq.org/javadoc/latest/org/jooq/DSLContext.html&#34;&gt;&lt;em&gt;DSLContext&lt;/em&gt;&lt;/a&gt; es el objeto que usaremos para construir las sentencias SQL.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/940750739d639f0c46f5.js?file=AppConfiguration.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/940750739d639f0c46f5/raw/AppConfiguration.java&#34;&gt;AppConfiguration.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/940750739d639f0c46f5.js?file=AppConfiguration.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Una de las cosas que tendremos que resolver es que al generar código y usar el patrón &lt;em&gt;Active Record&lt;/em&gt;, si lo usamos ya que podemos usar jOOQ para generar únicamente las sentencias SQL o en los casos que lo hagamos pudiendo combiar &lt;em&gt;Active Records&lt;/em&gt; para unos casos y sentencias SQL con JDBC para otros, puede que necesitemos incluir campos adicionales a los presentes en la base de datos que manejen cierta lógica en la aplicación, también puede que necesitemos incluir métodos de lógica de negocio adicionales. Para incluir estos datos y métodos tendremos que extender la clase &lt;em&gt;Active Record&lt;/em&gt; que genera jOOQ. En aquellos sitios de la aplicación que necesitemos usar esas propiedades y métodos adicionales deberemos transformar la instancia de la clase que usa jOOQ (&lt;em&gt;PostRecord&lt;/em&gt;) por la clase que tenga esos datos adicionales (&lt;em&gt;AppPostRecord&lt;/em&gt;). Para ello la API de la clase &lt;a href=&#34;http://www.jooq.org/javadoc/3.6.x/org/jooq/Record.html&#34;&gt;Record&lt;/a&gt; ofrece el método &lt;a href=&#34;http://www.jooq.org/javadoc/3.6.x/org/jooq/Record.html#into-java.lang.Class-&#34;&gt;&lt;em&gt;into&lt;/em&gt;&lt;/a&gt; o &lt;a href=&#34;http://www.jooq.org/javadoc/3.6.x/org/jooq/Record.html#from-java.lang.Object-&#34;&gt;&lt;em&gt;from&lt;/em&gt;&lt;/a&gt; como muestro en el código de &lt;em&gt;AppPostRecord&lt;/em&gt; a continuación. Esta es la solución que he usado en &lt;a href=&#34;https://twitter.com/blogstackinfo&#34;&gt;Blog Stack&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;jOOQ nos genera automáticamente las clases que implementa el patrón &lt;em&gt;Active Record&lt;/em&gt; y dispondremos de los métodos CRUD heredados de la clase &lt;a href=&#34;http://www.jooq.org/javadoc/3.6.x/org/jooq/Record.html&#34;&gt;Record&lt;/a&gt;.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/940750739d639f0c46f5.js?file=AppPostRecord.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/940750739d639f0c46f5/raw/AppPostRecord.java&#34;&gt;AppPostRecord.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/940750739d639f0c46f5.js?file=AppPostRecord.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://blog.jooq.org/2014/09/12/why-you-should-not-implement-layered-architecture/&#34;&gt;Los desarrolladores de jOOQ abogan por la eliminación de capas&lt;/a&gt; en la arquitectura de la aplicación pero puede que aún preferimos desarrollar una capa que contenga las consultas a la base de datos que sea usada y compartida por el resto la aplicación para el acceso los datos, quizá más que una capa en este caso es una forma de organizar el código. Los &lt;em&gt;Active Records&lt;/em&gt; proporcionan algunos métodos de consulta pero probablemente necesitaremos más. En el siguiente ejemplo podemos ver como son las consultas con jOOQ. Si necesitamos métodos de búsqueda adicionales a los que por defecto jOOQ proporciona en Blog Stack he creado una clase &lt;a href=&#34;https://es.wikipedia.org/wiki/Data_Access_Object&#34;&gt;DAO&lt;/a&gt; por cada entidad de la base de datos. En el siguiente ejemplo se puede ver como se construyen las sentencias SQL con jOOQ usando su API fluida.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/940750739d639f0c46f5.js?file=PostDAO.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/940750739d639f0c46f5/raw/PostDAO.java&#34;&gt;PostDAO.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/940750739d639f0c46f5.js?file=PostDAOImpl.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/940750739d639f0c46f5/raw/PostDAOImpl.java&#34;&gt;PostDAOImpl.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/940750739d639f0c46f5.js?file=PostDAO.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/940750739d639f0c46f5.js?file=PostDAOImpl.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Para usar el generador de código de jOOQ con &lt;a href=&#34;http://gradle.org/&#34;&gt;Gradle&lt;/a&gt; debemos añadir la siguiente configuración al archivo de construcción del proyecto, este generador se conectará a la base de datos, obtendrá los datos de esquema y generará todas las clases del paquete &lt;a href=&#34;https://github.com/picodotdev/blog-stack/tree/master/src/main/java/info/blogstack/persistence/jooq&#34;&gt;info.blogstack.persistence.jooq&lt;/a&gt;. Por ejemplo, puede que queramos usar &lt;a href=&#34;http://www.joda.org/joda-time/&#34;&gt;JodaTime&lt;/a&gt; en vez de las clases &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Date.html&#34;&gt;Date&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/sql/Timestamp.html&#34;&gt;Timesptamp&lt;/a&gt; de la API de Java al menos si no usamos aún &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/&#34;&gt;Java 8 y sus novedades&lt;/a&gt;.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/940750739d639f0c46f5.js?file=build.gradle&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/940750739d639f0c46f5/raw/build.gradle&#34;&gt;build.gradle&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/940750739d639f0c46f5.js?file=build.gradle&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Otra alternativa con algunas similitudes a jOOQ es &lt;a href=&#34;http://jdbi.org/&#34;&gt;JDBI&lt;/a&gt; pero en esta las consultas no tienen el soporte del compilador que ofrece jOOQ, otra es &lt;a href=&#34;http://slick.typesafe.com/&#34;&gt;Slick&lt;/a&gt; para &lt;a href=&#34;http://www.scala-lang.org/&#34;&gt;Scala&lt;/a&gt;. También tiene cierta similitud con &lt;a href=&#34;https://mybatis.github.io/mybatis-3/es/&#34;&gt;MyBatis&lt;/a&gt; que existe desde hace bastante tiempo aunque jOOQ ofrece más posibilidades.&lt;/p&gt;
 

@@ -51,14 +51,8 @@
 
 &lt;p&gt;Iniciar el servidor OAuth de Keycloak usando &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt; es muy sencillo con el siguiente comando y archivo de &lt;a href=&#34;https://docs.docker.com/compose/&#34;&gt;Docker Compose&lt;/a&gt;, en el primer acceso se nos solicitará una clave y contraseña de administración:&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=docker-compose.yml&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc/raw/docker-compose.yml&#34;&gt;docker-compose.yml&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=docker-compose.sh&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc/raw/docker-compose.sh&#34;&gt;docker-compose.sh&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=docker-compose.yml&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=docker-compose.sh&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Para el ejemplo crearé un nuevo &lt;em&gt;realm&lt;/em&gt; que contendrá los usuarios y en el que registraremos la aplicación cliente.&lt;/p&gt;
 
@@ -94,48 +88,21 @@
 
 &lt;p&gt;Usando uno de los &lt;a href=&#34;https://keycloak.gitbooks.io/securing-client-applications-guide/content/v/2.2/topics/overview/supported-platforms.html&#34;&gt;adaptadores proporcionados por Keycloak&lt;/a&gt; para la integración en servidores y aplicaciones su uso no es complicado, en este caso usaré el adaptador para Spring Boot. Usándolo básicamente deberemos proporcionar en la configuración las credenciales de la aplicación cliente que hemos registrado previamente en Keycloak. Además indicaremos que URLs de la aplicación requiere autenticación y que roles han de poseer los usuarios autenticados. Al acceder a estas URLs el adaptador de Keycloak redirigirá al servidor para que el usuario se autentique, una vez autenticado se redirigirá a la aplicación de nuevo.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=application.yml&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc/raw/application.yml&#34;&gt;application.yml&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=application.yml&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Autenticado el usuario podemos obtener la instancia de &lt;a href=&#34;http://www.keycloak.org/docs/javadocs/org/keycloak/representations/AccessToken.html&#34;&gt;AccessToken&lt;/a&gt; que representa el &lt;em&gt;token&lt;/em&gt; de OAuth, para la autorización podemos usar Apache Shiro y para ellos deberemos implementar un Realm de tipo &lt;a href=&#34;https://shiro.apache.org/static/1.3.2/apidocs/org/apache/shiro/realm/AuthorizingRealm.html&#34;&gt;AuthorizingRealm&lt;/a&gt;. Tiene dos métodos que deberemos implementar &lt;a href=&#34;https://shiro.apache.org/static/1.3.2/apidocs/org/apache/shiro/realm/AuthenticatingRealm.html#doGetAuthenticationInfo-org.apache.shiro.authc.AuthenticationToken-&#34;&gt;doGetAuthenticationInfo&lt;/a&gt; y &lt;a href=&#34;https://shiro.apache.org/static/1.3.2/apidocs/org/apache/shiro/realm/AuthorizingRealm.html#doGetAuthorizationInfo-org.apache.shiro.subject.PrincipalCollection-&#34;&gt;doGetAuthorizationInfo&lt;/a&gt;, el primero lo usaremos para autenticar al usuario que en este caso teniendo el &lt;em&gt;AccessToken&lt;/em&gt; ya estará autenticado con Keycloak y el segundo método nos permitirá obtener los roles y permisos asociados al usuario que podríamos obtenerlos de una base de datos relacional, en el ejemplo los roles también se obtienen del token. Con un filtro realizaremos el inicio de sesión de forma programática del usuario representado por el &lt;em&gt;AccessToken&lt;/em&gt; cuando esté presente en la petición.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=KeycloakFilter.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc/raw/KeycloakFilter.java&#34;&gt;KeycloakFilter.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=AppRealm.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc/raw/AppRealm.java&#34;&gt;AppRealm.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=KeycloakFilter.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=AppRealm.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Con Apache Tapestry el filtro se registra en el módulo de la aplicación y con Shiro podemos realizar la autorización necesaria en las páginas u acciones de la aplicación usando anotaciones. En este caso una página pública que no requiere estar autenticado, una página accesible por un usuario autenticado y con rol &lt;em&gt;user&lt;/em&gt; y finalmente una página de administración que requiere rol &lt;em&gt;admin&lt;/em&gt;.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=Index.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc/raw/Index.java&#34;&gt;Index.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=User.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc/raw/User.java&#34;&gt;User.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=Admin.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc/raw/Admin.java&#34;&gt;Admin.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=Index.tml&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc/raw/Index.tml&#34;&gt;Index.tml&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=User.tml&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc/raw/User.tml&#34;&gt;User.tml&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=Admin.tml&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc/raw/Admin.tml&#34;&gt;Admin.tml&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=Index.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=User.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=Admin.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=Index.tml&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=User.tml&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=Admin.tml&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Como la página de inicio no requiere autenticación es accesible por cualquier usuario. Al navegar a la página de usuario o administrador se iniciará el proceso de autenticación primeramente redirigiéndonos al servidor Keycloak para que introduzcamos las credenciales.&lt;/p&gt;
 
@@ -247,28 +214,16 @@
 
 &lt;p&gt;Un ejemplo sencillo de la definición de una nueva clase en tiempo de ejecución con el método &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/String.html#toString--&#34;&gt;String.toString&lt;/a&gt; que devuelve un valor fijo sería la siguiente:&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Main-1.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/d4c18ea8e27c20450ba255e20715379a/raw/Main-1.java&#34;&gt;Main-1.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Main-1.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Con los métodos &lt;a href=&#34;http://bytebuddy.net/javadoc/1.4.28/net/bytebuddy/dynamic/DynamicType.html#saveIn-java.io.File-&#34;&gt;saveIn&lt;/a&gt;, &lt;a href=&#34;http://bytebuddy.net/javadoc/1.4.28/net/bytebuddy/dynamic/DynamicType.html#inject-java.io.File-&#34;&gt;inject&lt;/a&gt; y &lt;a href=&#34;http://bytebuddy.net/javadoc/1.4.28/net/bytebuddy/dynamic/DynamicType.html#toJar-java.io.File-&#34;&gt;toJar&lt;/a&gt; de &lt;a href=&#34;http://bytebuddy.net/javadoc/1.4.28/net/bytebuddy/dynamic/DynamicType.Unloaded.html&#34;&gt;DynamicType.Unloaded&lt;/a&gt; podemos generar las clases en el momento de construcción de la aplicación previo a que sea desplegada y guardarlas en archivos &lt;em&gt;.class&lt;/em&gt; o en librerías &lt;em&gt;.jar&lt;/em&gt;.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Main-2.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/d4c18ea8e27c20450ba255e20715379a/raw/Main-2.java&#34;&gt;Main-2.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Main-2.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Usando los selectores adecuados como &lt;em&gt;method&lt;/em&gt;, &lt;em&gt;field&lt;/em&gt;, &lt;em&gt;constructor&lt;/em&gt;, &lt;em&gt;named&lt;/em&gt; entre muchos otros de la clase &lt;a href=&#34;http://bytebuddy.net/javadoc/1.4.28/net/bytebuddy/matcher/ElementMatchers.html&#34;&gt;ElementMatchers&lt;/a&gt; seremos capaces de interceptar las llamadas a los métodos y establecerles el comportamiento que deseemos.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Main-3.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/d4c18ea8e27c20450ba255e20715379a/raw/Main-3.java&#34;&gt;Main-3.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Foo.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/d4c18ea8e27c20450ba255e20715379a/raw/Foo.java&#34;&gt;Foo.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Main-3.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Foo.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Byte Buddy permite tres tipos de extensiones:&lt;/p&gt;
 
@@ -282,27 +237,15 @@
 
 &lt;p&gt;Podemos proporcionar implementaciones de métodos de la siguiente forma, suponiendo que queremos redefinir el método &lt;em&gt;hello&lt;/em&gt; de la clase &lt;em&gt;Source&lt;/em&gt; con el comportamiento implementado en la clase &lt;em&gt;Target&lt;/em&gt;:&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Main-4.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/d4c18ea8e27c20450ba255e20715379a/raw/Main-4.java&#34;&gt;Main-4.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Source.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/d4c18ea8e27c20450ba255e20715379a/raw/Source.java&#34;&gt;Source.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Target.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/d4c18ea8e27c20450ba255e20715379a/raw/Target.java&#34;&gt;Target.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Main-4.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Source.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Target.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Dicho esto, la generación de código en tiempo de ejecución o compilación nos permite nuevas posibilidades que solo ofrecían lenguajes dinámicos o de resolver problemas con &lt;a href=&#34;https://en.wikipedia.org/wiki/Aspect-oriented_programming&#34;&gt;programación orientada a aspectos&lt;/a&gt;. Aún así hay que tener en cuenta que las clases Java son elementos especiales para la la máquina virtual y nunca son recolectadas por el recolector de basura mientras su &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html&#34;&gt;ClassLoader&lt;/a&gt; este en uso por alguna de las clases que hay cargadas en la aplicación.&lt;/p&gt;
 
 &lt;p&gt;Ejecutando esta pequeña aplicación obtenemos el siguiente resultado en la terminal.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=System.out&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/d4c18ea8e27c20450ba255e20715379a/raw/System.out&#34;&gt;System.out&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=System.out&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;En el &lt;a href=&#34;http://bytebuddy.net/#/tutorial&#34;&gt;tutorial de Byte Buddy&lt;/a&gt; encontraremos más información y más detallada de las posibilidades que nos ofrece esta interesante librería en la plataforma &lt;abbr title=&#34;Java Virtual Machine&#34;&gt;JVM&lt;/abbr&gt; para manipular &lt;em&gt;bytecode&lt;/em&gt; y tipos con el lenguaje Java en tiempo de ejecución.&lt;/p&gt;
 
@@ -355,24 +298,15 @@
 
 &lt;p&gt;Primero añadiremos como dependencia del proyecto la librería HttComponents. Como en las diferentes llamadas el intercambio de datos se realiza mediante el &lt;a href=&#34;http://json.org/&#34;&gt;formato JSON&lt;/a&gt; añadiremos otro par dependencias para procesar los datos en este formato, en este caso usando la API de &lt;a href=&#34;https://jsonp.java.net/&#34;&gt;JSON-P&lt;/a&gt; y una implementación.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/b174463a576223ab9986e3b32ac9b7be.js?file=build.gradle&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/b174463a576223ab9986e3b32ac9b7be/raw/build.gradle&#34;&gt;build.gradle&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/b174463a576223ab9986e3b32ac9b7be.js?file=build.gradle&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Este sencillo cliente realiza varias peticiones &lt;em&gt;get&lt;/em&gt; y &lt;em&gt;post&lt;/em&gt;. Una para obtener la configuración de los &lt;em&gt;endpoints&lt;/em&gt;, el que nos interesa es el de obtener un &lt;em&gt;access token&lt;/em&gt;, otra petición para obtener el &lt;em&gt;access token&lt;/em&gt; y finalmente con el &lt;em&gt;access token&lt;/em&gt; invocar al servicio mediante otra petición.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/b174463a576223ab9986e3b32ac9b7be.js?file=ClientMain.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/b174463a576223ab9986e3b32ac9b7be/raw/ClientMain.java&#34;&gt;ClientMain.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/b174463a576223ab9986e3b32ac9b7be.js?file=ClientMain.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Iniciado &lt;a href=&#34;http://www.keycloak.org/&#34;&gt;Keycloak&lt;/a&gt; con &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt;, configurado el &lt;em&gt;realm&lt;/em&gt; y creado un cliente junto con un rol e iniciado el servicio REST podemos ejecutar el cliente que invoque al servicio. El resultado de las trazas que obtendremos en la terminal será el siguiente.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/b174463a576223ab9986e3b32ac9b7be.js?file=System.out&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/b174463a576223ab9986e3b32ac9b7be/raw/System.out&#34;&gt;System.out&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/b174463a576223ab9986e3b32ac9b7be.js?file=System.out&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;En las trazas vemos el &lt;em&gt;endpoint&lt;/em&gt; para obtener &lt;em&gt;access token&lt;/em&gt;, el &lt;em&gt;access token&lt;/em&gt; obtenido, &lt;em&gt;refresh token&lt;/em&gt; y tiempos de expiración de los mismos, finalmente los datos devueltos por el servicio. Como se observa los &lt;em&gt;access token&lt;/em&gt; son una cadena opaca bastante larga de caracteres, y es que está cifrada, firmada digitalmente y contiene información como el rol y tiempos de expiración. Enviado el &lt;em&gt;access token&lt;/em&gt; al servicio REST el &lt;a href=&#34;https://keycloak.gitbooks.io/securing-client-applications-guide/content/v/2.2/topics/oidc/java/java-adapters.html&#34;&gt;adaptador de Keycloak para Spring Boot&lt;/a&gt; validará la firma digital del &lt;em&gt;token&lt;/em&gt;, descifrará la información, validará su tiempo de expiración y se comprobará si tiene el rol necesario para acceder al &lt;em&gt;endpoint&lt;/em&gt; del servicio REST. Notar que con la información incluida en el token y el hecho de que está firmado digitalmente no es necesario que el servicio REST se comunique con el proveedor de OAuth para hacer la validación.&lt;/p&gt;
 
@@ -425,19 +359,13 @@
 
 &lt;p&gt;Para no incluir en las páginas o artículos las mismas URLs una y otra vez tengo un archivo de referencias a enlaces en el que en formato &lt;a href=&#34;http://es.wikipedia.org/wiki/Markdown&#34;&gt;markdown&lt;/a&gt; a cada URL le doy un identificativo. Posteriormente hago uso de una facilidad que proporciona Hugo que son los &lt;a href=&#34;https://gohugo.io/extras/shortcodes/&#34;&gt;shortcodes&lt;/a&gt; similares a pequeños contenidos que pueden ser incluídos en los archivos de contenido u otras plantillas, este sería un trozo de un archivo de enlaces:&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/133181ba1d0df5c82369026ad1f9e350.js?file=links.html&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/133181ba1d0df5c82369026ad1f9e350/raw/links.html&#34;&gt;links.html&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/133181ba1d0df5c82369026ad1f9e350.js?file=links.html&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;El día que un enlace cambie basta con que lo modifique en el archivo enlaces sin tener que revisar, buscar, reemplazar y editar los archivos de contenido.&lt;/p&gt;
 
 &lt;p&gt;Esto para los enlaces externos hacia otras páginas pero de forma similar lo aplico a los enlaces internos hacia otras páginas de la bitácora. A cada artículo le asigno un número secuencial según los voy escribiendo y publicando, con esa secuencia creo un identificativo para el artículo y le asocio su URL.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/133181ba1d0df5c82369026ad1f9e350.js?file=postlinks.html&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/133181ba1d0df5c82369026ad1f9e350/raw/postlinks.html&#34;&gt;postlinks.html&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/133181ba1d0df5c82369026ad1f9e350.js?file=postlinks.html&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Con estos archivos usando la &lt;a href=&#34;https://daringfireball.net/projects/markdown/syntax#link&#34;&gt;sintaxis de markdown&lt;/a&gt; con &lt;code&gt;[texto enlace][identificativo-enlace]&lt;/code&gt;, por ejemplo &lt;code&gt;[¡Hola nuevo mundo!][blogbitix-0]&lt;/code&gt;, puedo hacer referencia a los enlaces con su identificativo y al generar el contenido estas referencias será sustituidas por los enlaces referenciados.&lt;/p&gt;
 
@@ -512,17 +440,11 @@
 
 &lt;p&gt;Si usamos Windows deberemos ejecutar los siguientes comandos en modo administrador, sustituyendo &lt;em&gt;macOS Sierra 10.12&lt;/em&gt; por el nombre que le hayamos dado a la máquina virtual al crearla:&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/588b2cd99be69d340c79cafb55f9b334.js?file=windows.cmd&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/588b2cd99be69d340c79cafb55f9b334/raw/windows.cmd&#34;&gt;windows.cmd&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/588b2cd99be69d340c79cafb55f9b334.js?file=windows.cmd&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;En el caso de Linux el archivo de comandos es similar e igualmente sustituiremos &lt;em&gt;macOS Sierra 10.12&lt;/em&gt; por el nombre que le hayamos dado a la máquina virtual al crearla:&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/588b2cd99be69d340c79cafb55f9b334.js?file=linux.sh&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/588b2cd99be69d340c79cafb55f9b334/raw/linux.sh&#34;&gt;linux.sh&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/588b2cd99be69d340c79cafb55f9b334.js?file=linux.sh&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Hecho estos dos pasos podemos proceder a iniciar la máquina virtual, veremos que empiezan a salir unos cuantos mensajes hasta que se inicia el sistema gráfico con la instalación y su asistente que constará de varios pasos.&lt;/p&gt;
 
@@ -679,14 +601,8 @@
 
 &lt;p&gt;Iniciado Keycloak con &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt; y &lt;a href=&#34;https://docs.docker.com/compose/&#34;&gt;Docker Compose&lt;/a&gt; accedemos al panel de administración con el navegador, en mi caso en &lt;em&gt;&lt;a href=&#34;http://localhost:9080&#34;&gt;http://localhost:9080&lt;/a&gt;&lt;/em&gt; con el usuario &lt;em&gt;admin&lt;/em&gt; y contraseña &lt;em&gt;admin&lt;/em&gt; según lo indicado en el archivo &lt;em&gt;docker-compose.yml&lt;/em&gt;.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=docker-compose.yml&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/d3cd61c429b60c83531b624245f77bd4/raw/docker-compose.yml&#34;&gt;docker-compose.yml&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=docker-compose-up.sh&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/d3cd61c429b60c83531b624245f77bd4/raw/docker-compose-up.sh&#34;&gt;docker-compose-up.sh&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=docker-compose.yml&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=docker-compose-up.sh&#34;&gt;&lt;/script&gt;
 
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
@@ -723,21 +639,12 @@
 
 &lt;p&gt;Indicaremos también el rol que deberá poseer el cliente para acceder al servicio REST junto que URLs del servicio estarán autenticadas por OAuth. Añadida la configuración al archivo &lt;em&gt;application.yml&lt;/em&gt; el servicio REST es totalmente inconsciente de la autenticación que se realizará con OAuth y Keycloak.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=application.yml&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/d3cd61c429b60c83531b624245f77bd4/raw/application.yml&#34;&gt;application.yml&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=MessageResource.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/d3cd61c429b60c83531b624245f77bd4/raw/MessageResource.java&#34;&gt;MessageResource.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=application.yml&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=MessageResource.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Iniciado Keycloak y el servicio REST con el comando &lt;code&gt;./gradlew run&lt;/code&gt; podemos iniciar el proceso de obtención de un &lt;em&gt;access token&lt;/em&gt; y llamar al servicio proporcionando el &lt;em&gt;access token&lt;/em&gt; obtenido y ver que pasa si no proporcionamos &lt;em&gt;token&lt;/em&gt; o uno modificado o inválido. Para obtener el &lt;em&gt;access token&lt;/em&gt; podemos emplear &lt;em&gt;curl&lt;/em&gt; accediendo al &lt;em&gt;endpoint&lt;/em&gt; de Keycloak para obtenerlos.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=curl-token.sh&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/d3cd61c429b60c83531b624245f77bd4/raw/curl-token.sh&#34;&gt;curl-token.sh&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=curl-token.sh&#34;&gt;&lt;/script&gt;
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
@@ -748,12 +655,9 @@
 &lt;/figure&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Obtenido el &lt;em&gt;access token&lt;/em&gt; si no lo proporcionamos en la llamada al servicio REST observaremos que la respuesta que obtenemos es un &lt;a href=&#34;https://en.wikipedia.org/wiki/List_of_HTTP_status_codes&#34;&gt;código de estado HTTP 401&lt;/a&gt; indicando que se necesitan proporcionar las credenciales que con OAuth es un &lt;em&gt;token&lt;/em&gt;.&lt;/p&gt;
+Obtenido el _access token_ si no lo proporcionamos en la llamada al servicio REST observaremos que la respuesta que obtenemos es un [código de estado HTTP 401][wikipedia-http-status-codes] indicando que se necesitan proporcionar las credenciales que con OAuth es un _token_.
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=curl-401.sh&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/d3cd61c429b60c83531b624245f77bd4/raw/curl-401.sh&#34;&gt;curl-401.sh&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=curl-401.sh&#34;&gt;&lt;/script&gt;
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
@@ -764,12 +668,9 @@
 &lt;/figure&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Proporcionando el token mediante una cabecera de la petición el servicio nos devolverá los datos que proporciona. Si el &lt;em&gt;token&lt;/em&gt; no es válido obtendremos un error HTTP 401.&lt;/p&gt;
+Proporcionando el token mediante una cabecera de la petición el servicio nos devolverá los datos que proporciona. Si el _token_ no es válido obtendremos un error HTTP 401.
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=curl.sh&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/d3cd61c429b60c83531b624245f77bd4/raw/curl.sh&#34;&gt;curl.sh&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=curl.sh&#34;&gt;&lt;/script&gt;
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
@@ -782,12 +683,9 @@
 &lt;/figure&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Para usar Keycloak en una aplicación Java con Spring Boot deberemos añadir algunas dependencias al proyecto que usando &lt;a href=&#34;http://gradle.org/&#34;&gt;Gradle&lt;/a&gt; como herramienta de construcción serían las siguientes.&lt;/p&gt;
+Para usar Keycloak en una aplicación Java con Spring Boot deberemos añadir algunas dependencias al proyecto que usando [Gradle][gradle] como herramienta de construcción serían las siguientes.
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=build.gradle&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/d3cd61c429b60c83531b624245f77bd4/raw/build.gradle&#34;&gt;build.gradle&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=build.gradle&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Un buen libro sobre OAuth que he leído es &lt;a href=&#34;http://amzn.to/2cUkF9d&#34;&gt;Mastering OAuth 2.0&lt;/a&gt; que explica detalladamente el protocolo OAuth junto con el resto de formas de obtener un &lt;em&gt;token&lt;/em&gt; además del mostrado en este artículo usando las credenciales del cliente.&lt;/p&gt;
 
@@ -849,10 +747,7 @@
 
 &lt;p&gt;Google Analytics además de proporcionarnos diversa información interesante sobre las visitas que recibimos en una página web puede servirnos para analizar el comportamiento de los usuarios, como interaccionan con la página, qué acciones realizan o que funcionalidades son usadas. La forma con la que podemos agregar información propia de la aplicación o página web es mediante los eventos de Analytics. Después de &lt;a href=&#34;https://developers.google.com/analytics/devguides/collection/analyticsjs/&#34;&gt;instalar el &lt;em&gt;script&lt;/em&gt; de Analytics&lt;/a&gt; podemos enviar eventos simplemente con la siguiente linea de código JavaScript.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/c66532a6eaab846b579ff55b902e874f.js?file=ad-enter.js&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c66532a6eaab846b579ff55b902e874f/raw/ad-enter.js&#34;&gt;ad-enter.js&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/c66532a6eaab846b579ff55b902e874f.js?file=ad-enter.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;La información del evento de compone de categoría (&lt;em&gt;category&lt;/em&gt;), acción (&lt;em&gt;action&lt;/em&gt;), etiqueta (&lt;em&gt;opt_label&lt;/em&gt;), valor  (&lt;em&gt;opt_value&lt;/em&gt;) y si no supone interacción (&lt;em&gt;opt_noninteraction&lt;/em&gt;). Deberemos proporcionar valores según queramos estructurar los eventos obligatoriamente para categoría y acción siendo el resto opcionales. En mi bitácora uso Analytics para además de visualizar la información que proporciona sobre visitas, ubicación de los usuarios, idioma, plataforma y navegador que usan, páginas más visitadas, origen de las visitas para lanzar unos cuantos eventos que me proporcionen información sobre las pulsaciones que se realizan en el menú de categorías y en los enlaces de redes sociales, en la lista de artículos recientes, artículos destacados y en el &lt;em&gt;widget&lt;/em&gt; de ShareThis y si se hace en el del inicio del artículo o en el del final. En la sección &lt;em&gt;Comportamiento &amp;gt; Eventos&lt;/em&gt; se agrega toda la información de los eventos, además podremos monitorizar en tiempo real los eventos que se estén produciendo en la sección &lt;em&gt;Tiempo real &amp;gt; Eventos&lt;/em&gt;.&lt;/p&gt;
 
@@ -860,10 +755,7 @@
 
 &lt;p&gt;Podemos medir cualquier cosa que deseemos incluso podemos conocer cuantos usuarios usan un bloqueador de anuncios como &lt;a href=&#34;https://adblockplus.org/es/&#34;&gt;AdBlock&lt;/a&gt;. Este es el código JavaScript que uso para conocer cuantos usuarios lo tiene activado o no.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/c66532a6eaab846b579ff55b902e874f.js?file=ad-block.js&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/c66532a6eaab846b579ff55b902e874f/raw/ad-block.js&#34;&gt;ad-block.js&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/c66532a6eaab846b579ff55b902e874f.js?file=ad-block.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;En la sección &lt;a href=&#34;https://developers.google.com/analytics/devguides/collection/analyticsjs/events&#34;&gt;Seguimiento de eventos&lt;/a&gt; de la documetación de Google Analytics y en el resto de secciónes hay más detalles sobre esta herramienta. Para cualquier cosa que podamos reaccionar mediente un evento con JavaScript podemos medirla con Analytics, sirviéndonos para extraer información valiosa sobre los usuarios que nos permitan medir, entender y luego mejorar la experiencia de usuario de nuestra propia página web.&lt;/p&gt;
 
@@ -911,47 +803,23 @@
 
 &lt;p&gt;Esta es la definición del &lt;em&gt;bean&lt;/em&gt; del servicio que creará el mensaje para el contenedor de inversión de control, también definimos el recurso del servicio REST para Jersey.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=Main.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/76862386194b211fc775b5fb36732bc9/raw/Main.java&#34;&gt;Main.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=JerseyConfig.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/76862386194b211fc775b5fb36732bc9/raw/JerseyConfig.java&#34;&gt;JerseyConfig.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=Main.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=JerseyConfig.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;El servicio lo definimos en una interfaz y una clase que la implementa.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=MessageService.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/76862386194b211fc775b5fb36732bc9/raw/MessageService.java&#34;&gt;MessageService.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=DefaultMessageService.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/76862386194b211fc775b5fb36732bc9/raw/DefaultMessageService.java&#34;&gt;DefaultMessageService.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=Message.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/76862386194b211fc775b5fb36732bc9/raw/Message.java&#34;&gt;Message.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=MessageService.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=DefaultMessageService.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=Message.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Es habitual que los servicios REST produzca como resultado un JSON como formato para devolver los datos. No necesitaremos hacer nada especial para convertir el &lt;em&gt;Java Bean&lt;/em&gt; de la clase &lt;em&gt;Message&lt;/em&gt; a JSON, de ello se encargará automáticamente JAX-RS. Con anotaciones como &lt;a href=&#34;http://docs.oracle.com/javaee/7/api/javax/ws/rs/QueryParam.html&#34;&gt;@QueryParam&lt;/a&gt; podemos obtener los parámetros del &lt;em&gt;query string&lt;/em&gt;, de la URL o cabeceras enviadas.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=MessageResource.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/76862386194b211fc775b5fb36732bc9/raw/MessageResource.java&#34;&gt;MessageResource.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=MessageResource.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Iniciada la aplicación con &lt;code&gt;./gradlew run&lt;/code&gt; y con la siguiente comando de &lt;code&gt;curl&lt;/code&gt; y URL obtendremos el mensaje en formato JSON en la salida.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=curl.sh&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/76862386194b211fc775b5fb36732bc9/raw/curl.sh&#34;&gt;curl.sh&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=out.txt&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/76862386194b211fc775b5fb36732bc9/raw/out.txt&#34;&gt;out.txt&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=curl.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=out.txt&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Al diseñar APIs REST más complejas que este sencillo ejemplo conviene conocer el término &lt;a href=&#34;https://en.wikipedia.org/wiki/HATEOAS&#34;&gt;HATEOAS&lt;/a&gt;. Deberemos definir como organizar la información devuelta por los diferentes que los libros &lt;a href=&#34;http://amzn.to/2cxWMRo&#34;&gt;RESTful Web APIs&lt;/a&gt; y &lt;a href=&#34;http://amzn.to/2cEzQz5&#34;&gt;REST in Practice&lt;/a&gt; además de &lt;a href=&#34;http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api&#34;&gt;artículos con consejos sobre como diseñar APIs RESTful&lt;/a&gt;.&lt;/p&gt;
 
@@ -1292,18 +1160,9 @@
 
 &lt;p&gt;Esto puede probarse con el siguiente ejemplo de código de un programa Java que guarda y recupera de una base de datos &lt;a href=&#34;http://www.postgresql.org/&#34;&gt;PostgreSQL&lt;/a&gt; una fecha que está en el intervalo de cambio horario. En el ejemplo utilizaré &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/series/docker/&#34;&gt;Docker&lt;/a&gt;.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/795512b5f0cb61bf88b16dfff519f4e7.js?file=Main.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/795512b5f0cb61bf88b16dfff519f4e7/raw/Main.java&#34;&gt;Main.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/795512b5f0cb61bf88b16dfff519f4e7.js?file=System.out&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/795512b5f0cb61bf88b16dfff519f4e7/raw/System.out&#34;&gt;System.out&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/795512b5f0cb61bf88b16dfff519f4e7.js?file=docker-compose.yml&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/795512b5f0cb61bf88b16dfff519f4e7/raw/docker-compose.yml&#34;&gt;docker-compose.yml&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/795512b5f0cb61bf88b16dfff519f4e7.js?file=Main.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/795512b5f0cb61bf88b16dfff519f4e7.js?file=System.out&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/795512b5f0cb61bf88b16dfff519f4e7.js?file=docker-compose.yml&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Tabajar con fechas no es simple, es muy curioso y no debemos hacer &lt;a href=&#34;http://infiniteundo.com/post/25509354022/more-falsehoods-programmers-believe-about-time&#34;&gt;suposiciones sobre las fechas que son incorrectas&lt;/a&gt; en las aplicaciones.&lt;/p&gt;
 
@@ -1363,14 +1222,8 @@
 
 &lt;p&gt;Usando Docker y el archivo de configuración completo podemos probar que funciona en local sin necesidad de instalar o cambiar la configuración de Nginx si tenemos instalado su paquete.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/82d3c361c947d57a25b346b386bdf3a9.js?file=docker-run-nginx.sh&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/82d3c361c947d57a25b346b386bdf3a9/raw/docker-run-nginx.sh&#34;&gt;docker-run-nginx.sh&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/82d3c361c947d57a25b346b386bdf3a9.js?file=nginx.conf&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/82d3c361c947d57a25b346b386bdf3a9/raw/nginx.conf&#34;&gt;nginx.conf&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/82d3c361c947d57a25b346b386bdf3a9.js?file=docker-run-nginx.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/82d3c361c947d57a25b346b386bdf3a9.js?file=nginx.conf&#34;&gt;&lt;/script&gt;
 
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
@@ -1386,14 +1239,8 @@
 
 &lt;h3 id=&#34;apache&#34;&gt;Apache&lt;/h3&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/82d3c361c947d57a25b346b386bdf3a9.js?file=docker-run-httpd.sh&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/82d3c361c947d57a25b346b386bdf3a9/raw/docker-run-httpd.sh&#34;&gt;docker-run-httpd.sh&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/82d3c361c947d57a25b346b386bdf3a9.js?file=httpd.conf&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/82d3c361c947d57a25b346b386bdf3a9/raw/httpd.conf&#34;&gt;httpd.conf&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/82d3c361c947d57a25b346b386bdf3a9.js?file=docker-run-httpd.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/82d3c361c947d57a25b346b386bdf3a9.js?file=httpd.conf&#34;&gt;&lt;/script&gt;
 
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
@@ -1462,21 +1309,12 @@
 
 &lt;p&gt;Hay que modificar el archivo de configuración de Nginx para que cachee el contenido. La directiva &lt;em&gt;proxy_cache_path&lt;/em&gt; indica donde se guardarán el contenido cacheado, cual es el tamaño de los metadatos de la caché y el tiempo de inactividad para cachear pasado el cual los recursos serán descartables. La directiva &lt;em&gt;proxy_cache_key&lt;/em&gt; permite diferenciar los recursos en la cache, &lt;em&gt;add_header X-Proxy-Cache&lt;/em&gt; añade una cabecera para la respuesta de Nginx con el resultado de cache que nos permite conocer si se produjo un acierto en la caché, un fallo o se ignoró la cache. Lo que es útil para depurar la aplicación u obtener información. Con &lt;em&gt;proxy_pass&lt;/em&gt; hacemos que Nginx haga de &lt;em&gt;proxy&lt;/em&gt; para el servidor de aplicaciones o la aplicación.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/9bc353ad2c84bfd320c4819f2a91b98c.js?file=nginx.conf&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/9bc353ad2c84bfd320c4819f2a91b98c/raw/nginx.conf&#34;&gt;nginx.conf&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/9bc353ad2c84bfd320c4819f2a91b98c.js?file=docker-compose.yml&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/9bc353ad2c84bfd320c4819f2a91b98c/raw/docker-compose.yml&#34;&gt;docker-compose.yml&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/9bc353ad2c84bfd320c4819f2a91b98c.js?file=nginx.conf&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/9bc353ad2c84bfd320c4819f2a91b98c.js?file=docker-compose.yml&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;La siguiente pequeña aplicación Java que usa el &lt;a href=&#34;http://spark.apache.org/&#34;&gt;framework Spark&lt;/a&gt; expone dos recursos para probar el funcionamiento de cache de Nginx, un recurso añade cabeceras de cacheo para la respuesta y otro no añade las cabeceras de respuesta. Atendiendo a las cabeceras establecidas por la aplicación y Nginx configurado para hacer de &lt;em&gt;proxy&lt;/em&gt; y cache devolverá el contenido deseado de su cache o solicitándolo a la aplicación y cacheándolo si así se indica en las cabeceras de respuesta.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/9bc353ad2c84bfd320c4819f2a91b98c.js?file=Main.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/9bc353ad2c84bfd320c4819f2a91b98c/raw/Main.java&#34;&gt;Main.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/9bc353ad2c84bfd320c4819f2a91b98c.js?file=Main.java&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;La primera petición que se realiza al recurso &lt;em&gt;cache&lt;/em&gt; devuelve un &lt;a href=&#34;https://es.wikipedia.org/wiki/Anexo:C%C3%B3digos_de_estado_HTTP#2xx:_Peticiones_correctas&#34;&gt;código de estado 200 de HTTP&lt;/a&gt; y Nginx en la cabecera &lt;em&gt;X-Proxy-Cache&lt;/em&gt; indica que se ha producido un &lt;em&gt;MISS&lt;/em&gt; o fallo en la cache, la segunda petición realizada antes de que pase el minuto del tiempo de expiración devuelve un &lt;a href=&#34;https://es.wikipedia.org/wiki/Anexo:C%C3%B3digos_de_estado_HTTP#3xx:_Redirecciones&#34;&gt;código de estado 304&lt;/a&gt; y Nginx en la cabecera &lt;em&gt;X-Proxy-Cache&lt;/em&gt; un &lt;em&gt;HIT&lt;/em&gt; o acierto en la cache, finalmente pasado más de un minuto del tiempo de expiración se devuelve un código de estado 200 y Nginx en la cabecera &lt;em&gt;X-Proxy-Cache&lt;/em&gt; un &lt;em&gt;EXPIRED&lt;/em&gt;. En las trazas de Nginx vemos las peticiones que se producen sus códigos de estado y después de este los bytes transferidos de contenido, nótese que en los casos de los 304 los bytes transferidos son 0, bytes de datos ahorrados y evitado que la petición llegue a la aplicación que son unos de los objetivos de las caches. En el recurso &lt;em&gt;nocache&lt;/em&gt; de la aplicación Nginx no cachea el contenido devuelto ya que en este no se establecen las cabeceras de cache en la respuesta.&lt;/p&gt;
 
@@ -1501,14 +1339,8 @@
 &lt;/figure&gt;
 &lt;/div&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/9bc353ad2c84bfd320c4819f2a91b98c.js?file=nginx.out&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/9bc353ad2c84bfd320c4819f2a91b98c/raw/nginx.out&#34;&gt;nginx.out&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/9bc353ad2c84bfd320c4819f2a91b98c.js?file=curl-cache.sh&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/9bc353ad2c84bfd320c4819f2a91b98c/raw/curl-cache.sh&#34;&gt;curl-cache.sh&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/9bc353ad2c84bfd320c4819f2a91b98c.js?file=nginx.out&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/9bc353ad2c84bfd320c4819f2a91b98c.js?file=curl-cache.sh&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;Hay servidores específicos para realizar tareas de cache como &lt;a href=&#34;https://varnish-cache.org/&#34;&gt;Varnish&lt;/a&gt; con más opciones de las que ofrece Nginx. Para los casos no complicados usando Nginx evitamos añadir una nueva pieza a la arquitectura de la aplicación. Entre los productos que ofrece Amazon está &lt;a href=&#34;https://aws.amazon.com/es/cloudfront/&#34;&gt;Cloudfront&lt;/a&gt; que es una cache para recursos estáticos con el añadido de que de forma automática está distribuida geográficamente de forma que los recursos se sirven por un servidor más cercano al cliente evitando un mal rendimiento por la latencia. En el artículo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/07/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry/&#34;&gt;servir recursos estáticos de un CDN en Apache Tapestry&lt;/a&gt; comento como usar esta red de distribución de contenido ofrecida por Amazon.&lt;/p&gt;
 
@@ -1596,44 +1428,20 @@
 
 &lt;p&gt;Definida la necesidad y unas pocas notas voy a poner el código de como con Apache Tapestry implementar la solución. La página del listado será la siguiente. En el &lt;em&gt;checkbox&lt;/em&gt; de selección se añade el atributo &lt;em&gt;data-product-actions&lt;/em&gt; con las acciones posibles que se obtienen del servicio &lt;em&gt;AppService&lt;/em&gt; con el método &lt;em&gt;getAvaliableActions&lt;/em&gt;. El componente de Tapestry &lt;em&gt;actions&lt;/em&gt; generará el código de los botones tanto para los individuales en su uso &lt;em&gt;&amp;lt;t:actions&amp;gt;&lt;/em&gt; con el parámetro &lt;em&gt;product&lt;/em&gt; como múltiples en su uso con el parámetro &lt;em&gt;type&lt;/em&gt;.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=Index.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/11715e0799339d0335a30ce30a17ee58/raw/Index.java&#34;&gt;Index.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=Index.tml&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/11715e0799339d0335a30ce30a17ee58/raw/Index.tml&#34;&gt;Index.tml&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=Index.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=Index.tml&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;El código para mostrar las acciones con botones para un determinado producto o para los productos es el siguiente. El mismo componente se encargará de realizar en el servidor la acción habilitar que no necesita modal. Con un poco de &lt;a href=&#34;http://es.wikipedia.org/wiki/JavaScript&#34;&gt;JavaScript&lt;/a&gt;, &lt;a href=&#34;http://jquery.com/&#34;&gt;jQuery&lt;/a&gt; y &lt;a href=&#34;http://underscorejs.org/&#34;&gt;Underscore&lt;/a&gt; se habilitarán o deshabilitarán los botones y se mostrará el diálogo para la acción deshabilitar.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=Actions.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/11715e0799339d0335a30ce30a17ee58/raw/Actions.java&#34;&gt;Actions.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=Actions.tml&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/11715e0799339d0335a30ce30a17ee58/raw/Actions.tml&#34;&gt;Actions.tml&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=actions.js&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/11715e0799339d0335a30ce30a17ee58/raw/actions.js&#34;&gt;actions.js&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=Actions.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=Actions.tml&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=actions.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;El código del modal para deshabilitar sería el siguiente. En el método &lt;em&gt;show&lt;/em&gt; recibe los &lt;em&gt;ids&lt;/em&gt; de los productos a deshabilitar y recupera del servidor el contenido de diálogo con una petición AJAX. El componente del modal se encargará de hacer el deshabilitado de los productos y la recarga de la página si finaliza correctamente o de mostar los errores de validación que se produzcan si no se ha introducido el motivo.&lt;/p&gt;
 
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=DisableProductsModal.java&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/11715e0799339d0335a30ce30a17ee58/raw/DisableProductsModal.java&#34;&gt;DisableProductsModal.java&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=DisableProductsModal.tml&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/11715e0799339d0335a30ce30a17ee58/raw/DisableProductsModal.tml&#34;&gt;DisableProductsModal.tml&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;script src=&#34;https://gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=modals.js&#34;&gt;&lt;/script&gt;
-  &lt;noscript&gt;&lt;pre&gt;&lt;a href=&#34;https://gist.githubusercontent.com/picodotdev/11715e0799339d0335a30ce30a17ee58/raw/modals.js&#34;&gt;modals.js&lt;/pre&gt;&lt;/a&gt;&lt;/noscript&gt;
-&lt;/div&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=DisableProductsModal.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=DisableProductsModal.tml&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=modals.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;
     El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/TapestryMultipleActions&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
