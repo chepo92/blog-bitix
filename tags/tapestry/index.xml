@@ -11,9 +11,128 @@
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
     
     <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2016/10/componente-select-multiple-en-apache-tapestry/</id>
+        <title>Componente select múltiple en Apache Tapestry</title>        
+        <updated>2016-10-22T09:00:00+02:00</updated>
+        <published>2016-10-22T09:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/10/componente-select-multiple-en-apache-tapestry/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/apache-tapestry.png&#34; class=&#34;right&#34; alt=&#34;Apache Tapestry&#34; title=&#34;Apache Tapestry&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;El &lt;em&gt;framework&lt;/em&gt; basado en componentes Apache Tapestry incorpora una amplia &lt;a href=&#34;http://tapestry.apache.org/component-reference.html&#34;&gt;colección de componentes&lt;/a&gt; que nos bastarán en la mayoría de casos que necesitemos. Para los casos en que deseemos un componente con un comportamiento específico podemos construir uno completamente nuevo basado en otros existentes incluyendo los propios nuestros, de una librería o incluidos en Tapestry.&lt;/p&gt;
+
+&lt;p&gt;En Tapestry hay múltiples componentes con los que construir formularios para que el usuario pueda introducir datos, ser enviados por el navegador y procesados en el servidor. Hay componentes de formulario desde &lt;em&gt;checkboxes&lt;/em&gt;, &lt;em&gt;radios&lt;/em&gt;, &lt;em&gt;select&lt;/em&gt;, &lt;em&gt;inputs&lt;/em&gt;, &amp;hellip; con soporte para &lt;abbr title=&#34;HyperText Markup Language&#34;&gt;HTML&lt;/abbr&gt; 5.&lt;/p&gt;
+
+&lt;p&gt;Observando en detalle la lista de componentes ofrecidos nos daremos cuenta de que está un componente &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/corelib/components/Select.html&#34;&gt;Select&lt;/a&gt; pero que solo se puede utilizar para que el usuario seleccione una única opción, sin embargo, en el estándar de HTML los campos de selección pueden utilizarse para seleccionar múltiples opciones. Como se no ofrece un componente &lt;em&gt;select&lt;/em&gt; para seleccionar múltiples opciones a la vez si lo necesitamos deberemos implementar uno que nos ofrezca esta funcionalidad. Con el codigo fuente de Tapestry la tarea es mucho más sencilla y prácticamente es copiar y pegar, el código completo del componente &lt;em&gt;MultiSelect&lt;/em&gt; será lo que muestre a continuación.&lt;/p&gt;
+
+&lt;p&gt;Todo componente de formulario en este &lt;em&gt;framework&lt;/em&gt; hereda de &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/corelib/base/AbstractField.html&#34;&gt;AbstracField&lt;/a&gt; en el que básicamente deberemos proporcionar una implementación del método &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/corelib/base/AbstractField.html#processSubmission(java.lang.String)&#34;&gt;processSubmission()&lt;/a&gt; donde procesaremos los datos recibidos en este caso con un método equivalente al tradicional en Java EE &lt;a href=&#34;https://docs.oracle.com/javaee/7/api/javax/servlet/ServletRequest.html#getParameterValues-java.lang.String-&#34;&gt;ServletRequest.getParameterValues&lt;/a&gt;. La otra parte que deberemos implementar es la generación de etiquetas HTML del componente en el método de ciclo de vida &lt;em&gt;beginRender()&lt;/em&gt; que en gran parte nos servirá lo implementado en el código fuente del componente &lt;em&gt;Select&lt;/em&gt; de Tapestry pero incluyendo el atributo &lt;em&gt;multiple&lt;/em&gt; que requiere HTML para los &lt;em&gt;selects&lt;/em&gt; de múltiples opciones.&lt;/p&gt;
+
+&lt;p&gt;Esta sería una implementación de un componente &lt;em&gt;select&lt;/em&gt; múltiple. La mayor diferencia entre el componente &lt;em&gt;Select&lt;/em&gt; y este &lt;em&gt;MultiSelect&lt;/em&gt; está en la propiedad &lt;em&gt;value&lt;/em&gt; que en el primero es de tipo &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html&#34;&gt;Object&lt;/a&gt; donde se guardará el dato seleccionado y &lt;em&gt;selected&lt;/em&gt; en el segundo que es un &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/List.html&#34;&gt;List&lt;/a&gt; de objetos donde se guardarán los datos seleccionados.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/880b9471c7f6ded2212fd5418c34a94a.js?file=MultiSelect.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Esta implementación del componente no necesita de una plantilla &lt;em&gt;tml&lt;/em&gt; sino que todo el HTML se generará desde el código Java. El componente soporta parámetros informales como indicamos con la anotación &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/annotations/SupportsInformalParameters.html&#34;&gt;@SupportsInformalParameters&lt;/a&gt; que son parámetros que se añadirán a la etiqueta &lt;em&gt;select&lt;/em&gt; incluidos tal cual se indican en su uso que por ejemplo podemos utilizar para variar el número de opciones visibles, personalizar los textos y otras funcionalidades de &lt;a href=&#34;https://silviomoreto.github.io/bootstrap-select/&#34;&gt;bootstrap-select&lt;/a&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/880b9471c7f6ded2212fd5418c34a94a.js?file=Index.tml&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/880b9471c7f6ded2212fd5418c34a94a.js?file=Index.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El código HTML generado por el componente es el siguiente:&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/880b9471c7f6ded2212fd5418c34a94a.js?file=Index.html&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Este sería el aspecto del &lt;em&gt;select&lt;/em&gt; múltiple con sus botones para seleccionar todas las opciones y deseleccionar todas, además de personalizados los textos y una pequeña flecha en el desplegable hacia el componente &lt;em&gt;select&lt;/em&gt;, todo esto configurado principalmente a través de atributos &lt;em&gt;data&lt;/em&gt; y clases &lt;abbr title=&#34;Cascading Stylesheets&#34;&gt;CSS&lt;/abbr&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/multiselect.png&#34; title=&#34;Aspecto del componente select mútiple&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/multiselect-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/multiselect-2.png&#34; title=&#34;Vista con opciones seleccionadas enviadas al servidor&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/multiselect-2-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;Componente MultiSelect con bootstrap-select&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Si queremos seleccionar múltiples opciones usando &lt;em&gt;checkboxes&lt;/em&gt; Tapestry ofrece el componente &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/corelib/components/Checklist.html&#34;&gt;Checklist&lt;/a&gt; y usando &lt;em&gt;selects&lt;/em&gt; otra opción es el componente &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/corelib/components/Palette.html&#34;&gt;Palette&lt;/a&gt; pero seguramente no sea lo que deseamos.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/checklist.png&#34; title=&#34;Componente Checklist de Tapestry&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/checklist-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/palette.png&#34; title=&#34;Componente Palette de Tapestry&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/palette-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;Componentes Checklist y Palette&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En un artículo anterior comenté como &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/10/componente-select-de-apache-tapestry-con-funcionalidades-adicionales-usando-bootstrap-select/&#34;&gt;adaptar el componente &lt;em&gt;Select&lt;/em&gt; y este &lt;em&gt;MultiSelect&lt;/em&gt; para añadirle funcionalidades de la librería bootstrap-select&lt;/a&gt; como cuadro de búsqueda, búsqueda por palabras clave, divisores, etc que consiste en añadir a las etiquetas HTML &lt;em&gt;select&lt;/em&gt;, &lt;em&gt;optiongrp&lt;/em&gt; y &lt;em&gt;option&lt;/em&gt; ciertos atributos con sus correspondientes valores con una combinación de parámetros informales y personalización de la clase &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/SelectModel.html&#34;&gt;SelectModel&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/PlugInTapestry&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;alert alert-warning&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/12/portada-PugInTapestry-thumb.png&#34; alt=&#34;Portada libro: PlugIn Tapestry&#34; title=&#34;Portada libro: PlugIn Tapestry&#34; style=&#34;float: left; margin-right: 1.5em;&#34;&gt;
+    &lt;h3&gt;Libro PlugIn Tapestry&lt;/h3&gt;
+    &lt;p&gt;Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este &lt;i&gt;framework&lt;/i&gt; en el formato que prefieras, &lt;a href=&#34;http://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/&#34;&gt;PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry&lt;/a&gt;, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.&lt;/p&gt;
+    &lt;br style=&#34;clear: both;&#34;&gt;
+    &lt;div class=&#34;buttons&#34;&gt;
+        &lt;a href=&#34;http://goo.gl/dfySZ1&#34; class=&#34;btn btn-lg btn-success&#34;&gt;PDF&lt;/a&gt;
+        &lt;a href=&#34;http://goo.gl/bs7Rtu&#34; class=&#34;btn btn-lg btn-success&#34;&gt;EPUB&lt;/a&gt;
+        &lt;a href=&#34;http://goo.gl/lxOZMT&#34; class=&#34;btn btn-lg btn-success&#34;&gt;MOBI&lt;/a&gt;
+        &lt;a href=&#34;http://goo.gl/MJJiPV&#34; class=&#34;btn btn-lg btn-success&#34;&gt;HTML&lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;buttons&#34;&gt;
+        &lt;a href=&#34;http://goo.gl/Qv1Ym&#34; class=&#34;btn btn-lg btn-success&#34;&gt;Código fuente ejemplos&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/corelib/components/Select.html&#34;&gt;Select&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://silviomoreto.github.io/bootstrap-select/&#34;&gt;Bootstrap Select&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="javascript"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+                <category term="software"/>
+            
+                <category term="tapestry"/>
+            
+        
+    </entry>
+    
+    <entry>
         <id>https://picodotdev.github.io/blog-bitix/2016/10/componente-select-de-apache-tapestry-con-funcionalidades-adicionales-usando-bootstrap-select/</id>
         <title>Componente select de Apache Tapestry con funcionalidades adicionales usando bootstrap-select</title>        
-        <updated>2016-10-19T23:00:00+02:00</updated>
+        <updated>2016-10-22T08:00:00+02:00</updated>
         <published>2016-10-15T13:00:00+02:00</published>
         <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/10/componente-select-de-apache-tapestry-con-funcionalidades-adicionales-usando-bootstrap-select/"/>
         <author><name>pico.dev</name></author>
@@ -54,7 +173,7 @@
 &lt;li&gt;Deshabilitar &lt;em&gt;select&lt;/em&gt;, opción o grupo de opciones&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Todas estas capacidades de personalización se consiguen bien añadiendo atributos a las etiquetas HTML &lt;em&gt;select&lt;/em&gt; o a las etiquetas &lt;em&gt;option&lt;/em&gt; y &lt;em&gt;optgroup&lt;/em&gt; con lo que usar el componente &lt;em&gt;bootstrap-select&lt;/em&gt; consiste básicamente generar el marcado HTML adecuado. Con JavaScript se puede construir el componente donde podemos indicar las mismas &lt;a href=&#34;https://silviomoreto.github.io/bootstrap-select/options/&#34;&gt;opciones adicionales&lt;/a&gt; que con los atributos &lt;em&gt;data-&lt;/em&gt;, también tiene &lt;a href=&#34;https://silviomoreto.github.io/bootstrap-select/methods/&#34;&gt;métodos&lt;/a&gt; para manipular su comportamiento de forma programática como por ejemplo recibir eventos cuando cambia la selección.&lt;/p&gt;
+&lt;p&gt;Todas estas capacidades de personalización se consiguen bien añadiendo atributos a las etiquetas &lt;abbr title=&#34;HyperText Markup Language&#34;&gt;HTML&lt;/abbr&gt; &lt;em&gt;select&lt;/em&gt; o a las etiquetas &lt;em&gt;option&lt;/em&gt; y &lt;em&gt;optgroup&lt;/em&gt; con lo que usar el componente &lt;em&gt;bootstrap-select&lt;/em&gt; consiste básicamente generar el marcado HTML adecuado. Con JavaScript se puede construir el componente donde podemos indicar las mismas &lt;a href=&#34;https://silviomoreto.github.io/bootstrap-select/options/&#34;&gt;opciones adicionales&lt;/a&gt; que con los atributos &lt;em&gt;data-&lt;/em&gt;, también tiene &lt;a href=&#34;https://silviomoreto.github.io/bootstrap-select/methods/&#34;&gt;métodos&lt;/a&gt; para manipular su comportamiento de forma programática como por ejemplo recibir eventos cuando cambia la selección.&lt;/p&gt;
 
 &lt;p&gt;Usando &lt;a href=&#34;http://tapestry.apache.org&#34;&gt;Apache Tapestry&lt;/a&gt; con su concepto de parámetros informales añadiremos las atributos necesarios en la etiqueta &lt;em&gt;select&lt;/em&gt; y con el modelo de datos proporcionado en &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/SelectModel.html&#34;&gt;SelectModel&lt;/a&gt;, &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/OptionGroupModel.html&#34;&gt;OptionGroupModel&lt;/a&gt; y &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/OptionModel.html&#34;&gt;OptionModel&lt;/a&gt; podremos proporcionar los atributos adicionales para las etiquetas de los &lt;em&gt;option&lt;/em&gt; y &lt;em&gt;optgroup&lt;/em&gt;. El modelo de datos de una etiqueta &lt;em&gt;select&lt;/em&gt; es una lista de opciones y grupos de opciones, cada opción tiene una etiqueta que se le mostrará al usuario, si está habilitada o no, el valor que se enviará al servidor cuando esté seleccionada y un mapa de atributos a añadir en la etiqueta de la opción.&lt;/p&gt;
 
@@ -83,6 +202,8 @@
 
 &lt;script src=&#34;//gist.github.com/picodotdev/128dcbc596aeeb6f40d89d95542925ce.js?file=PlugInStack.java&#34;&gt;&lt;/script&gt;
 &lt;script src=&#34;//gist.github.com/picodotdev/128dcbc596aeeb6f40d89d95542925ce.js?file=index.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En el artículo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/10/componente-select-multiple-en-apache-tapestry/&#34;&gt;Componente select múltiple en Apache Tapestry&lt;/a&gt; explico como crear un &lt;em&gt;select&lt;/em&gt; múltiple que por defecto no incluye Tapestry pero el estandar HTML soporta y en algún caso nos será necesario.&lt;/p&gt;
 
 &lt;p&gt;
     El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/PlugInTapestry&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
@@ -1462,91 +1583,6 @@ Creando un producto desde la consola de PostgreSQL y refrescando la página en e
     &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/&#34;&gt;Libro PlugIn Tapestry&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/tags/tapestry/&#34;&gt;Más artículos sobre Apache Tapestry&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="software"/>
-            
-                <category term="java"/>
-            
-                <category term="programacion"/>
-            
-                <category term="tapestry"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="blog-stack"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2014/08/forzar-el-uso-del-protocolo-https-en-apache-tapestry/</id>
-        <title>Forzar el uso del protocolo https en Apache Tapestry</title>        
-        <updated>2015-05-27T23:00:00+02:00</updated>
-        <published>2014-08-22T11:09:23+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2014/08/forzar-el-uso-del-protocolo-https-en-apache-tapestry/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/apache-tapestry.png&#34; class=&#34;right&#34; alt=&#34;Apache Tapestry&#34; title=&#34;Apache Tapestry&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;El &lt;a href=&#34;https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol_Secure&#34;&gt;protocolo seguro https&lt;/a&gt; hace que los datos que viajan entre el servidor y el cliente a través de internet estén cifrados de modo que nadie más pueda saber cual es es la información intercambiada ni se pueda alterar sin el conocimiento entre las dos partes. Estas propiedades nos son de interés para ciertas partes de una aplicación o en algunos casos la aplicación entera. ¿Cuales son estos casos? Son aquellos en los que queramos garantizar una mayor seguridad, estos pueden ser para proteger usuarios y contraseñas de autenticación para iniciar sesión, ciertos datos sensibles como datos personales, datos de tarjetas de crédito, &amp;hellip; evitando que una tercera parte los obtenga y los utilice para su provecho propio y supongan un problema de seguridad en la aplicación.&lt;/p&gt;
-
-&lt;p&gt;Es casi obligatorio forzar a que ciertas páginas de una aplicación o página web funcionen mediante el protocolo seguro https como las páginas de inicio de sesión donde los usuarios se autentican normalmente introduciendo su usuario y contraseña, páginas de compra donde los usuarios introducen los datos de su tarjeta de crédito o algunas secciones de una aplicación como las secciones de las cuentas de los usuarios o un backoffice.&lt;/p&gt;
-
-&lt;p&gt;En &lt;a href=&#34;http://tapestry.apache.org&#34;&gt;Apache Tapestry&lt;/a&gt; hay varias formas de forzar a que una determinada página use el protocolo seguro de modo que si se accede por el &lt;a href=&#34;https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol&#34;&gt;protocolo no seguro http&lt;/a&gt; la aplicación obligue a usar https haciendo una redirección. Una de ellas es utilizar la anotación &lt;a href=&#34;http://tapestry.apache.org/5.3/apidocs/org/apache/tapestry5/annotations/Secure.html&#34;&gt;@Secure&lt;/a&gt; en las páginas que queramos obligar a usar https. Basta con anotar las clases de las páginas con @Secure y Tapestry automáticamente hará la redirección al protocolo https cuando se acceda con http a la página.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/6c28ea0e096d90c6aa9f.js?file=Login.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Probablemente nos interese configurar el puerto y el host que usará Tapestry al hacer la redirección para que coincidan con el usado en el servidor al que accede el usuario, sobre todo si en la aplicación usamos un servidor web proxy como &lt;a href=&#34;http://httpd.apache.org/&#34;&gt;Apache&lt;/a&gt;, &lt;a href=&#34;http://www.lighttpd.net/&#34;&gt;Lighttpd&lt;/a&gt; o &lt;a href=&#34;http://nginx.org/&#34;&gt;Nginx&lt;/a&gt; delante del servidor de aplicaciones donde realmente se ejecuta la aplicación web. El puerto seguro del protocolo https predeterminado es 443 pero en el servidor de aplicaciones tomcat por defecto es 8443. Esto en tapestry lo indicamos configurando con ciertos símbolos.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/6c28ea0e096d90c6aa9f.js?file=AppModule-1.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Para probar mientras desarrollamos, al menos en nuestro equipo, que la redirección se hace correctamente empleando el plugin de gradle para tomcat podemos hacer que el servidor de desarrollo se inicie con el puerto https disponible. &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/02/generar-y-convertir-claves-y-certificados-con-openssl/&#34;&gt;Para usar https se necesita un certificado digital&lt;/a&gt; que el &lt;a href=&#34;https://github.com/bmuschko/gradle-tomcat-plugin&#34;&gt;plugin de gradle para tomcat&lt;/a&gt; se encarga de generar al iniciar la aplicación, aunque sea autofirmado y el navegador alerte que no lo reconoce como firmado un una autoridad en la que confíe, si lo aceptamos podemos acceder a la aplicación sin más problema. Usando gradle la configuración que podemos emplear es:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/6c28ea0e096d90c6aa9f.js?file=build.gradle&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;La anotación @Secure en Tapestry es suficiente pero podemos hacer lo mismo empleando &lt;a href=&#34;http://shiro.apache.org/&#34;&gt;Shiro&lt;/a&gt;. &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2013/05/seguridad-en-aplicacion-web-con-apache.html&#34;&gt;Integrando Shiro con Tapestry nos permite realizar autenticación y autorización&lt;/a&gt;, pero además empleando Shiro también podemos obligar a usar el protocolo https del mismo modo que lo hacemos con la anotación Secure. Cualquiera de las dos formas es perfectamente válida y depende más de cual prefiramos. Con la anotación @Secure deberemos anotar cada página, con Shiro podemos tener centralizado en un único punto en que páginas requerimos https. Con Shiro la configuración se hace con una contribución al servicio SecurityConfiguration y usando el método contributeSecurityConfiguration del módulo y la clase SecurityFilterChainFactory y su método ssl(). Un ejemplo es el siguiente:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/6c28ea0e096d90c6aa9f.js?file=AppModule-2.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;En cualquiera de los dos casos mostrados en este ejemplo se obliga a usar https en la página de login:&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/38/plugin-tapestry-https.png&#34; title=&#34;PlugIn Tapestry con https&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/38/plugin-tapestry-https-thumb.png&#34;&gt;&lt;/a&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;alert alert-warning&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/12/portada-PugInTapestry-thumb.png&#34; alt=&#34;Portada libro: PlugIn Tapestry&#34; title=&#34;Portada libro: PlugIn Tapestry&#34; style=&#34;float: left; margin-right: 1.5em;&#34;&gt;
-    &lt;h3&gt;Libro PlugIn Tapestry&lt;/h3&gt;
-    &lt;p&gt;Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este &lt;i&gt;framework&lt;/i&gt; en el formato que prefieras, &lt;a href=&#34;http://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/&#34;&gt;PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry&lt;/a&gt;, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.&lt;/p&gt;
-    &lt;br style=&#34;clear: both;&#34;&gt;
-    &lt;div class=&#34;buttons&#34;&gt;
-        &lt;a href=&#34;http://goo.gl/dfySZ1&#34; class=&#34;btn btn-lg btn-success&#34;&gt;PDF&lt;/a&gt;
-        &lt;a href=&#34;http://goo.gl/bs7Rtu&#34; class=&#34;btn btn-lg btn-success&#34;&gt;EPUB&lt;/a&gt;
-        &lt;a href=&#34;http://goo.gl/lxOZMT&#34; class=&#34;btn btn-lg btn-success&#34;&gt;MOBI&lt;/a&gt;
-        &lt;a href=&#34;http://goo.gl/MJJiPV&#34; class=&#34;btn btn-lg btn-success&#34;&gt;HTML&lt;/a&gt;
-    &lt;/div&gt;
-    &lt;div class=&#34;buttons&#34;&gt;
-        &lt;a href=&#34;http://goo.gl/Qv1Ym&#34; class=&#34;btn btn-lg btn-success&#34;&gt;Código fuente ejemplos&lt;/a&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;reference&#34;&gt;
-    Referencia:&lt;br&gt;
-    &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/02/configurar-ssl-en-un-servidor-tomcat-jboss-wildfly-lighttpd-nginx-apache/&#34;&gt;Configurar SSL en un servidor Tomcat, JBoss, WildFly, Lighttpd, Nginx o Apache&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/02/generar-y-convertir-claves-y-certificados-con-openssl/&#34;&gt;Generar y convertir claves y certificados con OpenSSL&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/&#34;&gt;Libro PlugIn Tapestry&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;/div&gt;

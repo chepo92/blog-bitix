@@ -11,9 +11,128 @@
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
     
     <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2016/10/componente-select-multiple-en-apache-tapestry/</id>
+        <title>Componente select múltiple en Apache Tapestry</title>        
+        <updated>2016-10-22T09:00:00+02:00</updated>
+        <published>2016-10-22T09:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/10/componente-select-multiple-en-apache-tapestry/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/apache-tapestry.png&#34; class=&#34;right&#34; alt=&#34;Apache Tapestry&#34; title=&#34;Apache Tapestry&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;El &lt;em&gt;framework&lt;/em&gt; basado en componentes Apache Tapestry incorpora una amplia &lt;a href=&#34;http://tapestry.apache.org/component-reference.html&#34;&gt;colección de componentes&lt;/a&gt; que nos bastarán en la mayoría de casos que necesitemos. Para los casos en que deseemos un componente con un comportamiento específico podemos construir uno completamente nuevo basado en otros existentes incluyendo los propios nuestros, de una librería o incluidos en Tapestry.&lt;/p&gt;
+
+&lt;p&gt;En Tapestry hay múltiples componentes con los que construir formularios para que el usuario pueda introducir datos, ser enviados por el navegador y procesados en el servidor. Hay componentes de formulario desde &lt;em&gt;checkboxes&lt;/em&gt;, &lt;em&gt;radios&lt;/em&gt;, &lt;em&gt;select&lt;/em&gt;, &lt;em&gt;inputs&lt;/em&gt;, &amp;hellip; con soporte para &lt;abbr title=&#34;HyperText Markup Language&#34;&gt;HTML&lt;/abbr&gt; 5.&lt;/p&gt;
+
+&lt;p&gt;Observando en detalle la lista de componentes ofrecidos nos daremos cuenta de que está un componente &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/corelib/components/Select.html&#34;&gt;Select&lt;/a&gt; pero que solo se puede utilizar para que el usuario seleccione una única opción, sin embargo, en el estándar de HTML los campos de selección pueden utilizarse para seleccionar múltiples opciones. Como se no ofrece un componente &lt;em&gt;select&lt;/em&gt; para seleccionar múltiples opciones a la vez si lo necesitamos deberemos implementar uno que nos ofrezca esta funcionalidad. Con el codigo fuente de Tapestry la tarea es mucho más sencilla y prácticamente es copiar y pegar, el código completo del componente &lt;em&gt;MultiSelect&lt;/em&gt; será lo que muestre a continuación.&lt;/p&gt;
+
+&lt;p&gt;Todo componente de formulario en este &lt;em&gt;framework&lt;/em&gt; hereda de &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/corelib/base/AbstractField.html&#34;&gt;AbstracField&lt;/a&gt; en el que básicamente deberemos proporcionar una implementación del método &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/corelib/base/AbstractField.html#processSubmission(java.lang.String)&#34;&gt;processSubmission()&lt;/a&gt; donde procesaremos los datos recibidos en este caso con un método equivalente al tradicional en Java EE &lt;a href=&#34;https://docs.oracle.com/javaee/7/api/javax/servlet/ServletRequest.html#getParameterValues-java.lang.String-&#34;&gt;ServletRequest.getParameterValues&lt;/a&gt;. La otra parte que deberemos implementar es la generación de etiquetas HTML del componente en el método de ciclo de vida &lt;em&gt;beginRender()&lt;/em&gt; que en gran parte nos servirá lo implementado en el código fuente del componente &lt;em&gt;Select&lt;/em&gt; de Tapestry pero incluyendo el atributo &lt;em&gt;multiple&lt;/em&gt; que requiere HTML para los &lt;em&gt;selects&lt;/em&gt; de múltiples opciones.&lt;/p&gt;
+
+&lt;p&gt;Esta sería una implementación de un componente &lt;em&gt;select&lt;/em&gt; múltiple. La mayor diferencia entre el componente &lt;em&gt;Select&lt;/em&gt; y este &lt;em&gt;MultiSelect&lt;/em&gt; está en la propiedad &lt;em&gt;value&lt;/em&gt; que en el primero es de tipo &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html&#34;&gt;Object&lt;/a&gt; donde se guardará el dato seleccionado y &lt;em&gt;selected&lt;/em&gt; en el segundo que es un &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/List.html&#34;&gt;List&lt;/a&gt; de objetos donde se guardarán los datos seleccionados.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/880b9471c7f6ded2212fd5418c34a94a.js?file=MultiSelect.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Esta implementación del componente no necesita de una plantilla &lt;em&gt;tml&lt;/em&gt; sino que todo el HTML se generará desde el código Java. El componente soporta parámetros informales como indicamos con la anotación &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/annotations/SupportsInformalParameters.html&#34;&gt;@SupportsInformalParameters&lt;/a&gt; que son parámetros que se añadirán a la etiqueta &lt;em&gt;select&lt;/em&gt; incluidos tal cual se indican en su uso que por ejemplo podemos utilizar para variar el número de opciones visibles, personalizar los textos y otras funcionalidades de &lt;a href=&#34;https://silviomoreto.github.io/bootstrap-select/&#34;&gt;bootstrap-select&lt;/a&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/880b9471c7f6ded2212fd5418c34a94a.js?file=Index.tml&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/880b9471c7f6ded2212fd5418c34a94a.js?file=Index.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El código HTML generado por el componente es el siguiente:&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/880b9471c7f6ded2212fd5418c34a94a.js?file=Index.html&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Este sería el aspecto del &lt;em&gt;select&lt;/em&gt; múltiple con sus botones para seleccionar todas las opciones y deseleccionar todas, además de personalizados los textos y una pequeña flecha en el desplegable hacia el componente &lt;em&gt;select&lt;/em&gt;, todo esto configurado principalmente a través de atributos &lt;em&gt;data&lt;/em&gt; y clases &lt;abbr title=&#34;Cascading Stylesheets&#34;&gt;CSS&lt;/abbr&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/multiselect.png&#34; title=&#34;Aspecto del componente select mútiple&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/multiselect-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/multiselect-2.png&#34; title=&#34;Vista con opciones seleccionadas enviadas al servidor&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/multiselect-2-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;Componente MultiSelect con bootstrap-select&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Si queremos seleccionar múltiples opciones usando &lt;em&gt;checkboxes&lt;/em&gt; Tapestry ofrece el componente &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/corelib/components/Checklist.html&#34;&gt;Checklist&lt;/a&gt; y usando &lt;em&gt;selects&lt;/em&gt; otra opción es el componente &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/corelib/components/Palette.html&#34;&gt;Palette&lt;/a&gt; pero seguramente no sea lo que deseamos.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/checklist.png&#34; title=&#34;Componente Checklist de Tapestry&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/checklist-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/palette.png&#34; title=&#34;Componente Palette de Tapestry&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/palette-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;Componentes Checklist y Palette&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En un artículo anterior comenté como &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/10/componente-select-de-apache-tapestry-con-funcionalidades-adicionales-usando-bootstrap-select/&#34;&gt;adaptar el componente &lt;em&gt;Select&lt;/em&gt; y este &lt;em&gt;MultiSelect&lt;/em&gt; para añadirle funcionalidades de la librería bootstrap-select&lt;/a&gt; como cuadro de búsqueda, búsqueda por palabras clave, divisores, etc que consiste en añadir a las etiquetas HTML &lt;em&gt;select&lt;/em&gt;, &lt;em&gt;optiongrp&lt;/em&gt; y &lt;em&gt;option&lt;/em&gt; ciertos atributos con sus correspondientes valores con una combinación de parámetros informales y personalización de la clase &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/SelectModel.html&#34;&gt;SelectModel&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/PlugInTapestry&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;alert alert-warning&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/12/portada-PugInTapestry-thumb.png&#34; alt=&#34;Portada libro: PlugIn Tapestry&#34; title=&#34;Portada libro: PlugIn Tapestry&#34; style=&#34;float: left; margin-right: 1.5em;&#34;&gt;
+    &lt;h3&gt;Libro PlugIn Tapestry&lt;/h3&gt;
+    &lt;p&gt;Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este &lt;i&gt;framework&lt;/i&gt; en el formato que prefieras, &lt;a href=&#34;http://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/&#34;&gt;PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry&lt;/a&gt;, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.&lt;/p&gt;
+    &lt;br style=&#34;clear: both;&#34;&gt;
+    &lt;div class=&#34;buttons&#34;&gt;
+        &lt;a href=&#34;http://goo.gl/dfySZ1&#34; class=&#34;btn btn-lg btn-success&#34;&gt;PDF&lt;/a&gt;
+        &lt;a href=&#34;http://goo.gl/bs7Rtu&#34; class=&#34;btn btn-lg btn-success&#34;&gt;EPUB&lt;/a&gt;
+        &lt;a href=&#34;http://goo.gl/lxOZMT&#34; class=&#34;btn btn-lg btn-success&#34;&gt;MOBI&lt;/a&gt;
+        &lt;a href=&#34;http://goo.gl/MJJiPV&#34; class=&#34;btn btn-lg btn-success&#34;&gt;HTML&lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;buttons&#34;&gt;
+        &lt;a href=&#34;http://goo.gl/Qv1Ym&#34; class=&#34;btn btn-lg btn-success&#34;&gt;Código fuente ejemplos&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/corelib/components/Select.html&#34;&gt;Select&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://silviomoreto.github.io/bootstrap-select/&#34;&gt;Bootstrap Select&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="javascript"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+                <category term="software"/>
+            
+                <category term="tapestry"/>
+            
+        
+    </entry>
+    
+    <entry>
         <id>https://picodotdev.github.io/blog-bitix/2016/10/componente-select-de-apache-tapestry-con-funcionalidades-adicionales-usando-bootstrap-select/</id>
         <title>Componente select de Apache Tapestry con funcionalidades adicionales usando bootstrap-select</title>        
-        <updated>2016-10-19T23:00:00+02:00</updated>
+        <updated>2016-10-22T08:00:00+02:00</updated>
         <published>2016-10-15T13:00:00+02:00</published>
         <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/10/componente-select-de-apache-tapestry-con-funcionalidades-adicionales-usando-bootstrap-select/"/>
         <author><name>pico.dev</name></author>
@@ -54,7 +173,7 @@
 &lt;li&gt;Deshabilitar &lt;em&gt;select&lt;/em&gt;, opción o grupo de opciones&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Todas estas capacidades de personalización se consiguen bien añadiendo atributos a las etiquetas HTML &lt;em&gt;select&lt;/em&gt; o a las etiquetas &lt;em&gt;option&lt;/em&gt; y &lt;em&gt;optgroup&lt;/em&gt; con lo que usar el componente &lt;em&gt;bootstrap-select&lt;/em&gt; consiste básicamente generar el marcado HTML adecuado. Con JavaScript se puede construir el componente donde podemos indicar las mismas &lt;a href=&#34;https://silviomoreto.github.io/bootstrap-select/options/&#34;&gt;opciones adicionales&lt;/a&gt; que con los atributos &lt;em&gt;data-&lt;/em&gt;, también tiene &lt;a href=&#34;https://silviomoreto.github.io/bootstrap-select/methods/&#34;&gt;métodos&lt;/a&gt; para manipular su comportamiento de forma programática como por ejemplo recibir eventos cuando cambia la selección.&lt;/p&gt;
+&lt;p&gt;Todas estas capacidades de personalización se consiguen bien añadiendo atributos a las etiquetas &lt;abbr title=&#34;HyperText Markup Language&#34;&gt;HTML&lt;/abbr&gt; &lt;em&gt;select&lt;/em&gt; o a las etiquetas &lt;em&gt;option&lt;/em&gt; y &lt;em&gt;optgroup&lt;/em&gt; con lo que usar el componente &lt;em&gt;bootstrap-select&lt;/em&gt; consiste básicamente generar el marcado HTML adecuado. Con JavaScript se puede construir el componente donde podemos indicar las mismas &lt;a href=&#34;https://silviomoreto.github.io/bootstrap-select/options/&#34;&gt;opciones adicionales&lt;/a&gt; que con los atributos &lt;em&gt;data-&lt;/em&gt;, también tiene &lt;a href=&#34;https://silviomoreto.github.io/bootstrap-select/methods/&#34;&gt;métodos&lt;/a&gt; para manipular su comportamiento de forma programática como por ejemplo recibir eventos cuando cambia la selección.&lt;/p&gt;
 
 &lt;p&gt;Usando &lt;a href=&#34;http://tapestry.apache.org&#34;&gt;Apache Tapestry&lt;/a&gt; con su concepto de parámetros informales añadiremos las atributos necesarios en la etiqueta &lt;em&gt;select&lt;/em&gt; y con el modelo de datos proporcionado en &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/SelectModel.html&#34;&gt;SelectModel&lt;/a&gt;, &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/OptionGroupModel.html&#34;&gt;OptionGroupModel&lt;/a&gt; y &lt;a href=&#34;https://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/OptionModel.html&#34;&gt;OptionModel&lt;/a&gt; podremos proporcionar los atributos adicionales para las etiquetas de los &lt;em&gt;option&lt;/em&gt; y &lt;em&gt;optgroup&lt;/em&gt;. El modelo de datos de una etiqueta &lt;em&gt;select&lt;/em&gt; es una lista de opciones y grupos de opciones, cada opción tiene una etiqueta que se le mostrará al usuario, si está habilitada o no, el valor que se enviará al servidor cuando esté seleccionada y un mapa de atributos a añadir en la etiqueta de la opción.&lt;/p&gt;
 
@@ -83,6 +202,8 @@
 
 &lt;script src=&#34;//gist.github.com/picodotdev/128dcbc596aeeb6f40d89d95542925ce.js?file=PlugInStack.java&#34;&gt;&lt;/script&gt;
 &lt;script src=&#34;//gist.github.com/picodotdev/128dcbc596aeeb6f40d89d95542925ce.js?file=index.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En el artículo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/10/componente-select-multiple-en-apache-tapestry/&#34;&gt;Componente select múltiple en Apache Tapestry&lt;/a&gt; explico como crear un &lt;em&gt;select&lt;/em&gt; múltiple que por defecto no incluye Tapestry pero el estandar HTML soporta y en algún caso nos será necesario.&lt;/p&gt;
 
 &lt;p&gt;
     El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/PlugInTapestry&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
@@ -1415,145 +1536,6 @@ Para usar Keycloak en una aplicación Java con Spring Boot deberemos añadir alg
                 <category term="java"/>
             
                 <category term="planeta-codigo"/>
-            
-                <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2016/04/el-componente-grid-de-apache-tapestry/</id>
-        <title>El componente Grid de Apache Tapestry</title>        
-        <updated>2016-04-30T12:00:00+02:00</updated>
-        <published>2016-04-30T12:00:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/04/el-componente-grid-de-apache-tapestry/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;En la mayoría de aplicaciones no solo es habitual sino algo muy usado el mostrar listados de elementos de forma tabular con paginación y columnas ordenables. En estos listados el complejo componente internamente &lt;em&gt;Grid&lt;/em&gt; de Apache Tapestry pero a la vez muy sencillo de usar puede marcar una diferencia significativa en el número de líneas de código necesarias a escribir, la flexibilidad, funcionalidad ofrecida, la productividad al hacer la implementación o modificarla comparándolo con lo necesario en otros &lt;em&gt;frameworks&lt;/em&gt; web en los que no hay nada comparable de serie.&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/apache-tapestry.png&#34; class=&#34;right&#34; alt=&#34;Apache Tapstry&#34; title=&#34;Apache Tapstry&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://tapestry.apache.org&#34;&gt;Apache Tapestry&lt;/a&gt; es uno de los muchos &lt;em&gt;frameworks&lt;/em&gt; disponibles en Java para el desarrollo de aplicaciones y páginas web. A diferencia de la mayoría se basa en componentes y proporciona una larga lista de ellos listos para usar de serie, pero también se pueden crear componentes nuevos basados en los propios de Tapestry o los que desarrollemos nosotros muy fácilmente. Los componentes son piezas reusables de código que se pueden reutilizar bien directamente o para formar nuevos componentes y es uno de los motivos por los que en Tapestry se consigue una alta productividad además de otros beneficios como la encapsulación.&lt;/p&gt;
-
-&lt;p&gt;Uno de los componentes más complejos pero al mismo tiempo muy simple de usar ofrecidos por el &lt;em&gt;framework&lt;/em&gt; es el &lt;a href=&#34;http://tapestry.apache.org/current/apidocs/org/apache/tapestry5/corelib/components/Grid.html&#34;&gt;componente Grid&lt;/a&gt;. El componente &lt;em&gt;Grid&lt;/em&gt; muestra en una tabla un listado de datos ofreciendo las funcionalidades de paginación, ordenación, personalización de columnas, filtrado de columnas, personalización en caso de estar vacío y algunas cosas más. Lo único que debemos tener en cuenta para aprovechar al máximo el componente &lt;em&gt;Grid&lt;/em&gt; son los parámetros que declara en su documentación su funcionamiento interno nos es irrelevante, será de los componentes más complejos y no por ello no es más difícil de utilizar basta decir que solo tiene un parámetro requerido y que es lo único imprescindible que es la lista de datos a mostrar.&lt;/p&gt;
-
-&lt;p&gt;Aunque el componente tiene un buen número de parámetros para personalizar según queramos su comportamiento basta que hagamos uso únicamente del parámetro &lt;em&gt;source&lt;/em&gt; que es la fuente de datos del &lt;em&gt;Grid&lt;/em&gt;, puede ser un objeto de tipo &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html&#34;&gt;Collection&lt;/a&gt; o un &lt;a href=&#34;http://tapestry.apache.org/current/apidocs/org/apache/tapestry5/grid/GridDataSource.html&#34;&gt;GridDataSource&lt;/a&gt; que proporciona métodos para hacer la paginación y ordenación eficientemente recuperando de la base de datos o fuente de datos únicamente los registros a mostrar realizando paginación.&lt;/p&gt;
-
-&lt;p&gt;&lt;script src=&#34;//gist.github.com/picodotdev/cddb3bbca6ad09c4d602b7b252ef0e35.js?file=ProductoAdmin.tml&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/cddb3bbca6ad09c4d602b7b252ef0e35.js?file=ProductoAdmin.java&#34;&gt;&lt;/script&gt;
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/139/grid.png&#34; title=&#34;Componente Grid de Tapestry&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/139/grid-thumb.png&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;figcaption&gt;Componente Grid de Tapestry&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;/div&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;source&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Con los parámetros &lt;em&gt;include&lt;/em&gt; y &lt;em&gt;exclude&lt;/em&gt; podemos determinar que propiedades de los objetos o &lt;em&gt;beans&lt;/em&gt; de la fuente de datos se incluyen en el Grid, con el parámetro &lt;em&gt;add&lt;/em&gt; podemos añadir nuevas columnas y personalizarlas con los datos que necesitemos como sería el caso de añadir una columna con un &lt;a href=&#34;http://tapestry.apache.org/current/apidocs/org/apache/tapestry5/corelib/components/Checkbox.html&#34;&gt;Checkbox&lt;/a&gt; por fila para realizar una selección múltiple o de una columna con botones para realizar acciones. Para ambas cosas en el cuerpo del componente_Grid_definimos subcomponentes con la siguiente nomenclatura &lt;em&gt;&amp;lt;p:[nombreColumna]Cell&amp;gt;&lt;/em&gt;, en en ejemplo usando &lt;em&gt;&amp;lt;p:nombreCell&amp;gt;&lt;/em&gt; y &lt;em&gt;&amp;lt;p:actionCell&amp;gt;&lt;/em&gt;. Las celdas de las columnas por defecto hacen un &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--&#34;&gt;toString()&lt;/a&gt; de la propiedad del &lt;em&gt;bean&lt;/em&gt; de la fila a mostrar, si queremos cambiar este comportamiento como en la columna nombre definimos la etiqueta &lt;em&gt;&amp;lt;p:nombreCell&amp;gt;&lt;/em&gt; y dentro incluimos el contenido que deseemos que puede contener otros componentes en este caso el nombre con un enlace.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;include&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;exclude&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;add&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;&amp;lt;p:[nombreColumna]Cell&amp;gt;&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Con el parámetro &lt;em&gt;rowsPerPage&lt;/em&gt; podemos cambiar el número de filas por página del &lt;em&gt;Grid&lt;/em&gt;, en el ejemplo son 2 pero puede ser la cifra que deseemos y tampoco tiene por que ser una constante, el número de filas a mostrar puede provenir de una expresión y cambiar según alguna lógica. Los parámetros &lt;em&gt;columnIndex&lt;/em&gt;, &lt;em&gt;rowIndex&lt;/em&gt; y &lt;em&gt;row&lt;/em&gt; nos proporcionan información del índice de la columna actual, índice de la fila actual y el objeto actual de la fila respectivamente que podemos usar al personalizar las celdas del &lt;em&gt;Grid&lt;/em&gt;. Son parámetros de salida que el &lt;em&gt;Grid&lt;/em&gt; se encarga de proporcionarnos según procesa las filas y celdas, en base a ellos podremos implementar alguna funcionalidad.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;rowsPerPage&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;columnIndex&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;rowIndex&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;row&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Los parámetros informales (denominados así para aquellos que le pasamos al &lt;em&gt;Grid&lt;/em&gt; que no están declarados explícitamente en su interfaz o contrato y que no proporcionan alguna funcionalidad) son incluidos en la etiqueta &lt;em&gt;table&lt;/em&gt; del &lt;abbr title=&#34;HyperText Markup Language&#34;&gt;HTML&lt;/abbr&gt; que genera el &lt;em&gt;Grid&lt;/em&gt;. Igualmente el parámetro informal &lt;em&gt;class&lt;/em&gt; se incluye tal cual se indica en el atributo en &lt;em&gt;class&lt;/em&gt; de la tabla para personalizar los estilos y usando el parámetro &lt;em&gt;rowClass&lt;/em&gt; se incluye en cada fila en su etiqueta &lt;em&gt;tr&lt;/em&gt; de HTML. Además de estas clases que podemos el componente añade algunas clases más a ciertas filas: &lt;em&gt;t-first&lt;/em&gt; para la primera fila, &lt;em&gt;t-last&lt;/em&gt; para la última, &lt;em&gt;t-sort-column-ascending&lt;/em&gt; y &lt;em&gt;t-sort-column-descending&lt;/em&gt; para las columnas que estén ordenadas ascendentemente y descendentemente de forma que con &lt;abbr title=&#34;&#34;&gt;CSS&lt;/abbr&gt; tengamos la posibilidad de cambiar sus estilos.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;class&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;rowClass&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Con el parámetro &lt;em&gt;empty&lt;/em&gt; definimos un componente &lt;a href=&#34;http://tapestry.apache.org/current/apidocs/org/apache/tapestry5/Block.html&#34;&gt;Block&lt;/a&gt; que se usará cuando el &lt;em&gt;Grid&lt;/em&gt; no tenga filas que mostrar, lo que es útil para mostrar un mensaje indicando que la tabla no tiene filas como cuando no hay elementos.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/139/grid-sin-elementos.png&#34; title=&#34;Mensaje de un Grid sin elementos&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/139/grid-sin-elementos-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;Mensaje de un Grid sin elementos&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;/div&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;empty&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Con &lt;em&gt;pagerPosition&lt;/em&gt; indicaremos si queremos la barra de paginación situada encima de la tabla, abajo, en ambas posiciones o no queremos.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;pagerPosition&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Por si fuera poco con el parámetro &lt;em&gt;inPlace&lt;/em&gt; podemos hacer que la paginación y ordenación funcione usando &lt;abbr title=&#34;Asynchronous JavaScript And XML&#34;&gt;AJAX&lt;/abbr&gt; de modo que no se recargue toda la página en cada pulsación de un enlace. No será necesario que añadamos nada de JavaScript, el componente se encargará de hacer la petición AJAX y con el resultado que sea devuelto actualizar la tabla.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;inPlace&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Finalmente, comentaré el parámetro &lt;em&gt;encoder&lt;/em&gt; con el que podemos hacer que el componente &lt;em&gt;Grid&lt;/em&gt; funcione cuando se usa dentro de un componente &lt;em&gt;Form&lt;/em&gt;. La clase &lt;a href=&#34;http://tapestry.apache.org/current/apidocs/org/apache/tapestry5/ValueEncoder.html&#34;&gt;ValueEncoder&lt;/a&gt; transforma un objeto a un &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/String.html&#34;&gt;String&lt;/a&gt; que lo identifique en el cliente y a partir del identificador del cliente los transforme al objeto cuando se envíe de nuevo al servidor. Podemos indicar el &lt;em&gt;ValueEncoder&lt;/em&gt; en cada &lt;em&gt;Grid&lt;/em&gt; o definirlo como una configuración del contenedor &lt;abbr title=&#34;Inversion of Control&#34;&gt;IoC&lt;/abbr&gt;.&lt;/p&gt;
-
-&lt;p&gt;Hay algún parámetro más como &lt;em&gt;sortModel&lt;/em&gt; y &lt;em&gt;paginationModel&lt;/em&gt; para mantener la información de ordenación y paginación pero los anteriores son los que más habitualmente usaremos y probablemente con &lt;em&gt;source&lt;/em&gt;, &lt;em&gt;include&lt;/em&gt;, &lt;em&gt;exclude&lt;/em&gt; y &lt;em&gt;add&lt;/em&gt; tengamos suficiente para muchos casos.&lt;/p&gt;
-
-&lt;p&gt;Es sorprendentemente lo sencillo que es usar el componente &lt;em&gt;Grid&lt;/em&gt; para toda la funcionalidad que proporciona. En ciertos casos este componente por si solo puede reducir drásticamente la cantidad de código necesario a escribir en las plantillas que producen HTML y aumentar notablemente la productividad al crear o modificar páginas con listados de elementos. En el artículo &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2013/06/mantenimiento-crud-en-apache-tapestry.html&#34;&gt;Mantenimiento CRUD en Apache Tapestry&lt;/a&gt; comento como conseguir un &lt;abbr title=&#34;Create, Read, Update and Delete&#34;&gt;CRUD&lt;/abbr&gt; completo usando el componente &lt;em&gt;Grid&lt;/em&gt; entre otras cosas.&lt;/p&gt;
-
-&lt;div class=&#34;alert alert-warning&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/12/portada-PugInTapestry-thumb.png&#34; alt=&#34;Portada libro: PlugIn Tapestry&#34; title=&#34;Portada libro: PlugIn Tapestry&#34; style=&#34;float: left; margin-right: 1.5em;&#34;&gt;
-    &lt;h3&gt;Libro PlugIn Tapestry&lt;/h3&gt;
-    &lt;p&gt;Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este &lt;i&gt;framework&lt;/i&gt; en el formato que prefieras, &lt;a href=&#34;http://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/&#34;&gt;PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry&lt;/a&gt;, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.&lt;/p&gt;
-    &lt;br style=&#34;clear: both;&#34;&gt;
-    &lt;div class=&#34;buttons&#34;&gt;
-        &lt;a href=&#34;http://goo.gl/dfySZ1&#34; class=&#34;btn btn-lg btn-success&#34;&gt;PDF&lt;/a&gt;
-        &lt;a href=&#34;http://goo.gl/bs7Rtu&#34; class=&#34;btn btn-lg btn-success&#34;&gt;EPUB&lt;/a&gt;
-        &lt;a href=&#34;http://goo.gl/lxOZMT&#34; class=&#34;btn btn-lg btn-success&#34;&gt;MOBI&lt;/a&gt;
-        &lt;a href=&#34;http://goo.gl/MJJiPV&#34; class=&#34;btn btn-lg btn-success&#34;&gt;HTML&lt;/a&gt;
-    &lt;/div&gt;
-    &lt;div class=&#34;buttons&#34;&gt;
-        &lt;a href=&#34;http://goo.gl/Qv1Ym&#34; class=&#34;btn btn-lg btn-success&#34;&gt;Código fuente ejemplos&lt;/a&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;reference&#34;&gt;
-    Referencia:&lt;br&gt;
-    &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2013/06/mantenimiento-crud-en-apache-tapestry.html&#34;&gt;Mantenimiento CRUD en Apache Tapestry&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/tags/tapestry/&#34;&gt;Artículos sobre Tapestry en Blog Bitix&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/search/label/tapestry&#34;&gt;Artículos sobre Tapestry en El blog de pico.dev&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="tapestry"/>
             
                 <category term="programacion"/>
             
