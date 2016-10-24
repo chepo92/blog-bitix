@@ -45,4 +45,12 @@ define(['jquery'], function($) {
     var i = random(0, spec.backgrounds.length - 1);
     var b = spec.backgrounds[i];
     $('body').css('background-image', 'url("assets/images/backgrounds/' + b + '")');
+
+    $("form[name='query']").on('submit', function() {
+      var query = $("input[name='q']", "form[name='query']").val();
+      var site = $("form[name='search']").data('site');
+      $("input[name='q']", "form[name='search']").val(query + ' site:' + site);
+      $("form[name='search']").submit();
+      return false;
+    });
 });
