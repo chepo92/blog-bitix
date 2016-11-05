@@ -11,6 +11,59 @@
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
     
     <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2016/11/historico-de-datos-y-diferencias-con-javers-en-java/</id>
+        <title>Histórico de datos y diferencias con Javers en Java</title>        
+        <updated>2016-11-05T11:00:00+01:00</updated>
+        <published>2016-11-05T11:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/11/historico-de-datos-y-diferencias-con-javers-en-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Por seguridad, por auditoría o histórico de datos una aplicación puede requerir no solo guardar los valores actuales de los datos que maneja sino también las versiones anteriores y los cambios en cada valor de los mismos. En Java hay una librería llamada Javers que nos proporciona funcionalidades como comparación, &lt;em&gt;snapshots&lt;/em&gt;, persistencia y un lenguaje de consulta para hacer búsquedas.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Por necesidades de negocio y requerimientos funcionales puede ser necesario guardar un histórico de ciertos datos de una aplicación en vez de solo la última versión de los datos. Tener solo la última versión de algunos datos puede no ser lo que se necesita. Por ejemplo, supongamos que una aplicación maneja una entidad de dominio producto y esta tiene un campo que es el precio y queremos guardar los cambios que se hacen a esta entidad para conocer el cambio de precio que han sufrido los productos. Otras necesidades pueden ser por auditoría o seguridad para saber que usuario ha hecho que cambios en los datos, para disponer de versiones anteriores de una entidad, comparar dos versiones de la misma entidad o lanzar consultas para obtener información de los cambios que se han producido.&lt;/p&gt;
+
+&lt;p&gt;Una librería que en Java nos ofrece toda esta información de auditoría es &lt;a href=&#34;http://javers.org/&#34;&gt;Javers&lt;/a&gt; con la posibilidad de persistirla en diferentes sistemas, en las tradicionales base de datos relacionales o en una base de datos no SQL como &lt;a href=&#34;https://www.mongodb.org/&#34;&gt;MongoDB&lt;/a&gt;. En la documentación encontramos como podemos &lt;a href=&#34;http://javers.org/documentation/diff-examples/&#34;&gt;comparar dos objetos&lt;/a&gt;, &lt;a href=&#34;http://javers.org/documentation/repository-examples/&#34;&gt;persistir cambios&lt;/a&gt; o &lt;a href=&#34;http://javers.org/documentation/jql-examples/&#34;&gt;lanzar consultas&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Javers diferencia dos tipos de objetos &lt;a href=&#34;http://javers.org/documentation/diff-examples/#compare-entities&#34;&gt;Entities&lt;/a&gt; o &lt;a href=&#34;http://javers.org/documentation/diff-examples/#compare-valueobjects&#34;&gt;ValueObjects&lt;/a&gt;. Los ValueObjects son objetos &lt;em&gt;java bean&lt;/em&gt; tradicionales de Java que no tenen identificador asignado y no son persistibles pero se pueden usar para hacer comparaciones entre dos objetos según las propiedades de los &lt;em&gt;java beans&lt;/em&gt;. Los objetos &lt;em&gt;java bean&lt;/em&gt; Entities tienen una propiedad que representa el identificativo de la entidad y las comparaciones se pueden hacer entre diferentes versiones del mismo.&lt;/p&gt;
+
+&lt;p&gt;En el siguiente ejemplo muestro como hacer comparaciones, como hacer cambios y persistirlos, como lanzar una consulta para obtener los cambios que se han producido u obtener &lt;em&gt;snapshots&lt;/em&gt; de versiones anteriores y como persistir estos cambios en una base de datos &lt;a href=&#34;http://www.postgresql.org/&#34;&gt;PostgreSQL&lt;/a&gt; en la que utilizaré &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt;. En la primera sección del ejemplo se comparan dos objetos y obtienen sus diferencias, posteriormente se persisten varios cambios y finalmente se realiza una consulta para obtener los cambios que haya habido en la propiedad &lt;em&gt;price&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/37deac8aa12db051e08a8253695e5fb4.js?file=Main.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/37deac8aa12db051e08a8253695e5fb4.js?file=Category.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/37deac8aa12db051e08a8253695e5fb4.js?file=Product.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/37deac8aa12db051e08a8253695e5fb4.js?file=System.out&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/37deac8aa12db051e08a8253695e5fb4.js?file=docker-compose.yml&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;La información se persistirán en varias tablas en este caso en un base de datos relacional PostgreSQL que Javers creará al iniciarse la aplicación, ejecutada la aplicación encontraremos datos.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/37deac8aa12db051e08a8253695e5fb4.js?file=tables.sql&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/HolaMundoJavers&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
         <id>https://picodotdev.github.io/blog-bitix/2016/10/anadir-botones-selectores-de-opciones-a-select-multiple-de-bootsrap-select/</id>
         <title>Añadir botones selectores de opciones a select múltiple de bootsrap-select</title>        
         <updated>2016-10-26T14:30:00+02:00</updated>
@@ -1482,84 +1535,6 @@ Para usar Keycloak en una aplicación Java con Spring Boot deberemos añadir alg
     Referencia:&lt;br&gt;
     &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://dzone.com/articles/alternatives-to-global-variables&#34;&gt;Alternatives to Global Variables &lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2016/05/que-es-el-concepto-de-heap-pollution-en-java/</id>
-        <title>Qué es el concepto de Heap Pollution en Java</title>        
-        <updated>2016-05-14T13:15:00+02:00</updated>
-        <published>2016-05-07T13:00:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/05/que-es-el-concepto-de-heap-pollution-en-java/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;Al trabajar con referencias de tipos genéricos, &lt;em&gt;raw&lt;/em&gt; y arrays debemos conocer el concepto de &lt;em&gt;Heap Pollution&lt;/em&gt; si no queremos que en algún punto del programa Java se produzca una excepción no esperada del tipo &lt;em&gt;ClassCastException&lt;/em&gt;. No teniéndolo en cuenta nos encontraremos con un error de los más difíciles de depurar ya que la excepción solo nos dirá donde se produjo no donde se encuentra el código erróneo que lo provocó.&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;La introducción de los &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/04/tutorial-sobre-los-tipos-genericos-de-java/&#34;&gt;tipos genéricos al lenguaje Java&lt;/a&gt; en la versión 5 hizo posible que pudiesemos parametrizar los tipos y que el compilador hiciese validaciones sobre ellos, también se permitieron eliminar muchos &lt;em&gt;cast&lt;/em&gt; que hasta entonces eran necesarios al usar el &lt;em&gt;framework&lt;/em&gt; de colecciones. Los tipos genéricos permiten evitar errores en tiempo de compilación, al mismo tiempo la eliminación de los &lt;em&gt;cast&lt;/em&gt; hace el código más legible y más fácilmente refactorizable. Sin embargo, para mantener la compatibilidad con versiones anteriores se optó por hacer algunos sacrificios en la implementación de genéricos en pos de otros beneficios. Una situación potencialmente problemática es el denominado &lt;a href=&#34;https://en.wikipedia.org/wiki/Heap_pollution&#34;&gt;Heap Pollution&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;El concepto de &lt;em&gt;Heap Pollution&lt;/em&gt; consiste de forma breve (quizá inexacta) en que un tipo genérico contiene un objeto con un tipo que no le corresponde según su tipo genérico, con un ejemplo, que una lista del tipo &lt;em&gt;List&amp;lt;String&amp;gt;&lt;/em&gt; contenga un &lt;em&gt;Number&lt;/em&gt; entre sus elementos. Que un tipo genérico pueda contener un objeto que no sea de su tipo genérico es detectado en tiempo de compilación con los &lt;em&gt;unchecked warning&lt;/em&gt; pero bajo algunas circunstancias se produce en tiempo de ejecución una excepción de tipo &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/ClassCastException.html&#34;&gt;ClassCastException&lt;/a&gt;, si ignoramos las advertencias y nuestro código no es cuidadoso. Esto es posible porque en Java el tipado de los genéricos sólo está disponible en tiempo de compilación lo que significa que no son &lt;em&gt;reified&lt;/em&gt;, el tipado genérico no está disponible en tiempo de ejecución como consecuencia del proceso conocido como &lt;em&gt;erasure&lt;/em&gt;, al trabajar con referencias de tipo &lt;em&gt;raw&lt;/em&gt; y genéricas hay que tener cuidado en las asignaciones y las advertencias del compilador.&lt;/p&gt;
-
-&lt;p&gt;Veamos en código las circunstancias bajo las cuales se pueden producir &lt;em&gt;Heap Pollution&lt;/em&gt;. Un tipo &lt;em&gt;List&amp;lt;String&amp;gt;&lt;/em&gt; puede asignarse a un &lt;em&gt;List&lt;/em&gt; y luego añadir a esa &lt;em&gt;List&lt;/em&gt; un &lt;em&gt;Integer&lt;/em&gt; momento en el que el compilador nos avisa con un &lt;em&gt;unchecked warning&lt;/em&gt; indicando que no puede validar que la lista &lt;em&gt;raw&lt;/em&gt; siendo &lt;em&gt;List&lt;/em&gt; un tipo genérico se le está añadiendo una referencia del tipo que debería tener, el compilador nos informa de que esa responsabilidad la tenemos nosotros. También podemos asignar un &lt;em&gt;List&lt;/em&gt; a un &lt;em&gt;List&amp;lt;Number&amp;gt;&lt;/em&gt;, en este caso el compilador tampoco puede validar que la &lt;em&gt;List&lt;/em&gt; sea realmente un &lt;em&gt;List&amp;lt;Number&amp;gt;&lt;/em&gt; y lo indica también con un &lt;em&gt;unchecked warning&lt;/em&gt;. Ignorando estas adevertencias se produce un &lt;em&gt;ClassCastException&lt;/em&gt; al acceder al elemento &lt;em&gt;Integer&lt;/em&gt; que contiene la &lt;em&gt;List&amp;lt;String&amp;gt;&lt;/em&gt; como se comprueba en los teses.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/51c3db8facfc286f2e87d908caf018d8.js?file=MainTest-generics.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Por otra parte en Java los arrays en tiempo de ejecución necesitan conocer el tipo &lt;em&gt;reified&lt;/em&gt; que contendrá. Esto unido a que los &lt;em&gt;varargs&lt;/em&gt; realmente se transforman en un array, el posible &lt;em&gt;Heap Pollution&lt;/em&gt; se da también en los métodos que soportan &lt;em&gt;varargs&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;El compilador convierte los &lt;em&gt;varargs&lt;/em&gt; de tipos genéricos de la siguiente forma:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/51c3db8facfc286f2e87d908caf018d8.js?file=Erasure-varargs.txt&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;En un método cuyo último argumento es un &lt;em&gt;vararg&lt;/em&gt; y de tipo genérico puede producirse &lt;em&gt;Heap Pollution&lt;/em&gt; como indica el compilaror, si estamos seguros de que no se puede dar este caso en el código del método podemos eliminar la advertencia del compilador añadiendo la anotación &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/SafeVarargs.html&#34;&gt;@SafeVarargs&lt;/a&gt; en el método. Añadir la anotación solo implica que el compilador eliminará la advertencia pero aún con ella puede seguir produciéndose la excepción &lt;em&gt;ClassCastException&lt;/em&gt; si el método no ha sido cuidadoso.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/51c3db8facfc286f2e87d908caf018d8.js?file=MainTest-varargs.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Tener en cuenta el &lt;em&gt;Heap Pollution&lt;/em&gt; es importante ya que la excepción &lt;em&gt;ClassCastException&lt;/em&gt; se produce más tarde y en un punto diferente de donde realmente está el error, mucho más tarde si el tipo genérico es serializado e incluso en otra &lt;abbr title=&#34;Java Virtual Machine&#34;&gt;JVM&lt;/abbr&gt; diferente. Estos errores son de los peores de depurar por la poca información que proporcionan ya que la traza de la excepción solo dice quien la lanzó no donde se introdujo el fallo.&lt;/p&gt;
-
-&lt;p&gt;La implementación de los &lt;em&gt;generics&lt;/em&gt; en Java viene con la garantía conocida como &lt;em&gt;cast-iron&lt;/em&gt; que consiste en que mientras el compilador no produzca una &lt;em&gt;unchecked warning&lt;/em&gt; en tiempo de compilación se garantiza que en tiempo de ejecución no se producirá una &lt;em&gt;ClassCastException&lt;/em&gt; por los &lt;em&gt;cast&lt;/em&gt; introducidos en el proceso de &lt;em&gt;erasure&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;Si nos encontramos con una de estas excepciones con los genéricos en una colección una buena alternativa es hacer uso de los métodos &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#checkedCollection-java.util.Collection-java.lang.Class-&#34;&gt;Collections.checkedCollection&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#checkedSet-java.util.Set-java.lang.Class-&#34;&gt;Collections.checkedSet&lt;/a&gt;,  &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#checkedMap-java.util.Map-java.lang.Class-java.lang.Class-&#34;&gt;Collections.checkedMap&lt;/a&gt; y alguno más similar que evitará que en una colección se produzca &lt;em&gt;Heap Pollution&lt;/em&gt;, la excepción &lt;em&gt;ClassCastException&lt;/em&gt; se lanzará en el momento de añadir a la colección la referencia que provocaría el &lt;em&gt;Heap Pollution&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;Relacionados con casos de combinar genéricos y arrays y &lt;em&gt;ClassCastException&lt;/em&gt; en el libro &lt;a rel=&#34;nofollow&#34; href=&#34;http://www.amazon.es/gp/product/0596527756/ref=as_li_ss_tl?ie=UTF8&amp;camp=3626&amp;creative=24822&amp;creativeASIN=0596527756&amp;linkCode=as2&amp;tag=blobit-21&#34;&gt;Java Generics and Collections&lt;/a&gt;&lt;img src=&#34;https://ir-es.amazon-adsystem.com/e/ir?t=blobit-21&amp;l=as2&amp;o=30&amp;a=0596527756&#34; width=&#34;1&#34; height=&#34;1&#34; border=&#34;0&#34; alt=&#34;&#34; style=&#34;border:none !important; margin:0px !important;&#34; /&gt; se definen dos principios a seguir para evitar excepciones: &lt;em&gt;The Principle of Truth in Advertising&lt;/em&gt; y &lt;em&gt;The Principle of Indecent Exposure&lt;/em&gt;.&lt;/p&gt;
-
-&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
-        &lt;iframe src=&#34;https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=ss_til&amp;asins=0596527756&amp;internal=1&#34; style=&#34;width:120px;height:240px;&#34; scrolling=&#34;no&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; frameborder=&#34;0&#34;&gt;&lt;/iframe&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Salvo que hagamos operaciones complicadas entre genéricos de diferentes tipos no será muy habitual que nos encontremos &lt;em&gt;ClassCastException&lt;/em&gt; por &lt;em&gt;Heap Pollution&lt;/em&gt;, pero es un concepto interesante conocer, en cualquier caso el compilador nos informará con los &lt;em&gt;unchecked warnings&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;
-    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaHeapPollution&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew test&lt;/code&gt;.
-&lt;/p&gt;
-
-&lt;div class=&#34;reference&#34;&gt;
-    Referencia:&lt;br&gt;
-    &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/04/tutorial-sobre-los-tipos-genericos-de-java/&#34;&gt;Tutorial sobre los tipos genéricos de Java&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/&#34;&gt;Novedades y nuevas características de Java 8&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/03/introduccion-y-nuevas-caracteristicas-de-java-ee-7/&#34;&gt;Introducción y nuevas características de Java EE 7&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Heap_pollution&#34;&gt;Heap Pollution&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;/div&gt;
