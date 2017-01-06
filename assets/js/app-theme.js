@@ -1,26 +1,4 @@
 define(['jquery'], function($) {
-    // Sharethis (async)
-    window.switchTo5x = true;
-    var sharethis = document.createElement('script');
-    sharethis.type = "text/javascript";
-    sharethis.async = true;
-    sharethis.src = '//ws.sharethis.com/button/buttons.js';
-    sharethis.onload = function(){
-        try {
-            stLight.options({
-                publisher: sharethisPublisher,
-                doNotHash: true,
-                doNotCopy: true,
-                hashAddressBar: false,
-                onhover: false
-            });
-        } catch(e) {
-            console.log(e);
-        }
-    }
-    var script = document.getElementsByTagName('script')[0];
-    script.parentNode.insertBefore(sharethis, script);
-
     // Background
     function random(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
