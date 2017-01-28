@@ -11,6 +11,109 @@
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
     
     <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/01/registro-y-descubrimiento-de-servicios-con-spring-cloud-y-consul/</id>
+        <title>Registro y descubrimiento de servicios con Spring Cloud y Consul</title>        
+        <updated>2017-01-28T11:00:00+01:00</updated>
+        <published>2017-01-28T11:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/01/registro-y-descubrimiento-de-servicios-con-spring-cloud-y-consul/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Tradicionalmente el conectar un servicio con sus servicios dependientes se ha realizado por configuración, normalmente mediante un nombre de dominio y su puerto. Esta configuración estática es suficiente para unos pocos servicios y que no varían durante su funcionamiento. Con el advenimiento de los microservicios con su estado y número cambiantes en el tiempo han surgido varias herramientas para en vez de usar configuración usar descubrimiento. Una de estas herramientas Consul para la que Spring Cloud proporciona integración.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/spring.png&#34; class=&#34;right&#34; alt=&#34;Spring&#34; title=&#34;Spring&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En una aplicación con una arquitectura de microservicios esta se compone de múltiples partes cambiantes. Los microservicios pueden aparecer, desaparecer, variar en número o cambiar de ubicación, la aplicación debe ser tolerante a esos cambios y seguir proporcionando su servicio. Por tanto, la configuración de red de los servicios no se puede realizar usando direcciones &lt;abbr title=&#34;Internet Protocol&#34;&gt;IP&lt;/abbr&gt; ya que no se conocen las que utilizarán los microservicios y usar nombres de dominio de &lt;abbr title=&#34;Domain Name System&#34;&gt;DNS&lt;/abbr&gt; puede no ser viable ya que los cambios tardan en propagarse. Conocer el nombre de &lt;em&gt;host&lt;/em&gt; y puerto reales de los microservicios es proporcionado por la funcionalidad de descubrimiento de servicios o &lt;em&gt;service discovery&lt;/em&gt; que proporcionan algunos servicios como &lt;a href=&#34;https://github.com/Netflix/eureka&#34;&gt;Eureka&lt;/a&gt;, &lt;a href=&#34;https://www.consul.io/&#34;&gt;Consul&lt;/a&gt; o &lt;a href=&#34;https://zookeeper.apache.org/&#34;&gt;Apache Zookeper&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;En este artículo explicaré como usar la parte de descubrimiento de servicios de Consul usando una aplicación con &lt;a href=&#34;http://projects.spring.io/spring-boot/&#34;&gt;Spring Boot&lt;/a&gt; y  con &lt;a href=&#34;http://projects.spring.io/spring-cloud/&#34;&gt;Spring Cloud&lt;/a&gt;. Spring Cloud proporciona varias cosas comunes para aplicaciones basadas en microservicios. Si aún no conoces las herramientas en las que se basará el ejemplo puedes consultar los siguientes artículos específicos como introducción:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2012/03/herramienta-de-construccion-gradle.html&#34;&gt;Herramienta de construcción Gradle &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/&#34;&gt;Ejemplo de multiproyecto con Gradle&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/10/aplicacion-java-autocontenida-con-spring-boot/&#34;&gt;Aplicación Java autocontenida con Spring Boot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/11/configuracion-de-una-aplicacion-en-diferentes-entornos-con-spring-cloud-config/&#34;&gt;Configuración de una aplicación en diferentes entornos con Spring Cloud Config&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Consul además de descubrimiento de servicios proporciona otras funcionalidades como detección de fallos o caídas para prevenir enviar peticiones a máquinas fuera de servicio y almacenamiento básico clave/valor para configuración dinámica o activación de características. Dispone de una aplicación web en la que podemos ver el estado de los servicios, una &lt;a href=&#34;https://www.consul.io/docs/agent/http.html&#34;&gt;API REST&lt;/a&gt; con la que comunicarse con Consul en una aplicación o en cada microservicio y un servidor de nombres &lt;abbr&gt;DNS&lt;/abbr&gt;, podemos usar cualquiera de las dos interfaces de consulta, la basada en la &lt;abbr&gt;API&lt;/abbr&gt; &lt;abbr&gt;REST&lt;/abbr&gt; o la basada en DNS para obtener las direcciones IP con la ubicación de los servicios.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/206/consul.png&#34; alt=&#34;Consul&#34; title=&#34;Consul&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Instalar Consul es muy sencillo basta con &lt;a href=&#34;https://www.consul.io/downloads.html&#34;&gt;descargar un binario&lt;/a&gt; y descargar la interfaz web si queremos tener el &lt;em&gt;dashboard&lt;/em&gt; con la información del servicio. Descargados y descomprimidos Consul se inicia con el siguiente comando. Podemos acceder al panel &lt;em&gt;dashboard&lt;/em&gt; con la dirección &lt;a href=&#34;http://localhost:8500&#34;&gt;http://localhost:8500&lt;/a&gt; con un navegador web. Inicialmente en el panel de servicios solo se encuentra el propio de Consul cuando aún no se ha registrado ningún servicio, aplicación o microservicio.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/69ebe9c83419447cdcfc4692988938a2.js?file=consul.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Una aplicación que use Spring Boot y que quiera hacer pública su disponibilidad en Consul basta con que use la anotación &lt;code&gt;@EnableDiscoveryClient&lt;/code&gt; en la clase de inicio de la aplicación junto con las dependencias adecuadas. Con la declaración de esta anotación y la dependencia &lt;em&gt;spring-cloud-starter-consul-all&lt;/em&gt; Spring se comunicará con Consul a través de la API REST para registrar cuando se inicie la aplicación, su nombre, nombre de máquina y puerto en el que estará disponible.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/69ebe9c83419447cdcfc4692988938a2.js?file=Main.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Spring Cloud proporciona además un servicio que podemos usar para conocer los servicios registrados en Consul, con la clase &lt;em&gt;DiscoveryClient&lt;/em&gt; podemos conocer los nombres de los servicios, su nombre de máquina y puerto desde una aplicación Java. En el método &lt;em&gt;run&lt;/em&gt; de la clase &lt;em&gt;Main&lt;/em&gt; se usa en este ejemplo para imprimir en la salida el listado de servicios registrados en Consul. Uno de esos servicios esta aplicación de ejemplo, ya que se registra en Consul cuando se inicia.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/206/consul-services.png&#34; title=&#34;Servicios registrados en Consul&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/206/consul-services-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Servicios registrados en Consul&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Consul para conocer que los servicios siguen en funcionamiento hace una petición &lt;abbr&gt;HTTP&lt;/abbr&gt; cada ciertos segundos a una ruta de la aplicación, Spring Boot proporciona una dependencia, &lt;em&gt;spring-boot-starter-actuator&lt;/em&gt;, que usada provee del &lt;em&gt;endpoint /health&lt;/em&gt; para que Consul monitorice el estado del servicio.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/69ebe9c83419447cdcfc4692988938a2.js?file=build.gradle&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/206/service-health.png&#34; title=&#34;Endpoint de estado de servicio&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/206/service-health-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Endpoint de estado de servicio&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Esta es la salida en la consola listando los servicios disponibles, siendo uno de ellos esta aplicación.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/69ebe9c83419447cdcfc4692988938a2.js?file=System.out&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/SpringCloudConsul&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./consul/consul.sh y ./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://projects.spring.io/spring-cloud/&#34;&gt;Spring Cloud&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://cloud.spring.io/spring-cloud-consul/&#34;&gt;Spring Cloud Consul&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
         <id>https://picodotdev.github.io/blog-bitix/2016/12/hemeroteca-10/</id>
         <title>Hemeroteca #10</title>        
         <updated>2016-12-24T12:00:00+01:00</updated>
@@ -1505,86 +1608,6 @@ Para usar Keycloak en una aplicación Java con Spring Boot deberemos añadir alg
         
             
                 <category term="blog-stack"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2016/09/ejemplo-de-api-rest-en-java-con-jax-rs-y-spring-boot/</id>
-        <title>Ejemplo de API REST en Java con JAX-RS y Spring Boot</title>        
-        <updated>2016-09-17T12:00:00+02:00</updated>
-        <published>2016-09-17T12:00:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/09/ejemplo-de-api-rest-en-java-con-jax-rs-y-spring-boot/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/spring.png&#34; class=&#34;right&#34; alt=&#34;Spring Framework&#34; title=&#34;Spring Framework&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;En Java a través de JAX-RS, una de entre las varias &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/03/introduccion-y-nuevas-caracteristicas-de-java-ee-7/&#34;&gt;especificaciones de JavaEE&lt;/a&gt;, podemos desarrollar servicios web basados en &lt;a href=&#34;http://es.wikipedia.org/wiki/Representational_State_Transfer&#34;&gt;&lt;abbr title=&#34;Representational State Transfer&#34;&gt;REST&lt;/abbr&gt;&lt;/a&gt; y &lt;a href=&#34;http://json.org/&#34;&gt;&lt;abbr title=&#34;JavaScript Object Notation&#34;&gt;JSON&lt;/abbr&gt;&lt;/a&gt;. Estos servicios web al usar la infraestructura de la web y el protocolo HTTP podemos hacer uso de facilidades que proporciona como &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/07/configurar-nginx-para-cachear-respuestas-del-servidor-de-aplicaciones/&#34;&gt;cacheo&lt;/a&gt;, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/06/como-redirigir-peticiones-de-http-a-https-en-nginx-apache-tomcat-jetty-y-wildfly/&#34;&gt;protocolo seguro&lt;/a&gt;, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/02/introduccion-al-protocolo-http-2/&#34;&gt;HTTP/2&lt;/a&gt;, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/07/como-optimizar-un-sitio-web-con-compresion-gzip-en-nginx-y-apache-httpd/&#34;&gt;compresión&lt;/a&gt; o autenticación. Usando &lt;a href=&#34;http://projects.spring.io/spring-boot/&#34;&gt;Spring Boot&lt;/a&gt; podemos desarrollar servicios web autocontenidos al igual que podemos hacer con las aplicaciones web tradicionales.&lt;/p&gt;
-
-&lt;p&gt;Para facilitar el inicio de los proyectos podemos usar &lt;a href=&#34;https://start.spring.io/&#34;&gt;Spring Initializr&lt;/a&gt; seleccionando los módulos web y JAX-RS con la implementación de referencia &lt;a href=&#34;https://jersey.java.net/&#34;&gt;Jersey&lt;/a&gt;. Al proyecto creado deberemos añadir los servicios que queramos proporcionar. En el ejemplo añadiré uno muy sencillo que devuelva un nuevo mensaje creado en un servicio inyectado en la clase del recurso del servicio REST.&lt;/p&gt;
-
-&lt;p&gt;Esta es la definición del &lt;em&gt;bean&lt;/em&gt; del servicio que creará el mensaje para el contenedor de inversión de control, también definimos el recurso del servicio REST para Jersey.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=Main.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=JerseyConfig.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;El servicio lo definimos en una interfaz y una clase que la implementa.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=MessageService.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=DefaultMessageService.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=Message.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Es habitual que los servicios REST produzca como resultado un JSON como formato para devolver los datos. No necesitaremos hacer nada especial para convertir el &lt;em&gt;Java Bean&lt;/em&gt; de la clase &lt;em&gt;Message&lt;/em&gt; a JSON, de ello se encargará automáticamente JAX-RS. Con anotaciones como &lt;a href=&#34;http://docs.oracle.com/javaee/7/api/javax/ws/rs/QueryParam.html&#34;&gt;@QueryParam&lt;/a&gt; podemos obtener los parámetros del &lt;em&gt;query string&lt;/em&gt;, de la URL o cabeceras enviadas.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=MessageResource.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Iniciada la aplicación con &lt;code&gt;./gradlew run&lt;/code&gt; y con la siguiente comando de &lt;code&gt;curl&lt;/code&gt; y URL obtendremos el mensaje en formato JSON en la salida.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=curl.sh&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/76862386194b211fc775b5fb36732bc9.js?file=out.txt&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Al diseñar APIs REST más complejas que este sencillo ejemplo conviene conocer el término &lt;a href=&#34;https://en.wikipedia.org/wiki/HATEOAS&#34;&gt;HATEOAS&lt;/a&gt;. Deberemos definir como organizar la información devuelta por los diferentes que los libros &lt;a href=&#34;http://amzn.to/2cxWMRo&#34;&gt;RESTful Web APIs&lt;/a&gt; y &lt;a href=&#34;http://amzn.to/2cEzQz5&#34;&gt;REST in Practice&lt;/a&gt; además de &lt;a href=&#34;http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api&#34;&gt;artículos con consejos sobre como diseñar APIs RESTful&lt;/a&gt;.&lt;/p&gt;
-
-&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1449358063&amp;linkId=e0cd589f357dfc1c77cfb004e6668fa5&amp;internal=1&#34;&gt;&lt;/iframe&gt;
-    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=0596805829&amp;linkId=3b1ee2b6ff595b6b3c2fd7c70eb35cc7&amp;internal=1&#34;&gt;&lt;/iframe&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Una vez que disponemos del servicio REST podemos &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/09/autenticacion-con-oauth-y-keycloak-en-un-servicio-rest-con-jax-rs-y-spring-boot/&#34;&gt;añadir autenticación y autorización con Keycloak como proveedor de OAuth&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;
-    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/SpringBootJaxrs&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
-&lt;/p&gt;
-
-&lt;div class=&#34;reference&#34;&gt;
-    Referencia:&lt;br&gt;
-    &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/03/introduccion-y-nuevas-caracteristicas-de-java-ee-7/&#34;&gt;Introducción y nuevas características de Java EE 7&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/04/aplicacion-de-ejemplo-usando-varias-especificaciones-de-java-ee-7/&#34;&gt;Aplicación de ejemplo usando varias especificaciones de Java EE 7&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://elbauldelprogramador.com/buenas-practicas-para-el-diseno-de-una-api-restful-pragmatica/&#34;&gt;Buenas prácticas para el diseño de una API RESTful pragmática&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="java"/>
             
                 <category term="planeta-codigo"/>
             
