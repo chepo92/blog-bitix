@@ -3,12 +3,131 @@
     <id>https://picodotdev.github.io/blog-bitix/post/index.xml</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2017-02-11T10:00:00+01:00</updated>
+    <updated>2017-02-18T10:00:00+01:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
-    <icon>https://picodotdev.github.io/blog-bitix//assets/images/custom/logotipos/hugo.png</icon>
-    <logo>https://picodotdev.github.io/blog-bitix//assets/images/custom/logotipos/hugo.png</logo>
+    <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
+    <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/02/ejemplo-de-rabbitmq-con-java-para-enviar-y-recibir-mensajes/</id>
+        <title>Ejemplo de RabbitMQ con Java para enviar y recibir mensajes</title>        
+        <updated>2017-02-18T10:00:00+01:00</updated>
+        <published>2017-02-18T10:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/02/ejemplo-de-rabbitmq-con-java-para-enviar-y-recibir-mensajes/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Entre las ventajas de integrar dos aplicaciones mediante el envío de mensajes están que evita que estén acopladas y la comunicación es asíncrona. Con RabbitMQ también podremos implementar cada uno de ellas con el lenguaje de programación que prefiramos de entre las varias posibilidades para las que ofrece clientes y por esto último podemos preferir usarlo en vez de las especificación JMS propia de Java EE que nos obligaría a usar un servidor de aplicaciones que lo implemente, posiblemente JBoss/Wildfly o Weblogic en vez de Tomcat o Jetty. En el artículo incluyo un ejemplo para el lenguaje Java mostrando el envío y recepción de mensajes junto con la aplicación de administración que nos proporcionará información útil.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/rabbitmq.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;RabbitMQ&#34; title=&#34;RabbitMQ&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Las aplicaciones que se integran mediante el envío y recepción de mensajes evitan el acoplamiento y sincronía junto con la posibilidad de implementar cada una de ellas con diferentes lenguajes o plataformas. Entre las especificaciones que componen Java EE está &lt;abbr title=”Java Message Service”&gt;JMS&lt;/abbr&gt; pero tanto la aplicación que envía como la que recibe mensajes deben estar programadas en el lenguaje Java, a menos que incluyamos un adaptador que permita a la aplicación no Java interactuar con JMS.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.rabbitmq.com/&#34;&gt;RabbitMQ&lt;/a&gt; es un software que proporciona una funcionalidad similar a JMS pero con la ventaja que ofrece soporte para los lenguajes más populares como &lt;a href=&#34;http://www.oracle.com/technetwork/java/index.html&#34;&gt;Java&lt;/a&gt; y &lt;a href=&#34;http://es.wikipedia.org/wiki/M%C3%A1quina_virtual_Java&#34;&gt;&lt;abbr title=&#34;Java Virtual Machine&#34;&gt;JVM&lt;/abbr&gt;&lt;/a&gt;, &lt;a href=&#34;https://www.ruby-lang.org/es/&#34;&gt;Ruby&lt;/a&gt;, &lt;a href=&#34;https://www.python.org/&#34;&gt;Python&lt;/a&gt;, &lt;a href=&#34;http://www.microsoft.com/net&#34;&gt;.NET&lt;/a&gt;, &lt;a href=&#34;http://php.net/&#34;&gt;PHP&lt;/a&gt;, &lt;a href=&#34;https://nodejs.org/en/&#34;&gt;Node.js&lt;/a&gt;, &lt;a href=&#34;https://golang.org/&#34;&gt;Go&lt;/a&gt; y varias más. Usa varios conceptos similares a los presentes en JMS como que el emisor envía los mensajes a una cola y el receptor los lee de ella de modo que ni el emisor ni receptor se conocen consiguiendo de este modo el desacoplamiento entre ellos. Los mensajes son leídos de las colas con la posibilidad de que cada mensaje sea recibido por un único receptor o por cada uno de ellos.&lt;/p&gt;
+
+&lt;p&gt;Realmente en RabbitMQ los mensajes no son enviados directamente por el emisor a las colas sino que se envían a un &lt;em&gt;exchange&lt;/em&gt; que finalmente lo enruta y encola en la cola destino. Los &lt;em&gt;exchanges&lt;/em&gt; pueden ser directos basando su lógica de encolado según el valor del &lt;em&gt;binding key&lt;/em&gt; enviada junto con el mensaje y un &lt;em&gt;routing key&lt;/em&gt; asociada con la cola o basados en temas en los que se usa una cadena formada por una lista de palabras separada por puntos, la lógica de enrutado se toma según si el &lt;em&gt;binding key&lt;/em&gt; cumple el patrón del &lt;em&gt;routing key&lt;/em&gt; que puede contener sustituidores de palabras, siendo un &lt;em&gt;*&lt;/em&gt; una palabra exacta y &lt;em&gt;#&lt;/em&gt; varias palabras contiguas.&lt;/p&gt;
+
+&lt;p&gt;En la &lt;a href=&#34;http://www.rabbitmq.com/documentation.html&#34;&gt;documentación de RabbitMQ&lt;/a&gt; hay 6 tutoriales en diferentes lenguajes para el envío y recepción de mensajes.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.rabbitmq.com/tutorials/tutorial-one-java.html&#34;&gt;Tutorial 1, Hello World&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.rabbitmq.com/tutorials/tutorial-two-java.html&#34;&gt;Tutorial 2, Work Queues&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.rabbitmq.com/tutorials/tutorial-three-java.html&#34;&gt;Tutorial  3, Publish/Subscribe&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.rabbitmq.com/tutorials/tutorial-four-java.html&#34;&gt;Tutorial 4, Routing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.rabbitmq.com/tutorials/tutorial-five-java.html&#34;&gt;Tutorial 5, Topics&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.rabbitmq.com/tutorials/tutorial-six-java.html&#34;&gt;Tutorial 6, Remote procedure call (RPC)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Basándome en estos ejemplos he creado un proyecto uno muy similar al Tutorial 1, ejecutable más fácilmente con &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt; y &lt;a href=&#34;http://gradle.org/&#34;&gt;Gradle&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Tanto en el emisor como en el receptor deberemos declarar las colas que van a usar (si una no existe se creará y si existe se usará), a la cola se le asigna un nombre y el receptor define un manejador para recibir los mensajes según se envían.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/0f1299cc2ed2316cce49418e555443f4.js?file=Send.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/0f1299cc2ed2316cce49418e555443f4.js?file=Receive.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/0f1299cc2ed2316cce49418e555443f4.js?file=build.gradle&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Para ejecutar el ejemplo usaré el &lt;a href=&#34;https://hub.docker.com/_/rabbitmq/&#34;&gt;contenedor de Docker para RabbitMQ&lt;/a&gt; iniciándolo con &lt;a href=&#34;https://docs.docker.com/compose/&#34;&gt;Docker Compose&lt;/a&gt; y el siguiente archivo descriptor. Puedes consultar la &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/series/docker/&#34;&gt;serie de artículos sobre Docker&lt;/a&gt; que escribí para conocer cómo usarlo.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/0f1299cc2ed2316cce49418e555443f4.js?file=docker-compose.yml&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/0f1299cc2ed2316cce49418e555443f4.js?file=docker-run.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Una vez iniciado el contenedor y con el código fuente del ejemplo, iniciamos en cualquier orden la parte receptora de los mensajes y la parte emisora de mensajes con los comandos &lt;code&gt;./gradlew receive&lt;/code&gt; y &lt;code&gt;./gradlew send&lt;/code&gt; respectivamente, momento en el cual veremos que en la consola salen las notificaciones de recepción y envío.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/210/send.png&#34; title=&#34;Aplicación de ejemplo enviando mensajes&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/210/send-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/210/receive.png&#34; title=&#34;Aplicación de ejemplo reciviendo mensajes&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/210/receive-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En la comunicación con RabbitMQ se puede usar &lt;a href=&#34;http://www.rabbitmq.com/ssl.html&#34;&gt;TLS/SSL&lt;/a&gt; así como mecanismos de &lt;a href=&#34;http://www.rabbitmq.com/authentication.html&#34;&gt;autenticación&lt;/a&gt; y &lt;a href=&#34;http://www.rabbitmq.com/access-control.html&#34;&gt;autorización&lt;/a&gt; para mayor seguridad. Usando confirmaciones si el receptor falla en el procesado el mensaje no se pierde ya que no se habrá declarado como &lt;em&gt;acknowledge&lt;/em&gt; aún así si RabbitMQ falla los mensajes se perderán a menos que las colas se declaren como persistentes las cuales se guardarán en disco perdurando a una catástrofe.&lt;/p&gt;
+
+&lt;p&gt;RabbitMQ posee un &lt;a href=&#34;https://www.rabbitmq.com/management.html&#34;&gt;&lt;em&gt;plugin&lt;/em&gt; para la administración&lt;/a&gt; con el que podemos administrar permisos, tener una vista global, ver ratios de mensajes, estadísticas, colas, &lt;em&gt;exchanges&lt;/em&gt; y más información, nos da información muy interesante sobre el estado del procesamiento de mensajes. Es accesible mediante el navegador y la URL &lt;em&gt;http://localhost:15672/&lt;/em&gt;. En la captura del estado de la cola &lt;em&gt;hello&lt;/em&gt; hay 10 mensajes encolados pendientes de entregar a algún receptor.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/210/rabbitmq-management.png&#34; title=&#34;Aplicación web de administración de RabbitMQ&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/210/rabbitmq-management-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/210/rabbitmq-queue.png&#34; title=&#34;Información de estado de una cola&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/210/rabbitmq-queue-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Para profundizar más en las aplicaciones basadas en mensajes con RabbitMQ dos buenos libros son &lt;a href=&#34;http://amzn.to/2lTGMQc&#34;&gt;Learning RabbitMQ&lt;/a&gt; y &lt;a href=&#34;http://amzn.to/2lW9qwF&#34;&gt;Matering RabbitMQ&lt;/a&gt; cubriendo temas más avanzados como &lt;em&gt;clustering&lt;/em&gt;, alta disponibilidad, arquitectura, patrones de diseño, seguridad y rendimiento.&lt;/p&gt;
+
+&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1783984562&amp;linkId=9bb0705e8a34f246d5530b141b0a690e&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1783981520&amp;linkId=e87eebb622314cdf0c2c14fc32940264&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/HolaMundoRabbitMQ&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;docker-compose up &amp;amp;&amp;amp; ./gradlew receive &amp;amp;&amp;amp; ./gradle send&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.rabbitmq.com/&#34;&gt;RabbitMQ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.rabbitmq.com/documentation.html&#34;&gt;Documentación RabbitMQ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/series/docker/&#34;&gt;Serie de artículos sobre Docker&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/introduccion-y-ejemplo-sencillo-de-java-message-service-jms/&#34;&gt;Introducción y ejemplo sencillo de Java Message Service (JMS)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/02/como-crear-un-servicio-de-systemd-para-una-aplicacion-con-spring-boot/</id>
@@ -22,11 +141,11 @@
           &lt;p&gt;&lt;strong&gt;La mayoría de distribuciones Linux ya usan systemd como gestor y supervisor de los servicios del sistema.  Creando un descriptor podremos gestionar un servicio propio con los mismos comandos de systemd que usamos para cualquier otro servicio del sistema.&lt;/strong&gt;&lt;/p&gt;
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/linux.png&#34; class=&#34;right&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/linux.png&#34; class=&#34;right&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
 &lt;/div&gt;
 
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Habiendo creado una aplicación o microservicio, por ejemplo con &lt;a href=&#34;http://projects.spring.io/spring-boot/&#34;&gt;Spring Boot&lt;/a&gt;, necesitaremos que se inicie con el sistema y una forma de gestionarlo para detenerlo, reiniciarlo y que se reinicie en caso de salida abrupta.&lt;/p&gt;
@@ -117,17 +236,17 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/208/bilbostack-2017.jpg&#34; title=&#34;BilboStack 2017&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/208/bilbostack-2017.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/208/bilbostack-2017.jpg&#34; title=&#34;BilboStack 2017&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/208/bilbostack-2017.jpg&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;BilboStack 2017&lt;/figcaption&gt;
 &lt;/figure&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/208/universidad-de-deusto-1.jpg&#34; title=&#34;Universidad de Deusto&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/208/universidad-de-deusto-1-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/208/universidad-de-deusto-1.jpg&#34; title=&#34;Universidad de Deusto&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/208/universidad-de-deusto-1-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/208/universidad-de-deusto-2.jpg&#34; title=&#34;Universidad de Deusto&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/208/universidad-de-deusto-2-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/208/universidad-de-deusto-2.jpg&#34; title=&#34;Universidad de Deusto&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/208/universidad-de-deusto-2-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;Universidad de Deusto&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -196,10 +315,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/208/track-1.jpg&#34; title=&#34;Track 1&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/208/track-1-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/208/track-1.jpg&#34; title=&#34;Track 1&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/208/track-1-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/208/track-2.jpg&#34; title=&#34;Track 2&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/208/track-2-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/208/track-2.jpg&#34; title=&#34;Track 2&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/208/track-2-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;Agenda&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -226,7 +345,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/208/invisible-o-desaparece.jpg&#34; title=&#34;Invisible o desaparece...&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/208/invisible-o-desaparece-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/208/invisible-o-desaparece.jpg&#34; title=&#34;Invisible o desaparece...&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/208/invisible-o-desaparece-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
@@ -269,7 +388,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/208/design-system.jpg&#34; title=&#34;Érase una vez... el Design System&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/208/design-system-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/208/design-system.jpg&#34; title=&#34;Érase una vez... el Design System&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/208/design-system-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
@@ -313,7 +432,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/208/agile-for-scrummies.jpg&#34; title=&#34;Agile for scrummies&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/208/agile-for-scrummies-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/208/agile-for-scrummies.jpg&#34; title=&#34;Agile for scrummies&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/208/agile-for-scrummies-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
@@ -341,7 +460,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/208/domain-driven-design.jpg&#34; title=&#34;Domain-Driven Design, uniendo negocio con el software&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/208/domain-driven-design-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/208/domain-driven-design.jpg&#34; title=&#34;Domain-Driven Design, uniendo negocio con el software&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/208/domain-driven-design-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
@@ -376,7 +495,7 @@
         <content type="html">
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/keepcoding.png&#34; class=&#34;right&#34; alt=&#34;KeepCoding&#34; title=&#34;KeepCoding&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/keepcoding.png&#34; class=&#34;right&#34; alt=&#34;KeepCoding&#34; title=&#34;KeepCoding&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;En internet hay cantidad de recursos disponibles para aprender de prácticamente cualquier cosas que queramos. También con libros técnicos como los &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/12/8-plus-libros-para-mejorar-como-programadores/&#34;&gt;8 libros que recomiendo para mejorar como programadores&lt;/a&gt; de los que es posible aprender de forma profunda sobre un tema en concreto. Estando suscritos a blogs como este también se pueden apreciar ciertos detalles sobre un tema o obtener una pequeña introducción con en ocasiones un ejemplo de código funcional.&lt;/p&gt;
@@ -403,7 +522,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/207/keepcoding-course.png&#34; title=&#34;Curso online de KeepCoding&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/207/keepcoding-course-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/207/keepcoding-course.png&#34; title=&#34;Curso online de KeepCoding&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/207/keepcoding-course-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Curso online de KeepCoding&lt;/figcaption&gt;
@@ -446,11 +565,11 @@
           &lt;p&gt;&lt;strong&gt;Tradicionalmente el conectar un servicio con sus servicios dependientes se ha realizado por configuración, normalmente mediante un nombre de dominio y su puerto. Esta configuración estática es suficiente para unos pocos servicios y que no varían durante su funcionamiento. Con el advenimiento de los microservicios con su estado y número cambiantes en el tiempo han surgido varias herramientas para en vez de usar configuración usar descubrimiento. Una de estas herramientas Consul para la que Spring Cloud proporciona integración.&lt;/strong&gt;&lt;/p&gt;
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/spring.png&#34; class=&#34;right&#34; alt=&#34;Spring&#34; title=&#34;Spring&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/spring.png&#34; class=&#34;right&#34; alt=&#34;Spring&#34; title=&#34;Spring&#34;/&gt;
 &lt;/div&gt;
 
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;En una aplicación con una arquitectura de microservicios esta se compone de múltiples partes cambiantes. Los microservicios pueden aparecer, desaparecer, variar en número o cambiar de ubicación, la aplicación debe ser tolerante a esos cambios y seguir proporcionando su servicio. Por tanto, la configuración de red de los servicios no se puede realizar usando direcciones &lt;abbr title=&#34;Internet Protocol&#34;&gt;IP&lt;/abbr&gt; ya que no se conocen las que utilizarán los microservicios y usar nombres de dominio de &lt;abbr title=&#34;Domain Name System&#34;&gt;DNS&lt;/abbr&gt; puede no ser viable ya que los cambios tardan en propagarse. Conocer el nombre de &lt;em&gt;host&lt;/em&gt; y puerto reales de los microservicios es proporcionado por la funcionalidad de descubrimiento de servicios o &lt;em&gt;service discovery&lt;/em&gt; que proporcionan algunos servicios como &lt;a href=&#34;https://github.com/Netflix/eureka&#34;&gt;Eureka&lt;/a&gt;, &lt;a href=&#34;https://www.consul.io/&#34;&gt;Consul&lt;/a&gt; o &lt;a href=&#34;https://zookeeper.apache.org/&#34;&gt;Apache Zookeper&lt;/a&gt;.&lt;/p&gt;
@@ -467,7 +586,7 @@
 &lt;p&gt;Consul además de descubrimiento de servicios proporciona otras funcionalidades como detección de fallos o caídas para prevenir enviar peticiones a máquinas fuera de servicio y almacenamiento básico clave/valor para configuración dinámica o activación de características. Dispone de una aplicación web en la que podemos ver el estado de los servicios, una &lt;a href=&#34;https://www.consul.io/docs/agent/http.html&#34;&gt;API REST&lt;/a&gt; con la que comunicarse con Consul en una aplicación o en cada microservicio y un servidor de nombres &lt;abbr&gt;DNS&lt;/abbr&gt;, podemos usar cualquiera de las dos interfaces de consulta, la basada en la &lt;abbr&gt;API&lt;/abbr&gt; &lt;abbr&gt;REST&lt;/abbr&gt; o la basada en DNS para obtener las direcciones IP con la ubicación de los servicios.&lt;/p&gt;
 
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/206/consul.png&#34; alt=&#34;Consul&#34; title=&#34;Consul&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/206/consul.png&#34; alt=&#34;Consul&#34; title=&#34;Consul&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Instalar Consul es muy sencillo basta con &lt;a href=&#34;https://www.consul.io/downloads.html&#34;&gt;descargar un binario&lt;/a&gt; y descargar la interfaz web si queremos tener el &lt;em&gt;dashboard&lt;/em&gt; con la información del servicio. Descargados y descomprimidos Consul se inicia con el siguiente comando. Podemos acceder al panel &lt;em&gt;dashboard&lt;/em&gt; con la dirección &lt;a href=&#34;http://localhost:8500&#34;&gt;http://localhost:8500&lt;/a&gt; con un navegador web. Inicialmente en el panel de servicios solo se encuentra el propio de Consul cuando aún no se ha registrado ningún servicio, aplicación o microservicio.&lt;/p&gt;
@@ -483,7 +602,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/206/consul-services.png&#34; title=&#34;Servicios registrados en Consul&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/206/consul-services-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/206/consul-services.png&#34; title=&#34;Servicios registrados en Consul&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/206/consul-services-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Servicios registrados en Consul&lt;/figcaption&gt;
@@ -497,7 +616,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/206/service-health.png&#34; title=&#34;Endpoint de estado de servicio&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/206/service-health-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/206/service-health.png&#34; title=&#34;Endpoint de estado de servicio&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/206/service-health-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Endpoint de estado de servicio&lt;/figcaption&gt;
@@ -549,11 +668,11 @@
           &lt;p&gt;&lt;strong&gt;Los sistemas GNU/Linux pueden ser igual de seguros o inseguros que los sistemas Windows. Sin embargo, en ambas plataformas hay algunas diferencias que explican por que los sistemas Windows tienen peor fama y por que los sistemas GNU/Linux se consideran más seguros que Windows.&lt;/strong&gt;&lt;/p&gt;
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/linux.png&#34; class=&#34;right&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/linux.png&#34; class=&#34;right&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
 &lt;/div&gt;
 
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/gnu.png&#34; class=&#34;right&#34; alt=&#34;GNU&#34; title=&#34;GNU&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/gnu.png&#34; class=&#34;right&#34; alt=&#34;GNU&#34; title=&#34;GNU&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Habitualmente se comenta que los sistemas con alguna distribución &lt;a href=&#34;http://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;http://www.linux.com/&#34;&gt;Linux&lt;/a&gt; son más seguros que los sistemas &lt;a href=&#34;http://www.microsoft.com/es-es/windows/&#34;&gt;Windows&lt;/a&gt;. Probablemente bien configurados y debidamente actualizados ambas opciones sean muy seguras. Sin embargo, desde el punto de vista de un usuario es común que Windows se vea infectado con virus o &lt;em&gt;malware&lt;/em&gt; aún con un antivirus instalado.&lt;/p&gt;
@@ -604,15 +723,15 @@
           &lt;p&gt;&lt;strong&gt;Arch Linux es una de las distribuciones más personalizables de GNU/Linux pero cuya instalación requiere leer una buena cantidad de documentación para saber que comandos ejecutar en el &lt;em&gt;prompt&lt;/em&gt; del sistema en el que te deja se medio de instalación. Algunos usuarios eligen una distribución como Antergos, KaOS o Manjaro con un instalalador gráfico y guiado simplemente por el hecho de no enfrentarse al instalador de Arch Linux. Ejecutar un comando y esperar a que termine para introducir otro es lento y requiere de atención.&lt;/strong&gt;&lt;/p&gt;
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/archlinux.png&#34; class=&#34;right&#34; alt=&#34;Arch Linux&#34; title=&#34;Arch Linux&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/archlinux.png&#34; class=&#34;right&#34; alt=&#34;Arch Linux&#34; title=&#34;Arch Linux&#34;/&gt;
 &lt;/div&gt;
 
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/linux.png&#34; class=&#34;right&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/linux.png&#34; class=&#34;right&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
 &lt;/div&gt;
 
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/gnu.png&#34; class=&#34;right&#34; alt=&#34;GNU&#34; title=&#34;GNU&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/gnu.png&#34; class=&#34;right&#34; alt=&#34;GNU&#34; title=&#34;GNU&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Hace tiempo que instalar una distribución &lt;a href=&#34;http://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;http://www.linux.com/&#34;&gt;Linux&lt;/a&gt; no tiene más dificultad que instalar un sistema operativo como &lt;a href=&#34;http://www.microsoft.com/es-es/windows/&#34;&gt;Windows&lt;/a&gt;, que consiste en descargar la imagen ISO del CD o DVD, grabarla en un CD, DVD o memoria USB e iniciar el sistema con el medio. Las &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/10/elegir-una-distribucion-gnu-linux-segun-el-usuario-uso-o-equipo/&#34;&gt;distribuciones aconsejadas para usuarios que provienen de Windows o macOS&lt;/a&gt; o no tiene muchos conocimientos informáticos poseen instaladores gráficos o basados en texto y guiados en varios pasos hasta completar la instalación en menos de una hora. Distribuciones como &lt;a href=&#34;http://www.ubuntu.com/&#34;&gt;Ubuntu&lt;/a&gt;, &lt;a href=&#34;https://elementary.io/es/&#34;&gt;elementary OS&lt;/a&gt; o &lt;a href=&#34;http://www.linuxmint.com/&#34;&gt;Linux Mint&lt;/a&gt; hacen que la instalación no requiera muchos conocimientos y sea completada con éxito por cualquier usuario.&lt;/p&gt;
@@ -620,10 +739,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/204/debian-installer-text.png&#34; title=&#34;Instalador de Debian en modo texto&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/204/debian-installer-text-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/debian-installer-text.png&#34; title=&#34;Instalador de Debian en modo texto&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/debian-installer-text-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/204/debian-installer-graphics.png&#34; title=&#34;Instalador de Debian en modo gráfico&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/204/debian-installer-graphics-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/debian-installer-graphics.png&#34; title=&#34;Instalador de Debian en modo gráfico&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/debian-installer-graphics-thumb.png&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;Instalación guíada de Debian basada en texto y gráfica&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -680,34 +799,34 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/204/archlinux-gnome.jpg&#34; title=&#34;GNOME&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/204/archlinux-gnome-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-gnome.jpg&#34; title=&#34;GNOME&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-gnome-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/204/archlinux-kde.jpg&#34; title=&#34;KDE&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/204/archlinux-kde-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-kde.jpg&#34; title=&#34;KDE&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-kde-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;Entornos de escritorio GNOME y KDE&lt;/figcaption&gt;
 &lt;/figure&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/204/archlinux-xfce.jpg&#34; title=&#34;XFCE&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/204/archlinux-xfce-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-xfce.jpg&#34; title=&#34;XFCE&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-xfce-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/204/archlinux-cinnamon.jpg&#34; title=&#34;Cinnamon&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/204/archlinux-cinnamon-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-cinnamon.jpg&#34; title=&#34;Cinnamon&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-cinnamon-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;Entornos de escritorio Xfce y Cinnamon&lt;/figcaption&gt;
 &lt;/figure&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/204/archlinux-lxde.jpg&#34; title=&#34;LXDE&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/204/archlinux-lxde-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-lxde.jpg&#34; title=&#34;LXDE&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-lxde-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/204/archlinux-mate.jpg&#34; title=&#34;Mate&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/204/archlinux-mate-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-mate.jpg&#34; title=&#34;Mate&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-mate-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;Entornos de escritorio LXDE y Mate&lt;/figcaption&gt;
 &lt;/figure&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/204/archlinux-root-password.png&#34; title=&#34;Solicitud de contraseña para descifrar partición root&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/204/archlinux-root-password-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-root-password.png&#34; title=&#34;Solicitud de contraseña para descifrar partición root&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-root-password-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Solicitud de contraseña para descifrar partición root&lt;/figcaption&gt;
@@ -756,7 +875,7 @@
 &lt;p&gt;Aunque la distribución &lt;a href=&#34;http://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;http://www.linux.com/&#34;&gt;Linux&lt;/a&gt; que uso es &lt;a href=&#34;https://www.archlinux.org/&#34;&gt;Arch Linux&lt;/a&gt; he elegido donar a Elementary OS porque me parece una distribución interesante por ofrecer algo distinto a las otras muchas distribuciones que existen y no tienen algo diferenciador. Elementary tiene un diseño, estética y usabilidad de interfaz muy cuidada. Arch Linux es la distribución &lt;em&gt;rolling release&lt;/em&gt; que se mantiene siempre actualizada y con una gran &lt;a href=&#34;https://wiki.archlinux.org/&#34;&gt;documentación en forma de wiki&lt;/a&gt;. Las versiones LTS de &lt;a href=&#34;http://www.ubuntu.com/&#34;&gt;Ubuntu&lt;/a&gt; ofrecen soporte durante un periodo largo de tiempo pero cuya interfaz Unity no convence a muchos. &lt;a href=&#34;https://www.debian.org/&#34;&gt;Debian&lt;/a&gt;, &lt;a href=&#34;http://www.opensuse.org/es/&#34;&gt;openSUSE&lt;/a&gt; y &lt;a href=&#34;https://fedoraproject.org/&#34;&gt;Fedora&lt;/a&gt; son otras de las distribuciones grandes y junto con &lt;a href=&#34;http://www.linuxmint.com/&#34;&gt;Linux Mint&lt;/a&gt; también a tener en cuenta para los usuarios que quieren dar el cambio a Linux. Pero para un recién llegado a GNU/Linux o que simplemente quiere un sistema para trabajar en mi opinión Elementary OS o Linux Mint o una versión LTS de Ubuntu si nos convence su interfaz Unity sea lo recomendable por lo que usar en un primer momento, desde luego no Arch Linux y posiblemente tampoco Debian, openSUSE o Fedora. Espero que Elementary siga desarrollandose y no sea una de las muchas distribuciones que al cabo de unos años es abandonada por falta de interés de sus desarrolladores, falta de éxito o ingresos.&lt;/p&gt;
 
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/elementary.png&#34; alt=&#34;Elementary OS&#34; title=&#34;Elementary OS&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/elementary.png&#34; alt=&#34;Elementary OS&#34; title=&#34;Elementary OS&#34;/&gt;
 &lt;/div&gt;
 
 &lt;h3 id=&#34;libre-office&#34;&gt;Libre Office&lt;/h3&gt;
@@ -764,7 +883,7 @@
 &lt;p&gt;LibreOffice es el proyecto ofimático que se postula como una de las mejores alternativas ofimáticas a &lt;a href=&#34;https://products.office.com/es-es/home&#34;&gt;Microsoft Office&lt;/a&gt;. Su interfaz, en mi opinión, está saturada de opciones en menús donde es difícil encontrar la funcionalidad que uno necesita siendo parecida a versiones antiguas de Microsoft Office. Sin embargo, en GNU/Linux no hay muchas alternativas ofimáticas tan completas de software libre. Otra alternativa es &lt;a href=&#34;https://www.wps.com/&#34;&gt;WPS Office&lt;/a&gt; con una interfaz mas cuidada y parecida a Microsoft Office con su interfaz de caja de herramientas &lt;em&gt;ribbon&lt;/em&gt; donde es más fácil encontrar las opciones en vez de interminables menús y diálogos de configuración. En LibreOffice me parece tan importante añadir nuevas funcionalidades como mejorar las existentes pero me gustaría que la interfaz fuese mejor, más parecida a la de Microsoft Office si fuese necesario. Parece que están dando los &lt;a href=&#34;https://es.blog.documentfoundation.org/evolucionando-mas-alla-de-las-restricciones-de-las-barras-de-herramientas/&#34;&gt;primeros pasos en LibreOffice para evolucionar la barra de herramientas&lt;/a&gt;.&lt;/p&gt;
 
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/libreoffice.png&#34; alt=&#34;LibreOffice&#34; title=&#34;LibreOffice&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/libreoffice.png&#34; alt=&#34;LibreOffice&#34; title=&#34;LibreOffice&#34;/&gt;
 &lt;/div&gt;
 
 &lt;h3 id=&#34;arch-linux-arm&#34;&gt;Arch Linux ARM&lt;/h3&gt;
@@ -772,7 +891,7 @@
 &lt;p&gt;El tercer proyecto al que he donado ha sido a Arch Linux ARM ya que lo uso en la &lt;a href=&#34;http://www.raspberrypi.org/&#34;&gt;Raspberry Pi&lt;/a&gt; con la que hago la descarga de imágenes de alguna distribución que quiera probar, series, películas y libros mediante P2P. Solo tiene 256MiB de memoria y una CPU de un único núcleo pero son más que suficientes para en una noche descargar cualquier contenido que necesite.&lt;/p&gt;
 
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/archlinux.png&#34; alt=&#34;Arch Linux&#34; title=&#34;Arch Linux&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/archlinux.png&#34; alt=&#34;Arch Linux&#34; title=&#34;Arch Linux&#34;/&gt;
 &lt;/div&gt;
 
 &lt;h3 id=&#34;comprobantes-de-las-donaciones&#34;&gt;Comprobantes de las donaciones&lt;/h3&gt;
@@ -780,21 +899,21 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/203/donacion-elementary.png&#34; title=&#34;Donación Elementary OS&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/203/donacion-elementary-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/203/donacion-elementary.png&#34; title=&#34;Donación Elementary OS&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/203/donacion-elementary-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Donación Elementary OS&lt;/figcaption&gt;
 &lt;/figure&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/203/donacion-thedocumentfoundation.png&#34; title=&#34;Donación The Document Foundation&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/203/donacion-thedocumentfoundation-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/203/donacion-thedocumentfoundation.png&#34; title=&#34;Donación The Document Foundation&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/203/donacion-thedocumentfoundation-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Donación The Document Foundation&lt;/figcaption&gt;
 &lt;/figure&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/203/donacion-archlinuxarm.png&#34; title=&#34;Donación Arch Linux ARM&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/203/donacion-archlinuxarm-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/203/donacion-archlinuxarm.png&#34; title=&#34;Donación Arch Linux ARM&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/203/donacion-archlinuxarm-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Donación Arch Linux ARM&lt;/figcaption&gt;
@@ -851,10 +970,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/202/analytics-2016.png&#34; title=&#34;Analytics 2016 de Blog Bitix&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/202/analytics-2016-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/202/analytics-2016.png&#34; title=&#34;Analytics 2016 de Blog Bitix&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/202/analytics-2016-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/202/adsense-2016.png&#34; title=&#34;AdSense 2016 de Blog Bitix&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/202/adsense-2016-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/202/adsense-2016.png&#34; title=&#34;AdSense 2016 de Blog Bitix&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/202/adsense-2016-thumb.png&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;Evolución visitas e ingresos de AdSense en 2016&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -938,7 +1057,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/202/christmas-tux-2016.jpg&#34; title=&#34;¡Felices fiestas y buen 2017!&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/202/christmas-tux-2016-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/202/christmas-tux-2016.jpg&#34; title=&#34;¡Felices fiestas y buen 2017!&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/202/christmas-tux-2016-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;¡Felices fiestas y buen 2017!&lt;/figcaption&gt;
@@ -993,10 +1112,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/201/1.jpg&#34; title=&#34;Escritorio&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/201/1-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/201/1.jpg&#34; title=&#34;Escritorio&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/201/1-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/201/2.jpg&#34; title=&#34;Escritorio&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/201/2-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/201/2.jpg&#34; title=&#34;Escritorio&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/201/2-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -1015,10 +1134,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/201/3.jpg&#34; title=&#34;Regleta enchufes y router ADSL&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/201/3-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/201/3.jpg&#34; title=&#34;Regleta enchufes y router ADSL&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/201/3-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/201/4.jpg&#34; title=&#34;Altavoces, Raspberry Pi, Tux y amigos de papel&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/201/4-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/201/4.jpg&#34; title=&#34;Altavoces, Raspberry Pi, Tux y amigos de papel&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/201/4-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -1029,16 +1148,16 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/201/tux.png&#34; title=&#34;Arch Linux calendar&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/201/tux-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/201/tux.png&#34; title=&#34;Arch Linux calendar&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/201/tux-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/201/arch-linux-calendar-2012.png&#34; title=&#34;&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/201/arch-linux-calendar-2012-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/201/arch-linux-calendar-2012.png&#34; title=&#34;&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/201/arch-linux-calendar-2012-thumb.png&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/201/arch-linux-cheat-cube.png&#34; title=&#34;Arch Linux cheat cube&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/201/arch-linux-cheat-cube-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/201/arch-linux-cheat-cube.png&#34; title=&#34;Arch Linux cheat cube&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/201/arch-linux-cheat-cube-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
@@ -1086,7 +1205,7 @@
         <content type="html">
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/javascript.png&#34; class=&#34;right&#34; alt=&#34;JavaScript&#34; title=&#34;JavaScript&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/javascript.png&#34; class=&#34;right&#34; alt=&#34;JavaScript&#34; title=&#34;JavaScript&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Este artículo es una combinación de varias cosas que forman el actual estado del arte en JavaScript. &lt;a href=&#34;http://gulpjs.com/&#34;&gt;Gulp&lt;/a&gt; como ejecutor de tareas, traducción o &lt;em&gt;transpiling&lt;/em&gt; de ECMAScript 6 a ECMAcript 5 con &lt;a href=&#34;https://babeljs.io/&#34;&gt;Babel&lt;/a&gt;, &lt;a href=&#34;https://www.npmjs.com/package/uglify-js&#34;&gt;Uglify&lt;/a&gt; como minificador y ofuscador de código y &lt;a href=&#34;https://eslint.org/&#34;&gt;ESLint&lt;/a&gt; como verificador del código.&lt;/p&gt;
@@ -1169,7 +1288,7 @@
           &lt;p&gt;&lt;strong&gt;Los métodos &lt;em&gt;equals&lt;/em&gt; y &lt;em&gt;hashCode&lt;/em&gt; son esenciales en las colecciones de objetos. Para su correcta implementación es necesario conocer unas cuantas propiedades que han de cumplir estos métodos. Pueden parecer sencillos pero no lo son tanto y una mala implementación posiblemente produzca algún tipo de error o comportamiento anómalo indeseado. En el siguiente artículo comento varias formas de implementarlos de forma sencilla y correcta.&lt;/strong&gt;&lt;/p&gt;
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;En Java los métodos &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals-java.lang.Object-&#34;&gt;equals&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode--&#34;&gt;hashCode&lt;/a&gt; están definidos en la raíz de la jerarquía de clases, esto es en la clase &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html&#34;&gt;Object&lt;/a&gt;, lo que significa que todas las instancias de objetos los poseen. Estos métodos son especialmente importantes ya que afectan al correcto funcionamiento de las colecciones como &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html&#34;&gt;Collection&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/List.html&#34;&gt;List&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Set.html&#34;&gt;Set&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Map.html&#34;&gt;Map&lt;/a&gt;, colecciones, listas, conjuntos y mapas que es difícil que cualquier programa no use alguna implementación de ellas.&lt;/p&gt;
@@ -1276,7 +1395,7 @@
           &lt;p&gt;&lt;strong&gt;Con ECMAScript 6 se han incorporado al lenguaje varias novedades como nuevas palabras reservadas para definir variables y constantes, símbolos, interpolación de variables en cadenas, desestructuración, forma abreviada para declarar funciones, nueva sintaxis más sencilla para definir clases, objetos de tipo &lt;em&gt;Map&lt;/em&gt; y &lt;em&gt;Set&lt;/em&gt;, &lt;em&gt;Promises&lt;/em&gt; como alternativa a &lt;em&gt;callbacks&lt;/em&gt;, el protocolo &lt;em&gt;Iterator&lt;/em&gt; y generadores, además de algunas otras cosas que si como yo no habías dedicado tiempo a aprender mejor JavaScript aún te resulten novedosas.&lt;/strong&gt;&lt;/p&gt;
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/javascript.png&#34; class=&#34;right&#34; alt=&#34;JavaScript&#34; title=&#34;JavaScript&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/javascript.png&#34; class=&#34;right&#34; alt=&#34;JavaScript&#34; title=&#34;JavaScript&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Hasta ahora como desarrollador web durante prácticamente toda mi vida laboral no había dedicado tiempo a conocer en más detalle el lenguaje de programación &lt;a href=&#34;http://es.wikipedia.org/wiki/JavaScript&#34;&gt;JavaScript&lt;/a&gt; usado en los navegadores web. Mucho de lo que necesitaba me era suficiente con librerías como &lt;a href=&#34;http://jquery.com/&#34;&gt;jQuery&lt;/a&gt; o &lt;a href=&#34;http://underscorejs.org/&#34;&gt;underscore&lt;/a&gt;. Ahora algunas páginas web tienen un peso importante en el lado cliente y ante esta necesidad el lenguaje JavaScript está evolucionando e incorporando nuevas características como las definidas en sus especificaciones de &lt;a href=&#34;https://es.wikipedia.org/wiki/ECMAScript&#34;&gt;ECMAScript&lt;/a&gt;.&lt;/p&gt;
@@ -1460,25 +1579,25 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/197/bombilla-led-philips-1.jpg&#34; title=&#34;Bombilla LED PHILIPS 100W E27 13.5W 2700K&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/197/bombilla-led-philips-1-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/197/bombilla-led-philips-1.jpg&#34; title=&#34;Bombilla LED PHILIPS 100W E27 13.5W 2700K&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/197/bombilla-led-philips-1-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/197/bombilla-led-philips-2.jpg&#34; title=&#34;Bombilla LED PHILIPS 100W E27 13.5W 2700K&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/197/bombilla-led-philips-2-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/197/bombilla-led-philips-2.jpg&#34; title=&#34;Bombilla LED PHILIPS 100W E27 13.5W 2700K&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/197/bombilla-led-philips-2-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/197/bombilla-led-philips-3.jpg&#34; title=&#34;Bombilla LED PHILIPS 100W E27 13.5W 2700K&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/197/bombilla-led-philips-3-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/197/bombilla-led-philips-3.jpg&#34; title=&#34;Bombilla LED PHILIPS 100W E27 13.5W 2700K&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/197/bombilla-led-philips-3-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/197/bombilla-led-philips-4.jpg&#34; title=&#34;Bombilla LED PHILIPS 100W E27 13.5W 2700K&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/197/bombilla-led-philips-4-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/197/bombilla-led-philips-4.jpg&#34; title=&#34;Bombilla LED PHILIPS 100W E27 13.5W 2700K&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/197/bombilla-led-philips-4-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;Bombilla LED PHILIPS 100W E27 13.5W 2700K&lt;/figcaption&gt;
 &lt;/figure&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/197/lampara-brilliant.jpg&#34; title=&#34;Lámpara Brilliant con bombillas LED PHILIPS 100W E27 13.5W 2700K&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/197/lampara-brilliant-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/197/lampara-brilliant.jpg&#34; title=&#34;Lámpara Brilliant con bombillas LED PHILIPS 100W E27 13.5W 2700K&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/197/lampara-brilliant-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Lámpara Brilliant con bombillas LED PHILIPS 100W E27 13.5W 2700K&lt;/figcaption&gt;
@@ -1513,7 +1632,7 @@
         <content type="html">
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/keepassx.png&#34; class=&#34;right&#34; alt=&#34;KeePassX&#34; title=&#34;KeePassX&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/keepassx.png&#34; class=&#34;right&#34; alt=&#34;KeePassX&#34; title=&#34;KeePassX&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;La mayor parte de servicios usan aún como forma de autenticación el método de usuario y contraseña. Si la contraseña proporcionada conocida solo por su usuario es correcta el sistema confía en que el usuario es quien dice ser. Las contraseñas debería ser difíciles de averiguar, se recomienda que tenga una longitud mínima de 8 caracteres y que contenga letras en minúscula y mayúscula, números y símbolos, sin embargo, cuanto más fuerte y difícil sea de averiguar más difícil será recordarla. Además, idealmente se debe utilizar una contraseña distinta en cada servicio para evitar que descubierta la contraseña por un fallo de seguridad en cualquiera de en los que se use pueda accederse a todos los otros servicios que use ese usuario utilice, por lo que el número de contraseñas a recordar pueden ser numerosas de modo que muchos usuarios terminan usando la misma contraseña en varios servicios con el riesgo que conlleva. Dado que recordar una contraseña fuerte para cada servicio es difícil y mantenerlas guardadas en un archivo de texto o en un papel no es lo más recomendable podemos usar un programa que las almacene.&lt;/p&gt;
@@ -1527,10 +1646,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/196/keepassx-1.png&#34; title=&#34;KeePassX&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/196/keepassx-1-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/196/keepassx-1.png&#34; title=&#34;KeePassX&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/196/keepassx-1-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/196/keepassx-4.png&#34; title=&#34;KeePassX&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/196/keepassx-4-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/196/keepassx-4.png&#34; title=&#34;KeePassX&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/196/keepassx-4-thumb.png&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -1541,7 +1660,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/196/keepassx-2.png&#34; title=&#34;KeePassX&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/196/keepassx-2-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/196/keepassx-2.png&#34; title=&#34;KeePassX&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/196/keepassx-2-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
@@ -1553,7 +1672,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/196/keepassx-3.png&#34; title=&#34;Contraseñas guardadas&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/196/keepassx-3-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/196/keepassx-3.png&#34; title=&#34;Contraseñas guardadas&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/196/keepassx-3-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
@@ -1576,117 +1695,6 @@
                 <category term="blog-stack"/>
             
                 <category term="gnu-linux"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="planeta-linux"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2016/11/instalar-programas-con-homebrew-en-macos/</id>
-        <title>Instalar programas con Homebrew en macOS</title>        
-        <updated>2016-11-25T22:30:00+01:00</updated>
-        <published>2016-11-19T12:00:00+01:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/11/instalar-programas-con-homebrew-en-macos/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;Para no tener que descargar binarios e instalarlos manualmente y estar pendiente de nuevas versiones que se publiquen en un futuro en macOS está Homebrew. Homebrew es un gestor de paquetes similar a los existentes en las distribuciones GNU/Linux con el que podremos buscar software, instalar, actualizar, ver que hemos instalado, cuales están desactualizados, iniciar y parar servicios y desinstalar los paquetes o programas. Esta es una guía básica sobre como instalar software en macOS con Homebrew y como instalar iTerm2 que es una mejor terminal que la propia del sistema con iterm.&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/apple.png&#34; class=&#34;right&#34; alt=&#34;Apple&#34; title=&#34;Apple&#34;/&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/macos.png&#34; class=&#34;right&#34; alt=&#34;macOS&#34; title=&#34;macOS&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Como nuevo usuario de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/11/mi-primer-mac-yo-usuario-de-gnu-linux/&#34;&gt;mi primer mac&lt;/a&gt; he tenido que empezar instalando los programas que voy a usar. Una de las cosas buenas de las distribuciones &lt;a href=&#34;http://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;http://www.linux.com/&#34;&gt;Linux&lt;/a&gt; es la forma de obtener e instalar programas. Cada distribución de GNU/Linux tiene su repositorio de paquetes y programas de los que el gestor de paquetes obtiene e instala. Los gestores paquetes se encargan de instalar, actualizar y desinstalar cada paquete junto las dependencias que requiera. Con el gestor de paquetes y desde la terminal es posible instalar múltiples programas rápidamente con un comando. En &lt;a href=&#34;http://www.microsoft.com/es-es/windows/&#34;&gt;Windows&lt;/a&gt; y &lt;a href=&#34;http://www.apple.com/macos/&#34;&gt;macOS&lt;/a&gt; los programas se instalan descargando un binario y ejecutándolo que inicia un asistente. Instalar programas de esta forma en Windows y macOS tiene los inconvenientes de que hay que hay que ir a la página oficial de programa y descargar el último binario disponible, además cuando se publique una nueva versión hay que descargar el nuevo binario y volverlo a instalar, también es una fuente de introducción de virus si se descarga e instala el software de fuentes no confiables. En GNU/Linux el gestor de paquetes se encarga de actualizar los paquetes y programas que estén desactualizados cuando haya nuevas versiones.&lt;/p&gt;
-
-&lt;p&gt;En macOS existe un gestor de paquetes similar a los existentes en GNU/Linux, &lt;a href=&#34;http://brew.sh/&#34;&gt;Homebrew&lt;/a&gt; se define así mismo como el gestor de paquetes que le falta a macOS. Con Homebrew podemos instalar los programas y mantenerlos actualizados sin tener que estar observando cuando se publica una nueva versión de cada programa. Con Homebrew también podremos instalar muchos de los comandos que están disponibles en GNU/Linux como wget, cmus, gimp, &amp;hellip; &lt;a href=&#34;https://caskroom.github.io/&#34;&gt;Hombrew Cask&lt;/a&gt; es un añadido que proporciona los mismo para los binarios de los programas de macOS. Con estas dos herramientas podemos instalar y mantener actualizado la mayor parte del software que utilicemos.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/195/homebrew.png&#34; title=&#34;Homebrew&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/195/homebrew-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Para instalar Hombrew ejecutamos el siguiente comando en la terminal:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=homebrew.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;El siguiente comando nos permitirá instalar versiones anteriores a las últimas, por ejemplo, Java 7:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-versions.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Lo siguiente será buscar los programas que queramos:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-search.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Para instalar Firefox, Google Chrome, VirtualBox, Docker, Java 8 y Java 7, Atom e iTerm2:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-cask-install.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Algunos otros programas que podemos instalar si programamos son:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-install.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Con jenv podemos cambiar entre las versiones de Java 8 y Java 7:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=jenv.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Los servicios como MySQL o Redis podemos iniciarlos y pararlos, además de ver cuales hemos instalado:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-services.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;También podemos listar que paquetes y programas tenemos instalados:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-list.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Para ver que programas y paquetes tenemos desactualizados:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-outdated.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Para actualizar todos los paquetes desactualizados o actualizar uno individualmente:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-upgrade.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Si queremos mantener desactualizado un paquete podemos fijar la versión que tengamos instalada:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-pin.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Y para desinstalar paquetes:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-uninstall.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;La terminal incluida de serie en macOS es muy básica por ello mucha gente suele instalar una más avanzada como &lt;a href=&#34;http://iterm2.com/&#34;&gt;iTerm2&lt;/a&gt;. iTerm2 añade funcionalidades como pestañas y podemos dividir una terminal horizontal y verticalmente. También se puede instalar &lt;a href=&#34;http://ohmyz.sh/&#34;&gt;oh-my-zsh&lt;/a&gt; que permite gestionar la configuración del intérprete de comandos &lt;a href=&#34;http://zsh.sourceforge.net/&#34;&gt;zsh&lt;/a&gt; pudiendo añadir temas para modificar el &lt;em&gt;prompt&lt;/em&gt; del sistema o cambiarlo según la información del directorio actual, por ejemplo, si estamos en un directorio de git veremos en que rama estamos y si hay cambios realizados.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=oh-my-zsh.sh&#34;&gt;&lt;/script&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/195/iterm2.png&#34; title=&#34;iTerm2&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/195/iterm2-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;Terminal iTerm2&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="apple"/>
-            
-                <category term="blog-stack"/>
             
                 <category term="planeta-codigo"/>
             

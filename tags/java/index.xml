@@ -6,9 +6,128 @@
     <updated>0001-01-01T00:00:00+00:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
-    <icon>https://picodotdev.github.io/blog-bitix//assets/images/custom/logotipos/hugo.png</icon>
-    <logo>https://picodotdev.github.io/blog-bitix//assets/images/custom/logotipos/hugo.png</logo>
+    <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
+    <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/02/ejemplo-de-rabbitmq-con-java-para-enviar-y-recibir-mensajes/</id>
+        <title>Ejemplo de RabbitMQ con Java para enviar y recibir mensajes</title>        
+        <updated>2017-02-18T10:00:00+01:00</updated>
+        <published>2017-02-18T10:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/02/ejemplo-de-rabbitmq-con-java-para-enviar-y-recibir-mensajes/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Entre las ventajas de integrar dos aplicaciones mediante el envío de mensajes están que evita que estén acopladas y la comunicación es asíncrona. Con RabbitMQ también podremos implementar cada uno de ellas con el lenguaje de programación que prefiramos de entre las varias posibilidades para las que ofrece clientes y por esto último podemos preferir usarlo en vez de las especificación JMS propia de Java EE que nos obligaría a usar un servidor de aplicaciones que lo implemente, posiblemente JBoss/Wildfly o Weblogic en vez de Tomcat o Jetty. En el artículo incluyo un ejemplo para el lenguaje Java mostrando el envío y recepción de mensajes junto con la aplicación de administración que nos proporcionará información útil.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/rabbitmq.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;RabbitMQ&#34; title=&#34;RabbitMQ&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Las aplicaciones que se integran mediante el envío y recepción de mensajes evitan el acoplamiento y sincronía junto con la posibilidad de implementar cada una de ellas con diferentes lenguajes o plataformas. Entre las especificaciones que componen Java EE está &lt;abbr title=”Java Message Service”&gt;JMS&lt;/abbr&gt; pero tanto la aplicación que envía como la que recibe mensajes deben estar programadas en el lenguaje Java, a menos que incluyamos un adaptador que permita a la aplicación no Java interactuar con JMS.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.rabbitmq.com/&#34;&gt;RabbitMQ&lt;/a&gt; es un software que proporciona una funcionalidad similar a JMS pero con la ventaja que ofrece soporte para los lenguajes más populares como &lt;a href=&#34;http://www.oracle.com/technetwork/java/index.html&#34;&gt;Java&lt;/a&gt; y &lt;a href=&#34;http://es.wikipedia.org/wiki/M%C3%A1quina_virtual_Java&#34;&gt;&lt;abbr title=&#34;Java Virtual Machine&#34;&gt;JVM&lt;/abbr&gt;&lt;/a&gt;, &lt;a href=&#34;https://www.ruby-lang.org/es/&#34;&gt;Ruby&lt;/a&gt;, &lt;a href=&#34;https://www.python.org/&#34;&gt;Python&lt;/a&gt;, &lt;a href=&#34;http://www.microsoft.com/net&#34;&gt;.NET&lt;/a&gt;, &lt;a href=&#34;http://php.net/&#34;&gt;PHP&lt;/a&gt;, &lt;a href=&#34;https://nodejs.org/en/&#34;&gt;Node.js&lt;/a&gt;, &lt;a href=&#34;https://golang.org/&#34;&gt;Go&lt;/a&gt; y varias más. Usa varios conceptos similares a los presentes en JMS como que el emisor envía los mensajes a una cola y el receptor los lee de ella de modo que ni el emisor ni receptor se conocen consiguiendo de este modo el desacoplamiento entre ellos. Los mensajes son leídos de las colas con la posibilidad de que cada mensaje sea recibido por un único receptor o por cada uno de ellos.&lt;/p&gt;
+
+&lt;p&gt;Realmente en RabbitMQ los mensajes no son enviados directamente por el emisor a las colas sino que se envían a un &lt;em&gt;exchange&lt;/em&gt; que finalmente lo enruta y encola en la cola destino. Los &lt;em&gt;exchanges&lt;/em&gt; pueden ser directos basando su lógica de encolado según el valor del &lt;em&gt;binding key&lt;/em&gt; enviada junto con el mensaje y un &lt;em&gt;routing key&lt;/em&gt; asociada con la cola o basados en temas en los que se usa una cadena formada por una lista de palabras separada por puntos, la lógica de enrutado se toma según si el &lt;em&gt;binding key&lt;/em&gt; cumple el patrón del &lt;em&gt;routing key&lt;/em&gt; que puede contener sustituidores de palabras, siendo un &lt;em&gt;*&lt;/em&gt; una palabra exacta y &lt;em&gt;#&lt;/em&gt; varias palabras contiguas.&lt;/p&gt;
+
+&lt;p&gt;En la &lt;a href=&#34;http://www.rabbitmq.com/documentation.html&#34;&gt;documentación de RabbitMQ&lt;/a&gt; hay 6 tutoriales en diferentes lenguajes para el envío y recepción de mensajes.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.rabbitmq.com/tutorials/tutorial-one-java.html&#34;&gt;Tutorial 1, Hello World&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.rabbitmq.com/tutorials/tutorial-two-java.html&#34;&gt;Tutorial 2, Work Queues&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.rabbitmq.com/tutorials/tutorial-three-java.html&#34;&gt;Tutorial  3, Publish/Subscribe&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.rabbitmq.com/tutorials/tutorial-four-java.html&#34;&gt;Tutorial 4, Routing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.rabbitmq.com/tutorials/tutorial-five-java.html&#34;&gt;Tutorial 5, Topics&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.rabbitmq.com/tutorials/tutorial-six-java.html&#34;&gt;Tutorial 6, Remote procedure call (RPC)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Basándome en estos ejemplos he creado un proyecto uno muy similar al Tutorial 1, ejecutable más fácilmente con &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt; y &lt;a href=&#34;http://gradle.org/&#34;&gt;Gradle&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Tanto en el emisor como en el receptor deberemos declarar las colas que van a usar (si una no existe se creará y si existe se usará), a la cola se le asigna un nombre y el receptor define un manejador para recibir los mensajes según se envían.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/0f1299cc2ed2316cce49418e555443f4.js?file=Send.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/0f1299cc2ed2316cce49418e555443f4.js?file=Receive.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/0f1299cc2ed2316cce49418e555443f4.js?file=build.gradle&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Para ejecutar el ejemplo usaré el &lt;a href=&#34;https://hub.docker.com/_/rabbitmq/&#34;&gt;contenedor de Docker para RabbitMQ&lt;/a&gt; iniciándolo con &lt;a href=&#34;https://docs.docker.com/compose/&#34;&gt;Docker Compose&lt;/a&gt; y el siguiente archivo descriptor. Puedes consultar la &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/series/docker/&#34;&gt;serie de artículos sobre Docker&lt;/a&gt; que escribí para conocer cómo usarlo.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/0f1299cc2ed2316cce49418e555443f4.js?file=docker-compose.yml&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/0f1299cc2ed2316cce49418e555443f4.js?file=docker-run.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Una vez iniciado el contenedor y con el código fuente del ejemplo, iniciamos en cualquier orden la parte receptora de los mensajes y la parte emisora de mensajes con los comandos &lt;code&gt;./gradlew receive&lt;/code&gt; y &lt;code&gt;./gradlew send&lt;/code&gt; respectivamente, momento en el cual veremos que en la consola salen las notificaciones de recepción y envío.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/210/send.png&#34; title=&#34;Aplicación de ejemplo enviando mensajes&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/210/send-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/210/receive.png&#34; title=&#34;Aplicación de ejemplo reciviendo mensajes&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/210/receive-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En la comunicación con RabbitMQ se puede usar &lt;a href=&#34;http://www.rabbitmq.com/ssl.html&#34;&gt;TLS/SSL&lt;/a&gt; así como mecanismos de &lt;a href=&#34;http://www.rabbitmq.com/authentication.html&#34;&gt;autenticación&lt;/a&gt; y &lt;a href=&#34;http://www.rabbitmq.com/access-control.html&#34;&gt;autorización&lt;/a&gt; para mayor seguridad. Usando confirmaciones si el receptor falla en el procesado el mensaje no se pierde ya que no se habrá declarado como &lt;em&gt;acknowledge&lt;/em&gt; aún así si RabbitMQ falla los mensajes se perderán a menos que las colas se declaren como persistentes las cuales se guardarán en disco perdurando a una catástrofe.&lt;/p&gt;
+
+&lt;p&gt;RabbitMQ posee un &lt;a href=&#34;https://www.rabbitmq.com/management.html&#34;&gt;&lt;em&gt;plugin&lt;/em&gt; para la administración&lt;/a&gt; con el que podemos administrar permisos, tener una vista global, ver ratios de mensajes, estadísticas, colas, &lt;em&gt;exchanges&lt;/em&gt; y más información, nos da información muy interesante sobre el estado del procesamiento de mensajes. Es accesible mediante el navegador y la URL &lt;em&gt;http://localhost:15672/&lt;/em&gt;. En la captura del estado de la cola &lt;em&gt;hello&lt;/em&gt; hay 10 mensajes encolados pendientes de entregar a algún receptor.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/210/rabbitmq-management.png&#34; title=&#34;Aplicación web de administración de RabbitMQ&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/210/rabbitmq-management-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/210/rabbitmq-queue.png&#34; title=&#34;Información de estado de una cola&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/210/rabbitmq-queue-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Para profundizar más en las aplicaciones basadas en mensajes con RabbitMQ dos buenos libros son &lt;a href=&#34;http://amzn.to/2lTGMQc&#34;&gt;Learning RabbitMQ&lt;/a&gt; y &lt;a href=&#34;http://amzn.to/2lW9qwF&#34;&gt;Matering RabbitMQ&lt;/a&gt; cubriendo temas más avanzados como &lt;em&gt;clustering&lt;/em&gt;, alta disponibilidad, arquitectura, patrones de diseño, seguridad y rendimiento.&lt;/p&gt;
+
+&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1783984562&amp;linkId=9bb0705e8a34f246d5530b141b0a690e&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1783981520&amp;linkId=e87eebb622314cdf0c2c14fc32940264&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/HolaMundoRabbitMQ&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;docker-compose up &amp;amp;&amp;amp; ./gradlew receive &amp;amp;&amp;amp; ./gradle send&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.rabbitmq.com/&#34;&gt;RabbitMQ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.rabbitmq.com/documentation.html&#34;&gt;Documentación RabbitMQ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/series/docker/&#34;&gt;Serie de artículos sobre Docker&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/introduccion-y-ejemplo-sencillo-de-java-message-service-jms/&#34;&gt;Introducción y ejemplo sencillo de Java Message Service (JMS)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/02/como-crear-un-servicio-de-systemd-para-una-aplicacion-con-spring-boot/</id>
@@ -22,11 +141,11 @@
           &lt;p&gt;&lt;strong&gt;La mayoría de distribuciones Linux ya usan systemd como gestor y supervisor de los servicios del sistema.  Creando un descriptor podremos gestionar un servicio propio con los mismos comandos de systemd que usamos para cualquier otro servicio del sistema.&lt;/strong&gt;&lt;/p&gt;
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/linux.png&#34; class=&#34;right&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/linux.png&#34; class=&#34;right&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
 &lt;/div&gt;
 
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Habiendo creado una aplicación o microservicio, por ejemplo con &lt;a href=&#34;http://projects.spring.io/spring-boot/&#34;&gt;Spring Boot&lt;/a&gt;, necesitaremos que se inicie con el sistema y una forma de gestionarlo para detenerlo, reiniciarlo y que se reinicie en caso de salida abrupta.&lt;/p&gt;
@@ -113,11 +232,11 @@
           &lt;p&gt;&lt;strong&gt;Tradicionalmente el conectar un servicio con sus servicios dependientes se ha realizado por configuración, normalmente mediante un nombre de dominio y su puerto. Esta configuración estática es suficiente para unos pocos servicios y que no varían durante su funcionamiento. Con el advenimiento de los microservicios con su estado y número cambiantes en el tiempo han surgido varias herramientas para en vez de usar configuración usar descubrimiento. Una de estas herramientas Consul para la que Spring Cloud proporciona integración.&lt;/strong&gt;&lt;/p&gt;
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/spring.png&#34; class=&#34;right&#34; alt=&#34;Spring&#34; title=&#34;Spring&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/spring.png&#34; class=&#34;right&#34; alt=&#34;Spring&#34; title=&#34;Spring&#34;/&gt;
 &lt;/div&gt;
 
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;En una aplicación con una arquitectura de microservicios esta se compone de múltiples partes cambiantes. Los microservicios pueden aparecer, desaparecer, variar en número o cambiar de ubicación, la aplicación debe ser tolerante a esos cambios y seguir proporcionando su servicio. Por tanto, la configuración de red de los servicios no se puede realizar usando direcciones &lt;abbr title=&#34;Internet Protocol&#34;&gt;IP&lt;/abbr&gt; ya que no se conocen las que utilizarán los microservicios y usar nombres de dominio de &lt;abbr title=&#34;Domain Name System&#34;&gt;DNS&lt;/abbr&gt; puede no ser viable ya que los cambios tardan en propagarse. Conocer el nombre de &lt;em&gt;host&lt;/em&gt; y puerto reales de los microservicios es proporcionado por la funcionalidad de descubrimiento de servicios o &lt;em&gt;service discovery&lt;/em&gt; que proporcionan algunos servicios como &lt;a href=&#34;https://github.com/Netflix/eureka&#34;&gt;Eureka&lt;/a&gt;, &lt;a href=&#34;https://www.consul.io/&#34;&gt;Consul&lt;/a&gt; o &lt;a href=&#34;https://zookeeper.apache.org/&#34;&gt;Apache Zookeper&lt;/a&gt;.&lt;/p&gt;
@@ -134,7 +253,7 @@
 &lt;p&gt;Consul además de descubrimiento de servicios proporciona otras funcionalidades como detección de fallos o caídas para prevenir enviar peticiones a máquinas fuera de servicio y almacenamiento básico clave/valor para configuración dinámica o activación de características. Dispone de una aplicación web en la que podemos ver el estado de los servicios, una &lt;a href=&#34;https://www.consul.io/docs/agent/http.html&#34;&gt;API REST&lt;/a&gt; con la que comunicarse con Consul en una aplicación o en cada microservicio y un servidor de nombres &lt;abbr&gt;DNS&lt;/abbr&gt;, podemos usar cualquiera de las dos interfaces de consulta, la basada en la &lt;abbr&gt;API&lt;/abbr&gt; &lt;abbr&gt;REST&lt;/abbr&gt; o la basada en DNS para obtener las direcciones IP con la ubicación de los servicios.&lt;/p&gt;
 
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/206/consul.png&#34; alt=&#34;Consul&#34; title=&#34;Consul&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/206/consul.png&#34; alt=&#34;Consul&#34; title=&#34;Consul&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Instalar Consul es muy sencillo basta con &lt;a href=&#34;https://www.consul.io/downloads.html&#34;&gt;descargar un binario&lt;/a&gt; y descargar la interfaz web si queremos tener el &lt;em&gt;dashboard&lt;/em&gt; con la información del servicio. Descargados y descomprimidos Consul se inicia con el siguiente comando. Podemos acceder al panel &lt;em&gt;dashboard&lt;/em&gt; con la dirección &lt;a href=&#34;http://localhost:8500&#34;&gt;http://localhost:8500&lt;/a&gt; con un navegador web. Inicialmente en el panel de servicios solo se encuentra el propio de Consul cuando aún no se ha registrado ningún servicio, aplicación o microservicio.&lt;/p&gt;
@@ -150,7 +269,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/206/consul-services.png&#34; title=&#34;Servicios registrados en Consul&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/206/consul-services-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/206/consul-services.png&#34; title=&#34;Servicios registrados en Consul&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/206/consul-services-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Servicios registrados en Consul&lt;/figcaption&gt;
@@ -164,7 +283,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/206/service-health.png&#34; title=&#34;Endpoint de estado de servicio&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/206/service-health-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/206/service-health.png&#34; title=&#34;Endpoint de estado de servicio&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/206/service-health-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Endpoint de estado de servicio&lt;/figcaption&gt;
@@ -224,10 +343,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/202/analytics-2016.png&#34; title=&#34;Analytics 2016 de Blog Bitix&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/202/analytics-2016-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/202/analytics-2016.png&#34; title=&#34;Analytics 2016 de Blog Bitix&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/202/analytics-2016-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/202/adsense-2016.png&#34; title=&#34;AdSense 2016 de Blog Bitix&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/202/adsense-2016-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/202/adsense-2016.png&#34; title=&#34;AdSense 2016 de Blog Bitix&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/202/adsense-2016-thumb.png&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;Evolución visitas e ingresos de AdSense en 2016&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -311,7 +430,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/202/christmas-tux-2016.jpg&#34; title=&#34;¡Felices fiestas y buen 2017!&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/202/christmas-tux-2016-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/202/christmas-tux-2016.jpg&#34; title=&#34;¡Felices fiestas y buen 2017!&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/202/christmas-tux-2016-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;¡Felices fiestas y buen 2017!&lt;/figcaption&gt;
@@ -360,7 +479,7 @@
           &lt;p&gt;&lt;strong&gt;Los métodos &lt;em&gt;equals&lt;/em&gt; y &lt;em&gt;hashCode&lt;/em&gt; son esenciales en las colecciones de objetos. Para su correcta implementación es necesario conocer unas cuantas propiedades que han de cumplir estos métodos. Pueden parecer sencillos pero no lo son tanto y una mala implementación posiblemente produzca algún tipo de error o comportamiento anómalo indeseado. En el siguiente artículo comento varias formas de implementarlos de forma sencilla y correcta.&lt;/strong&gt;&lt;/p&gt;
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;En Java los métodos &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals-java.lang.Object-&#34;&gt;equals&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode--&#34;&gt;hashCode&lt;/a&gt; están definidos en la raíz de la jerarquía de clases, esto es en la clase &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html&#34;&gt;Object&lt;/a&gt;, lo que significa que todas las instancias de objetos los poseen. Estos métodos son especialmente importantes ya que afectan al correcto funcionamiento de las colecciones como &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html&#34;&gt;Collection&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/List.html&#34;&gt;List&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Set.html&#34;&gt;Set&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Map.html&#34;&gt;Map&lt;/a&gt;, colecciones, listas, conjuntos y mapas que es difícil que cualquier programa no use alguna implementación de ellas.&lt;/p&gt;
@@ -467,7 +586,7 @@
           &lt;p&gt;&lt;strong&gt;Por seguridad, por auditoría o histórico de datos una aplicación puede requerir no solo guardar los valores actuales de los datos que maneja sino también las versiones anteriores y los cambios en cada valor de los mismos. En Java hay una librería llamada Javers que nos proporciona funcionalidades como comparación, &lt;em&gt;snapshots&lt;/em&gt;, persistencia y un lenguaje de consulta para hacer búsquedas.&lt;/strong&gt;&lt;/p&gt;
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Por necesidades de negocio y requerimientos funcionales puede ser necesario guardar un histórico de ciertos datos de una aplicación en vez de solo la última versión de los datos. Tener solo la última versión de algunos datos puede no ser lo que se necesita. Por ejemplo, supongamos que una aplicación maneja una entidad de dominio producto y esta tiene un campo que es el precio y queremos guardar los cambios que se hacen a esta entidad para conocer el cambio de precio que han sufrido los productos. Otras necesidades pueden ser por auditoría o seguridad para saber que usuario ha hecho que cambios en los datos, para disponer de versiones anteriores de una entidad, comparar dos versiones de la misma entidad o lanzar consultas para obtener información de los cambios que se han producido.&lt;/p&gt;
@@ -518,11 +637,11 @@
         <content type="html">
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/apache-tapestry.png&#34; class=&#34;right&#34; alt=&#34;Apache Tapestry&#34; title=&#34;Apache Tapestry&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/apache-tapestry.png&#34; class=&#34;right&#34; alt=&#34;Apache Tapestry&#34; title=&#34;Apache Tapestry&#34;/&gt;
 &lt;/div&gt;
 
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;La librería &lt;a href=&#34;https://silviomoreto.github.io/bootstrap-select/&#34;&gt;bootstrap-select&lt;/a&gt; nos permite crear elementos &lt;em&gt;select&lt;/em&gt; enriquecidos con más funcionalidades que las propias ofrecidas por el navegador para seleccionar una única opción o para seleccionar múltiples opciones. Usando esta librería y añadiendo algunos atributos a las etiquetas HTML &lt;em&gt;select&lt;/em&gt;, &lt;em&gt;optgroup&lt;/em&gt; y &lt;em&gt;option&lt;/em&gt; añadirá varias funcionalidades interesantes como comento en &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/10/componente-select-de-apache-tapestry-con-funcionalidades-adicionales-usando-bootstrap-select/&#34;&gt;Componente select de Apache Tapestry con funcionalidades adicionales usando bootstrap-select&lt;/a&gt;.&lt;/p&gt;
@@ -534,10 +653,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/189/multiselect-todos.png&#34; title=&#34;Multiselect con opciones Todos y Ninguno&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/189/multiselect-todos-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/189/multiselect-todos.png&#34; title=&#34;Multiselect con opciones Todos y Ninguno&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/189/multiselect-todos-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/189/multiselect.png&#34; title=&#34;Opciones seleccionadas de Multiselect&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/189/multiselect-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/189/multiselect.png&#34; title=&#34;Opciones seleccionadas de Multiselect&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/189/multiselect-thumb.png&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;MultiSelect con opciones Todos y Ninguno&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -558,10 +677,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/189/multiselect-europa.png&#34; title=&#34;Multiselect con opciones Europa&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/189/multiselect-europa-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/189/multiselect-europa.png&#34; title=&#34;Multiselect con opciones Europa&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/189/multiselect-europa-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/189/multiselect-asia.png&#34; title=&#34;Multiselect con opciones Asia&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/189/multiselect-asia-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/189/multiselect-asia.png&#34; title=&#34;Multiselect con opciones Asia&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/189/multiselect-asia-thumb.png&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;MultiSelect con opciones Europa, America y Asia&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -576,7 +695,7 @@
 &lt;/p&gt;
 
 &lt;div class=&#34;alert alert-warning&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/12/portada-PugInTapestry-thumb.png&#34; alt=&#34;Portada libro: PlugIn Tapestry&#34; title=&#34;Portada libro: PlugIn Tapestry&#34; style=&#34;float: left; margin-right: 1.5em;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/12/portada-PugInTapestry-thumb.png&#34; alt=&#34;Portada libro: PlugIn Tapestry&#34; title=&#34;Portada libro: PlugIn Tapestry&#34; style=&#34;float: left; margin-right: 1.5em;&#34;&gt;
     &lt;h3&gt;Libro PlugIn Tapestry&lt;/h3&gt;
     &lt;p&gt;Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este &lt;i&gt;framework&lt;/i&gt; en el formato que prefieras, &lt;a href=&#34;http://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/&#34;&gt;PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry&lt;/a&gt;, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.&lt;/p&gt;
     &lt;br style=&#34;clear: both;&#34;&gt;
@@ -623,11 +742,11 @@
         <content type="html">
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/apache-tapestry.png&#34; class=&#34;right&#34; alt=&#34;Apache Tapestry&#34; title=&#34;Apache Tapestry&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/apache-tapestry.png&#34; class=&#34;right&#34; alt=&#34;Apache Tapestry&#34; title=&#34;Apache Tapestry&#34;/&gt;
 &lt;/div&gt;
 
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;El &lt;em&gt;framework&lt;/em&gt; basado en componentes Apache Tapestry incorpora una amplia &lt;a href=&#34;http://tapestry.apache.org/component-reference.html&#34;&gt;colección de componentes&lt;/a&gt; que nos bastarán en la mayoría de casos que necesitemos. Para los casos en que deseemos un componente con un comportamiento específico podemos construir uno completamente nuevo basado en otros existentes incluyendo los propios nuestros, de una librería o incluidos en Tapestry.&lt;/p&gt;
@@ -656,10 +775,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/multiselect.png&#34; title=&#34;Aspecto del componente select mútiple&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/multiselect-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/188/multiselect.png&#34; title=&#34;Aspecto del componente select mútiple&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/188/multiselect-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/multiselect-2.png&#34; title=&#34;Vista con opciones seleccionadas enviadas al servidor&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/multiselect-2-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/188/multiselect-2.png&#34; title=&#34;Vista con opciones seleccionadas enviadas al servidor&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/188/multiselect-2-thumb.png&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;Componente MultiSelect con bootstrap-select&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -670,10 +789,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/checklist.png&#34; title=&#34;Componente Checklist de Tapestry&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/checklist-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/188/checklist.png&#34; title=&#34;Componente Checklist de Tapestry&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/188/checklist-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/palette.png&#34; title=&#34;Componente Palette de Tapestry&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/188/palette-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/188/palette.png&#34; title=&#34;Componente Palette de Tapestry&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/188/palette-thumb.png&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;Componentes Checklist y Palette&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -686,7 +805,7 @@
 &lt;/p&gt;
 
 &lt;div class=&#34;alert alert-warning&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/12/portada-PugInTapestry-thumb.png&#34; alt=&#34;Portada libro: PlugIn Tapestry&#34; title=&#34;Portada libro: PlugIn Tapestry&#34; style=&#34;float: left; margin-right: 1.5em;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/12/portada-PugInTapestry-thumb.png&#34; alt=&#34;Portada libro: PlugIn Tapestry&#34; title=&#34;Portada libro: PlugIn Tapestry&#34; style=&#34;float: left; margin-right: 1.5em;&#34;&gt;
     &lt;h3&gt;Libro PlugIn Tapestry&lt;/h3&gt;
     &lt;p&gt;Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este &lt;i&gt;framework&lt;/i&gt; en el formato que prefieras, &lt;a href=&#34;http://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/&#34;&gt;PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry&lt;/a&gt;, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.&lt;/p&gt;
     &lt;br style=&#34;clear: both;&#34;&gt;
@@ -742,11 +861,11 @@
         <content type="html">
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/apache-tapestry.png&#34; class=&#34;right&#34; alt=&#34;Apache Tapestry&#34; title=&#34;Apache Tapestry&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/apache-tapestry.png&#34; class=&#34;right&#34; alt=&#34;Apache Tapestry&#34; title=&#34;Apache Tapestry&#34;/&gt;
 &lt;/div&gt;
 
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;El selector de opciones implementado en los navegadores es muy simple pudiendo seleccionar un elemento de una lista, mostrar los elementos agrupados por categorías o seleccionar múltiples elementos pero mostrándolos en formato de una lista en vez de como un desplegable. &lt;a href=&#34;https://silviomoreto.github.io/bootstrap-select/&#34;&gt;bootstrap-select&lt;/a&gt; es una librería que utiliza los estilos de &lt;a href=&#34;http://getbootstrap.com/&#34;&gt;Bootstrap&lt;/a&gt; y que añade algunas funcionalidades más a los componentes de selección de opciones de los formularios de una página web.&lt;/p&gt;
@@ -790,10 +909,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/187/select-1.png&#34; title=&#34;Componente selector con bootstrap-select&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/187/select-1-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/187/select-1.png&#34; title=&#34;Componente selector con bootstrap-select&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/187/select-1-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/187/select-2.png&#34; title=&#34;&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/187/select-2-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/187/select-2.png&#34; title=&#34;&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/187/select-2-thumb.png&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;Componente selector con bootstrap-select&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -813,7 +932,7 @@
 &lt;/p&gt;
 
 &lt;div class=&#34;alert alert-warning&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/12/portada-PugInTapestry-thumb.png&#34; alt=&#34;Portada libro: PlugIn Tapestry&#34; title=&#34;Portada libro: PlugIn Tapestry&#34; style=&#34;float: left; margin-right: 1.5em;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/12/portada-PugInTapestry-thumb.png&#34; alt=&#34;Portada libro: PlugIn Tapestry&#34; title=&#34;Portada libro: PlugIn Tapestry&#34; style=&#34;float: left; margin-right: 1.5em;&#34;&gt;
     &lt;h3&gt;Libro PlugIn Tapestry&lt;/h3&gt;
     &lt;p&gt;Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este &lt;i&gt;framework&lt;/i&gt; en el formato que prefieras, &lt;a href=&#34;http://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/&#34;&gt;PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry&lt;/a&gt;, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.&lt;/p&gt;
     &lt;br style=&#34;clear: both;&#34;&gt;
@@ -872,11 +991,11 @@
           &lt;p&gt;&lt;strong&gt;OAuth es un protocolo usado para permitir a una aplicación acceder a los recursos de un usuario sin que este proporcione a la aplicación cliente sus credenciales y manteniendo el control de revocar los permisos concedidos. Es ampliamente usado por los servicios de redes sociales de las empresas más conocidas, también lo podemos usar en nuestras aplicaciones. En el ejemplo usaré Keycloak y una aplicación Java con Spring Boot, Apache Shiro y Apache Tapestry.&lt;/strong&gt;&lt;/p&gt;
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/keycloak.png&#34; class=&#34;right&#34; alt=&#34;Keycloak&#34; title=&#34;Keycloak&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/keycloak.png&#34; class=&#34;right&#34; alt=&#34;Keycloak&#34; title=&#34;Keycloak&#34;/&gt;
 &lt;/div&gt;
 
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;El protocolo &lt;a href=&#34;https://oauth.net/&#34;&gt;OAuth&lt;/a&gt; permite a una aplicación cliente acceder a los recursos de un usuario almacenados en otra aplicación sin que el usuario proporcione a la aplicación cliente sus credenciales, además el usuario tiene la capacidad de revocar en caulquier momento los permisos concedidos a la aplicación cliente. El protocolo OAuth es ampliamente usado por empresas como &lt;a href=&#34;https://www.google.es/&#34;&gt;Google&lt;/a&gt;, &lt;a href=&#34;https://www.facebook.com/&#34;&gt;Facebook&lt;/a&gt;, &lt;a href=&#34;https://twitter.com/&#34;&gt;Twitter&lt;/a&gt; en sus aplicaciones y servicios. También aplicando una arquitectura de microservicios, al dividir una aplicación en varios módulos o simplemente varias aplicaciones independientes pero que son usadas al mismo tiempo por el mismo usuario para evitar que el usuario se autentique en cada aplicación individualmente y que cada aplicación implemente la funcionalidad de autenticación podemos centralizarla usando OAuth a modo de autenticación única o &lt;a href=&#34;https://es.wikipedia.org/wiki/Single_Sign-On&#34;&gt;&lt;abbr title=&#34;Single Sign-On&#34;&gt;SSO&lt;/abbr&gt;&lt;/a&gt;. Usando &lt;a href=&#34;http://www.keycloak.org/&#34;&gt;Keycloak&lt;/a&gt; como servidor de OAuth podemos integrarlo en una aplicación Java que use &lt;a href=&#34;http://shiro.apache.org/&#34;&gt;Apache Shiro&lt;/a&gt; para la autorización, &lt;a href=&#34;http://projects.spring.io/spring-boot/&#34;&gt;Spring Boot&lt;/a&gt; para iniciar la aplicación y &lt;a href=&#34;http://tapestry.apache.org&#34;&gt;Apache Tapestry&lt;/a&gt; como &lt;em&gt;framework&lt;/em&gt; web.&lt;/p&gt;
@@ -909,28 +1028,28 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/keycloak-realm.png&#34; title=&#34;Keycloak realm&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/keycloak-realm-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/keycloak-realm.png&#34; title=&#34;Keycloak realm&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/keycloak-realm-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/keycloak-client.png&#34; title=&#34;Keycloak client&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/keycloak-client-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/keycloak-client-roles.png&#34; title=&#34;Keycloak client roles&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/keycloak-client-roles-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/keycloak-roles.png&#34; title=&#34;Keycloak roles&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/keycloak-roles-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/keycloak-client.png&#34; title=&#34;Keycloak client&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/keycloak-client-thumb.png&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/keycloak-users.png&#34; title=&#34;Keycloak users&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/keycloak-users-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/keycloak-client-roles.png&#34; title=&#34;Keycloak client roles&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/keycloak-client-roles-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/keycloak-users-role-mappings.png&#34; title=&#34;Keycloak users role mappings&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/keycloak-users-role-mappings-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/keycloak-roles.png&#34; title=&#34;Keycloak roles&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/keycloak-roles-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/keycloak-users.png&#34; title=&#34;Keycloak users&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/keycloak-users-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/keycloak-users-role-mappings.png&#34; title=&#34;Keycloak users role mappings&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/keycloak-users-role-mappings-thumb.png&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -959,16 +1078,16 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/tapestry-index.png&#34; title=&#34;Index&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/tapestry-index-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/tapestry-index.png&#34; title=&#34;Index&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/tapestry-index-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/tapestry-keycloak-login.png&#34; title=&#34;Login&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/tapestry-keycloak-login-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/tapestry-keycloak-login.png&#34; title=&#34;Login&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/tapestry-keycloak-login-thumb.png&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/tapestry-user.png&#34; title=&#34;User&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/tapestry-user-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/tapestry-user.png&#34; title=&#34;User&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/tapestry-user-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
@@ -980,7 +1099,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/tapestry-error403.png&#34; title=&#34;Error 403&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/185/tapestry-error403-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/tapestry-error403.png&#34; title=&#34;Error 403&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/185/tapestry-error403-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
@@ -1000,7 +1119,7 @@
 &lt;/p&gt;
 
 &lt;div class=&#34;alert alert-warning&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/12/portada-PugInTapestry-thumb.png&#34; alt=&#34;Portada libro: PlugIn Tapestry&#34; title=&#34;Portada libro: PlugIn Tapestry&#34; style=&#34;float: left; margin-right: 1.5em;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/12/portada-PugInTapestry-thumb.png&#34; alt=&#34;Portada libro: PlugIn Tapestry&#34; title=&#34;Portada libro: PlugIn Tapestry&#34; style=&#34;float: left; margin-right: 1.5em;&#34;&gt;
     &lt;h3&gt;Libro PlugIn Tapestry&lt;/h3&gt;
     &lt;p&gt;Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este &lt;i&gt;framework&lt;/i&gt; en el formato que prefieras, &lt;a href=&#34;http://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/&#34;&gt;PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry&lt;/a&gt;, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.&lt;/p&gt;
     &lt;br style=&#34;clear: both;&#34;&gt;
@@ -1056,11 +1175,11 @@
           &lt;p&gt;&lt;strong&gt;El tipado seguro y el sistema de tipos es sin duda una de las características más importante del lenguaje de programación Java que han contribuido a su éxito. Cuando no conocemos los tipos en tiempo de compilación el sistema de tipos es una limitación donde los lenguajes dinámicos son capaces de resolver el problema sin necesidad de los tipos pero perdiendo la ayuda del compilador. Usando una librería de generación de código en tiempo de compilación o ejecución tenemos la posibilidad en Java de realizar algunas tareas que los lenguajes dinámicos permiten.&lt;/strong&gt;&lt;/p&gt;
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/bytebuddy.png&#34; class=&#34;right&#34; alt=&#34;Byte Buddy&#34; title=&#34;Byte Buddy&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/bytebuddy.png&#34; class=&#34;right&#34; alt=&#34;Byte Buddy&#34; title=&#34;Byte Buddy&#34;/&gt;
 &lt;/div&gt;
 
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Java posee un sistema de tipos estricto con el que detectar errores de compilación y hace que el código sea más legible, con un &lt;abbr title=&#34;Integrated Development Environment&#34;&gt;IDE&lt;/abbr&gt; los errores de compilación los detectaremos inmediatamente según escribimos código. Este sistema de tipos estricto es deseable en aplicaciones de negocio y empresariales ya que ayuda a que las aplicaciones tengan menos errores o errores de compilación pasen inadvertidos y ser descubiertos incluso semanas después de haber sido desplegados en producción. Su sistema de tipos es uno de los responsables del éxito de Java. Sin embargo, el sistema de tipos estricto impone restricciones en otro tipo de ámbitos como en una biblioteca de propósito general ya que no se conocerán los tipos en tiempo de compilación y no podrán por tanto ser referenciados o alternativamente hayan ser definidos como interfaces o clases abstractas que posteriormente son implementadas o extendidas.&lt;/p&gt;
@@ -1157,7 +1276,7 @@
           &lt;p&gt;&lt;strong&gt;Teniendo un servicio REST securizado con OAuth2 al invocarlo deberemos realizar el flujo necesario para obtener un &lt;em&gt;access token&lt;/em&gt; y posteriormente enviarlo al servicio REST como forma de autenticación y autorización. Usando un cliente programado en el lenguaje Java y usando la librería HttpClient podemos hacer las peticiones HTTP necesarias para la invocación del servicio.&lt;/strong&gt;&lt;/p&gt;
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Explicaba como llamar a un servicio REST autenticado con OAuth2 en el artículo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/09/autenticacion-con-oauth-y-keycloak-en-un-servicio-rest-con-jax-rs-y-spring-boot/&#34;&gt;autenticación con OAuth y Keycloak en un servicio REST con JAX-RS y Spring Boot&lt;/a&gt;. Para ello usaba la utilidad &lt;em&gt;curl&lt;/em&gt; para hacer las peticiones HTTP &lt;em&gt;get&lt;/em&gt; y &lt;em&gt;post&lt;/em&gt; necesarias tanto para obtener el &lt;em&gt;access token&lt;/em&gt; usando el flujo &lt;em&gt;client_credentials&lt;/em&gt; como para una vez obtenido el &lt;em&gt;access token&lt;/em&gt; llamar al servicio REST. En una aplicación usaremos un lenguaje de programación para llmar al servicio, en este ejemplo mostraré como llamarlo usando un cliente programado en lenguaje Java que hará las mismas peticiones &lt;em&gt;get&lt;/em&gt; y &lt;em&gt;post&lt;/em&gt; pero usando la librería &lt;a href=&#34;https://hc.apache.org/&#34;&gt;HttComponents&lt;/a&gt; en vez de &lt;em&gt;curl&lt;/em&gt;.&lt;/p&gt;
@@ -1216,11 +1335,11 @@
           &lt;p&gt;&lt;strong&gt;Keycloak es un proveedor de OAuth que podemos usar en nuestras aplicaciones y servicios para proporcionar autenticación, autorización, SSO y también añadir seguridad a los servicios REST que desarrollemos como muestro en este artículo. OAuth tiene varias ventajas sobre usar autenticación &lt;em&gt;Basic&lt;/em&gt;.&lt;/strong&gt;&lt;/p&gt;
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/keycloak.png&#34; class=&#34;right&#34; alt=&#34;Keycloak&#34; title=&#34;Keycloak&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/keycloak.png&#34; class=&#34;right&#34; alt=&#34;Keycloak&#34; title=&#34;Keycloak&#34;/&gt;
 &lt;/div&gt;
 
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Una forma de autenticar a los clientes de un servicio REST es usar &lt;a href=&#34;https://en.wikipedia.org/wiki/Basic_access_authentication&#34;&gt;autenticación Basic&lt;/a&gt; que se basa en añadir una cabecera en la petición en la que se incluye un usuario y contraseña. La autenticación Basic es sencilla pero para que sea segura ha de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/02/configurar-ssl-en-un-servidor-tomcat-jboss-wildfly-lighttpd-nginx-apache/&#34;&gt;usar el protocolo seguro HTTPS&lt;/a&gt;.&lt;/p&gt;
@@ -1237,7 +1356,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/180/keycloak-login.png&#34; title=&#34;Inicio de sesión de Keycloak&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/180/keycloak-login-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/180/keycloak-login.png&#34; title=&#34;Inicio de sesión de Keycloak&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/180/keycloak-login-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
@@ -1249,16 +1368,16 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/180/keycloak-add-client.png&#34; title=&#34;Registro del cliente&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/180/keycloak-add-client-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/180/keycloak-add-client.png&#34; title=&#34;Registro del cliente&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/180/keycloak-add-client-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/180/keycloak-add-role.png&#34; title=&#34;Creación de rol&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/180/keycloak-add-role-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/180/keycloak-add-role.png&#34; title=&#34;Creación de rol&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/180/keycloak-add-role-thumb.png&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/180/keycloak-service-account-roles.png&#34; title=&#34;Asignación de roles al cliente&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/180/keycloak-service-account-roles-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/180/keycloak-service-account-roles.png&#34; title=&#34;Asignación de roles al cliente&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/180/keycloak-service-account-roles-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
@@ -1278,7 +1397,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/180/keycloak-access-token.png&#34; title=&#34;Obtención de un token&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/180/keycloak-access-token-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/180/keycloak-access-token.png&#34; title=&#34;Obtención de un token&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/180/keycloak-access-token-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
@@ -1291,7 +1410,7 @@ Obtenido el _access token_ si no lo proporcionamos en la llamada al servicio RES
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/180/client-no-token.png&#34; title=&#34;Llamada al servicio REST sin token&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/180/client-no-token-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/180/client-no-token.png&#34; title=&#34;Llamada al servicio REST sin token&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/180/client-no-token-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
@@ -1304,10 +1423,10 @@ Proporcionando el token mediante una cabecera de la petición el servicio nos de
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/180/client-ouath.png&#34; title=&#34;Llamada al servicio REST con token&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/180/client-ouath-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/180/client-ouath.png&#34; title=&#34;Llamada al servicio REST con token&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/180/client-ouath-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/180/client-token-tampered.png&#34; title=&#34;Llamada al servicio REST con token inválido&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/180/client-token-tampered-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/180/client-token-tampered.png&#34; title=&#34;Llamada al servicio REST con token inválido&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/180/client-token-tampered-thumb.png&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -1368,11 +1487,11 @@ Para usar Keycloak en una aplicación Java con Spring Boot deberemos añadir alg
         <content type="html">
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
 
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/spring.png&#34; class=&#34;right&#34; alt=&#34;Spring Framework&#34; title=&#34;Spring Framework&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/spring.png&#34; class=&#34;right&#34; alt=&#34;Spring Framework&#34; title=&#34;Spring Framework&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;En Java a través de JAX-RS, una de entre las varias &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/03/introduccion-y-nuevas-caracteristicas-de-java-ee-7/&#34;&gt;especificaciones de JavaEE&lt;/a&gt;, podemos desarrollar servicios web basados en &lt;a href=&#34;http://es.wikipedia.org/wiki/Representational_State_Transfer&#34;&gt;&lt;abbr title=&#34;Representational State Transfer&#34;&gt;REST&lt;/abbr&gt;&lt;/a&gt; y &lt;a href=&#34;http://json.org/&#34;&gt;&lt;abbr title=&#34;JavaScript Object Notation&#34;&gt;JSON&lt;/abbr&gt;&lt;/a&gt;. Estos servicios web al usar la infraestructura de la web y el protocolo HTTP podemos hacer uso de facilidades que proporciona como &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/07/configurar-nginx-para-cachear-respuestas-del-servidor-de-aplicaciones/&#34;&gt;cacheo&lt;/a&gt;, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/06/como-redirigir-peticiones-de-http-a-https-en-nginx-apache-tomcat-jetty-y-wildfly/&#34;&gt;protocolo seguro&lt;/a&gt;, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/02/introduccion-al-protocolo-http-2/&#34;&gt;HTTP/2&lt;/a&gt;, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/07/como-optimizar-un-sitio-web-con-compresion-gzip-en-nginx-y-apache-httpd/&#34;&gt;compresión&lt;/a&gt; o autenticación. Usando &lt;a href=&#34;http://projects.spring.io/spring-boot/&#34;&gt;Spring Boot&lt;/a&gt; podemos desarrollar servicios web autocontenidos al igual que podemos hacer con las aplicaciones web tradicionales.&lt;/p&gt;
@@ -1448,11 +1567,11 @@ Para usar Keycloak en una aplicación Java con Spring Boot deberemos añadir alg
         <content type="html">
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
 
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/postgresql.png&#34; class=&#34;right&#34; alt=&#34;PostgreSQL&#34; title=&#34;PostgreSQL&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/postgresql.png&#34; class=&#34;right&#34; alt=&#34;PostgreSQL&#34; title=&#34;PostgreSQL&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Es rara la aplicación que trabajado con bases de datos no maneje fechas, quizá es menos habitual aplicaciones que trabajan con fechas y diferentes horarias, esto es haciendo alguna conversión entre zonas horarias. Si se nos presenta el caso de trabajar con fechas y diferentes zonas horarias haremos bien en hacer que las fechas que guardemos en la base de datos estén en la misma zona horaria al menos y convertirla posteriormente a la zona horaria que necesite la aplicación. &lt;abbr title=&#34;Coordinated Universal Time&#34;&gt;UTC&lt;/abbr&gt; además de ser una zona horaria neutra evita el problema de que algunas bases de datos o lenguajes de programación para los campos fecha no guarda las zonas horarias con lo que puede ocurrirnos que guardemos la fecha en una zona horaria y la recuperemos en otra produciendo posiblemente incoherencias en las fechas por una hora.&lt;/p&gt;
@@ -1511,148 +1630,6 @@ Para usar Keycloak en una aplicación Java con Spring Boot deberemos añadir alg
                 <category term="java"/>
             
                 <category term="planeta-codigo"/>
-            
-                <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2016/07/no-un-tag-jsp-o-un-tag-de-grails-no-es-equivalente-a-un-componente-de-tapestry/</id>
-        <title>No, un tag JSP o un tag de Grails no es equivalente a un componente de Tapestry</title>        
-        <updated>2016-07-25T12:00:00+02:00</updated>
-        <published>2016-07-25T12:00:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/07/no-un-tag-jsp-o-un-tag-de-grails-no-es-equivalente-a-un-componente-de-tapestry/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;Alguna vez que he dado una presentación sobre Apache Tapestry después de la misma me comentaron que eso mismo que explicaba se podía hacer con el &lt;em&gt;framework&lt;/em&gt; que esa persona usaba. En un proyecto la tecnología no es es lo más importante pero es una herramienta que puede facilitar en gran medida el desarrollo. Respecto a los componentes de Tapestry alguien puede pensar que son iguales a los &lt;em&gt;tag&lt;/em&gt; que existen en las tecnologías de presentación como JSP o Grails. En este artículo comentaré algunas diferencias importantes que los hace más y muy interesantes junto con otras características de &lt;em&gt;framework&lt;/em&gt;.&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/apache-tapestry.png&#34; class=&#34;right&#34; alt=&#34;Apache Tapestry&#34; title=&#34;Apache Tapestry&#34;/&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Viendo el panel &lt;a href=&#34;https://es.wikipedia.org/wiki/Kanban_(desarrollo)&#34;&gt;Kanban&lt;/a&gt; de la herramienta de peticiones &lt;a href=&#34;https://www.atlassian.com/software/jira&#34;&gt;JIRA&lt;/a&gt; que usamos para registrar y priorizar las siguiente tareas en la empresa que trabajo hay unas cuantas que consisten en dado un listado de compras poder realizar operaciones sobre múltiples filas sin salir de la pantalla del listado. La necesidad es evitar que los usuarios de la aplicación hagan las acciones de forma individual de forma repetitiva, evitarles esto harán que sean más productivos y podrán desarrollar su trabajo mejor y más rápido. Así de sencillo, aparentemente.&lt;/p&gt;
-
-&lt;p&gt;Esta necesidad que en la realidad será implementada con &lt;a href=&#34;https://grails.org/&#34;&gt;Grails&lt;/a&gt; quería compararla con una implementación equivalente usando &lt;a href=&#34;http://tapestry.apache.org&#34;&gt;Apache Tapestry&lt;/a&gt; porque como en muchas otras necesidades intuyo que con Tapestry implementarlas es significativamente más sencillo y con un resultado de implementación como en este caso con el que quedo más a gusto.&lt;/p&gt;
-
-&lt;h3 id=&#34;la-necesidad&#34;&gt;La necesidad&lt;/h3&gt;
-
-&lt;p&gt;Definiendo más la necesidad hasta ahora cada fila del listado tiene un conjunto de botones para realizar acciones individuales y ahora se quiere al final del listado otro conjunto de botones para realizar acciones sobre las compras que se seleccionen de forma múltiple. Para seleccionar las compras se usará un &lt;em&gt;checkbox&lt;/em&gt; colocado al inicio de cada fila. Para algunas acciones el usuario ha de introducir información adicional cosa que hará con un diálogo modal que ya existe pero que hasta ahora solo permitía hacer la acción de forma individual. Las mismas acciones se realizarán en varias páginas de la aplicación (después de la acción se deberá volver a la página en la que se estaba), solo se podrán hacer las acciones múltiples si en todas las compras seleccionadas es posible realizar esa acción y el contenido de los diálogos solicitando información adicional podrán depender de las compras seleccionadas. Las acciones en el ejemplo serán habilitar o deshabilitar. Determinar las acciones posibles de una compra es compleja y saber si una acción es posible no depende solo de información en la propia compra sino de otras entidades del sistema, en el ejemplo no será así pero se tendrá en cuenta en la implementación.&lt;/p&gt;
-
-&lt;p&gt;Esta sería una imagen del prototipo de los botones para hacer acciones múltiples, seleccionar compras y el diálogo modal para introducir información adicional.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/164/listado.png&#34; title=&#34;Listado de productos&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/164/listado-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/164/modal.png&#34; title=&#34;Modal solicitando información adicional&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/164/modal-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Listado y modal de la necesidad expuesta&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;/div&gt;
-
-&lt;p&gt;En la necesidad real las filas son compras pero en el ejemplo usaré la entidad &lt;em&gt;Product&lt;/em&gt;. Las acciones en el ejemplo serán habilitar para la que no será necesaria información adicional, la otra acción será deshabilitar para la que se necesitará introducir una razón con un modal.&lt;/p&gt;
-
-&lt;h3 id=&#34;las-posibilidades&#34;&gt;Las posibilidades&lt;/h3&gt;
-
-&lt;p&gt;Para implementar técnicamente el que solo se puedan hacer las acciones múltiples según los productos seleccionadas se habilitarán o deshabilitarán los botones con JavaScript sin peticiones AJAX adicionales al servidor para ello toda la información necesaria deberá estar en el cliente. En este caso bastará habilitar o deshabilitar cada botón según si esa acción es posible en todas los productos seleccionadas pero eso podría no bastar ya que se podría requerir que productos fuesen del mismo vendedor. En el ejemplo con un atributo en un elemento HTML de la fila que contenga las acciones posibles separadas por comas bastará. De esta forma no habrá que hacer consultas adicionales al servidor mediante peticiones AJAX en cada nueva selección.&lt;/p&gt;
-
-&lt;p&gt;Sin embargo, como el contenido de los diálogos depende del producto o productos seleccionadas se hará una petición AJAX para obtener su contenido. De esta forma el contenido de los diálogos no tendrá que estar precargado (el número de acciones podría ser una decena) en el cliente ni generarlo con JavaScript en cliente que sería algo más complicado que usar la propia tecnología para generar contenido que está presente en el servidor y posiblemente más propenso a errores por usar JavaScript.&lt;/p&gt;
-
-&lt;h3 id=&#34;la-implementación-con-apache-tapestry&#34;&gt;La implementación con Apache Tapestry&lt;/h3&gt;
-
-&lt;p&gt;Definida la necesidad y unas pocas notas voy a poner el código de como con Apache Tapestry implementar la solución. La página del listado será la siguiente. En el &lt;em&gt;checkbox&lt;/em&gt; de selección se añade el atributo &lt;em&gt;data-product-actions&lt;/em&gt; con las acciones posibles que se obtienen del servicio &lt;em&gt;AppService&lt;/em&gt; con el método &lt;em&gt;getAvaliableActions&lt;/em&gt;. El componente de Tapestry &lt;em&gt;actions&lt;/em&gt; generará el código de los botones tanto para los individuales en su uso &lt;em&gt;&amp;lt;t:actions&amp;gt;&lt;/em&gt; con el parámetro &lt;em&gt;product&lt;/em&gt; como múltiples en su uso con el parámetro &lt;em&gt;type&lt;/em&gt;.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=Index.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=Index.tml&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;El código para mostrar las acciones con botones para un determinado producto o para los productos es el siguiente. El mismo componente se encargará de realizar en el servidor la acción habilitar que no necesita modal. Con un poco de &lt;a href=&#34;http://es.wikipedia.org/wiki/JavaScript&#34;&gt;JavaScript&lt;/a&gt;, &lt;a href=&#34;http://jquery.com/&#34;&gt;jQuery&lt;/a&gt; y &lt;a href=&#34;http://underscorejs.org/&#34;&gt;Underscore&lt;/a&gt; se habilitarán o deshabilitarán los botones y se mostrará el diálogo para la acción deshabilitar.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=Actions.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=Actions.tml&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=actions.js&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;El código del modal para deshabilitar sería el siguiente. En el método &lt;em&gt;show&lt;/em&gt; recibe los &lt;em&gt;ids&lt;/em&gt; de los productos a deshabilitar y recupera del servidor el contenido de diálogo con una petición AJAX. El componente del modal se encargará de hacer el deshabilitado de los productos y la recarga de la página si finaliza correctamente o de mostar los errores de validación que se produzcan si no se ha introducido el motivo.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=DisableProductsModal.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=DisableProductsModal.tml&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/11715e0799339d0335a30ce30a17ee58.js?file=modals.js&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;
-    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/TapestryMultipleActions&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
-&lt;/p&gt;
-
-&lt;h3 id=&#34;algunas-diferencias-con-servlets-jsp-y-grails&#34;&gt;Algunas diferencias con Servlets/JSP y Grails&lt;/h3&gt;
-
-&lt;p&gt;La tecnología de presentación de páginas web Java con &lt;em&gt;Java Server Pages&lt;/em&gt; o JSP permiten encapsular con un &lt;em&gt;tag&lt;/em&gt; la generación de un trozo de HTML no en el propio JSP sino en ese &lt;em&gt;tag&lt;/em&gt; que en código Java pudiendo incluir la llamada a un JSP. Los &lt;em&gt;tags&lt;/em&gt; y librerías de &lt;em&gt;tags&lt;/em&gt; son una forma de reutilizar esas partes de generación de código en el mismo proyecto y entre proyectos. Los &lt;em&gt;tags&lt;/em&gt; además son una forma de abstraernos del funcionamiento interno del &lt;em&gt;tag&lt;/em&gt; haciendo que solo necesitemos conocer sus parámetros.&lt;/p&gt;
-
-&lt;p&gt;Si usamos JSP usar librerías de &lt;em&gt;tags&lt;/em&gt; es una buena idea, sin embargo, tiene algunas limitaciones como que requieren un archivo descriptor en formato XML que las defina y aunque pudiendo saber que parámetros definen y cuáles son requeridos no define el tipo de los parámetros que requiere. Los archivos XML en la época actual han caído en desuso porque son propensos a errores, errores que no son detectados hasta tiempo de ejecución, de los peores tipos de errores. Por otro lado, que los &lt;em&gt;tags&lt;/em&gt; no especifiquen el tipo de parámetro que requiere cada uno hace que debamos inspeccionar el código fuente del &lt;em&gt;tag&lt;/em&gt; con lo que la ventaja de abstraerse del funcionamiento no es del todo completa. Si por algún cambio el tipo de parámetro cambia hay que adaptar todos los usos del &lt;em&gt;tag&lt;/em&gt;, si alguno no se hace nuevamente se producirán errores en tiempo de ejecución.&lt;/p&gt;
-
-&lt;p&gt;Grails usa GSP, una tecnología de presentación similar a los JSP. También dispone de &lt;em&gt;tags&lt;/em&gt; que no requieren definir los &lt;em&gt;tags&lt;/em&gt; en un archivo XML simplificando su uso pero que igualmente adolecen de algunos problemas como los JSP. Por un lado, los &lt;em&gt;tags&lt;/em&gt; de Grails no disponen un mecanismo para hacer requerido un determinado parámetro con lo que deberemos incluir la comprobación con código nosotros, tampoco define el tipo de parámetros que requiere. También aunque hacer más simple su desarrollo al no tener un descriptor XML como en los &lt;em&gt;tag&lt;/em&gt; JSP hace que haya que inspeccionar el código fuente para saber qué parámetros tiene, si son requeridos y cuál es el tipo del parámetro. Todo esto hace que puedan producirse errores en tiempo de ejecución y errores que no son producidos hasta que se ejercita el &lt;em&gt;tag&lt;/em&gt; con un mal uso o un uso desactualizado al igual que usando los &lt;em&gt;tag&lt;/em&gt; JSP.&lt;/p&gt;
-
-&lt;p&gt;En Apache Tapestry todo son componentes, las páginas también son componentes con la característica de que no están embebidos en otro componente. Un componente de Apache Tapestry sería similar a un &lt;em&gt;tag&lt;/em&gt; de JSP o un &lt;em&gt;tag&lt;/em&gt; de Grails, con ciertas similitudes pero no iguales en aspectos importantes. De pronto, un componente de Tapestry define los parámetros que necesita y si son requeridos pero también define el tipo del parámetro. Como se aprecia en las páginas de documentación de los &lt;a href=&#34;http://tapestry.apache.org/component-reference.html&#34;&gt;componentes integrados de serie en Apache Tapestry&lt;/a&gt; se puede conocer esta información sin necesidad de conocer el código fuente del componente, documentación que podemos generar para los componentes que nosotros desarrollemos. Los parámetros, si son requeridos y sus tipos forman el contrato del componente y es lo único que deberemos conocer para usarlos, su funcionamiento interno nos es irrelevante que incluye el código JavaScript que necesite, podría que CSS y literales internacionalizados.&lt;/p&gt;
-
-&lt;p&gt;Pero esas no son las únicas diferencias con los &lt;em&gt;tags&lt;/em&gt; de JSP o de Grails y es que estas son solo tecnologías de presentación, la V del &lt;a href=&#34;https://es.wikipedia.org/wiki/Modelo%E2%80%93vista%E2%80%93controlador&#34;&gt;patrón MVC&lt;/a&gt;. Los componentes de Tapestry aparte de encapsular la lógica de presentación también pueden encapsular lógica de controlador, en el conocido patrón MVC además de V pueden ser C con lo que encapsulan aún más funcionalidad. La lógica de presentación y controlador en los JSP y Grails está separada pero ambas lógicas no son independientes, están relacionadas, en Tapestry está encapsulada en el mismo componente.&lt;/p&gt;
-
-&lt;p&gt;Los componentes de Tapestry usan el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/07/modelo-push-contra-modelo-pull-en-frameworks-web/&#34;&gt;modelo pull en vez del modelo push&lt;/a&gt; haciendo innecesario construir un objeto &lt;em&gt;Map&lt;/em&gt; que pasar a la vista, haciendo que sea la plantilla la que solicite al controlador los datos que necesita y haciendo que el controlador no sepa que datos necesita la vista. El controlador solo deberá tener las propiedades y métodos que necesite la vista. Dado que en las plantillas &lt;em&gt;tml&lt;/em&gt; de la vista no se pueden incluir expresiones complejas hace que no contengan lógica que estará en el controlador asociado que es código Java donde tendremos la ayuda del compilador para detectar errores.&lt;/p&gt;
-
-&lt;p&gt;Para volver a la misma página en &lt;a href=&#34;https://spring.io/&#34;&gt;Spring MVC&lt;/a&gt;, &lt;a href=&#34;https://struts.apache.org/&#34;&gt;Struts&lt;/a&gt; o &lt;a href=&#34;https://grails.org/&#34;&gt;Grails&lt;/a&gt; posiblemente deberíamos recibir además información para retornar a la misma página en la que estabamos cosa que es innecesaria en Tapestry por su &lt;a href=&#34;http://tapestry.apache.org/page-navigation.html&#34;&gt;concepto de contexto de activación de página&lt;/a&gt; y el patrón &lt;em&gt;Redirect-After-Post&lt;/em&gt; hará que al recargar la página por código con &lt;code&gt;window.localtion.reload();&lt;/code&gt; después de una petición POST el navegador no muestre un diálogo modal informando al usuario de que se reenviarán datos.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/164/dialogo-recargar.png&#34; title=&#34;Diálogo recargar después de petición POST en Firefox&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/164/dialogo-recargar-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;Diálogo recargar después de petición POST en Firefox&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://facebook.github.io/react/&#34;&gt;React&lt;/a&gt; y &lt;a href=&#34;https://www.polymer-project.org/1.0/&#34;&gt;Polymer&lt;/a&gt; son tecnologías de cliente en algunos aspectos similares a los componentes de Apache Tapestry pero con la diferencia de que unos son para el navegador del cliente y otros para el servidor, nada nos impide en la misma aplicación usar en el cliente React y Polymer y en el servidor Apache Tapestry. Nótese en el código del caso anterior que Tapestry ofrece integración con JavaScript de un modo que no existe ni en Spring MVC, Struts o Grails e incorpora de serie &lt;a href=&#34;http://requirejs.org/&#34;&gt;RequireJS&lt;/a&gt;, Undercore y jQuery, un componente de Tapestry puede requerir la cargar de un recurso de JavaScript y desde el componente es posible pasar datos al JavaScript usando el servicio &lt;a href=&#34;http://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/services/javascript/JavaScriptSupport.html&#34;&gt;JavaScriptSupport&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Esto es solo un pequeño ejemplo de las posibilidades de Apache Tapestry me dejo muchas otras como los eventos, &lt;em&gt;translators&lt;/em&gt;, &lt;em&gt;encoders&lt;/em&gt;, &lt;em&gt;coerces&lt;/em&gt;, librerías de componentes, &lt;em&gt;inversion of control&lt;/em&gt;, AJAX, validaciones de formularios, &amp;hellip; En un proyecto las herrramientas no son lo más importante pero &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/06/el-lenguaje-de-programacion-framework-y-librerias-importan/&#34;&gt;el lenguaje de programación, framework y librerías importan&lt;/a&gt;, hay &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/05/10-razones-para-seguir-usando-java/&#34;&gt;10 razones para seguir usando Java&lt;/a&gt; y varios &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2011/08/motivos-para-elegir-apache-tapestry.html&#34;&gt;motivos para elegir Apache Tapestry&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;finalizando&#34;&gt;Finalizando&lt;/h3&gt;
-
-&lt;p&gt;Lamentablemente hasta el momento no he tenido una oportunidad laboral de comprobar y demostrar que como en este ejemplo pero basado en una necesidad real que con Tapestry la implementación de la solución es más sencilla, menos propensa a errores y que la productividad no está relacionado con escribir unas pocas líneas de código menos con un lenguaje menos verboso o dejar de escribir puntos y comas al final de las líneas, más aún con las &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/&#34;&gt;novedades de Java 8&lt;/a&gt;. Quizá un día llegue esa oportunidad :|.&lt;/p&gt;
-
-&lt;div class=&#34;alert alert-warning&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/custom/posts/12/portada-PugInTapestry-thumb.png&#34; alt=&#34;Portada libro: PlugIn Tapestry&#34; title=&#34;Portada libro: PlugIn Tapestry&#34; style=&#34;float: left; margin-right: 1.5em;&#34;&gt;
-    &lt;h3&gt;Libro PlugIn Tapestry&lt;/h3&gt;
-    &lt;p&gt;Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este &lt;i&gt;framework&lt;/i&gt; en el formato que prefieras, &lt;a href=&#34;http://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/&#34;&gt;PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry&lt;/a&gt;, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.&lt;/p&gt;
-    &lt;br style=&#34;clear: both;&#34;&gt;
-    &lt;div class=&#34;buttons&#34;&gt;
-        &lt;a href=&#34;http://goo.gl/dfySZ1&#34; class=&#34;btn btn-lg btn-success&#34;&gt;PDF&lt;/a&gt;
-        &lt;a href=&#34;http://goo.gl/bs7Rtu&#34; class=&#34;btn btn-lg btn-success&#34;&gt;EPUB&lt;/a&gt;
-        &lt;a href=&#34;http://goo.gl/lxOZMT&#34; class=&#34;btn btn-lg btn-success&#34;&gt;MOBI&lt;/a&gt;
-        &lt;a href=&#34;http://goo.gl/MJJiPV&#34; class=&#34;btn btn-lg btn-success&#34;&gt;HTML&lt;/a&gt;
-    &lt;/div&gt;
-    &lt;div class=&#34;buttons&#34;&gt;
-        &lt;a href=&#34;http://goo.gl/EPw49k&#34; class=&#34;btn btn-lg btn-success&#34;&gt;Código fuente ejemplos&lt;/a&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="java"/>
-            
-                <category term="opinion"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="tapestry"/>
             
                 <category term="programacion"/>
             
