@@ -11,6 +11,80 @@
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
     
     <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-hello-world-con-java-en-la-raspberry-pi/</id>
+        <title>Ejemplo Hello World con Java en la Raspberry Pi</title>        
+        <updated>2017-03-04T23:00:00+01:00</updated>
+        <published>2017-03-04T11:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-hello-world-con-java-en-la-raspberry-pi/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/raspberrypi.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Raspberry Pi&#34; title=&#34;Raspberry Pi&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Este artículo es introductorio a los siguientes que escribiré y publicaré sobre el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;kit de iniciación a la electrónica para la Raspberry Pi&lt;/a&gt;. Antes de empezar a cacharrear con los sensores y dipositivos de entrada y salida, con los pines GPIO y para hacerlo de forma cómoda crearé un entorno de desarrollo y despliegue en la &lt;a href=&#34;http://www.raspberrypi.org/&#34;&gt;Raspberry Pi&lt;/a&gt; usando &lt;a href=&#34;https://es.wikipedia.org/wiki/Secure_Shell&#34;&gt;SSH&lt;/a&gt;, &lt;a href=&#34;https://rsync.samba.org/&#34;&gt;rsync&lt;/a&gt; para copiar los artefactos del equipo de desarrollo a la RPi y &lt;a href=&#34;http://www.ansible.com&#34;&gt;Ansible&lt;/a&gt; usándolo desde &lt;a href=&#34;http://gradle.org/&#34;&gt;Gradle&lt;/a&gt; para lanzar comandos y ejecutar los ejemplos de forma remota aunque si no se quiere usar Ansible se pueden lanzar los comandos mediante SSH.&lt;/p&gt;
+
+&lt;p&gt;En la Raspberry Pi deberemos instalar por supuesto &lt;a href=&#34;http://www.oracle.com/technetwork/java/index.html&#34;&gt;Java&lt;/a&gt; (es posible usar Java 8) junto con SSH y rsync, configurar el servidor SSH en la RPi modificando el archivo &lt;em&gt;/etc/ssh/sshd_config&lt;/em&gt;, habilitar el servidor SSH, copiar nuestra &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/02/generar-y-convertir-claves-y-certificados-con-openssl/&#34;&gt;clave pública ssh generada previamente&lt;/a&gt; al archivo &lt;em&gt;~/.ssh/authorized_keys&lt;/em&gt; del usuario e instalar &lt;a href=&#34;https://www.python.org/&#34;&gt;Python&lt;/a&gt; como requerimiento de Ansible. Los programas Java los escribiremos en un equipo más potente que la Raspberry Pi ya sea un portátil o un equipo de sobremesa con un IDE ya sea &lt;a href=&#34;https://www.jetbrains.com/idea/&#34;&gt;IntelliJ&lt;/a&gt;, &lt;a href=&#34;https://eclipse.org&#34;&gt;eclipse&lt;/a&gt; u otro, también deberemos instalar Gradle, Ansible y rsync. En Arch Linux con los siguientes comandos del gestor de paquetes:&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=pacman-raspberrypi.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=authorized_keys&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=pacman.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Con la ayuda de unas tareas para la herramienta de construcción Gradle haremos el despliegue y la ejecución de la librería &lt;em&gt;jar&lt;/em&gt; del proyecto de los ejemplos y de las dependencias que necesiten. El archivo de construcción de Gradle sería el siguiente en el que la tarea &lt;em&gt;copyDependencies&lt;/em&gt; copia las dependencias al directorio &lt;em&gt;build/libs&lt;/em&gt;. La tarea &lt;em&gt;upload&lt;/em&gt; ejecutan el comando &lt;em&gt;rsync&lt;/em&gt; para subir el archivo &lt;em&gt;jar&lt;/em&gt; y las dependencias del proyecto a la Raspberry Pi. Finalmente, una tarea como &lt;em&gt;executeHelloWorld&lt;/em&gt; ejecutará el comando en la Raspberry Pi para lanzar el programa Java. Con SSH también se puede lanzar el comando de forma remota cambiando la dirección IP de la Raspberry Pi por la que tenga asignada.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=build.gradle&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=executeSSH.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=executeGradle.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El programa de ejemplo es universal gracias a la idea &lt;em&gt;«Write once, run anywhere»&lt;/em&gt; posibilitado por la máquina virtual o &lt;abbr title=&#34;Java Virtual Machine&#34;&gt;&lt;a href=&#34;http://es.wikipedia.org/wiki/M%C3%A1quina_virtual_Java&#34;&gt;JVM&lt;/a&gt;&lt;/abbr&gt; y el &lt;em&gt;bytecode&lt;/em&gt;, está compilado en un sistema con arquitectura x64 (el de mi equipo) y ejecutado en un sistema con arquitectura arm (el de la RPi). No se diferencia en nada al que usaríamos para lo mismo en cualquier otro sistema distinto de la Raspberry Pi.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=HelloWorld.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El resultado de este ejemplo es un mensaje en la terminal que es emitido por un programa Java ejecutado en la Raspberry Pi y lanzado de forma remota.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/213/java-raspberrypi-hello-world.png&#34; title=&#34;Ejemplo Hello World con Java en la Raspberry Pi&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/213/java-raspberrypi-hello-world-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Ejemplo Hello World con Java en la Raspberry Pi&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;En los siguientes artículos de la serie mostraré ya como usar diferentes elementos de salida como diodos LED, zumbador, &lt;em&gt;display&lt;/em&gt; LCD 1602 o de entrada como un pulsador.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew executeHelloWorld&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="gnu-linux"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/02/ejemplo-de-rabbitmq-con-java-para-enviar-y-recibir-mensajes/</id>
         <title>Ejemplo de RabbitMQ con Java para enviar y recibir mensajes</title>        
         <updated>2017-02-18T10:00:00+01:00</updated>
@@ -1560,85 +1634,6 @@ Para usar Keycloak en una aplicación Java con Spring Boot deberemos añadir alg
 &lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/03/introduccion-y-nuevas-caracteristicas-de-java-ee-7/&#34;&gt;Introducción y nuevas características de Java EE 7&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/04/aplicacion-de-ejemplo-usando-varias-especificaciones-de-java-ee-7/&#34;&gt;Aplicación de ejemplo usando varias especificaciones de Java EE 7&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://elbauldelprogramador.com/buenas-practicas-para-el-diseno-de-una-api-restful-pragmatica/&#34;&gt;Buenas prácticas para el diseño de una API RESTful pragmática&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2016/08/por-que-guardar-las-fechas-en-utc-en-la-base-de-datos/</id>
-        <title>Por qué guardar las fechas en UTC en la base de datos</title>        
-        <updated>2016-08-14T02:30:00+02:00</updated>
-        <published>2016-08-13T01:00:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/08/por-que-guardar-las-fechas-en-utc-en-la-base-de-datos/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/postgresql.png&#34; class=&#34;right&#34; alt=&#34;PostgreSQL&#34; title=&#34;PostgreSQL&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Es rara la aplicación que trabajado con bases de datos no maneje fechas, quizá es menos habitual aplicaciones que trabajan con fechas y diferentes horarias, esto es haciendo alguna conversión entre zonas horarias. Si se nos presenta el caso de trabajar con fechas y diferentes zonas horarias haremos bien en hacer que las fechas que guardemos en la base de datos estén en la misma zona horaria al menos y convertirla posteriormente a la zona horaria que necesite la aplicación. &lt;abbr title=&#34;Coordinated Universal Time&#34;&gt;UTC&lt;/abbr&gt; además de ser una zona horaria neutra evita el problema de que algunas bases de datos o lenguajes de programación para los campos fecha no guarda las zonas horarias con lo que puede ocurrirnos que guardemos la fecha en una zona horaria y la recuperemos en otra produciendo posiblemente incoherencias en las fechas por una hora.&lt;/p&gt;
-
-&lt;h3 id=&#34;por-qué-elegir-utc&#34;&gt;¿Por qué elegir UTC?&lt;/h3&gt;
-
-&lt;p&gt;Principalmente porque es una zona horaria neutra, universal y que elimina ambigüedades ya que que no tiene &lt;abbr title=&#34;Daily Saving Time&#34;&gt;DST&lt;/abbr&gt; o horario de verano y podremos guardar las fechas sin temor a que al recuperarlas estén en otra zona horaria si la base de datos o el lenguaje de programación para guardarlas no las soporta.&lt;/p&gt;
-
-&lt;p&gt;Otros motivos que se mencionan en un comentario en inglés &lt;a href=&#34;http://ideas.kentico.com/forums/239189-kentico-product-ideas/suggestions/6825844-always-store-dates-times-in-utc-in-the-database&#34;&gt;Always store dates/times in UTC (in the database)&lt;/a&gt; y algún otro en &lt;a href=&#34;http://blog.abodit.com/2010/02/datetime-values-should-always-be-stored-in-utc/&#34;&gt;DateTime values should always be stored in UTC&lt;/a&gt; son que:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Calcular duraciones de tiempo es simple. El periodo de tiempo entre la 2:30 AM UTC y las 3:30 AM UTC es siempre una hora cosa que no ocurre en las horas que hay cambio de horario pudiendo ser el periodo entre cero y dos horas.&lt;/li&gt;
-&lt;li&gt;No hay fechas inválidas cuando se adelanta la hora por ejemplo de las 2:00 AM a las 3:00 AM, pudiendo ser que las 2:30 AM en esa zona horaria no exista.&lt;/li&gt;
-&lt;li&gt;Se evitan problemas al ordenar o agrupar fechas pudiendo ser el caso de que una fecha con tiempo 2:59 AM sea antes que las 2:01 AM por causa del cambio horario.&lt;/li&gt;
-&lt;li&gt;Los cambios horarios están sujetos a cambios nada predecibles y varían a lo largo del tiempo con relativa frecuencia con lo para calcular de forma fiable cuantas horas hay entre dos fechas se necesita guardar las variaciones históricas de DST. Ni las fechas de cambios DST son constantes ni las zonas horarias se mantienen fijas para las localizaciones.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Una vez recuperada la fecha en UTC podemos &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/01/convertir-fechas-y-husos-horarios-en-java/&#34;&gt;convertir de diferentes formas una fecha de una zona horaria a otra en Java&lt;/a&gt; y en cualquier otro lenguaje con las facilidades que proporcione según la zona horaria a visualizar la fecha.&lt;/p&gt;
-
-&lt;h3 id=&#34;cúal-es-el-caso-que-puede-dar-problemas&#34;&gt;¿Cúal es el caso que puede dar problemas?&lt;/h3&gt;
-
-&lt;p&gt;Uno en el que la hora a guardar coincida con un cambio de hora de la zona horaria en la que guardemos las fechas. Por ejemplo, en España el año 2016 el cambio de horario de verano (DST/CEST) a horario de invierno (CET) se hará el 30 de octubre momento en el que a las 3:00 (CEST) volverán a ser las 02:00 pero con diferente zona horaria (CET).&lt;/p&gt;
-
-&lt;h3 id=&#34;ejemplo&#34;&gt;Ejemplo&lt;/h3&gt;
-
-&lt;p&gt;Supongamos que tenemos la fecha 30 de octubre a las 02:30 CEST y la guardamos en la base de datos pero sin la zona horaria pasando a estar implícita. En esta fecha y hora se produce un cambio horario de horario de verano a horario de invierno en España. Al recuperar la fecha será 30 de octubre a las 02:30 CET, la diferencia está entre el &lt;abbr title=&#34;Central European Summer Time&#34;&gt;CEST&lt;/abbr&gt; y &lt;abbr title=&#34;Central European Time&#34;&gt;CET&lt;/abbr&gt; o la diferencia horaria +02:00 y +01:00. Una hora de diferencia entre la original y la que recuperamos de la base de datos después de hacer la conversión.&lt;/p&gt;
-
-&lt;p&gt;Esto puede probarse con el siguiente ejemplo de código de un programa Java que guarda y recupera de una base de datos &lt;a href=&#34;http://www.postgresql.org/&#34;&gt;PostgreSQL&lt;/a&gt; una fecha que está en el intervalo de cambio horario. En el ejemplo utilizaré &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/series/docker/&#34;&gt;Docker&lt;/a&gt;.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/795512b5f0cb61bf88b16dfff519f4e7.js?file=Main.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/795512b5f0cb61bf88b16dfff519f4e7.js?file=System.out&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/795512b5f0cb61bf88b16dfff519f4e7.js?file=docker-compose.yml&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Tabajar con fechas no es simple, es muy curioso y no debemos hacer &lt;a href=&#34;http://infiniteundo.com/post/25509354022/more-falsehoods-programmers-believe-about-time&#34;&gt;suposiciones sobre las fechas que son incorrectas&lt;/a&gt; en las aplicaciones.&lt;/p&gt;
-
-&lt;p&gt;
-    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/DateTimeDatabase&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;cd misc/docker/postgresql/ &amp;amp;&amp;amp; docker-compose up &amp;amp;&amp;amp; ./gradlew run&lt;/code&gt;.
-&lt;/p&gt;
-
-&lt;div class=&#34;reference&#34;&gt;
-    Referencia:&lt;br&gt;
-    &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/01/convertir-fechas-y-husos-horarios-en-java/&#34;&gt;Convertir fechas y husos horarios en Java&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://ideas.kentico.com/forums/239189-kentico-product-ideas/suggestions/6825844-always-store-dates-times-in-utc-in-the-database&#34;&gt;Always store dates/times in UTC (in the database)&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;/div&gt;
