@@ -11,6 +11,77 @@
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
     
     <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-hello-world-con-java-en-la-raspberry-pi/</id>
+        <title>Ejemplo Hello World con Java en la Raspberry Pi</title>        
+        <updated>2017-03-04T11:00:00+01:00</updated>
+        <published>2017-03-04T11:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-hello-world-con-java-en-la-raspberry-pi/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/raspberrypi.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Raspberry Pi&#34; title=&#34;Raspberry Pi&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Este artículo es introductorio a los siguientes que escribiré y publicaré sobre el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;kit de iniciación a la electrónica para la Raspberry Pi&lt;/a&gt;. Antes de empezar a cacharrear con los sensores y dipositivos de entrada y salida, con los pines GPIO y para hacerlo de forma cómoda crearé un entorno de desarrollo y despliegue en la &lt;a href=&#34;http://www.raspberrypi.org/&#34;&gt;Raspberry Pi&lt;/a&gt; usando &lt;a href=&#34;https://es.wikipedia.org/wiki/Secure_Shell&#34;&gt;SSH&lt;/a&gt;, &lt;a href=&#34;https://rsync.samba.org/&#34;&gt;rsync&lt;/a&gt; para copiar los artefactos del equipo de desarrollo a la RPi y &lt;a href=&#34;http://www.ansible.com&#34;&gt;Ansible&lt;/a&gt; usándolo desde &lt;a href=&#34;http://gradle.org/&#34;&gt;Gradle&lt;/a&gt; para lanzar comandos y ejecutar los ejemplos de forma remota.&lt;/p&gt;
+
+&lt;p&gt;En la Raspberry Pi deberemos instalar por supuesto &lt;a href=&#34;http://www.oracle.com/technetwork/java/index.html&#34;&gt;Java&lt;/a&gt; (es posible usar Java 8) junto con SSH y rsync, configurar el servidor SSH en la RPi modificando el archivo &lt;em&gt;/etc/ssh/sshd_config&lt;/em&gt;, habilitar el servidor SSH, copiar nuestra &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/02/generar-y-convertir-claves-y-certificados-con-openssl/&#34;&gt;clave pública ssh generada previamente&lt;/a&gt; al archivo &lt;em&gt;~/.ssh/authorized_keys&lt;/em&gt; del usuario e instalar &lt;a href=&#34;https://www.python.org/&#34;&gt;Python&lt;/a&gt; como requerimiento de Ansible. Los programas Java los escribiremos en un equipo más potente que la Raspberry Pi ya sea un portátil o un equipo de sobremesa con un IDE ya sea &lt;a href=&#34;https://www.jetbrains.com/idea/&#34;&gt;IntelliJ&lt;/a&gt;, &lt;a href=&#34;https://eclipse.org&#34;&gt;eclipse&lt;/a&gt; u otro, también deberemos instalar Gradle, Ansible y rsync. En Arch Linux con los siguientes comandos del gestor de paquetes:&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=pacman-raspberrypi.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=authorized_keys&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=pacman.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Con la ayuda de unas tareas para la herramienta de construcción Gradle haremos el despliegue y la ejecución de la librería &lt;em&gt;jar&lt;/em&gt; del proyecto de los ejemplos y de las dependencias que necesiten. El archivo de construcción de Gradle sería el siguiente en el que la tarea &lt;em&gt;copyDependencies&lt;/em&gt; copia las dependencias al directorio &lt;em&gt;build/libs&lt;/em&gt;. La tarea &lt;em&gt;upload&lt;/em&gt; ejecutan el comando &lt;em&gt;rsync&lt;/em&gt; para subir el archivo &lt;em&gt;jar&lt;/em&gt; y las dependencias del proyecto a la Raspberry Pi. Finalmente, una tarea como &lt;em&gt;executeHelloWorld&lt;/em&gt; ejecutará el comando en la Raspberry Pi para lanzar el programa Java.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=build.gradle&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=build.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El programa de ejemplo es universal gracias a la idea &lt;em&gt;«Write once, run anywhere»&lt;/em&gt; posibilitado por la máquina virtual o &lt;abbr title=&#34;Java Virtual Machine&#34;&gt;&lt;a href=&#34;http://es.wikipedia.org/wiki/M%C3%A1quina_virtual_Java&#34;&gt;JVM&lt;/a&gt;&lt;/abbr&gt; y el &lt;em&gt;bytecode&lt;/em&gt;, está compilado en un sistema con arquitectura x64 (el de mi equipo) y ejecutado en un sistema con arquitectura arm (el de la RPi). No se diferencia en nada al que usaríamos para lo mismo en cualquier otro sistema distinto de la Raspberry Pi.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=HelloWorld.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El resultado de este ejemplo es un mensaje en la terminal que es emitido por un programa Java ejecutado en la Raspberry Pi y lanzado de forma remota.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/213/java-raspberrypi-hello-world.png&#34; title=&#34;Ejemplo Hello World con Java en la Raspberry Pi&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/213/java-raspberrypi-hello-world-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Ejemplo Hello World con Java en la Raspberry Pi&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;En los siguientes artículos de la serie mostraré ya como usar diferentes elementos de salida como diodos LED, zumbador, &lt;em&gt;display&lt;/em&gt; LCD 1602 o de entrada como un pulsador.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew executeHelloWorld&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="gnu-linux"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/</id>
         <title>Desempaquetado del kit de iniciación a la electrónica para la Raspberry Pi</title>        
         <updated>2017-02-25T23:30:00+01:00</updated>
@@ -1927,246 +1998,6 @@
                 <category term="gnu-linux"/>
             
                 <category term="planeta-linux"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2016/08/jugar-a-videojuegos-clasicos-y-miticos-de-arcade-con-mame-en-gnu-linux/</id>
-        <title>Jugar a videojuegos clásicos y míticos de arcade con Mame en GNU/Linux</title>        
-        <updated>2016-08-15T23:00:00+02:00</updated>
-        <published>2016-08-15T12:00:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/08/jugar-a-videojuegos-clasicos-y-miticos-de-arcade-con-mame-en-gnu-linux/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/mame.jpg&#34; class=&#34;right&#34; alt=&#34;MAME&#34; title=&#34;MAME&#34;/&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/linux.png&#34; class=&#34;right&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;http://www.linux.com/&#34;&gt;Linux&lt;/a&gt; no es la plataforma preferida por las empresas de desarrollo de videojuegos para lanzar sus juegos triple A. Esto hace que los juegos más destacados no esté disponibles en GNU/Linux o sea con un tiempo de retraso notable de meses y años. Pero esto no quiere decir que en la plataforma del pingüino no haya juegos algunos que ya he comentado como el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/07/jugar-al-ajedrez-en-gnu-linux-con-gnome/&#34;&gt;ajedrez&lt;/a&gt;, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/07/jugar-al-clasico-de-estrategia-de-tablero-go-en-gnu-linux/&#34;&gt;go&lt;/a&gt;, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/08/juegos-incluidos-en-el-entorno-de-escritorio-gnome/&#34;&gt;juegos ofrecidos en el entorno del escritorio GNOME&lt;/a&gt; y otros de diferentes géneros como estrategia, &lt;em&gt;arcade&lt;/em&gt; o simulación.&lt;/p&gt;
-
-&lt;p&gt;Los juegos actuales de las consolas y PC poseen una calidad gráfica muy notable y han evolucionado al juego en red con otros jugadores como &lt;abbr title=&#34;Massively Multiplayer Online&#34;&gt;MMO&lt;/abbr&gt; siendo más sociales. Hace una décadas las máquinas de &lt;em&gt;arcade&lt;/em&gt; y las consolas más modestas como la &lt;a href=&#34;https://es.wikipedia.org/wiki/Nintendo_Entertainment_System&#34;&gt;NES de Nintendo&lt;/a&gt; o los juegos &lt;a href=&#34;https://es.wikipedia.org/wiki/Neo-Geo&#34;&gt;Neo Geo&lt;/a&gt; eran la norma y a pesar de que no se pueden comparar con el realismo de las tres dimensiones proporcionados por las potentes tarjetas gráficas en los juegos actuales su aspecto &lt;a href=&#34;https://es.wikipedia.org/wiki/Pixel_art&#34;&gt;pixel-art&lt;/a&gt; es muy notable pero sobre todo la diversión que proporcionan no tiene que envidiar a cualquier juego actual.&lt;/p&gt;
-
-&lt;p&gt;Juegos míticos como 1942, 1943, 1944, Ghouls &amp;amp; Ghosts, Double Dragon, Super Mario 3, Golden Axe, Pengo, Amidar, Donkey Kong, Metal Slug, Rainbow Islands, Track &amp;amp; Field, The Legend of Zelda, &amp;hellip; y me dejo muchísimos The NewZealand Story, Super Glob, Q*bert, Jump Bug, Bagman, &amp;hellip; que en los que andamos entre los 35 y 50 forman parte de nuestro recuerdos de infancia, solo hay que buscar en la &lt;a href=&#34;http://www.mamedb.com&#34;&gt;base de datos de juegos MAME&lt;/a&gt;. Quizá sea por estos recuerdos que la comunidad de juegos retro sigue vigente hoy en día y que organiza eventos de encuentro para fans de las consolas viejas que no obsoletas e informática antigua. Quizá dentro de unas décadas los que hoy está en su infancia con la &lt;a href=&#34;http://www.raspberrypi.org/&#34;&gt;Raspberry Pi&lt;/a&gt; dentro de unas décadas recuerden este pequeño ordenador de 40€ como hoy algunos consideran a la &lt;a href=&#34;https://es.wikipedia.org/wiki/MSX&#34;&gt;MSX&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Voy a explicar como instalar &lt;a href=&#34;http://www.mame.net/&#34;&gt;Mame&lt;/a&gt; para emular esos sistemas antiguos y con las ROMs de los juegos jugar a ellos en un sistema GNU/Linux. Si nos hacemos con un controlador de consola con la típica cruceta y cuatro o  más botones la experiencia será mejor que con el teclado y más real a la original de la máquina de &lt;em&gt;arcade&lt;/em&gt; o consola. El número de  &lt;a href=&#34;http://www.progettoemma.net/mess/sysset.php&#34;&gt;sistemas soportados por Mame&lt;/a&gt; llega a más de 2000 entre ellos &lt;a href=&#34;https://en.wikipedia.org/wiki/Amiga&#34;&gt;Amiga&lt;/a&gt;, &lt;a href=&#34;https://en.wikipedia.org/wiki/Amstrad&#34;&gt;Amstrad&lt;/a&gt;, &lt;a href=&#34;https://en.wikipedia.org/wiki/Atari&#34;&gt;Atari&lt;/a&gt;, &lt;a href=&#34;https://en.wikipedia.org/wiki/Commodore_International&#34;&gt;Commodore&lt;/a&gt;, &lt;a href=&#34;https://es.wikipedia.org/wiki/Nintendo_Entertainment_System&#34;&gt;Famicon (NES)&lt;/a&gt;, &lt;a href=&#34;https://es.wikipedia.org/wiki/Master_System&#34;&gt;Master System&lt;/a&gt;, &lt;a href=&#34;https://es.wikipedia.org/wiki/Neo-Geo&#34;&gt;Neo Geo&lt;/a&gt; o &lt;a href=&#34;https://es.wikipedia.org/wiki/Sinclair_ZX_Spectrum&#34;&gt;ZX Spectrum&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Deberemos instalar el paquete del &lt;a href=&#34;https://www.archlinux.org/packages/community/x86_64/sdlmame/&#34;&gt;emulador Mame&lt;/a&gt; y un lanzador que en este caso usaré &lt;a href=&#34;https://www.archlinux.org/packages/community/x86_64/qmc2/&#34;&gt;QMC2&lt;/a&gt;. Posteriormente deberemos obtener las ROMs de los juegos de algunas de las muchas páginas que existen en internet. En &lt;a href=&#34;https://www.archlinux.org/&#34;&gt;Arch Linux&lt;/a&gt; los paquetes del emulador Mame y el lanzador QMC2 los instalamos con el siguiente comando:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/f61b598b7e63472ab592f9c3d98c48cd.js?file=pacman.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Instalados estos paquetes y descargada una ROM de ejemplo como la de &lt;a href=&#34;http://www.emuparadise.me/M.A.M.E._-_Multiple_Arcade_Machine_Emulator_ROMs/Ghouls&#39;n_Ghosts_(World&#34;&gt;Ghouls &amp;amp; Gosht&lt;/a&gt;/13191) de &lt;a href=&#34;http://www.emuparadise.me&#34;&gt;EMUPARADISE&lt;/a&gt; y colocada en un directorio (no hace falta descomprimir el archivo de la ROM) iniciamos el lanzador QMC2. QMC2 inicialmente nos pedirá donde se encuentra el binario del emulador y el directorio donde están las ROMs. Configurado QMC2 buscaremos el juego por su nombre del que hayamos descargado la ROM.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/qmc2.png&#34; title=&#34;Lanzador QMC2&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/qmc2-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/qmc2-config.png&#34; title=&#34;Configuración de QMC2&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/qmc2-config-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Lanzador QMC2 de juegos MAME y su configuración&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;Si hay varios resultados para el mismo nombre de juego iremos probando a iniciarlos uno a uno hasta que se abra una ventana emergente con el juego. Las teclas por defecto del primer jugador son las flechas del teclado, la tecla &lt;kbd&gt;Alt-izquierda&lt;/kbd&gt; para el botón 1, &lt;kbd&gt;Ctrl-izquierdo&lt;/kbd&gt; para el botón 2 y la &lt;kbd&gt;barra espaciadora&lt;/kbd&gt; para el botón 3. Iniciado sdlmame en la sección de &lt;em&gt;Input &amp;gt; Player 1&lt;/em&gt; podremos configurar las teclas. Las teclas &lt;kbd&gt;1&lt;/kbd&gt; y &lt;kbd&gt;2&lt;/kbd&gt; nos permitirá seleccionar entre uno y dos jugadores y la tecla &lt;kbd&gt;5&lt;/kbd&gt; introducir monedas o créditos.&lt;/p&gt;
-
-&lt;p&gt;Esta es una pequeña lista no completa de los juegos míticos que recuerdo de mi época.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/amidar.png&#34; title=&#34;Amidar&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/amidar-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/dark-seal.png&#34; title=&#34;Dark Seal&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/dark-seal-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Amidar y Dark Seal&lt;/figcaption&gt;
-&lt;/figure&gt;
-    
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/donkey-kong.png&#34; title=&#34;Donkey Kong&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/donkey-kong-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/donkey-kong-jr.png&#34; title=&#34;Donkey Kong Jr.&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/donkey-kong-jr-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Donkey Kong y Donkey Kong Jr.&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/ghosts-and-goblins.png&#34; title=&#34;Ghosts and Goblins&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/ghosts-and-goblins-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/ghouls-and-ghosts.png&#34; title=&#34;Ghouls and Ghosts&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/ghouls-and-ghosts-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Ghosts and Goblins y Ghouls and Ghosts&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/hyper-sports.png&#34; title=&#34;Hyper Sports&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/hyper-sports-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/metal-slug.png&#34; title=&#34;Metal Slug&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/metal-slug-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Hyper Sports y Metal Slug&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/meikyu-jima.png&#34; title=&#34;Meikyu Jima&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/meikyu-jima-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/new-rally-x.png&#34; title=&#34;New Rally X&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/new-rally-x-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Meikyu Jima y New Rally X&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/pang.png&#34; title=&#34;Pang&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/pang-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/pengo.png&#34; title=&#34;Pengo&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/pengo-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Pang y Pengo&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/puck-man.png&#34; title=&#34;Puck Man&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/puck-man-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/rainbow-islands.png&#34; title=&#34;Rainbow Islands&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/rainbow-islands-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Puck Man y Rainbow Islands&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/rygar.png&#34; title=&#34;Rygar&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/rygar-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/squash.png&#34; title=&#34;Squash&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/squash-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Rygar y Squash&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/super-mario-bros.png&#34; title=&#34;Super Mario Bros&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/super-mario-bros-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/super-mario-bros-3.png&#34; title=&#34;Super Mario Bros 3&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/super-mario-bros-3-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Super Mario Bros y Super Mario Bros 3&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/super-volleyball.png&#34; title=&#34;Super Volleyball&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/super-volleyball-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/tetris.png&#34; title=&#34;Tetris&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/tetris-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Super Volleyball y Tetris&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/toki.png&#34; title=&#34;Toki&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/toki-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/track-and-field.png&#34; title=&#34;Track and Field&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/track-and-field-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Toki y Track and Field&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/traverse.png&#34; title=&#34;Traverse&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/traverse-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/willow.png&#34; title=&#34;Willow&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/willow-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Traverse y Willow&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/wonder-boy.png&#34; title=&#34;Wonder Boy&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/wonder-boy-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/world-rally.png&#34; title=&#34;World Rally&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/world-rally-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Wonder Boy y World Rally&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;Ya solo nos queda buscar con tu buscador preferido algún artículo que recopile las mejores ROMs o aquellas que recuerdes y descargarlas en el directorio de las ROMS. Algunos emuladores deberemos previamente &lt;a href=&#34;http://www.emuparadise.me/M.A.M.E._-_Multiple_Arcade_Machine_Emulator_ROMs/Neo-Geo/15030&#34;&gt;descargar su ROM de emulador como en el caso de Neo-Geo&lt;/a&gt; para esta plataforma y colocarla también en el directorio de las ROMs.&lt;/p&gt;
-
-&lt;p&gt;Para jugar a los juegos de la NES de Nintendo con QMC2 no he conseguido ejecutarlos, he tenido que introducir el comando &lt;code&gt;sdlmame nes&lt;/code&gt; en la terminal buscar la ROM navegando por los directorios, seleccionarla y usar la opción de &lt;em&gt;reset&lt;/em&gt;.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/sdlmame-nes.png&#34; title=&#34;sdlmame NES&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/sdlmame-nes-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/sdlmame-nes-supermariobros3.png&#34; title=&#34;sdlmame Super Mario Bros 3&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/170/sdlmame-nes-supermariobros3-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Ejecución de un juego NES con sdlmame&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;Si no usamos Linux tanto Mame como QMC2 están disponibles tanto para &lt;a href=&#34;http://www.microsoft.com/es-es/windows/&#34;&gt;Windows&lt;/a&gt; como para &lt;a href=&#34;http://www.apple.com/macos/&#34;&gt;Mac OS X&lt;/a&gt; en sus secciones de descarga:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.mame.net/&#34;&gt;http://www.mame.net/&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://qmc2.batcom-it.net/&#34;&gt;http://qmc2.batcom-it.net/&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Incluso con una &lt;a href=&#34;http://amzn.to/2bjieY2&#34;&gt;Raspberry Pi 3&lt;/a&gt; podremos jugar usando como pantalla una televisión. Con un &lt;a href=&#34;http://amzn.to/2bjiYN8&#34;&gt;mando inalámbrico de arcade&lt;/a&gt; (no he probado si funcionará) tendremos una experiencia muy parecida a una consola. Instalando en la RPi una distribución como &lt;a href=&#34;https://retropie.org.uk/&#34;&gt;Retropie&lt;/a&gt; o &lt;a href=&#34;http://www.libretro.com/&#34;&gt;Libretro&lt;/a&gt; emularemos los juegos en este pequeño computador multipropósito.&lt;/p&gt;
-
-&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B01CD5VC92&amp;linkId=a79bf1bb391f6591c039b7696a22e9ef&amp;internal=1&#34;&gt;&lt;/iframe&gt;
-    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B013B61SCS&amp;linkId=61b4a105bc7d42ff174de961aaab0e67&amp;internal=1&#34;&gt;&lt;/iframe&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Ya solo nos queda disfrutar y pasar un buen rato con nuestros juegos preferidos, nada que envidiar en cuanto a diversión a una Play Station 4 ;), ah y no ocupan 20 GiB sino menos de 1 MiB.&lt;/p&gt;
-
-&lt;div class=&#34;reference&#34;&gt;
-    Referencia:&lt;br&gt;
-    &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.emuparadise.me&#34;&gt;Emuparadise&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.mamedb.com&#34;&gt;MAME Database&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.xataka.com/videojuegos/emuladores-roms-y-el-debate-entre-la-nostalgia-el-amor-a-lo-retro-y-la-ilegalidad&#34;&gt;Emuladores, ROMs y el debate entre la nostalgia, el amor a lo retro y la ilegalidad&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="gnu-linux"/>
-            
-                <category term="planeta-linux"/>
-            
-                <category term="software-libre"/>
             
         
     </entry>
