@@ -11,6 +11,138 @@
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
     
     <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/03/controlar-un-display-1602-para-mostrar-texto-con-la-raspberry-pi-y-java/</id>
+        <title>Controlar un display 1602 para mostrar texto con la Raspberry Pi y Java</title>        
+        <updated>2017-03-18T10:00:00+01:00</updated>
+        <published>2017-03-18T10:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/03/controlar-un-display-1602-para-mostrar-texto-con-la-raspberry-pi-y-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/raspberrypi.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Raspberry Pi&#34; title=&#34;Raspberry Pi&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Uno de los motivos por los que compré el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;kit de iniciación a la electrónica para la Raspberry Pi&lt;/a&gt;, además de cacharrear un poco, era en concreto controlar el &lt;em&gt;display&lt;/em&gt; LCD de 16 columnas y 2 filas. En el &lt;em&gt;kit&lt;/em&gt; el &lt;em&gt;display&lt;/em&gt; viene con un adaptador con el bus de comunicación I2C. El &lt;em&gt;display&lt;/em&gt; se puede usar sin este bus pero requiere utilizar muchos más pines GPIO de datos de los limitados 17 que ofrece la Raspberry Pi 1 y los 26 de las Raspberry Pi B+, 2  y 3. Controlar el &lt;em&gt;display&lt;/em&gt; con I2C requiere únicamente 2 pines, por contra sin usar I2C requiere un número significativamente mayor 4 u 8 pines.&lt;/p&gt;
+
+&lt;p&gt;El &lt;em&gt;display&lt;/em&gt; 1602 con su adaptador para el bus I2C que viene con el &lt;em&gt;kit&lt;/em&gt; ya incorporado en la parte trasera es el siguiente.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/215/display-lcd-1602.jpg&#34; title=&#34;Display LCD 16 columnas y 2 filas&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/215/display-lcd-1602-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/215/adaptador-bus-i2c-1602.jpg&#34; title=&#34;Adaptador bus I2C para display 1602&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/215/adaptador-bus-i2c-1602-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;Display LCD 1602 y adaptador bus I2C&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;El esquema de conexionado para controlar el &lt;em&gt;display&lt;/em&gt; requiere usar los pines de la Raspberry Pi &lt;em&gt;SDA&lt;/em&gt; y &lt;em&gt;SDL&lt;/em&gt; además de un &lt;em&gt;pin&lt;/em&gt; para proporcionar un voltaje de 5V y otro &lt;em&gt;pin&lt;/em&gt; para la tierra. El &lt;em&gt;pin&lt;/em&gt; &lt;em&gt;SDA&lt;/em&gt; es el número 2 según la numeración de pines de la Raspberry Pi y el &lt;em&gt;SDL&lt;/em&gt; es el 5. El &lt;em&gt;pin&lt;/em&gt; &lt;em&gt;SDA&lt;/em&gt; es utilizado en el bus I2C para transmitir los datos y el &lt;em&gt;SDL&lt;/em&gt; para la señal de reloj o sincronización. Utilizando la placa de extensión wiringPi de 26 &lt;em&gt;pines&lt;/em&gt; los &lt;em&gt;pines&lt;/em&gt; &lt;em&gt;SDA&lt;/em&gt; y &lt;em&gt;SDL&lt;/em&gt; se encuentran identificados por su nombre y el de la placa de extensión de 40 &lt;em&gt;pines&lt;/em&gt; que viene con el &lt;em&gt;kit&lt;/em&gt; de iniciación también, deberemos identificar estos pines y realizar las conexiones adecuadamente.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/215/breadboard-cableado.jpg&#34; title=&#34;Cableado en la breadboard&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/215/breadboard-cableado-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/215/esquema-cableado.png&#34; title=&#34;Esquema del cableado&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/215/esquema-cableado-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;Cableado en la breadboard&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Hay que emplear varios cables macho-macho y hembra-hembra para conectar a los pines del adaptador I2C del &lt;em&gt;display&lt;/em&gt;  a los &lt;em&gt;pines&lt;/em&gt; del voltaje de 5V, tierra, &lt;em&gt;SDA&lt;/em&gt; y &lt;em&gt;SDL&lt;/em&gt; de la placa de pruebas sin soldadura.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/215/cables-macho-macho-hembra-hembra.jpg&#34; title=&#34;Unión cables macho-macho y hembra-hembra&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/215/cables-macho-macho-hembra-hembra-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Unión cables macho-hembra&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;El siguiente paso será activar el bus I2C en la Raspberry Pi que por defecto está desactivado. Esto requiere añadir unos parámetros en la configuración de arranque y cargar unos módulos del kernel que finalmente crearán un dispositivo tal que en &lt;em&gt;/dev/i2c-0&lt;/em&gt; o &lt;em&gt;/dev/i2c-0&lt;/em&gt;. Si instalamos el paquete &lt;em&gt;i2c-tools&lt;/em&gt; podremos detectar el &lt;em&gt;display&lt;/em&gt; en el bus I2C, en la captura de pantalla en la dirección 27 que hay que usar al construir la instancia del controlador del &lt;em&gt;display&lt;/em&gt;. Estos cambios en la configuración de inicio requieren reiniciar la Raspberry Pi. En un sistema con la distribución &lt;a href=&#34;http://archlinuxarm.org/&#34;&gt;Arch Linux ARM&lt;/a&gt; los cambios son los siguientes.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/1ab3b748f7e9cc0c60cbc7c21531f21f.js?file=configuration.txt&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/215/i2cdetect.png&#34; title=&#34;Detectción del display 1602 en el bus I2C&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/215/i2cdetect-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Detectción del display 1602 en el bus I2C&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Según la &lt;a href=&#34;https://www.sparkfun.com/datasheets/LCD/HD44780.pdf&#34;&gt;especificación del &lt;em&gt;display&lt;/em&gt; 1602&lt;/a&gt; este componente soporta varios comandos para controlarlo, algunos son para limpiar el texto, cambiar la dirección de escritura, añadir caracteres personalizados y emitir texto en la línea o posición del &lt;em&gt;display&lt;/em&gt; que queramos. No es simple el controlar el &lt;em&gt;display&lt;/em&gt; a bajo nivel ya que hay que trabajar en momentos con binario y usar bytes, por ello para el ejemplo usaré la librería &lt;a href=&#34;http://rtd.diozero.com/en/latest/&#34;&gt;diozero&lt;/a&gt; que ya trae una implementación de controlador con funciones de alto nivel &lt;em&gt;I2CLcd&lt;/em&gt; que en versiones más recientes de la librería ha sido renombrada a &lt;a href=&#34;http://static.javadoc.io/com.diozero/diozero-core/0.9/com/diozero/HD44780Lcd.html&#34;&gt;HD44780Lcd&lt;/a&gt; mucho más cómoda que enviar &lt;em&gt;bytes&lt;/em&gt; a bajo nivel al bus I2C, el &lt;a href=&#34;https://github.com/mattjlewis/diozero/blob/master/diozero-core/src/main/java/com/diozero/HD44780Lcd.java&#34;&gt;código fuente de la clase HD44780Lcd&lt;/a&gt; está disponible y podemos verlo si hay curiosidad.&lt;/p&gt;
+
+&lt;p&gt;En mi caso con la Raspberry Pi 1 he tenido que utilizar la versión 0.9 de la librería diozero porque la 0.8 me generaba un &lt;em&gt;stacktrace&lt;/em&gt; de una excepción &lt;em&gt;java.lang.UnsupportedOperationException&lt;/em&gt;. Obtener esta versión de la librería como aún era de desarrollo y no estaba publicada en &lt;a href=&#34;https://search.maven.org/&#34;&gt;Maven Central&lt;/a&gt; la he descargado de un &lt;a href=&#34;https://drive.google.com/drive/u/0/folders/0B2Kd_bs3CEYaZ3NiRkd4OXhYd3c&#34;&gt;google drive que ha creado el autor&lt;/a&gt; y usado en &lt;a href=&#34;http://gradle.org/&#34;&gt;Gradle&lt;/a&gt; como una dependencia del sistema de ficheros. Como librería subyacente de diozero para controlar los pines GPIO he usado &lt;a href=&#34;http://abyz.co.uk/rpi/pigpio/&#34;&gt;pigpio&lt;/a&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/1ab3b748f7e9cc0c60cbc7c21531f21f.js?file=java.lang.UnsupportedOperationException&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En el ejemplo mostraré un texto en cada una de las lineas del &lt;em&gt;display&lt;/em&gt; y usaré una de las funciones del &lt;em&gt;display&lt;/em&gt; para mostrar caracteres personalizados con los que es posible crear &lt;em&gt;emojis&lt;/em&gt; o caracteres nuevos. El controlador de diozero ya contiene una buena colección de caracteres personalizados que definen el patrón de 5x8 puntos que siguen, los nombres de estos caracteres personalizados están en la clase interna &lt;em&gt;Characters&lt;/em&gt; de &lt;em&gt;HD44780Lcd&lt;/em&gt; aunque también podemos definir nuevos. El ejemplo es el siguiente.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/1ab3b748f7e9cc0c60cbc7c21531f21f.js?file=Lcd.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/1ab3b748f7e9cc0c60cbc7c21531f21f.js?file=build.gradle&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/1ab3b748f7e9cc0c60cbc7c21531f21f.js?file=executeSSH.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/1ab3b748f7e9cc0c60cbc7c21531f21f.js?file=executeGradle.sh&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/215/mensaje-lcd-1602.jpg&#34; title=&#34;Mensaje en LCD 1602&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/215/mensaje-lcd-1602-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Mensaje en LCD 1602&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+&lt;div class=&#34;video-post&#34; style=&#34;text-align: center;&#34;&gt;
+  &lt;iframe width=&#34;640&#34; height=&#34;360&#34; src=&#34;https://www.youtube.com/embed/V6msjQNDPuU&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Pudiendo mostrar mensajes en &lt;em&gt;display&lt;/em&gt; es posible mostrar cualquier información que un programa sea capaz de capturar como temperatura y humedad del correspondiente sensor en el mismo &lt;em&gt;kit&lt;/em&gt;, estado de un pulsador, espacio disponible en el disco del sistema, y memoria libre, &lt;em&gt;uptime&lt;/em&gt; del sistema, fecha y hora, &amp;hellip; cualquier cosa que se nos ocurra.&lt;/p&gt;
+
+&lt;p&gt;El ejemplo parece simple, y el programa Java lo es, pero requiere conocer varias cosas que en internet está dispersas como activar el bus I2C o conocer la librería diozero para controlar el &lt;em&gt;display&lt;/em&gt; que simplifica enormemente el código y nos evita comunicarnos a más bajo nivel con el &lt;em&gt;display&lt;/em&gt;, realizar las conexiones eléctricas también requiere algo de conocimiento. Averiguar todo esto me costó una buena cantidad de tiempo.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew executeLcd&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="gnu-linux"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-encender-y-apagar-diodo-led-con-la-raspberry-pi-en-java/</id>
         <title>Ejemplo encender y apagar diodo LED con la Raspberry Pi en Java</title>        
         <updated>2017-03-12T00:15:00+01:00</updated>
@@ -1829,119 +1961,6 @@ En los ajustes veremos el saldo disponible que se irá descontando según los re
                 <category term="blog-stack"/>
             
                 <category term="gnu-linux"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="planeta-linux"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2016/11/instalar-programas-con-homebrew-en-macos/</id>
-        <title>Instalar programas con Homebrew en macOS</title>        
-        <updated>2016-11-25T22:30:00+01:00</updated>
-        <published>2016-11-19T12:00:00+01:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/11/instalar-programas-con-homebrew-en-macos/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;Para no tener que descargar binarios e instalarlos manualmente y estar pendiente de nuevas versiones que se publiquen en un futuro en macOS está Homebrew. Homebrew es un gestor de paquetes similar a los existentes en las distribuciones GNU/Linux con el que podremos buscar software, instalar, actualizar, ver que hemos instalado, cuales están desactualizados, iniciar y parar servicios y desinstalar los paquetes o programas. Esta es una guía básica sobre como instalar software en macOS con Homebrew y como instalar iTerm2 que es una mejor terminal que la propia del sistema con iterm.&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/apple.png&#34; class=&#34;right&#34; alt=&#34;Apple&#34; title=&#34;Apple&#34;/&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/macos.png&#34; class=&#34;right&#34; alt=&#34;macOS&#34; title=&#34;macOS&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Como nuevo usuario de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/11/mi-primer-mac-yo-usuario-de-gnu-linux/&#34;&gt;mi primer mac&lt;/a&gt; he tenido que empezar instalando los programas que voy a usar. Una de las cosas buenas de las distribuciones &lt;a href=&#34;http://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;http://www.linux.com/&#34;&gt;Linux&lt;/a&gt; es la forma de obtener e instalar programas. Cada distribución de GNU/Linux tiene su repositorio de paquetes y programas de los que el gestor de paquetes obtiene e instala. Los gestores paquetes se encargan de instalar, actualizar y desinstalar cada paquete junto las dependencias que requiera. Con el gestor de paquetes y desde la terminal es posible instalar múltiples programas rápidamente con un comando. En &lt;a href=&#34;http://www.microsoft.com/es-es/windows/&#34;&gt;Windows&lt;/a&gt; y &lt;a href=&#34;http://www.apple.com/macos/&#34;&gt;macOS&lt;/a&gt; los programas se instalan descargando un binario y ejecutándolo que inicia un asistente. Instalar programas de esta forma en Windows y macOS tiene los inconvenientes de que hay que hay que ir a la página oficial de programa y descargar el último binario disponible, además cuando se publique una nueva versión hay que descargar el nuevo binario y volverlo a instalar, también es una fuente de introducción de virus si se descarga e instala el software de fuentes no confiables. En GNU/Linux el gestor de paquetes se encarga de actualizar los paquetes y programas que estén desactualizados cuando haya nuevas versiones.&lt;/p&gt;
-
-&lt;p&gt;En macOS existe un gestor de paquetes similar a los existentes en GNU/Linux, &lt;a href=&#34;http://brew.sh/&#34;&gt;Homebrew&lt;/a&gt; se define así mismo como el gestor de paquetes que le falta a macOS. Con Homebrew podemos instalar los programas y mantenerlos actualizados sin tener que estar observando cuando se publica una nueva versión de cada programa. Con Homebrew también podremos instalar muchos de los comandos que están disponibles en GNU/Linux como wget, cmus, gimp, &amp;hellip; &lt;a href=&#34;https://caskroom.github.io/&#34;&gt;Hombrew Cask&lt;/a&gt; es un añadido que proporciona los mismo para los binarios de los programas de macOS. Con estas dos herramientas podemos instalar y mantener actualizado la mayor parte del software que utilicemos.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/195/homebrew.png&#34; title=&#34;Homebrew&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/195/homebrew-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;Para instalar Hombrew ejecutamos el siguiente comando en la terminal:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=homebrew.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;El siguiente comando nos permitirá instalar versiones anteriores a las últimas, por ejemplo, Java 7:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-versions.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Lo siguiente será buscar los programas que queramos:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-search.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Para instalar Firefox, Google Chrome, VirtualBox, Docker, Java 8 y Java 7, Atom e iTerm2:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-cask-install.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Algunos otros programas que podemos instalar si programamos son:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-install.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Con jenv podemos cambiar entre las versiones de Java 8 y Java 7:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=jenv.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Los servicios como MySQL o Redis podemos iniciarlos y pararlos, además de ver cuales hemos instalado:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-services.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;También podemos listar que paquetes y programas tenemos instalados:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-list.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Para ver que programas y paquetes tenemos desactualizados:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-outdated.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Para actualizar todos los paquetes desactualizados o actualizar uno individualmente:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-upgrade.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Si queremos mantener desactualizado un paquete podemos fijar la versión que tengamos instalada:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-pin.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Y para desinstalar paquetes:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=brew-uninstall.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;La terminal incluida de serie en macOS es muy básica por ello mucha gente suele instalar una más avanzada como &lt;a href=&#34;http://iterm2.com/&#34;&gt;iTerm2&lt;/a&gt;. iTerm2 añade funcionalidades como pestañas y podemos dividir una terminal horizontal y verticalmente. También se puede instalar &lt;a href=&#34;http://ohmyz.sh/&#34;&gt;oh-my-zsh&lt;/a&gt; que permite gestionar la configuración del intérprete de comandos &lt;a href=&#34;http://zsh.sourceforge.net/&#34;&gt;zsh&lt;/a&gt; pudiendo añadir temas para modificar el &lt;em&gt;prompt&lt;/em&gt; del sistema o cambiarlo según la información del directorio actual, por ejemplo, si estamos en un directorio de git veremos en que rama estamos y si hay cambios realizados.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/75e99b8f3dd26a446b1b0ec19cd81ee0.js?file=oh-my-zsh.sh&#34;&gt;&lt;/script&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/195/iterm2.png&#34; title=&#34;iTerm2&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/195/iterm2-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;Terminal iTerm2&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="apple"/>
-            
-                <category term="blog-stack"/>
             
                 <category term="planeta-codigo"/>
             
