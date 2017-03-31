@@ -11,6 +11,144 @@
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
     
     <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/03/obtener-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/</id>
+        <title>Obtener temperatura y humedad con el sensor DHT11, la Raspberry Pi, C y Java</title>        
+        <updated>2017-03-31T19:00:00+01:00</updated>
+        <published>2017-03-31T19:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/03/obtener-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;El &lt;em&gt;kit&lt;/em&gt; de iniciación a la electrónica para la Raspberry Pi tiene un sensor para la temperatura y humedad, el modelo DHT11. Obtener la información requiere restricciones de tiempo, este es un caso de uso justificado para usar lenguaje C y JNI para integrarlo con Java. En el ejemplo el código C llama a un método de una clase Java con dos valores enteros o lanza una excepción en caso de que al realizar la lectura haya habido algún error en la transmisión de los bits.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/raspberrypi.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Raspberry Pi&#34; title=&#34;Raspberry Pi&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Entre los varios sensores incluídos en el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;kit de iniciación para la Raspberry Pi&lt;/a&gt; está el sensor de temperatura y humedad con el modelo DHT11. El DHT11 es un sensor muy básico pero suficiente y válido si el objetivo es trastear un poco con hardware.&lt;/p&gt;
+
+&lt;p&gt;En la &lt;a href=&#34;http://www.micropik.com/PDF/dht11.pdf&#34;&gt;especificación del sensor DHT11&lt;/a&gt; está descrita su funcionamiento y forma de comunicación. Utiliza 3 cables, uno para la corriente de 3.3V, otro para tierra y finalmente uno de datos que se conecta a cualquier &lt;em&gt;pin&lt;/em&gt; &lt;abbr title=&#34;General Purpose Input Output&#34;&gt;GPIO&lt;/abbr&gt; de la Raspberry Pi. Según la especificación el sensor proporciona sus datos en unos 4 ms cuando se le emite un pulso bajo durante unos pocos microsegundos y a continuación uno alto durante otros pocos microsegundos, momento a partir del cual el sensor emite 40 bits de información empezando por un pulso bajo de inicio y a continuación el propio bit con un pulso alto, según sea la duración del pulso alto el bit se considera un 0 si es menor de unos 27μs y un 1 si dura más de ese tiempo hasta unos 80μs momento en el que se emite el siguiente bit de información. Los primeros 8 bits corresponden a la parte entera de la humedad, los siguientes 8 bits a la parte decimal de la humedad, el tercer grupo de 8 bits a la parte entera de la temperatura y 8 bits más para la parte decimal. El último grupo de 8 bits hasta completar los 40 bits son de &lt;em&gt;checksum&lt;/em&gt; para detectar errores en la transmisión. El porcentaje de errores en la transmisión significativo en este sensor y quizá haya que realizar varias lecturas del sensor para obtener una correcta.&lt;/p&gt;
+
+&lt;p&gt;Dada las restricciones de tiempo que utiliza el sensor en el ejemplo usaré el lenguaje C para obtener los valores de temperatura y humedad y &lt;abbr title=&#34;Java Native Interface&#34;&gt;JNI&lt;/abbr&gt; para acceder a ellos desde Java. Aún usando C se producen errores en la obtención de los valores ya que el método usado por el sensor y transmitir los datos basados en tiempo de microsegundos no es muy fiable. Usando Java la situación sería peor por las restricciones que impone la máquina virtual con sus paradas para la recolección de basura por ejemplo. Así que el ejemplo consistirá en una combinación de C y Java con JNI un poco más avanzado que el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-de-jni-usar-codigo-en-c-desde-java/&#34;&gt;Ejemplo de JNI, usar código en C desde Java&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/219/dht11-1.jpg&#34; title=&#34;Sensor DHT11&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/219/dht11-1-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/219/dht11-2.jpg&#34; title=&#34;Sensor DHT11&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/219/dht11-2-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;Sensor DHT11&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Lo primero que deberemos hacer para acceder a la información del sensor desde Java es crear una clase que contenga un método nativo que realizará la lectura de la información en C. Con la utilidad &lt;em&gt;javah&lt;/em&gt; obtendremos el archivo de cabecera que implementará el programa en C. Finalmente, siguiendo la especificación se escribe el código C que realice la lectura que en este caso usará la librería &lt;a href=&#34;http://wiringpi.com/&#34;&gt;wiringPi&lt;/a&gt; para la interacción con los pines GPIO de la Raspberry Pi.&lt;/p&gt;
+
+&lt;p&gt;El código en C invocará el método &lt;em&gt;setTemperatureHumidity&lt;/em&gt; pasando como parámetros los datos de temperatura y humedad leídos del sensor, el método nativo &lt;em&gt;read&lt;/em&gt; es utilizado por el código Java que controla el sensor para realizar la lectura en el código C.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=Dht11.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=Dht11.h&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=Dht11.c&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El código en C del sensor hay que compilarlo en la Raspberry Pi con el compilador &lt;a href=&#34;https://gcc.gnu.org/&#34;&gt;gcc&lt;/a&gt; obteniendo una librería con código nativo que Java y JNI cargará y enlazará de forma dinámica en el programa Java. Ya que el código C usa la librería wiringPi ha de instalarse previamente junto con el compilador gcc. Obtenida la librería la copiamos mediante FTP o SSH de la Raspberry Pi a nuestro equipo de desarrollo. El código C realiza la lectura usando la librería wiringPi siguiendo la especificación de como se transmiten los datos por el sensor, realizada una lectura correcta usa varias de las funciones de la estructura &lt;a href=&#34;http://xdprof.sourceforge.net/doxygen/structJNIEnv__.html&#34;&gt;JNIEnv&lt;/a&gt; para obtener la referencia a un método de la clase DHT11 e invocarlo con los valores obtenidos del sensor o lanza una excepción si la lectura ha sido errónea.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=install-packages.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El comando para compilar la librería de código nativo a partir del código en C y el archivo de cabecera generado con &lt;em&gt;javah&lt;/em&gt; es el siguiente.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=compile.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Para facilitar la ejecución la librería la proporcionó ya compilada y ubicada en el directorio &lt;em&gt;src/main/resources&lt;/em&gt; de modo que será incluida en el archivo &lt;em&gt;jar&lt;/em&gt; generado por &lt;a href=&#34;http://gradle.org/&#34;&gt;Gradle&lt;/a&gt; en el ejemplo y que la clase DHT11 extraerá al directorio temporal del sistema y cargará para su uso.&lt;/p&gt;
+
+&lt;p&gt;La clase Java del ejemplo que hace uso del sensor realiza una lectura cada 3 segundos e imprime en la terminal y en el &lt;em&gt;display&lt;/em&gt; 1602 el último valor obtenido correctamente de la temperatura y humedad.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=TemperatureHumidity.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Este es el esquema de conexiones que he utilizado para el ejemplo y una foto del cableado real, he usado del &lt;em&gt;pin&lt;/em&gt; GPIO número 2 según la nomenclatura de wiringPi para el cable de datos del sensor DHT11 que se corresponde con pin número 13 según la nomenclatura del &lt;em&gt;header&lt;/em&gt; de la Raspberry Pi. Para ver el cableado del &lt;em&gt;display&lt;/em&gt; 1602 más detalladamente consulta el artículo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/controlar-un-display-lcd-1602-para-mostrar-texto-con-la-raspberry-pi-y-java/&#34;&gt;Controlar un display LCD 1602 para mostrar texto con la Raspberry Pi y Java&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/219/cableado.jpg&#34; title=&#34;Cableado sensor DHT11 y display 1602&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/219/cableado-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Cableado sensor DHT11 y display 1602&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Ejecutando el programa del ejemplo y usando el display 1602 (16 columnas y 2 filas) se muestra la temperatura y humedad obtenida del sensor.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/219/temperature-humidity.jpg&#34; title=&#34;Cableado ejemplo y funcionando&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/219/temperature-humidity-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/219/display.jpg&#34; title=&#34;Cableado ejemplo y funcionando&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/219/display-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;Cableado ejemplo y funcionando&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;En el kernel de Linux hay un módulo que proporciona también los valores del sensor, sin embargo, no he conseguido obtener la temperatura y humedad usándolo. Lo he probado con el kernel 4.4 de Arch Linux ARM y en la versión 4.9 veo que hay cambios en este módulo que quizá lo hagan funcionar. Para usar el módulo del kernel hay que añadir un poco de configuración para el inicio de la Raspberry Pi. En los archivos &lt;em&gt;/sys/devices/platform/dht11@0/iio:device0/in_temp_input&lt;/em&gt; y &lt;em&gt;/sys/devices/platform/dht11@0/iio:device0/in_temp_input&lt;/em&gt; estarán la temperatura y humedad respectivamente.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=kernel-module-config.txt&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=cat.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Para ejecutar el ejemplo con ya todo instalado uso uno de los siguientes dos comandos.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=execute.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew executeDht11&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.ibm.com/developerworks/java/tutorials/j-jni/j-jni.html&#34;&gt;Java programming with JNI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://hirt.se/blog/?p=493&#34;&gt;Accessing 1-wire Protocol Devices from Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.circuitbasics.com/how-to-set-up-the-dht11-humidity-sensor-on-the-raspberry-pi/&#34;&gt;How to Set Up the DHT11 Humidity Sensor on the Raspberry Pi&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.prometec.net/sensores-dht11/&#34;&gt;Sensores de temperatura DHT11&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/Hexalyse/RPi-weather-log/blob/master/dht11.c&#34;&gt;dht11.c&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.uugear.com/portfolio/read-dht1122-temperature-humidity-sensor-from-raspberry-pi/&#34;&gt;Read DHT11/22 Temperature &amp;amp; Humidity Sensor from Raspberry Pi&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://arduino-info.wikispaces.com/DHT11-Humidity-TempSensor&#34;&gt;Digital output temperature and humidity sensor DHT11 - DHT22&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://playground.arduino.cc/Main/DHT11Lib&#34;&gt;A DHT11 Class for Arduino&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/torvalds/linux/blob/master/drivers/iio/humidity/dht11.c&#34;&gt;torvalds/linux/blob/master/drivers/iio/humidity/dht11.c&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.tortosaforum.com/raspberrypi/dht11driver.htm&#34;&gt;RaspberryPi DHT11 temperature and humidity sensor driver&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="gnu-linux"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-de-jni-usar-codigo-en-c-desde-java/</id>
         <title>Ejemplo de JNI, usar código en C desde Java</title>        
         <updated>2017-03-25T10:05:00+01:00</updated>
@@ -1618,107 +1756,6 @@
 &lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=CXDrGJoCVhc&#34;&gt;Keycloak Basics Tutorial Part 2&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=B-qIkB9lsLs&#34;&gt;Keycloak Demo Part 1&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=QgWgUg5F_JQ&#34;&gt;Keycloak Demo Part 2&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2016/10/generacion-de-codigo-en-tiempo-de-ejecucion-con-byte-buddy/</id>
-        <title>Generación de código en tiempo de ejecución con Byte Buddy</title>        
-        <updated>2016-10-07T09:15:00+02:00</updated>
-        <published>2016-10-02T12:00:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/10/generacion-de-codigo-en-tiempo-de-ejecucion-con-byte-buddy/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;El tipado seguro y el sistema de tipos es sin duda una de las características más importante del lenguaje de programación Java que han contribuido a su éxito. Cuando no conocemos los tipos en tiempo de compilación el sistema de tipos es una limitación donde los lenguajes dinámicos son capaces de resolver el problema sin necesidad de los tipos pero perdiendo la ayuda del compilador. Usando una librería de generación de código en tiempo de compilación o ejecución tenemos la posibilidad en Java de realizar algunas tareas que los lenguajes dinámicos permiten.&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/bytebuddy.png&#34; class=&#34;right&#34; alt=&#34;Byte Buddy&#34; title=&#34;Byte Buddy&#34;/&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Java posee un sistema de tipos estricto con el que detectar errores de compilación y hace que el código sea más legible, con un &lt;abbr title=&#34;Integrated Development Environment&#34;&gt;IDE&lt;/abbr&gt; los errores de compilación los detectaremos inmediatamente según escribimos código. Este sistema de tipos estricto es deseable en aplicaciones de negocio y empresariales ya que ayuda a que las aplicaciones tengan menos errores o errores de compilación pasen inadvertidos y ser descubiertos incluso semanas después de haber sido desplegados en producción. Su sistema de tipos es uno de los responsables del éxito de Java. Sin embargo, el sistema de tipos estricto impone restricciones en otro tipo de ámbitos como en una biblioteca de propósito general ya que no se conocerán los tipos en tiempo de compilación y no podrán por tanto ser referenciados o alternativamente hayan ser definidos como interfaces o clases abstractas que posteriormente son implementadas o extendidas.&lt;/p&gt;
-
-&lt;p&gt;Para acceder a propiedades e invocar métodos de tipos desconocidos en tiempo de compilación en Java disponemos de la &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/package-summary.html&#34;&gt;reflection API&lt;/a&gt; o API de introspección aunque tiene los siguientes inconvenientes:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Es lenta: más que la invocación directa de un método. La API de introspección usa &lt;abbr title=&#34;Java Native Interface&#34;&gt;JNI&lt;/abbr&gt; y requiere hacer un análisis del objeto costosa para invocar el método del objeto.&lt;/li&gt;
-&lt;li&gt;Inutiliza el tipado seguro: la API de introspección no es &lt;em&gt;type-safe&lt;/em&gt;. La comprobación de los tipos de los argumentos en la invocación de un método es retrasada hasta el momento de ejecución.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Usando la  API de introspección perdemos una de las grandes características de Java, el tipado seguro, adicionalmente el rendimiento será menor. Conocidas estas limitaciones hay varias librerías que las palían generando código en tiempo de ejecución, algunas de las más conocidas son &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Proxy.html&#34;&gt;Java Proxy&lt;/a&gt; que está incluida en el propio JDK, &lt;a href=&#34;https://github.com/cglib/cglib&#34;&gt;cglib&lt;/a&gt;, &lt;a href=&#34;https://jboss-javassist.github.io/javassist/&#34;&gt;Javassists&lt;/a&gt; o &lt;a href=&#34;http://asm.ow2.org/index.html&#34;&gt;ASM&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Leyendo uno de los artículos de la publicación gratuita &lt;a href=&#34;http://www.oracle.com/technetwork/java/javamagazine/index.html&#34;&gt;Java Magazine&lt;/a&gt; de &lt;a href=&#34;http://www.javamagazine.mozaicreader.com/NovDec2015#&amp;amp;pageSet=0&amp;amp;page=0&#34;&gt;Nov/Dic 2015&lt;/a&gt; conocí otra alternativa llamada &lt;a href=&#34;http://bytebuddy.net/&#34;&gt;Byte Buddy&lt;/a&gt; con la que al contrario de otras posibilidades no estamos limitados a generar clases que implementen interfaces conocidas (como en Java proxies), tiene un mantenimiento activo y soporta las nuevas características de las últimas versiones del lenguaje (al contrario de cglib), no está tan limitada (como Javassists) y no hay que tener conocimientos de &lt;em&gt;byte code&lt;/em&gt; (como con ASM).&lt;/p&gt;
-
-&lt;p&gt;La generación de código se ha vuelto ubicua en muchas de las librerías más populares de Java y se usa profusamente en &lt;a href=&#34;https://spring.io/&#34;&gt;Spring&lt;/a&gt;, &lt;a href=&#34;http://hibernate.org/&#34;&gt;Hibernate&lt;/a&gt; o &lt;a href=&#34;http://tapestry.apache.org&#34;&gt;Apache Tapestry&lt;/a&gt; para aplicar seguridad, gestión de transacciones, mapeo modelo relacional-objeto o pruebas unitarias o de integración (&lt;em&gt;mocking&lt;/em&gt;, &amp;hellip;) y de manera similar a lo ofrecido por los &lt;a href=&#34;http://groovy-lang.org/metaprogramming.html&#34;&gt;&lt;abbr title=&#34;Abstract Syntax Tree&#34;&gt;AST&lt;/abbr&gt;&lt;/a&gt; de &lt;a href=&#34;http://www.groovy-lang.org/&#34;&gt;Groovy&lt;/a&gt;. Permite emular algunas propiedades que solo están accesibles al programar con lenguajes dinámicos sin perder las comprobaciones de tipos. Las clases generadas por Byte Buddy no se distinguen de las clases generadas por el compilador.&lt;/p&gt;
-
-&lt;p&gt;Un ejemplo sencillo de la definición de una nueva clase en tiempo de ejecución con el método &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/String.html#toString--&#34;&gt;String.toString&lt;/a&gt; que devuelve un valor fijo sería la siguiente:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Main-1.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Con los métodos &lt;a href=&#34;http://bytebuddy.net/javadoc/1.4.28/net/bytebuddy/dynamic/DynamicType.html#saveIn-java.io.File-&#34;&gt;saveIn&lt;/a&gt;, &lt;a href=&#34;http://bytebuddy.net/javadoc/1.4.28/net/bytebuddy/dynamic/DynamicType.html#inject-java.io.File-&#34;&gt;inject&lt;/a&gt; y &lt;a href=&#34;http://bytebuddy.net/javadoc/1.4.28/net/bytebuddy/dynamic/DynamicType.html#toJar-java.io.File-&#34;&gt;toJar&lt;/a&gt; de &lt;a href=&#34;http://bytebuddy.net/javadoc/1.4.28/net/bytebuddy/dynamic/DynamicType.Unloaded.html&#34;&gt;DynamicType.Unloaded&lt;/a&gt; podemos generar las clases en el momento de construcción de la aplicación previo a que sea desplegada y guardarlas en archivos &lt;em&gt;.class&lt;/em&gt; o en librerías &lt;em&gt;.jar&lt;/em&gt;.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Main-2.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Usando los selectores adecuados como &lt;em&gt;method&lt;/em&gt;, &lt;em&gt;field&lt;/em&gt;, &lt;em&gt;constructor&lt;/em&gt;, &lt;em&gt;named&lt;/em&gt; entre muchos otros de la clase &lt;a href=&#34;http://bytebuddy.net/javadoc/1.4.28/net/bytebuddy/matcher/ElementMatchers.html&#34;&gt;ElementMatchers&lt;/a&gt; seremos capaces de interceptar las llamadas a los métodos y establecerles el comportamiento que deseemos.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Main-3.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Foo.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Byte Buddy permite tres tipos de extensiones:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;subclass&lt;/em&gt;: crea un nuevo tipo subclase de otro.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;redefine&lt;/em&gt;: redefine el comportamiento de un tipo existente.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;rebase&lt;/em&gt;: redefine el comportamiento de un tipo existente y renombra los métodos redefinidos de modo que siguen estando disponibles internamente.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Devolver valores fijos en un método seguramente no será lo que deseemos en muchos casos pero podemos delegar el comportamiento de un método en otro y esta es una forma muy sencilla de manipular el comportamiento de un método sin conocer absolutamente nada de &lt;em&gt;bytecode&lt;/em&gt; ya que todo el código que proporcionamos es código Java. En el método en que se delega la llamada de uno interceptado es posible usar varias anotaciones para obtener diversos parámetros adicionales, &lt;em&gt;@Argument(n)&lt;/em&gt;, &lt;em&gt;@AllArguments&lt;/em&gt;, &lt;em&gt;@This&lt;/em&gt;, &lt;em&gt;@Super&lt;/em&gt;, &lt;em&gt;@Origin&lt;/em&gt; (Method, Constructor, Executable, Class, MethodHandle, MethodType, String o int), &lt;em&gt;@SuperCall&lt;/em&gt;, &lt;em&gt;@RuntimeType&lt;/em&gt;, &lt;em&gt;@DefaultCall&lt;/em&gt;, &lt;em&gt;@Default&lt;/em&gt;. El &lt;a href=&#34;http://bytebuddy.net/javadoc/1.4.28/net/bytebuddy/implementation/bind/annotation/package-summary.html&#34;&gt;listado completo de anotaciones&lt;/a&gt; está disponible en la API Javadoc.&lt;/p&gt;
-
-&lt;p&gt;Podemos proporcionar implementaciones de métodos de la siguiente forma, suponiendo que queremos redefinir el método &lt;em&gt;hello&lt;/em&gt; de la clase &lt;em&gt;Source&lt;/em&gt; con el comportamiento implementado en la clase &lt;em&gt;Target&lt;/em&gt;:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Main-4.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Source.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=Target.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Dicho esto, la generación de código en tiempo de ejecución o compilación nos permite nuevas posibilidades que solo ofrecían lenguajes dinámicos o de resolver problemas con &lt;a href=&#34;https://en.wikipedia.org/wiki/Aspect-oriented_programming&#34;&gt;programación orientada a aspectos&lt;/a&gt;. Aún así hay que tener en cuenta que las clases Java son elementos especiales para la la máquina virtual y nunca son recolectadas por el recolector de basura mientras su &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html&#34;&gt;ClassLoader&lt;/a&gt; este en uso por alguna de las clases que hay cargadas en la aplicación.&lt;/p&gt;
-
-&lt;p&gt;Ejecutando esta pequeña aplicación obtenemos el siguiente resultado en la terminal.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/d4c18ea8e27c20450ba255e20715379a.js?file=System.out&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;En el &lt;a href=&#34;http://bytebuddy.net/#/tutorial&#34;&gt;tutorial de Byte Buddy&lt;/a&gt; encontraremos más información y más detallada de las posibilidades que nos ofrece esta interesante librería en la plataforma &lt;abbr title=&#34;Java Virtual Machine&#34;&gt;JVM&lt;/abbr&gt; para manipular &lt;em&gt;bytecode&lt;/em&gt; y tipos con el lenguaje Java en tiempo de ejecución.&lt;/p&gt;
-
-&lt;p&gt;
-    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/HolaMundoByteBuddy&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
-&lt;/p&gt;
-
-&lt;div class=&#34;reference&#34;&gt;
-    Referencia:&lt;br&gt;
-    &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://bytebuddy.net/&#34;&gt;Byte Buddy&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://bytebuddy.net/#/tutorial&#34;&gt;Tutorial de Byte Buddy&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.javamagazine.mozaicreader.com/NovDec2015#&amp;amp;pageSet=0&amp;amp;page=0&#34;&gt;Java Magazine Nov/Dic 2015&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;/div&gt;
