@@ -3,7 +3,7 @@
     <id>https://picodotdev.github.io/blog-bitix/index.xml</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2017-03-31T19:00:00+01:00</updated>
+    <updated>2017-04-02T12:00:00+02:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
@@ -11,10 +11,95 @@
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
     
     <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/04/iniciar-un-stack-de-servicios-en-un-cluster-de-docker-swarm/</id>
+        <title>Iniciar un stack de servicios en un cluster de Docker Swarm</title>        
+        <updated>2017-04-02T12:00:00+02:00</updated>
+        <published>2017-04-02T12:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/04/iniciar-un-stack-de-servicios-en-un-cluster-de-docker-swarm/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Los &lt;em&gt;stacks&lt;/em&gt; en Docker Swarm son definiciones en un archivo de texto en formato YAML de múltiples servicios además de volúmenes, redes de software y secretos. Esta definición de un &lt;em&gt;stack&lt;/em&gt; ejecutado en un &lt;em&gt;cluster&lt;/em&gt; de nodos Docker Swarm permite iniciar múltiples contenedores además de los otros elementos que necesiten para su funcionamiento. Los &lt;em&gt;stacks&lt;/em&gt; son el equivalente para Docker Swarm de los archivos multicontenedor de Docker Compose, y el formato de ambos muy similar.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/docker.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Docker&#34; title=&#34;Docker&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Con &lt;a href=&#34;https://docs.docker.com/compose/&#34;&gt;Docker Compose&lt;/a&gt; se pueden &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/07/aplicaciones-multicontenedor-con-docker-compose/&#34;&gt;definir en un único archivo un conjunto de contenedores&lt;/a&gt; que forma un servicio o aplicación y que se lanzan como una unidad. En vez de ejecutar los comandos individuales que inician cada contenedor el archivo en formato &lt;a href=&#34;http://www.yaml.org/&#34;&gt;yaml&lt;/a&gt; de Docker Compose define varios contenedores y al ser un archivo de texto es añadible a un sistema de control de versiones para registrar los cambios. La información del archivo de Docker Compose es la misma que se indicaría en el comando para iniciar un contenedor individual.&lt;/p&gt;
+
+&lt;p&gt;En versiones más recientes se ha modificado ligeramente el formato del archivo de Docker Compose para añadirle las características necesarias que necesita &lt;a href=&#34;https://docs.docker.com/swarm/&#34;&gt;Docker Swarm&lt;/a&gt;, la &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/introduccion-y-ejemplo-de-cluster-de-contenedores-con-docker-swarm/&#34;&gt;herramienta integrada en Docker que permite crear &lt;em&gt;clusters&lt;/em&gt; de nodos&lt;/a&gt; que ejecuten contenedores &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt;. A estos archivos ahora se les denomina como &lt;em&gt;stacks&lt;/em&gt;. Así hay nuevas secciones como &lt;em&gt;services&lt;/em&gt;, &lt;em&gt;networks&lt;/em&gt;, &lt;em&gt;volumes&lt;/em&gt; y &lt;em&gt;secrets&lt;/em&gt; entre otras para soportar algunas funcionalidades adicionales. La sección &lt;em&gt;services&lt;/em&gt; es similar a la que usábamos en Docker Compose y define los contenedores. Por ejemplo, para definir que el servicio se componga de un contenedor con un servidor web &lt;a href=&#34;http://nginx.org/&#34;&gt;nginx&lt;/a&gt; usaríamos el siguiente archivo. El parámetro &lt;em&gt;version&lt;/em&gt; es muy importante ya que indica las opciones soportadas en el archivo.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/7fccfe93a0e297cd8cb3df83a3b9d967.js?file=docker-compose-stack-nginx.yml&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;A destacar las opciones &lt;em&gt;deploy&lt;/em&gt; y &lt;em&gt;replicas&lt;/em&gt; ya que indican cuantas instancias o contenedores de ese servicio habrá en el &lt;em&gt;cluster&lt;/em&gt;. Al igual que con los comandos de Docker Swarm era posible crear redes por software a las cuales conectar los contenedores para que se puedan comunicar entre sí en la sección &lt;em&gt;networks&lt;/em&gt; de cada servicio se indica las redes a las que conectarlo y en la sección a nivel raíz del archivo las redes a crear.&lt;/p&gt;
+
+&lt;p&gt;También hay una sección propia para definir los volúmenes que dependiendo del &lt;em&gt;driver&lt;/em&gt; se integra con diferentes plataformas de computación como &lt;a href=&#34;http://aws.amazon.com/es/ec2/&#34;&gt;Amazon EC2&lt;/a&gt;, &lt;a href=&#34;https://www.digitalocean.com/&#34;&gt;Digital Ocean&lt;/a&gt;, &lt;a href=&#34;http://virtualbox.org/&#34;&gt;VirtualBox&lt;/a&gt; con &lt;a href=&#34;https://rexray.readthedocs.io/en/v0.3.3/&#34;&gt;REX-Ray&lt;/a&gt;, &amp;hellip;. Los volúmenes proporcionan persistencia a los efímeros contenedores, por un lado almacenar datos que deban sobrevivir a la vida de un contenedor en su sistema de archivos es inadecuado ya que sus datos no son compartidos si se inicia otra instancia del contenedor y son eliminados cuando el contenedor desaparece, por otro lado en un &lt;em&gt;cluster&lt;/em&gt; de contenedores Docker si un contenedor de un servicio finaliza inexperadamente Docker Swarm puede decidir reiniciarlo en cualquier otro nodo del &lt;em&gt;cluster&lt;/em&gt; para mantener el estado del servicio por lo que los archivos compartidos no pueden estar tampoco en el &lt;em&gt;host&lt;/em&gt; que hospeda los contenedores. Por estos motivos Docker Swarm necesita de un sistema de persistencia, que en este caso son los volúmenes definidos en la sección del mismo nombre &lt;em&gt;volumes&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Para mayor seguridad se ha incorporado la sección &lt;em&gt;secrets&lt;/em&gt; en la que se especifican elementos de datos como archivos que en el contenedor se montan en el directorio &lt;em&gt;/run/secrets/&lt;/em&gt;. Algunos elementos sensibles como usuarios y contraseñas al proporcionarse como parámetros o variables de entorno aparecen haciendo un listado de procesos del sistema con sus respectivos comandos de lanzamiento y parámetros, lo que es un problema de seguridad. Hay otros elementos sensibles como claves SSH, claves privadas o certificados que ahora con los &lt;em&gt;secrets&lt;/em&gt; no es necesario incluirlos en la propia imagen del contenedor.&lt;/p&gt;
+
+&lt;p&gt;La forma de iniciar y eliminar un &lt;em&gt;stack&lt;/em&gt; en un &lt;em&gt;cluster&lt;/em&gt; de nodos Docker Swarm es el siguiente:&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/7fccfe93a0e297cd8cb3df83a3b9d967.js?file=docker-compose-stack-deploy-nginx.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/7fccfe93a0e297cd8cb3df83a3b9d967.js?file=docker-compose-stack-remove-nginx.sh&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/220/nginx-service.png&#34; title=&#34;&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/220/nginx-service-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Cluster de nodos de Docker Swarm con servicio de nginx replicado con 2 instancias&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;En la captura de la terminal se aprecia como estando el &lt;em&gt;cluster&lt;/em&gt; formado por tres nodos y el servicio estando replicado con dos instancias Docker Swarm ha decidido iniciar una instancia de contenedor nginx en el &lt;em&gt;nodo-01&lt;/em&gt; y otra en el &lt;em&gt;nodo-03&lt;/em&gt; pero perfectamente podría haber iniciado una de ellas en el &lt;em&gt;nodo-02&lt;/em&gt;. Gracias a las capacidades de &lt;em&gt;networking&lt;/em&gt; de Docker Swarm con &lt;a href=&#34;https://docs.docker.com/engine/swarm/ingress/&#34;&gt;Routing Mesh&lt;/a&gt; al cualquier nodo que se le haga una petición al puerto 80 del servicio de nginx devolverá una respuesta, incluso si se hace en el ejemplo la petición al &lt;em&gt;nodo-02&lt;/em&gt; la respuesta será devuelta aunque en ese nodo no tenga una instancia de contenedor ejecutándose, realmente redirigirá la petición de forma transparente para el cliente la petición a un nodo que si tenga una instancia de nginx. También, al estar el servicio replicado con dos instancias Docker Swarm realizará automáticamente un &lt;a href=&#34;https://docs.docker.com/docker-cloud/getting-started/deploy-app/9_load-balance_the_service/&#34;&gt;balanceo de carga&lt;/a&gt; &lt;em&gt;round-robin&lt;/em&gt; repartiendo las peticiones entre cada una de las instancias de nginx.&lt;/p&gt;
+
+&lt;p&gt;De los &lt;em&gt;volumes&lt;/em&gt; y &lt;em&gt;secrets&lt;/em&gt; en posteriores entregas de esta &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/series/docker/&#34;&gt;serie de artículos sobre Docker&lt;/a&gt; las comentaré de forma específica. El &lt;em&gt;stack&lt;/em&gt; de servicios mostrado en este ejemplo es muy sencillo. Aunque también sencillo en el mismo código fuente del ejemplo incluyo otro &lt;em&gt;stack&lt;/em&gt; formado por un servicio de nginx y una aplicación Java con &lt;a href=&#34;http://projects.spring.io/spring-boot/&#34;&gt;Spring Boot&lt;/a&gt; que hace uso de &lt;em&gt;secrets&lt;/em&gt; y &lt;em&gt;volumes&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/7fccfe93a0e297cd8cb3df83a3b9d967.js?file=docker-compose-stack-app.yml&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Un libro que me ha gustado mucho y que recomiendo leer sobre Docker Swarm es &lt;a href=&#34;http://amzn.to/2mIirti&#34;&gt;The Devops 2.1 Toolkit&lt;/a&gt; que lo explica detalladamente y todo el libro está orientado a como usarlo en un entorno de producción. Un libro más introductorio que también he leído y que está bastante bien es &lt;a href=&#34;http://amzn.to/2mF3Xtj&#34;&gt;Docker in Action&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1633430235&amp;linkId=a6c4acab72c208d29232f2e0a8edb8ee&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1542468914&amp;linkId=2101ae950cfcfe9e69b6cc1210e4bf2c&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/DockerSwarm&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.docker.com/engine/swarm/stack-deploy/&#34;&gt;Deploy a stack to a swarm&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.docker.com/compose/compose-file/&#34;&gt;Compose file reference&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog"/>
+            
+                <category term="blog-stack"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+        
+    </entry>
+    
+    <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/</id>
         <title>Obtener la temperatura y humedad con el sensor DHT11, la Raspberry Pi, C y Java</title>        
-        <updated>2017-03-31T19:30:00+01:00</updated>
-        <published>2017-03-31T19:00:00+01:00</published>
+        <updated>2017-04-02T10:15:00+02:00</updated>
+        <published>2017-03-31T19:00:00+02:00</published>
         <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/"/>
         <author><name>pico.dev</name></author>
         <content type="html">
@@ -70,7 +155,7 @@
 
 &lt;script src=&#34;//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=TemperatureHumidity.java&#34;&gt;&lt;/script&gt;
 
-&lt;p&gt;Este es el esquema de conexiones que he utilizado para el ejemplo y una foto del cableado real, he usado del &lt;em&gt;pin&lt;/em&gt; GPIO número 2 según la nomenclatura de wiringPi para el cable de datos del sensor DHT11 que se corresponde con pin número 13 según la nomenclatura del &lt;em&gt;header&lt;/em&gt; de la Raspberry Pi. Para ver el cableado del &lt;em&gt;display&lt;/em&gt; 1602 más detalladamente consulta el artículo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/controlar-un-display-lcd-1602-para-mostrar-texto-con-la-raspberry-pi-y-java/&#34;&gt;Controlar un display LCD 1602 para mostrar texto con la Raspberry Pi y Java&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Este es el esquema de conexiones que he utilizado para el ejemplo y una foto del cableado real, he usado del &lt;em&gt;pin&lt;/em&gt; GPIO número 2 según la nomenclatura de wiringPi para el cable de datos del sensor DHT11 que se corresponde con pin número 13 según la nomenclatura del &lt;em&gt;header&lt;/em&gt; de la Raspberry Pi. Para ver el cableado del &lt;em&gt;display&lt;/em&gt; 1602 más detalladamente y la activación del bus de comunicación I2C que necesita consulta el artículo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/controlar-un-display-lcd-1602-para-mostrar-texto-con-la-raspberry-pi-y-java/&#34;&gt;Controlar un display LCD 1602 para mostrar texto con la Raspberry Pi y Java&lt;/a&gt;.&lt;/p&gt;
 
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
@@ -1930,61 +2015,6 @@ En los ajustes veremos el saldo disponible que se irá descontando según los re
                 <category term="planeta-codigo"/>
             
                 <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2017/01/distribuciones-gnu-linux-mas-seguras-que-windows/</id>
-        <title>Distribuciones GNU/Linux, ¿más seguras que Windows?</title>        
-        <updated>2017-01-21T20:00:00+01:00</updated>
-        <published>2017-01-21T10:00:00+01:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/01/distribuciones-gnu-linux-mas-seguras-que-windows/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;Los sistemas GNU/Linux pueden ser igual de seguros o inseguros que los sistemas Windows. Sin embargo, en ambas plataformas hay algunas diferencias que explican por que los sistemas Windows tienen peor fama y por que los sistemas GNU/Linux se consideran más seguros que Windows.&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/linux.png&#34; class=&#34;right&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/gnu.png&#34; class=&#34;right&#34; alt=&#34;GNU&#34; title=&#34;GNU&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Habitualmente se comenta que los sistemas con alguna distribución &lt;a href=&#34;http://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;http://www.linux.com/&#34;&gt;Linux&lt;/a&gt; son más seguros que los sistemas &lt;a href=&#34;http://www.microsoft.com/es-es/windows/&#34;&gt;Windows&lt;/a&gt;. Probablemente bien configurados y debidamente actualizados ambas opciones sean muy seguras. Sin embargo, desde el punto de vista de un usuario es común que Windows se vea infectado con virus o &lt;em&gt;malware&lt;/em&gt; aún con un antivirus instalado.&lt;/p&gt;
-
-&lt;p&gt;Las razones de que Windows se vea más amenazado son varias, una es que es una plataforma con una cuota de uso enorme por tanto muy atractiva de atacar. Otra es que instalar programas o software en las distribuciones GNU/Linux se realiza en su mayor parte desde los repositorios oficiales, es decir, de una fuente confiable. En Windows hay que buscar la página oficial del programa y en los resultados de Google no siempre es la primera opción si se busca por «windows reproductor de vídeo», «windows programa para descargar películas» o segundas o terceras opciones es software dudoso. Esas páginas no oficiales de los programas pueden realmente hospedar programas con virus. Quizá ahora que &lt;a href=&#34;http://www.microsoft.com/&#34;&gt;Microsoft&lt;/a&gt; ha añadido en sus últimas versiones de Windows &lt;a href=&#34;https://www.microsoft.com/en-us/windows/windows-10-apps&#34;&gt;una tienda de aplicaciones&lt;/a&gt; se podrán instalar desde ella con más garantías de forma similar a lo que desde hace mucho tiempo en GNU/Linux son los repositorios de paquetes.&lt;/p&gt;
-
-&lt;p&gt;Otro motivo es que &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/01/windows-10-y-office-2016-tan-faciles-de-usar-sin-licencia-como-siempre/&#34;&gt;muchos usuarios de Windows y Office los usan sin licencia&lt;/a&gt; y no hay mayor problema ya que incluso Microsoft ofrece la descarga de la &lt;a href=&#34;https://www.microsoft.com/es-es/software-download/windows10ISO&#34;&gt;imagen ISO de Windows 10&lt;/a&gt; desde su propia página pero para realizar la activación sin la correspondiente licencia hay que usar un programa que puede contener un virus y en un buen caso obligar a reinstalar Windows para deshacerse de él, un peor caso es que el virus no muestre síntomas de su presencia y pase desapercibido pero recolectando datos (contraseñas, fotos, documentos, &amp;hellip;) del usuario sin que este lo sepa. La lista de programas que los usuarios de Windows usan sin licencia es mucho más extensa &lt;a href=&#34;http://www.adobe.com/es/products/photoshop.html&#34;&gt;Photoshop&lt;/a&gt;, &lt;a href=&#34;https://www.adobe.com/es/products/illustrator.html&#34;&gt;Illustrator&lt;/a&gt;, &lt;a href=&#34;https://www.adobe.com/es/products/indesign.html&#34;&gt;InDesign&lt;/a&gt;, &lt;a href=&#34;https://www.adobe.com/es/products/premiere.html&#34;&gt;Premiere Pro&lt;/a&gt;, &lt;a href=&#34;https://www.adobe.com/es/products/aftereffects.html&#34;&gt;After Effects&lt;/a&gt;, &lt;a href=&#34;https://www.adobe.com/es/products/photoshop-lightroom.html&#34;&gt;Lightroom&lt;/a&gt;, &lt;a href=&#34;https://acrobat.adobe.com/es/es/acrobat.html&#34;&gt;Acrobat&lt;/a&gt;, &lt;a href=&#34;https://www.adobe.com/es/creativecloud/catalog/desktop.html&#34;&gt;otro software de Adobe&lt;/a&gt;, &lt;a href=&#34;http://www.autodesk.es/products/autocad/overview&#34;&gt;AutoCAD&lt;/a&gt;, &lt;a href=&#34;http://www.winzip.com/win/es/index.htm&#34;&gt;Winzip&lt;/a&gt;, &amp;hellip; que igualmente al &lt;em&gt;crackearlos&lt;/em&gt; para usarlos después de su periodo de prueba, con la que la seguridad de los sistemas Windows se ve comprometida. Para cada uno de estos programas hay otros &lt;a href=&#34;http://alternativeto.net/&#34;&gt;alternativos con licencias de software libre&lt;/a&gt; mejores o las suficientes funciones para la mayoría de usuarios. Los juegos también son muy pirateados y los &lt;em&gt;cracks&lt;/em&gt; usados también pueden contener funciones maliciosas y es otra fuente de entrada para comprometer la seguridad.&lt;/p&gt;
-
-&lt;p&gt;Con la cuota de uso que tiene Windows serán muchos usuarios con muchos conocimientos que lo usan pero es mayor el número de sus usuarios que tienen pocos conocimientos informáticos y que a la mayoría les vino con el ordenador preinstalado con &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2011/05/impuesto-windows.html&#34;&gt;el impuesto Windows&lt;/a&gt; con lo que la seguridad de los sistemas Windows queda inutilizada. Algunas páginas de reputación dudosa muestran mensajes o correos electrónicos fraudulentos contienen &lt;em&gt;banners&lt;/em&gt; advirtiendo que se debe descargar y ejecutar un programa, un usuario con conocimientos simplemente los ignoraría pero algunos usuarios sin conocimientos pueden hacerles caso. E incluso los usuarios con conocimientos si no usan el software con su licencia y usan activadores pueden comprometer la seguridad de sus sistemas.&lt;/p&gt;
-
-&lt;p&gt;Descargar y ejecutar un programa en GNU/Linux de una fuente externa a los repositorios oficiales igualmente puede comprometer la seguridad pero dado que todo el software normalmente se encuentra en los repositorios no suele haber necesidad. Sin embargo, también hay que tener precauciones de &lt;em&gt;scritps&lt;/em&gt; como estos dos que pueden destruir de forma catastrófica un sistema GNU/Linux.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;ADVERTENCIA: no los ejecutes!&lt;/strong&gt;. El primero elimina todos los archivos del sistema y el segundo por mucho que parezcan unos extraños inocentes emoticonos crea procesos hasta que agota los recursos del sistema. Un usuario de GNU/Linux precavido y con conocimientos antes revisaría el contenido de cualquier &lt;em&gt;script&lt;/em&gt; o binario ejecutable y no ejecutaría nada en caso de duda.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/dde4ffdff673e05692c2714fc2ca40ba.js?file=nuke.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Dicho lo cual, tanto GNU/Linux y Windows tendrán un nivel de seguridad no tan diferente bien configurados pero el hecho de que los primeros normalmente se basan en software libre, usan repositorios de software confiables, se mantienen siempre actualizados y más rápidamente (al no suponer un coste en nuevas licencias de Windows ni tiene una fecha de expiración del soporte como Windows XP, Vista o Windows 7), se evitan usar activadores, el código fuente está disponible para cualquiera que quiera verlo, la seguridad es auditable y si contuviese alguna función maliciosa podría ser descubierta con mayor facilidad, junto con que los usuarios de GNU/Linux tienen de media más conocimientos que los usuarios Windows, es una plataforma minoritaria en cuota de uso, más fragmentada en diferentes distribuciones y por tanto menos atractiva para atacar hace que GNU/Linux a nivel de usuario tenga menos problemas de seguridad.&lt;/p&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="gnu-linux"/>
-            
-                <category term="microsoft"/>
-            
-                <category term="opinion"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="planeta-linux"/>
             
         
     </entry>
