@@ -11,6 +11,183 @@
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
     
     <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/04/como-usar-un-diodo-led-un-pulsador-y-un-zumbador-con-la-raspberry-pi-y-java/</id>
+        <title>Cómo usar un diodo LED, un pulsador y un zumbador con la Raspberry Pi y Java</title>        
+        <updated>2017-04-08T12:00:00+02:00</updated>
+        <published>2017-04-08T12:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/04/como-usar-un-diodo-led-un-pulsador-y-un-zumbador-con-la-raspberry-pi-y-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;El &lt;em&gt;kit&lt;/em&gt; de electrónica para la Raspberry Pi incluye varios dispositivos controlables con lo &lt;em&gt;pines&lt;/em&gt; GPIO. En el caso de este ejemplo usaré un diodo LED, un zumbador y un pulsador para crear un ejemplo en el que el diodo LED se enciendan y el zumbador emita un sonido cuando el pulsador se active.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/raspberrypi.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Raspberry Pi&#34; title=&#34;Raspberry Pi&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En artículos anteriores ya he comentado &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-encender-y-apagar-diodo-led-con-la-raspberry-pi-en-java/&#34;&gt;como hacer parpadear un diodo LED&lt;/a&gt;, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/controlar-un-display-lcd-1602-para-mostrar-texto-con-la-raspberry-pi-y-java/&#34;&gt;como usar un display LCD de 16 columnas y 2 filas&lt;/a&gt; y &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/&#34;&gt;como obtener la temperatura y humedad de un sensor DHT11&lt;/a&gt;, todo estos ejemplo usando varios elementos de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;kit de iniciación a la electrónica para la Raspberry Pi 3&lt;/a&gt;. En este artículo en el que mostraré cómo usar un LED, un pulsador y un zumbador es mucho más sencillo que los casos del &lt;em&gt;display&lt;/em&gt; LCD de 16 filas y 2 columnas y del sensor DHT11. Vistos los ejemplos de artículos anteriores lo más difícil de este es hacer el conexionado con los cables. Para controlar los pines usaré la librería &lt;a href=&#34;http://rtd.diozero.com/en/latest/&#34;&gt;diozero&lt;/a&gt; que proporciona clases de alto nivel para cada uno de estos elementos para que desde código Java sea bastante sencillo controlarlos.&lt;/p&gt;
+
+&lt;p&gt;El ejemplo consistirá en que cuando se presione el pulsador se encienda el diodo LED y el zumbador se active emitiendo un zumbido audible. Cada uno de estos elementos requiere usar un &lt;em&gt;pin&lt;/em&gt; &lt;abbr title=&#34;General Purpose Input Output&#34;&gt;GPIO&lt;/abbr&gt; de los 17 que hay disponibles en la Raspberry Pi 1 que es el modelo que tengo yo o de los 26 &lt;em&gt;pines&lt;/em&gt; que poseen versiones posteriores de la Raspberry Pi como la B+, 2 y 3.&lt;/p&gt;
+
+&lt;p&gt;Este sería el esquema de conexionado de los elementos. El diodo LED tiene una polaridad de modo que la patita larga que es la parte positiva se conectará al &lt;em&gt;pin&lt;/em&gt; GPIO 1 según la nomenclatura de wiringPi o el 18 según la de Broadcom con una resistencia de 200 ohmios entre el &lt;em&gt;pin&lt;/em&gt; GIPO y la patita de diodo para que la intensidad que atraviesa el diodo sea menor y no se desgaste. El zumbador también tiene una polaridad que en el caso del &lt;em&gt;kit&lt;/em&gt; que he usado viene serigrafiado y con una etiqueta, la parte positiva se conectará a otro &lt;em&gt;pin&lt;/em&gt; GPIO y usaré el &lt;em&gt;pin&lt;/em&gt; GPIO 2. Para que el pulsador haga contacto bien en la placa de conexiones para hacer pruebas sin soldadura hay que presionar sin forzar pero hasta que quede bien enjadado y sin fijo, usaré el &lt;em&gt;pin&lt;/em&gt; GPIO 3.&lt;/p&gt;
+
+&lt;p&gt;Para el pulsador usaré el método &lt;em&gt;PULL UP&lt;/em&gt; (el otro es &lt;em&gt;PULL DOWN&lt;/em&gt;) donde conectaré una patita del pulsador a tierra y la adyacente al &lt;em&gt;pin&lt;/em&gt; GPIO, en &lt;a href=&#34;https://grantwinney.com/using-pullup-and-pulldown-resistors-on-the-raspberry-pi/&#34;&gt;algunas páginas&lt;/a&gt; se explica haciendo uso de resistencias, sin embargo, el uso de resistencias en la Raspberry Pi no es necesario ya que los &lt;em&gt;pines&lt;/em&gt; ya &lt;a href=&#34;https://projects.drogon.net/raspberry-pi/wiringpi/special-pin-functions/&#34;&gt;las tinen incorporadas internamente&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/221/cableado.jpg&#34; title=&#34;cableado en la breadboard&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/221/cableado-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/221/esquema-cableado.png&#34; title=&#34;Esquema del cableado&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/221/esquema-cableado-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;Esquema del cableado&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;La librería diozeo para identificar los pines usa la nomenclatura de Broadcom, otras son las nomenclaturas del &lt;em&gt;header&lt;/em&gt; o de wiringPi. Hay que tener en cuenta la nomenclatura que se use ya que el número del &lt;em&gt;pin&lt;/em&gt; variará en cada una de ellas, también hay que tener en cuenta la versión de la Raspberry Pi ya que hay pequeñas variaciones según la versión. Por ejemplo, según la tabla de referencia siguiente, para la Raspberry Pi 1 y según la nomenclatura de Brodacom el &lt;em&gt;pin&lt;/em&gt; GPIO 18 corresponde al número 12 de &lt;em&gt;header&lt;/em&gt;, el GPIO 21 al número 13 y el GPIO 22 al número 15. Según la nomenclatura de wiringPi el GPIO 1 corresponde al número 1, el GPIO 2 al número 2 y el GPIO 3 al número 3.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/221/raspberrypi1b-header-rev1.png&#34; title=&#34;Header de pines Raspberry Pi 1 B&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/221/raspberrypi1b-header-rev1-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/221/raspberrypi3b-header.png&#34; title=&#34;Header de pines Raspberry Pi 3 B&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/221/raspberrypi3b-header-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;Header de pines Raspberry Pi 1 B y Raspberry Pi 3 B, nomenclatura wiringPi&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/221/raspberrypi1b-header-rev1-broadcom.png&#34; title=&#34;Header de pines Raspberry Pi 1 B&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/221/raspberrypi1b-header-rev1-broadcom-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/221/raspberrypi3b-header-broadcom.png&#34; title=&#34;Header de pines Raspberry Pi 3 B&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/221/raspberrypi3b-header-broadcom-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;Headers de pines Raspberry Pi 1 B y Raspberry Pi 3 B, nomenclatura Broadcom&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Usando la librería diozero el código Java para realizar el ejemplo no necesita excesiva explicación. Es posible hacer uso de las &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/&#34;&gt;funciones lambdas que incorporó el lenguaje Java en la versión de Java 8&lt;/a&gt; y con la sentencia &lt;em&gt;try-with-resources&lt;/em&gt; del lenguaje los elementos se finalizará correctamente en caso de producirse alguna excepción, por ejemplo apagando el diodo en caso de que estuviese encendido o apagando el zumbador en su caso.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/0d5bb399bc7a20b903ee54ec41dee8e1.js?file=LedButtonBuzzer.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Este es un pequeño vídeo en el que muestro su funcionamiento.&lt;/p&gt;
+
+&lt;div class=&#34;video-post&#34; style=&#34;text-align: center;&#34;&gt;
+  &lt;iframe width=&#34;640&#34; height=&#34;360&#34; src=&#34;https://www.youtube.com/embed/jaqMi53pjf0&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew executeLedButtonBuzzer&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="gnu-linux"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/04/windows-10-and-office-2016-as-easy-to-use-without-license-as-always/</id>
+        <title>Windows 10 and Office 2016 as easy to use without license as always</title>        
+        <updated>2017-04-08T11:00:00+02:00</updated>
+        <published>2017-04-08T11:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/04/windows-10-and-office-2016-as-easy-to-use-without-license-as-always/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;I commented in an article that it is surprising that Microsoft with the capacity that it has and being the devices connected to Internet mostly is not able to avoid using its software without license. I&amp;rsquo;m about to see if with Windows 10 and Office 2016 it&amp;rsquo;s still as easy to use as always. I will also have a sample of the unfair fame of Windows but that allows Microsoft for the bloatware that the device manufacturers pre-installs with its operating system.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/microsoft.png&#34; class=&#34;right&#34; alt=&#34;Microsoft&#34; title=&#34;Microsoft&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/windows-10.png&#34; class=&#34;right&#34; alt=&#34;Windows 10&#34; title=&#34;Windows 10&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/microsoft-office.png&#34; class=&#34;right&#34; alt=&#34;Microsoft Office&#34; title=&#34;Microsoft Office&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This 2016 I have started nothing more and nothing less than installing the operating system and programs of a laptop. One of those favors that we as advanced computer users habitually do. I normally do it willingly, this time I received another in exchange for another kind, so perfect. The need for reinstallation came from the fact that the laptop was remarkably slow despite having a mechanical hard disk and it was not because the equipment was old or had little memory, the processor was an AMD Athlon x2 QL-65 with 4 GiB memory and 320GB hard drive, something that should be more than enough for the purpose of surfing the internet, watching movies, listening to music and do office tasks. It was slow to start, running programs in addition to some antivirus message popups complaining that its trial period expired that appeared when entering the desktop. That was not all, a virus encrypted the personal files, photos and documents, asking in exchange for recovering them something that I did not even bother to see in detail, surely nothing good.&lt;/p&gt;
+
+&lt;p&gt;The computer had several bloatware programs typical of &lt;a href=&#34;http://www.microsoft.com/es-es/windows/&#34;&gt;Windows&lt;/a&gt; laptops provided by manufacturers, an antivirus that could fit the definition of what it tries to protect that expires after a while and leaves it unprotected, a music player that starts with the desktop and hides at the top of the screen in case you atypically need it. The manufacturers are the ones who pre-install these undesirable programs and will be the main culprits but if &lt;a href=&#34;http://www.microsoft.com/&#34;&gt;Microsoft&lt;/a&gt; knows the bad name they give their systems, and so far has not prevented it, some guilt will have, if its operating system is an imposition in practically the whole laptops that are sold in stores, Do you know the &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2011/05/impuesto-windows.html&#34;&gt;Windows tax&lt;/a&gt;?, they could impose some condition to allow Windows pre-install and make their users happier.&lt;/p&gt;
+
+&lt;p&gt;On the other hand since the time of Windows Vista the computer can be reinstalled and leave as factory included all the bloatware previously quoted but for this they reserve about 10 GiB of the hard disk space that is not usable by the user. With hard drives with capacities of 320 / 500 GB that are reserved 10 GiB is no bigger problem but more than one has asked because its available space does not correspond with the specifications of the equipment that bought.&lt;/p&gt;
+
+&lt;p&gt;At the point of doing the reinstallation I had no problem, the computer had Windows 7 originally, had been upgraded to Windows 10 and activated correctly in the period of free upgrade offered by Microsoft. Downloaded the &lt;a href=&#34;https://www.microsoft.com/es-es/software-download/windows10ISO&#34;&gt;ISO image of Windows 10&lt;/a&gt; that kindly offered by Microsoft on its own website I had not to look for it as it used to be in file sharing networks, point for them. In one of the installation steps I deleted all the partitions recovering the space reserved for the recovery partition. A few minutes of waiting, a couple of reboots and several privacy options deactivated that could give Windows 10 the name of spyware, supposedly for the sake of user, and after creating the user account the system starts with all the devices working properly including graphics card, network and WiFi. Windows is displayed as enabled.&lt;/p&gt;
+
+&lt;p&gt;I have to install the basic additional programs with the intention of being free software or respecting the licenses &lt;a href=&#34;https://www.mozilla.org/es-ES/firefox/new/&#34;&gt;Firefox&lt;/a&gt; along with &lt;a href=&#34;https://adblockplus.org/es/&#34;&gt;AdBlockPlus&lt;/a&gt;, &lt;a href=&#34;http://www.videolan.org/vlc/&#34;&gt;VLC&lt;/a&gt;, &lt;a href=&#34;http://www.peazip.org/peazip-64bit.html&#34;&gt;PeaZip&lt;/a&gt;, &lt;a href=&#34;http://www.imgburn.com/&#34;&gt;ImgBurn&lt;/a&gt;, &lt;a href=&#34;https://get.adobe.com/es/reader/otherversions/&#34;&gt;Acrobat Reader&lt;/a&gt;, &lt;a href=&#34;http://www.freefilesync.org/&#34;&gt;FreeFilesync&lt;/a&gt;, &lt;a href=&#34;http://www.utorrent.com/intl/es/&#34;&gt;uTorrent&lt;/a&gt; to which I add &lt;a href=&#34;http://www.oracle.com/technetwork/java/index.html&#34;&gt;Java&lt;/a&gt;. Finally I am asked to install the office suite &lt;a href=&#34;https://products.office.com/es-es/home&#34;&gt;Microsoft Office&lt;/a&gt; as it will be used, my intention fails, I propose to recommend some alternative option as &lt;a href=&#34;https://www.google.es/intl/es/docs/about/&#34;&gt;Google Docs&lt;/a&gt; or &lt;a href=&#34;http://www.libreoffice.org/&#34;&gt;LibreOffice&lt;/a&gt;. However, Office is what they use, do they ask students to take a license that still costs about 125€ for students? 250€ for other mortals? It&amp;rsquo;s the start of 2016, it&amp;rsquo;s the weekend and I do not want to think much about it, I download the latest version of Office and I install it.&lt;/p&gt;
+
+&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B01019TBFO&amp;linkId=cd34e38c16f0643882e1dc753d6ef77d&amp;internal=1&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B00HC6QQQM&amp;linkId=762b16ff0b7f340317343dc4a24097ab&amp;internal=1&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B01FNRXAZG&amp;linkId=1f45d19184a5ea936b680670062a7fad&amp;internal=1&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;I start Word and it shows me a message that after about 30 days many of its functions will be disabled. The time comes to prove empirically once again what I said in &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/07/a-microsoft-no-le-importa-que-uses-windows-u-office-sin-licencia/&#34;&gt;Microsoft does not care that you use Windows or Office without a license&lt;/a&gt;, I look for some activator in Google, there are hundreds of results, I release one of the link that gives me some hope of not have a virus, I immediately download the .exe file and Windows Defender warns that it have a virus, I run it anyway and click on the button to activate the Office, a message indicating that the activation has failed, I try several options without apparent effect to see if I am not right and Microsoft has done its job to avoid piracy. I search the links and I download another, virus warning, everything normal, I run it, icons begin to appear on the desktop of rare programs that are being installed and Firefox has been changed its home page, wow! This supposed activator was a virus, Defender was right, I will have to reinstall everything again.&lt;/p&gt;
+
+&lt;p&gt;I put in the table the fat weapons, start a new reinstallation of Windows 10 and Office in a virtual machine with &lt;a href=&#34;http://virtualbox.org/&#34;&gt;VirtualBox&lt;/a&gt; that will allow me to make the tests more easily using the snapshots of the system, if something goes wrong I will be able to return to an earlier point without having to reinstall. I aim to find some activator that works, long ago when using Windows in the first or second, maybe the third link no more than that in Google was the activator that worked, I think again that maybe Microsoft has protected better their software. I inform myself a little more on some of the hundreds of pages, I find that I have to disable Windows Defender, as explained in those pages activate Windows and Office (any of its versions) is as easy as I remembered, use an activator and push a button. I just did not find the right one? I put a little more interest and I look for the &amp;ldquo;official&amp;rdquo; page of an activator, it seems that I have found one with good feelings. I disable Windows Defender, I run the activator, the activator window opens and I select to activate Windows and Office pushing button, in a few seconds it ends and it informs that the activation was correct. I check that Windows is enabled and Office is also enabled.&lt;/p&gt;
+
+&lt;p&gt;I start the third installation again on the laptop and perform the activation in the same way as in the virtual machine except Office only since the laptop has already a legal Windows license. Office reports that it is activated. I wish I had not been able to get it.&lt;/p&gt;
+
+&lt;p&gt;It is the beginning of 2016 and I have not made one but three installations of Windows and Office, more than days of the year have. And I&amp;rsquo;m still right, using them without a license is still as easy as ever once found the right links in Google, Do a tuesday patch day will install some Windows update that discovers the crack applied to Office? I&amp;rsquo;ll find out.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+        &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/119/windows-10.png&#34; title=&#34;Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/119/windows-10-thumb.png&#34;&gt;&lt;/a&gt;
+        &lt;figcaption&gt;Windows 10&lt;/figcaption&gt;
+    &lt;/figure&gt;
+    &lt;figure&gt;
+        &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/119/microsoft-word-2016.png&#34; title=&#34;Microsoft Word 2016&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/119/microsoft-word-2016-thumb.png&#34;&gt;&lt;/a&gt;
+        &lt;figcaption&gt;Microsoft Word 2016&lt;/figcaption&gt;
+    &lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;If you can use software with a legal license but if not use some of the alternative options available for both Windows &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/09/autenticacion-con-oauth-y-keycloak-en-un-servicio-rest-con-jax-rs-y-spring-boot/&#34;&gt;choosing a GNU/Linux distribution&lt;/a&gt; and &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/05/3-opciones-ofimaticas-alternativas-a-microsoft-office/&#34;&gt;Office and any of its alternatives&lt;/a&gt; that suits your needs.&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="microsoft"/>
+            
+                <category term="opinion"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+        
+    </entry>
+    
+    <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/04/iniciar-un-stack-de-servicios-en-un-cluster-de-docker-swarm/</id>
         <title>Iniciar un stack de servicios en un cluster de Docker Swarm</title>        
         <updated>2017-04-02T12:00:00+02:00</updated>
@@ -1772,210 +1949,6 @@ En los ajustes veremos el saldo disponible que se irá descontando según los re
                 <category term="programacion"/>
             
                 <category term="promocion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2017/01/distribuciones-gnu-linux-mas-seguras-que-windows/</id>
-        <title>Distribuciones GNU/Linux, ¿más seguras que Windows?</title>        
-        <updated>2017-01-21T20:00:00+01:00</updated>
-        <published>2017-01-21T10:00:00+01:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/01/distribuciones-gnu-linux-mas-seguras-que-windows/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;Los sistemas GNU/Linux pueden ser igual de seguros o inseguros que los sistemas Windows. Sin embargo, en ambas plataformas hay algunas diferencias que explican por que los sistemas Windows tienen peor fama y por que los sistemas GNU/Linux se consideran más seguros que Windows.&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/linux.png&#34; class=&#34;right&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/gnu.png&#34; class=&#34;right&#34; alt=&#34;GNU&#34; title=&#34;GNU&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Habitualmente se comenta que los sistemas con alguna distribución &lt;a href=&#34;http://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;http://www.linux.com/&#34;&gt;Linux&lt;/a&gt; son más seguros que los sistemas &lt;a href=&#34;http://www.microsoft.com/es-es/windows/&#34;&gt;Windows&lt;/a&gt;. Probablemente bien configurados y debidamente actualizados ambas opciones sean muy seguras. Sin embargo, desde el punto de vista de un usuario es común que Windows se vea infectado con virus o &lt;em&gt;malware&lt;/em&gt; aún con un antivirus instalado.&lt;/p&gt;
-
-&lt;p&gt;Las razones de que Windows se vea más amenazado son varias, una es que es una plataforma con una cuota de uso enorme por tanto muy atractiva de atacar. Otra es que instalar programas o software en las distribuciones GNU/Linux se realiza en su mayor parte desde los repositorios oficiales, es decir, de una fuente confiable. En Windows hay que buscar la página oficial del programa y en los resultados de Google no siempre es la primera opción si se busca por «windows reproductor de vídeo», «windows programa para descargar películas» o segundas o terceras opciones es software dudoso. Esas páginas no oficiales de los programas pueden realmente hospedar programas con virus. Quizá ahora que &lt;a href=&#34;http://www.microsoft.com/&#34;&gt;Microsoft&lt;/a&gt; ha añadido en sus últimas versiones de Windows &lt;a href=&#34;https://www.microsoft.com/en-us/windows/windows-10-apps&#34;&gt;una tienda de aplicaciones&lt;/a&gt; se podrán instalar desde ella con más garantías de forma similar a lo que desde hace mucho tiempo en GNU/Linux son los repositorios de paquetes.&lt;/p&gt;
-
-&lt;p&gt;Otro motivo es que &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/01/windows-10-y-office-2016-tan-faciles-de-usar-sin-licencia-como-siempre/&#34;&gt;muchos usuarios de Windows y Office los usan sin licencia&lt;/a&gt; y no hay mayor problema ya que incluso Microsoft ofrece la descarga de la &lt;a href=&#34;https://www.microsoft.com/es-es/software-download/windows10ISO&#34;&gt;imagen ISO de Windows 10&lt;/a&gt; desde su propia página pero para realizar la activación sin la correspondiente licencia hay que usar un programa que puede contener un virus y en un buen caso obligar a reinstalar Windows para deshacerse de él, un peor caso es que el virus no muestre síntomas de su presencia y pase desapercibido pero recolectando datos (contraseñas, fotos, documentos, &amp;hellip;) del usuario sin que este lo sepa. La lista de programas que los usuarios de Windows usan sin licencia es mucho más extensa &lt;a href=&#34;http://www.adobe.com/es/products/photoshop.html&#34;&gt;Photoshop&lt;/a&gt;, &lt;a href=&#34;https://www.adobe.com/es/products/illustrator.html&#34;&gt;Illustrator&lt;/a&gt;, &lt;a href=&#34;https://www.adobe.com/es/products/indesign.html&#34;&gt;InDesign&lt;/a&gt;, &lt;a href=&#34;https://www.adobe.com/es/products/premiere.html&#34;&gt;Premiere Pro&lt;/a&gt;, &lt;a href=&#34;https://www.adobe.com/es/products/aftereffects.html&#34;&gt;After Effects&lt;/a&gt;, &lt;a href=&#34;https://www.adobe.com/es/products/photoshop-lightroom.html&#34;&gt;Lightroom&lt;/a&gt;, &lt;a href=&#34;https://acrobat.adobe.com/es/es/acrobat.html&#34;&gt;Acrobat&lt;/a&gt;, &lt;a href=&#34;https://www.adobe.com/es/creativecloud/catalog/desktop.html&#34;&gt;otro software de Adobe&lt;/a&gt;, &lt;a href=&#34;http://www.autodesk.es/products/autocad/overview&#34;&gt;AutoCAD&lt;/a&gt;, &lt;a href=&#34;http://www.winzip.com/win/es/index.htm&#34;&gt;Winzip&lt;/a&gt;, &amp;hellip; que igualmente al &lt;em&gt;crackearlos&lt;/em&gt; para usarlos después de su periodo de prueba, con la que la seguridad de los sistemas Windows se ve comprometida. Para cada uno de estos programas hay otros &lt;a href=&#34;http://alternativeto.net/&#34;&gt;alternativos con licencias de software libre&lt;/a&gt; mejores o las suficientes funciones para la mayoría de usuarios. Los juegos también son muy pirateados y los &lt;em&gt;cracks&lt;/em&gt; usados también pueden contener funciones maliciosas y es otra fuente de entrada para comprometer la seguridad.&lt;/p&gt;
-
-&lt;p&gt;Con la cuota de uso que tiene Windows serán muchos usuarios con muchos conocimientos que lo usan pero es mayor el número de sus usuarios que tienen pocos conocimientos informáticos y que a la mayoría les vino con el ordenador preinstalado con &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2011/05/impuesto-windows.html&#34;&gt;el impuesto Windows&lt;/a&gt; con lo que la seguridad de los sistemas Windows queda inutilizada. Algunas páginas de reputación dudosa muestran mensajes o correos electrónicos fraudulentos contienen &lt;em&gt;banners&lt;/em&gt; advirtiendo que se debe descargar y ejecutar un programa, un usuario con conocimientos simplemente los ignoraría pero algunos usuarios sin conocimientos pueden hacerles caso. E incluso los usuarios con conocimientos si no usan el software con su licencia y usan activadores pueden comprometer la seguridad de sus sistemas.&lt;/p&gt;
-
-&lt;p&gt;Descargar y ejecutar un programa en GNU/Linux de una fuente externa a los repositorios oficiales igualmente puede comprometer la seguridad pero dado que todo el software normalmente se encuentra en los repositorios no suele haber necesidad. Sin embargo, también hay que tener precauciones de &lt;em&gt;scritps&lt;/em&gt; como estos dos que pueden destruir de forma catastrófica un sistema GNU/Linux.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;ADVERTENCIA: no los ejecutes!&lt;/strong&gt;. El primero elimina todos los archivos del sistema y el segundo por mucho que parezcan unos extraños inocentes emoticonos crea procesos hasta que agota los recursos del sistema. Un usuario de GNU/Linux precavido y con conocimientos antes revisaría el contenido de cualquier &lt;em&gt;script&lt;/em&gt; o binario ejecutable y no ejecutaría nada en caso de duda.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/dde4ffdff673e05692c2714fc2ca40ba.js?file=nuke.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Dicho lo cual, tanto GNU/Linux y Windows tendrán un nivel de seguridad no tan diferente bien configurados pero el hecho de que los primeros normalmente se basan en software libre, usan repositorios de software confiables, se mantienen siempre actualizados y más rápidamente (al no suponer un coste en nuevas licencias de Windows ni tiene una fecha de expiración del soporte como Windows XP, Vista o Windows 7), se evitan usar activadores, el código fuente está disponible para cualquiera que quiera verlo, la seguridad es auditable y si contuviese alguna función maliciosa podría ser descubierta con mayor facilidad, junto con que los usuarios de GNU/Linux tienen de media más conocimientos que los usuarios Windows, es una plataforma minoritaria en cuota de uso, más fragmentada en diferentes distribuciones y por tanto menos atractiva para atacar hace que GNU/Linux a nivel de usuario tenga menos problemas de seguridad.&lt;/p&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="gnu-linux"/>
-            
-                <category term="microsoft"/>
-            
-                <category term="opinion"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="planeta-linux"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2017/01/script-de-instalacion-de-arch-linux-desatendido-automatizado-y-personalizable/</id>
-        <title>Script de instalación de Arch Linux desatendido, automatizado y personalizable</title>        
-        <updated>2017-01-13T00:00:00+01:00</updated>
-        <published>2017-01-13T00:00:00+01:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/01/script-de-instalacion-de-arch-linux-desatendido-automatizado-y-personalizable/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;Arch Linux es una de las distribuciones más personalizables de GNU/Linux pero cuya instalación requiere leer una buena cantidad de documentación para saber que comandos ejecutar en el &lt;em&gt;prompt&lt;/em&gt; del sistema en el que te deja se medio de instalación. Algunos usuarios eligen una distribución como Antergos, KaOS o Manjaro con un instalalador gráfico y guiado simplemente por el hecho de no enfrentarse al instalador de Arch Linux. Ejecutar un comando y esperar a que termine para introducir otro es lento y requiere de atención.&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/archlinux.png&#34; class=&#34;right&#34; alt=&#34;Arch Linux&#34; title=&#34;Arch Linux&#34;/&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/linux.png&#34; class=&#34;right&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/gnu.png&#34; class=&#34;right&#34; alt=&#34;GNU&#34; title=&#34;GNU&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Hace tiempo que instalar una distribución &lt;a href=&#34;http://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;http://www.linux.com/&#34;&gt;Linux&lt;/a&gt; no tiene más dificultad que instalar un sistema operativo como &lt;a href=&#34;http://www.microsoft.com/es-es/windows/&#34;&gt;Windows&lt;/a&gt;, que consiste en descargar la imagen ISO del CD o DVD, grabarla en un CD, DVD o memoria USB e iniciar el sistema con el medio. Las &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/10/elegir-una-distribucion-gnu-linux-segun-el-usuario-uso-o-equipo/&#34;&gt;distribuciones aconsejadas para usuarios que provienen de Windows o macOS&lt;/a&gt; o no tiene muchos conocimientos informáticos poseen instaladores gráficos o basados en texto y guiados en varios pasos hasta completar la instalación en menos de una hora. Distribuciones como &lt;a href=&#34;http://www.ubuntu.com/&#34;&gt;Ubuntu&lt;/a&gt;, &lt;a href=&#34;https://elementary.io/es/&#34;&gt;elementary OS&lt;/a&gt; o &lt;a href=&#34;http://www.linuxmint.com/&#34;&gt;Linux Mint&lt;/a&gt; hacen que la instalación no requiera muchos conocimientos y sea completada con éxito por cualquier usuario.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/debian-installer-text.png&#34; title=&#34;Instalador de Debian en modo texto&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/debian-installer-text-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/debian-installer-graphics.png&#34; title=&#34;Instalador de Debian en modo gráfico&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/debian-installer-graphics-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Instalación guíada de Debian basada en texto y gráfica&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;Otras distribuciones basadas en principios diferentes y usuarios a los que está destinadas con otras necesidades o preferencias puede que requieran algo más de conocimientos a cambio de realizar configuraciones más avanzadas como el particionado del disco, cifrado del disco o software que se instala. Algunas distribuciones como &lt;a href=&#34;https://www.archlinux.org/&#34;&gt;Arch Linux&lt;/a&gt; incluso no proporcionan ningún instalador.&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;It is targeted at the proficient GNU/Linux user, or anyone with a do-it-yourself attitude who is willing to read the documentation, and solve their own problems.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;En Arch Linux con su &lt;a href=&#34;https://wiki.archlinux.org/index.php/Arch_Linux&#34;&gt;forma de hacer las cosas&lt;/a&gt; deja al usuario el poder de personalizar el sistema completamente a sus necesidades y preferencias únicamente limitado por su determinación de conseguirlo. Solo proporciona &lt;a href=&#34;https://www.archlinux.org/download/&#34;&gt;el medio con el que iniciar la instalación&lt;/a&gt; que comienza con una terminal y un &lt;em&gt;prompt&lt;/em&gt; del sistema, una &lt;a href=&#34;https://wiki.archlinux.org/index.php/Installation_guide&#34;&gt;guía de instalación&lt;/a&gt; junto con las &lt;a href=&#34;https://wiki.archlinux.org/index.php/General_recommendations&#34;&gt;recomendaciones generales&lt;/a&gt; y &lt;a href=&#34;https://wiki.archlinux.org/&#34;&gt;una de las mejores fuentes de información en GNU/Linux&lt;/a&gt; además de completa de cada aspecto que necesitemos en la instalación. Después de haber leído las páginas relevantes de la wiki de Arch Linux, seguramente más de una y dos veces, hasta comprenderla en su mayor parte se empieza a realizar la receta que contenga los comandos necesarios hasta completar la instalación.&lt;/p&gt;
-
-&lt;p&gt;En multitud de blogs y vídeos de YouTube hay guías que contienen los comandos y las explicaciones necesarias. Cualquier usuario de Arch Linux con un blog seguramente ha publicado un artículo con su guía de instalación (sí, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/05/anexo-a-la-guia-de-instalacion-y-del-principiante-de-arch-linux/&#34;&gt;yo también publiqué la mía&lt;/a&gt;). Un usuario que quiera instalar Arch Linux debe leer varios de esos artículos además de la guía oficial de instalación. Según la filosofía de Arch Linux este proceso de aprendizaje se considera necesario y permite una mayor compresión del sistema. Pero saber los comandos que hay que introducir para realizar la instalación de Arch Linux no evita tener que teclearlos uno de tras de otro y esperar a que termine el anterior para introducir el siguiente. Tampoco todas las personas tienen el tiempo para realizarlo. Varias &lt;a href=&#34;https://wiki.archlinux.org/index.php/Arch-based_distributions&#34;&gt;distribuciones derivadas de Arch Linux&lt;/a&gt; como &lt;a href=&#34;https://antergos.com/&#34;&gt;Antergos&lt;/a&gt;, &lt;a href=&#34;https://kaosx.us/&#34;&gt;KaOS&lt;/a&gt; o &lt;a href=&#34;https://manjaro.org/&#34;&gt;Manjaro&lt;/a&gt; ofrecen los instaladores gráficos y guiados más amigables que atraen a algunos usuarios buscando usar Arch Linux pero no pasar por su poco amigable proceso de instalación. Por fortuna al ser una distribución &lt;em&gt;rolling release&lt;/em&gt; (en constante actualización) solo hay que hacer una única instalación por equipo en principio durante toda su vida de uso. Pero incluso para los usuarios de Arch Linux realizar una segunda instalación en un nuevo equipo es cansina.&lt;/p&gt;
-
-&lt;p&gt;Hace unos meses conocí &lt;a href=&#34;https://arch-anywhere.org/&#34;&gt;arch-anywhere&lt;/a&gt; que básicamente es un &lt;em&gt;script&lt;/em&gt; de bash, con un instalador guiado y basado en texto que hace menos laboriosa la instalación de Arch Linux de forma similar a las existentes en otras distribuciones más amigables. Sin embargo, hay un dos cosas que no me convencen de &lt;em&gt;arch-anywhere&lt;/em&gt;, una es que no es desatendido requiriendo contestar a varias preguntas de forma interactiva, esperar a que termine ejecute algún comando según la contestación anterior y contestar a la siguiente pregunta. Por lo demás, ofrece un buen nivel de personalización cubriendo las necesidades más comunes de los usuarios como personalizar el particionado, elegir el sistema de archivos, si se quiere LVM, cifrado, el entorno de escritorio (GNOME, KDE, XFCE, &amp;hellip;), kernel, cargador de arranque (GRUB) y programas a instalar. Otra cosa que no me convence es que usa una imagen ISO propia y no la original de Arch Linux.&lt;/p&gt;
-
-&lt;p&gt;Basándome en &lt;em&gt;arch-anywhere&lt;/em&gt; y dedicando un poco de tiempo he creado un &lt;em&gt;script&lt;/em&gt; en bash para instalar Arch Linux de forma automatizada, desatendida y personalizable hasta cierto punto aunque siendo útil para los casos de configuraciones más comunes. Algunas de las funcionalidades que soporta son:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;BIOS con &lt;a href=&#34;https://wiki.archlinux.org/index.php/Partitioning&#34;&gt;particionado&lt;/a&gt; GPT&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://wiki.archlinux.org/index.php/Unified_Extensible_Firmware_Interface&#34;&gt;UEFI&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://wiki.archlinux.org/index.php/LVM&#34;&gt;LVM&lt;/a&gt; y no LVM&lt;/li&gt;
-&lt;li&gt;Partición &lt;em&gt;root&lt;/em&gt; &lt;a href=&#34;https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_an_entire_system&#34;&gt;cifrada&lt;/a&gt; y sin cifrar&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://wiki.archlinux.org/index.php/File_systems&#34;&gt;Sistemas de archivos&lt;/a&gt; ext4, btrfs (sin swap) o xfs&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://wiki.archlinux.org/index.php/Swap&#34;&gt;swap&lt;/a&gt; con archivo&lt;/li&gt;
-&lt;li&gt;Instalación con &lt;a href=&#34;https://wiki.archlinux.org/index.php/Wireless_network_configuration&#34;&gt;red WIFI&lt;/a&gt; WPA&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://wiki.archlinux.org/index.php/Solid_State_Drives&#34;&gt;Soporte TRIM&lt;/a&gt; para discos SSD&lt;/li&gt;
-&lt;li&gt;Utilidades como invitado de &lt;a href=&#34;https://wiki.archlinux.org/index.php/VirtualBox&#34;&gt;VirtualBox&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://wiki.archlinux.org/index.php/Microcode&#34;&gt;Microcódigo&lt;/a&gt; para procesadores Intel&lt;/li&gt;
-&lt;li&gt;Creación de usuario&lt;/li&gt;
-&lt;li&gt;Instalación de &lt;a href=&#34;https://wiki.archlinux.org/index.php/AUR_helpers&#34;&gt;yaourt&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Instalación de paquetes&lt;/li&gt;
-&lt;li&gt;Instalación de entorno de escritorio (&lt;a href=&#34;https://wiki.archlinux.org/index.php/GNOME&#34;&gt;GNOME&lt;/a&gt;, &lt;a href=&#34;https://wiki.archlinux.org/index.php/KDE&#34;&gt;KDE&lt;/a&gt;, &lt;a href=&#34;https://wiki.archlinux.org/index.php/Xfce&#34;&gt;Xfce&lt;/a&gt;, &lt;a href=&#34;https://wiki.archlinux.org/index.php/MATE&#34;&gt;Mate&lt;/a&gt;, &lt;a href=&#34;https://wiki.archlinux.org/index.php/Cinnamon&#34;&gt;Cinnamon&lt;/a&gt;, &lt;a href=&#34;https://wiki.archlinux.org/index.php/LXDE&#34;&gt;LXDE&lt;/a&gt;) y gestor de sesiones (&lt;a href=&#34;https://wiki.archlinux.org/index.php/GDM&#34;&gt;gdm&lt;/a&gt;, &lt;a href=&#34;https://wiki.archlinux.org/index.php/SDDM&#34;&gt;sddm&lt;/a&gt;, &lt;a href=&#34;https://wiki.archlinux.org/index.php/LightDM&#34;&gt;lightdm&lt;/a&gt;, &lt;a href=&#34;https://wiki.archlinux.org/index.php/LXDM&#34;&gt;lxdm&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Instalación base sin entorno de escritorio&lt;/li&gt;
-&lt;li&gt;Instalación de &lt;a href=&#34;https://wiki.archlinux.org/index.php/Kernels&#34;&gt;kernels&lt;/a&gt; adicionales (linux-lts, linux-grsec, linux-zen)&lt;/li&gt;
-&lt;li&gt;Instalación de controlador gráfico (intel, nvidia, amd)&lt;/li&gt;
-&lt;li&gt;Cargador de arranque con &lt;a href=&#34;https://wiki.archlinux.org/index.php/GRUB&#34;&gt;GRUB&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;La forma aconsejada de instalar Arch Linux es aprendiendo cuales son los comandos a ejecutar y que hace cada uno de ellos, primero lee la guía oficial de instalación de Arch Linux y comprende que hacen los comandos del &lt;em&gt;script&lt;/em&gt;. Este &lt;em&gt;script&lt;/em&gt; no es oficial y por ello en el &lt;a href=&#34;https://foros.archlinux-es.org/&#34;&gt;foro de Arch Linux en español&lt;/a&gt; o &lt;a href=&#34;https://bbs.archlinux.org/&#34;&gt;en inglés&lt;/a&gt; no podrán darte soporte aunque yo en los comentarios de este artículo te ayudaré si preguntas. Ten en cuenta que de momento solo lo he probado en &lt;a href=&#34;http://virtualbox.org/&#34;&gt;VirtualBox&lt;/a&gt; no en un sistema real y que este &lt;em&gt;script&lt;/em&gt; elimina toda la información del dispositivo de instalación. Si lo pruebas deja un comentario al final de artículo.&lt;/p&gt;
-
-&lt;p&gt;Iniciado el instalador de la imagen ISO de Arch Linux, hay que descargar el &lt;em&gt;script&lt;/em&gt;, editar algunas variables de entorno y darle permisos de ejecución. Los comandos y variables a editar según el sistema a instalar son los siguientes:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/536d786ca788113b1b088957d001d294.js?file=alis-install.sh&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/536d786ca788113b1b088957d001d294.js?file=alis.conf&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;El código del instalador no es muy complicado y mucho más sencillo que el &lt;a href=&#34;https://github.com/deadhead420/arch-linux-anywhere/blob/master/arch-installer.sh&#34;&gt;código de arch-anywhere&lt;/a&gt; al no estar mezclado con los mensajes interactivos que hacen preguntas y esperan respuestas. Los comandos que he recopilado de la receta son los que ejecutaríamos uno detrás de otro con únicamente el medio de instalación de Arch Linux. La función &lt;em&gt;main&lt;/em&gt; contiene los pasos en los que consiste la instalación, desde el paticionado y cifrado del disco hasta el reinicio una vez completada la instalación, el resto de las funciones los comandos de ese paso de la instalación.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/536d786ca788113b1b088957d001d294.js?file=alis.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Estas son algunas capturas de pantalla con diferentes entornos de escritorio que he probado con VirtualBox.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-gnome.jpg&#34; title=&#34;GNOME&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-gnome-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-kde.jpg&#34; title=&#34;KDE&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-kde-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Entornos de escritorio GNOME y KDE&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-xfce.jpg&#34; title=&#34;XFCE&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-xfce-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-cinnamon.jpg&#34; title=&#34;Cinnamon&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-cinnamon-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Entornos de escritorio Xfce y Cinnamon&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-lxde.jpg&#34; title=&#34;LXDE&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-lxde-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-mate.jpg&#34; title=&#34;Mate&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-mate-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Entornos de escritorio LXDE y Mate&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-root-password.png&#34; title=&#34;Solicitud de contraseña para descifrar partición root&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/204/archlinux-root-password-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;Solicitud de contraseña para descifrar partición root&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;
-    El &lt;a href=&#34;https://github.com/picodotdev/alis/tree/master/&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt;.
-&lt;/p&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="gnu-linux"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="planeta-linux"/>
-            
-                <category term="software-libre"/>
             
         
     </entry>
