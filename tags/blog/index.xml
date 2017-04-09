@@ -11,6 +11,103 @@
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
     
     <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/04/escalar-y-actualizar-un-servicio-de-un-cluster-de-docker-swarm/</id>
+        <title>Escalar y actualizar un servicio de un cluster de Docker Swarm</title>        
+        <updated>2017-04-09T11:00:00+02:00</updated>
+        <published>2017-04-09T11:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/04/escalar-y-actualizar-un-servicio-de-un-cluster-de-docker-swarm/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Ya tenemos un &lt;em&gt;cluster&lt;/em&gt; formado por varios nodos con algún servicio ejecutándose en el &lt;em&gt;cluster&lt;/em&gt; de Docker Swarm. Si surge la necesidad los servicios del &lt;em&gt;cluster&lt;/em&gt; se pueden escalar cambiando el número de instancias de contenedores que forma el servicio para atender las necesidades computacionales o para ofrecer el servicio a más usuarios. Por otro lado, pasado un tiempo muy posiblemente se publicará una nueva imagen de los contenedores, el servicio se puede actualizar para que los contenedores utilicen esa nueva imagen.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/docker.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Docker&#34; title=&#34;Docker&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Una vez que ya hemos &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/introduccion-y-ejemplo-de-cluster-de-contenedores-con-docker-swarm/&#34;&gt;creado un &lt;em&gt;cluster&lt;/em&gt; de nodos con Docker Swarm&lt;/a&gt; y hemos desplegado algunos servicios ya sea directamente mediante comandos para crear servicios o mediante un &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/04/iniciar-un-stack-de-servicios-en-un-cluster-de-docker-swarm/&#34;&gt;&lt;em&gt;stack&lt;/em&gt; con un archivo similar a un Docker Compose&lt;/a&gt; al cabo de un tiempo necesitaremos hacer otras operaciones. Dos de esas operaciónes básicas son escalar hacia arriba o hacia abajo un servicio cambiando el número de instancias de contenedores desplegadas o actualizar la imagen que utilizan los servicios por otra diferente posiblemente más nueva.&lt;/p&gt;
+
+&lt;p&gt;En la documentación de &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt; están detallados y comentados los &lt;a href=&#34;https://docs.docker.com/engine/swarm/swarm-tutorial/scale-service/&#34;&gt;comandos para escalar un servicio&lt;/a&gt;. Por ejemplo, en el &lt;em&gt;cluster&lt;/em&gt; de ejemplo formado por tres nodos, uno con el rol de &lt;em&gt;manager&lt;/em&gt; y otros dos como &lt;em&gt;worker&lt;/em&gt;, ejecutándose en &lt;a href=&#34;http://virtualbox.org/&#34;&gt;VirtualBox&lt;/a&gt; y desplegando un servicio para el servidor &lt;a href=&#34;http://nginx.org/&#34;&gt;nginx&lt;/a&gt; con inicialmente una réplica o instancia podemos escalar el servicio para que se cree alguna instancia o contenedor más del servicio con el siguiente comando &lt;em&gt;docker service scale&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/1a9862e63c242949ee04cd313e82f3ec.js?file=06-nginx-scale.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Al igual que cuando se crea un contenedor para un servicio en el &lt;em&gt;cluster&lt;/em&gt; &lt;a href=&#34;https://docs.docker.com/swarm/&#34;&gt;Docker Swarm&lt;/a&gt; si no se indica alguna restricción decidirá en qué nodos se crean las nuevas instancias o contenedores del servicio.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/223/nginx-service-1.png&#34; title=&#34;Servicio de nginx con una réplica&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/223/nginx-service-1-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/223/nginx-service-4.png&#34; title=&#34;Servicio de nginx escalado a cuatro réplicas&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/223/nginx-service-4-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;Servicio de nginx antes y después de escalarlo&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/223/nginx-service-scale.png&#34; title=&#34;Escalado del servicio de nginx&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/223/nginx-service-scale-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Escalado del servicio de nginx&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Por otro lado, una vez desplegados en un &lt;em&gt;cluster&lt;/em&gt; algunos servicios llegará el momento en que queramos actualizar algún parámetro del servicio, uno de ellos será probablemente la imagen del servicio cuando se publique una nueva. En la página de documentación &lt;a href=&#34;https://docs.docker.com/engine/swarm/swarm-tutorial/rolling-update/&#34;&gt;Aplicando actualizaciones a un servicio&lt;/a&gt; está explicada esta funcionalidad y los comandos junto con sus opciones que hay que utilizar.&lt;/p&gt;
+
+&lt;p&gt;En el ejemplo al crear el &lt;em&gt;cluster&lt;/em&gt; se usa la última imagen de docker para nginx, en un entorno de producción es más recomendable establecer una versión en concreto para evitar que la imagen que se usa no varía desde que se prueba hasta que se despliega. El siguiente &lt;em&gt;script&lt;/em&gt; actualiza la imagen a la versión &lt;em&gt;nginx:1.10-alpine&lt;/em&gt; en todas las réplicas del servicio de nginx en el &lt;em&gt;cluster&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/1a9862e63c242949ee04cd313e82f3ec.js?file=06-nginx-update.sh&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/223/nginx-service-update.png&#34; title=&#34;Actualización de la imagen del servicio de nginx&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/223/nginx-service-update-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Actualización de la imagen del servicio de nginx&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Docker Swarm realiza el proceso de actualización siguiendo los siguientes pasos:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Detiene el primer contenedor o tarea a actualizar.&lt;/li&gt;
+&lt;li&gt;Programa la actualización del contenedor o tarea detenida.&lt;/li&gt;
+&lt;li&gt;Inicia una nueva tarea actualizado.&lt;/li&gt;
+&lt;li&gt;Si la tarea actualizada retorna su estado como &lt;em&gt;RUNNING&lt;/em&gt; se espera un tiempo determinado y se inicia el proceso de actualización de una nueva tarea.&lt;/li&gt;
+&lt;li&gt;Si, en cualquier momento durante la actualización, una tarea retorna su estado como &lt;em&gt;FAILED&lt;/em&gt;, se detiene la actualización.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Por defecto, el planificador actualiza las tareas o contenedores del servicio de uno en uno. Con la opción &lt;em&gt;&amp;ndash;update-parallelism&lt;/em&gt; se especifica el número de tareas del servicio que se actualizan simultáneamente. La opción &lt;em&gt;&amp;ndash;update-delay&lt;/em&gt; especifica el tiempo de espera desde que se actualiza la tarea de un servicio y la siguiente. Se puede describir como una combinación de segundos, minutos o horas, de modo que 1m30s indica una espera de 1 minuto y 30 segundos.&lt;/p&gt;
+
+&lt;p&gt;En los &lt;a href=&#34;https://docs.docker.com/compose/compose-file/&#34;&gt;archivos en formato YAML de los &lt;em&gt;stacks&lt;/em&gt; de Docker Compose&lt;/a&gt; hay una sección en cada servicio en el que se indica el número de contenedores que se desea que esté formado el servicio así como las opciones de paralelismo y tiempo de espera entre actualización.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/1a9862e63c242949ee04cd313e82f3ec.js?file=docker-compose-stack-app.yml&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/DockerSwarm&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog"/>
+            
+                <category term="blog-stack"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+        
+    </entry>
+    
+    <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/04/iniciar-un-stack-de-servicios-en-un-cluster-de-docker-swarm/</id>
         <title>Iniciar un stack de servicios en un cluster de Docker Swarm</title>        
         <updated>2017-04-02T12:00:00+02:00</updated>
