@@ -3,12 +3,94 @@
     <id>https://picodotdev.github.io/blog-bitix/tags/java/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2017-04-13T11:00:00+02:00</updated>
+    <updated>2017-05-07T11:00:00+02:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
     <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/05/controlar-un-servomotor-con-la-raspberry-pi-y-java/</id>
+        <title>Controlar un servomotor con la Raspberry Pi y Java</title>        
+        <updated>2017-05-07T11:00:00+02:00</updated>
+        <published>2017-05-07T11:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/05/controlar-un-servomotor-con-la-raspberry-pi-y-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/raspberrypi.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Raspberry Pi&#34; title=&#34;Raspberry Pi&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Otro de los elementos que incluye el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;kit de iniciación a la Raspberry Pi&lt;/a&gt; es un servomotor, en concreto uno del modelo SG90. En la &lt;a href=&#34;http://akizukidenshi.com/download/ds/towerpro/SG90_a.pdf&#34;&gt;especificación del servomotor SG90&lt;/a&gt; está detallado cual es el código de colores de los cables. Rojo para la corriente de 5V, marrón para tierra y naranja para el &lt;em&gt;pin&lt;/em&gt; &lt;abbr title=&#34;Pulse Width Modulated&#34;&gt;PWM&lt;/abbr&gt; con el que se controlará el servo motor, el diodo led es simplemente para saber que cuando se enciende el programa Java se ha iniciado. La Raspberry Pi tiene algunos pines con soporte hardware para realizar PWM.&lt;/p&gt;
+
+&lt;p&gt;Un servomotor es un elemento distinto de un motor, un motor usa dos cables uno para mover el motor hacia adelante y otro cable para mover el motor hacia atrás. Los servomotores además de utilizar un único cable para controlarlo su funcionalidad es distinta usándose para posicionar el motor en un determinado ángulo que en el caso del SG90 tiene un ángulo de funcionamiento de 180º. Además el servomotor es más complejo, como se explica en el siguiente artículo de título &lt;a href=&#34;http://handyboard.com/hb/faq/hardware-faqs/dc-vs-servo/&#34;&gt;¿Cual es la diferencia entre un motor DC y servo motor?&lt;/a&gt; el servomotor se compone de varios elementos empaquetados como una pieza. Se compone de un motor DC normal, una unidad de reducción, un sensor de posicionamiento y un circuito de control.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/230/servomotor.jpg&#34; title=&#34;Servomotor&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/230/servomotor-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/230/cableado.jpg&#34; title=&#34;Cableado en la breadboard&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/230/cableado-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;Servomotor y cableado&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;La función del servomotor es recibir la señal de control y aplicar corriente al motor hasta que que esté en la posición indicada por la señal. Un servomotor no rota libremente sino que como he comentado en el caso del SG90 tiene un ángulo de funcionamiento de entre 0º y 180º. La señal de control es un pulso de anchura modulada o PWM.&lt;/p&gt;
+
+&lt;p&gt;Usando la librería &lt;a href=&#34;http://rtd.diozero.com/en/latest/&#34;&gt;Diozero&lt;/a&gt; es sencillo controlar un servomotor a través de la clase &lt;a href=&#34;http://static.javadoc.io/com.diozero/diozero-core/0.9/com/diozero/sandpit/Servo.html&#34;&gt;Servo&lt;/a&gt;. El constructor recibe tres datos el &lt;em&gt;pin&lt;/em&gt; de la Raspberry Pi que controlará el servomotor, según la nomenclatura Broadcom que usa la librería Diozero, la frecuencia del pulso PWD que sirve para controlar la velocidad de rotación y finalmente la posición inicial a establecer. Con el método &lt;a href=&#34;http://static.javadoc.io/com.diozero/diozero-core/0.9/com/diozero/sandpit/Servo.html#getPulseWidthMs--&#34;&gt;pulseWidthMs&lt;/a&gt; y un rango de un valor &lt;em&gt;float&lt;/em&gt; entre 0.6 y 2.4 controlaremos la posición o ángulo del servomotor.&lt;/p&gt;
+
+&lt;p&gt;El siguiente programa Java cambia en un bucle la posición del servo desde la posición mínima a la máxima. En él he utilizado el &lt;em&gt;pin&lt;/em&gt; 18 que en la Raspberry Pi 1 soporta PWD, en las versiones 2 y 3 podríamos haber usado los &lt;em&gt;pines&lt;/em&gt; 18 o 19.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/92cd41d20e45e50a7657e219789c0e81.js?file=Servomotor.java&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;video-post&#34; style=&#34;text-align: center;&#34;&gt;
+  &lt;iframe width=&#34;640&#34; height=&#34;360&#34; src=&#34;https://www.youtube.com/embed/g8RsvZ26Cqg&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Aunque he conseguido hacer funcionar el servomotor con este programa no ha sido exento de problemas. Y es que cuando el programa finaliza la Raspberry Pi se me bloquea o se pierde la conectividad de red. No se si por algún &lt;em&gt;bug&lt;/em&gt; en la librería Diozero o alguna incompatibilidad con la Raspberry Pi 1 B, quizá en otro modelo de la Raspberry Pi no dé los problemas que a mi me da.&lt;/p&gt;
+
+&lt;p&gt;En otros artículos de la serie puedes consultar cómo usar otros &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;elementos de kit con Java y la Raspberry Pi&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew executeServomotor&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://akizukidenshi.com/download/ds/towerpro/SG90_a.pdf&#34;&gt;Especificación SG90 servomotor&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="gnu-linux"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/04/ejemplo-sensor-de-golpes-y-detector-de-movimiento-en-la-raspberry-pi-con-java/</id>
@@ -1522,127 +1604,6 @@
     &lt;div class=&#34;buttons&#34;&gt;
         &lt;a href=&#34;http://goo.gl/EPw49k&#34; class=&#34;btn btn-lg btn-success&#34;&gt;Código fuente ejemplos&lt;/a&gt;
     &lt;/div&gt;
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="java"/>
-            
-                <category term="javascript"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="programacion"/>
-            
-                <category term="software"/>
-            
-                <category term="tapestry"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2016/10/componente-select-multiple-en-apache-tapestry/</id>
-        <title>Componente select múltiple en Apache Tapestry</title>        
-        <updated>2016-10-25T13:45:00+02:00</updated>
-        <published>2016-10-25T13:45:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2016/10/componente-select-multiple-en-apache-tapestry/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/apache-tapestry.png&#34; class=&#34;right&#34; alt=&#34;Apache Tapestry&#34; title=&#34;Apache Tapestry&#34;/&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.png&#34; class=&#34;right&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;El &lt;em&gt;framework&lt;/em&gt; basado en componentes Apache Tapestry incorpora una amplia &lt;a href=&#34;http://tapestry.apache.org/component-reference.html&#34;&gt;colección de componentes&lt;/a&gt; que nos bastarán en la mayoría de casos que necesitemos. Para los casos en que deseemos un componente con un comportamiento específico podemos construir uno completamente nuevo basado en otros existentes incluyendo los propios nuestros, de una librería o incluidos en Tapestry.&lt;/p&gt;
-
-&lt;p&gt;En Tapestry hay múltiples componentes con los que construir formularios para que el usuario pueda introducir datos, ser enviados por el navegador y procesados en el servidor. Hay componentes de formulario desde &lt;em&gt;checkboxes&lt;/em&gt;, &lt;em&gt;radios&lt;/em&gt;, &lt;em&gt;select&lt;/em&gt;, &lt;em&gt;inputs&lt;/em&gt;, &amp;hellip; con soporte para &lt;abbr title=&#34;HyperText Markup Language&#34;&gt;HTML&lt;/abbr&gt; 5.&lt;/p&gt;
-
-&lt;p&gt;Observando en detalle la lista de componentes ofrecidos nos daremos cuenta de que está un componente &lt;a href=&#34;https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/corelib/components/Select.html&#34;&gt;Select&lt;/a&gt; pero que solo se puede utilizar para que el usuario seleccione una única opción, sin embargo, en el estándar de HTML los campos de selección pueden utilizarse para seleccionar múltiples opciones. Como se no ofrece un componente &lt;em&gt;select&lt;/em&gt; para seleccionar múltiples opciones a la vez si lo necesitamos deberemos implementar uno que nos ofrezca esta funcionalidad. Con el codigo fuente de Tapestry la tarea es mucho más sencilla y prácticamente es copiar y pegar, el código completo del componente &lt;em&gt;MultiSelect&lt;/em&gt; será lo que muestre a continuación.&lt;/p&gt;
-
-&lt;p&gt;Todo componente de formulario en este &lt;em&gt;framework&lt;/em&gt; hereda de &lt;a href=&#34;https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/corelib/base/AbstractField.html&#34;&gt;AbstracField&lt;/a&gt; en el que básicamente deberemos proporcionar una implementación del método &lt;a href=&#34;https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/corelib/base/AbstractField.html#processSubmission(java.lang.String)&#34;&gt;processSubmission()&lt;/a&gt; donde procesaremos los datos recibidos en este caso con un método equivalente al tradicional en Java EE &lt;a href=&#34;https://docs.oracle.com/javaee/7/api/javax/servlet/ServletRequest.html#getParameterValues-java.lang.String-&#34;&gt;ServletRequest.getParameterValues&lt;/a&gt;. La otra parte que deberemos implementar es la generación de etiquetas HTML del componente en el método de ciclo de vida &lt;em&gt;beginRender()&lt;/em&gt; que en gran parte nos servirá lo implementado en el código fuente del componente &lt;em&gt;Select&lt;/em&gt; de Tapestry pero incluyendo el atributo &lt;em&gt;multiple&lt;/em&gt; que requiere HTML para los &lt;em&gt;selects&lt;/em&gt; de múltiples opciones.&lt;/p&gt;
-
-&lt;p&gt;Esta sería una implementación de un componente &lt;em&gt;select&lt;/em&gt; múltiple. La mayor diferencia entre el componente &lt;em&gt;Select&lt;/em&gt; y este &lt;em&gt;MultiSelect&lt;/em&gt; está en la propiedad &lt;em&gt;value&lt;/em&gt; que en el primero es de tipo &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html&#34;&gt;Object&lt;/a&gt; donde se guardará el dato seleccionado y &lt;em&gt;selected&lt;/em&gt; en el segundo que es un &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/List.html&#34;&gt;List&lt;/a&gt; de objetos donde se guardarán los datos seleccionados.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/880b9471c7f6ded2212fd5418c34a94a.js?file=MultiSelect.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Esta implementación del componente no necesita de una plantilla &lt;em&gt;tml&lt;/em&gt; sino que todo el HTML se generará desde el código Java. El componente soporta parámetros informales como indicamos con la anotación &lt;a href=&#34;https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/annotations/SupportsInformalParameters.html&#34;&gt;@SupportsInformalParameters&lt;/a&gt; que son parámetros que se añadirán a la etiqueta &lt;em&gt;select&lt;/em&gt; incluidos tal cual se indican en su uso que por ejemplo podemos utilizar para variar el número de opciones visibles, personalizar los textos y otras funcionalidades de &lt;a href=&#34;https://silviomoreto.github.io/bootstrap-select/&#34;&gt;bootstrap-select&lt;/a&gt;.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/880b9471c7f6ded2212fd5418c34a94a.js?file=Index.tml&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/880b9471c7f6ded2212fd5418c34a94a.js?file=Index.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;El código HTML generado por el componente es el siguiente:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/880b9471c7f6ded2212fd5418c34a94a.js?file=Index.html&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Este sería el aspecto del &lt;em&gt;select&lt;/em&gt; múltiple con sus botones para seleccionar todas las opciones y deseleccionar todas, además de personalizados los textos y una pequeña flecha en el desplegable hacia el componente &lt;em&gt;select&lt;/em&gt;, todo esto configurado principalmente a través de atributos &lt;em&gt;data&lt;/em&gt; y clases &lt;abbr title=&#34;Cascading Stylesheets&#34;&gt;CSS&lt;/abbr&gt;.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/188/multiselect.png&#34; title=&#34;Aspecto del componente select mútiple&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/188/multiselect-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/188/multiselect-2.png&#34; title=&#34;Vista con opciones seleccionadas enviadas al servidor&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/188/multiselect-2-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Componente MultiSelect con bootstrap-select&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;Si queremos seleccionar múltiples opciones usando &lt;em&gt;checkboxes&lt;/em&gt; Tapestry ofrece el componente &lt;a href=&#34;https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/corelib/components/Checklist.html&#34;&gt;Checklist&lt;/a&gt; y usando &lt;em&gt;selects&lt;/em&gt; otra opción es el componente &lt;a href=&#34;https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/corelib/components/Palette.html&#34;&gt;Palette&lt;/a&gt; pero seguramente no sea lo que deseamos.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/188/checklist.png&#34; title=&#34;Componente Checklist de Tapestry&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/188/checklist-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/188/palette.png&#34; title=&#34;Componente Palette de Tapestry&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/188/palette-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Componentes Checklist y Palette&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;En un artículo anterior comenté como &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/10/componente-select-de-apache-tapestry-con-funcionalidades-adicionales-usando-bootstrap-select/&#34;&gt;adaptar el componente &lt;em&gt;Select&lt;/em&gt; y este &lt;em&gt;MultiSelect&lt;/em&gt; para añadirle funcionalidades de la librería bootstrap-select&lt;/a&gt; como cuadro de búsqueda, búsqueda por palabras clave, divisores, etc que consiste en añadir a las etiquetas HTML &lt;em&gt;select&lt;/em&gt;, &lt;em&gt;optiongrp&lt;/em&gt; y &lt;em&gt;option&lt;/em&gt; ciertos atributos con sus correspondientes valores con una combinación de parámetros informales y personalización de la clase &lt;a href=&#34;https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/SelectModel.html&#34;&gt;SelectModel&lt;/a&gt;. En el siguiente artículo comentaré como &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/10/anadir-botones-selectores-de-opciones-a-select-multiple-de-bootsrap-select/&#34;&gt;añadir botones selectores de opciones&lt;/a&gt; además de los que incorpora &lt;em&gt;bootstrap-select&lt;/em&gt; de Todos y Ninguno.&lt;/p&gt;
-
-&lt;p&gt;
-    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/PlugInTapestry&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
-&lt;/p&gt;
-
-&lt;div class=&#34;alert alert-warning&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/12/portada-PugInTapestry-thumb.png&#34; alt=&#34;Portada libro: PlugIn Tapestry&#34; title=&#34;Portada libro: PlugIn Tapestry&#34; style=&#34;float: left; margin-right: 1.5em;&#34;&gt;
-    &lt;h3&gt;Libro PlugIn Tapestry&lt;/h3&gt;
-    &lt;p&gt;Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este &lt;i&gt;framework&lt;/i&gt; en el formato que prefieras, &lt;a href=&#34;http://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/&#34;&gt;PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry&lt;/a&gt;, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.&lt;/p&gt;
-    &lt;br style=&#34;clear: both;&#34;&gt;
-    &lt;div class=&#34;buttons&#34;&gt;
-        &lt;a href=&#34;http://goo.gl/dfySZ1&#34; class=&#34;btn btn-lg btn-success&#34;&gt;PDF&lt;/a&gt;
-        &lt;a href=&#34;http://goo.gl/bs7Rtu&#34; class=&#34;btn btn-lg btn-success&#34;&gt;EPUB&lt;/a&gt;
-        &lt;a href=&#34;http://goo.gl/lxOZMT&#34; class=&#34;btn btn-lg btn-success&#34;&gt;MOBI&lt;/a&gt;
-        &lt;a href=&#34;http://goo.gl/MJJiPV&#34; class=&#34;btn btn-lg btn-success&#34;&gt;HTML&lt;/a&gt;
-    &lt;/div&gt;
-    &lt;div class=&#34;buttons&#34;&gt;
-        &lt;a href=&#34;http://goo.gl/EPw49k&#34; class=&#34;btn btn-lg btn-success&#34;&gt;Código fuente ejemplos&lt;/a&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;reference&#34;&gt;
-    Referencia:&lt;br&gt;
-    &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/corelib/components/Select.html&#34;&gt;Select&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://silviomoreto.github.io/bootstrap-select/&#34;&gt;Bootstrap Select&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
 &lt;/div&gt;
 
 
