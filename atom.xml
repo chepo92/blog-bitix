@@ -3,12 +3,105 @@
     <id>https://picodotdev.github.io/blog-bitix/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2017-06-11T12:00:00+02:00</updated>
+    <updated>2017-06-17T13:00:00+02:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
     <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/</id>
+        <title>Autenticación mutua de cliente y servidor con certificados</title>        
+        <updated>2017-06-17T13:00:00+02:00</updated>
+        <published>2017-06-17T13:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/openssl.svg&#34; class=&#34;right&#34; width=&#34;400&#34; alt=&#34;OpenSSL&#34; title=&#34;OpenSSL&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Los certificados no solo sirven para autenticar a un servidor o acceder solo a aquellos en los que confiamos. El servidor también puede autenticar a los clientes mediante un certificado como alternativa a usar un usuario y contraseña ya sea una autenticación &lt;em&gt;BASIC&lt;/em&gt; o un formulario personalizado. Al igual que en el cliente usa el certificado de la autoridad de certificación en la que confía para validar el que presenta el servidor, el servidor puede requerir que el cliente también proporcione un certificado que el servidor valida según las autoridades de certificación en las que confía, en ambos casos el servidor o cliente usan su clave privada para iniciar la conexión segura con el &lt;em&gt;handsake&lt;/em&gt; del &lt;a href=&#34;https://es.wikipedia.org/wiki/Transport_Layer_Security&#34;&gt;protocolo TLS&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Para el ejemplo usaré un servidor web &lt;a href=&#34;https://nginx.org/&#34;&gt;nginx&lt;/a&gt; ejecutado como un contenedor de &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt; configurado de tal manera que requiere autenticación para el cliente con certificados.&lt;/p&gt;
+
+&lt;p&gt;Inicialmente deberemos generar tres parejas de claves privadas y públicas, una para nuestra propia autoridad de certificación, una clave para el servidor y otra para el cliente. Al mismo tiempo generaré otras tres parejas de claves privadas y públicas para comprobar que cuando se proporciona un certificado incorrecto la autenticación falla.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=openssl-genrsa.sh&#34;&gt;&lt;/script&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=ca.crt&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=ca.key&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=ca.pub&#34;&gt;&lt;/script&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=openssl-genrsa-unknown.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El siguiente paso es generar los certificados y firmar con la clave y certificado de la autoridad de certificado los certificados del servidor y cliente. Como paso previo a que la autoridad de certificación emita los certificados del servidor y cliente hay que generar una petición de firma de certificado, los archivos &lt;em&gt;.csr&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=openssl-req.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=openssl-req-unknown.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Con la misma herramienta de &lt;a href=&#34;https://www.openssl.org/&#34;&gt;OpenSSL&lt;/a&gt; es posible comprobar si un certificado es válido para una autoridad de certificación en la que se confía, para ello se usa el certificado raiz de la autoridad.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=openssl-verify.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=openssl-verify-unknown.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Para hacer que el servidor nginx requiera autenticación mediante certificados para el cliente hay que añadir un poco de configuración mediante las directivas &lt;em&gt;ssl&lt;/em&gt; donde se indica el certificado del servidor, la clave privada del servidor, el certificado de la autoridad de certificación contra la que se validarán los certificados de los clientes y finalmente la directiva que establece que se ha de verificar a los clientes mediante certificados.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=nginx.conf&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Con el siguiente archivo descriptor de &lt;a href=&#34;https://docs.docker.com/compose/&#34;&gt;Docker Compose&lt;/a&gt; y comando se inicia el servidor web nginx.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=docker-compose.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=docker-compose.yml&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Iniciado el servidor web ya se pueden realizar peticiones y el servidor y el cliente se autenticarán mutuamente. El servidor devolverá el código HTML de la página de bienvenida por defecto con las cabeceras del protocolo HTTP después de realizar el &lt;em&gt;handsake&lt;/em&gt; donde se valida el certificado del servidor.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=curl.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Si se intenta realizar una petición sin certificado de cliente o con un certificado de cliente en el que no confié el servidor (que no esté firmado por la autoridad de certificación en la que confía) se devolverá un código de estado 400 que indica que la petición se ha rechazado. También el cliente advertirá si la autoridad de certificación en la que confía no valida el certificado del servidor con un error 400 y título &lt;em&gt;400 The SSL certificate error&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=curl-unknown.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El siguiente &lt;em&gt;script&lt;/em&gt; escrito en lenguaje &lt;a href=&#34;http://www.groovy-lang.org/&#34;&gt;Groovy&lt;/a&gt; muestra como desde un programa para la plataforma Java se realiza autenticación mutua y que error da cuando alguno de los certificados es inválido ya sea el del cliente o el del servidor. Generando previamente los &lt;em&gt;keystores&lt;/em&gt; de la autoridad de certificado y del cliente introduciendo como clave en el ejemplo &lt;em&gt;password&lt;/em&gt; cuando se solicita.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=keytool.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=MutualCertAuth.groovy&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=groovy.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En caso de que al usar un &lt;em&gt;keytore&lt;/em&gt; con un certificado de una autoridad que no valida el certificado del servidor se producirán un error, también cuando el certificado del cliente no sea válido para el servidor.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=groovy-unknown.sh&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/series/docker/&#34;&gt;Serie de artículos sobre Docker&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/&#34;&gt;Guardar contraseñas usando «Salted Password Hashing» y otras formas correctas&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+                <category term="seguridad"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/06/introduccion-a-la-base-de-datos-nosql-redis/</id>
@@ -1805,127 +1898,6 @@
 &lt;p&gt;
     El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/DockerSwarm&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt;.
 &lt;/p&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog"/>
-            
-                <category term="blog-stack"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="planeta-linux"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2017/04/contenedores-en-docker-swarm-con-volumenes-de-datos-persistentes-usando-rex-ray-y-virtualbox/</id>
-        <title>Contenedores en Docker Swarm con volúmenes de datos persistentes usando REX-Ray y VirtualBox</title>        
-        <updated>2017-04-16T23:00:00+02:00</updated>
-        <published>2017-04-16T12:00:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/04/contenedores-en-docker-swarm-con-volumenes-de-datos-persistentes-usando-rex-ray-y-virtualbox/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;Salvo que un servicio sea sin estado o &lt;em&gt;stateless&lt;/em&gt; los contenedores de Docker necesitan persistir datos y que estos sobrevivan a su terminación, como es el caso de un contenedor de una base de datos. Además en un &lt;em&gt;cluster&lt;/em&gt; de nodos Docker hay que tener en cuenta que los datos deben estar accesibles para todos los nodos ya que un contenedor que usase los datos podría ser lanzado en cualquiera de ellos. REX-Ray es un sistema de almacenamiento en red que cubre estas necesidades, es simple de instalar, configurar y de iniciar. En el artículo muestro un ejemplo usando REX-Ray junto con Docker Swarm y VirtualBox.&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/docker.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Docker&#34; title=&#34;Docker&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Los contenedores de datos son efímeros, se crean y se destruyen y con ellos los datos que tuviesen en su sistema de archivos de modo que cualquier dato que queramos que sobreviva a la vida del contenedor ha de almacenarse de forma externa, este es el caso de los datos de una base de datos como &lt;a href=&#34;http://www.postgresql.org/&#34;&gt;PostgreSQL&lt;/a&gt; o &lt;a href=&#34;https://www.mongodb.org/&#34;&gt;MongoDB&lt;/a&gt;. Además usando &lt;a href=&#34;https://docs.docker.com/swarm/&#34;&gt;Docker Swarm&lt;/a&gt; se plantea el problema de que hay varios nodos formando un &lt;em&gt;cluster&lt;/em&gt; por lo que los datos han de estar accesibles independientemente del nodo en el que sea iniciado el contenedor que los utilice y significa que los datos no pueden estar almacenados en el nodo ya que un contenedor podría ser iniciado en cualquiera de ellos.&lt;/p&gt;
-
-&lt;p&gt;Así que los contenedores iniciados en un &lt;em&gt;cluster&lt;/em&gt; de Docker Swarm que usen datos persistentes necesitan un sistema de almacenamiento en red externo a los contenedores y nodos. Una de las opciones disponibles es &lt;a href=&#34;https://rexray.codedellemc.com/&#34;&gt;REX-Ray&lt;/a&gt; que ofrece una configuración sencilla y múltiples proveedores de computación entre las que están las más populares como &lt;a href=&#34;http://aws.amazon.com/es/ec2/&#34;&gt;Amazon EC2&lt;/a&gt;, &lt;a href=&#34;https://www.digitalocean.com/&#34;&gt;Digital Ocean&lt;/a&gt;, &lt;a href=&#34;https://cloud.google.com/compute/&#34;&gt;Google Compute Engine&lt;/a&gt;, &lt;a href=&#34;http://azure.microsoft.com/es-es/&#34;&gt;Azure&lt;/a&gt; e incluso &lt;a href=&#34;https://www.virtualbox.org/&#34;&gt;VirtualBox&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;En el siguiente ejemplo uso un &lt;em&gt;cluster&lt;/em&gt; de nodos Docker, VirtualBox y REX-Ray para proporcionar volúmenes de datos persistentes para un contenedor que tiene una base de datos postgres basándome en el artículo previo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/introduccion-y-ejemplo-de-cluster-de-contenedores-con-docker-swarm/&#34;&gt;Crear un &lt;em&gt;cluster&lt;/em&gt; de contenedores Docker&lt;/a&gt; donde explicaba como crear un &lt;em&gt;cluster&lt;/em&gt; de nodos con Docker Swarm.&lt;/p&gt;
-
-&lt;p&gt;Para la integración entre VirtualBox y REX-Ray hay que iniciar primero un servidor en el &lt;em&gt;host&lt;/em&gt; que permite a REX-Ray hacer llamadas remotas a VirtualBox para que gestione los volúmenes de datos.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/07ede1de4295c24af75a1189085d9d77.js?file=02-vboxwebsrv.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Si hay un &lt;em&gt;firewall&lt;/em&gt; hay que permitir el tráfico para el puerto &lt;em&gt;18083&lt;/em&gt;, en mi caso que uso &lt;em&gt;ufw&lt;/em&gt; creando la siguiente regla.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/07ede1de4295c24af75a1189085d9d77.js?file=ufw.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Con el &lt;em&gt;cluster&lt;/em&gt; creado debemos instalar y configurar REX-Ray en cada uno de los nodos ejecutando varios comandos, un comando instala REX-Ray, otro crea el archivo de configuración en &lt;em&gt;/etc/rexray/config.yml&lt;/em&gt; y finalmente otro inicia el servicio de REX-Ray. Algunas opciones que se indican en el archivo de configuración de REX-Ray es la ubicación en el &lt;em&gt;host&lt;/em&gt; donde se guardan los volúmenes con el parámetro &lt;em&gt;volumePath&lt;/em&gt;.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/07ede1de4295c24af75a1189085d9d77.js?file=03-rex-ray-install.sh&#34;&gt;&lt;/script&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/226/instalacion-rex-ray.png&#34; title=&#34;Instalación de REX-Ray en nodos de Docker Swarm con VirtualBox&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/226/instalacion-rex-ray-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  
-  &lt;figcaption&gt;Instalación de REX-Ray en nodos de Docker Swarm con VirtualBox&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;Para probar la persistencia de datos usaré un &lt;em&gt;stack&lt;/em&gt; iniciado de la misma forma que en artículo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/04/iniciar-un-stack-de-servicios-en-un-cluster-de-docker-swarm/&#34;&gt;Iniciar un stack de servicios en un cluster de Docker Swarm&lt;/a&gt; pero con un contenedor de postgres que guarda los datos en un volumen de REX-Ray en &lt;em&gt;/var/lib/postgresql/data&lt;/em&gt;. Para iniciar el &lt;em&gt;stack&lt;/em&gt; el &lt;em&gt;custer&lt;/em&gt; de Docker Swarm uso un archivo de &lt;a href=&#34;https://docs.docker.com/compose/&#34;&gt;Docker Compose&lt;/a&gt; con la definición del &lt;em&gt;stack&lt;/em&gt; en formato YAML.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/07ede1de4295c24af75a1189085d9d77.js?file=docker-compose-stack-postgres.yml&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/07ede1de4295c24af75a1189085d9d77.js?file=06-docker-compose-stack-deploy-postgres.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;En la siguiente captura de pantalla se observa en que nodo ha sido iniciado el contenedor de postgres y que identificativo se le ha asignado.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/226/stack-deploy-postgres.png&#34; title=&#34;Deploy del stack de postgres&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/226/stack-deploy-postgres-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  
-  &lt;figcaption&gt;Deploy del stack de postgres&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;En el &lt;em&gt;stack&lt;/em&gt; el volumen de datos postgres está declarado y creado de forma externa. Usando VirtualBox con REX-Ray en el &lt;em&gt;host&lt;/em&gt; o anfitrión se crea un archivo que contiene los datos del volumen. Al listar los volúmenes de datos además de los creados &lt;em&gt;postgres&lt;/em&gt; y &lt;em&gt;app&lt;/em&gt; están los de los discos duros de cada uno de los nodos identificados como &lt;em&gt;disk.vmdk&lt;/em&gt;. El parámetro &lt;em&gt;opt=size=5&lt;/em&gt; indica que el volumen de datos es de una tamaño de 5GiB.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/07ede1de4295c24af75a1189085d9d77.js?file=06-create-volumes.sh&#34;&gt;&lt;/script&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/226/volumes.png&#34; title=&#34;Volúmenes de datos&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/226/volumes-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/226/volumes-nautilus.png&#34; title=&#34;Archivos de volúmenes en el sistema de archivos del host&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/226/volumes-nautilus-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;Volúmenes de datos&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;Para crear algunos datos en la base de datos hay que conectarse al contenedor y lanzar algunas sentencias SQL. Hay que obtener el identificativo del contenedor de postgres, iniciar un proceso &lt;em&gt;bash&lt;/em&gt;, realizar la conexión a la base de datos con el cliente &lt;em&gt;psql&lt;/em&gt; y lanzar las sentencias SQL.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/07ede1de4295c24af75a1189085d9d77.js?file=postgres.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Destruyendo el &lt;em&gt;stack&lt;/em&gt; y volviéndolo a arrancar posiblemente Docker Swarm iniciará el contenedor en otro nodo del &lt;em&gt;cluster&lt;/em&gt; pero los datos seguirán estando presentes en la base de datos postgres, se puede comprobar iniciando una nueva sesión bash en el nuevo contenedor, iniciando el cliente de psql y lanzando la consulta &lt;em&gt;select&lt;/em&gt; de SQL o con el comando &lt;em&gt;\dt&lt;/em&gt; para obtener las tablas de la base de datos, &lt;em&gt;\d+ company&lt;/em&gt; para obtener una descripción de la tabla y la consulta SQL &lt;em&gt;SELECT * FROM company;&lt;/em&gt;.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/07ede1de4295c24af75a1189085d9d77.js?file=docker-compose-stack-remove-postgres.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;
-    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/DockerSwarm&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt;.
-&lt;/p&gt;
-
-&lt;div class=&#34;reference&#34;&gt;
-    Referencia:&lt;br&gt;
-    &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://rexray.readthedocs.io/en/v0.3.3/user-guide/installation/&#34;&gt;REX-Ray Installation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://rexray.readthedocs.io/en/v0.3.3/user-guide/installation/#docker-machine-virtualbox&#34;&gt;REX-Ray Installation - Docker Machine (VirtualBox)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://rexray.readthedocs.io/en/v0.3.3/user-guide/storage-providers/#virtualbox&#34;&gt;REX-Ray Storage Providers - VirtualBox&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://rexray.readthedocs.io/en/stable/user-guide/applications/&#34;&gt;REX-Ray - Applications&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;/div&gt;
 
 
 

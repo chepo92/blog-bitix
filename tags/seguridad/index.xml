@@ -3,12 +3,105 @@
     <id>https://picodotdev.github.io/blog-bitix/tags/seguridad/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2016-06-18T13:00:00+02:00</updated>
+    <updated>2017-06-17T13:00:00+02:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
     <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/</id>
+        <title>Autenticación mutua de cliente y servidor con certificados</title>        
+        <updated>2017-06-17T13:00:00+02:00</updated>
+        <published>2017-06-17T13:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/openssl.svg&#34; class=&#34;right&#34; width=&#34;400&#34; alt=&#34;OpenSSL&#34; title=&#34;OpenSSL&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Los certificados no solo sirven para autenticar a un servidor o acceder solo a aquellos en los que confiamos. El servidor también puede autenticar a los clientes mediante un certificado como alternativa a usar un usuario y contraseña ya sea una autenticación &lt;em&gt;BASIC&lt;/em&gt; o un formulario personalizado. Al igual que en el cliente usa el certificado de la autoridad de certificación en la que confía para validar el que presenta el servidor, el servidor puede requerir que el cliente también proporcione un certificado que el servidor valida según las autoridades de certificación en las que confía, en ambos casos el servidor o cliente usan su clave privada para iniciar la conexión segura con el &lt;em&gt;handsake&lt;/em&gt; del &lt;a href=&#34;https://es.wikipedia.org/wiki/Transport_Layer_Security&#34;&gt;protocolo TLS&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Para el ejemplo usaré un servidor web &lt;a href=&#34;https://nginx.org/&#34;&gt;nginx&lt;/a&gt; ejecutado como un contenedor de &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt; configurado de tal manera que requiere autenticación para el cliente con certificados.&lt;/p&gt;
+
+&lt;p&gt;Inicialmente deberemos generar tres parejas de claves privadas y públicas, una para nuestra propia autoridad de certificación, una clave para el servidor y otra para el cliente. Al mismo tiempo generaré otras tres parejas de claves privadas y públicas para comprobar que cuando se proporciona un certificado incorrecto la autenticación falla.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=openssl-genrsa.sh&#34;&gt;&lt;/script&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=ca.crt&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=ca.key&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=ca.pub&#34;&gt;&lt;/script&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=openssl-genrsa-unknown.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El siguiente paso es generar los certificados y firmar con la clave y certificado de la autoridad de certificado los certificados del servidor y cliente. Como paso previo a que la autoridad de certificación emita los certificados del servidor y cliente hay que generar una petición de firma de certificado, los archivos &lt;em&gt;.csr&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=openssl-req.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=openssl-req-unknown.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Con la misma herramienta de &lt;a href=&#34;https://www.openssl.org/&#34;&gt;OpenSSL&lt;/a&gt; es posible comprobar si un certificado es válido para una autoridad de certificación en la que se confía, para ello se usa el certificado raiz de la autoridad.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=openssl-verify.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=openssl-verify-unknown.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Para hacer que el servidor nginx requiera autenticación mediante certificados para el cliente hay que añadir un poco de configuración mediante las directivas &lt;em&gt;ssl&lt;/em&gt; donde se indica el certificado del servidor, la clave privada del servidor, el certificado de la autoridad de certificación contra la que se validarán los certificados de los clientes y finalmente la directiva que establece que se ha de verificar a los clientes mediante certificados.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=nginx.conf&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Con el siguiente archivo descriptor de &lt;a href=&#34;https://docs.docker.com/compose/&#34;&gt;Docker Compose&lt;/a&gt; y comando se inicia el servidor web nginx.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=docker-compose.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=docker-compose.yml&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Iniciado el servidor web ya se pueden realizar peticiones y el servidor y el cliente se autenticarán mutuamente. El servidor devolverá el código HTML de la página de bienvenida por defecto con las cabeceras del protocolo HTTP después de realizar el &lt;em&gt;handsake&lt;/em&gt; donde se valida el certificado del servidor.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=curl.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Si se intenta realizar una petición sin certificado de cliente o con un certificado de cliente en el que no confié el servidor (que no esté firmado por la autoridad de certificación en la que confía) se devolverá un código de estado 400 que indica que la petición se ha rechazado. También el cliente advertirá si la autoridad de certificación en la que confía no valida el certificado del servidor con un error 400 y título &lt;em&gt;400 The SSL certificate error&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=curl-unknown.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El siguiente &lt;em&gt;script&lt;/em&gt; escrito en lenguaje &lt;a href=&#34;http://www.groovy-lang.org/&#34;&gt;Groovy&lt;/a&gt; muestra como desde un programa para la plataforma Java se realiza autenticación mutua y que error da cuando alguno de los certificados es inválido ya sea el del cliente o el del servidor. Generando previamente los &lt;em&gt;keystores&lt;/em&gt; de la autoridad de certificado y del cliente introduciendo como clave en el ejemplo &lt;em&gt;password&lt;/em&gt; cuando se solicita.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=keytool.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=MutualCertAuth.groovy&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=groovy.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En caso de que al usar un &lt;em&gt;keytore&lt;/em&gt; con un certificado de una autoridad que no valida el certificado del servidor se producirán un error, también cuando el certificado del cliente no sea válido para el servidor.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/16c98598bc1a2e63509f9c70960419b3.js?file=groovy-unknown.sh&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/series/docker/&#34;&gt;Serie de artículos sobre Docker&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/&#34;&gt;Guardar contraseñas usando «Salted Password Hashing» y otras formas correctas&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+                <category term="seguridad"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2016/06/como-redirigir-peticiones-de-http-a-https-en-nginx-apache-tomcat-jetty-y-wildfly/</id>
@@ -554,7 +647,7 @@ La opción _-f_ sirve para usar EncFS en primer plano, si lo usamos de esta form
         <author><name>pico.dev</name></author>
         <content type="html">
         
-        &lt;p&gt;Usar un protocolo seguro garantiza de que los datos intercambiados entre el cliente y el servidor no son leídos ni modificados por una tercera parte además de verificar que la comunicación se está realizando entre las partes que dicen ser. Para usar un &lt;a href=&#34;http://es.wikipedia.org/wiki/Transport_Layer_Security&#34;&gt;protocolo seguro como SSL/TLS&lt;/a&gt; debemos disponer de con certificado, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/02/generar-y-convertir-claves-y-certificados-con-openssl/&#34;&gt;con OpenSSL podemos generar y convertirlo al formato que deseemos&lt;/a&gt;, sin embargo, para que el usuario tenga garantía de que el certificado es válido este se debe estar firmado por una &lt;a href=&#34;https://es.wikipedia.org/wiki/Autoridad_de_certificaci%C3%B3n&#34;&gt;autoridad de certificación&lt;/a&gt; (CA) en la que confíe, generalmente con una de las autoridades de certificación cuyos certificados están preinstalados en el navegador web (en Firefox podemos verlos en &lt;em&gt;Preferencias&amp;gt; Avanzado&amp;gt; Certificados&amp;gt; Ver certificados&lt;/em&gt;), los certificados autofirmados son útiles para hacer pruebas pero no son válidos para los usuarios. En este artículo comentaré que tipos de certificados hay y donde podemos obtener o comprar un certificado digital firmado por una CA que sea de confianza para el usuario.&lt;/p&gt;
+        &lt;p&gt;Usar un protocolo seguro garantiza de que los datos intercambiados entre el cliente y el servidor no son leídos ni modificados por una tercera parte además de verificar que la comunicación se está realizando entre las partes que dicen ser. Para usar un &lt;a href=&#34;https://es.wikipedia.org/wiki/Transport_Layer_Security&#34;&gt;protocolo seguro como SSL/TLS&lt;/a&gt; debemos disponer de con certificado, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/02/generar-y-convertir-claves-y-certificados-con-openssl/&#34;&gt;con OpenSSL podemos generar y convertirlo al formato que deseemos&lt;/a&gt;, sin embargo, para que el usuario tenga garantía de que el certificado es válido este se debe estar firmado por una &lt;a href=&#34;https://es.wikipedia.org/wiki/Autoridad_de_certificaci%C3%B3n&#34;&gt;autoridad de certificación&lt;/a&gt; (CA) en la que confíe, generalmente con una de las autoridades de certificación cuyos certificados están preinstalados en el navegador web (en Firefox podemos verlos en &lt;em&gt;Preferencias&amp;gt; Avanzado&amp;gt; Certificados&amp;gt; Ver certificados&lt;/em&gt;), los certificados autofirmados son útiles para hacer pruebas pero no son válidos para los usuarios. En este artículo comentaré que tipos de certificados hay y donde podemos obtener o comprar un certificado digital firmado por una CA que sea de confianza para el usuario.&lt;/p&gt;
 
 &lt;p&gt;Los navegadores suelen indicar que se está usando una comunicación segura cuando en la barra de direcciones se muestra un candado y se está usando el protocolo https. Además, haciendo clic en el candado se pueden ver los detalles del certificado usado por el servidor para la comunicación cifrada.&lt;/p&gt;
 
@@ -741,7 +834,7 @@ La opción _-f_ sirve para usar EncFS en primer plano, si lo usamos de esta form
           &lt;p&gt;&lt;strong&gt;Tanto en un servidor web como de aplicaciones podemos hacer que la comunicación entre el cliente y el servidor esté cifrada usando un protocolo seguro. La configuración para usar un protocolo seguro en cada servidor es diferente pero todos se basan en lo mismo, usar un certificado y un clave. En este artículo muestro la configuración necesaria en los servidores web y de aplicaciones más populares.&lt;/strong&gt;&lt;/p&gt;
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/openssl.png&#34; class=&#34;right&#34; alt=&#34;OpenSSL&#34; title=&#34;OpenSSL&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/openssl.svg&#34; class=&#34;right&#34; width=&#34;400&#34; alt=&#34;OpenSSL&#34; title=&#34;OpenSSL&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;En entradas anteriores he explicado &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2013/11/introduccion-la-criptografia-e-inicio-con-gpg.html&#34;&gt;en que consiste la criptografía y GPG&lt;/a&gt; y como podemos usarlo a nivel personal para firmar y cifrar archivos y &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2013/11/como-usar-gpg-con-evolution.html&#34;&gt;firmar correos electrónicos con el cliente de correo Evolution&lt;/a&gt;. También he comentado &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/02/generar-y-convertir-claves-y-certificados-con-openssl/&#34;&gt;como crer un certificado con OpenSSL y como convertirlo a diferentes formatos&lt;/a&gt;. En esta entrada explicaré como usar un certificado SSL creado con OpenSSL después de conocer los &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/04/certificado-ssl-de-empresa-wildcard-y-de-validacion-extendida/&#34;&gt;Certificados SSL, de empresa, «wildcard» y de validación extendida&lt;/a&gt; para proporcionar acceso cifrado al sevidor web o servidor de aplicaciones, explicaré cual es la configuración necesaria para los servidores &lt;a href=&#34;http://tomcat.apache.org/&#34;&gt;Tomcat&lt;/a&gt;, &lt;a href=&#34;http://www.lighttpd.net/&#34;&gt;Lighttpd&lt;/a&gt;, &lt;a href=&#34;http://www.jboss.org/jbossas&#34;&gt;JBoss&lt;/a&gt;/&lt;a href=&#34;http://wildfly.org/&#34;&gt;WildFly&lt;/a&gt;, &lt;a href=&#34;http://nginx.org/&#34;&gt;Nginx&lt;/a&gt; y &lt;a href=&#34;http://www.apache.org/&#34;&gt;Apache&lt;/a&gt;.&lt;/p&gt;
@@ -837,7 +930,7 @@ La opción _-f_ sirve para usar EncFS en primer plano, si lo usamos de esta form
           &lt;p&gt;&lt;strong&gt;Usando los comandos expuestos en este artículo y con OpenSSL podemos crear una clave pública y privada para usarlo con ssh o para cifrar y descifrar mensajes, un certificado autofirmado que podremos usar en un servidor de aplicaciones para usar un protocolo seguro y también convertir las claves y certificados a uno de los formatos aceptados por la aplicación que usemos.&lt;/strong&gt;&lt;/p&gt;
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/openssl.png&#34; class=&#34;right&#34; alt=&#34;OpenSSL&#34; title=&#34;OpenSSL&#34;/&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/openssl.svg&#34; class=&#34;right&#34; width=&#34;400&#34; alt=&#34;OpenSSL&#34; title=&#34;OpenSSL&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Para un uso personal como enviar correos o archivos cifrados o firmados digitalmente usar &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2013/11/introduccion-la-criptografia-e-inicio-con-gpg.html&#34;&gt;GnuPG&lt;/a&gt; es una buena opción. En Internet los servidores también se aprovechan del uso de criptografía para realizar comunicaciones seguras entre el usuario y el servidor.&lt;/p&gt;
