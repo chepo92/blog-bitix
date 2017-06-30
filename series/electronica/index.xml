@@ -1,0 +1,1242 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://picodotdev.github.io/blog-bitix/series/electronica/</id>
+    <title type="text">Blog Bitix</title>
+    <subtitle>Recent content on Blog Bitix</subtitle>
+    <updated>2017-05-14T11:00:00+02:00</updated>
+    <author><name>pico.dev</name></author>
+    <generator>Hugo</generator>
+    <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
+    <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
+    <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/05/luces-navidenas-con-la-raspberry-pi-y-java/</id>
+        <title>Luces navideñas con la Raspberry Pi y Java</title>        
+        <updated>2017-05-14T11:00:00+02:00</updated>
+        <published>2017-05-14T11:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/05/luces-navidenas-con-la-raspberry-pi-y-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Con diferentes sensores y dispositivos de salida de electrónica se pueden realizar proyectos muy interesantes. En el siguiente usaré múltiples diodos LED que se encenderán y apagarán de forma aleatoria cada cierto tiempo. El resultado será muy vistoso y lo utilizaré cuando lleguen las fechas como luces navideñas.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/raspberrypi.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Raspberry Pi&#34; title=&#34;Raspberry Pi&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Como muestra de lo que se puede hacer con la Raspberry Pi usando los pines GPIO haré un ejemplo que consistirá en múltiples diodos LED de diferentes colores enciendan y apaguen simulando una especie de luces navideñas. Como yo tengo la Raspbperry Pi 1 B con 26 pines de los cuales solo 17 son GPIO podré usar hasta 17 diodos LED, aunque solo usaré 15. En el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;kit de iniciación a la electrónica para la Raspberry Pi&lt;/a&gt; viene incluidos 24 diodos LED de diferentes colores 6 blancos, 6 rojos, 6 amarillos y 6 verdes, también es necesario una resistencia por cada diodo de unos 200 ohmios de los cuales en el &lt;em&gt;kit&lt;/em&gt; se incluyen 20 de este valor.&lt;/p&gt;
+
+&lt;p&gt;Aunque con muchos más LED el ejemplo no es más complicado que el ejemplo que ya mostré de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-encender-y-apagar-diodo-led-con-la-raspberry-pi-en-java/&#34;&gt;encender y apagar un diodo LED&lt;/a&gt;. Usaré diodos de diferentes colores y dispuestos de forma aleatoria para darle un aspecto desordenado, para darle un aspecto más caótico los LEDs se encenderán y apagarán de forma aleatoria. Usaré el lenguaje de programación Java y la librería de alto nivel &lt;a href=&#34;http://rtd.diozero.com/en/latest/&#34;&gt;diozero&lt;/a&gt; para controlar el encendido y apagado de los diodos.&lt;/p&gt;
+
+&lt;p&gt;Esta es la foto del cableado usando múltiples cables macho-macho para conectar los pines con el polo positivo de los diodos pasando por la resistencia y también múltiples cables para conectar el polo negativo del diodo con tierra. Usando una placa &lt;em&gt;breadboard&lt;/em&gt; para realizar las conexiones sin soldadura y una placa de extensión wiringPi para conectar la Raspberry Pi con la placa &lt;em&gt;breadboard&lt;/em&gt; con un cable de 26 pines en mi caso por el modelo que tengo de RPi este es el aspecto de cableado.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-01.jpg&#34; title=&#34;Cableado de las luces LED del árbol de navidad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-01-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-02.jpg&#34; title=&#34;Cableado de las luces LED del árbol de navidad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-02-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-03.jpg&#34; title=&#34;Cableado de las luces LED del árbol de navidad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-03-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-04.jpg&#34; title=&#34;Cableado de las luces LED del árbol de navidad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-04-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-05.jpg&#34; title=&#34;Cableado de las luces LED del árbol de navidad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-05-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Cableado de las luces LED del árbol de navidad&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Cada cierto tiempo los diodos cambian de estado, algunos se encenderán, otros se apagarán y otros seguirán en el estado que estaban. Para ello generaré un booleano aleatorio para cada uno de los diodos que determinará si debe estar encendido o apagado. Este es el programa Java junto con la parte relevante del archivo &lt;a href=&#34;http://gradle.org/&#34;&gt;Gradle&lt;/a&gt; para compilar y construir el ejemplo y el comando que uso para ejecutarlo.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/86d81809da0ad791e41a8f821a58ea62.js?file=ChristmasTree.java%20&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/86d81809da0ad791e41a8f821a58ea62.js?file=build.gradle&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/86d81809da0ad791e41a8f821a58ea62.js?file=execute.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Esta aplicación para la Raspberry Pi queda bastante vistosa y no es muy complicado de realizar a pesar del del lío de cables que resulta. Este es un vídeo de su funcionamiento.&lt;/p&gt;
+
+&lt;div class=&#34;media media-video&#34; style=&#34;text-align: center;&#34;&gt;
+  &lt;iframe width=&#34;640&#34; height=&#34;360&#34; src=&#34;https://www.youtube.com/embed/F2BChbcyr5g&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRasberriPi&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew executeChristmasTree&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="gnu-linux"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/05/controlar-un-servomotor-con-la-raspberry-pi-y-java/</id>
+        <title>Controlar un servomotor con la Raspberry Pi y Java</title>        
+        <updated>2017-05-13T11:40:00+02:00</updated>
+        <published>2017-05-07T11:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/05/controlar-un-servomotor-con-la-raspberry-pi-y-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/raspberrypi.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Raspberry Pi&#34; title=&#34;Raspberry Pi&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Otro de los elementos que incluye el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;kit de iniciación a la Raspberry Pi&lt;/a&gt; es un &lt;a href=&#34;https://es.wikipedia.org/wiki/Servomotor&#34;&gt;servomotor&lt;/a&gt;, en concreto uno del modelo SG90. En la &lt;a href=&#34;http://akizukidenshi.com/download/ds/towerpro/SG90_a.pdf&#34;&gt;especificación del servomotor SG90&lt;/a&gt; está detallado cual es el código de colores de los cables. Rojo para la corriente de 5V, marrón para tierra y naranja para el &lt;em&gt;pin&lt;/em&gt; &lt;abbr title=&#34;Pulse Width Modulated&#34;&gt;PWM&lt;/abbr&gt; con el que se controlará el servo motor, el diodo led es simplemente para saber que cuando se enciende el programa Java se ha iniciado. La Raspberry Pi tiene algunos pines con soporte hardware para realizar PWM.&lt;/p&gt;
+
+&lt;p&gt;Un servomotor es un elemento distinto de un motor, un motor usa dos cables uno para mover el motor hacia adelante y otro cable para mover el motor hacia atrás. Los servomotores además de utilizar un único cable para controlarlo su funcionalidad es distinta usándose para posicionar el motor en un determinado ángulo que en el caso del SG90 tiene un ángulo de funcionamiento de 180º. Además el servomotor es más complejo, como se explica en el siguiente artículo de título &lt;a href=&#34;http://handyboard.com/hb/faq/hardware-faqs/dc-vs-servo/&#34;&gt;¿Cual es la diferencia entre un motor DC y servo motor?&lt;/a&gt; el servomotor se compone de varios elementos empaquetados como una pieza. Se compone de un motor DC normal, una unidad de reducción, un sensor de posicionamiento y un circuito de control.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/230/servomotor.jpg&#34; title=&#34;Servomotor&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/230/servomotor-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/230/cableado.jpg&#34; title=&#34;Cableado en la breadboard&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/230/cableado-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Servomotor y cableado&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;La función del servomotor es recibir la señal de control y aplicar corriente al motor hasta que que esté en la posición indicada por la señal. Un servomotor no rota libremente sino que como he comentado en el caso del SG90 tiene un ángulo de funcionamiento de entre 0º y 180º. La señal de control es un pulso de anchura modulada o PWM.&lt;/p&gt;
+
+&lt;p&gt;Usando la librería &lt;a href=&#34;http://rtd.diozero.com/en/latest/&#34;&gt;Diozero&lt;/a&gt; es sencillo controlar un servomotor a través de la clase &lt;a href=&#34;http://static.javadoc.io/com.diozero/diozero-core/0.9/com/diozero/sandpit/Servo.html&#34;&gt;Servo&lt;/a&gt;. El constructor recibe tres datos el &lt;em&gt;pin&lt;/em&gt; de la Raspberry Pi que controlará el servomotor, según la nomenclatura Broadcom que usa la librería Diozero, la frecuencia del pulso PWD que sirve para controlar la velocidad de rotación y finalmente la posición inicial a establecer. Con el método &lt;a href=&#34;http://static.javadoc.io/com.diozero/diozero-core/0.9/com/diozero/sandpit/Servo.html#getPulseWidthMs--&#34;&gt;pulseWidthMs&lt;/a&gt; y un rango de un valor &lt;em&gt;float&lt;/em&gt; entre 0.6 y 2.4 controlaremos la posición o ángulo del servomotor.&lt;/p&gt;
+
+&lt;p&gt;El siguiente programa Java cambia en un bucle la posición del servo desde la posición mínima a la máxima. En él he utilizado el &lt;em&gt;pin&lt;/em&gt; 18 que en la Raspberry Pi 1 soporta PWD, en las versiones 2 y 3 podríamos haber usado los &lt;em&gt;pines&lt;/em&gt; 18 o 19.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/92cd41d20e45e50a7657e219789c0e81.js?file=Servomotor.java&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media media-video&#34; style=&#34;text-align: center;&#34;&gt;
+  &lt;iframe width=&#34;640&#34; height=&#34;360&#34; src=&#34;https://www.youtube.com/embed/g8RsvZ26Cqg&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Aunque he conseguido hacer funcionar el servomotor con este programa no ha sido exento de problemas. Y es que cuando el programa finaliza la Raspberry Pi se me bloquea o se pierde la conectividad de red. No se si por algún &lt;em&gt;bug&lt;/em&gt; en la librería Diozero o alguna incompatibilidad con la Raspberry Pi 1 B, quizá en otro modelo de la Raspberry Pi no dé los problemas que a mi me da.&lt;/p&gt;
+
+&lt;p&gt;En otros artículos de la serie puedes consultar cómo usar otros &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;elementos de kit con Java y la Raspberry Pi&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew executeServomotor&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://akizukidenshi.com/download/ds/towerpro/SG90_a.pdf&#34;&gt;Especificación SG90 servomotor&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://es.wikipedia.org/wiki/Servomotor&#34;&gt;Servomotor&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="gnu-linux"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/04/ejemplo-sensor-de-golpes-y-detector-de-movimiento-en-la-raspberry-pi-con-java/</id>
+        <title>Ejemplo sensor de golpes y detector de movimiento en la Raspberry Pi con Java</title>        
+        <updated>2017-04-13T11:00:00+02:00</updated>
+        <published>2017-04-13T11:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/04/ejemplo-sensor-de-golpes-y-detector-de-movimiento-en-la-raspberry-pi-con-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/raspberrypi.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Raspberry Pi&#34; title=&#34;Raspberry Pi&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Otro par de sensores que incluye el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;kit de introducción a la electrónica para la Raspberry Pi&lt;/a&gt; son un sensor de golpes o &lt;em&gt;tilt&lt;/em&gt; y un detector de movimiento. El funcionamiento de ambos es muy similar, utilizando un &lt;em&gt;pin&lt;/em&gt; &lt;abbr title=&#34;General Purpose Input Output&#34;&gt;GPIO&lt;/abbr&gt; como entrada se recibe si el sensor de golpes está activo o si el detector de movimiento ha detectado movimiento. El sensor de golpes es una bolita de mercurio encerrada en una ampolla de cristal. Como el mercurio a temperatura ambiente su estado es líquido puede moverse y como es un metal puede conducir la electricidad cuando está en una determinada posición entre dos filamentos.&lt;/p&gt;
+
+&lt;p&gt;El sensor de golpes necesita de tres cables uno para la corriente de 3.3V, otro para tierra y finalmente otro que se conecta como entrada a un &lt;em&gt;pin&lt;/em&gt; GPIO. Usando varios cables hembra-hembra y macho-macho hacemos las conexiones entre el sensor y la placa de pruebas sin soldadura o &lt;em&gt;breadboard&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/224/sensores-1.jpg&#34; title=&#34;Sensor de golpes y detector de movimiento&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/224/sensores-1-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/224/sensores-2.jpg&#34; title=&#34;Sensor de golpes y detector de movimiento&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/224/sensores-2-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Sensor de golpes y detector de movimiento&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Usando la librería &lt;a href=&#34;http://rtd.diozero.com/en/latest/&#34;&gt;diozero&lt;/a&gt; para controlar los &lt;em&gt;pines&lt;/em&gt; GPIO desde un programa implementado con Java detectamos si el sensor está activo o no según la posición de la bolita de mercurio. El ejemplo consiste en &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-encender-y-apagar-diodo-led-con-la-raspberry-pi-en-java/&#34;&gt;encender un diodo LED&lt;/a&gt; que ya mostré en un artículo anterior de esta &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/series/electronica/&#34;&gt;serie sobre electrónica&lt;/a&gt; cuando el sensor &lt;em&gt;tilt&lt;/em&gt; esté activo. Usaré el &lt;em&gt;pin&lt;/em&gt; 18 para el diodo LED y el &lt;em&gt;pin&lt;/em&gt; 21 para el sensor según la nomenclatura de Broadcom. Los &lt;em&gt;pines&lt;/em&gt; serían el 12 según la nomenclatura del &lt;em&gt;header&lt;/em&gt; y 1 según la nomenclatura de wiringPi para el diodo LED y 13 y 2 para el sensor &lt;em&gt;tilt&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/224/cableado-tilt.jpg&#34; title=&#34;Cableado sensor de golpes&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/224/cableado-tilt-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Cableado sensor de golpes&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/ec8532262fcc92e4862a2cd4c294b073.js?file=Tilt.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En el siguiente vídeo se aprecia como cuando al cambiar de posición del sensor de movimiento se mueve la bolita de mercurio y el diodo LED de ejemplo se enciende y apaga.&lt;/p&gt;
+
+&lt;div class=&#34;media media-video&#34; style=&#34;text-align: center;&#34;&gt;
+  &lt;iframe width=&#34;640&#34; height=&#34;360&#34; src=&#34;https://www.youtube.com/embed/7Rkou-pJWFY&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;El detector de movimiento en teoría es similar en funcionamiento al &lt;em&gt;tilt&lt;/em&gt; y la librería diozero proporciona la clase &lt;a href=&#34;http://static.javadoc.io/com.diozero/diozero-core/0.9/com/diozero/sandpit/MotionSensor.html&#34;&gt;MotionSensor&lt;/a&gt; para hacer más sencillo su uso. Digo en teoría porque no he conseguido hacerlo funcionar y he revisado varias veces las conexiones mostradas en otros ejemplos incluido el &lt;a href=&#34;http://osoyoo.com/2016/07/14/motionsensor-pi/&#34;&gt;ejemplo de osoyoo&lt;/a&gt;, no se si es porque me falta algo más que debo tener en cuenta y que no conozco o el sensor no funciona viniendome estropeado. Cuando el sensor detecta movimiento cambia el voltaje de su &lt;em&gt;pin&lt;/em&gt; GPIO de datos. Los otros dos &lt;em&gt;pines&lt;/em&gt; que utiliza son uno para el voltaje de 5V y el de tierra.&lt;/p&gt;
+
+&lt;p&gt;El programa Java para el sensor de movimiento es similar al sensor &lt;em&gt;tilt&lt;/em&gt; e igualmente encendería o apagaría un diodo LED cuando detecta movimiento.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/224/cableado-motion.jpg&#34; title=&#34;Cableado sensor de movimiento&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/224/cableado-motion-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Cableado sensor de movimiento&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/ec8532262fcc92e4862a2cd4c294b073.js?file=Motion.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Ambos ejemplos pueden usarse con los siguientes comandos cambiando la dirección IP de la Raspberry Pi y el directorio de la misma a donde se suben los ejemplos.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/ec8532262fcc92e4862a2cd4c294b073.js?file=execute.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El siguiente artículo de la sería será sobre cómo usar un &lt;em&gt;servo motor&lt;/em&gt; que es diferente de un motor que gira constantemente.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://pimylifeup.com/raspberry-pi-motion-sensor/&#34;&gt;Raspberry Pi Motion Sensor using a PIR Sensor&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.meccanismocomplesso.org/en/pir-motion-detector/&#34;&gt;PIR motion detector – a sensor for Arduino and Raspberry Pi (1st part)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="gnu-linux"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/04/como-usar-un-diodo-led-un-pulsador-y-un-zumbador-con-la-raspberry-pi-y-java/</id>
+        <title>Cómo usar un diodo LED, un pulsador y un zumbador con la Raspberry Pi y Java</title>        
+        <updated>2017-04-09T12:00:00+02:00</updated>
+        <published>2017-04-09T12:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/04/como-usar-un-diodo-led-un-pulsador-y-un-zumbador-con-la-raspberry-pi-y-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;El &lt;em&gt;kit&lt;/em&gt; de electrónica para la Raspberry Pi incluye varios dispositivos controlables con lo &lt;em&gt;pines&lt;/em&gt; GPIO. En el caso de este ejemplo usaré un diodo LED, un zumbador y un pulsador para crear un ejemplo en el que el diodo LED se enciendan y el zumbador emita un sonido cuando el pulsador se active.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/raspberrypi.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Raspberry Pi&#34; title=&#34;Raspberry Pi&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En artículos anteriores ya he comentado &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-encender-y-apagar-diodo-led-con-la-raspberry-pi-en-java/&#34;&gt;como hacer parpadear un diodo LED&lt;/a&gt;, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/controlar-un-display-lcd-1602-para-mostrar-texto-con-la-raspberry-pi-y-java/&#34;&gt;como usar un display LCD de 16 columnas y 2 filas&lt;/a&gt; y &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/&#34;&gt;como obtener la temperatura y humedad de un sensor DHT11&lt;/a&gt;, todo estos ejemplo usando varios elementos de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;kit de iniciación a la electrónica para la Raspberry Pi 3&lt;/a&gt;. En este artículo en el que mostraré cómo usar un LED, un pulsador y un zumbador es mucho más sencillo que los casos del &lt;em&gt;display&lt;/em&gt; LCD de 16 filas y 2 columnas y del sensor DHT11. Vistos los ejemplos de artículos anteriores lo más difícil de este es hacer el conexionado con los cables. Para controlar los pines usaré la librería &lt;a href=&#34;http://rtd.diozero.com/en/latest/&#34;&gt;diozero&lt;/a&gt; que proporciona clases de alto nivel para cada uno de estos elementos para que desde código Java sea bastante sencillo controlarlos.&lt;/p&gt;
+
+&lt;p&gt;El ejemplo consistirá en que cuando se presione el pulsador se encienda el diodo LED y el zumbador se active emitiendo un zumbido audible. Cada uno de estos elementos requiere usar un &lt;em&gt;pin&lt;/em&gt; &lt;abbr title=&#34;General Purpose Input Output&#34;&gt;GPIO&lt;/abbr&gt; de los 17 que hay disponibles en la Raspberry Pi 1 que es el modelo que tengo yo o de los 26 &lt;em&gt;pines&lt;/em&gt; que poseen versiones posteriores de la Raspberry Pi como la B+, 2 y 3.&lt;/p&gt;
+
+&lt;p&gt;Este sería el esquema de conexionado de los elementos. El diodo LED tiene una polaridad de modo que la patita larga que es la parte positiva se conectará al &lt;em&gt;pin&lt;/em&gt; GPIO 1 según la nomenclatura de wiringPi o el 18 según la de Broadcom con una resistencia de 200 ohmios entre el &lt;em&gt;pin&lt;/em&gt; GIPO y la patita de diodo para que la intensidad que atraviesa el diodo sea menor y no se desgaste. El zumbador también tiene una polaridad que en el caso del &lt;em&gt;kit&lt;/em&gt; que he usado viene serigrafiado y con una etiqueta, la parte positiva se conectará a otro &lt;em&gt;pin&lt;/em&gt; GPIO y usaré el &lt;em&gt;pin&lt;/em&gt; GPIO 2. Para que el pulsador haga contacto bien en la placa de conexiones para hacer pruebas sin soldadura hay que presionar sin forzar pero hasta que quede bien encadado y sin fijo, usaré el &lt;em&gt;pin&lt;/em&gt; GPIO 3.&lt;/p&gt;
+
+&lt;p&gt;Para el pulsador usaré el método &lt;em&gt;PULL UP&lt;/em&gt; (el otro es &lt;em&gt;PULL DOWN&lt;/em&gt;) donde conectaré una patita del pulsador a tierra y la adyacente al &lt;em&gt;pin&lt;/em&gt; GPIO, en &lt;a href=&#34;https://grantwinney.com/using-pullup-and-pulldown-resistors-on-the-raspberry-pi/&#34;&gt;algunas páginas&lt;/a&gt; se explica haciendo uso de resistencias, sin embargo, el uso de resistencias en la Raspberry Pi no es necesario ya que los &lt;em&gt;pines&lt;/em&gt; ya &lt;a href=&#34;https://projects.drogon.net/raspberry-pi/wiringpi/special-pin-functions/&#34;&gt;las tienen incorporadas internamente&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/221/cableado.jpg&#34; title=&#34;cableado en la breadboard&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/221/cableado-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/221/esquema-cableado.png&#34; title=&#34;Esquema del cableado&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/221/esquema-cableado-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Esquema del cableado&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;La librería diozeo para identificar los pines usa la nomenclatura de Broadcom, otras son las nomenclaturas del &lt;em&gt;header&lt;/em&gt; o de wiringPi. Hay que tener en cuenta la nomenclatura que se use ya que el número del &lt;em&gt;pin&lt;/em&gt; variará en cada una de ellas, también hay que tener en cuenta la versión de la Raspberry Pi ya que hay pequeñas variaciones según la versión. Por ejemplo, según la tabla de referencia siguiente, para la Raspberry Pi 1 y según la nomenclatura de Brodacom el &lt;em&gt;pin&lt;/em&gt; GPIO 18 corresponde al número 12 de &lt;em&gt;header&lt;/em&gt;, el GPIO 21 al número 13 y el GPIO 22 al número 15. Según la nomenclatura de wiringPi el GPIO 1 corresponde al número 1, el GPIO 2 al número 2 y el GPIO 3 al número 3.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/221/raspberrypi1b-header-rev1.png&#34; title=&#34;Header de pines Raspberry Pi 1 B&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/221/raspberrypi1b-header-rev1-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/221/raspberrypi3b-header.png&#34; title=&#34;Header de pines Raspberry Pi 3 B&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/221/raspberrypi3b-header-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Header de pines Raspberry Pi 1 B y Raspberry Pi 3 B, nomenclatura wiringPi&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/221/raspberrypi1b-header-rev1-broadcom.png&#34; title=&#34;Header de pines Raspberry Pi 1 B&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/221/raspberrypi1b-header-rev1-broadcom-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/221/raspberrypi3b-header-broadcom.png&#34; title=&#34;Header de pines Raspberry Pi 3 B&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/221/raspberrypi3b-header-broadcom-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Headers de pines Raspberry Pi 1 B y Raspberry Pi 3 B, nomenclatura Broadcom&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Usando la librería diozero el código Java para realizar el ejemplo no necesita excesiva explicación. Es posible hacer uso de las &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/&#34;&gt;funciones lambdas que incorporó el lenguaje Java en la versión de Java 8&lt;/a&gt; y con la sentencia &lt;em&gt;try-with-resources&lt;/em&gt; del lenguaje los elementos se finalizará correctamente en caso de producirse alguna excepción, por ejemplo apagando el diodo en caso de que estuviese encendido o apagando el zumbador en su caso.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/0d5bb399bc7a20b903ee54ec41dee8e1.js?file=LedButtonBuzzer.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Este es un pequeño vídeo en el que muestro su funcionamiento.&lt;/p&gt;
+
+&lt;div class=&#34;media media-video&#34; style=&#34;text-align: center;&#34;&gt;
+  &lt;iframe width=&#34;640&#34; height=&#34;360&#34; src=&#34;https://www.youtube.com/embed/jaqMi53pjf0&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew executeLedButtonBuzzer&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="gnu-linux"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/</id>
+        <title>Obtener la temperatura y humedad con el sensor DHT11, la Raspberry Pi, C y Java</title>        
+        <updated>2017-04-02T10:15:00+02:00</updated>
+        <published>2017-03-31T19:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;El &lt;em&gt;kit&lt;/em&gt; de iniciación a la electrónica para la Raspberry Pi tiene un sensor para la temperatura y humedad, el modelo DHT11. Obtener la información requiere restricciones de tiempo, este es un caso de uso justificado para usar lenguaje C y JNI para integrarlo con Java. En el ejemplo el código C llama a un método de una clase Java con dos valores enteros o lanza una excepción en caso de que al realizar la lectura haya habido algún error en la transmisión de los bits.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/raspberrypi.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Raspberry Pi&#34; title=&#34;Raspberry Pi&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Entre los varios sensores incluídos en el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;kit de iniciación para la Raspberry Pi&lt;/a&gt; está el sensor de temperatura y humedad con el modelo DHT11. El DHT11 es un sensor muy básico pero suficiente y válido si el objetivo es trastear un poco con hardware.&lt;/p&gt;
+
+&lt;p&gt;En la &lt;a href=&#34;http://www.micropik.com/PDF/dht11.pdf&#34;&gt;especificación del sensor DHT11&lt;/a&gt; está descrita su funcionamiento y forma de comunicación. Utiliza 3 cables, uno para la corriente de 3.3V, otro para tierra y finalmente uno de datos que se conecta a cualquier &lt;em&gt;pin&lt;/em&gt; &lt;abbr title=&#34;General Purpose Input Output&#34;&gt;GPIO&lt;/abbr&gt; de la Raspberry Pi. Según la especificación el sensor proporciona sus datos en unos 4 ms cuando se le emite un pulso bajo durante unos pocos microsegundos y a continuación uno alto durante otros pocos microsegundos, momento a partir del cual el sensor emite 40 bits de información empezando por un pulso bajo de inicio y a continuación el propio bit con un pulso alto, según sea la duración del pulso alto el bit se considera un 0 si es menor de unos 27μs y un 1 si dura más de ese tiempo hasta unos 80μs momento en el que se emite el siguiente bit de información. Los primeros 8 bits corresponden a la parte entera de la humedad, los siguientes 8 bits a la parte decimal de la humedad, el tercer grupo de 8 bits a la parte entera de la temperatura y 8 bits más para la parte decimal. El último grupo de 8 bits hasta completar los 40 bits son de &lt;em&gt;checksum&lt;/em&gt; para detectar errores en la transmisión. El porcentaje de errores en la transmisión significativo en este sensor y quizá haya que realizar varias lecturas del sensor para obtener una correcta.&lt;/p&gt;
+
+&lt;p&gt;Dada las restricciones de tiempo que utiliza el sensor en el ejemplo usaré el lenguaje C para obtener los valores de temperatura y humedad y &lt;abbr title=&#34;Java Native Interface&#34;&gt;JNI&lt;/abbr&gt; para acceder a ellos desde Java. Aún usando C se producen errores en la obtención de los valores ya que el método usado por el sensor y transmitir los datos basados en tiempo de microsegundos no es muy fiable. Usando Java la situación sería peor por las restricciones que impone la máquina virtual con sus paradas para la recolección de basura por ejemplo. Así que el ejemplo consistirá en una combinación de C y Java con JNI un poco más avanzado que el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-de-jni-usar-codigo-en-c-desde-java/&#34;&gt;Ejemplo de JNI, usar código en C desde Java&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/219/dht11-1.jpg&#34; title=&#34;Sensor DHT11&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/219/dht11-1-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/219/dht11-2.jpg&#34; title=&#34;Sensor DHT11&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/219/dht11-2-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Sensor DHT11&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Lo primero que deberemos hacer para acceder a la información del sensor desde Java es crear una clase que contenga un método nativo que realizará la lectura de la información en C. Con la utilidad &lt;em&gt;javah&lt;/em&gt; obtendremos el archivo de cabecera que implementará el programa en C. Finalmente, siguiendo la especificación se escribe el código C que realice la lectura que en este caso usará la librería &lt;a href=&#34;http://wiringpi.com/&#34;&gt;wiringPi&lt;/a&gt; para la interacción con los pines GPIO de la Raspberry Pi.&lt;/p&gt;
+
+&lt;p&gt;El código en C invocará el método &lt;em&gt;setTemperatureHumidity&lt;/em&gt; pasando como parámetros los datos de temperatura y humedad leídos del sensor, el método nativo &lt;em&gt;read&lt;/em&gt; es utilizado por el código Java que controla el sensor para realizar la lectura en el código C.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=Dht11.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=Dht11.h&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=Dht11.c&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El código en C del sensor hay que compilarlo en la Raspberry Pi con el compilador &lt;a href=&#34;https://gcc.gnu.org/&#34;&gt;gcc&lt;/a&gt; obteniendo una librería con código nativo que Java y JNI cargará y enlazará de forma dinámica en el programa Java. Ya que el código C usa la librería wiringPi ha de instalarse previamente junto con el compilador gcc. Obtenida la librería la copiamos mediante FTP o SSH de la Raspberry Pi a nuestro equipo de desarrollo. El código C realiza la lectura usando la librería wiringPi siguiendo la especificación de como se transmiten los datos por el sensor, realizada una lectura correcta usa varias de las funciones de la estructura &lt;a href=&#34;http://xdprof.sourceforge.net/doxygen/structJNIEnv__.html&#34;&gt;JNIEnv&lt;/a&gt; para obtener la referencia a un método de la clase DHT11 e invocarlo con los valores obtenidos del sensor o lanza una excepción si la lectura ha sido errónea.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=install-packages.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El comando para compilar la librería de código nativo a partir del código en C y el archivo de cabecera generado con &lt;em&gt;javah&lt;/em&gt; es el siguiente.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=compile.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Para facilitar la ejecución la librería la proporcionó ya compilada y ubicada en el directorio &lt;em&gt;src/main/resources&lt;/em&gt; de modo que será incluida en el archivo &lt;em&gt;jar&lt;/em&gt; generado por &lt;a href=&#34;http://gradle.org/&#34;&gt;Gradle&lt;/a&gt; en el ejemplo y que la clase DHT11 extraerá al directorio temporal del sistema y cargará para su uso.&lt;/p&gt;
+
+&lt;p&gt;La clase Java del ejemplo que hace uso del sensor realiza una lectura cada 3 segundos e imprime en la terminal y en el &lt;em&gt;display&lt;/em&gt; 1602 el último valor obtenido correctamente de la temperatura y humedad.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=TemperatureHumidity.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Este es el esquema de conexiones que he utilizado para el ejemplo y una foto del cableado real, he usado del &lt;em&gt;pin&lt;/em&gt; GPIO número 2 según la nomenclatura de wiringPi para el cable de datos del sensor DHT11 que se corresponde con pin número 13 según la nomenclatura del &lt;em&gt;header&lt;/em&gt; de la Raspberry Pi. Para ver el cableado del &lt;em&gt;display&lt;/em&gt; 1602 más detalladamente y la activación del bus de comunicación I2C que necesita consulta el artículo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/controlar-un-display-lcd-1602-para-mostrar-texto-con-la-raspberry-pi-y-java/&#34;&gt;Controlar un display LCD 1602 para mostrar texto con la Raspberry Pi y Java&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/219/cableado.jpg&#34; title=&#34;Cableado sensor DHT11 y display 1602&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/219/cableado-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Cableado sensor DHT11 y display 1602&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Ejecutando el programa del ejemplo y usando el display 1602 (16 columnas y 2 filas) se muestra la temperatura y humedad obtenida del sensor.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/219/temperature-humidity.jpg&#34; title=&#34;Cableado ejemplo y funcionando&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/219/temperature-humidity-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/219/display.jpg&#34; title=&#34;Cableado ejemplo y funcionando&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/219/display-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Cableado ejemplo y funcionando&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;En el kernel de Linux hay un módulo que proporciona también los valores del sensor, sin embargo, no he conseguido obtener la temperatura y humedad usándolo. Lo he probado con el kernel 4.4 de Arch Linux ARM y en la versión 4.9 veo que hay cambios en este módulo que quizá lo hagan funcionar. Para usar el módulo del kernel hay que añadir un poco de configuración para el inicio de la Raspberry Pi. En los archivos &lt;em&gt;/sys/devices/platform/dht11@0/iio:device0/in_temp_input&lt;/em&gt; y &lt;em&gt;/sys/devices/platform/dht11@0/iio:device0/in_temp_input&lt;/em&gt; estarán la temperatura y humedad respectivamente.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=kernel-module-config.txt&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=cat.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Para ejecutar el ejemplo con ya todo instalado uso uno de los siguientes dos comandos.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=execute.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew executeTemperatureHumidity&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.ibm.com/developerworks/java/tutorials/j-jni/j-jni.html&#34;&gt;Java programming with JNI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://hirt.se/blog/?p=493&#34;&gt;Accessing 1-wire Protocol Devices from Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.circuitbasics.com/how-to-set-up-the-dht11-humidity-sensor-on-the-raspberry-pi/&#34;&gt;How to Set Up the DHT11 Humidity Sensor on the Raspberry Pi&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.prometec.net/sensores-dht11/&#34;&gt;Sensores de temperatura DHT11&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/Hexalyse/RPi-weather-log/blob/master/dht11.c&#34;&gt;dht11.c&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.uugear.com/portfolio/read-dht1122-temperature-humidity-sensor-from-raspberry-pi/&#34;&gt;Read DHT11/22 Temperature &amp;amp; Humidity Sensor from Raspberry Pi&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://arduino-info.wikispaces.com/DHT11-Humidity-TempSensor&#34;&gt;Digital output temperature and humidity sensor DHT11 - DHT22&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://playground.arduino.cc/Main/DHT11Lib&#34;&gt;A DHT11 Class for Arduino&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/torvalds/linux/blob/master/drivers/iio/humidity/dht11.c&#34;&gt;torvalds/linux/blob/master/drivers/iio/humidity/dht11.c&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.tortosaforum.com/raspberrypi/dht11driver.htm&#34;&gt;RaspberryPi DHT11 temperature and humidity sensor driver&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="gnu-linux"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-de-jni-usar-codigo-en-c-desde-java/</id>
+        <title>Ejemplo de JNI, usar código en C desde Java</title>        
+        <updated>2017-03-25T10:05:00+01:00</updated>
+        <published>2017-03-25T10:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-de-jni-usar-codigo-en-c-desde-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Para tareas muy específicas que requieran alto rendimiento, baja latencia, tiempo real o haya restricciones de tiempo el lenguaje Java y la JVM pueden mostrar algunas limitaciones obligando a escribir alguna sección crítica de un programa en un lenguaje nativo como C o C++. Para hacer posible la integración entre Java y C existe en Java la API JNI. En este artículo mostraré como realizar un programa Java que emite el mensaje Hola Mundo desde una biblioteca compartida en C y usando JNI.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/gnu.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;SVG&#34; title=&#34;SVG&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/linux.png&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Nunca hasta ahora había tenido necesidad de crear un programa que no estuviese completamente escrito en el lenguaje Java. La &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/overview-summary.html&#34;&gt;API de Java&lt;/a&gt; ofrece multitud de clases para cualquier funcionalidad que necesitemos desde estructuras de datos hasta algoritmos de búsqueda o criptografía. También porque el rendimiento de un programa en Java es suficiente y similar a un programa equivalente escrito en C o C++ gracias a las optimizaciones que implementa la máquina virtual de Java o &lt;abbr title=&#34;Java Virtual Machine&#34;&gt;JVM&lt;/abbr&gt; aún siendo los programas Java compilados a una representación intermedia de &lt;em&gt;bytecode&lt;/em&gt; independiente de la arquitectura de procesador y sistema operativo en archivos de extensión &lt;em&gt;class&lt;/em&gt; y posteriormente interpretados y traducidos a la arquitectura de ejecución, lo que le proporciona a Java la conocida frase &lt;em&gt;&amp;ldquo;Write once, run anywhere&amp;rdquo;&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Sin embargo, en casos que se necesita un alto rendimiento para tareas muy específicas o evitar las imposiciones de la máquina virtual como las paradas que realiza para el recolector de basura una solución es escribir esa funcionalidad crítica en lenguaje C, C++ e incluso en &lt;a href=&#34;https://golang.org/&#34;&gt;Go&lt;/a&gt;. El caso de necesidad que me he encontrado es acceder a un sensor de temperatura DHT11 del &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;kit de iniciación a la electrónica para la Raspberry Pi&lt;/a&gt; para leer de él la temperatura y humedad. La forma que tiene el sensor DHT11 de proporcionar los datos tiene restricciones de tiempo, cuando se le requieren los valores envía 80 bits de datos donde un pulso de 27μs significa un 0 y un pulso de más de ese tiempo hasta 70μs significa un 1. Estas restricciones de tiempo del sensor y el hecho de que es en una modesta en potencia &lt;a href=&#34;https://www.raspberrypi.org/&#34;&gt;Raspberry Pi&lt;/a&gt; 1 donde lo usaré hace que Java no sea capaz de leer correctamente los valores del sensor.&lt;/p&gt;
+
+&lt;p&gt;Acceder desde Java a código nativo en C requiere usar &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/technotes/guides/jni/spec/jniTOC.html&#34;&gt;Java Native Interface o por sus siglas JNI&lt;/a&gt;. Lo primero que hay que realizar es crear una clase que declare los métodos que serán implementados de forma nativa declarando estos métodos usando la palabra reservada &lt;em&gt;native&lt;/em&gt; y que serán enlazados por la JVM cargando una librería compartida con &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/System.html#loadLibrary-java.lang.String-&#34;&gt;System.loadLibrary()&lt;/a&gt;. Creada la clase Java se ha de generar el archivo de cabecera &lt;em&gt;.h&lt;/em&gt; propia del lenguaje C con el programa de utilidad del JDK &lt;em&gt;javah&lt;/em&gt;. Con el archivo de cabecera se implementa la función y se crea una librería compartida en &lt;a href=&#34;https://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;http://www.linux.com/&#34;&gt;Linux&lt;/a&gt; usando el &lt;a href=&#34;https://gcc.gnu.org/&#34;&gt;compilador gcc&lt;/a&gt;. Con la librería compartida se puede iniciar el programa Java. Si la biblioteca compartida no se encuentra se lanzará una excepción del tipo &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/UnsatisfiedLinkError.html&#34;&gt;UnsatisfiedLinkError&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/217/UnsatisfiedLinkError.png&#34; title=&#34;Excepción UnsatisfiedLinkError cuando no se encuentra la librería de código nativo&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/217/UnsatisfiedLinkError-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Excepción UnsatisfiedLinkError cuando no se encuentra la librería de código nativo&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Algunas otras necesidades para hacer uso de JNI son:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Acceder a características dependientes de la plataforma necesitadas por la aplicación que no están soportadas en la librería estándar de Java.&lt;/li&gt;
+&lt;li&gt;Ya hay una librería escrita en otro lenguaje y se quiere hacer accesible a código Java a través de JNI.&lt;/li&gt;
+&lt;li&gt;Se quiere implementar una pequeña parte de código crítico en un lenguaje de bajo nivel como ensamblador.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Desde los métodos de código nativo se puede:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Crear, inspeccionar y actualizar objetos Java (incluyendo arrays y strings).&lt;/li&gt;
+&lt;li&gt;Llamar a métodos Java.&lt;/li&gt;
+&lt;li&gt;Capturar y lanzar excepciones.&lt;/li&gt;
+&lt;li&gt;Cargar y obtener información de clases.&lt;/li&gt;
+&lt;li&gt;Realizar validación de tipos en tiempo de ejecución.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Los comandos para generar el archivo de cabecera de C y compilarlo con el código nativo en una librería compartida con gcc son:&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/94e61b21e8d1378384e363879df5be31.js?file=build.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/94e61b21e8d1378384e363879df5be31.js?file=build.gradle&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;La cabecera usa varias definiciones de tipos definidas en los archivos &lt;em&gt;jni.h&lt;/em&gt; y el archivo que variará según el sistema operativo &lt;em&gt;jni_md.h&lt;/em&gt;. En la &lt;a href=&#34;http://xdprof.sourceforge.net/doxygen/structJNIEnv__.html&#34;&gt;estructura JNIEnv&lt;/a&gt; con múltiples funciones de integración en C y Java, también varias definiciones de los tipos Java para usarlos en C como &lt;em&gt;jobject&lt;/em&gt;, &lt;em&gt;jstring&lt;/em&gt;, &lt;em&gt;jint&lt;/em&gt;, &lt;em&gt;jboolean&lt;/em&gt;, &lt;em&gt;jlong&lt;/em&gt;, &lt;em&gt;jdouble&lt;/em&gt;, &lt;em&gt;jchar&lt;/em&gt;, etc.&lt;/p&gt;
+
+&lt;p&gt;El programa que emite el mensaje &lt;em&gt;Hello World!&lt;/em&gt; desde código nativo en C debe cargar y enlazar la librería de código nativo con el código de la clase Java. Esto se muestra en el bloque de inicialización &lt;em&gt;static&lt;/em&gt; de la clase, en este caso usándo el método &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/System.html#load-java.lang.String-&#34;&gt;System.load()&lt;/a&gt;, la librería de código nativo de extensión &lt;em&gt;.so&lt;/em&gt; en GNU/Linux como en este caso al construirse el proyecto se incluye en el archivo &lt;em&gt;.jar&lt;/em&gt; del artefacto resultante se extráe al directorio temporal y se carga desde esa ubicación temporal. En el programa se llama al método &lt;em&gt;print&lt;/em&gt; implementado en código nativo y en el código C se usa la función &lt;em&gt;printf&lt;/em&gt; de la librería &lt;em&gt;stdio&lt;/em&gt; para emitir el mensaje:&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/94e61b21e8d1378384e363879df5be31.js?file=JniHelloWorld.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/94e61b21e8d1378384e363879df5be31.js?file=JniHelloWorld.c&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/94e61b21e8d1378384e363879df5be31.js?file=JniHelloWorld.h&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;La librería compartida para un sistema &lt;em&gt;amd64&lt;/em&gt; la he compilado en mi equipo de escritorio y para la versión &lt;em&gt;arm&lt;/em&gt; en la Raspberry Pi e incluido en el directorio &lt;em&gt;src/main/resources&lt;/em&gt; de código fuente del ejemplo.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/94e61b21e8d1378384e363879df5be31.js?file=execute.sh&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/217/JniHelloWorld-amd64.png&#34; title=&#34;Mensaje en la terminal emitido desde código nativo (amd64)&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/217/JniHelloWorld-amd64-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/217/JniHelloWorld-arm.png&#34; title=&#34;Mensaje en la terminal emitido desde código nativo (ARM)&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/217/JniHelloWorld-arm-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Mensaje en la terminal emitido desde código nativo en un sistema amd64 y ARM&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Ente ejemplo usa Java 8 y requiere instalar el compilador gcc para compilar la librería con código nativo. &lt;a href=&#34;http://gradle.org/&#34;&gt;Gradle&lt;/a&gt; ofrece soporte para &lt;a href=&#34;https://docs.gradle.org/3.4.1/userguide/native_software.html&#34;&gt;compilar código nativo con su plugin&lt;/a&gt;, sin embargo, he preferido usar y conocer los comandos javah y gcc sin usar Gradle. En el siguiente artículo mostraré el ejemplo del sensor DHT11 usando JNI y código nativo en C llamando a métodos de un objeto Java desde código C.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew executeJniHelloWorldLocal&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.dogan.io/2015/08/15/java-jni-jnr-go/&#34;&gt;GO: Call me maybe, Java!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://docs.oracle.com/javase/8/docs/technotes/guides/jni/spec/jniTOC.html&#34;&gt;Java Native Interface Specification&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www3.ntu.edu.sg/home/ehchua/programming/java/JavaNativeInterface.html&#34;&gt;Java Programming Tutorial, Java Native Interface (JNI)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="gnu-linux"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/03/controlar-un-display-lcd-1602-para-mostrar-texto-con-la-raspberry-pi-y-java/</id>
+        <title>Controlar un display LCD 1602 para mostrar texto con la Raspberry Pi y Java</title>        
+        <updated>2017-03-19T02:00:00+01:00</updated>
+        <published>2017-03-18T10:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/03/controlar-un-display-lcd-1602-para-mostrar-texto-con-la-raspberry-pi-y-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/raspberrypi.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Raspberry Pi&#34; title=&#34;Raspberry Pi&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Uno de los motivos por los que compré el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;kit de iniciación a la electrónica para la Raspberry Pi&lt;/a&gt;, además de cacharrear un poco, era en concreto controlar el &lt;em&gt;display&lt;/em&gt; LCD de 16 columnas y 2 filas. En el &lt;em&gt;kit&lt;/em&gt; el &lt;em&gt;display&lt;/em&gt; viene con un adaptador con el bus de comunicación I2C. El &lt;em&gt;display&lt;/em&gt; se puede usar sin este bus pero requiere utilizar muchos más pines GPIO de datos de los limitados 17 que ofrece la Raspberry Pi 1 y los 26 de las Raspberry Pi B+, 2  y 3. Controlar el &lt;em&gt;display&lt;/em&gt; con I2C requiere únicamente 2 pines, por contra sin usar I2C requiere un número significativamente mayor 4 u 8 pines.&lt;/p&gt;
+
+&lt;p&gt;El &lt;em&gt;display&lt;/em&gt; 1602 con su adaptador para el bus I2C que viene con el &lt;em&gt;kit&lt;/em&gt; ya incorporado en la parte trasera es el siguiente.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/215/display-lcd-1602.jpg&#34; title=&#34;Display LCD 16 columnas y 2 filas&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/215/display-lcd-1602-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/215/adaptador-bus-i2c-1602.jpg&#34; title=&#34;Adaptador bus I2C para display 1602&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/215/adaptador-bus-i2c-1602-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Display LCD 1602 y adaptador bus I2C&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;El esquema de conexionado para controlar el &lt;em&gt;display&lt;/em&gt; requiere usar los pines de la Raspberry Pi &lt;em&gt;SDA&lt;/em&gt; y &lt;em&gt;SDL&lt;/em&gt; además de un &lt;em&gt;pin&lt;/em&gt; para proporcionar un voltaje de 5V y otro &lt;em&gt;pin&lt;/em&gt; para la tierra. El &lt;em&gt;pin&lt;/em&gt; &lt;em&gt;SDA&lt;/em&gt; es el número 2 según la numeración de pines de la Raspberry Pi y el &lt;em&gt;SDL&lt;/em&gt; es el 5. El &lt;em&gt;pin&lt;/em&gt; &lt;em&gt;SDA&lt;/em&gt; es utilizado en el bus I2C para transmitir los datos y el &lt;em&gt;SDL&lt;/em&gt; para la señal de reloj o sincronización. Utilizando la placa de extensión wiringPi de 26 &lt;em&gt;pines&lt;/em&gt; los &lt;em&gt;pines&lt;/em&gt; &lt;em&gt;SDA&lt;/em&gt; y &lt;em&gt;SDL&lt;/em&gt; se encuentran identificados por su nombre y el de la placa de extensión de 40 &lt;em&gt;pines&lt;/em&gt; que viene con el &lt;em&gt;kit&lt;/em&gt; de iniciación también, deberemos identificar estos pines y realizar las conexiones adecuadamente.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/215/breadboard-cableado.jpg&#34; title=&#34;Cableado en la breadboard&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/215/breadboard-cableado-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/215/esquema-cableado.png&#34; title=&#34;Esquema del cableado&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/215/esquema-cableado-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Cableado en la breadboard&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Hay que emplear varios cables macho-macho y hembra-hembra para conectar a los pines del adaptador I2C del &lt;em&gt;display&lt;/em&gt;  a los &lt;em&gt;pines&lt;/em&gt; del voltaje de 5V, tierra, &lt;em&gt;SDA&lt;/em&gt; y &lt;em&gt;SDL&lt;/em&gt; de la placa de pruebas sin soldadura.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/215/cables-macho-macho-hembra-hembra.jpg&#34; title=&#34;Unión cables macho-macho y hembra-hembra&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/215/cables-macho-macho-hembra-hembra-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Unión cables macho-hembra&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;El siguiente paso será activar el bus I2C en la Raspberry Pi que por defecto está desactivado. Esto requiere añadir unos parámetros en la configuración de arranque y cargar unos módulos del kernel que finalmente crearán un dispositivo tal que en &lt;em&gt;/dev/i2c-0&lt;/em&gt; o &lt;em&gt;/dev/i2c-0&lt;/em&gt;. Si instalamos el paquete &lt;em&gt;i2c-tools&lt;/em&gt; podremos detectar el &lt;em&gt;display&lt;/em&gt; en el bus I2C, en la captura de pantalla en la dirección 27 que hay que usar al construir la instancia del controlador del &lt;em&gt;display&lt;/em&gt;. Estos cambios en la configuración de inicio requieren reiniciar la Raspberry Pi. En un sistema con la distribución &lt;a href=&#34;http://archlinuxarm.org/&#34;&gt;Arch Linux ARM&lt;/a&gt; los cambios son los siguientes.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/1ab3b748f7e9cc0c60cbc7c21531f21f.js?file=configuration.txt&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/215/i2cdetect.png&#34; title=&#34;Detectción del display 1602 en el bus I2C&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/215/i2cdetect-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Detectción del display 1602 en el bus I2C&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Según la &lt;a href=&#34;https://www.sparkfun.com/datasheets/LCD/HD44780.pdf&#34;&gt;especificación del &lt;em&gt;display&lt;/em&gt; 1602&lt;/a&gt; este componente soporta varios comandos para controlarlo, algunos son para limpiar el texto, cambiar la dirección de escritura, añadir caracteres personalizados y emitir texto en la línea o posición del &lt;em&gt;display&lt;/em&gt; que queramos. No es simple el controlar el &lt;em&gt;display&lt;/em&gt; a bajo nivel ya que hay que trabajar en momentos con binario y usar bytes, por ello para el ejemplo usaré la librería &lt;a href=&#34;http://rtd.diozero.com/en/latest/&#34;&gt;diozero&lt;/a&gt; que ya trae una implementación de controlador con funciones de alto nivel &lt;em&gt;I2CLcd&lt;/em&gt; que en versiones más recientes de la librería ha sido renombrada a &lt;a href=&#34;http://static.javadoc.io/com.diozero/diozero-core/0.9/com/diozero/HD44780Lcd.html&#34;&gt;HD44780Lcd&lt;/a&gt; mucho más cómoda que enviar &lt;em&gt;bytes&lt;/em&gt; a bajo nivel al bus I2C, el &lt;a href=&#34;https://github.com/mattjlewis/diozero/blob/master/diozero-core/src/main/java/com/diozero/HD44780Lcd.java&#34;&gt;código fuente de la clase HD44780Lcd&lt;/a&gt; está disponible y podemos verlo si hay curiosidad.&lt;/p&gt;
+
+&lt;p&gt;En mi caso con la Raspberry Pi 1 he tenido que utilizar la versión 0.9 de la librería diozero porque la 0.8 me generaba un &lt;em&gt;stacktrace&lt;/em&gt; de una excepción &lt;em&gt;java.lang.UnsupportedOperationException&lt;/em&gt;. Obtener esta versión de la librería como aún era de desarrollo y no estaba publicada en &lt;a href=&#34;https://search.maven.org/&#34;&gt;Maven Central&lt;/a&gt; la he descargado de un &lt;a href=&#34;https://drive.google.com/drive/u/0/folders/0B2Kd_bs3CEYaZ3NiRkd4OXhYd3c&#34;&gt;google drive que ha creado el autor&lt;/a&gt; y usado en &lt;a href=&#34;http://gradle.org/&#34;&gt;Gradle&lt;/a&gt; como una dependencia del sistema de ficheros. Como librería subyacente de diozero para controlar los pines GPIO he usado &lt;a href=&#34;http://abyz.co.uk/rpi/pigpio/&#34;&gt;pigpio&lt;/a&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/1ab3b748f7e9cc0c60cbc7c21531f21f.js?file=java.lang.UnsupportedOperationException&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En el ejemplo mostraré un texto en cada una de las lineas del &lt;em&gt;display&lt;/em&gt; y usaré una de las funciones del para mostrar caracteres personalizados con los que es posible crear &lt;em&gt;emojis&lt;/em&gt; o caracteres nuevos. El controlador de diozero ya contiene una buena colección de caracteres personalizados que definen el patrón de 5x8 puntos que siguen, los nombres de estos caracteres personalizados están en la clase interna &lt;em&gt;Characters&lt;/em&gt; de &lt;a href=&#34;http://static.javadoc.io/com.diozero/diozero-core/0.9/com/diozero/HD44780Lcd.html&#34;&gt;HD44780Lcd&lt;/a&gt; aunque también podemos definir nuevos. El ejemplo es el siguiente donde se muestra el uso de los métodos &lt;a href=&#34;http://static.javadoc.io/com.diozero/diozero-core/0.9/com/diozero/HD44780Lcd.html#setText-int-java.lang.String-&#34;&gt;setText&lt;/a&gt; y &lt;a href=&#34;http://static.javadoc.io/com.diozero/diozero-core/0.9/com/diozero/HD44780Lcd.html#setCharacter-int-int-char-&#34;&gt;setCharacter&lt;/a&gt;, también el constructor donde hay que indicar la dirección asignada al dispositivo en el bus I2C que siendo la 27 corresponde con el valor definido en una constante. Pero también hay otros métodos como &lt;a href=&#34;http://static.javadoc.io/com.diozero/diozero-core/0.9/com/diozero/HD44780Lcd.html#clear--&#34;&gt;clear&lt;/a&gt;, &lt;a href=&#34;http://static.javadoc.io/com.diozero/diozero-core/0.9/com/diozero/HD44780Lcd.html#cursorOff--&#34;&gt;cursorOff&lt;/a&gt; y &lt;a href=&#34;http://static.javadoc.io/com.diozero/diozero-core/0.9/com/diozero/HD44780Lcd.html#cursorOn--&#34;&gt;cursorOn&lt;/a&gt; para apagar y encender el cursor, &lt;a href=&#34;http://static.javadoc.io/com.diozero/diozero-core/0.9/com/diozero/HD44780Lcd.html#displayOff--&#34;&gt;displayOff&lt;/a&gt;
+&lt;a href=&#34;http://static.javadoc.io/com.diozero/diozero-core/0.9/com/diozero/HD44780Lcd.html#displayOn--&#34;&gt;displayOn&lt;/a&gt; para apgar y encender el &lt;em&gt;display&lt;/em&gt; y &lt;a href=&#34;http://static.javadoc.io/com.diozero/diozero-core/0.9/com/diozero/HD44780Lcd.html#createChar-int-byte:A-&#34;&gt;createChar&lt;/a&gt; para crear nuevos caracteres definidos como una &lt;em&gt;array&lt;/em&gt; de 8 posiciones donde cada &lt;em&gt;byte&lt;/em&gt; indica los pixeles encendidos de cada fila del caracter de 5x8 y con &lt;a href=&#34;http://static.javadoc.io/com.diozero/diozero-core/0.9/com/diozero/HD44780Lcd.html#setCharacter-int-int-char-&#34;&gt;setCharacter&lt;/a&gt; para emitir uno de los 8 posibles que se pueden usar al mismo tiempo. Además de estos también hay otros pocos métodos más relacionados con el cursor.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/1ab3b748f7e9cc0c60cbc7c21531f21f.js?file=Lcd.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/1ab3b748f7e9cc0c60cbc7c21531f21f.js?file=build.gradle&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/1ab3b748f7e9cc0c60cbc7c21531f21f.js?file=executeSSH.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/1ab3b748f7e9cc0c60cbc7c21531f21f.js?file=executeGradle.sh&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/215/mensaje-lcd-1602.jpg&#34; title=&#34;Mensaje en LCD 1602&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/215/mensaje-lcd-1602-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Mensaje en LCD 1602&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+&lt;div class=&#34;media media media-video&#34; style=&#34;text-align: center;&#34;&gt;
+  &lt;iframe width=&#34;640&#34; height=&#34;360&#34; src=&#34;https://www.youtube.com/embed/V6msjQNDPuU&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Pudiendo mostrar mensajes en &lt;em&gt;display&lt;/em&gt; es posible mostrar cualquier información que un programa sea capaz de capturar como temperatura y humedad del correspondiente sensor en el mismo &lt;em&gt;kit&lt;/em&gt;, estado de un pulsador, espacio disponible en el disco del sistema, y memoria libre, &lt;em&gt;uptime&lt;/em&gt; del sistema, fecha y hora, &amp;hellip; cualquier cosa que se nos ocurra.&lt;/p&gt;
+
+&lt;p&gt;El ejemplo parece simple, y el programa Java lo es, pero requiere conocer varias cosas que en internet está dispersas como activar el bus I2C o conocer la librería diozero para controlar el &lt;em&gt;display&lt;/em&gt; que simplifica enormemente el código y nos evita comunicarnos a más bajo nivel con el &lt;em&gt;display&lt;/em&gt;, realizar las conexiones eléctricas también requiere algo de conocimiento. Averiguar todo esto me costó una buena cantidad de tiempo.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew executeLcd&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="gnu-linux"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-encender-y-apagar-diodo-led-con-la-raspberry-pi-en-java/</id>
+        <title>Ejemplo encender y apagar diodo LED con la Raspberry Pi en Java</title>        
+        <updated>2017-03-12T00:15:00+01:00</updated>
+        <published>2017-03-11T10:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-encender-y-apagar-diodo-led-con-la-raspberry-pi-en-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/raspberrypi.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Raspberry Pi&#34; title=&#34;Raspberry Pi&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;El primer ejemplo que haré de un programa Java que usa los &lt;em&gt;pines&lt;/em&gt; GPIO para realizar algo con el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;kit de inicialización a la electrónica con la Raspberry Pi&lt;/a&gt; consiste en un pequeño programa Java que hace parpadear un diodo LED. La librería &lt;a href=&#34;http://rtd.diozero.com/en/latest/&#34;&gt;Diozero&lt;/a&gt; ofrece a los programas Java el acceso a los &lt;em&gt;pines&lt;/em&gt; GPIO de la diferentes versiones de la Raspberry Pi desde la 1 (rev 1 y rev 2) pasando por los modelos B+, 2 y 3. Otra librería que se puede usar con el lenguaje de programación Java es &lt;a href=&#34;http://pi4j.com/&#34;&gt;Pi4J&lt;/a&gt; aunque personalmente Diozero me ha gustado más por ser de más alto nivel.&lt;/p&gt;
+
+&lt;p&gt;Algunas de las características que ofrece la librería Diozero son:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Soporta dispositivos GPIO / I2C / SPI (LEDs, botones, sensores, motores, pantallas, etc).&lt;/li&gt;
+&lt;li&gt;Soporta todos los modelos de las placas Raspberry Pi, Odroid C2, BeagleBone Black, C.H.I.P y Asus Tinker.&lt;/li&gt;
+&lt;li&gt;Usa caracterśiticas de Java como &lt;a href=&#34;https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html&#34;&gt;gestión automática de recursos&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html&#34;&gt;expresiones lambda&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html&#34;&gt;referencias a métodos&lt;/a&gt; que simplifican el desarrollo y mejoran la legibilidad.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://rtd.diozero.com/en/latest/#devices&#34;&gt;Lista de deipositivos&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Soporta varios proveedores para el acceso al los dispositivos con &lt;a href=&#34;http://rtd.diozero.com/en/latest/#performance&#34;&gt;diferentes grados de rendimiento&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Una de las primeras cosas a conocer es como se numeran los &lt;em&gt;pines&lt;/em&gt; en la Raspberry Pi ya que hay varias nomenclaturas (&lt;em&gt;header&lt;/em&gt;, wiringPi y Broadcom) y que nomenclatura utiliza la librería Diozero. También deberemos tener en cuenta el modelo de la Raspberry Pi que poseamos ya que según el modelo hay pequeñas diferencias en algunos &lt;em&gt;pines&lt;/em&gt;. Además si usamos una placa de extensión para pruebas sin sodadura como la &lt;a href=&#34;http://wiringpi.com/&#34;&gt;wiringPi&lt;/a&gt; deberemos identificarlos por su nombre. Yo que poseo una de las primeras Raspberry Pi (la 1, rev1) el correspondiente su &lt;a href=&#34;https://www.raspberrypi.org/documentation/usage/gpio/&#34;&gt;esquema de &lt;em&gt;pines&lt;/em&gt; Raspberry Pi 1 (rev. 1)&lt;/a&gt; es el del enlace. En ese esquema se define que el &lt;em&gt;pin&lt;/em&gt; número 12 según el conteo del &lt;em&gt;header&lt;/em&gt; corresponde a GPIO 18 según la nomenclatura Broadcom y la librería Diozero y al GPIO 1 en la librería Pi4J y en la placa de extensión wiringPi.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/raspberrypi1b.jpg&#34; title=&#34;Raspberry Pi 1 B&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/raspberrypi1b-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/raspberrypi3b.jpg&#34; title=&#34;Raspberry Pi 3 B&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/raspberrypi3b-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Placas modelos Raspberry Pi 1 B y 3 B&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/breadboard-cableado.jpg&#34; title=&#34;Breadboard y placa extesión GPIO wiringPi de 26 pines&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/breadboard-cableado-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/gpio-extension-40-pines-board.jpg&#34; title=&#34;Placa extesión GPIO de 40 pines&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/gpio-extension-40-pines-board-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Breadboard y placa extesión GPIO wiringPi de 26 pines y 40 pines&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/esquema-cableado.png&#34; title=&#34;Esquema del cableado&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/esquema-cableado-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Esquema del cableado&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Como uso la placa de extensión wiringPi para conectar los &lt;em&gt;pines&lt;/em&gt; de la Raspberry Pi a otra placa para hacer pruebas sin soldadura también conocidas como &lt;em&gt;breadboard&lt;/em&gt;  resultará que en el programa Java al usar Diozero uso la nomenclatura Broadcom para identificar los pines pero al conectar los cables en la placa de pruebas uso la nomenclatura de wiringPi.&lt;/p&gt;
+
+&lt;p&gt;Para el ejemplo utilizaré la placa de extensión sin soldadura, una resistencia de 200 ohmios (dadas sus bandas de colores rojo, negro, marrón y dorado) y un diodo LED además de un par de cables macho-macho para realizar las conexiones electrónicas entre el GPIO 18 (según la nomenclatura de la librería Diozero y Broadcom, 12 según la nomenclatura del &lt;em&gt;header&lt;/em&gt; y 1 según la de wiringPi) y la resistencia además de entre el diodo y la línea de tierra. Los diodos LED poseen una orientación y hay que conectar la resistencia con el polo positivo del diodo LED, el polo positivo del diodo LED identifica porque es la patita larga y el negativo con tierra es la patita corta. Si realizamos la conexión al revés solo pasará que el diodo no se enciende pero no lo estropeará, la resistencia si es necesaria para no hacer que pase por el diodo una intensidad que lo estropee como se explica en
+&lt;a href=&#34;http://www.educachip.com/resistencia-led/&#34;&gt;¿Qué resistencia ooner a un LED?&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/diodo-resistencia.jpg&#34; title=&#34;Diodo blanco y resistencia de 200 ohmios&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/diodo-resistencia-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Diodo blanco y resistencia de 200 ohmios&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Las resistencias poseen cuatro bandas de colores que indican el valor en ohmios de esa resistencia, la tabla de colores es el siguiente:&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/codigo-colores-resistencias.jpg&#34; title=&#34;Código de colores de las resistencias&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/codigo-colores-resistencias-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Código de colores de las resistencias&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;El programa Java para hacer parpadear el diodo LED con la librería Diozero con el proveedor &lt;a href=&#34;http://abyz.co.uk/rpi/pigpio/&#34;&gt;pigpio&lt;/a&gt;. El ejemplo consiste en activar y apagar el &lt;em&gt;pin&lt;/em&gt; sucesivamente en un bucle y usar el método &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#sleep-long-&#34;&gt;Thread.sleep&lt;/a&gt; para que pase unos segundos entre uno y otro y nos de tiempo a ver el encendido y apagado. El nada complejo programa Java para controlar el diodo y un vídeo de su funcionamiento están a continuación.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/1fda899b7fbbc19a82bb397d525927f2.js?file=PinBlink.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/1fda899b7fbbc19a82bb397d525927f2.js?file=executeSSH.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/1fda899b7fbbc19a82bb397d525927f2.js?file=executeGradle.sh&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media media-video&#34; style=&#34;text-align: center;&#34;&gt;
+  &lt;iframe width=&#34;640&#34; height=&#34;360&#34; src=&#34;https://www.youtube.com/embed/NX5tBxWuzFA&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En un artículo anterior comento &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-hello-world-con-java-en-la-raspberry-pi/&#34;&gt;como disponer de un entorno para desarrollar, desplegar las librerías &lt;em&gt;jar&lt;/em&gt; en la Raspberry Pi&lt;/a&gt; y como ejecutar los ejemplos desde la línea de comandos usando una combinación de herramientas de &lt;a href=&#34;https://es.wikipedia.org/wiki/Secure_Shell&#34;&gt;SSH&lt;/a&gt;, &lt;a href=&#34;https://rsync.samba.org/&#34;&gt;rsync&lt;/a&gt; y &lt;a href=&#34;http://www.ansible.com&#34;&gt;Ansible&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew executePinBlink&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="gnu-linux"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-hello-world-con-java-en-la-raspberry-pi/</id>
+        <title>Ejemplo Hello World con Java en la Raspberry Pi</title>        
+        <updated>2017-03-04T23:00:00+01:00</updated>
+        <published>2017-03-04T11:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-hello-world-con-java-en-la-raspberry-pi/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/raspberrypi.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Raspberry Pi&#34; title=&#34;Raspberry Pi&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Este artículo es introductorio a los siguientes que escribiré y publicaré sobre el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;kit de iniciación a la electrónica para la Raspberry Pi&lt;/a&gt;. Antes de empezar a cacharrear con los sensores y dipositivos de entrada y salida, con los pines GPIO y para hacerlo de forma cómoda crearé un entorno de desarrollo y despliegue en la &lt;a href=&#34;https://www.raspberrypi.org/&#34;&gt;Raspberry Pi&lt;/a&gt; usando &lt;a href=&#34;https://es.wikipedia.org/wiki/Secure_Shell&#34;&gt;SSH&lt;/a&gt;, &lt;a href=&#34;https://rsync.samba.org/&#34;&gt;rsync&lt;/a&gt; para copiar los artefactos del equipo de desarrollo a la RPi y &lt;a href=&#34;http://www.ansible.com&#34;&gt;Ansible&lt;/a&gt; usándolo desde &lt;a href=&#34;http://gradle.org/&#34;&gt;Gradle&lt;/a&gt; para lanzar comandos y ejecutar los ejemplos de forma remota aunque si no se quiere usar Ansible se pueden lanzar los comandos mediante SSH.&lt;/p&gt;
+
+&lt;p&gt;En la Raspberry Pi deberemos instalar por supuesto &lt;a href=&#34;http://www.oracle.com/technetwork/java/index.html&#34;&gt;Java&lt;/a&gt; (es posible usar Java 8) junto con SSH y rsync, configurar el servidor SSH en la RPi modificando el archivo &lt;em&gt;/etc/ssh/sshd_config&lt;/em&gt;, habilitar el servidor SSH, copiar nuestra &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/02/generar-y-convertir-claves-y-certificados-con-openssl/&#34;&gt;clave pública ssh generada previamente&lt;/a&gt; al archivo &lt;em&gt;~/.ssh/authorized_keys&lt;/em&gt; del usuario e instalar &lt;a href=&#34;https://www.python.org/&#34;&gt;Python&lt;/a&gt; como requerimiento de Ansible. Los programas Java los escribiremos en un equipo más potente que la Raspberry Pi ya sea un portátil o un equipo de sobremesa con un IDE ya sea &lt;a href=&#34;https://www.jetbrains.com/idea/&#34;&gt;IntelliJ&lt;/a&gt;, &lt;a href=&#34;https://eclipse.org&#34;&gt;eclipse&lt;/a&gt; u otro, también deberemos instalar Gradle, Ansible y rsync. En Arch Linux con los siguientes comandos del gestor de paquetes:&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=pacman-raspberrypi.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=authorized_keys&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=pacman.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Con la ayuda de unas tareas para la herramienta de construcción Gradle haremos el despliegue y la ejecución de la librería &lt;em&gt;jar&lt;/em&gt; del proyecto de los ejemplos y de las dependencias que necesiten. El archivo de construcción de Gradle sería el siguiente en el que la tarea &lt;em&gt;copyDependencies&lt;/em&gt; copia las dependencias al directorio &lt;em&gt;build/libs&lt;/em&gt;. La tarea &lt;em&gt;upload&lt;/em&gt; ejecutan el comando &lt;em&gt;rsync&lt;/em&gt; para subir el archivo &lt;em&gt;jar&lt;/em&gt; y las dependencias del proyecto a la Raspberry Pi. Finalmente, una tarea como &lt;em&gt;executeHelloWorld&lt;/em&gt; ejecutará el comando en la Raspberry Pi para lanzar el programa Java. Con SSH también se puede lanzar el comando de forma remota cambiando la dirección IP de la Raspberry Pi por la que tenga asignada.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=build.gradle&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=executeSSH.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=executeGradle.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El programa de ejemplo es universal gracias a la idea &lt;em&gt;«Write once, run anywhere»&lt;/em&gt; posibilitado por la máquina virtual o &lt;abbr title=&#34;Java Virtual Machine&#34;&gt;&lt;a href=&#34;http://es.wikipedia.org/wiki/M%C3%A1quina_virtual_Java&#34;&gt;JVM&lt;/a&gt;&lt;/abbr&gt; y el &lt;em&gt;bytecode&lt;/em&gt;, está compilado en un sistema con arquitectura x64 (el de mi equipo) y ejecutado en un sistema con arquitectura arm (el de la RPi). No se diferencia en nada al que usaríamos para lo mismo en cualquier otro sistema distinto de la Raspberry Pi.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/2a2fb6ccb095ddaee5a1df0a5ebb0cae.js?file=HelloWorld.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El resultado de este ejemplo es un mensaje en la terminal que es emitido por un programa Java ejecutado en la Raspberry Pi y lanzado de forma remota.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/213/java-raspberrypi-hello-world.png&#34; title=&#34;Ejemplo Hello World con Java en la Raspberry Pi&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/213/java-raspberrypi-hello-world-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Ejemplo Hello World con Java en la Raspberry Pi&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;En los siguientes artículos de la serie mostraré ya como usar diferentes elementos de salida como diodos LED, zumbador, &lt;em&gt;display&lt;/em&gt; LCD 1602 o de entrada como un pulsador.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew executeHelloWorld&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="gnu-linux"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/</id>
+        <title>Desempaquetado del kit de iniciación a la electrónica para la Raspberry Pi</title>        
+        <updated>2017-02-25T23:30:00+01:00</updated>
+        <published>2017-02-25T11:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/raspberrypi.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Raspberry Pi&#34; title=&#34;Raspberry Pi&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En el año 2012 compré una de las primeras Raspberry Pi que estuvieron disponibles a la venta, una placa modelo B de 256 MiB. La Raspberry Pi es un pequeño computador en una placa del tamaño de una tarjeta de crédito a un precio que aún se sigue manteniendo en las nuevas versiones de unos 40€ a los que hay que sumar algunos complementos necesarios como una tarjeta SD o microSD y un cargador con conector miniUSB. Las versiones iniciales que es la que tengo se componían de:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;CPU 700 Mhz, un núcleo ARM11 de 32 bits&lt;/li&gt;
+&lt;li&gt;Memoria de 256 MiB&lt;/li&gt;
+&lt;li&gt;Ethernet 100 MB&lt;/li&gt;
+&lt;li&gt;Lector tarjeta SD&lt;/li&gt;
+&lt;li&gt;2 x USB 2.0&lt;/li&gt;
+&lt;li&gt;HDMI&lt;/li&gt;
+&lt;li&gt;26 pines, 17 de propósito general o GPIO&lt;/li&gt;
+&lt;li&gt;Salida de audio&lt;/li&gt;
+&lt;li&gt;Salida de vídeo&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Después de unos años se han lanzado versiones notablemente mejoradas, hasta la fecha la última es la &lt;a href=&#34;http://amzn.to/2mmu6Os&#34;&gt;Raspberry Pi 3&lt;/a&gt; de esta placa que multiplica por 4 la cantidad de memoria RAM hasta 1 GiB y con una CPU de 4 núcleos a una frecuencia de 1.2 Ghz basados en los procesadores ARM Cortex-A53 de 64 bits, incluyendo WIFI N y Bluetooth 4.1, 4 conectores USB, lector microSD y 26 pines GPIO. Aunque la finalidad original de este computador es el aprendizaje de programación y electrónica el uso principal que le he dado hasta ahora ha sido para hacer descargas P2P via torrent. Esta placa es muy popular debido a su bajo coste aunque hay que sumarle posteriormente el precio de una tarjeta microSD y el cargador para proporcionarle energía, su éxito no solo es debido a su coste ya que hay opciones aún más potentes en algunos aspectos a precio similar que no son tan populares, el valor diferenciador de la Raspberry Pi es el apoyo y soporte de la comunidad.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/raspberrypi1b.jpg&#34; title=&#34;Raspberry Pi 1 B&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/raspberrypi1b-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/raspberrypi3b.jpg&#34; title=&#34;Raspberry Pi 3 B&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/raspberrypi3b-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Placas modelos Raspberry Pi 1 B y 3 B&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
+  &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B01CD5VC92&amp;linkId=8984621587929046662fba2b79079f5e&#34;&gt;&lt;/iframe&gt;
+  &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B01DDFFOYK&amp;linkId=079335c8a813f0df668ada2e897b7562&#34;&gt;&lt;/iframe&gt;
+  &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B00J29BR3Y&amp;linkId=4c06245cfc2383a7972edcbe3e42333a&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Hace unas semanas compré un &lt;a href=&#34;http://amzn.to/2mgnpko&#34;&gt;kit de electrónica básico para la Raspberry Pi&lt;/a&gt; pero que incluye una buena cantidad de sensores y elementos de electrónica y sirve para cualquier placa con pines GPIO. Como el &lt;em&gt;kit&lt;/em&gt; es para la Raspberry Pi 3 y viene con un cable de extensión de 40 pines (cantidad de pines que tiene la Raspberry Pi 3) y yo tengo la 1 debí comprar también un &lt;a href=&#34;http://amzn.to/2lSYiDF&#34;&gt;cable de extensión de 26 pines&lt;/a&gt; (los que tiene la Raspberry Pi 1) para la matriz de puntos con la que hacer pruebas sin soldar los elementos. El precio del &lt;em&gt;kit&lt;/em&gt; no es muy caro, de unos 30€ y el barómetro no venía soldado con sus pines por lo que si queremos usarlo deberemos hacer la soldadura primero con un &lt;a href=&#34;http://amzn.to/2mtXv8L&#34;&gt;soldador de electrónica&lt;/a&gt; y &lt;a href=&#34;http://amzn.to/2lSTYUU&#34;&gt;estaño&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;El contenido del &lt;em&gt;kit&lt;/em&gt; es el siguiente que viene en una estupenda caja de plástico para guardar todos los componentes de forma ordenada:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1 x GPIO to breadboard 40-pin breakout interface&lt;/li&gt;
+&lt;li&gt;1 x solderless prototype breadboard&lt;/li&gt;
+&lt;li&gt;40 x pin jumper wires (male to male 15cm)&lt;/li&gt;
+&lt;li&gt;2 x 8 pin Jumper Wires (female to female 20cm)&lt;/li&gt;
+&lt;li&gt;24 x LED (6 x Bright White, 6 x Red, 6 x Yellow, 6 x Green)&lt;/li&gt;
+&lt;li&gt;65 x resistors (200ohm x 20pcs, 1Kohm x 20pcs, 10Kohm x 20pcs, 1Mohm x 5pcs)&lt;/li&gt;
+&lt;li&gt;3 x photoresistor (light sensor)&lt;/li&gt;
+&lt;li&gt;5 x push buttons&lt;/li&gt;
+&lt;li&gt;3 x potentiometer (10kilohm adjustable resistor)&lt;/li&gt;
+&lt;li&gt;1 x A/D converter&lt;/li&gt;
+&lt;li&gt;1 x DHT11 Temperature/Humidity sensor&lt;/li&gt;
+&lt;li&gt;1 x motion sensor&lt;/li&gt;
+&lt;li&gt;1 x mercury tilt switch sensor&lt;/li&gt;
+&lt;li&gt;1 x I2C 1602 alphanumeric LCD&lt;/li&gt;
+&lt;li&gt;1 x servo motor&lt;/li&gt;
+&lt;li&gt;1 x piezo Buzzer&lt;/li&gt;
+&lt;li&gt;1 x BMP180 Pressure/Temperature Sensor&lt;/li&gt;
+&lt;li&gt;1 x relay&lt;/li&gt;
+&lt;li&gt;1 x Infrared Remote Controller and Receiver(VS1838B)&lt;/li&gt;
+&lt;li&gt;1 x Raspberry Pi/Arduino 8-Channel TTL Logic Level Converter&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/caja.jpg&#34; title=&#34;Caja&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/caja-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/componentes-1.jpg&#34; title=&#34;Componentes&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/componentes-1-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Caja, componentes y sensores&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/display-1.jpg&#34; title=&#34;Display 16x02&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/display-1-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/display-2.jpg&#34; title=&#34;Display 16x02 con adaptador I2C&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/display-2-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Display 16x02 y adaptador I2C&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/breadboard-1.jpg&#34; title=&#34;Breadboard&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/breadboard-1-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/breadboard-2.jpg&#34; title=&#34;Breadboard y adaptador&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/breadboard-2-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Breadboard y adaptador&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/adaptador-breadboard.jpg&#34; title=&#34;Breadboard&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/adaptador-breadboard-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/diodos-resistencias.jpg&#34; title=&#34;Diodos, botones, resistencias y fotoresistores&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/diodos-resistencias-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Adaptador breadboard, diodos, botones, resistencias y fotoresistores&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
+  &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B01MDUP97N&amp;linkId=a16adfaf3d471a1e94dc0590c0d615be&#34;&gt;&lt;/iframe&gt;
+  &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B00W9F5LR6&amp;linkId=5668053b0c5cb1aa9ff20db0e39790e8&#34;&gt;&lt;/iframe&gt;
+  &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B01KC2AQJK&amp;linkId=e45d6edd69dac157bd5ddf58be2cb301&#34;&gt;&lt;/iframe&gt;
+  &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B008DEYEAW&amp;linkId=1f3f2cae44a45a28da37ac44749ed329&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;La matriz de conexiones o &lt;em&gt;breadboard&lt;/em&gt; es una forma cómoda de hacer pruebas sin tener que hacer soldaduras, los puntos en vertical de la mitad superior e inferior están conectados entre si de modo que con los cables macho-macho podamos poner y quitar conexiones. La matriz está numerada horizontalmente con números y verticalmente con letras de forma que cada punto sea identificable individualmente. Las dos filas de puntos superiores suelen usarse para proporcionar un voltaje de 5V y la conexión de tierra, las dos filas de puntos inferiores para proporcionar un voltaje de 3.3V y tierra. La placa está dividida en dos mitades verticalmente de las letras A-D y E-F formando columnas verticales de puntos conectadas en grupos de 5.&lt;/p&gt;
+
+&lt;p&gt;Mi intención para este &lt;em&gt;kit&lt;/em&gt; es hacer unos pequeños ejemplos usando en cada uno de ellos uno o varios elementos y con el lenguaje de programación Java y la librería &lt;a href=&#34;http://rtd.diozero.com/en/latest/&#34;&gt;Diozero&lt;/a&gt;. Entre los ejemplos estará encender y apagar un LED, usar el &lt;em&gt;display&lt;/em&gt; de 16x2 caracteres, el sensor de temperatura y humedad, el sensor de infrarrojos, el motor, los pulsadores, el sensor de movimiento, los detectores de luz, el detector de golpes, etc&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;En la página del fabricante o distribuidor mayorista &lt;a href=&#34;http://osoyoo.com/&#34;&gt;Osoyoo&lt;/a&gt; hay colgados varios ejemplos usando varios de estos elementos. También deberemos hacernos con las referencias de los pines para saber las conexiones que debemos hacer con los cables junto con la tabla de referencia de colores de las resistencias. Para usar las tablas de referencia debemos saber que hay varias formas de numerar los pines. Está la del &lt;em&gt;header&lt;/em&gt; del 1 al 26 o del 1 al 40 secuencialmente según la disposición en el &lt;em&gt;header&lt;/em&gt;, la que utiliza la librería &lt;a href=&#34;http://wiringpi.com/&#34;&gt;wiringPi&lt;/a&gt; y &lt;a href=&#34;http://pi4j.com/&#34;&gt;Pi4J&lt;/a&gt; para numerar los pines GPIO y la de Broadcom que utiliza la librería Diozero. Estas tablas de referencia de nomenclatura son importantes porque cada una numera los pines de forma diferente, por ejemplo, según la numeración de wiringPi el pin número 3 corresponde al GPIO 8 cuando según la nomenclatura de Broadcom el mismo pin corresponde al GPIO 0 en el modelo RPi 1 modelo B rev1 y al GPIO 2 en la RPi 3.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/raspberrypi1b-header-rev1.png&#34; title=&#34;Header de pines Raspberry Pi 1 B&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/raspberrypi1b-header-rev1-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/raspberrypi3b-header.png&#34; title=&#34;Header de pines Raspberry Pi 3 B&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/raspberrypi3b-header-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Header de pines Raspberry Pi 1 B y Raspberry Pi 3 B, nomenclatura wiringPi&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/raspberrypi1b-header-rev1-broadcom.png&#34; title=&#34;Header de pines Raspberry Pi 1 B&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/raspberrypi1b-header-rev1-broadcom-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/raspberrypi3b-header-broadcom.png&#34; title=&#34;Header de pines Raspberry Pi 3 B&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/raspberrypi3b-header-broadcom-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Headers de pines Raspberry Pi 1 B y Raspberry Pi 3 B, nomenclatura Broadcom&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/codigo-colores-resistencias.jpg&#34; title=&#34;Código de colores de las resistencias&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/codigo-colores-resistencias-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Código de colores de las resistencias&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Un ejemplo básico sin necesidad de programar nada es encender un diodo LED. Los elementos a usar son el diodo LED, una resistencia, los cables macho-macho, el cable de extensión y la matriz de puntos. Para ello conectamos el cable de extensión a la matriz de puntos donde con los cables macho-macho haremos las conexiones en los agujeros de la matriz de puntos. Usaremos la conexión de voltaje de 3.3V y una resistencia de 200 ohmios para que el LED no reciba demasiada intensidad. Los diodos LED tienen dos patitas, una más corta que la otra que indican la polaridad, la corta es el polo negativo y se conecta a tierra, la larga es el polo positivo que se conecta a uno de los extremos de la resistencia y el otro extremo de esta la voltaje de 3.3V.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/hola-mundo-led.jpg&#34; title=&#34;Ejemplo conexión LEDs&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/hola-mundo-led-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/raspberrypi.jpg&#34; title=&#34;Raspberry Pi&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/raspberrypi-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Ejemplo conexión LEDs y Raspberry Pi&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Con el programa &lt;a href=&#34;http://fritzing.org/home/&#34;&gt;Fritzing&lt;/a&gt; podremos prototipar y documentar el esquema de  conexiones que realicemos de los proyectos. Posee numerosos modelos, elementos electrónicos y dispositivos de entrada y salida aunque no he encontrado el correspondiente la placa de extensión de wiringPi.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/fritzing.png&#34; title=&#34;Fritzing&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/212/fritzing-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Fritzing&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;En el siguiente artículo explicaré como crear un programa Java para encender y apagar varias veces un diodo LED con la librería Doizero. Además explicaré como con &lt;a href=&#34;http://gradle.org/&#34;&gt;Gradle&lt;/a&gt;, &lt;a href=&#34;https://es.wikipedia.org/wiki/Secure_Shell&#34;&gt;SSH&lt;/a&gt; y &lt;a href=&#34;http://www.ansible.com&#34;&gt;Ansible&lt;/a&gt; hacerlo de forma cómoda desde nuestra máquina de desarrollo y no directamente desde la más lenta Raspberry Pi.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Software. Hardware. Complete.&lt;/em&gt;&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="gnu-linux"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+</feed>
