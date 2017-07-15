@@ -3,12 +3,126 @@
     <id>https://picodotdev.github.io/blog-bitix/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2017-07-09T13:00:00+02:00</updated>
+    <updated>2017-07-15T00:00:00+02:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
     <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/07/tutorial-sobre-programacion-concurrente-en-java/</id>
+        <title>Tutorial sobre programación concurrente en Java</title>        
+        <updated>2017-07-15T00:00:00+02:00</updated>
+        <published>2017-07-15T00:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/07/tutorial-sobre-programacion-concurrente-en-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Java proporciona en su API numerosas primitivas para realizar programación concurrente. La programación concurrente permite realizar varias tareas simultáneamente aprovechando los múltiples núcleos de los procesadores modernos con un tiempo de ejecución total para un conjunto de tareas significativamente menor. Dos de los problemas de concurrencia más conocidos son el problema de los filósofos y del barbero que en este artículo muestro como implementar usando varias de las primitivas ofrecidas por Java.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En todo el tiempo que llevo programando en Java no he tenido necesidad de conocer en detalle las primitivas de concurrencia que ofrece el lenguaje y la API. Java desde sus primeras versiones ya ofrecía el soporte básico para la programación concurrente con las clases &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html&#34;&gt;Thread&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html&#34;&gt;Runnable&lt;/a&gt; y algunas primitivas de sincronización como la palabra clave reservada &lt;em&gt;syncrhonized&lt;/em&gt;, los &lt;em&gt;locks&lt;/em&gt; intrínsecos de los objetos y algunos métodos de la clase &lt;em&gt;Thread&lt;/em&gt; como &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#sleep-long-&#34;&gt;sleep&lt;/a&gt;, &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait--&#34;&gt;wait&lt;/a&gt; y &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#join--&#34;&gt;join&lt;/a&gt;. Entre la documentación de Java está el siguiente &lt;a href=&#34;https://docs.oracle.com/javase/tutorial/essential/concurrency/&#34;&gt;tutorial sobre la concurrencia en Java&lt;/a&gt; que es muy recomendable leer.&lt;/p&gt;
+
+&lt;p&gt;Las computadoras realizan varias tareas de forma concurrente con la ayuda del sistema operativo que permite compartir el procesador para realizar diferentes tareas (navegar por internet, editar un documento, escuchar música, &amp;hellip;) cambiando cada muy poco tiempo (medido en ms) entre procesos, con los procesadores de varios núcleos las tareas se ejecutan silmultáneamente en diferentes núcleos. Los &lt;em&gt;threads&lt;/em&gt; en Java se comunican principalmente compartiendo referencias a objetos, este tipo de comunicación es eficiente pero posibilita dos tipos de errores, interferencias entre &lt;em&gt;threads&lt;/em&gt; y errores de consistencia, la herramienta para evitarlos es la sincronización. Sin embargo, la sincronización introduce contención cuando dos o más hilos intentan acceder al mismo recurso simultáneamente y provocan una pérdida de rendimiento. El bloqueo mutuo o &lt;em&gt;deadlock&lt;/em&gt;, la inanición o &lt;em&gt;starvation&lt;/em&gt; y un bloqueo vivo o &lt;em&gt;livelock&lt;/em&gt; son problemas de la sincronización. Seguramente te suenen los objetos inmutables, en la programación concurrente son especialmente útiles dado que su estado no cambia y no pueden corromperse ni quedar en un estado inconsistente por la interferencia entre &lt;em&gt;threads&lt;/em&gt; evitando de esta manera errores que suelen ser difíciles de depurar por ofrecer un comportamiento errático.&lt;/p&gt;
+
+&lt;p&gt;En vez de usar los &lt;em&gt;locks&lt;/em&gt; implícitos de los objetos la API de Java para concurrencia ofrece varios tipos más con propiedades adicionales como la habilidad de salir si el intento de adquirir el &lt;em&gt;lock&lt;/em&gt; falla. En el paquete &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/package-summary.html&#34;&gt;java.util.concurrent.locks&lt;/a&gt; está listados. Otro tipo de primitivas de sincronización para &lt;em&gt;threads&lt;/em&gt; son los &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Semaphore.html&#34;&gt;Semaphore&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CyclicBarrier.html&#34;&gt;CyclicBarrier&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CountDownLatch.html&#34;&gt;CountDownLatch&lt;/a&gt; entre otros como &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Phaser.html&#34;&gt;Phaser&lt;/a&gt; y &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Exchanger.html&#34;&gt;Exchanger&lt;/a&gt;. En el paquete &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/package-summary.html&#34;&gt;java.util.concurrent.atomic&lt;/a&gt; hay varios tipos de datos básicos que realizan sus operaciones de forma atómica como por ejemplo contadores.&lt;/p&gt;
+
+&lt;p&gt;Con los &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executors.html&#34;&gt;Executors&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html&#34;&gt;ExecutorService&lt;/a&gt; no hace falta que manejemos los hilos a bajo nivel, es posible obtener un &lt;em&gt;pool&lt;/em&gt; de &lt;em&gt;threads&lt;/em&gt; de una tamaño específico y enviar clases &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Callable.html&#34;&gt;Callable&lt;/a&gt; o &lt;em&gt;Runnable&lt;/em&gt; que devuelven un resultado para que se ejecuten con un &lt;em&gt;thread&lt;/em&gt; del &lt;em&gt;pool&lt;/em&gt; cuando esté libre. Con la clase &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ScheduledExecutorService.html&#34;&gt;ScheduledExecutorService&lt;/a&gt; se programa la ejecución de tareas de forma periódica. En los &lt;em&gt;streams&lt;/em&gt; añadidos a Java 8 el procesamiento se puede realizar de forma paralela aprovechando los microprocesadores multinúcleo sin tener que usar de forma explícita ninguna de las utilidades anteriores, internamente usa el &lt;em&gt;Fork/Join&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;El soporte para la programación concurrente ofrecido en Java es suficiente para la mayoría de tareas que podamos necesitar y ha mejorado bastante desde las primeras versiones.&lt;/p&gt;
+
+&lt;p&gt;El primer ejemplo que muestro es usando concurrencia ejecutar varias tareas y como realizándolas de forma secuencial el tiempo total empleado es la suma del tiempo de las tareas individuales y como usando concurrencia es la suma de la tarea que más tarda. El ejemplo se trata de 8 tareas que de forma secuencial tardan aproximadamente 24 segundos ya que cada tarea emplea 3 segundos, en el caso empleando concurrencia el tiempo es de aproximadamente 6 segundos ya se se emplea en &lt;em&gt;pool&lt;/em&gt; de &lt;em&gt;threads&lt;/em&gt; de 4 de capacidad con lo que las primeras 4 tareas tardan 3 segundos y el siguiente lote de 4 tareas tarda otros 3 segundos para un total de 6 segundos.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/b18f1c1e32d73b4ef03d4ae3670f80b6.js?file=Main.java&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+        &lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/GjXM3ACFPPW027eLqKiZlrvMh.js&#34; id=&#34;asciicast-GjXM3ACFPPW027eLqKiZlrvMh&#34; async&gt;&lt;/script&gt;
+        &lt;noscript&gt;&lt;a href=&#34;https://asciinema.org/a/GjXM3ACFPPW027eLqKiZlrvMh&#34; target=&#34;_blank&#34;&gt;&lt;img src=&#34;https://asciinema.org/a/GjXM3ACFPPW027eLqKiZlrvMh.png&#34; width=&#34;734&#34;/&gt;&lt;/a&gt;&lt;/noscript&gt;
+        
+        &lt;figcaption&gt;Ejecución secuencial y concurrente de tareas&lt;/figcaption&gt;
+        
+    &lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Dos de los problemas más conocidos en la programación concurrente son el de &lt;a href=&#34;https://es.wikipedia.org/wiki/Problema_de_la_cena_de_los_fil%C3%B3sofos&#34;&gt;La cena de los filósofos&lt;/a&gt; y el de &lt;a href=&#34;https://es.wikipedia.org/wiki/Problema_del_barbero_durmiente&#34;&gt;El barbero durmiente&lt;/a&gt;. Usando algunas de las primitivas comentadas en este artículo este sería el código para para resolver ambos problemas en Java.&lt;/p&gt;
+
+&lt;p&gt;En este código del problema de los filósofos la clase &lt;em&gt;Table&lt;/em&gt; crea los filósofos asignándoles los &lt;em&gt;Fork&lt;/em&gt; que tienen que compartir para comer después de estar un tiempo pensando. En la ejecución se observa que el primer filósofo que intenta comer puede hacerlo ya que sus tenedores adyacentes está libres pero posteriormente se observa que en algunas ocasiones algún filósofo no puede hacerlo porque sus tenedores están siendo usados por alguno de sus compañeros adyacentes.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/b18f1c1e32d73b4ef03d4ae3670f80b6.js?file=PhilosophersMain.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/b18f1c1e32d73b4ef03d4ae3670f80b6.js?file=Table.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/b18f1c1e32d73b4ef03d4ae3670f80b6.js?file=Fork.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/b18f1c1e32d73b4ef03d4ae3670f80b6.js?file=Philosopher.java&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+        &lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/kxDfAc6SNNZ3EFdR4Zrc1U163.js&#34; id=&#34;asciicast-kxDfAc6SNNZ3EFdR4Zrc1U163&#34; async&gt;&lt;/script&gt;
+        &lt;noscript&gt;&lt;a href=&#34;https://asciinema.org/a/kxDfAc6SNNZ3EFdR4Zrc1U163&#34; target=&#34;_blank&#34;&gt;&lt;img src=&#34;https://asciinema.org/a/kxDfAc6SNNZ3EFdR4Zrc1U163.png&#34; width=&#34;734&#34;/&gt;&lt;/a&gt;&lt;/noscript&gt;
+        
+        &lt;figcaption&gt;Ejemplo de concurrencia de los filósofos&lt;/figcaption&gt;
+        
+    &lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En el caso de ejemplo del barbero cuando solo hay un barbero los clientes se acumulan ya que estos entran en la tienda a razón de 1 entre 1500 y 3500ms y el barbero tarda afeitar un cliente entre 2000 y 7000ms. Poniendo en la barbería dos barberos los clientes ya no se acumulan en la sala de espera.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/b18f1c1e32d73b4ef03d4ae3670f80b6.js?file=BarberShopMain.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/b18f1c1e32d73b4ef03d4ae3670f80b6.js?file=BarberShop.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/b18f1c1e32d73b4ef03d4ae3670f80b6.js?file=Street.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/b18f1c1e32d73b4ef03d4ae3670f80b6.js?file=Barber.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/b18f1c1e32d73b4ef03d4ae3670f80b6.js?file=Client.java&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+        &lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/uej4sdDRO03kAcROgu4RAc27z.js&#34; id=&#34;asciicast-uej4sdDRO03kAcROgu4RAc27z&#34; async&gt;&lt;/script&gt;
+        &lt;noscript&gt;&lt;a href=&#34;https://asciinema.org/a/uej4sdDRO03kAcROgu4RAc27z&#34; target=&#34;_blank&#34;&gt;&lt;img src=&#34;https://asciinema.org/a/uej4sdDRO03kAcROgu4RAc27z.png&#34; width=&#34;734&#34;/&gt;&lt;/a&gt;&lt;/noscript&gt;
+        
+        &lt;figcaption&gt;Ejemplo de concurrencia del barbero (1 barbero)&lt;/figcaption&gt;
+        
+    &lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+        &lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/etiWqKLzR4BI3HpOLawuzSwuo.js&#34; id=&#34;asciicast-etiWqKLzR4BI3HpOLawuzSwuo&#34; async&gt;&lt;/script&gt;
+        &lt;noscript&gt;&lt;a href=&#34;https://asciinema.org/a/etiWqKLzR4BI3HpOLawuzSwuo&#34; target=&#34;_blank&#34;&gt;&lt;img src=&#34;https://asciinema.org/a/etiWqKLzR4BI3HpOLawuzSwuo.png&#34; width=&#34;734&#34;/&gt;&lt;/a&gt;&lt;/noscript&gt;
+        
+        &lt;figcaption&gt;Ejemplo de concurrencia del barbero (2 barberos)&lt;/figcaption&gt;
+        
+    &lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaconCurrency&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/tutorial/essential/concurrency/&#34;&gt;Tutorial sobre la concurrencia en Java&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/07/iniciar-rapido-un-proyecto-de-java-con-gradle-o-de-spring-con-spring-initializr/</id>
@@ -1849,380 +1963,6 @@
                 <category term="software"/>
             
                 <category term="software-libre"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2017/05/descargar-e-instalar-windows-10-paso-a-paso-desde-cero/</id>
-        <title>Descargar e instalar Windows 10 paso a paso desde cero</title>        
-        <updated>2017-05-13T11:35:00+02:00</updated>
-        <published>2017-05-09T22:30:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/05/descargar-e-instalar-windows-10-paso-a-paso-desde-cero/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;Un virus, el &lt;em&gt;bloatware&lt;/em&gt; preinstalado en muchos portátiles o tras instalar y desinstalar programas en Windows puede ocasionar que el equipo sea lento, se muestren mensajes de error o un virus cifre los archivos personales. En estos casos una solución habitual sencilla, rápida y fiable de volver a usar con normalidad el equipo es reinstalar Windows 10 desde cero. No es complicado pero para un usuario con pocos conocimientos de informática no es una tarea sencilla. En este artículo explicaré como instalar paso a paso y desde cero el sistema operativo Windows 10.&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/microsoft.svg&#34; class=&#34;right&#34; width=&#34;300&#34; alt=&#34;Microsoft&#34; title=&#34;Microsoft&#34;/&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/windows-10.svg&#34; class=&#34;right&#34; width=&#34;300&#34; alt=&#34;Windows 10&#34; title=&#34;Windows 10&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Prácticamente la totalidad de portátiles que se venden en las grandes superficies comerciales más conocidas están con el sistema operativo Windows preinstalado. Pero los fabricantes con la intención dotar de más capacidades y funcionalidades que las que incorpora &lt;a href=&#34;https://www.microsoft.com/es-es/windows/&#34;&gt;Windows&lt;/a&gt; instalan numerosos programas que conforman el conocido &lt;em&gt;bloatware&lt;/em&gt; que en muchas ocasiones hacen que un equipo completamente nuevo sea más lento de lo normal al iniciar el sistema, al arrancar programas o trabajar con ellos. Entre los programas que suelen preinstalar los fabricantes están los antivirus que al cabo de un tiempo se desactivan ya que suelen ser versiones de evaluación pudiendo dejar al equipo desprotegido ante virus y software malicioso, Windows 10 ya incorpora uno, Windows Defender, y para la mayoría de usuarios es suficiente por su efectividad aceptable. Otros programas que los fabricantes suelen instalar son reproductores de vídeo o software multimedia en la mayoría de casos innecesario ya que Windows  de por si ya incorpora las capacidades de trabajar con archivos multimedia como fotografías o vídeos. También puede darse el caso que tras una actualización o la instalación de un programa el equipo empiece a presentar fallos.&lt;/p&gt;
-
-&lt;p&gt;En los casos anteriores realizar una reinstalación de Windows desde cero es necesaria. Muchos usuarios no tienen conocimientos avanzados de tecnología o informática y no conocen los pasos para realizar una reinstalación. En este artículo explicaré detalladamente, paso a paso y desde cero cuales son los pasos que hay que realizar para instalar Windows 10.&lt;/p&gt;
-
-&lt;h3 id=&#34;requisitos-mínimos&#34;&gt;Requisitos mínimos&lt;/h3&gt;
-
-&lt;p&gt;Lo primero es conocer que Windows 10 para funcionar correctamente posee unos requisitos mínimos para el equipo en el que vaya a ser instalado, fue comercializado en julio del 2015 y cualquier equipo posterior a esa fecha ya cumplirá con los requisitos mínimos y también los equipos que cumpliesen con los de Windows 7 o viniesen preinstalados con esta versión anterior. En la página de &lt;a href=&#34;https://www.microsoft.com/es-es/windows/windows-10-specifications&#34;&gt;Especificaciones y requisitos del sistema para Windows&lt;/a&gt; están detalladas una buena cantidad de notas informativas y los requerimientos que son los siguientes:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Procesador: Un procesador a 1 GHz o más rápido o SoC&lt;/li&gt;
-&lt;li&gt;RAM: 1 gigabyte (GiB) para 32 bits o 2 GB para 64 bits&lt;/li&gt;
-&lt;li&gt;Espacio en disco duro: 16 GB para un SO de 32 bits o 20 GB para un SO de 64 bits&lt;/li&gt;
-&lt;li&gt;Tarjeta gráfica: DirectX 9 o posterior con un controlador WDDM 1.0&lt;/li&gt;
-&lt;li&gt;Pantalla: 800 x 600&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Estos son los requisitos básicos, los recomendables para una buena experiencia de uso son disponer de 4 GiB de memoria y con esta memoria el siguiente aspecto con el que más se nota una mejora es disponer de un disco duro de estado sólido o SSD en vez de mecánico ya que son varias magnitudes más rápidos tanto en la lectura como en la escritura.&lt;/p&gt;
-
-&lt;p&gt;Cualquier equipo nuevo cumple con estos requisitos pero quizá algunos no posean disco duro SSD, estos discos son más caros y ofrecen menos capacidad aunque ya se han abaratado y son bastante asequibles y su capacidad a partir de los 128 GiB o 256 GiB son suficientes para muchos usuarios. Pagar algo más por un equipo con un disco SSD es una buena decisión, un equipo con disco mecánico puede tardar 1 o 2 minutos en iniciarse, uno con un SSD menos de 10 segundos lo que es solo un ejemplo entre la diferencia entre unos y otros.&lt;/p&gt;
-
-&lt;h3 id=&#34;copia-de-seguridad&#34;&gt;Copia de seguridad&lt;/h3&gt;
-
-&lt;p&gt;Una vez que sabes que el equipo cumple con los requisitos mínimos hay que hacer una copia de seguridad de los documentos, fotos y demás archivos personales que posea el equipo y quieras conservar en un disco duro o memoria USB externo, si son muchos los datos en vez de copiar y pegar con el explorador de archivos puedes hacer la &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/05/como-realizar-copias-de-seguridad-en-windows-con-freefilesync/&#34;&gt;copia de seguridad con el programa FreeFileSync&lt;/a&gt; y restaurar los datos también con el mismo programa una vez reinstalado Windows.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/freefilesync.png&#34; title=&#34;FreeFileSync&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/freefilesync-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  
-  &lt;figcaption&gt;Realizar copia de seguridad con FreeFileSync&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;h3 id=&#34;creación-del-medio-de-instalación&#34;&gt;Creación del medio de instalación&lt;/h3&gt;
-
-&lt;p&gt;En versiones anteriores de Windows este debía buscarse en las redes de compartición de archivos o P2P como torrent. Con Windows 10 Microsoft sabiamente para evitar problemas de seguridad proporciona la imagen ISO o una herramienta de creación del medio USB desde su propia página. Para &lt;a href=&#34;https://www.microsoft.com/es-es/software-download/windows10&#34;&gt;descargar la imagen ISO de Windows&lt;/a&gt; hay que seleccionar la edición a descargar (en el momento de escribir este artículo la última es la &lt;em&gt;Creators Update&lt;/em&gt;) y el idioma.&lt;/p&gt;
-
-&lt;p&gt;Según la actualización de Windows descargada las capturas de pantalla o pasos variarán pero serán similares en gran parte. En este artículo he utilizado la actualización &lt;em&gt;Creators Update&lt;/em&gt;, la anterior era &lt;em&gt;Anniversary Update&lt;/em&gt; y la anterior la versión original de Windows 10. Cualquier equipo de la última década ya incorpora un procesador de 64 bits, que el procesador sea de 64 bits le permite usar tamaños de memoria superiores a 4 GiB.&lt;/p&gt;
-
-&lt;p&gt;Accediendo a la página de descarga de Windows 10 desde un sistema con Windows 7, Windows 8.1 o Windows 10 se mostrará la opción de descargar la herramienta de creación de medios o &lt;em&gt;Media Creation Tool&lt;/em&gt;. Descargada y ejecutada la herramienta realiza la descarga de Windows 10 y la creación de medio ya sea un DVD o memoria USB. En el caso de la memoria USB esta deberá tener una capacidad de al menos 8 GiB y todos los datos que posea se perderán con lo que su datos en su caso deberán ser salvaguardados en otra unidad externa.&lt;/p&gt;
-
-&lt;p&gt;Para realizar la instalación de Windows 10 es más recomendable usar una memoria USB con el programa &lt;em&gt;Media Creation Tool&lt;/em&gt; ya que es más rápida que utilizar un disco DVD ya en desuso para los que algunos sistemas ya ni siquiera incorporan su lector.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/windows-media-creation-tool-01.png&#34; title=&#34;Media Creation Tool&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/windows-media-creation-tool-01-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/windows-media-creation-tool-02.png&#34; title=&#34;Media Creation Tool&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/windows-media-creation-tool-02-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/windows-media-creation-tool-03.png&#34; title=&#34;Media Creation Tool&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/windows-media-creation-tool-03-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/windows-media-creation-tool-04.png&#34; title=&#34;Media Creation Tool&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/windows-media-creation-tool-04-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/windows-media-creation-tool-05.png&#34; title=&#34;Media Creation Tool&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/windows-media-creation-tool-05-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;Creación del medio de instalación&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;h3 id=&#34;inicio-instalación-de-window-10&#34;&gt;Inicio instalación de Window 10&lt;/h3&gt;
-
-&lt;p&gt;Una vez está listo el medio de instalación de Windows 10 en forma de memoria USB o DVD con el equipo apagado y el medio de instalación conectado a un puerto USB o insertado en el lector de DVD hay que iniciarlo para que arranque desde el medio de instalación. Según el fabricante iniciar el equipo desde el medio de instalación varía ligeramente pero suele emplearse la pulsación de una tecla cuando el equipo se inicia que suele ser la tecla F2, F8, F10, F12 o la tecla Escape que permite seleccionar la unidad desde la que se inicia el equipo donde hay que elegir la memoria USB o DVD. Puede ser que la tecla de acceso a la BIOS UEFI donde también se podrá seleccionar el orden de arranque de las unidades que también varía según el fabricante, la BIOS UEFI contiene parámetros importante de configuración del equipo con lo que hay que tener precaución en las cosas que se modifican en ellas por lo que si no estás seguro de los cambios que estás realizando no los guardes, por suerte las últimas versiones de las BIOS UEFI son más intuitivas y con interfaces gráficas más fáciles de usar.&lt;/p&gt;
-
-&lt;p&gt;Según el fabricante e incluso modelos de la misma fabricante la tecla de acceso para iniciar desde el medio de instalación varía:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Acer: F2 o Delete&lt;/li&gt;
-&lt;li&gt;Asus: F2 o F10&lt;/li&gt;
-&lt;li&gt;Dell: F2, F1, Delete, F12 o F3&lt;/li&gt;
-&lt;li&gt;HP: F10 o Esc&lt;/li&gt;
-&lt;li&gt;Lenovo: F1 o F2&lt;/li&gt;
-&lt;li&gt;Sony: F2, F3, F1 o tecla assist&lt;/li&gt;
-&lt;li&gt;Toshiba: F2, F1, Esc&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;En las siguientes páginas puedes encontrar varias posibles teclas para entrar en la BIOS y cambiar la unidad de inicio del sistema según la marca, &lt;a href=&#34;http://www.makeuseof.com/tag/enter-bios-computer/&#34;&gt;I&lt;/a&gt;, &lt;a href=&#34;https://www.lifewire.com/bios-setup-utility-access-keys-for-major-bios-manufacturers-2624461&#34;&gt;II&lt;/a&gt; y &lt;a href=&#34;https://www.lifewire.com/bios-setup-utility-access-keys-for-popular-computer-systems-2624463&#34;&gt;III&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Puede ser el caso de que cuando se inicia el equipo muestre un mensaje con la tecla que hay que pulsar si hay que probar hasta dar con ella. Después de pulsar la tecla de encendido poco después o según se muestra un logotipo es cuando hay que pulsar la tecla.&lt;/p&gt;
-
-&lt;h3 id=&#34;asistente-de-instalación-de-windows-10&#34;&gt;Asistente de instalación de Windows 10&lt;/h3&gt;
-
-&lt;p&gt;Uno de los éxitos de Windows 10 es que la instalación ofrece un asistente con el que después de completar varios pasos y pulsaciones en botones &lt;em&gt;Siguiente&lt;/em&gt; el sistema queda instalado y listo para usarse. La instalación se completa en menos de una hora.&lt;/p&gt;
-
-&lt;p&gt;Entre los pasos están la selección del idioma, la versión del sistema &lt;em&gt;Home&lt;/em&gt; o &lt;em&gt;Pro&lt;/em&gt; (la primera es suficiente), la lectura de de los términos de la licencia de uso que poca gente se lee completamente por su extensión y su jerga legal poco comprensible. Si el equipo tiene una licencia se ofrecerá la posibilidad de introducir la clave del producto para activar Windows, si no la tiene es posible omitir este paso pulsando la opción &lt;em&gt;No tengo clave de producto&lt;/em&gt; y usar Windows sin limitaciones durante un tiempo, pasado un tiempo en cualquier caso las limitaciones son muy leves y Windows 10 es usable con normalidad.&lt;/p&gt;
-
-&lt;p&gt;Es recomendable la instalación &lt;em&gt;Personalizada: instalar solo Windows&lt;/em&gt; y no conservar archivos y configuraciones anteriores para evitar problemas o heredarlos del sistema anterior. También es recomendable eliminar todas las particiones del disco y dejar que Windows cree las necesarias.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-01.png&#34; title=&#34;Instalación de Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-01-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-02.png&#34; title=&#34;Instalación de Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-02-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-03.png&#34; title=&#34;Instalación de Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-03-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-04.png&#34; title=&#34;Instalación de Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-04-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-05.png&#34; title=&#34;Instalación de Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-05-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-06.png&#34; title=&#34;Instalación de Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-06-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-07.png&#34; title=&#34;Instalación de Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-07-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-08.png&#34; title=&#34;Instalación de Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-08-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-09.png&#34; title=&#34;Instalación de Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-09-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-10.png&#34; title=&#34;Instalación de Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-10-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-11.png&#34; title=&#34;Instalación de Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-11-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;Instalación de Windows 10&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;Tras unos pasos donde se mostrará el progreso de instalación y algún reinicio automático el sistema se inicia con un asistente de configuración para personalizar el sistema.&lt;/p&gt;
-
-&lt;h3 id=&#34;configuración-básica&#34;&gt;Configuración básica&lt;/h3&gt;
-
-&lt;p&gt;Después de instalar Windows este ofrece un nuevo asistente donde se personalizan algunas cosas adicionales del sistema. Algunas opciones a seleccionar en estos pasos antes de empezar a usar Windows 10 son:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;La región o país del usuario.&lt;/li&gt;
-&lt;li&gt;La distribución o disposición de las teclas del teclado.&lt;/li&gt;
-&lt;li&gt;El usuario de inicio de sesión ya sea con una cuenta de Microsoft o con una cuenta sin conexión y la contraseña.&lt;/li&gt;
-&lt;li&gt;Si se desea usar Cortana como asistente personal.&lt;/li&gt;
-&lt;li&gt;Algunas opciones de privacidad que son recomendables desactivar para que Windows no recopile información de nuestro dispositivo aunque sean datos anónimos.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-12.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-12-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-13.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-13-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-14.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-14-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-15.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-15-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-16.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-16-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-17.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-17-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-18.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-18-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-19.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-19-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-20.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-20-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-21.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-21-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-22.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-22-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-23.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-23-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-24.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-24-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-25.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-25-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-26.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-26-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-27.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-27-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-28.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-28-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-29.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-29-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-30.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-30-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-31.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-31-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-32.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-32-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-33.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-33-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-34.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-34-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-35.png&#34; title=&#34;Configuración Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/instalacion-windows-10-35-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Configuración inicial de Windows 10&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;h3 id=&#34;usando-windows&#34;&gt;Usando Windows&lt;/h3&gt;
-
-&lt;p&gt;Si el equipo ya tenía licencia de de Windows y estaba activado seguramente Windows 10 ya lo reconozca como activado. También es muy probable que Windows 10 sea capaz de reconocer automáticamente todo el hardware que posea en el equipo incluyendo la tarjeta gráfica pasa usar la máxima resolución que ofrezca la pantalla.&lt;/p&gt;
-
-&lt;p&gt;Llegado a este punto Windows 10 ya se puede empezar a usar y quizá instalar el software básico que vayas a utilizar como un paquete ofimático ya sea &lt;a href=&#34;https://products.office.com/es-es/home&#34;&gt;Microsoft Office&lt;/a&gt; o alguna de las mejores &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/05/3-opciones-ofimaticas-alternativas-a-microsoft-office/&#34;&gt;3 alternativas a Microsoft Office&lt;/a&gt;, un navegador web como &lt;a href=&#34;https://www.mozilla.org/es-ES/firefox/new/&#34;&gt;Firefox&lt;/a&gt; o &lt;a href=&#34;https://www.google.es/chrome/browser/desktop/&#34;&gt;Chrome&lt;/a&gt; con el complemento para bloquear publicidad &lt;a href=&#34;https://adblockplus.org/es/&#34;&gt;AdBlockPlus&lt;/a&gt; en vez de usar &lt;a href=&#34;https://www.microsoft.com/es-es/windows/microsoft-edge/&#34;&gt;Microsoft Edge&lt;/a&gt; que está incorporado por defecto.&lt;/p&gt;
-
-&lt;p&gt;Aún sin licencia y sin activar Windows 10 es perfectamente usable, quizá al cabo de un tiempo no puedas cambiar algunas opciones de personalización como el fondo del escritorio o temas de las ventanas pero nada importante que impida usarlo. Y en cualquier caso &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/01/windows-10-y-office-2016-tan-faciles-de-usar-sin-licencia-como-siempre/&#34;&gt;Windows 10 y Office 2016 siguen siendo tan fáciles de usar sin licencia como siempre&lt;/a&gt;.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/windows-10-01.jpg&#34; title=&#34;Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/windows-10-01-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/windows-10-02.png&#34; title=&#34;Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/windows-10-02-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/windows-10-03.png&#34; title=&#34;Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/windows-10-03-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/windows-10-04.jpg&#34; title=&#34;Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/windows-10-04-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;Windows 10&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;h3 id=&#34;alternativa-a-windows-con-distribuciones-gnu-linux&#34;&gt;Alternativa a Windows con distribuciones GNU/Linux&lt;/h3&gt;
-
-&lt;p&gt;Debes conocer que Windows no es la única opción de sistema operativo que puedes instalar, si quieres puedes probar alguna de las distribuciones &lt;a href=&#34;https://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;https://www.linux.com/&#34;&gt;Linux&lt;/a&gt; como alternativa a Windows y descubrir el mundo del software libre que respeta tus derechos y no te los quita como el software privativo, puedes leer el artículo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/10/elegir-una-distribucion-gnu-linux-segun-el-usuario-uso-o-equipo/&#34;&gt;Elegir una distribución GNU/Linux según el usuario o equipo&lt;/a&gt; e &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/05/descargar-e-instalar-la-distribucion-ubuntu-de-gnu-linux-paso-a-paso-desde-cero/&#34;&gt;instalar Ubuntu paso a paso desde cero&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Las siguientes son unas capturas de pantalla de varias de las distribuciones GNU/Linux más famosas.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/ubuntu.png&#34; title=&#34;Ubuntu con entorno de escritorio Unity&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/ubuntu-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/elementary-os.png&#34; title=&#34;elementaryOS&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/elementary-os-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;Ubuntu y elementaryOS&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/fedora.png&#34; title=&#34;Fedora con entorno de escritorio GNOME&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/fedora-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/opensuse.png&#34; title=&#34;openSUSE con entorno de escritorio KDE&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/231/opensuse-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;Fedora y openSUSE&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="microsoft"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="software"/>
             
         
     </entry>
