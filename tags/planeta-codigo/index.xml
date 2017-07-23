@@ -3,12 +3,69 @@
     <id>https://picodotdev.github.io/blog-bitix/tags/planeta-codigo/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2017-07-16T12:30:00+02:00</updated>
+    <updated>2017-07-23T13:00:00+02:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
     <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/07/ejecutar-varias-tareas-de-forma-concurrente-en-java/</id>
+        <title>Ejecutar varias tareas de forma concurrente en Java</title>        
+        <updated>2017-07-23T13:00:00+02:00</updated>
+        <published>2017-07-23T13:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/07/ejecutar-varias-tareas-de-forma-concurrente-en-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En el artículo de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/iniciacion-a-la-programacion-concurrente-en-java/&#34;&gt;iniciación a la programación concurrente en Java&lt;/a&gt; explicaba las facilidades que proporciona este lenguaje para la programación de tareas con varios hilos que implica la sincronización y bloqueo mediante varias primitivas como semáforos o &lt;em&gt;locks&lt;/em&gt;, ponía el ejemplo y su código de dos de los típicos ejemplos que suelen usarse en las asignaturas de sistemas operativos, el problema de los filósofos y el del barbero.&lt;/p&gt;
+
+&lt;p&gt;En el caso de tener varias tareas que tardan unos segundos si las ejecutamos de forma secuencial el tiempo que tardarán será la suma de todas las tareas. Si las tareas no son dependientes, no hace falta esperar a que termine una anterior para comenzar otra, o el problema se puede descomponer en varias partes ejecutándolas de forma concurrente y simultáneamente el tiempo total que tardarán aproximadamente será el tiempo de la tarea más lenta.&lt;/p&gt;
+
+&lt;p&gt;En la &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/overview-summary.html&#34;&gt;API de Java&lt;/a&gt; además de las primitivas de sincronización se ofrece además algunas clases para manejar hilos y tareas a ejecutar de forma concurrente sin tener que manejar los hilos a bajo nivel. La clase &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html&#34;&gt;ExecutorService&lt;/a&gt; permite crear un &lt;em&gt;pool&lt;/em&gt; de &lt;em&gt;threads&lt;/em&gt; con un número fijo de ellos, el &lt;em&gt;pool&lt;/em&gt; reutilizará cada &lt;em&gt;thread&lt;/em&gt; para ir ejecutando las tareas. Crear &lt;em&gt;threads&lt;/em&gt; es una operación más o menos costosa con lo que reutilizándolos se aprovecha mejor los recursos del sistema y en un número grande de tareas a ejecutar la mejora en el rendimiento quizá se note. Crear un &lt;em&gt;pool&lt;/em&gt; con un número fijo y limitado de &lt;em&gt;threads&lt;/em&gt; evita que el sistema se sature o por el contrario esté infrautilizado, configurando el tamaño del &lt;em&gt;pool&lt;/em&gt; de &lt;em&gt;threads&lt;/em&gt; según las características del sistema que las ejecutará y del tipo de recursos que más utiliza las tareas se obtiene el mejor rendimiento posible.&lt;/p&gt;
+
+&lt;p&gt;Con el método &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/Runtime.html#availableProcessors--&#34;&gt;Runtime.availableProcessors&lt;/a&gt; se obtiene el número de núcleos lógicos del ordenador de los modernos procesadores que utilizan &lt;a href=&#34;https://es.wikipedia.org/wiki/HyperThreading&#34;&gt;Hyper Threading&lt;/a&gt; tanto los de Intel como AMD, si las tareas hacen un uso muy intensivo de CPU y poco de entrada/salida el tamaño del &lt;em&gt;pool&lt;/em&gt; de &lt;em&gt;threads&lt;/em&gt; óptimo será cercano al número de núcleos del procesador. Por el contrario, si las tareas hacen un uso intensivo de de entrada/salida el tamaño del &lt;em&gt;pool&lt;/em&gt; de &lt;em&gt;threads&lt;/em&gt; óptimo será mayor ya que estarán la mayor parte del tiempo esperando a que finalicen las lentas operaciones de entrada y salida comparadas con la CPU.&lt;/p&gt;
+
+&lt;p&gt;Suponiendo que una aplicación ha de realizar varias consultas a una base de datos para presentar su información al usuario, esas consultas y por la cantidad de información que tiene la base de datos o porque los índices no ayudan tardan en ejecutarse 3 segundos, teniendo que realizar 8 de estas consultas el tiempo total que tardará la aplicación en presentar la información será de 24 segundos (8 tareas x 3 segundos/tarea) ejecutando las consultas de forma secuencial. 24 segundos es un tiempo considerable y el usuario pensará que la aplicación no responde. Ejecutando las tareas con un &lt;em&gt;pool&lt;/em&gt; de 8 &lt;em&gt;threads&lt;/em&gt; el tiempo total empleado para presentar la información será de 3 segundos y con un &lt;em&gt;pool&lt;/em&gt; de 4 &lt;em&gt;threads&lt;/em&gt; el tiempo será de 6 segundos, mucho menos que los 24 de forma secuencial.&lt;/p&gt;
+
+&lt;p&gt;Este es el código para ejecutar tareas de forma secuencial y de forma concurrente con un &lt;em&gt;pool&lt;/em&gt; de &lt;em&gt;threads&lt;/em&gt; de tamaño el doble del número de procesadores del sistema midiendo además el tiempo total para comprobar la diferencia de tiempos de ambas opciones.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/492e1b80c21886c748600784c9f9cfdc.js?file=Main.java&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+        &lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/vuoXPba1ks9aOg5Ebm3MTkIbM.js&#34; id=&#34;asciicast-vuoXPba1ks9aOg5Ebm3MTkIbM&#34; async&gt;&lt;/script&gt;
+        &lt;noscript&gt;&lt;a href=&#34;https://asciinema.org/a/vuoXPba1ks9aOg5Ebm3MTkIbM&#34; target=&#34;_blank&#34;&gt;&lt;img src=&#34;https://asciinema.org/a/vuoXPba1ks9aOg5Ebm3MTkIbM.png&#34; width=&#34;734&#34;/&gt;&lt;/a&gt;&lt;/noscript&gt;
+        
+        &lt;figcaption&gt;Ejemplo de ejecución secuencial y concurrente&lt;/figcaption&gt;
+        
+    &lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaExecutors&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/07/4-formas-de-hacer-un-bucle-for-en-java/</id>
@@ -1635,101 +1692,6 @@
                 <category term="planeta-codigo"/>
             
                 <category term="planeta-linux"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2017/05/luces-navidenas-con-la-raspberry-pi-y-java/</id>
-        <title>Luces navideñas con la Raspberry Pi y Java</title>        
-        <updated>2017-05-14T11:00:00+02:00</updated>
-        <published>2017-05-14T11:00:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/05/luces-navidenas-con-la-raspberry-pi-y-java/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;Con diferentes sensores y dispositivos de salida de electrónica se pueden realizar proyectos muy interesantes. En el siguiente usaré múltiples diodos LED que se encenderán y apagarán de forma aleatoria cada cierto tiempo. El resultado será muy vistoso y lo utilizaré cuando lleguen las fechas como luces navideñas.&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/raspberrypi.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Raspberry Pi&#34; title=&#34;Raspberry Pi&#34;/&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Como muestra de lo que se puede hacer con la Raspberry Pi usando los pines GPIO haré un ejemplo que consistirá en múltiples diodos LED de diferentes colores enciendan y apaguen simulando una especie de luces navideñas. Como yo tengo la Raspbperry Pi 1 B con 26 pines de los cuales solo 17 son GPIO podré usar hasta 17 diodos LED, aunque solo usaré 15. En el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;kit de iniciación a la electrónica para la Raspberry Pi&lt;/a&gt; viene incluidos 24 diodos LED de diferentes colores 6 blancos, 6 rojos, 6 amarillos y 6 verdes, también es necesario una resistencia por cada diodo de unos 200 ohmios de los cuales en el &lt;em&gt;kit&lt;/em&gt; se incluyen 20 de este valor.&lt;/p&gt;
-
-&lt;p&gt;Aunque con muchos más LED el ejemplo no es más complicado que el ejemplo que ya mostré de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-encender-y-apagar-diodo-led-con-la-raspberry-pi-en-java/&#34;&gt;encender y apagar un diodo LED&lt;/a&gt;. Usaré diodos de diferentes colores y dispuestos de forma aleatoria para darle un aspecto desordenado, para darle un aspecto más caótico los LEDs se encenderán y apagarán de forma aleatoria. Usaré el lenguaje de programación Java y la librería de alto nivel &lt;a href=&#34;http://rtd.diozero.com/en/latest/&#34;&gt;diozero&lt;/a&gt; para controlar el encendido y apagado de los diodos.&lt;/p&gt;
-
-&lt;p&gt;Esta es la foto del cableado usando múltiples cables macho-macho para conectar los pines con el polo positivo de los diodos pasando por la resistencia y también múltiples cables para conectar el polo negativo del diodo con tierra. Usando una placa &lt;em&gt;breadboard&lt;/em&gt; para realizar las conexiones sin soldadura y una placa de extensión wiringPi para conectar la Raspberry Pi con la placa &lt;em&gt;breadboard&lt;/em&gt; con un cable de 26 pines en mi caso por el modelo que tengo de RPi este es el aspecto de cableado.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-01.jpg&#34; title=&#34;Cableado de las luces LED del árbol de navidad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-01-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-02.jpg&#34; title=&#34;Cableado de las luces LED del árbol de navidad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-02-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-03.jpg&#34; title=&#34;Cableado de las luces LED del árbol de navidad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-03-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-04.jpg&#34; title=&#34;Cableado de las luces LED del árbol de navidad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-04-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-05.jpg&#34; title=&#34;Cableado de las luces LED del árbol de navidad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-05-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  
-  &lt;figcaption&gt;Cableado de las luces LED del árbol de navidad&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;Cada cierto tiempo los diodos cambian de estado, algunos se encenderán, otros se apagarán y otros seguirán en el estado que estaban. Para ello generaré un booleano aleatorio para cada uno de los diodos que determinará si debe estar encendido o apagado. Este es el programa Java junto con la parte relevante del archivo &lt;a href=&#34;https://gradle.org/&#34;&gt;Gradle&lt;/a&gt; para compilar y construir el ejemplo y el comando que uso para ejecutarlo.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/86d81809da0ad791e41a8f821a58ea62.js?file=ChristmasTree.java%20&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/86d81809da0ad791e41a8f821a58ea62.js?file=build.gradle&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/86d81809da0ad791e41a8f821a58ea62.js?file=execute.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Esta aplicación para la Raspberry Pi queda bastante vistosa y no es muy complicado de realizar a pesar del del lío de cables que resulta. Este es un vídeo de su funcionamiento.&lt;/p&gt;
-
-&lt;div class=&#34;media media-video&#34; style=&#34;text-align: center;&#34;&gt;
-  &lt;iframe width=&#34;640&#34; height=&#34;360&#34; src=&#34;https://www.youtube.com/embed/F2BChbcyr5g&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
-&lt;/div&gt;
-
-&lt;p&gt;
-    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRasberriPi&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew executeChristmasTree&lt;/code&gt;.
-&lt;/p&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="gnu-linux"/>
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="planeta-linux"/>
-            
-                <category term="programacion"/>
             
         
     </entry>

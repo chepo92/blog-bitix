@@ -3,12 +3,69 @@
     <id>https://picodotdev.github.io/blog-bitix/tags/java/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2017-07-16T12:30:00+02:00</updated>
+    <updated>2017-07-23T13:00:00+02:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
     <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/07/ejecutar-varias-tareas-de-forma-concurrente-en-java/</id>
+        <title>Ejecutar varias tareas de forma concurrente en Java</title>        
+        <updated>2017-07-23T13:00:00+02:00</updated>
+        <published>2017-07-23T13:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/07/ejecutar-varias-tareas-de-forma-concurrente-en-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En el artículo de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/iniciacion-a-la-programacion-concurrente-en-java/&#34;&gt;iniciación a la programación concurrente en Java&lt;/a&gt; explicaba las facilidades que proporciona este lenguaje para la programación de tareas con varios hilos que implica la sincronización y bloqueo mediante varias primitivas como semáforos o &lt;em&gt;locks&lt;/em&gt;, ponía el ejemplo y su código de dos de los típicos ejemplos que suelen usarse en las asignaturas de sistemas operativos, el problema de los filósofos y el del barbero.&lt;/p&gt;
+
+&lt;p&gt;En el caso de tener varias tareas que tardan unos segundos si las ejecutamos de forma secuencial el tiempo que tardarán será la suma de todas las tareas. Si las tareas no son dependientes, no hace falta esperar a que termine una anterior para comenzar otra, o el problema se puede descomponer en varias partes ejecutándolas de forma concurrente y simultáneamente el tiempo total que tardarán aproximadamente será el tiempo de la tarea más lenta.&lt;/p&gt;
+
+&lt;p&gt;En la &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/overview-summary.html&#34;&gt;API de Java&lt;/a&gt; además de las primitivas de sincronización se ofrece además algunas clases para manejar hilos y tareas a ejecutar de forma concurrente sin tener que manejar los hilos a bajo nivel. La clase &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html&#34;&gt;ExecutorService&lt;/a&gt; permite crear un &lt;em&gt;pool&lt;/em&gt; de &lt;em&gt;threads&lt;/em&gt; con un número fijo de ellos, el &lt;em&gt;pool&lt;/em&gt; reutilizará cada &lt;em&gt;thread&lt;/em&gt; para ir ejecutando las tareas. Crear &lt;em&gt;threads&lt;/em&gt; es una operación más o menos costosa con lo que reutilizándolos se aprovecha mejor los recursos del sistema y en un número grande de tareas a ejecutar la mejora en el rendimiento quizá se note. Crear un &lt;em&gt;pool&lt;/em&gt; con un número fijo y limitado de &lt;em&gt;threads&lt;/em&gt; evita que el sistema se sature o por el contrario esté infrautilizado, configurando el tamaño del &lt;em&gt;pool&lt;/em&gt; de &lt;em&gt;threads&lt;/em&gt; según las características del sistema que las ejecutará y del tipo de recursos que más utiliza las tareas se obtiene el mejor rendimiento posible.&lt;/p&gt;
+
+&lt;p&gt;Con el método &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/Runtime.html#availableProcessors--&#34;&gt;Runtime.availableProcessors&lt;/a&gt; se obtiene el número de núcleos lógicos del ordenador de los modernos procesadores que utilizan &lt;a href=&#34;https://es.wikipedia.org/wiki/HyperThreading&#34;&gt;Hyper Threading&lt;/a&gt; tanto los de Intel como AMD, si las tareas hacen un uso muy intensivo de CPU y poco de entrada/salida el tamaño del &lt;em&gt;pool&lt;/em&gt; de &lt;em&gt;threads&lt;/em&gt; óptimo será cercano al número de núcleos del procesador. Por el contrario, si las tareas hacen un uso intensivo de de entrada/salida el tamaño del &lt;em&gt;pool&lt;/em&gt; de &lt;em&gt;threads&lt;/em&gt; óptimo será mayor ya que estarán la mayor parte del tiempo esperando a que finalicen las lentas operaciones de entrada y salida comparadas con la CPU.&lt;/p&gt;
+
+&lt;p&gt;Suponiendo que una aplicación ha de realizar varias consultas a una base de datos para presentar su información al usuario, esas consultas y por la cantidad de información que tiene la base de datos o porque los índices no ayudan tardan en ejecutarse 3 segundos, teniendo que realizar 8 de estas consultas el tiempo total que tardará la aplicación en presentar la información será de 24 segundos (8 tareas x 3 segundos/tarea) ejecutando las consultas de forma secuencial. 24 segundos es un tiempo considerable y el usuario pensará que la aplicación no responde. Ejecutando las tareas con un &lt;em&gt;pool&lt;/em&gt; de 8 &lt;em&gt;threads&lt;/em&gt; el tiempo total empleado para presentar la información será de 3 segundos y con un &lt;em&gt;pool&lt;/em&gt; de 4 &lt;em&gt;threads&lt;/em&gt; el tiempo será de 6 segundos, mucho menos que los 24 de forma secuencial.&lt;/p&gt;
+
+&lt;p&gt;Este es el código para ejecutar tareas de forma secuencial y de forma concurrente con un &lt;em&gt;pool&lt;/em&gt; de &lt;em&gt;threads&lt;/em&gt; de tamaño el doble del número de procesadores del sistema midiendo además el tiempo total para comprobar la diferencia de tiempos de ambas opciones.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/492e1b80c21886c748600784c9f9cfdc.js?file=Main.java&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+        &lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/vuoXPba1ks9aOg5Ebm3MTkIbM.js&#34; id=&#34;asciicast-vuoXPba1ks9aOg5Ebm3MTkIbM&#34; async&gt;&lt;/script&gt;
+        &lt;noscript&gt;&lt;a href=&#34;https://asciinema.org/a/vuoXPba1ks9aOg5Ebm3MTkIbM&#34; target=&#34;_blank&#34;&gt;&lt;img src=&#34;https://asciinema.org/a/vuoXPba1ks9aOg5Ebm3MTkIbM.png&#34; width=&#34;734&#34;/&gt;&lt;/a&gt;&lt;/noscript&gt;
+        
+        &lt;figcaption&gt;Ejemplo de ejecución secuencial y concurrente&lt;/figcaption&gt;
+        
+    &lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaExecutors&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/07/4-formas-de-hacer-un-bucle-for-en-java/</id>
@@ -1703,138 +1760,6 @@
 
 &lt;p&gt;
     El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew executeLcd&lt;/code&gt;.
-&lt;/p&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="gnu-linux"/>
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="planeta-linux"/>
-            
-                <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-encender-y-apagar-diodo-led-con-la-raspberry-pi-en-java/</id>
-        <title>Ejemplo encender y apagar diodo LED con la Raspberry Pi en Java</title>        
-        <updated>2017-03-12T00:15:00+01:00</updated>
-        <published>2017-03-11T10:00:00+01:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-encender-y-apagar-diodo-led-con-la-raspberry-pi-en-java/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/raspberrypi.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Raspberry Pi&#34; title=&#34;Raspberry Pi&#34;/&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;El primer ejemplo que haré de un programa Java que usa los &lt;em&gt;pines&lt;/em&gt; GPIO para realizar algo con el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;kit de inicialización a la electrónica con la Raspberry Pi&lt;/a&gt; consiste en un pequeño programa Java que hace parpadear un diodo LED. La librería &lt;a href=&#34;http://rtd.diozero.com/en/latest/&#34;&gt;Diozero&lt;/a&gt; ofrece a los programas Java el acceso a los &lt;em&gt;pines&lt;/em&gt; GPIO de la diferentes versiones de la Raspberry Pi desde la 1 (rev 1 y rev 2) pasando por los modelos B+, 2 y 3. Otra librería que se puede usar con el lenguaje de programación Java es &lt;a href=&#34;http://pi4j.com/&#34;&gt;Pi4J&lt;/a&gt; aunque personalmente Diozero me ha gustado más por ser de más alto nivel.&lt;/p&gt;
-
-&lt;p&gt;Algunas de las características que ofrece la librería Diozero son:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Soporta dispositivos GPIO / I2C / SPI (LEDs, botones, sensores, motores, pantallas, etc).&lt;/li&gt;
-&lt;li&gt;Soporta todos los modelos de las placas Raspberry Pi, Odroid C2, BeagleBone Black, C.H.I.P y Asus Tinker.&lt;/li&gt;
-&lt;li&gt;Usa caracterśiticas de Java como &lt;a href=&#34;https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html&#34;&gt;gestión automática de recursos&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html&#34;&gt;expresiones lambda&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html&#34;&gt;referencias a métodos&lt;/a&gt; que simplifican el desarrollo y mejoran la legibilidad.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://rtd.diozero.com/en/latest/#devices&#34;&gt;Lista de deipositivos&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;Soporta varios proveedores para el acceso al los dispositivos con &lt;a href=&#34;http://rtd.diozero.com/en/latest/#performance&#34;&gt;diferentes grados de rendimiento&lt;/a&gt;.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Una de las primeras cosas a conocer es como se numeran los &lt;em&gt;pines&lt;/em&gt; en la Raspberry Pi ya que hay varias nomenclaturas (&lt;em&gt;header&lt;/em&gt;, wiringPi y Broadcom) y que nomenclatura utiliza la librería Diozero. También deberemos tener en cuenta el modelo de la Raspberry Pi que poseamos ya que según el modelo hay pequeñas diferencias en algunos &lt;em&gt;pines&lt;/em&gt;. Además si usamos una placa de extensión para pruebas sin sodadura como la &lt;a href=&#34;http://wiringpi.com/&#34;&gt;wiringPi&lt;/a&gt; deberemos identificarlos por su nombre. Yo que poseo una de las primeras Raspberry Pi (la 1, rev1) el correspondiente su &lt;a href=&#34;https://www.raspberrypi.org/documentation/usage/gpio/&#34;&gt;esquema de &lt;em&gt;pines&lt;/em&gt; Raspberry Pi 1 (rev. 1)&lt;/a&gt; es el del enlace. En ese esquema se define que el &lt;em&gt;pin&lt;/em&gt; número 12 según el conteo del &lt;em&gt;header&lt;/em&gt; corresponde a GPIO 18 según la nomenclatura Broadcom y la librería Diozero y al GPIO 1 en la librería Pi4J y en la placa de extensión wiringPi.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/raspberrypi1b.jpg&#34; title=&#34;Raspberry Pi 1 B&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/raspberrypi1b-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/raspberrypi3b.jpg&#34; title=&#34;Raspberry Pi 3 B&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/raspberrypi3b-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;Placas modelos Raspberry Pi 1 B y 3 B&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/breadboard-cableado.jpg&#34; title=&#34;Breadboard y placa extesión GPIO wiringPi de 26 pines&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/breadboard-cableado-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/gpio-extension-40-pines-board.jpg&#34; title=&#34;Placa extesión GPIO de 40 pines&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/gpio-extension-40-pines-board-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;Breadboard y placa extesión GPIO wiringPi de 26 pines y 40 pines&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/esquema-cableado.png&#34; title=&#34;Esquema del cableado&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/esquema-cableado-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  
-  &lt;figcaption&gt;Esquema del cableado&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;Como uso la placa de extensión wiringPi para conectar los &lt;em&gt;pines&lt;/em&gt; de la Raspberry Pi a otra placa para hacer pruebas sin soldadura también conocidas como &lt;em&gt;breadboard&lt;/em&gt;  resultará que en el programa Java al usar Diozero uso la nomenclatura Broadcom para identificar los pines pero al conectar los cables en la placa de pruebas uso la nomenclatura de wiringPi.&lt;/p&gt;
-
-&lt;p&gt;Para el ejemplo utilizaré la placa de extensión sin soldadura, una resistencia de 200 ohmios (dadas sus bandas de colores rojo, negro, marrón y dorado) y un diodo LED además de un par de cables macho-macho para realizar las conexiones electrónicas entre el GPIO 18 (según la nomenclatura de la librería Diozero y Broadcom, 12 según la nomenclatura del &lt;em&gt;header&lt;/em&gt; y 1 según la de wiringPi) y la resistencia además de entre el diodo y la línea de tierra. Los diodos LED poseen una orientación y hay que conectar la resistencia con el polo positivo del diodo LED, el polo positivo del diodo LED identifica porque es la patita larga y el negativo con tierra es la patita corta. Si realizamos la conexión al revés solo pasará que el diodo no se enciende pero no lo estropeará, la resistencia si es necesaria para no hacer que pase por el diodo una intensidad que lo estropee como se explica en
-&lt;a href=&#34;http://www.educachip.com/resistencia-led/&#34;&gt;¿Qué resistencia ooner a un LED?&lt;/a&gt;.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/diodo-resistencia.jpg&#34; title=&#34;Diodo blanco y resistencia de 200 ohmios&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/diodo-resistencia-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  
-  &lt;figcaption&gt;Diodo blanco y resistencia de 200 ohmios&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;Las resistencias poseen cuatro bandas de colores que indican el valor en ohmios de esa resistencia, la tabla de colores es el siguiente:&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/codigo-colores-resistencias.jpg&#34; title=&#34;Código de colores de las resistencias&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/214/codigo-colores-resistencias-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  
-  &lt;figcaption&gt;Código de colores de las resistencias&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;El programa Java para hacer parpadear el diodo LED con la librería Diozero con el proveedor &lt;a href=&#34;http://abyz.co.uk/rpi/pigpio/&#34;&gt;pigpio&lt;/a&gt;. El ejemplo consiste en activar y apagar el &lt;em&gt;pin&lt;/em&gt; sucesivamente en un bucle y usar el método &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#sleep-long-&#34;&gt;Thread.sleep&lt;/a&gt; para que pase unos segundos entre uno y otro y nos de tiempo a ver el encendido y apagado. El nada complejo programa Java para controlar el diodo y un vídeo de su funcionamiento están a continuación.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/1fda899b7fbbc19a82bb397d525927f2.js?file=PinBlink.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/1fda899b7fbbc19a82bb397d525927f2.js?file=executeSSH.sh&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/1fda899b7fbbc19a82bb397d525927f2.js?file=executeGradle.sh&#34;&gt;&lt;/script&gt;
-
-&lt;div class=&#34;media media-video&#34; style=&#34;text-align: center;&#34;&gt;
-  &lt;iframe width=&#34;640&#34; height=&#34;360&#34; src=&#34;https://www.youtube.com/embed/NX5tBxWuzFA&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
-&lt;/div&gt;
-
-&lt;p&gt;En un artículo anterior comento &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-hello-world-con-java-en-la-raspberry-pi/&#34;&gt;como disponer de un entorno para desarrollar, desplegar las librerías &lt;em&gt;jar&lt;/em&gt; en la Raspberry Pi&lt;/a&gt; y como ejecutar los ejemplos desde la línea de comandos usando una combinación de herramientas de &lt;a href=&#34;https://es.wikipedia.org/wiki/Secure_Shell&#34;&gt;SSH&lt;/a&gt;, &lt;a href=&#34;https://rsync.samba.org/&#34;&gt;rsync&lt;/a&gt; y &lt;a href=&#34;https://www.ansible.com/&#34;&gt;Ansible&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;
-    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew executePinBlink&lt;/code&gt;.
 &lt;/p&gt;
 
 
