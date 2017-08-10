@@ -6,17 +6,39 @@ define(['jquery'], function($) {
 
     var spec = {
         backgrounds: [
+            'asanoha.png',
+            'back.png',
+            'circles-and-roundabouts.png',
             'confectionary.png',
-            'dimension.png',
-            'skulls.png',
-            'tree_bark.png',
             'contemporary_china_2.png',
-            'eight_horns.png',
-            'swirl_pattern.png',
-            'upfeathers.png',
+            'corrugation.png',
             'contemporary_china.png',
+            'diamond_upholstery.png',
+            'dimension.png',
+            'doodles.png',
+            'eight_horns.png',
+            'escheresque.png',
+            'geometry2.png',
+            'geometry.png',
+            'gplay.png',
+            'grey.png',
+            'lyonnette.png',
+            'memphis-colorful.png',
             'paisley.png',
-            'symphony.png'
+            'photography.png',
+            'playstation.png',
+            'pow-star.png',
+            'psychedelic.png',
+            'pyramid.png',
+            'reticular_tissue.png',
+            'sayagata.png',
+            'skulls.png',
+            'swirl.png',
+            'symphony.png',
+            'tiny_grid.png',
+            'topography.png',
+            'tree_bark.png',
+            'upfeathers.png'
         ]
     };
 
