@@ -3,12 +3,77 @@
     <id>https://picodotdev.github.io/blog-bitix/post/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2017-08-12T11:00:00+02:00</updated>
+    <updated>2017-08-14T11:00:00+02:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
     <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/08/el-antipatron-de-inicializacion-de-variables-con-dobles-corchetes-en-java/</id>
+        <title>El antipatrón de inicialización de variables con dobles corchetes en Java</title>        
+        <updated>2017-08-14T11:00:00+02:00</updated>
+        <published>2017-08-14T11:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/08/el-antipatron-de-inicializacion-de-variables-con-dobles-corchetes-en-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Java es un lenguaje más verboso y con menos azúcar sintáctico (o veneno para ratas, según se mire) que otros lenguajes. Esto hace que por ejemplo para declarar e inicializar objetos tan comunes en un programa de tipo &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Map.html&#34;&gt;Map&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/List.html&#34;&gt;List&lt;/a&gt; o &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Set.html&#34;&gt;Set&lt;/a&gt; que contengan un número fijo de elementos haya que escribir varias líneas de código. Estas clases de estructuras de datos del grupo de colecciones son de las más usadas en una aplicación Java. A la fecha de escribir este artículo Java no soporta literales para las colecciones que reduzca las lineas de código para inicializarlas y mejore la legibilidad del código aunque en versiones recientes si se han incorporado métodos de utilidad que cubren el requerimiento.&lt;/p&gt;
+
+&lt;p&gt;Con el objetivo de reducir la verbosidad quizá en algún sitio se pueda ver que usando la técnica de doble llave se puede inicializar un &lt;em&gt;Map&lt;/em&gt; o &lt;em&gt;List&lt;/em&gt; de una forma más reducida, tal que:&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/093fa885f8d9a40901938951fb8e8cd9.js?file=AntipatronCorchetes.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Sin embargo, no es recomendable usar este &lt;em&gt;hack&lt;/em&gt; del lenguaje porque presenta sus inconvenientes, por ello está desaconsejado y se considera un antipatrón. En el pozo de sabiduría para el programador de &lt;a href=&#34;https://stackoverflow.com/&#34;&gt;StackOverflow&lt;/a&gt; se indican &lt;a href=&#34;http://stackoverflow.com/questions/1958636/what-is-double-brace-initialization-in-java#27521360&#34;&gt;varios inconvenientes&lt;/a&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Cada bloque de inicialización con doble llave crea una clase anónima que incrementa el número de clases de la aplicación y que puede penalizar el rendimiento si se usa de forma extensiva en una aplicación.&lt;/li&gt;
+&lt;li&gt;Si se retorna un mapa inicializado de esta forma desde un método el mapa tendrá una referencia al objeto que lo creo, lo que evita que el objeto sea destruido por el recolector de basura hasta que no se recolecte el mapa creando una potencial fuga de memoria.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;En &lt;a href=&#34;http://stackoverflow.com/questions/1005073/initialization-of-an-arraylist-in-one-line#1005083&#34;&gt;otros hilos de StackOverflow&lt;/a&gt; algunas respuestas muy votadas se propone usar dobles llaves para la inicialización, pero por los puntos comentados anteriormente mejor no usarla por mucho que esté en StackOverflow y haya sido esta una respuesta muy votada.&lt;/p&gt;
+
+&lt;p&gt;Las alternativas en Java 8 en el caso del &lt;em&gt;Map&lt;/em&gt; si queremos reducir la verbosidad al inicializar estos tipos de datos usados profusamente podemos usar lo siguiente, , en el caso de &lt;em&gt;List&lt;/em&gt; o &lt;em&gt;Set&lt;/em&gt; disponemos desde hace más tiempo del método &lt;em&gt;Arrays.asList&lt;/em&gt;:&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/093fa885f8d9a40901938951fb8e8cd9.js?file=MapListSetJava8.java&#34;&gt;&lt;/script&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/093fa885f8d9a40901938951fb8e8cd9.js?file=MapListSetJava7.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En Java 9 aunque aún no se incorporen la definición de literales al lenguaje con los métodos de utilidad &lt;em&gt;of&lt;/em&gt; en su respectivas interfaces gracias a los &lt;em&gt;defaults methods&lt;/em&gt; el código se simplifica en gran medida.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/093fa885f8d9a40901938951fb8e8cd9.js?file=MapListSetJava9.java&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://javarevisited.blogspot.com.es/2015/10/what-is-double-brace-initialization-in-java-example-anti-pattern.html&#34;&gt;What is Double Brace Initialization in Java? Anti Pattern Example&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://c2.com/cgi/wiki?DoubleBraceInitialization&#34;&gt;Double Brace Initialization&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/1958636/what-is-double-brace-initialization-in-java&#34;&gt;What is Double Brace initialization in Java?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://minborgsjavapot.blogspot.com.es/2014/12/java-8-initializing-maps-in-smartest-way.html&#34;&gt;Java 8, Initializing Maps in the Smartest Way&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/08/instalar-y-renovar-un-certificado-de-lets-encrypt-en-nginx/</id>
@@ -103,7 +168,7 @@
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/08/sustituir-caldera-de-gas-por-un-termo-electrico-fleck-duo-7-50/</id>
         <title>Sustituir caldera de gas por un termo eléctrico Fleck Duo 7 50</title>        
-        <updated>2017-08-05T18:00:00+02:00</updated>
+        <updated>2017-08-14T10:00:00+02:00</updated>
         <published>2017-08-04T18:00:00+02:00</published>
         <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/08/sustituir-caldera-de-gas-por-un-termo-electrico-fleck-duo-7-50/"/>
         <author><name>pico.dev</name></author>
@@ -246,7 +311,7 @@
   &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/251/plantilla-montaje.jpg&#34; title=&#34;Plantilla montaje&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/251/plantilla-montaje-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/251/etiqueta-calificacion-energetica.jpg&#34; title=&#34;Etiqueta calificación energética&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/251/etiqueta-calificacion-energetica-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/251/etiqueta-calificacion-energetica.jpg&#34; title=&#34;Etiqueta de calificación energética&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/251/etiqueta-calificacion-energetica-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;Válvula de seguridad por presión, tacos, tornillos, casquillos electrolíticos, plantilla montaje y etiqueta de calificación energética&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -1785,85 +1850,6 @@
                 <category term="planeta-linux"/>
             
                 <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2017/06/asi-trata-pepephone-a-sus-clientes/</id>
-        <title>Así trata Pepephone a sus clientes</title>        
-        <updated>2017-06-03T12:00:00+02:00</updated>
-        <published>2017-06-03T12:00:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/06/asi-trata-pepephone-a-sus-clientes/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/pepephone.svg&#34; class=&#34;right&#34; width=&#34;400&#34; alt=&#34;Pepephone&#34; title=&#34;Pepephone&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;El martes 30 de mayo &lt;a href=&#34;https://www.pepephone.com/&#34;&gt;Pepephone&lt;/a&gt; me enviaba y a todos sus clientes un correo informándome que el día anterior habían tenido una caída de servicio en el ADSL y que si había sido afectado que lo sentían. La caída del servicio había sido durante unas cuatro horas de la noche del día anterior y de la madrugada del mismo día. En mi caso por ese horario no había resultado afectado por la caída del servicio y si no llega a ser por el correo que Pepephone me envió no me hubiese enterado.&lt;/p&gt;
-
-&lt;p&gt;Este es el correo que Pepephone envió para informar a los clientes del ADSL y fibra de la incidencia.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/238/incidencia-pepephone.png&#34; title=&#34;Correo informativo incidencia Pepephone&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/238/incidencia-pepephone-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  
-  &lt;figcaption&gt;Correo informativo incidencia Pepephone&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;Informaban de la caída del servicio junto con una breve disculpa pero también a modo de compensación y sin tener que solicitarlo un descuento en la siguiente factura por valor de un día entero del servicio aunque la incidencia solo fue durante unas horas y yo no había sido afectado, es más según explicaban en el correo posiblemente no todos los clientes habían sido afectados pero la compensación con el descuento la aplicarían a todos los clientes. Un aplauso para Pepephone por tratar así a sus clientes, lo que corresponde según la ley y algo más ya que creo que las condiciones para la compensación deben superar un importe y una duración mínima de la incidnecia. Muchas veces solo hablamos para quejarnos cuando algo no nos gusta algo pero no alabamos las cosas positivas. Aunque sería mejor que no hubiese habido caída de servicio, como se produjo la respuesta de Pepephone fue compensar a sus cliente sin que éstos lo pidan lo que es de muy agradecer.&lt;/p&gt;
-
-&lt;p&gt;Y la compensación no ha sido varios meses después sino en la siguiente factura que correspondía emitir unos días más tarde.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/238/descuento-pepephone.png&#34; title=&#34;Descuento en la factura con la compensación&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/238/descuento-pepephone-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  
-  &lt;figcaption&gt;Descuento en la factura con la compensación&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;Esto forma de trato es una diferencia destacable de esta compañía con respecto a muchos de los otros proveedores de internet. Varias otras compañías lo que suelen hacer es sin que tu lo pidas subirte el importe de la factura ofreciendo más megas de bajada o subida, o más megas mensuales que puede que no te interesen y prefieras seguir con los mismos megas y con el mismo importe de la factura.&lt;/p&gt;
-
-&lt;p&gt;El ADSL de Pepephone, o de cualquier otro operador, no ofrece mucha velocidad de descarga y de subida (yo obtengo 10 MB de bajada y 1 MB de subida) pero es más que suficiente para navegar y para hacer descargas P2P vía torrent. Salvo momentos muy puntuales en los que en una descarga si quiero que vaya más rápido la velocidad del ADSL es más que suficiente. Yo no soy un usuario que realice muchas descargas y cuando las hago con la Raspberry Pi en una noche no hay nada que no pueda descargar todo lo que le eche aún a la velocidad de descarga de 1 MiB/s, no soy un usuario que descarga mucho pero si un usuario que usa internet bastante, si para mi es suficiente para usuarios que no le den tanto uso a internet también debería ser suficiente. Y si eres de los afortunados que tiene cobertura de la fibra de Pepephone es la fibra con mejor precio aún con su coste de instalación, con la menor cuota mensual posterior en unos pocos meses queda compensada.&lt;/p&gt;
-
-&lt;p&gt;En el artículo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/08/eligiendo-proveedor-de-internet-finalmente-pepephone/&#34;&gt;Eligiendo proveedor de internet, finalmente Pepephone&lt;/a&gt; explicaba mis motivos y comparándola con otras opciones que barajé para decidirme por un proveedor. Finalmente fue Pepephone por el precio aun con su coste de instalación al cabo de unos meses compensa siendo internet un servicio que no se cambia cada pocos meses, pero no solo fue el precio también consideré el trato que da Pepephone a sus clientes y con correos como el anterior se demuestra. Donde otros operadores te suben la factura de forma unilateral anualmente o incluso más de una vez al año sin que lo quieras Pepephone hace una compensación sin que lo pidas, para todos los clientes y por más tiempo de lo que resultó la caída del servicio.&lt;/p&gt;
-
-&lt;p&gt;Resulta que nos quejamos de los precios de algunos operadores o del trato que ofrecen a los clientes pero luego los usuarios siguen contratando con esas compañías cuando hay otras que tratan a sus clientes con respeto. No hacen regalos ni promociones pero ofrecen un precio ajustado y razonable y un trato respetuoso. En internet está Pepephone y en el sector de las eléctricas están empresas como &lt;a href=&#34;https://www.holaluz.com/&#34;&gt;HolaLuz&lt;/a&gt; o &lt;a href=&#34;https://www.pepeenergy.com/&#34;&gt;Pepeenergy&lt;/a&gt; que ofrecen energía 100% renovable y de las que también he oído hablar bien, cambiar de compañía que ofrece un servicio no se hace todos los días pero si en algún momento tienes que hacerlo considera alguna de estas u otras compañías con estos valores y no te dejes engatusar por promociones envenenadas destinadas más bien a engañar a los clientes. Como consumidores tenemos también una responsabilidad.&lt;/p&gt;
-
-&lt;p&gt;¿Tu proveedor de internet te trata así?&lt;/p&gt;
-
-&lt;div class=&#34;reference&#34;&gt;
-    Referencia:&lt;br&gt;
-    &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.adslzone.net/2017/05/31/una-caida-de-la-fibra-y-el-adsl-de-masmovil-yoigo-y-pepephone-dejo-sin-servicio-sus-clientes/&#34;&gt;Una caída de la fibra y el ADSL de MásMóvil, Yoigo y Pepephone dejó sin servicio a sus clientes&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="opinion"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="planeta-linux"/>
             
         
     </entry>
