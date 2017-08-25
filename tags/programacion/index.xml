@@ -3,12 +3,74 @@
     <id>https://picodotdev.github.io/blog-bitix/tags/programacion/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2017-08-18T23:00:00+02:00</updated>
+    <updated>2017-08-25T11:00:00+02:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
     <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/08/cache-simple-de-datos-y-con-ehcache-en-java/</id>
+        <title>Cache simple de datos y con Ehcache en Java</title>        
+        <updated>2017-08-25T11:00:00+02:00</updated>
+        <published>2017-08-25T11:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/08/cache-simple-de-datos-y-con-ehcache-en-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En ocasiones es necesario usar una cache que contenga un número de elementos hasta un límite y que cuando se vayan añadiendo más se vayan borrando otros según algún criterio. En Java si no queremos añadir una nueva dependencia al proyecto con una librería especializada como &lt;a href=&#34;http://www.ehcache.org/&#34;&gt;Ehcache&lt;/a&gt; la clase &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/LinkedHashMap.html&#34;&gt;LinkedHashMap&lt;/a&gt; sirve para aquellos casos de uso simples sin necesidad de dependencias adicionales.&lt;/p&gt;
+
+&lt;p&gt;Si el coste de obtener algunos datos es costoso ya sean porque hay que obtenerlos de una base de datos, mediante una operación de disco o red o hay que hacer algún cálculo sobre ellos en estos casos guardar los datos en una cache supondrá un aumento notable de rendimiento de mayor o menor medida según el coste de la operación que evita la cache. Usar una cache es viable si es posible usar datos no completamente actualizados y dedicar algo de espacio en memoria para la cache. Si en la mayor parte de las búsquedas que se hacen en la cache el elemento buscado está ya presente se considera un acierto o &lt;em&gt;hit&lt;/em&gt; y si no está presente un fallo o &lt;em&gt;miss&lt;/em&gt;, cuando mayor sea el número de aciertos en la cache mayor será el aumento rendimiento percibido.&lt;/p&gt;
+
+&lt;p&gt;Para usar la clase &lt;em&gt;LinkedHashMap&lt;/em&gt; como estructura de datos para una cache simple basta que creemos una nueva clase que extienda de esta con una implementación personalizada para el método &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/LinkedHashMap.html#removeEldestEntry-java.util.Map.Entry-&#34;&gt;removeEldestEntry&lt;/a&gt; que devuelva &lt;em&gt;true&lt;/em&gt; para eliminar entrada más antigua, un caso sería cuando en el mapa se alcance el límite de elementos a almacenar como máximo.&lt;/p&gt;
+
+&lt;p&gt;En el ejemplo se crea una cache que tiene como máximo 5 elementos y se insertan en ella 15, cuando se intenta insertar en elemento más de la capacidad máxima el elemento más viejo se elimina de modo que la cache siempre tiene como máximo 5 elementos. Si la cache va a ser accedida tanto para operaciones de lectura como de escritura desde múltiples &lt;em&gt;threads&lt;/em&gt; hay que prevenir posibles problemas de concurrencia sincronizando su acceso con el método &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#synchronizedMap-java.util.Map-&#34;&gt;Collections.synchronizedMap&lt;/a&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/3770da191943f7dac30e6a37416cec0f.js?file=Main-1.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/3770da191943f7dac30e6a37416cec0f.js?file=SimpleCache.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Si son necesarias funcionalidades más avanzadas como que los elementos expiren pasado un tiempo y para mayores cantidades de datos guardar parte de la cache en disco con un límite de espacio ocupado una de las opciones más conocidas es Ehcache.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/3770da191943f7dac30e6a37416cec0f.js?file=Main-2.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Cachear datos se puede hacer en varios puntos de una aplicación, si se trata de una aplicación web &lt;a href=&#34;https://varnish-cache.org/&#34;&gt;Varnish&lt;/a&gt; cachea el HTML, CSS y JavaScript además de los códigos de estado incluso &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/07/configurar-nginx-para-cachear-respuestas-del-servidor-de-aplicaciones/&#34;&gt;nginx incorpora la funcionalidad de cache&lt;/a&gt;, la propia aplicación puede cachear ciertos datos con alguna de las formas expuestas en este artículo y las propias bases de datos pueden cachear en memoria ciertos datos para evitar acceder al sistema de ficheros o disco. En definitiva una cache usada de forma efectiva ayuda a mitigar la penalización de operaciones costosas de acceso a red o a disco comparado con el acceso a memoria.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/255/java-cache.png&#34; title=&#34;Ejecución del ejemplo&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/255/java-cache-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaCache&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/08/37-buenos-libros-sobre-sobre-java-linux-devops-y-desarrollo-que-he-leido/</id>
@@ -1911,101 +1973,6 @@
                 <category term="blog-stack"/>
             
                 <category term="gnu-linux"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="planeta-linux"/>
-            
-                <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2017/05/luces-navidenas-con-la-raspberry-pi-y-java/</id>
-        <title>Luces navideñas con la Raspberry Pi y Java</title>        
-        <updated>2017-05-14T11:00:00+02:00</updated>
-        <published>2017-05-14T11:00:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/05/luces-navidenas-con-la-raspberry-pi-y-java/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;Con diferentes sensores y dispositivos de salida de electrónica se pueden realizar proyectos muy interesantes. En el siguiente usaré múltiples diodos LED que se encenderán y apagarán de forma aleatoria cada cierto tiempo. El resultado será muy vistoso y lo utilizaré cuando lleguen las fechas como luces navideñas.&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/raspberrypi.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Raspberry Pi&#34; title=&#34;Raspberry Pi&#34;/&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Como muestra de lo que se puede hacer con la Raspberry Pi usando los pines GPIO haré un ejemplo que consistirá en múltiples diodos LED de diferentes colores enciendan y apaguen simulando una especie de luces navideñas. Como yo tengo la Raspbperry Pi 1 B con 26 pines de los cuales solo 17 son GPIO podré usar hasta 17 diodos LED, aunque solo usaré 15. En el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;kit de iniciación a la electrónica para la Raspberry Pi&lt;/a&gt; viene incluidos 24 diodos LED de diferentes colores 6 blancos, 6 rojos, 6 amarillos y 6 verdes, también es necesario una resistencia por cada diodo de unos 200 ohmios de los cuales en el &lt;em&gt;kit&lt;/em&gt; se incluyen 20 de este valor.&lt;/p&gt;
-
-&lt;p&gt;Aunque con muchos más LED el ejemplo no es más complicado que el ejemplo que ya mostré de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-encender-y-apagar-diodo-led-con-la-raspberry-pi-en-java/&#34;&gt;encender y apagar un diodo LED&lt;/a&gt;. Usaré diodos de diferentes colores y dispuestos de forma aleatoria para darle un aspecto desordenado, para darle un aspecto más caótico los LEDs se encenderán y apagarán de forma aleatoria. Usaré el lenguaje de programación Java y la librería de alto nivel &lt;a href=&#34;http://rtd.diozero.com/en/latest/&#34;&gt;diozero&lt;/a&gt; para controlar el encendido y apagado de los diodos.&lt;/p&gt;
-
-&lt;p&gt;Esta es la foto del cableado usando múltiples cables macho-macho para conectar los pines con el polo positivo de los diodos pasando por la resistencia y también múltiples cables para conectar el polo negativo del diodo con tierra. Usando una placa &lt;em&gt;breadboard&lt;/em&gt; para realizar las conexiones sin soldadura y una placa de extensión wiringPi para conectar la Raspberry Pi con la placa &lt;em&gt;breadboard&lt;/em&gt; con un cable de 26 pines en mi caso por el modelo que tengo de RPi este es el aspecto de cableado.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-01.jpg&#34; title=&#34;Cableado de las luces LED del árbol de navidad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-01-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-02.jpg&#34; title=&#34;Cableado de las luces LED del árbol de navidad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-02-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-03.jpg&#34; title=&#34;Cableado de las luces LED del árbol de navidad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-03-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-04.jpg&#34; title=&#34;Cableado de las luces LED del árbol de navidad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-04-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-05.jpg&#34; title=&#34;Cableado de las luces LED del árbol de navidad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/233/arbol-navidad-05-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  
-  &lt;figcaption&gt;Cableado de las luces LED del árbol de navidad&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;Cada cierto tiempo los diodos cambian de estado, algunos se encenderán, otros se apagarán y otros seguirán en el estado que estaban. Para ello generaré un booleano aleatorio para cada uno de los diodos que determinará si debe estar encendido o apagado. Este es el programa Java junto con la parte relevante del archivo &lt;a href=&#34;https://gradle.org/&#34;&gt;Gradle&lt;/a&gt; para compilar y construir el ejemplo y el comando que uso para ejecutarlo.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/86d81809da0ad791e41a8f821a58ea62.js?file=ChristmasTree.java%20&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/86d81809da0ad791e41a8f821a58ea62.js?file=build.gradle&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/86d81809da0ad791e41a8f821a58ea62.js?file=execute.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Esta aplicación para la Raspberry Pi queda bastante vistosa y no es muy complicado de realizar a pesar del del lío de cables que resulta. Este es un vídeo de su funcionamiento.&lt;/p&gt;
-
-&lt;div class=&#34;media media-video&#34; style=&#34;text-align: center;&#34;&gt;
-  &lt;iframe width=&#34;640&#34; height=&#34;360&#34; src=&#34;https://www.youtube.com/embed/F2BChbcyr5g&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
-&lt;/div&gt;
-
-&lt;p&gt;
-    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRasberriPi&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew executeChristmasTree&lt;/code&gt;.
-&lt;/p&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="gnu-linux"/>
-            
-                <category term="java"/>
             
                 <category term="planeta-codigo"/>
             
