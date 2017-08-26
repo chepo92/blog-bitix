@@ -1,13 +1,291 @@
-<!DOCTYPE html><html lang="es"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="author" content="pico.dev"><meta name="keywords" content="java, programacion, tapestry, linux, gnu, gnu/linux, arch, arch linux, software, software libre, html, css, javascript"><meta name="description" content="Las aplicaciones de comercio electrónico o que realizan operaciones financieras con importes seguro que necesitan una forma de representar un importe junto con una divisa. También si necesitan convertir importes en diferentes divisas necesitarán obtener los ratios de conversión de alguna fuente, en el artículo Servicio para obtener ratios de conversión entre divisas comentaba uno que podemos usar, Open Exchange Rates. Java incluye clases para datos numéricos y con ellos se pueden representar importes como por ejemplo BigDecimal. &hellip;"><base href="https://picodotdev.github.io/blog-bitix/"><title>Cómo trabajar con importes, ratios y divisas en Java</title><link rel="author" type="text/plain" href="humans.txt"><link rel="shortcut icon" href="assets/favicon.ico"><link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/apple-touch-icon-144-precomposed.png"><link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2015/07/como-trabajar-con-importes-ratios-y-divisas-en-java/"><link href="index.xml" rel="alternate" type="application/rss+xml" title="Blog Bitix"><link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=PT+Serif:400,700italic,700,400italic"><link rel="stylesheet" type="text/css" href="//www.google.com/cse/api/branding.css"><link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-3.3.6-dist/css/bootstrap.min.css"><link rel="stylesheet" href="assets/libs/Gallery-2.17.0/css/blueimp-gallery.min.css"><link rel="stylesheet" href="assets/libs/Bootstrap-Image-Gallery-3.3.6/css/bootstrap-image-gallery.min.css"><link rel="stylesheet" type="text/css" href="assets/css/main.css"><script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script><script type="text/javascript">(adsbygoogle = window.adsbygoogle || []).push({
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="pico.dev">
+  <meta name="keywords" content="java, programacion, tapestry, linux, gnu, gnu/linux, arch, arch linux, software, software libre, html, css, javascript">
+  <meta name="description" content="Las aplicaciones de comercio electrónico o que realizan operaciones financieras con importes seguro que necesitan una forma de representar un importe junto con una divisa. También si necesitan convertir importes en diferentes divisas necesitarán obtener los ratios de conversión de alguna fuente, en el artículo Servicio para obtener ratios de conversión entre divisas comentaba uno que podemos usar, Open Exchange Rates. Java incluye clases para datos numéricos y con ellos se pueden representar importes como por ejemplo BigDecimal. &hellip;">
+  <base href="https://picodotdev.github.io/blog-bitix/">
+
+  <title>Cómo trabajar con importes, ratios y divisas en Java</title>
+
+  <link rel="author" type="text/plain" href="humans.txt" />
+  <link rel="shortcut icon" href="assets/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/apple-touch-icon-144-precomposed.png">
+  <link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2015/07/como-trabajar-con-importes-ratios-y-divisas-en-java/">
+
+  
+  <link href="index.xml" rel="alternate" type="application/rss+xml" title="Blog Bitix" />
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=PT+Serif:400,700italic,700,400italic">
+  
+  <link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-4.0.0-beta/css/bootstrap.min.css">
+  
+  <link rel="stylesheet" href="assets/libs/Gallery-2.25.2/css/blueimp-gallery.min.css">
+  
+  <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+
+  
+  <script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script>
+  <script type="text/javascript">
+    (adsbygoogle = window.adsbygoogle || []).push({
       google_ad_client: 'ca-pub-3533636310991304',
       enable_page_level_ads: true
-    });</script><script type="text/javascript" async>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    });
+  </script>
+  <script type="text/javascript" async>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
     ga('create', 'UA-12874075-4', 'picodotdev.github.io');
-    ga('send', 'pageview');</script><script type="text/javascript" src="assets/libs/require.min.js" data-main="assets/js/main" async></script><script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" async="async"></script><script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=custom-share-buttons" async="async"></script></head><body><div class="container"><div class="row"><header><div class="row"><div class="col-md-4 col-md-offset-4"><h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2><div class="links"><a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a><a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a><a href="https://plus.google.com/114317443908384387611/posts" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a><a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a></div></div><div class="col-md-4 text-center"><form name="query" class="form-inline search" onsubmit="return false"><div class="input-group"><input type="text" name="q" class="form-control" placeholder="Buscar en Blog Bitix"> <span class="input-group-btn"><button class="btn btn-default" type="submit">Buscar</button></span></div></form><form name="search" action="https://duckduckgo.com/" method="get" class="hidden" data-site="https://picodotdev.github.io/blog-bitix/"><input type="hidden" name="q" value=""></form></div></div><div class="row"><div class="col-md-12"><nav><ul class="nav nav-pills"><li role="presentation"><a href="/blog-bitix/tags/java/">Java</a></li><li role="presentation"><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li><li role="presentation"><a href="/blog-bitix/tags/javascript/">JavaScript</a></li><li role="presentation"><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li><li role="presentation"><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li><li role="presentation"><a href="/blog-bitix/pages/links/">Enlaces</a></li><li role="presentation"><a href="/blog-bitix/pages/about/">Acerca de...</a></li></ul></nav></div></div></header><div class="col-sm-12 col-md-8"><div class="row"><div class="col-md-12"><article itemscope itemtype="http://schema.org/BlogPosting"><meta itemprop="inLanguage" content="es"><meta itemprop="keywords" content="blog-stack, java, planeta-codigo, programacion"><h1 itemprop="name">Cómo trabajar con importes, ratios y divisas en Java</h1><p class="information">Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2015-07-21">21/07/2015</time>, actualizado el <time itemprop="dateModified" datetime="2015-07-21">21/07/2015</time>.<br><a href="tags/blog-stack/">blog-stack</a> <a href="tags/java/">java</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/programacion/">programacion</a><br><a href="/blog-bitix/2015/07/como-trabajar-con-importes-ratios-y-divisas-en-java/" itemprop="url">Enlace permanente</a> <a href="/blog-bitix/2015/07/como-trabajar-con-importes-ratios-y-divisas-en-java/#comments">Comentarios</a></p><p class="summary" itemprop="about">Aún en Java 8 no tenemos una API incluida en el JDK dedicada al manejo de importes, divisas y conversiones. Si la especificación JSR-354 se incluye en alguna versión podremos hacer uso de ella sin necesidad de ninguna dependencia adicional, pero si tenemos necesidad ahora podemos usar la librería que ha producido la especificación. Usando las clases y métodos de la API evitaremos hacer y mantener una implementación nosotros mismos que además seguro no llega al nivel de esta.</p><ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-3533636310991304" data-ad-slot="5966819782" data-type="leaderboard"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script><div class="content" itemprop="articleBody"><meta itemprop="wordCount" content="703"><div class="logotypes" style="float: right"><img src="assets/images/logotipos/java.png" class="right" alt="Java" title="Java"></div><p>Las aplicaciones de comercio electrónico o que realizan operaciones financieras con importes seguro que necesitan una forma de representar un importe junto con una divisa. También si necesitan convertir importes en diferentes divisas necesitarán obtener los ratios de conversión de alguna fuente, en el artículo <a href="https://picodotdev.github.io/blog-bitix/2015/06/servicio-para-obtener-ratios-de-conversion-entre-divisas/">Servicio para obtener ratios de conversión entre divisas</a> comentaba uno que podemos usar, <a href="https://openexchangerates.org/">Open Exchange Rates</a>. Java incluye clases para datos numéricos y con ellos se pueden representar importes como por ejemplo <a href="https://docs.oracle.com/javase/8/docs/api/java/math/BigDecimal.html">BigDecimal</a>. Para importes no debemos usar en ningún caso un tipo de dato <em>float</em> o <em>double</em> ya que estos son incapaces de representar ciertos valores de forma exacta, usando <a href="http://elblogdepicodev.blogspot.com.es/2012/01/errores-de-precision-redondeo-y.html"><em>float</em> y <em>double</em> tendremos errores de precisión, redondeo y representación</a>. En vez de crear un nuevo tipo de datos (una clase) que tenga como propiedades un BigDecimal para el importe y un String o similar para representar la divisa además de implementar las varias operaciones aritméticas y de comparación entre otras muchas cosas que necesitaremos podemos usar la librería que la <a href="https://github.com/JavaMoney/jsr354-api/blob/master/src/main/asciidoc/JavaMoneySpecification.adoc">especificación JSR-354</a> proporciona una API dedicada a importes y divisas en Java. En Java 8 no se incluyó pero en una futura versión quizá si se incluya en el propio JDK. En este artículo comentaré como usando Java 8 podemos hacer uso de esta API desde ya y que ofrece.</p><p>Aunque la especificación no es parte de Java aún el grupo de trabajo encargado ha generado una dependencia que podemos usar. En el <a href="https://github.com/JavaMoney/">repositorio de GitHub</a> podemos encontrar el código de la librería. Incluyéndola como dependencia de un proyecto podemos usarla, usando <a href="https://gradle.org/">Gradle</a> con:</p><script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=build.gradle"></script><p>La librería hace uso de lambdas, una de las <a href="https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/">novedades que introdujo de Java 8 en el lenguaje</a>, y nos facilita varias funcionalidades. También permite usar <em>streams</em>. Veamos algunas de las posibilidades.</p><h3 id="representación-de-divisas-e-importes">Representación de divisas e importes</h3><p>Las divisas se representan con <a href="https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/CurrencyUnit.java">CurrencyUnit</a> y los importes se representan usando la clase <a href="https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/MonetaryAmount.java">MoneyAmount</a>, tenemos varias formas de crear instancias de estas clases.</p><script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=Main-1.java"></script><p>La API ofrece varios métodos para extraer los valores numéricos, la parte entera y decimal, que una instancia de MoneyAmount contiene así como obtener los valores en un tipo de datos más básico como BigDecimal.</p><script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=Main-2.java"></script><h3 id="operaciones-aritméticas-de-comparación-y-operaciones-personalizadas">Operaciones aritméticas, de comparación y operaciones personalizadas</h3><p>Podemos hacer operaciones aritméticas (suma, resta, multiplicación y división) entre dos importes.</p><script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=Main-3.java"></script><p>También podremos hacer comparaciones:</p><script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=Main-4.java"></script><h3 id="redondear-importes">Redondear importes</h3><script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=Main-9.java"></script><p>E incluso implementar operaciones más complejas y habituales personalizadas con la clase <a href="https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/MonetaryOperator.java">MonetaryOperator</a> que se puede aplicar usando el método <em>with</em> de MonerayAmount.</p><h3 id="formateado-y-analizado">Formateado y analizado</h3><p>Dependiendo de país o la moneda los importes se representan de forma diferente, por ejemplo, en Estados Unidos se usa «,» como separador de millares y «.» como separador de los decimales, en España es diferente, se usa «.» para los millares y «,» para los decimales. También hay monedas que no tienen decimales como el Yen japonés. Disponemos de métodos y clases para formatear correctamente el importe.</p><script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=Main-5.java"></script><p>Podemos hacer la operación contraria <em>parseando</em> o analizando la cadena, obtener un objeto MoneyAmount desde su representación en String.</p><script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=Main-6.java"></script><h3 id="ratios-de-conversión-conversiones-entre-divisas">Ratios de conversión, conversiones entre divisas</h3><p>Si necesitamos convertir el importe de una moneda a otra necesitaremos el ratio de conversión entre las monedas, es decir, por cada dólar estadounidense cuántos euros son si queremos hacer una conversión de USD a euro. Se puede obtener el ratio de conversión o hacer la conversión directamente entre las dos monedas. En el siguiente código se muestra cuántos euros son 10 USD con la cotización entre las divisas en el momento de escribir el artículo.</p><script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=Main-7.java"></script><p>La librería incluye varias fuentes para las cotizaciones de cada moneda, una de ellas es el Banco Central Europeo pero también podemos crear la implementación de una nueva fuente que por ejemplo use Open Exchange Rates.</p><h3 id="streams-y-filtros">Streams y filtros</h3><p>Por si todo esto fuera poco podemos usar las características de programación funcional de Java 8 ya que la librería ofrece soporte para streams para ejemplo filtrar o para agrupar.</p><script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=Main-8.java"></script><p>El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/JavaMoney">código fuente completo del ejemplo</a> está en uno de mis repositorios de GitHub.</p><div class="reference">Referencia:<br><ul><li><a href="https://github.com/JavaMoney/jsr354-api">JSR 354 API</a></li><li><a href="https://github.com/JavaMoney/jsr354-ri">JSR 354 RI</a></li><li><a href="https://java.net/projects/javamoney/pages/Home">JSR 354 - Currency and Money</a></li><li><a href="https://github.com/JavaMoney/jsr354-api/blob/master/src/main/asciidoc/JavaMoneySpecification.adoc">JSR 354 Money and Currency — Specification</a></li><li><a href="http://java.dzone.com/articles/looking-java-9-money-and">Looking into the Java 9 Money and Currency API (JSR 354)</a></li><li><a href="https://weblogs.java.net/blog/otaviojava/archive/2014/08/25/java-9-coming-money-api">Java 9 is coming with money api</a></li><li><a href="http://www.joda.org/joda-money/">Joda Money</a></li><li><a href="http://es.slideshare.net/AnatoleTresch/adopt-jsr-354">Adopt JSR 354</a></li></ul></div></div></article></div></div><div class="row"><div class="col-md-12"><div class="sharethis-inline-share-buttons"></div></div></div><div class="row"><div class="col-md-12"><ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-3533636310991304" data-ad-slot="5966819782" data-type="leaderboard"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div><a id="comments"></a><div class="row"><div class="col-md-12"><div id="disqus_thread"></div></div></div><script type="text/javascript" async>var disqus_shortname = 'blog-bitix';
+    ga('send', 'pageview');
+  </script>  
+  <script type="text/javascript" src="assets/js/vendor.bundle.js" async></script>
+  <script type="text/javascript" src="assets/js/app-theme.bundle.js" async></script>
+  <script type="text/javascript" src="assets/js/app.bundle.js" async></script>
+
+  <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" async="async"></script>
+  <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=custom-share-buttons" async="async"></script>
+
+  
+  
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <header>
+  <div class="row">
+    <div class="col-sm-12 col-md-4"></div>
+    <div class="col-sm-12 col-md-4">
+      <h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2>
+      <div class="links">
+        
+          <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a>
+        
+        
+          <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a>
+        
+        
+          <a href="https://plus.google.com/114317443908384387611/posts" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a>
+        
+        
+          <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a>
+        
+        
+        
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-4 text-center">
+      <form name="query" class="form-inline search" onsubmit="return false;">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Buscar en Blog Bitix">
+          <span class="input-group-btn">
+            <button class="btn btn-secondary" type="submit">Buscar</button>
+          </span>
+        </div>
+      </form>
+      <form name="search" action="https://duckduckgo.com/" method="get" class="hidden" data-site="https://picodotdev.github.io/blog-bitix/">
+        <input type="hidden" name="q" value="">
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <nav class="nav nav-pills nav-fill">
+  
+    <a href="/blog-bitix/tags/java/" class="nav-item nav-link">Java</a>
+  
+    <a href="/blog-bitix/tags/gnu-linux/" class="nav-item nav-link">GNU/Linux</a>
+  
+    <a href="/blog-bitix/tags/javascript/" class="nav-item nav-link">JavaScript</a>
+  
+    <a href="/blog-bitix/tags/tapestry/" class="nav-item nav-link">Tapestry</a>
+  
+    <a href="/blog-bitix/archive/" class="nav-item nav-link">Archivo y hemeroteca</a>
+  
+    <a href="/blog-bitix/pages/links/" class="nav-item nav-link">Enlaces</a>
+  
+    <a href="/blog-bitix/pages/about/" class="nav-item nav-link">Acerca de...</a>
+  
+</nav>
+
+    </div>
+  </div>
+</header>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-8">
+        <div class="row">
+          <div class="col-md-12">
+            <article itemscope itemtype="http://schema.org/BlogPosting">
+              
+              <meta itemprop="inLanguage" content="es">
+              
+              
+                <meta itemprop="keywords" content="blog-stack, java, planeta-codigo, programacion">
+              
+              
+              <h1 itemprop="name">Cómo trabajar con importes, ratios y divisas en Java</h1>
+              <p class="information">
+                Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2015-07-21">21/07/2015</time>, actualizado el <time itemprop="dateModified" datetime="2015-07-21">21/07/2015</time>.
+                
+                
+                  <br>
+                   <a href="tags/blog-stack/">blog-stack</a> <a href="tags/java/">java</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/programacion/">programacion</a>
+                
+                <br>
+                <a href="/blog-bitix/2015/07/como-trabajar-con-importes-ratios-y-divisas-en-java/" itemprop="url">Enlace permanente</a>
+                
+                  <a href="/blog-bitix/2015/07/como-trabajar-con-importes-ratios-y-divisas-en-java/#comments">Comentarios</a>
+                
+                
+              </p>
+
+              
+                <p class="summary" itemprop="about">Aún en Java 8 no tenemos una API incluida en el JDK dedicada al manejo de importes, divisas y conversiones. Si la especificación JSR-354 se incluye en alguna versión podremos hacer uso de ella sin necesidad de ninguna dependencia adicional, pero si tenemos necesidad ahora podemos usar la librería que ha producido la especificación. Usando las clases y métodos de la API evitaremos hacer y mantener una implementación nosotros mismos que además seguro no llega al nivel de esta.</p>
+              
+              
+
+              <ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="5966819782"
+     data-type="leaderboard"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+              <div class="content" itemprop="articleBody">
+                <meta itemprop="wordCount" content="703">
+                
+
+
+                <div class="logotypes" style="float: right;">
+    <img src="assets/images/logotipos/java.png" class="right" alt="Java" title="Java"/>
+</div>
+
+<p>Las aplicaciones de comercio electrónico o que realizan operaciones financieras con importes seguro que necesitan una forma de representar un importe junto con una divisa. También si necesitan convertir importes en diferentes divisas necesitarán obtener los ratios de conversión de alguna fuente, en el artículo <a href="https://picodotdev.github.io/blog-bitix/2015/06/servicio-para-obtener-ratios-de-conversion-entre-divisas/">Servicio para obtener ratios de conversión entre divisas</a> comentaba uno que podemos usar, <a href="https://openexchangerates.org/">Open Exchange Rates</a>. Java incluye clases para datos numéricos y con ellos se pueden representar importes como por ejemplo <a href="https://docs.oracle.com/javase/8/docs/api/java/math/BigDecimal.html">BigDecimal</a>. Para importes no debemos usar en ningún caso un tipo de dato <em>float</em> o <em>double</em> ya que estos son incapaces de representar ciertos valores de forma exacta, usando <a href="http://elblogdepicodev.blogspot.com.es/2012/01/errores-de-precision-redondeo-y.html"><em>float</em> y <em>double</em> tendremos errores de precisión, redondeo y representación</a>. En vez de crear un nuevo tipo de datos (una clase) que tenga como propiedades un BigDecimal para el importe y un String o similar para representar la divisa además de implementar las varias operaciones aritméticas y de comparación entre otras muchas cosas que necesitaremos podemos usar la librería que la <a href="https://github.com/JavaMoney/jsr354-api/blob/master/src/main/asciidoc/JavaMoneySpecification.adoc">especificación JSR-354</a> proporciona una API dedicada a importes y divisas en Java. En Java 8 no se incluyó pero en una futura versión quizá si se incluya en el propio JDK. En este artículo comentaré como usando Java 8 podemos hacer uso de esta API desde ya y que ofrece.</p>
+
+<p>Aunque la especificación no es parte de Java aún el grupo de trabajo encargado ha generado una dependencia que podemos usar. En el <a href="https://github.com/JavaMoney/">repositorio de GitHub</a> podemos encontrar el código de la librería. Incluyéndola como dependencia de un proyecto podemos usarla, usando <a href="https://gradle.org/">Gradle</a> con:</p>
+
+<script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=build.gradle"></script>
+
+<p>La librería hace uso de lambdas, una de las <a href="https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/">novedades que introdujo de Java 8 en el lenguaje</a>, y nos facilita varias funcionalidades. También permite usar <em>streams</em>. Veamos algunas de las posibilidades.</p>
+
+<h3 id="representación-de-divisas-e-importes">Representación de divisas e importes</h3>
+
+<p>Las divisas se representan con <a href="https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/CurrencyUnit.java">CurrencyUnit</a> y los  importes se representan usando la clase <a href="https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/MonetaryAmount.java">MoneyAmount</a>, tenemos varias formas de crear instancias de estas clases.</p>
+
+<script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=Main-1.java"></script>
+
+<p>La API ofrece varios métodos para extraer los valores numéricos, la parte entera y decimal, que una instancia de MoneyAmount contiene así como obtener los valores en un tipo de datos más básico como BigDecimal.</p>
+
+<script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=Main-2.java"></script>
+
+<h3 id="operaciones-aritméticas-de-comparación-y-operaciones-personalizadas">Operaciones aritméticas, de comparación y operaciones personalizadas</h3>
+
+<p>Podemos hacer operaciones aritméticas (suma, resta, multiplicación y división) entre dos importes.</p>
+
+<script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=Main-3.java"></script>
+
+<p>También podremos hacer comparaciones:</p>
+
+<script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=Main-4.java"></script>
+
+<h3 id="redondear-importes">Redondear importes</h3>
+
+<script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=Main-9.java"></script>
+
+<p>E incluso implementar operaciones más complejas y habituales personalizadas con la clase <a href="https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/MonetaryOperator.java">MonetaryOperator</a> que se puede aplicar usando el método <em>with</em> de MonerayAmount.</p>
+
+<h3 id="formateado-y-analizado">Formateado y analizado</h3>
+
+<p>Dependiendo de país o la moneda los importes se representan de forma diferente, por ejemplo, en Estados Unidos se usa «,» como separador de millares y «.» como separador de los decimales, en España es diferente, se usa «.» para los millares y «,» para los decimales. También hay monedas que no tienen decimales como el Yen japonés. Disponemos de métodos y clases para formatear correctamente el importe.</p>
+
+<script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=Main-5.java"></script>
+
+<p>Podemos hacer la operación contraria <em>parseando</em> o analizando la cadena, obtener un objeto MoneyAmount desde su representación en String.</p>
+
+<script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=Main-6.java"></script>
+
+<h3 id="ratios-de-conversión-conversiones-entre-divisas">Ratios de conversión, conversiones entre divisas</h3>
+
+<p>Si necesitamos convertir el importe de una moneda a otra necesitaremos el ratio de conversión entre las monedas, es decir, por cada dólar estadounidense cuántos euros son si queremos hacer una conversión de USD a euro. Se puede obtener el ratio de conversión o hacer la conversión directamente entre las dos monedas. En el siguiente código se muestra cuántos euros son 10 USD con la cotización entre las divisas en el momento de escribir el artículo.</p>
+
+<script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=Main-7.java"></script>
+
+<p>La librería incluye varias fuentes para las cotizaciones de cada moneda, una de ellas es el Banco Central Europeo pero también podemos crear la implementación de una nueva fuente que por ejemplo use Open Exchange Rates.</p>
+
+<h3 id="streams-y-filtros">Streams y filtros</h3>
+
+<p>Por si todo esto fuera poco podemos usar las características de programación funcional de Java 8 ya que la librería ofrece soporte para streams para ejemplo filtrar o para agrupar.</p>
+
+<script src="//gist.github.com/picodotdev/6d22d043d7ca6f6146cb.js?file=Main-8.java"></script>
+
+<p>El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/JavaMoney">código fuente completo del ejemplo</a> está en uno de mis repositorios de GitHub.</p>
+
+<div class="reference">
+    Referencia:<br>
+    <ul>
+<li><a href="https://github.com/JavaMoney/jsr354-api">JSR 354 API</a></li>
+<li><a href="https://github.com/JavaMoney/jsr354-ri">JSR 354 RI</a></li>
+<li><a href="https://java.net/projects/javamoney/pages/Home">JSR 354 - Currency and Money</a></li>
+<li><a href="https://github.com/JavaMoney/jsr354-api/blob/master/src/main/asciidoc/JavaMoneySpecification.adoc">﻿JSR 354 Money and Currency — Specification</a></li>
+<li><a href="http://java.dzone.com/articles/looking-java-9-money-and">Looking into the Java 9 Money and Currency API (JSR 354)</a></li>
+<li><a href="https://weblogs.java.net/blog/otaviojava/archive/2014/08/25/java-9-coming-money-api">Java 9 is coming with money api</a></li>
+<li><a href="http://www.joda.org/joda-money/">Joda Money</a></li>
+<li><a href="http://es.slideshare.net/AnatoleTresch/adopt-jsr-354">Adopt JSR 354</a></li>
+</ul>
+
+</div>
+
+
+
+              </div>
+            </article>
+          </div>
+        </div>
+        
+
+        
+<div class="row">
+  <div class="col-md-12">
+    <div class="sharethis-inline-share-buttons"></div>
+  </div>
+</div>
+
+
+        <div class="row">
+          <div class="col-md-12">
+            <ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="5966819782"
+     data-type="leaderboard"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+          </div>
+        </div>
+        
+  <a id="comments"></a>
+  <div class="row">
+    <div class="col-md-12">
+      <div id="disqus_thread"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript" async>
+    var disqus_shortname = 'blog-bitix';
     var disqus_identifier = 'https:\/\/picodotdev.github.io\/blog-bitix\/2015\/07\/como-trabajar-con-importes-ratios-y-divisas-en-java\/';
     var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2015\/07\/como-trabajar-con-importes-ratios-y-divisas-en-java\/';
     var disqus_script = 'embed.js';
@@ -17,10 +295,169 @@
       dsq.async = true;
       dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());</script></div><div class="col-md-4"><div class="row"><div class="col-md-12 text-center"><ins class="adsbygoogle" style="display:inline-block;width:300px;height:600px" data-ad-client="ca-pub-3533636310991304" data-ad-slot="9559414587" data-type="large-skycraper"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div><div class="row"><div class="col-md-12 text-center"><ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-3533636310991304" data-ad-slot="2873752587" data-type="large-rectangle"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div><div class="row text-center"><div class="col-md-12"><a href="https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/"><img src="//static.fsf.org/nosvn/images/badges/badges_es/i-support-fs_red-bg-es.png" alt="Yo apoyo al software libre"></a></div></div><div class="row"><div class="col-md-12"><hr></div></div><div class="row"><div class="col-md-12"><ul class="list-unstyled recents"><li><span class="glyphicon glyphicon-hand-right"></span> <a href="archive/">Más artículos recientes en el archivo</a></li></ul></div></div></div></div><div class="row"><div class="col-md-12"><hr></div></div><footer><div class="row"><div class="col-md-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos a la semana desde el año 2010.</p></div><div class="col-md-4 text-center menu"><ul class="list-unstyled"><li><a href="/blog-bitix/tags/java/">Java</a></li><li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li><li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li><li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li><li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li><li><a href="/blog-bitix/pages/links/">Enlaces</a></li><li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li><li><a href="/blog-bitix/pages/about/">Acerca de...</a></li></ul></div><div class="col-md-4 text-center links"><a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a><a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a><a href="https://plus.google.com/114317443908384387611/posts" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a><a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a></div></div><div class="row"><div class="col-md-12">Copyleft <span class="copyleft">&copy;</span> 2017 - <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style="border-width:0" src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" class="licencia"></a><br><a href="https://twitter.com/blogstackinfo"><img src="https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png" alt="Blog Stack" title="Blog Stack"></a><a href="https://www.planetacodigo.com/"><img src="https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png" alt="Planeta código" title="Planeta código"></a><br><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></span> by <a xmlns:cc="https://creativecommons.org/ns#" href="https://picodotdev.github.io/blog-bitix/" property="cc:attributionName" rel="cc:attributionURL">pico.dev</a> is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class="credit">Powered by <a href="https://gohugo.io/" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a></span></div></div></footer></div><div class="blueimp-gallery-container"><div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false"><div class="slides"></div><h3 class="title"></h3><a class="prev">‹</a> <a class="next">›</a> <a class="close">×</a> <a class="play-pause"></a><ol class="indicator"></ol><div class="modal fade"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" aria-hidden="true">&times;</button><h4 class="modal-title"></h4></div><div class="modal-body next"></div><div class="modal-footer"><button type="button" class="btn btn-default pull-left prev"><i class="glyphicon glyphicon-chevron-left"></i> Anterior</button> <button type="button" class="btn btn-primary next">Siguiente <i class="glyphicon glyphicon-chevron-right"></i></button></div></div></div></div></div></div><script type="text/javascript">window.cookieconsent_options = {
+    }());
+  </script>
+
+      </div>
+      <div class="col-md-4">
+        <div class="row">
+  <div class="col-md-12 text-center">
+    <ins class="adsbygoogle"
+     style="display:inline-block;width:300px;height:600px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="9559414587"
+     data-type="large-skycraper"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12 text-center">
+    <ins class="adsbygoogle"
+     style="display:inline-block;width:336px;height:280px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="2873752587"
+     data-type="large-rectangle"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+  </div>
+</div>
+<div class="row text-center">
+  <div class="col-md-12">
+    <a href="https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/"><img src="//static.fsf.org/nosvn/images/badges/badges_es/i-support-fs_red-bg-es.png" alt="Yo apoyo al software libre"></a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <hr>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <ul class="list-unstyled recents">
+      <li><span class="glyphicon glyphicon-hand-right"></span> <a href="archive/">Más artículos recientes en el archivo</a></li>
+    </ul>
+  </div>
+</div>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <hr>
+      </div>
+    </div>
+    <footer>
+  <div class="row">
+    <div class="col-sm-12 col-md-4">
+      <p><strong>Blog Bitix</strong></p>
+      <p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p>
+      <p>Publicando de uno a tres artículos a la semana desde el año 2010.</p>
+    </div>
+    <div class="col-sm-12 col-md-4 text-center menu">
+      <ul class="list-unstyled">
+        
+          <li><a href="/blog-bitix/tags/java/">Java</a></li>
+        
+          <li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li>
+        
+          <li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li>
+        
+          <li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li>
+        
+          <li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li>
+        
+          <li><a href="/blog-bitix/pages/links/">Enlaces</a></li>
+        
+          <li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li>
+        
+          <li><a href="/blog-bitix/pages/about/">Acerca de...</a></li>
+        
+      </ul>
+    </div>
+    <div class="col-sm-12 col-md-4 text-center links">
+      
+        <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a>
+      
+      
+        <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a>
+      
+      
+        <a href="https://plus.google.com/114317443908384387611/posts" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a>
+      
+      
+        <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a>
+      
+      
+      
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      Copyleft <span class="copyleft">&copy;</span> 2017 - <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style="border-width:0" src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" class="licencia"/></a><br />
+      <a href="https://twitter.com/blogstackinfo"><img src="https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png" alt="Blog Stack" title="Blog Stack"></a>
+      <a href="https://www.planetacodigo.com/"><img src="https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png" alt="Planeta código" title="Planeta código"></a>
+      <br/>
+      <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></span> by <a xmlns:cc="https://creativecommons.org/ns#" href="https://picodotdev.github.io/blog-bitix/" property="cc:attributionName" rel="cc:attributionURL">pico.dev</a> is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.
+      <br/>
+      <span class="credit">Powered by <a href="https://gohugo.io/" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a></span>
+    </div>
+  </div>
+</footer>
+
+  </div>
+  
+<div class="blueimp-gallery-container">
+  <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false">
+    
+    <div class="slides"></div>
+    
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    
+    <div class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body next"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left prev">
+              <i class="glyphicon glyphicon-chevron-left"></i>
+              Anterior
+            </button>
+            <button type="button" class="btn btn-primary next">
+              Siguiente
+              <i class="glyphicon glyphicon-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  
+<script type="text/javascript">
+    window.cookieconsent_options = {
         "message": "Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.",
         "dismiss": "Aceptar",
         "learnMore": "Más información",
         "link": null,
         "theme": "dark-bottom"
-    };</script><script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script></body></html>
+    };
+</script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script>
+</body>
+</html>

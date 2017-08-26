@@ -1,13 +1,361 @@
-<!DOCTYPE html><html lang="es"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="author" content="pico.dev"><meta name="keywords" content="java, programacion, tapestry, linux, gnu, gnu/linux, arch, arch linux, software, software libre, html, css, javascript"><meta name="description" content="Nunca hasta ahora había tenido necesidad de crear un programa que no estuviese completamente escrito en el lenguaje Java. La API de Java ofrece multitud de clases para cualquier funcionalidad que necesitemos desde estructuras de datos hasta algoritmos de búsqueda o criptografía. También porque el rendimiento de un programa en Java es suficiente y similar a un programa equivalente escrito en C o C&#43;&#43; gracias a las optimizaciones que implementa la máquina virtual de Java o JVM aún siendo los programas Java compilados a una representación intermedia de bytecode independiente de la arquitectura de procesador y sistema operativo en archivos de extensión class y posteriormente interpretados y traducidos a la arquitectura de ejecución, lo que le proporciona a Java la conocida frase &ldquo;Write once, run anywhere&rdquo;. &hellip;"><base href="https://picodotdev.github.io/blog-bitix/"><title>Ejemplo de JNI, usar código en C desde Java</title><link rel="author" type="text/plain" href="humans.txt"><link rel="shortcut icon" href="assets/favicon.ico"><link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/apple-touch-icon-144-precomposed.png"><link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-de-jni-usar-codigo-en-c-desde-java/"><link href="index.xml" rel="alternate" type="application/rss+xml" title="Blog Bitix"><link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=PT+Serif:400,700italic,700,400italic"><link rel="stylesheet" type="text/css" href="//www.google.com/cse/api/branding.css"><link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-3.3.6-dist/css/bootstrap.min.css"><link rel="stylesheet" href="assets/libs/Gallery-2.17.0/css/blueimp-gallery.min.css"><link rel="stylesheet" href="assets/libs/Bootstrap-Image-Gallery-3.3.6/css/bootstrap-image-gallery.min.css"><link rel="stylesheet" type="text/css" href="assets/css/main.css"><script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script><script type="text/javascript">(adsbygoogle = window.adsbygoogle || []).push({
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="pico.dev">
+  <meta name="keywords" content="java, programacion, tapestry, linux, gnu, gnu/linux, arch, arch linux, software, software libre, html, css, javascript">
+  <meta name="description" content="Nunca hasta ahora había tenido necesidad de crear un programa que no estuviese completamente escrito en el lenguaje Java. La API de Java ofrece multitud de clases para cualquier funcionalidad que necesitemos desde estructuras de datos hasta algoritmos de búsqueda o criptografía. También porque el rendimiento de un programa en Java es suficiente y similar a un programa equivalente escrito en C o C&#43;&#43; gracias a las optimizaciones que implementa la máquina virtual de Java o JVM aún siendo los programas Java compilados a una representación intermedia de bytecode independiente de la arquitectura de procesador y sistema operativo en archivos de extensión class y posteriormente interpretados y traducidos a la arquitectura de ejecución, lo que le proporciona a Java la conocida frase &ldquo;Write once, run anywhere&rdquo;. &hellip;">
+  <base href="https://picodotdev.github.io/blog-bitix/">
+
+  <title>Ejemplo de JNI, usar código en C desde Java</title>
+
+  <link rel="author" type="text/plain" href="humans.txt" />
+  <link rel="shortcut icon" href="assets/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/apple-touch-icon-144-precomposed.png">
+  <link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-de-jni-usar-codigo-en-c-desde-java/">
+
+  
+  <link href="index.xml" rel="alternate" type="application/rss+xml" title="Blog Bitix" />
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=PT+Serif:400,700italic,700,400italic">
+  
+  <link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-4.0.0-beta/css/bootstrap.min.css">
+  
+  <link rel="stylesheet" href="assets/libs/Gallery-2.25.2/css/blueimp-gallery.min.css">
+  
+  <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+
+  
+  <script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script>
+  <script type="text/javascript">
+    (adsbygoogle = window.adsbygoogle || []).push({
       google_ad_client: 'ca-pub-3533636310991304',
       enable_page_level_ads: true
-    });</script><script type="text/javascript" async>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    });
+  </script>
+  <script type="text/javascript" async>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
     ga('create', 'UA-12874075-4', 'picodotdev.github.io');
-    ga('send', 'pageview');</script><script type="text/javascript" src="assets/libs/require.min.js" data-main="assets/js/main" async></script><script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" async="async"></script><script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=custom-share-buttons" async="async"></script></head><body><div class="container"><div class="row"><header><div class="row"><div class="col-md-4 col-md-offset-4"><h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2><div class="links"><a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a><a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a><a href="https://plus.google.com/114317443908384387611/posts" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a><a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a></div></div><div class="col-md-4 text-center"><form name="query" class="form-inline search" onsubmit="return false"><div class="input-group"><input type="text" name="q" class="form-control" placeholder="Buscar en Blog Bitix"> <span class="input-group-btn"><button class="btn btn-default" type="submit">Buscar</button></span></div></form><form name="search" action="https://duckduckgo.com/" method="get" class="hidden" data-site="https://picodotdev.github.io/blog-bitix/"><input type="hidden" name="q" value=""></form></div></div><div class="row"><div class="col-md-12"><nav><ul class="nav nav-pills"><li role="presentation"><a href="/blog-bitix/tags/java/">Java</a></li><li role="presentation"><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li><li role="presentation"><a href="/blog-bitix/tags/javascript/">JavaScript</a></li><li role="presentation"><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li><li role="presentation"><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li><li role="presentation"><a href="/blog-bitix/pages/links/">Enlaces</a></li><li role="presentation"><a href="/blog-bitix/pages/about/">Acerca de...</a></li></ul></nav></div></div></header><div class="col-sm-12 col-md-8"><div class="row"><div class="col-md-12"><article itemscope itemtype="http://schema.org/BlogPosting"><meta itemprop="inLanguage" content="es"><meta itemprop="keywords" content="blog-stack, gnu-linux, java, planeta-codigo, planeta-linux, programacion"><h1 itemprop="name">Ejemplo de JNI, usar código en C desde Java</h1><p class="information">Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2017-03-25">25/03/2017</time>, actualizado el <time itemprop="dateModified" datetime="2017-03-25">25/03/2017</time>.<br><a href="tags/blog-stack/">blog-stack</a> <a href="tags/gnu-linux/">gnu-linux</a> <a href="tags/java/">java</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/planeta-linux/">planeta-linux</a> <a href="tags/programacion/">programacion</a><br><a href="/blog-bitix/2017/03/ejemplo-de-jni-usar-codigo-en-c-desde-java/" itemprop="url">Enlace permanente</a> <a href="/blog-bitix/2017/03/ejemplo-de-jni-usar-codigo-en-c-desde-java/#comments">Comentarios</a></p><p class="summary" itemprop="about">Para tareas muy específicas que requieran alto rendimiento, baja latencia, tiempo real o haya restricciones de tiempo el lenguaje Java y la JVM pueden mostrar algunas limitaciones obligando a escribir alguna sección crítica de un programa en un lenguaje nativo como C o C++. Para hacer posible la integración entre Java y C existe en Java la API JNI. En este artículo mostraré como realizar un programa Java que emite el mensaje Hola Mundo desde una biblioteca compartida en C y usando JNI.</p><ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-3533636310991304" data-ad-slot="5966819782" data-type="leaderboard"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script><div class="content" itemprop="articleBody"><meta itemprop="wordCount" content="897"><div class="logotypes" style="float: right"><img src="assets/images/logotipos/java.svg" class="right" width="200" alt="Java" title="Java"></div><div class="logotypes" style="float: right; clear: right"><img src="assets/images/logotipos/gnu.svg" class="right" width="200" alt="SVG" title="SVG"></div><div class="logotypes" style="float: right; clear: right"><img src="assets/images/logotipos/linux.png" class="right" width="200" alt="Linux" title="Linux"></div><p>Nunca hasta ahora había tenido necesidad de crear un programa que no estuviese completamente escrito en el lenguaje Java. La <a href="https://docs.oracle.com/javase/8/docs/api/overview-summary.html">API de Java</a> ofrece multitud de clases para cualquier funcionalidad que necesitemos desde estructuras de datos hasta algoritmos de búsqueda o criptografía. También porque el rendimiento de un programa en Java es suficiente y similar a un programa equivalente escrito en C o C++ gracias a las optimizaciones que implementa la máquina virtual de Java o <abbr title="Java Virtual Machine">JVM</abbr> aún siendo los programas Java compilados a una representación intermedia de <em>bytecode</em> independiente de la arquitectura de procesador y sistema operativo en archivos de extensión <em>class</em> y posteriormente interpretados y traducidos a la arquitectura de ejecución, lo que le proporciona a Java la conocida frase <em>&ldquo;Write once, run anywhere&rdquo;</em>.</p><p>Sin embargo, en casos que se necesita un alto rendimiento para tareas muy específicas o evitar las imposiciones de la máquina virtual como las paradas que realiza para el recolector de basura una solución es escribir esa funcionalidad crítica en lenguaje C, C++ e incluso en <a href="https://golang.org/">Go</a>. El caso de necesidad que me he encontrado es acceder a un sensor de temperatura DHT11 del <a href="https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/">kit de iniciación a la electrónica para la Raspberry Pi</a> para leer de él la temperatura y humedad. La forma que tiene el sensor DHT11 de proporcionar los datos tiene restricciones de tiempo, cuando se le requieren los valores envía 80 bits de datos donde un pulso de 27μs significa un 0 y un pulso de más de ese tiempo hasta 70μs significa un 1. Estas restricciones de tiempo del sensor y el hecho de que es en una modesta en potencia <a href="https://www.raspberrypi.org/">Raspberry Pi</a> 1 donde lo usaré hace que Java no sea capaz de leer correctamente los valores del sensor.</p><p>Acceder desde Java a código nativo en C requiere usar <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jni/spec/jniTOC.html">Java Native Interface o por sus siglas JNI</a>. Lo primero que hay que realizar es crear una clase que declare los métodos que serán implementados de forma nativa declarando estos métodos usando la palabra reservada <em>native</em> y que serán enlazados por la JVM cargando una librería compartida con <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/System.html#loadLibrary-java.lang.String-">System.loadLibrary()</a>. Creada la clase Java se ha de generar el archivo de cabecera <em>.h</em> propia del lenguaje C con el programa de utilidad del JDK <em>javah</em>. Con el archivo de cabecera se implementa la función y se crea una librería compartida en <a href="https://www.gnu.org/">GNU</a>/<a href="https://www.linux.com/">Linux</a> usando el <a href="https://gcc.gnu.org/">compilador gcc</a>. Con la librería compartida se puede iniciar el programa Java. Si la biblioteca compartida no se encuentra se lanzará una excepción del tipo <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/UnsatisfiedLinkError.html">UnsatisfiedLinkError</a>.</p><div class="media" style="text-align: center"><figure><a href="assets/images/posts/2017/217/UnsatisfiedLinkError.png" title="Excepción UnsatisfiedLinkError cuando no se encuentra la librería de código nativo" data-gallery><img src="assets/images/posts/2017/217/UnsatisfiedLinkError-thumb.png"></a><figcaption>Excepción UnsatisfiedLinkError cuando no se encuentra la librería de código nativo</figcaption></figure></div><p>Algunas otras necesidades para hacer uso de JNI son:</p><ul><li>Acceder a características dependientes de la plataforma necesitadas por la aplicación que no están soportadas en la librería estándar de Java.</li><li>Ya hay una librería escrita en otro lenguaje y se quiere hacer accesible a código Java a través de JNI.</li><li>Se quiere implementar una pequeña parte de código crítico en un lenguaje de bajo nivel como ensamblador.</li></ul><p>Desde los métodos de código nativo se puede:</p><ul><li>Crear, inspeccionar y actualizar objetos Java (incluyendo arrays y strings).</li><li>Llamar a métodos Java.</li><li>Capturar y lanzar excepciones.</li><li>Cargar y obtener información de clases.</li><li>Realizar validación de tipos en tiempo de ejecución.</li></ul><p>Los comandos para generar el archivo de cabecera de C y compilarlo con el código nativo en una librería compartida con gcc son:</p><script src="//gist.github.com/picodotdev/94e61b21e8d1378384e363879df5be31.js?file=build.sh"></script><script src="//gist.github.com/picodotdev/94e61b21e8d1378384e363879df5be31.js?file=build.gradle"></script><p>La cabecera usa varias definiciones de tipos definidas en los archivos <em>jni.h</em> y el archivo que variará según el sistema operativo <em>jni_md.h</em>. En la <a href="http://xdprof.sourceforge.net/doxygen/structJNIEnv__.html">estructura JNIEnv</a> con múltiples funciones de integración en C y Java, también varias definiciones de los tipos Java para usarlos en C como <em>jobject</em>, <em>jstring</em>, <em>jint</em>, <em>jboolean</em>, <em>jlong</em>, <em>jdouble</em>, <em>jchar</em>, etc.</p><p>El programa que emite el mensaje <em>Hello World!</em> desde código nativo en C debe cargar y enlazar la librería de código nativo con el código de la clase Java. Esto se muestra en el bloque de inicialización <em>static</em> de la clase, en este caso usándo el método <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/System.html#load-java.lang.String-">System.load()</a>, la librería de código nativo de extensión <em>.so</em> en GNU/Linux como en este caso al construirse el proyecto se incluye en el archivo <em>.jar</em> del artefacto resultante se extráe al directorio temporal y se carga desde esa ubicación temporal. En el programa se llama al método <em>print</em> implementado en código nativo y en el código C se usa la función <em>printf</em> de la librería <em>stdio</em> para emitir el mensaje:</p><script src="//gist.github.com/picodotdev/94e61b21e8d1378384e363879df5be31.js?file=JniHelloWorld.java"></script><script src="//gist.github.com/picodotdev/94e61b21e8d1378384e363879df5be31.js?file=JniHelloWorld.c"></script><script src="//gist.github.com/picodotdev/94e61b21e8d1378384e363879df5be31.js?file=JniHelloWorld.h"></script><p>La librería compartida para un sistema <em>amd64</em> la he compilado en mi equipo de escritorio y para la versión <em>arm</em> en la Raspberry Pi e incluido en el directorio <em>src/main/resources</em> de código fuente del ejemplo.</p><script src="//gist.github.com/picodotdev/94e61b21e8d1378384e363879df5be31.js?file=execute.sh"></script><div class="media" style="text-align: center"><figure><a href="assets/images/posts/2017/217/JniHelloWorld-amd64.png" title="Mensaje en la terminal emitido desde código nativo (amd64)" data-gallery><img src="assets/images/posts/2017/217/JniHelloWorld-amd64-thumb.png"></a><a href="assets/images/posts/2017/217/JniHelloWorld-arm.png" title="Mensaje en la terminal emitido desde código nativo (ARM)" data-gallery><img src="assets/images/posts/2017/217/JniHelloWorld-arm-thumb.png"></a><figcaption>Mensaje en la terminal emitido desde código nativo en un sistema amd64 y ARM</figcaption></figure></div><p>Ente ejemplo usa Java 8 y requiere instalar el compilador gcc para compilar la librería con código nativo. <a href="https://gradle.org/">Gradle</a> ofrece soporte para <a href="https://docs.gradle.org/3.4.1/userguide/native_software.html">compilar código nativo con su plugin</a>, sin embargo, he preferido usar y conocer los comandos javah y gcc sin usar Gradle. En el siguiente artículo mostraré el ejemplo del sensor DHT11 usando JNI y código nativo en C llamando a métodos de un objeto Java desde código C.</p><p>El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew executeJniHelloWorldLocal</code>.</p><div class="reference">Referencia:<br><ul><li><a href="https://blog.dogan.io/2015/08/15/java-jni-jnr-go/">GO: Call me maybe, Java!</a></li><li><a href="http://docs.oracle.com/javase/8/docs/technotes/guides/jni/spec/jniTOC.html">Java Native Interface Specification</a></li><li><a href="http://www3.ntu.edu.sg/home/ehchua/programming/java/JavaNativeInterface.html">Java Programming Tutorial, Java Native Interface (JNI)</a></li></ul></div></div></article></div></div><div class="row serie"><div class="col-md-12"><p>Este artículo forma parte de la serie <b>electronica</b>:</p><ol class="serie-articles"><li><a href="https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/">Desempaquetado del kit de iniciación a la electrónica para la Raspberry Pi</a></li><li><a href="https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-hello-world-con-java-en-la-raspberry-pi/">Ejemplo Hello World con Java en la Raspberry Pi</a></li><li><a href="https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-encender-y-apagar-diodo-led-con-la-raspberry-pi-en-java/">Ejemplo encender y apagar diodo LED con la Raspberry Pi en Java</a></li><li><a href="https://picodotdev.github.io/blog-bitix/2017/03/controlar-un-display-lcd-1602-para-mostrar-texto-con-la-raspberry-pi-y-java/">Controlar un display LCD 1602 para mostrar texto con la Raspberry Pi y Java</a></li><li><a href="https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-de-jni-usar-codigo-en-c-desde-java/">Ejemplo de JNI, usar código en C desde Java</a></li><li><a href="https://picodotdev.github.io/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/">Obtener la temperatura y humedad con el sensor DHT11, la Raspberry Pi, C y Java</a></li><li><a href="https://picodotdev.github.io/blog-bitix/2017/04/como-usar-un-diodo-led-un-pulsador-y-un-zumbador-con-la-raspberry-pi-y-java/">Cómo usar un diodo LED, un pulsador y un zumbador con la Raspberry Pi y Java</a></li><li><a href="https://picodotdev.github.io/blog-bitix/2017/04/ejemplo-sensor-de-golpes-y-detector-de-movimiento-en-la-raspberry-pi-con-java/">Ejemplo sensor de golpes y detector de movimiento en la Raspberry Pi con Java</a></li><li><a href="https://picodotdev.github.io/blog-bitix/2017/05/controlar-un-servomotor-con-la-raspberry-pi-y-java/">Controlar un servomotor con la Raspberry Pi y Java</a></li><li><a href="https://picodotdev.github.io/blog-bitix/2017/05/luces-navidenas-con-la-raspberry-pi-y-java/">Luces navideñas con la Raspberry Pi y Java</a></li></ol></div></div><div class="row"><div class="col-md-12"><div class="sharethis-inline-share-buttons"></div></div></div><div class="row"><div class="col-md-12"><ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-3533636310991304" data-ad-slot="5966819782" data-type="leaderboard"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div><a id="comments"></a><div class="row"><div class="col-md-12"><div id="disqus_thread"></div></div></div><script type="text/javascript" async>var disqus_shortname = 'blog-bitix';
+    ga('send', 'pageview');
+  </script>  
+  <script type="text/javascript" src="assets/js/vendor.bundle.js" async></script>
+  <script type="text/javascript" src="assets/js/app-theme.bundle.js" async></script>
+  <script type="text/javascript" src="assets/js/app.bundle.js" async></script>
+
+  <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" async="async"></script>
+  <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=custom-share-buttons" async="async"></script>
+
+  
+  
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <header>
+  <div class="row">
+    <div class="col-sm-12 col-md-4"></div>
+    <div class="col-sm-12 col-md-4">
+      <h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2>
+      <div class="links">
+        
+          <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a>
+        
+        
+          <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a>
+        
+        
+          <a href="https://plus.google.com/114317443908384387611/posts" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a>
+        
+        
+          <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a>
+        
+        
+        
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-4 text-center">
+      <form name="query" class="form-inline search" onsubmit="return false;">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Buscar en Blog Bitix">
+          <span class="input-group-btn">
+            <button class="btn btn-secondary" type="submit">Buscar</button>
+          </span>
+        </div>
+      </form>
+      <form name="search" action="https://duckduckgo.com/" method="get" class="hidden" data-site="https://picodotdev.github.io/blog-bitix/">
+        <input type="hidden" name="q" value="">
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <nav class="nav nav-pills nav-fill">
+  
+    <a href="/blog-bitix/tags/java/" class="nav-item nav-link">Java</a>
+  
+    <a href="/blog-bitix/tags/gnu-linux/" class="nav-item nav-link">GNU/Linux</a>
+  
+    <a href="/blog-bitix/tags/javascript/" class="nav-item nav-link">JavaScript</a>
+  
+    <a href="/blog-bitix/tags/tapestry/" class="nav-item nav-link">Tapestry</a>
+  
+    <a href="/blog-bitix/archive/" class="nav-item nav-link">Archivo y hemeroteca</a>
+  
+    <a href="/blog-bitix/pages/links/" class="nav-item nav-link">Enlaces</a>
+  
+    <a href="/blog-bitix/pages/about/" class="nav-item nav-link">Acerca de...</a>
+  
+</nav>
+
+    </div>
+  </div>
+</header>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-8">
+        <div class="row">
+          <div class="col-md-12">
+            <article itemscope itemtype="http://schema.org/BlogPosting">
+              
+              <meta itemprop="inLanguage" content="es">
+              
+              
+                <meta itemprop="keywords" content="blog-stack, gnu-linux, java, planeta-codigo, planeta-linux, programacion">
+              
+              
+              <h1 itemprop="name">Ejemplo de JNI, usar código en C desde Java</h1>
+              <p class="information">
+                Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2017-03-25">25/03/2017</time>, actualizado el <time itemprop="dateModified" datetime="2017-03-25">25/03/2017</time>.
+                
+                
+                  <br>
+                   <a href="tags/blog-stack/">blog-stack</a> <a href="tags/gnu-linux/">gnu-linux</a> <a href="tags/java/">java</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/planeta-linux/">planeta-linux</a> <a href="tags/programacion/">programacion</a>
+                
+                <br>
+                <a href="/blog-bitix/2017/03/ejemplo-de-jni-usar-codigo-en-c-desde-java/" itemprop="url">Enlace permanente</a>
+                
+                  <a href="/blog-bitix/2017/03/ejemplo-de-jni-usar-codigo-en-c-desde-java/#comments">Comentarios</a>
+                
+                
+              </p>
+
+              
+                <p class="summary" itemprop="about">Para tareas muy específicas que requieran alto rendimiento, baja latencia, tiempo real o haya restricciones de tiempo el lenguaje Java y la JVM pueden mostrar algunas limitaciones obligando a escribir alguna sección crítica de un programa en un lenguaje nativo como C o C++. Para hacer posible la integración entre Java y C existe en Java la API JNI. En este artículo mostraré como realizar un programa Java que emite el mensaje Hola Mundo desde una biblioteca compartida en C y usando JNI.</p>
+              
+              
+
+              <ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="5966819782"
+     data-type="leaderboard"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+              <div class="content" itemprop="articleBody">
+                <meta itemprop="wordCount" content="897">
+                
+
+
+                <div class="logotypes" style="float: right;">
+    <img src="assets/images/logotipos/java.svg" class="right" width="200" alt="Java" title="Java"/>
+</div>
+
+<div class="logotypes" style="float: right; clear: right;">
+    <img src="assets/images/logotipos/gnu.svg" class="right" width="200" alt="SVG" title="SVG"/>
+</div>
+
+<div class="logotypes" style="float: right; clear: right;">
+    <img src="assets/images/logotipos/linux.png" class="right" width="200" alt="Linux" title="Linux"/>
+</div>
+
+<p>Nunca hasta ahora había tenido necesidad de crear un programa que no estuviese completamente escrito en el lenguaje Java. La <a href="https://docs.oracle.com/javase/8/docs/api/overview-summary.html">API de Java</a> ofrece multitud de clases para cualquier funcionalidad que necesitemos desde estructuras de datos hasta algoritmos de búsqueda o criptografía. También porque el rendimiento de un programa en Java es suficiente y similar a un programa equivalente escrito en C o C++ gracias a las optimizaciones que implementa la máquina virtual de Java o <abbr title="Java Virtual Machine">JVM</abbr> aún siendo los programas Java compilados a una representación intermedia de <em>bytecode</em> independiente de la arquitectura de procesador y sistema operativo en archivos de extensión <em>class</em> y posteriormente interpretados y traducidos a la arquitectura de ejecución, lo que le proporciona a Java la conocida frase <em>&ldquo;Write once, run anywhere&rdquo;</em>.</p>
+
+<p>Sin embargo, en casos que se necesita un alto rendimiento para tareas muy específicas o evitar las imposiciones de la máquina virtual como las paradas que realiza para el recolector de basura una solución es escribir esa funcionalidad crítica en lenguaje C, C++ e incluso en <a href="https://golang.org/">Go</a>. El caso de necesidad que me he encontrado es acceder a un sensor de temperatura DHT11 del <a href="https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/">kit de iniciación a la electrónica para la Raspberry Pi</a> para leer de él la temperatura y humedad. La forma que tiene el sensor DHT11 de proporcionar los datos tiene restricciones de tiempo, cuando se le requieren los valores envía 80 bits de datos donde un pulso de 27μs significa un 0 y un pulso de más de ese tiempo hasta 70μs significa un 1. Estas restricciones de tiempo del sensor y el hecho de que es en una modesta en potencia <a href="https://www.raspberrypi.org/">Raspberry Pi</a> 1 donde lo usaré hace que Java no sea capaz de leer correctamente los valores del sensor.</p>
+
+<p>Acceder desde Java a código nativo en C requiere usar <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jni/spec/jniTOC.html">Java Native Interface o por sus siglas JNI</a>. Lo primero que hay que realizar es crear una clase que declare los métodos que serán implementados de forma nativa declarando estos métodos usando la palabra reservada <em>native</em> y que serán enlazados por la JVM cargando una librería compartida con <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/System.html#loadLibrary-java.lang.String-">System.loadLibrary()</a>. Creada la clase Java se ha de generar el archivo de cabecera <em>.h</em> propia del lenguaje C con el programa de utilidad del JDK <em>javah</em>. Con el archivo de cabecera se implementa la función y se crea una librería compartida en <a href="https://www.gnu.org/">GNU</a>/<a href="https://www.linux.com/">Linux</a> usando el <a href="https://gcc.gnu.org/">compilador gcc</a>. Con la librería compartida se puede iniciar el programa Java. Si la biblioteca compartida no se encuentra se lanzará una excepción del tipo <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/UnsatisfiedLinkError.html">UnsatisfiedLinkError</a>.</p>
+
+<div class="media" style="text-align: center;">
+    <figure>
+  
+  <a href="assets/images/posts/2017/217/UnsatisfiedLinkError.png" title="Excepción UnsatisfiedLinkError cuando no se encuentra la librería de código nativo" data-gallery><img src="assets/images/posts/2017/217/UnsatisfiedLinkError-thumb.png"/></a>
+  
+  
+  
+  <figcaption>Excepción UnsatisfiedLinkError cuando no se encuentra la librería de código nativo</figcaption>
+</figure>
+
+</div>
+
+<p>Algunas otras necesidades para hacer uso de JNI son:</p>
+
+<ul>
+<li>Acceder a características dependientes de la plataforma necesitadas por la aplicación que no están soportadas en la librería estándar de Java.</li>
+<li>Ya hay una librería escrita en otro lenguaje y se quiere hacer accesible a código Java a través de JNI.</li>
+<li>Se quiere implementar una pequeña parte de código crítico en un lenguaje de bajo nivel como ensamblador.</li>
+</ul>
+
+<p>Desde los métodos de código nativo se puede:</p>
+
+<ul>
+<li>Crear, inspeccionar y actualizar objetos Java (incluyendo arrays y strings).</li>
+<li>Llamar a métodos Java.</li>
+<li>Capturar y lanzar excepciones.</li>
+<li>Cargar y obtener información de clases.</li>
+<li>Realizar validación de tipos en tiempo de ejecución.</li>
+</ul>
+
+<p>Los comandos para generar el archivo de cabecera de C y compilarlo con el código nativo en una librería compartida con gcc son:</p>
+
+<script src="//gist.github.com/picodotdev/94e61b21e8d1378384e363879df5be31.js?file=build.sh"></script>
+<script src="//gist.github.com/picodotdev/94e61b21e8d1378384e363879df5be31.js?file=build.gradle"></script>
+
+<p>La cabecera usa varias definiciones de tipos definidas en los archivos <em>jni.h</em> y el archivo que variará según el sistema operativo <em>jni_md.h</em>. En la <a href="http://xdprof.sourceforge.net/doxygen/structJNIEnv__.html">estructura JNIEnv</a> con múltiples funciones de integración en C y Java, también varias definiciones de los tipos Java para usarlos en C como <em>jobject</em>, <em>jstring</em>, <em>jint</em>, <em>jboolean</em>, <em>jlong</em>, <em>jdouble</em>, <em>jchar</em>, etc.</p>
+
+<p>El programa que emite el mensaje <em>Hello World!</em> desde código nativo en C debe cargar y enlazar la librería de código nativo con el código de la clase Java. Esto se muestra en el bloque de inicialización <em>static</em> de la clase, en este caso usándo el método <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/System.html#load-java.lang.String-">System.load()</a>, la librería de código nativo de extensión <em>.so</em> en GNU/Linux como en este caso al construirse el proyecto se incluye en el archivo <em>.jar</em> del artefacto resultante se extráe al directorio temporal y se carga desde esa ubicación temporal. En el programa se llama al método <em>print</em> implementado en código nativo y en el código C se usa la función <em>printf</em> de la librería <em>stdio</em> para emitir el mensaje:</p>
+
+<script src="//gist.github.com/picodotdev/94e61b21e8d1378384e363879df5be31.js?file=JniHelloWorld.java"></script>
+<script src="//gist.github.com/picodotdev/94e61b21e8d1378384e363879df5be31.js?file=JniHelloWorld.c"></script>
+<script src="//gist.github.com/picodotdev/94e61b21e8d1378384e363879df5be31.js?file=JniHelloWorld.h"></script>
+
+<p>La librería compartida para un sistema <em>amd64</em> la he compilado en mi equipo de escritorio y para la versión <em>arm</em> en la Raspberry Pi e incluido en el directorio <em>src/main/resources</em> de código fuente del ejemplo.</p>
+
+<script src="//gist.github.com/picodotdev/94e61b21e8d1378384e363879df5be31.js?file=execute.sh"></script>
+
+<div class="media" style="text-align: center;">
+    <figure>
+  
+  <a href="assets/images/posts/2017/217/JniHelloWorld-amd64.png" title="Mensaje en la terminal emitido desde código nativo (amd64)" data-gallery><img src="assets/images/posts/2017/217/JniHelloWorld-amd64-thumb.png"/></a>
+  
+  
+  <a href="assets/images/posts/2017/217/JniHelloWorld-arm.png" title="Mensaje en la terminal emitido desde código nativo (ARM)" data-gallery><img src="assets/images/posts/2017/217/JniHelloWorld-arm-thumb.png"/></a>
+  
+  
+  <figcaption>Mensaje en la terminal emitido desde código nativo en un sistema amd64 y ARM</figcaption>
+</figure>
+
+</div>
+
+<p>Ente ejemplo usa Java 8 y requiere instalar el compilador gcc para compilar la librería con código nativo. <a href="https://gradle.org/">Gradle</a> ofrece soporte para <a href="https://docs.gradle.org/3.4.1/userguide/native_software.html">compilar código nativo con su plugin</a>, sin embargo, he preferido usar y conocer los comandos javah y gcc sin usar Gradle. En el siguiente artículo mostraré el ejemplo del sensor DHT11 usando JNI y código nativo en C llamando a métodos de un objeto Java desde código C.</p>
+
+<p>
+    El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew executeJniHelloWorldLocal</code>.
+</p>
+
+<div class="reference">
+    Referencia:<br>
+    <ul>
+<li><a href="https://blog.dogan.io/2015/08/15/java-jni-jnr-go/">GO: Call me maybe, Java!</a></li>
+<li><a href="http://docs.oracle.com/javase/8/docs/technotes/guides/jni/spec/jniTOC.html">Java Native Interface Specification</a></li>
+<li><a href="http://www3.ntu.edu.sg/home/ehchua/programming/java/JavaNativeInterface.html">Java Programming Tutorial, Java Native Interface (JNI)</a></li>
+</ul>
+
+</div>
+
+
+
+              </div>
+            </article>
+          </div>
+        </div>
+        
+  <div class="row serie">
+    <div class="col-md-12">
+      
+        <p>
+          Este artículo forma parte de la serie <b>electronica</b>:
+        </p>
+        
+        <ol class="serie-articles">
+          
+            <li>
+              <a href="https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/">Desempaquetado del kit de iniciación a la electrónica para la Raspberry Pi</a>
+            </li>
+          
+            <li>
+              <a href="https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-hello-world-con-java-en-la-raspberry-pi/">Ejemplo Hello World con Java en la Raspberry Pi</a>
+            </li>
+          
+            <li>
+              <a href="https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-encender-y-apagar-diodo-led-con-la-raspberry-pi-en-java/">Ejemplo encender y apagar diodo LED con la Raspberry Pi en Java</a>
+            </li>
+          
+            <li>
+              <a href="https://picodotdev.github.io/blog-bitix/2017/03/controlar-un-display-lcd-1602-para-mostrar-texto-con-la-raspberry-pi-y-java/">Controlar un display LCD 1602 para mostrar texto con la Raspberry Pi y Java</a>
+            </li>
+          
+            <li>
+              <a href="https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-de-jni-usar-codigo-en-c-desde-java/">Ejemplo de JNI, usar código en C desde Java</a>
+            </li>
+          
+            <li>
+              <a href="https://picodotdev.github.io/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/">Obtener la temperatura y humedad con el sensor DHT11, la Raspberry Pi, C y Java</a>
+            </li>
+          
+            <li>
+              <a href="https://picodotdev.github.io/blog-bitix/2017/04/como-usar-un-diodo-led-un-pulsador-y-un-zumbador-con-la-raspberry-pi-y-java/">Cómo usar un diodo LED, un pulsador y un zumbador con la Raspberry Pi y Java</a>
+            </li>
+          
+            <li>
+              <a href="https://picodotdev.github.io/blog-bitix/2017/04/ejemplo-sensor-de-golpes-y-detector-de-movimiento-en-la-raspberry-pi-con-java/">Ejemplo sensor de golpes y detector de movimiento en la Raspberry Pi con Java</a>
+            </li>
+          
+            <li>
+              <a href="https://picodotdev.github.io/blog-bitix/2017/05/controlar-un-servomotor-con-la-raspberry-pi-y-java/">Controlar un servomotor con la Raspberry Pi y Java</a>
+            </li>
+          
+            <li>
+              <a href="https://picodotdev.github.io/blog-bitix/2017/05/luces-navidenas-con-la-raspberry-pi-y-java/">Luces navideñas con la Raspberry Pi y Java</a>
+            </li>
+          
+        </ol>
+      
+    </div>
+  </div>
+
+
+        
+<div class="row">
+  <div class="col-md-12">
+    <div class="sharethis-inline-share-buttons"></div>
+  </div>
+</div>
+
+
+        <div class="row">
+          <div class="col-md-12">
+            <ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="5966819782"
+     data-type="leaderboard"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+          </div>
+        </div>
+        
+  <a id="comments"></a>
+  <div class="row">
+    <div class="col-md-12">
+      <div id="disqus_thread"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript" async>
+    var disqus_shortname = 'blog-bitix';
     var disqus_identifier = 'https:\/\/picodotdev.github.io\/blog-bitix\/2017\/03\/ejemplo-de-jni-usar-codigo-en-c-desde-java\/';
     var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2017\/03\/ejemplo-de-jni-usar-codigo-en-c-desde-java\/';
     var disqus_script = 'embed.js';
@@ -17,10 +365,169 @@
       dsq.async = true;
       dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());</script></div><div class="col-md-4"><div class="row"><div class="col-md-12 text-center"><ins class="adsbygoogle" style="display:inline-block;width:300px;height:600px" data-ad-client="ca-pub-3533636310991304" data-ad-slot="9559414587" data-type="large-skycraper"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div><div class="row"><div class="col-md-12 text-center"><ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-3533636310991304" data-ad-slot="2873752587" data-type="large-rectangle"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div><div class="row text-center"><div class="col-md-12"><a href="https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/"><img src="//static.fsf.org/nosvn/images/badges/badges_es/i-support-fs_red-bg-es.png" alt="Yo apoyo al software libre"></a></div></div><div class="row"><div class="col-md-12"><hr></div></div><div class="row"><div class="col-md-12"><ul class="list-unstyled recents"><li><span class="glyphicon glyphicon-hand-right"></span> <a href="archive/">Más artículos recientes en el archivo</a></li></ul></div></div></div></div><div class="row"><div class="col-md-12"><hr></div></div><footer><div class="row"><div class="col-md-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos a la semana desde el año 2010.</p></div><div class="col-md-4 text-center menu"><ul class="list-unstyled"><li><a href="/blog-bitix/tags/java/">Java</a></li><li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li><li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li><li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li><li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li><li><a href="/blog-bitix/pages/links/">Enlaces</a></li><li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li><li><a href="/blog-bitix/pages/about/">Acerca de...</a></li></ul></div><div class="col-md-4 text-center links"><a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a><a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a><a href="https://plus.google.com/114317443908384387611/posts" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a><a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a></div></div><div class="row"><div class="col-md-12">Copyleft <span class="copyleft">&copy;</span> 2017 - <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style="border-width:0" src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" class="licencia"></a><br><a href="https://twitter.com/blogstackinfo"><img src="https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png" alt="Blog Stack" title="Blog Stack"></a><a href="https://www.planetacodigo.com/"><img src="https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png" alt="Planeta código" title="Planeta código"></a><br><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></span> by <a xmlns:cc="https://creativecommons.org/ns#" href="https://picodotdev.github.io/blog-bitix/" property="cc:attributionName" rel="cc:attributionURL">pico.dev</a> is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class="credit">Powered by <a href="https://gohugo.io/" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a></span></div></div></footer></div><div class="blueimp-gallery-container"><div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false"><div class="slides"></div><h3 class="title"></h3><a class="prev">‹</a> <a class="next">›</a> <a class="close">×</a> <a class="play-pause"></a><ol class="indicator"></ol><div class="modal fade"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" aria-hidden="true">&times;</button><h4 class="modal-title"></h4></div><div class="modal-body next"></div><div class="modal-footer"><button type="button" class="btn btn-default pull-left prev"><i class="glyphicon glyphicon-chevron-left"></i> Anterior</button> <button type="button" class="btn btn-primary next">Siguiente <i class="glyphicon glyphicon-chevron-right"></i></button></div></div></div></div></div></div><script type="text/javascript">window.cookieconsent_options = {
+    }());
+  </script>
+
+      </div>
+      <div class="col-md-4">
+        <div class="row">
+  <div class="col-md-12 text-center">
+    <ins class="adsbygoogle"
+     style="display:inline-block;width:300px;height:600px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="9559414587"
+     data-type="large-skycraper"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12 text-center">
+    <ins class="adsbygoogle"
+     style="display:inline-block;width:336px;height:280px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="2873752587"
+     data-type="large-rectangle"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+  </div>
+</div>
+<div class="row text-center">
+  <div class="col-md-12">
+    <a href="https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/"><img src="//static.fsf.org/nosvn/images/badges/badges_es/i-support-fs_red-bg-es.png" alt="Yo apoyo al software libre"></a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <hr>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <ul class="list-unstyled recents">
+      <li><span class="glyphicon glyphicon-hand-right"></span> <a href="archive/">Más artículos recientes en el archivo</a></li>
+    </ul>
+  </div>
+</div>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <hr>
+      </div>
+    </div>
+    <footer>
+  <div class="row">
+    <div class="col-sm-12 col-md-4">
+      <p><strong>Blog Bitix</strong></p>
+      <p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p>
+      <p>Publicando de uno a tres artículos a la semana desde el año 2010.</p>
+    </div>
+    <div class="col-sm-12 col-md-4 text-center menu">
+      <ul class="list-unstyled">
+        
+          <li><a href="/blog-bitix/tags/java/">Java</a></li>
+        
+          <li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li>
+        
+          <li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li>
+        
+          <li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li>
+        
+          <li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li>
+        
+          <li><a href="/blog-bitix/pages/links/">Enlaces</a></li>
+        
+          <li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li>
+        
+          <li><a href="/blog-bitix/pages/about/">Acerca de...</a></li>
+        
+      </ul>
+    </div>
+    <div class="col-sm-12 col-md-4 text-center links">
+      
+        <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a>
+      
+      
+        <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a>
+      
+      
+        <a href="https://plus.google.com/114317443908384387611/posts" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a>
+      
+      
+        <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a>
+      
+      
+      
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      Copyleft <span class="copyleft">&copy;</span> 2017 - <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style="border-width:0" src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" class="licencia"/></a><br />
+      <a href="https://twitter.com/blogstackinfo"><img src="https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png" alt="Blog Stack" title="Blog Stack"></a>
+      <a href="https://www.planetacodigo.com/"><img src="https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png" alt="Planeta código" title="Planeta código"></a>
+      <br/>
+      <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></span> by <a xmlns:cc="https://creativecommons.org/ns#" href="https://picodotdev.github.io/blog-bitix/" property="cc:attributionName" rel="cc:attributionURL">pico.dev</a> is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.
+      <br/>
+      <span class="credit">Powered by <a href="https://gohugo.io/" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a></span>
+    </div>
+  </div>
+</footer>
+
+  </div>
+  
+<div class="blueimp-gallery-container">
+  <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false">
+    
+    <div class="slides"></div>
+    
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    
+    <div class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body next"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left prev">
+              <i class="glyphicon glyphicon-chevron-left"></i>
+              Anterior
+            </button>
+            <button type="button" class="btn btn-primary next">
+              Siguiente
+              <i class="glyphicon glyphicon-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  
+<script type="text/javascript">
+    window.cookieconsent_options = {
         "message": "Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.",
         "dismiss": "Aceptar",
         "learnMore": "Más información",
         "link": null,
         "theme": "dark-bottom"
-    };</script><script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script></body></html>
+    };
+</script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script>
+</body>
+</html>

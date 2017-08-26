@@ -1,14 +1,352 @@
-<!DOCTYPE html><html lang="es"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="author" content="pico.dev"><meta name="keywords" content="java, programacion, tapestry, linux, gnu, gnu/linux, arch, arch linux, software, software libre, html, css, javascript"><meta name="description" content="Una forma de autenticar a los clientes de un servicio REST es usar autenticación Basic que se basa en añadir una cabecera en la petición en la que se incluye un usuario y contraseña. La autenticación Basic es sencilla pero para que sea segura ha de usar el protocolo seguro HTTPS.
-Sin embargo, presenta otros inconvenientes y es que si al servicio van a acceder varios clientes y a uno queremos impedirle el acceso no podremos hacerlo sin cambiar el usuario y contraseña lo que obligará al resto de clientes actualizarse para usar las nuevas credenciales si las comparten, que no siempre es posible sobre todo si esos clientes están fuera de nuestro control. &hellip;"><base href="https://picodotdev.github.io/blog-bitix/"><title>Autenticación con OAuth y Keycloak en un servicio REST con JAX-RS y Spring Boot</title><link rel="author" type="text/plain" href="humans.txt"><link rel="shortcut icon" href="assets/favicon.ico"><link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/apple-touch-icon-144-precomposed.png"><link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2016/09/autenticacion-con-oauth-y-keycloak-en-un-servicio-rest-con-jax-rs-y-spring-boot/"><link href="index.xml" rel="alternate" type="application/rss+xml" title="Blog Bitix"><link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=PT+Serif:400,700italic,700,400italic"><link rel="stylesheet" type="text/css" href="//www.google.com/cse/api/branding.css"><link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-3.3.6-dist/css/bootstrap.min.css"><link rel="stylesheet" href="assets/libs/Gallery-2.17.0/css/blueimp-gallery.min.css"><link rel="stylesheet" href="assets/libs/Bootstrap-Image-Gallery-3.3.6/css/bootstrap-image-gallery.min.css"><link rel="stylesheet" type="text/css" href="assets/css/main.css"><script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script><script type="text/javascript">(adsbygoogle = window.adsbygoogle || []).push({
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="pico.dev">
+  <meta name="keywords" content="java, programacion, tapestry, linux, gnu, gnu/linux, arch, arch linux, software, software libre, html, css, javascript">
+  <meta name="description" content="Una forma de autenticar a los clientes de un servicio REST es usar autenticación Basic que se basa en añadir una cabecera en la petición en la que se incluye un usuario y contraseña. La autenticación Basic es sencilla pero para que sea segura ha de usar el protocolo seguro HTTPS.
+Sin embargo, presenta otros inconvenientes y es que si al servicio van a acceder varios clientes y a uno queremos impedirle el acceso no podremos hacerlo sin cambiar el usuario y contraseña lo que obligará al resto de clientes actualizarse para usar las nuevas credenciales si las comparten, que no siempre es posible sobre todo si esos clientes están fuera de nuestro control. &hellip;">
+  <base href="https://picodotdev.github.io/blog-bitix/">
+
+  <title>Autenticación con OAuth y Keycloak en un servicio REST con JAX-RS y Spring Boot</title>
+
+  <link rel="author" type="text/plain" href="humans.txt" />
+  <link rel="shortcut icon" href="assets/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/apple-touch-icon-144-precomposed.png">
+  <link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2016/09/autenticacion-con-oauth-y-keycloak-en-un-servicio-rest-con-jax-rs-y-spring-boot/">
+
+  
+  <link href="index.xml" rel="alternate" type="application/rss+xml" title="Blog Bitix" />
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=PT+Serif:400,700italic,700,400italic">
+  
+  <link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-4.0.0-beta/css/bootstrap.min.css">
+  
+  <link rel="stylesheet" href="assets/libs/Gallery-2.25.2/css/blueimp-gallery.min.css">
+  
+  <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+
+  
+  <script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script>
+  <script type="text/javascript">
+    (adsbygoogle = window.adsbygoogle || []).push({
       google_ad_client: 'ca-pub-3533636310991304',
       enable_page_level_ads: true
-    });</script><script type="text/javascript" async>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    });
+  </script>
+  <script type="text/javascript" async>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
     ga('create', 'UA-12874075-4', 'picodotdev.github.io');
-    ga('send', 'pageview');</script><script type="text/javascript" src="assets/libs/require.min.js" data-main="assets/js/main" async></script><script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" async="async"></script><script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=custom-share-buttons" async="async"></script></head><body><div class="container"><div class="row"><header><div class="row"><div class="col-md-4 col-md-offset-4"><h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2><div class="links"><a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a><a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a><a href="https://plus.google.com/114317443908384387611/posts" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a><a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a></div></div><div class="col-md-4 text-center"><form name="query" class="form-inline search" onsubmit="return false"><div class="input-group"><input type="text" name="q" class="form-control" placeholder="Buscar en Blog Bitix"> <span class="input-group-btn"><button class="btn btn-default" type="submit">Buscar</button></span></div></form><form name="search" action="https://duckduckgo.com/" method="get" class="hidden" data-site="https://picodotdev.github.io/blog-bitix/"><input type="hidden" name="q" value=""></form></div></div><div class="row"><div class="col-md-12"><nav><ul class="nav nav-pills"><li role="presentation"><a href="/blog-bitix/tags/java/">Java</a></li><li role="presentation"><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li><li role="presentation"><a href="/blog-bitix/tags/javascript/">JavaScript</a></li><li role="presentation"><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li><li role="presentation"><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li><li role="presentation"><a href="/blog-bitix/pages/links/">Enlaces</a></li><li role="presentation"><a href="/blog-bitix/pages/about/">Acerca de...</a></li></ul></nav></div></div></header><div class="col-sm-12 col-md-8"><div class="row"><div class="col-md-12"><article itemscope itemtype="http://schema.org/BlogPosting"><meta itemprop="inLanguage" content="es"><meta itemprop="keywords" content="blog-stack, java, planeta-codigo, programacion"><h1 itemprop="name">Autenticación con OAuth y Keycloak en un servicio REST con JAX-RS y Spring Boot</h1><p class="information">Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2016-09-24">24/09/2016</time>, actualizado el <time itemprop="dateModified" datetime="2016-10-07">07/10/2016</time>.<br><a href="tags/blog-stack/">blog-stack</a> <a href="tags/java/">java</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/programacion/">programacion</a><br><a href="/blog-bitix/2016/09/autenticacion-con-oauth-y-keycloak-en-un-servicio-rest-con-jax-rs-y-spring-boot/" itemprop="url">Enlace permanente</a> <a href="/blog-bitix/2016/09/autenticacion-con-oauth-y-keycloak-en-un-servicio-rest-con-jax-rs-y-spring-boot/#comments">Comentarios</a></p><p class="summary" itemprop="about">Keycloak es un proveedor de OAuth que podemos usar en nuestras aplicaciones y servicios para proporcionar autenticación, autorización, SSO y también añadir seguridad a los servicios REST que desarrollemos como muestro en este artículo. OAuth tiene varias ventajas sobre usar autenticación <em>Basic</em>.</p><ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-3533636310991304" data-ad-slot="5966819782" data-type="leaderboard"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script><div class="content" itemprop="articleBody"><meta itemprop="wordCount" content="666"><div class="logotypes" style="float: right"><img src="assets/images/logotipos/keycloak.png" class="right" alt="Keycloak" title="Keycloak"></div><div class="logotypes" style="float: right; clear: right"><img src="assets/images/logotipos/java.png" class="right" alt="Java" title="Java"></div><p>Una forma de autenticar a los clientes de un servicio REST es usar <a href="https://en.wikipedia.org/wiki/Basic_access_authentication">autenticación Basic</a> que se basa en añadir una cabecera en la petición en la que se incluye un usuario y contraseña. La autenticación Basic es sencilla pero para que sea segura ha de <a href="https://picodotdev.github.io/blog-bitix/2014/02/configurar-ssl-en-un-servidor-tomcat-jboss-wildfly-lighttpd-nginx-apache/">usar el protocolo seguro HTTPS</a>.</p><p>Sin embargo, presenta otros inconvenientes y es que si al servicio van a acceder varios clientes y a uno queremos impedirle el acceso no podremos hacerlo sin cambiar el usuario y contraseña lo que obligará al resto de clientes actualizarse para usar las nuevas credenciales si las comparten, que no siempre es posible sobre todo si esos clientes están fuera de nuestro control. Para solventar el segundo problema tenemos la posibilidad de segurizar el servicio REST con el <a href="https://oauth.net/">protocolo OAuth</a>.</p><p>Teniendo un <a href="https://picodotdev.github.io/blog-bitix/2016/09/ejemplo-de-api-rest-en-java-con-jax-rs-y-spring-boot/">servicio web REST implementado con JAX-RS y Spring Boot</a> añadirle seguridad con OAuth mediante el proveedor <a href="http://www.keycloak.org/">Keycloak</a> es lo que muestro en este artículo. En el servicio REST bastará que usemos el <a href="https://keycloak.gitbooks.io/securing-client-applications-guide/content/v/latest/topics/oidc/java/java-adapters.html">adaptador para Spring Boot de Keycloak</a> y añadamos en Keycloak cierta configuración que consistirá en un <em>realm</em> y el registro de un cliente. Para acceder al servicio REST usaremos el flujo <em>client_credentials</em> que nos permitirá obtener un <em>token</em> usando las credenciales del cliente.</p><p>Iniciado Keycloak con <a href="https://www.docker.com/">Docker</a> y <a href="https://docs.docker.com/compose/">Docker Compose</a> accedemos al panel de administración con el navegador, en mi caso en <em><a href="http://localhost:9080">http://localhost:9080</a></em> con el usuario <em>admin</em> y contraseña <em>admin</em> según lo indicado en el archivo <em>docker-compose.yml</em>.</p><script src="//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=docker-compose.yml"></script><script src="//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=docker-compose-up.sh"></script><div class="media" style="text-align: center"><figure><a href="assets/images/posts/2016/180/keycloak-login.png" title="Inicio de sesión de Keycloak" data-gallery><img src="assets/images/posts/2016/180/keycloak-login-thumb.png"></a><figcaption></figcaption></figure></div><p>Creamos un <em>realm</em>, en el ejemplo llamado <em>springbootjaxrs</em> y un cliente con id <em>client</em>, además crearemos un rol <em>api</em> y se lo asignaremos al cliente.</p><div class="media" style="text-align: center"><figure><a href="assets/images/posts/2016/180/keycloak-add-client.png" title="Registro del cliente" data-gallery><img src="assets/images/posts/2016/180/keycloak-add-client-thumb.png"></a><a href="assets/images/posts/2016/180/keycloak-add-role.png" title="Creación de rol" data-gallery><img src="assets/images/posts/2016/180/keycloak-add-role-thumb.png"></a><figcaption></figcaption></figure><figure><a href="assets/images/posts/2016/180/keycloak-service-account-roles.png" title="Asignación de roles al cliente" data-gallery><img src="assets/images/posts/2016/180/keycloak-service-account-roles-thumb.png"></a><figcaption></figcaption></figure></div><p>Una vez realizada la configuración en el servidor de OAuth/Keycloak obtendremos la configuración para el adaptador de Keycloak para el servicio REST desde la pestaña <em>Installation</em> que añadiremos en el fichero de configuración de Spring Boot <em>application.yml</em>. Además, indicaremos que el cliente solo aceptará <em>access tokens</em> mediante la opción <em>bearer-only</em> de modo que no hará redirecciones para autenticar.</p><p>Indicaremos también el rol que deberá poseer el cliente para acceder al servicio REST junto que URLs del servicio estarán autenticadas por OAuth. Añadida la configuración al archivo <em>application.yml</em> el servicio REST es totalmente inconsciente de la autenticación que se realizará con OAuth y Keycloak.</p><script src="//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=application.yml"></script><script src="//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=MessageResource.java"></script><p>Iniciado Keycloak y el servicio REST con el comando <code>gradlew run</code> podemos iniciar el proceso de obtención de un <em>access token</em> y llamar al servicio proporcionando el <em>access token</em> obtenido y ver que pasa si no proporcionamos <em>token</em> o uno modificado o inválido. Para obtener el <em>access token</em> podemos emplear <em>curl</em> accediendo al <em>endpoint</em> de Keycloak para obtenerlos.</p><script src="//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=curl-token.sh"></script><div class="media" style="text-align: center"><figure><a href="assets/images/posts/2016/180/keycloak-access-token.png" title="Obtención de un token" data-gallery><img src="assets/images/posts/2016/180/keycloak-access-token-thumb.png"></a><figcaption></figcaption></figure></div>Obtenido el _access token_ si no lo proporcionamos en la llamada al servicio REST observaremos que la respuesta que obtenemos es un [código de estado HTTP 401][wikipedia-http-status-codes] indicando que se necesitan proporcionar las credenciales que con OAuth es un _token_.<script src="//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=curl-401.sh"></script><div class="media" style="text-align: center"><figure><a href="assets/images/posts/2016/180/client-no-token.png" title="Llamada al servicio REST sin token" data-gallery><img src="assets/images/posts/2016/180/client-no-token-thumb.png"></a><figcaption></figcaption></figure></div>Proporcionando el token mediante una cabecera de la petición el servicio nos devolverá los datos que proporciona. Si el _token_ no es válido obtendremos un error HTTP 401.<script src="//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=curl.sh"></script><div class="media" style="text-align: center"><figure><a href="assets/images/posts/2016/180/client-ouath.png" title="Llamada al servicio REST con token" data-gallery><img src="assets/images/posts/2016/180/client-ouath-thumb.png"></a><a href="assets/images/posts/2016/180/client-token-tampered.png" title="Llamada al servicio REST con token inválido" data-gallery><img src="assets/images/posts/2016/180/client-token-tampered-thumb.png"></a><figcaption></figcaption></figure></div>Para usar Keycloak en una aplicación Java con Spring Boot deberemos añadir algunas dependencias al proyecto que usando [Gradle][gradle] como herramienta de construcción serían las siguientes.<script src="//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=build.gradle"></script><p>Un buen libro sobre OAuth que he leído es <a href="https://amzn.to/2cUkF9d">Mastering OAuth 2.0</a> que explica detalladamente el protocolo OAuth junto con el resto de formas de obtener un <em>token</em> además del mostrado en este artículo usando las credenciales del cliente.</p><div class="media-amazon" style="text-align: center"><iframe style="width:120px;height:240px" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=blobit-21&o=30&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=1784395404&linkId=726dc0d3e4914bc672e6b127da045db2&internal=1"></iframe></div><p>En el siguiente artículo mostraré un <a href="https://picodotdev.github.io/blog-bitix/2016/10/cliente-de-un-servicio-rest-autenticado-con-oauth2-en-java/">cliente del servicio REST autenticado con OAuth en Java</a> que haga las mismas llamadas que con <em>curl</em> pero usando código Java mediante la librería <a href="http://hc.apache.org/">HttpComponents</a>.</p><p>El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/SpringBootJaxrsOauth">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradle run</code>.</p><div class="reference">Referencia:<br><ul><li><a href="https://picodotdev.github.io/blog-bitix/2016/09/ejemplo-de-api-rest-en-java-con-jax-rs-y-spring-boot/">Servicio web REST implementado con JAX-RS y Spring Boot</a></li><li><a href="https://picodotdev.github.io/blog-bitix/2016/10/integrar-autenticacion-oauth-con-keycloak-shiro-apache-tapestry-y-spring-boot/">Integrar autenticación OAuth con Keycloak, Shiro, Apache Tapestry y Spring Boot&rdquo;</a></li><li><a href="https://blog.pivotal.io/pivotal-cloud-foundry/products/securing-restful-web-services-with-oauth2">Securing RESTful Web Services with OAuth2</a></li><li><a href="http://docs.apigee.com/api-services/content/oauth-20-client-credentials-grant-type">Implementing the client credentials grant type</a></li><li><a href="http://stackoverflow.com/questions/28658735/what-are-keycloaks-oauth2-openid-connect-endpoints">What are Keycloak&rsquo;s OAuth2 / OpenID Connect endpoints?</a></li><li><a href="https://picodotdev.github.io/blog-bitix/series/docker/">Serie de artículos sobre Docker</a></li></ul></div></div></article></div></div><div class="row"><div class="col-md-12"><div class="sharethis-inline-share-buttons"></div></div></div><div class="row"><div class="col-md-12"><ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-3533636310991304" data-ad-slot="5966819782" data-type="leaderboard"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div><a id="comments"></a><div class="row"><div class="col-md-12"><div id="disqus_thread"></div></div></div><script type="text/javascript" async>var disqus_shortname = 'blog-bitix';
+    ga('send', 'pageview');
+  </script>  
+  <script type="text/javascript" src="assets/js/vendor.bundle.js" async></script>
+  <script type="text/javascript" src="assets/js/app-theme.bundle.js" async></script>
+  <script type="text/javascript" src="assets/js/app.bundle.js" async></script>
+
+  <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" async="async"></script>
+  <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=custom-share-buttons" async="async"></script>
+
+  
+  
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <header>
+  <div class="row">
+    <div class="col-sm-12 col-md-4"></div>
+    <div class="col-sm-12 col-md-4">
+      <h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2>
+      <div class="links">
+        
+          <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a>
+        
+        
+          <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a>
+        
+        
+          <a href="https://plus.google.com/114317443908384387611/posts" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a>
+        
+        
+          <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a>
+        
+        
+        
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-4 text-center">
+      <form name="query" class="form-inline search" onsubmit="return false;">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Buscar en Blog Bitix">
+          <span class="input-group-btn">
+            <button class="btn btn-secondary" type="submit">Buscar</button>
+          </span>
+        </div>
+      </form>
+      <form name="search" action="https://duckduckgo.com/" method="get" class="hidden" data-site="https://picodotdev.github.io/blog-bitix/">
+        <input type="hidden" name="q" value="">
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <nav class="nav nav-pills nav-fill">
+  
+    <a href="/blog-bitix/tags/java/" class="nav-item nav-link">Java</a>
+  
+    <a href="/blog-bitix/tags/gnu-linux/" class="nav-item nav-link">GNU/Linux</a>
+  
+    <a href="/blog-bitix/tags/javascript/" class="nav-item nav-link">JavaScript</a>
+  
+    <a href="/blog-bitix/tags/tapestry/" class="nav-item nav-link">Tapestry</a>
+  
+    <a href="/blog-bitix/archive/" class="nav-item nav-link">Archivo y hemeroteca</a>
+  
+    <a href="/blog-bitix/pages/links/" class="nav-item nav-link">Enlaces</a>
+  
+    <a href="/blog-bitix/pages/about/" class="nav-item nav-link">Acerca de...</a>
+  
+</nav>
+
+    </div>
+  </div>
+</header>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-8">
+        <div class="row">
+          <div class="col-md-12">
+            <article itemscope itemtype="http://schema.org/BlogPosting">
+              
+              <meta itemprop="inLanguage" content="es">
+              
+              
+                <meta itemprop="keywords" content="blog-stack, java, planeta-codigo, programacion">
+              
+              
+              <h1 itemprop="name">Autenticación con OAuth y Keycloak en un servicio REST con JAX-RS y Spring Boot</h1>
+              <p class="information">
+                Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2016-09-24">24/09/2016</time>, actualizado el <time itemprop="dateModified" datetime="2016-10-07">07/10/2016</time>.
+                
+                
+                  <br>
+                   <a href="tags/blog-stack/">blog-stack</a> <a href="tags/java/">java</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/programacion/">programacion</a>
+                
+                <br>
+                <a href="/blog-bitix/2016/09/autenticacion-con-oauth-y-keycloak-en-un-servicio-rest-con-jax-rs-y-spring-boot/" itemprop="url">Enlace permanente</a>
+                
+                  <a href="/blog-bitix/2016/09/autenticacion-con-oauth-y-keycloak-en-un-servicio-rest-con-jax-rs-y-spring-boot/#comments">Comentarios</a>
+                
+                
+              </p>
+
+              
+                <p class="summary" itemprop="about">Keycloak es un proveedor de OAuth que podemos usar en nuestras aplicaciones y servicios para proporcionar autenticación, autorización, SSO y también añadir seguridad a los servicios REST que desarrollemos como muestro en este artículo. OAuth tiene varias ventajas sobre usar autenticación <em>Basic</em>.</p>
+              
+              
+
+              <ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="5966819782"
+     data-type="leaderboard"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+              <div class="content" itemprop="articleBody">
+                <meta itemprop="wordCount" content="666">
+                
+
+
+                <div class="logotypes" style="float: right;">
+    <img src="assets/images/logotipos/keycloak.png" class="right" alt="Keycloak" title="Keycloak"/>
+</div>
+
+<div class="logotypes" style="float: right; clear: right;">
+    <img src="assets/images/logotipos/java.png" class="right" alt="Java" title="Java"/>
+</div>
+
+<p>Una forma de autenticar a los clientes de un servicio REST es usar <a href="https://en.wikipedia.org/wiki/Basic_access_authentication">autenticación Basic</a> que se basa en añadir una cabecera en la petición en la que se incluye un usuario y contraseña. La autenticación Basic es sencilla pero para que sea segura ha de <a href="https://picodotdev.github.io/blog-bitix/2014/02/configurar-ssl-en-un-servidor-tomcat-jboss-wildfly-lighttpd-nginx-apache/">usar el protocolo seguro HTTPS</a>.</p>
+
+<p>Sin embargo, presenta otros inconvenientes y es que si al servicio van a acceder varios clientes y a uno queremos impedirle el acceso no podremos hacerlo sin cambiar el usuario y contraseña lo que obligará al resto de clientes actualizarse para usar las nuevas credenciales si las comparten, que no siempre es posible sobre todo si esos clientes están fuera de nuestro control. Para solventar el segundo problema tenemos la posibilidad de segurizar el servicio REST con el <a href="https://oauth.net/">protocolo OAuth</a>.</p>
+
+<p>Teniendo un <a href="https://picodotdev.github.io/blog-bitix/2016/09/ejemplo-de-api-rest-en-java-con-jax-rs-y-spring-boot/">servicio web REST implementado con JAX-RS y Spring Boot</a> añadirle seguridad con OAuth mediante el proveedor <a href="http://www.keycloak.org/">Keycloak</a> es lo que muestro en este artículo. En el servicio REST bastará que usemos el <a href="https://keycloak.gitbooks.io/securing-client-applications-guide/content/v/latest/topics/oidc/java/java-adapters.html">adaptador para Spring Boot de Keycloak</a> y añadamos en Keycloak cierta configuración que consistirá en un <em>realm</em> y el registro de un cliente. Para acceder al servicio REST usaremos el flujo <em>client_credentials</em> que nos permitirá obtener un <em>token</em> usando las credenciales del cliente.</p>
+
+<p>Iniciado Keycloak con <a href="https://www.docker.com/">Docker</a> y <a href="https://docs.docker.com/compose/">Docker Compose</a> accedemos al panel de administración con el navegador, en mi caso en <em><a href="http://localhost:9080">http://localhost:9080</a></em> con el usuario <em>admin</em> y contraseña <em>admin</em> según lo indicado en el archivo <em>docker-compose.yml</em>.</p>
+
+<script src="//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=docker-compose.yml"></script>
+<script src="//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=docker-compose-up.sh"></script>
+
+<div class="media" style="text-align: center;">
+    <figure>
+  
+  <a href="assets/images/posts/2016/180/keycloak-login.png" title="Inicio de sesión de Keycloak" data-gallery><img src="assets/images/posts/2016/180/keycloak-login-thumb.png"/></a>
+  
+  
+  
+  <figcaption></figcaption>
+</figure>
+
+</div>
+
+<p>Creamos un <em>realm</em>, en el ejemplo llamado <em>springbootjaxrs</em> y un cliente con id <em>client</em>, además crearemos un rol <em>api</em> y se lo asignaremos al cliente.</p>
+
+<div class="media" style="text-align: center;">
+    <figure>
+  
+  <a href="assets/images/posts/2016/180/keycloak-add-client.png" title="Registro del cliente" data-gallery><img src="assets/images/posts/2016/180/keycloak-add-client-thumb.png"/></a>
+  
+  
+  <a href="assets/images/posts/2016/180/keycloak-add-role.png" title="Creación de rol" data-gallery><img src="assets/images/posts/2016/180/keycloak-add-role-thumb.png"/></a>
+  
+  
+  <figcaption></figcaption>
+</figure>
+
+    <figure>
+  
+  <a href="assets/images/posts/2016/180/keycloak-service-account-roles.png" title="Asignación de roles al cliente" data-gallery><img src="assets/images/posts/2016/180/keycloak-service-account-roles-thumb.png"/></a>
+  
+  
+  
+  <figcaption></figcaption>
+</figure>
+
+</div>
+
+<p>Una vez realizada la configuración en el servidor de OAuth/Keycloak obtendremos la configuración para el adaptador de Keycloak para el servicio REST desde la pestaña <em>Installation</em> que añadiremos en el fichero de configuración de Spring Boot <em>application.yml</em>. Además, indicaremos que el cliente solo aceptará <em>access tokens</em> mediante la opción <em>bearer-only</em> de modo que no hará redirecciones para autenticar.</p>
+
+<p>Indicaremos también el rol que deberá poseer el cliente para acceder al servicio REST junto que URLs del servicio estarán autenticadas por OAuth. Añadida la configuración al archivo <em>application.yml</em> el servicio REST es totalmente inconsciente de la autenticación que se realizará con OAuth y Keycloak.</p>
+
+<script src="//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=application.yml"></script>
+<script src="//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=MessageResource.java"></script>
+
+<p>Iniciado Keycloak y el servicio REST con el comando <code>gradlew run</code> podemos iniciar el proceso de obtención de un <em>access token</em> y llamar al servicio proporcionando el <em>access token</em> obtenido y ver que pasa si no proporcionamos <em>token</em> o uno modificado o inválido. Para obtener el <em>access token</em> podemos emplear <em>curl</em> accediendo al <em>endpoint</em> de Keycloak para obtenerlos.</p>
+
+<script src="//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=curl-token.sh"></script>
+<div class="media" style="text-align: center;">
+    <figure>
+  
+  <a href="assets/images/posts/2016/180/keycloak-access-token.png" title="Obtención de un token" data-gallery><img src="assets/images/posts/2016/180/keycloak-access-token-thumb.png"/></a>
+  
+  
+  
+  <figcaption></figcaption>
+</figure>
+
+</div>
+
+Obtenido el _access token_ si no lo proporcionamos en la llamada al servicio REST observaremos que la respuesta que obtenemos es un [código de estado HTTP 401][wikipedia-http-status-codes] indicando que se necesitan proporcionar las credenciales que con OAuth es un _token_.
+
+<script src="//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=curl-401.sh"></script>
+<div class="media" style="text-align: center;">
+    <figure>
+  
+  <a href="assets/images/posts/2016/180/client-no-token.png" title="Llamada al servicio REST sin token" data-gallery><img src="assets/images/posts/2016/180/client-no-token-thumb.png"/></a>
+  
+  
+  
+  <figcaption></figcaption>
+</figure>
+
+</div>
+
+Proporcionando el token mediante una cabecera de la petición el servicio nos devolverá los datos que proporciona. Si el _token_ no es válido obtendremos un error HTTP 401.
+
+<script src="//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=curl.sh"></script>
+<div class="media" style="text-align: center;">
+    <figure>
+  
+  <a href="assets/images/posts/2016/180/client-ouath.png" title="Llamada al servicio REST con token" data-gallery><img src="assets/images/posts/2016/180/client-ouath-thumb.png"/></a>
+  
+  
+  <a href="assets/images/posts/2016/180/client-token-tampered.png" title="Llamada al servicio REST con token inválido" data-gallery><img src="assets/images/posts/2016/180/client-token-tampered-thumb.png"/></a>
+  
+  
+  <figcaption></figcaption>
+</figure>
+
+</div>
+
+Para usar Keycloak en una aplicación Java con Spring Boot deberemos añadir algunas dependencias al proyecto que usando [Gradle][gradle] como herramienta de construcción serían las siguientes.
+
+<script src="//gist.github.com/picodotdev/d3cd61c429b60c83531b624245f77bd4.js?file=build.gradle"></script>
+
+<p>Un buen libro sobre OAuth que he leído es <a href="https://amzn.to/2cUkF9d">Mastering OAuth 2.0</a> que explica detalladamente el protocolo OAuth junto con el resto de formas de obtener un <em>token</em> además del mostrado en este artículo usando las credenciales del cliente.</p>
+
+<div class="media-amazon" style="text-align: center;">
+    <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=blobit-21&o=30&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=1784395404&linkId=726dc0d3e4914bc672e6b127da045db2&internal=1"></iframe>
+</div>
+
+<p>En el siguiente artículo mostraré un <a href="https://picodotdev.github.io/blog-bitix/2016/10/cliente-de-un-servicio-rest-autenticado-con-oauth2-en-java/">cliente del servicio REST autenticado con OAuth en Java</a> que haga las mismas llamadas que con <em>curl</em> pero usando código Java mediante la librería <a href="http://hc.apache.org/">HttpComponents</a>.</p>
+
+<p>
+    El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/SpringBootJaxrsOauth">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradle run</code>.
+</p>
+
+<div class="reference">
+    Referencia:<br>
+    <ul>
+<li><a href="https://picodotdev.github.io/blog-bitix/2016/09/ejemplo-de-api-rest-en-java-con-jax-rs-y-spring-boot/">Servicio web REST implementado con JAX-RS y Spring Boot</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2016/10/integrar-autenticacion-oauth-con-keycloak-shiro-apache-tapestry-y-spring-boot/">Integrar autenticación OAuth con Keycloak, Shiro, Apache Tapestry y Spring Boot&rdquo;</a></li>
+<li><a href="https://blog.pivotal.io/pivotal-cloud-foundry/products/securing-restful-web-services-with-oauth2">Securing RESTful Web Services with OAuth2</a></li>
+<li><a href="http://docs.apigee.com/api-services/content/oauth-20-client-credentials-grant-type">Implementing the client credentials grant type</a></li>
+<li><a href="http://stackoverflow.com/questions/28658735/what-are-keycloaks-oauth2-openid-connect-endpoints">What are Keycloak&rsquo;s OAuth2 / OpenID Connect endpoints?</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/series/docker/">Serie de artículos sobre Docker</a></li>
+</ul>
+
+</div>
+
+
+
+              </div>
+            </article>
+          </div>
+        </div>
+        
+
+        
+<div class="row">
+  <div class="col-md-12">
+    <div class="sharethis-inline-share-buttons"></div>
+  </div>
+</div>
+
+
+        <div class="row">
+          <div class="col-md-12">
+            <ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="5966819782"
+     data-type="leaderboard"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+          </div>
+        </div>
+        
+  <a id="comments"></a>
+  <div class="row">
+    <div class="col-md-12">
+      <div id="disqus_thread"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript" async>
+    var disqus_shortname = 'blog-bitix';
     var disqus_identifier = 'https:\/\/picodotdev.github.io\/blog-bitix\/2016\/09\/autenticacion-con-oauth-y-keycloak-en-un-servicio-rest-con-jax-rs-y-spring-boot\/';
     var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2016\/09\/autenticacion-con-oauth-y-keycloak-en-un-servicio-rest-con-jax-rs-y-spring-boot\/';
     var disqus_script = 'embed.js';
@@ -18,10 +356,169 @@ Sin embargo, presenta otros inconvenientes y es que si al servicio van a acceder
       dsq.async = true;
       dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());</script></div><div class="col-md-4"><div class="row"><div class="col-md-12 text-center"><ins class="adsbygoogle" style="display:inline-block;width:300px;height:600px" data-ad-client="ca-pub-3533636310991304" data-ad-slot="9559414587" data-type="large-skycraper"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div><div class="row"><div class="col-md-12 text-center"><ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-3533636310991304" data-ad-slot="2873752587" data-type="large-rectangle"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div><div class="row text-center"><div class="col-md-12"><a href="https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/"><img src="//static.fsf.org/nosvn/images/badges/badges_es/i-support-fs_red-bg-es.png" alt="Yo apoyo al software libre"></a></div></div><div class="row"><div class="col-md-12"><hr></div></div><div class="row"><div class="col-md-12"><ul class="list-unstyled recents"><li><span class="glyphicon glyphicon-hand-right"></span> <a href="archive/">Más artículos recientes en el archivo</a></li></ul></div></div></div></div><div class="row"><div class="col-md-12"><hr></div></div><footer><div class="row"><div class="col-md-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos a la semana desde el año 2010.</p></div><div class="col-md-4 text-center menu"><ul class="list-unstyled"><li><a href="/blog-bitix/tags/java/">Java</a></li><li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li><li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li><li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li><li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li><li><a href="/blog-bitix/pages/links/">Enlaces</a></li><li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li><li><a href="/blog-bitix/pages/about/">Acerca de...</a></li></ul></div><div class="col-md-4 text-center links"><a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a><a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a><a href="https://plus.google.com/114317443908384387611/posts" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a><a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a></div></div><div class="row"><div class="col-md-12">Copyleft <span class="copyleft">&copy;</span> 2017 - <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style="border-width:0" src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" class="licencia"></a><br><a href="https://twitter.com/blogstackinfo"><img src="https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png" alt="Blog Stack" title="Blog Stack"></a><a href="https://www.planetacodigo.com/"><img src="https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png" alt="Planeta código" title="Planeta código"></a><br><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></span> by <a xmlns:cc="https://creativecommons.org/ns#" href="https://picodotdev.github.io/blog-bitix/" property="cc:attributionName" rel="cc:attributionURL">pico.dev</a> is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class="credit">Powered by <a href="https://gohugo.io/" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a></span></div></div></footer></div><div class="blueimp-gallery-container"><div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false"><div class="slides"></div><h3 class="title"></h3><a class="prev">‹</a> <a class="next">›</a> <a class="close">×</a> <a class="play-pause"></a><ol class="indicator"></ol><div class="modal fade"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" aria-hidden="true">&times;</button><h4 class="modal-title"></h4></div><div class="modal-body next"></div><div class="modal-footer"><button type="button" class="btn btn-default pull-left prev"><i class="glyphicon glyphicon-chevron-left"></i> Anterior</button> <button type="button" class="btn btn-primary next">Siguiente <i class="glyphicon glyphicon-chevron-right"></i></button></div></div></div></div></div></div><script type="text/javascript">window.cookieconsent_options = {
+    }());
+  </script>
+
+      </div>
+      <div class="col-md-4">
+        <div class="row">
+  <div class="col-md-12 text-center">
+    <ins class="adsbygoogle"
+     style="display:inline-block;width:300px;height:600px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="9559414587"
+     data-type="large-skycraper"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12 text-center">
+    <ins class="adsbygoogle"
+     style="display:inline-block;width:336px;height:280px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="2873752587"
+     data-type="large-rectangle"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+  </div>
+</div>
+<div class="row text-center">
+  <div class="col-md-12">
+    <a href="https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/"><img src="//static.fsf.org/nosvn/images/badges/badges_es/i-support-fs_red-bg-es.png" alt="Yo apoyo al software libre"></a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <hr>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <ul class="list-unstyled recents">
+      <li><span class="glyphicon glyphicon-hand-right"></span> <a href="archive/">Más artículos recientes en el archivo</a></li>
+    </ul>
+  </div>
+</div>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <hr>
+      </div>
+    </div>
+    <footer>
+  <div class="row">
+    <div class="col-sm-12 col-md-4">
+      <p><strong>Blog Bitix</strong></p>
+      <p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p>
+      <p>Publicando de uno a tres artículos a la semana desde el año 2010.</p>
+    </div>
+    <div class="col-sm-12 col-md-4 text-center menu">
+      <ul class="list-unstyled">
+        
+          <li><a href="/blog-bitix/tags/java/">Java</a></li>
+        
+          <li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li>
+        
+          <li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li>
+        
+          <li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li>
+        
+          <li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li>
+        
+          <li><a href="/blog-bitix/pages/links/">Enlaces</a></li>
+        
+          <li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li>
+        
+          <li><a href="/blog-bitix/pages/about/">Acerca de...</a></li>
+        
+      </ul>
+    </div>
+    <div class="col-sm-12 col-md-4 text-center links">
+      
+        <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a>
+      
+      
+        <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a>
+      
+      
+        <a href="https://plus.google.com/114317443908384387611/posts" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a>
+      
+      
+        <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a>
+      
+      
+      
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      Copyleft <span class="copyleft">&copy;</span> 2017 - <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style="border-width:0" src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" class="licencia"/></a><br />
+      <a href="https://twitter.com/blogstackinfo"><img src="https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png" alt="Blog Stack" title="Blog Stack"></a>
+      <a href="https://www.planetacodigo.com/"><img src="https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png" alt="Planeta código" title="Planeta código"></a>
+      <br/>
+      <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></span> by <a xmlns:cc="https://creativecommons.org/ns#" href="https://picodotdev.github.io/blog-bitix/" property="cc:attributionName" rel="cc:attributionURL">pico.dev</a> is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.
+      <br/>
+      <span class="credit">Powered by <a href="https://gohugo.io/" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a></span>
+    </div>
+  </div>
+</footer>
+
+  </div>
+  
+<div class="blueimp-gallery-container">
+  <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false">
+    
+    <div class="slides"></div>
+    
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    
+    <div class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body next"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left prev">
+              <i class="glyphicon glyphicon-chevron-left"></i>
+              Anterior
+            </button>
+            <button type="button" class="btn btn-primary next">
+              Siguiente
+              <i class="glyphicon glyphicon-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  
+<script type="text/javascript">
+    window.cookieconsent_options = {
         "message": "Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.",
         "dismiss": "Aceptar",
         "learnMore": "Más información",
         "link": null,
         "theme": "dark-bottom"
-    };</script><script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script></body></html>
+    };
+</script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script>
+</body>
+</html>

@@ -1,13 +1,381 @@
-<!DOCTYPE html><html lang="es"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="author" content="pico.dev"><meta name="keywords" content="java, programacion, tapestry, linux, gnu, gnu/linux, arch, arch linux, software, software libre, html, css, javascript"><meta name="description" content="El protocolo OAuth permite a una aplicación cliente acceder a los recursos de un usuario almacenados en otra aplicación sin que el usuario proporcione a la aplicación cliente sus credenciales, además el usuario tiene la capacidad de revocar en caulquier momento los permisos concedidos a la aplicación cliente. El protocolo OAuth es ampliamente usado por empresas como Google, Facebook, Twitter en sus aplicaciones y servicios. También aplicando una arquitectura de microservicios, al dividir una aplicación en varios módulos o simplemente varias aplicaciones independientes pero que son usadas al mismo tiempo por el mismo usuario para evitar que el usuario se autentique en cada aplicación individualmente y que cada aplicación implemente la funcionalidad de autenticación podemos centralizarla usando OAuth a modo de autenticación única o SSO. &hellip;"><base href="https://picodotdev.github.io/blog-bitix/"><title>Integrar autenticación OAuth con Keycloak, Shiro, Apache Tapestry y Spring Boot</title><link rel="author" type="text/plain" href="humans.txt"><link rel="shortcut icon" href="assets/favicon.ico"><link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/apple-touch-icon-144-precomposed.png"><link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2016/10/integrar-autenticacion-oauth-con-keycloak-shiro-apache-tapestry-y-spring-boot/"><link href="index.xml" rel="alternate" type="application/rss+xml" title="Blog Bitix"><link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=PT+Serif:400,700italic,700,400italic"><link rel="stylesheet" type="text/css" href="//www.google.com/cse/api/branding.css"><link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-3.3.6-dist/css/bootstrap.min.css"><link rel="stylesheet" href="assets/libs/Gallery-2.17.0/css/blueimp-gallery.min.css"><link rel="stylesheet" href="assets/libs/Bootstrap-Image-Gallery-3.3.6/css/bootstrap-image-gallery.min.css"><link rel="stylesheet" type="text/css" href="assets/css/main.css"><script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script><script type="text/javascript">(adsbygoogle = window.adsbygoogle || []).push({
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="pico.dev">
+  <meta name="keywords" content="java, programacion, tapestry, linux, gnu, gnu/linux, arch, arch linux, software, software libre, html, css, javascript">
+  <meta name="description" content="El protocolo OAuth permite a una aplicación cliente acceder a los recursos de un usuario almacenados en otra aplicación sin que el usuario proporcione a la aplicación cliente sus credenciales, además el usuario tiene la capacidad de revocar en caulquier momento los permisos concedidos a la aplicación cliente. El protocolo OAuth es ampliamente usado por empresas como Google, Facebook, Twitter en sus aplicaciones y servicios. También aplicando una arquitectura de microservicios, al dividir una aplicación en varios módulos o simplemente varias aplicaciones independientes pero que son usadas al mismo tiempo por el mismo usuario para evitar que el usuario se autentique en cada aplicación individualmente y que cada aplicación implemente la funcionalidad de autenticación podemos centralizarla usando OAuth a modo de autenticación única o SSO. &hellip;">
+  <base href="https://picodotdev.github.io/blog-bitix/">
+
+  <title>Integrar autenticación OAuth con Keycloak, Shiro, Apache Tapestry y Spring Boot</title>
+
+  <link rel="author" type="text/plain" href="humans.txt" />
+  <link rel="shortcut icon" href="assets/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/apple-touch-icon-144-precomposed.png">
+  <link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2016/10/integrar-autenticacion-oauth-con-keycloak-shiro-apache-tapestry-y-spring-boot/">
+
+  
+  <link href="index.xml" rel="alternate" type="application/rss+xml" title="Blog Bitix" />
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=PT+Serif:400,700italic,700,400italic">
+  
+  <link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-4.0.0-beta/css/bootstrap.min.css">
+  
+  <link rel="stylesheet" href="assets/libs/Gallery-2.25.2/css/blueimp-gallery.min.css">
+  
+  <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+
+  
+  <script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script>
+  <script type="text/javascript">
+    (adsbygoogle = window.adsbygoogle || []).push({
       google_ad_client: 'ca-pub-3533636310991304',
       enable_page_level_ads: true
-    });</script><script type="text/javascript" async>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    });
+  </script>
+  <script type="text/javascript" async>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
     ga('create', 'UA-12874075-4', 'picodotdev.github.io');
-    ga('send', 'pageview');</script><script type="text/javascript" src="assets/libs/require.min.js" data-main="assets/js/main" async></script><script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" async="async"></script><script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=custom-share-buttons" async="async"></script></head><body><div class="container"><div class="row"><header><div class="row"><div class="col-md-4 col-md-offset-4"><h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2><div class="links"><a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a><a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a><a href="https://plus.google.com/114317443908384387611/posts" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a><a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a></div></div><div class="col-md-4 text-center"><form name="query" class="form-inline search" onsubmit="return false"><div class="input-group"><input type="text" name="q" class="form-control" placeholder="Buscar en Blog Bitix"> <span class="input-group-btn"><button class="btn btn-default" type="submit">Buscar</button></span></div></form><form name="search" action="https://duckduckgo.com/" method="get" class="hidden" data-site="https://picodotdev.github.io/blog-bitix/"><input type="hidden" name="q" value=""></form></div></div><div class="row"><div class="col-md-12"><nav><ul class="nav nav-pills"><li role="presentation"><a href="/blog-bitix/tags/java/">Java</a></li><li role="presentation"><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li><li role="presentation"><a href="/blog-bitix/tags/javascript/">JavaScript</a></li><li role="presentation"><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li><li role="presentation"><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li><li role="presentation"><a href="/blog-bitix/pages/links/">Enlaces</a></li><li role="presentation"><a href="/blog-bitix/pages/about/">Acerca de...</a></li></ul></nav></div></div></header><div class="col-sm-12 col-md-8"><div class="row"><div class="col-md-12"><article itemscope itemtype="http://schema.org/BlogPosting"><meta itemprop="inLanguage" content="es"><meta itemprop="keywords" content="blog-stack, java, planeta-codigo, programacion"><h1 itemprop="name">Integrar autenticación OAuth con Keycloak, Shiro, Apache Tapestry y Spring Boot</h1><p class="information">Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2016-10-07">07/10/2016</time>, actualizado el <time itemprop="dateModified" datetime="2016-10-08">08/10/2016</time>.<br><a href="tags/blog-stack/">blog-stack</a> <a href="tags/java/">java</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/programacion/">programacion</a><br><a href="/blog-bitix/2016/10/integrar-autenticacion-oauth-con-keycloak-shiro-apache-tapestry-y-spring-boot/" itemprop="url">Enlace permanente</a> <a href="/blog-bitix/2016/10/integrar-autenticacion-oauth-con-keycloak-shiro-apache-tapestry-y-spring-boot/#comments">Comentarios</a></p><p class="summary" itemprop="about">OAuth es un protocolo usado para permitir a una aplicación acceder a los recursos de un usuario sin que este proporcione a la aplicación cliente sus credenciales y manteniendo el control de revocar los permisos concedidos. Es ampliamente usado por los servicios de redes sociales de las empresas más conocidas, también lo podemos usar en nuestras aplicaciones. En el ejemplo usaré Keycloak y una aplicación Java con Spring Boot, Apache Shiro y Apache Tapestry.</p><ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-3533636310991304" data-ad-slot="5966819782" data-type="leaderboard"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script><div class="content" itemprop="articleBody"><meta itemprop="wordCount" content="1264"><div class="logotypes" style="float: right"><img src="assets/images/logotipos/keycloak.png" class="right" alt="Keycloak" title="Keycloak"></div><div class="logotypes" style="float: right; clear: right"><img src="assets/images/logotipos/java.png" class="right" alt="Java" title="Java"></div><p>El protocolo <a href="https://oauth.net/">OAuth</a> permite a una aplicación cliente acceder a los recursos de un usuario almacenados en otra aplicación sin que el usuario proporcione a la aplicación cliente sus credenciales, además el usuario tiene la capacidad de revocar en caulquier momento los permisos concedidos a la aplicación cliente. El protocolo OAuth es ampliamente usado por empresas como <a href="https://www.google.es/">Google</a>, <a href="https://www.facebook.com/">Facebook</a>, <a href="https://twitter.com/">Twitter</a> en sus aplicaciones y servicios. También aplicando una arquitectura de microservicios, al dividir una aplicación en varios módulos o simplemente varias aplicaciones independientes pero que son usadas al mismo tiempo por el mismo usuario para evitar que el usuario se autentique en cada aplicación individualmente y que cada aplicación implemente la funcionalidad de autenticación podemos centralizarla usando OAuth a modo de autenticación única o <a href="https://es.wikipedia.org/wiki/Single_Sign-On"><abbr title="Single Sign-On">SSO</abbr></a>. Usando <a href="http://www.keycloak.org/">Keycloak</a> como servidor de OAuth podemos integrarlo en una aplicación Java que use <a href="http://shiro.apache.org/">Apache Shiro</a> para la autorización, <a href="http://projects.spring.io/spring-boot/">Spring Boot</a> para iniciar la aplicación y <a href="http://tapestry.apache.org">Apache Tapestry</a> como <em>framework</em> web.</p><p>En el protocolo OAuth se diferencia las aplicaciones cliente que son capaces de mantener seguras sus credenciales como es el caso de una aplicación web ejecutada en el servidor o las aplicaciones que no son capaces de mantener sus credenciales seguras como es el caso de una aplicación cliente ejecutada en el navegador o en algunos casos nativa en el móvil. Independientemente de la aplicación cliente o de los <a href="https://tools.ietf.org/html/rfc6749#page-8">varios flujos de autenticación</a> el acceso a los recursos del usuario se hace mediante la obtención de un <em>token</em> que es una cadena de caracteres opaca de cierta longitud pero que descifrada contiene información del usuario autenticado también está firmada digitalmente por el servidor de OAuth para evitar alteraciones. El protocolo define varios flujos para obtener un <em>token</em>, obtenido el <em>token</em> con cualquiera de ellos el acceso a los recursos es indiferente del flujo que haya sido empleado.</p><p>En una aplicación segura con el <em>grant</em> de tipo <em>authorization code</em> los pasos que se siguen son los siguientes:</p><ul><li>El servidor redirige al usuario al servidor de OAuth cuando intenta acceder a una URL protegida.</li><li>El usuario introduce sus credenciales en una página de inicio de sesión proporcionada por el servidor OAuth, normalmente un usuario y contraseña.</li><li>El servidor OAuth envía al navegador una redirección hacia la aplicación proporcionado un código de autorización en la URL que puede intercambiarse por un <em>token</em>.</li><li>El navegador con la redirección envía el código de autorización al servidor, el servidor obtiene de la URL, obtiene el código de autorización y lo usa para intercambiarlo por un <em>token</em> del servidor OAuth proporcionado además las credenciales del cliente.</li><li>Obtenido el <em>token</em> con los permisos adecuados la aplicación ya puede permitir acceso o acceder a los recursos.</li></ul><p>Para obtener el <em>token</em> el servidor mantiene seguras sus credenciales como cliente OAuth. Nótese también que con el <em>token</em> el servidor (cliente OAuth) no necesita comunicarse con el servidor OAuth para validar el <em>token</em> ya que está firmado digitalmente, cifrado y tiene concecido un periodo de validadez.</p><p>Un cliente se considera inseguro si la aplicación cliente no puede mantener seguras sus credenciales, si las credenciales de la aplicación están en el navegador o en una aplicación nativa del móvil se considera que las credenciales podrían obtenerse. En una aplicación web en un servidor las credenciales de la aplicación se mantienen seguras en el servidor.</p><p>El siguiente ejemplo muestra como autenticar con Keycloak como proveedor de OAuth una aplicación Java que usa Shiro para la autorización, Spring Boot y el <em>framework</em> web Apache Tapestry. OAuth y Keycloak también puede usarse para <a href="https://picodotdev.github.io/blog-bitix/2016/09/autenticacion-con-oauth-y-keycloak-en-un-servicio-rest-con-jax-rs-y-spring-boot/">securizar con OAuth un servicio REST con JAX-RS</a> y crear un <a href="https://picodotdev.github.io/blog-bitix/2016/10/cliente-de-un-servicio-rest-autenticado-con-oauth2-en-java/">cliente Java para acceder al servicio REST securizado con OAuth</a> emplenado el flujo <em>client credentials</em>. Lo mostrado en este artículo solo es una pequeña parte de las opciones y posibilidades que ofrece Keycloak, en las capturas de pantalla mostradas hay muchas pestañas, opciones y campos con funcionalidades adicionales.</p><p>Iniciar el servidor OAuth de Keycloak usando <a href="https://www.docker.com/">Docker</a> es muy sencillo con el siguiente comando y archivo de <a href="https://docs.docker.com/compose/">Docker Compose</a>, en el primer acceso se nos solicitará una clave y contraseña de administración:</p><script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=docker-compose.yml"></script><script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=docker-compose.sh"></script><p>Para el ejemplo crearé un nuevo <em>realm</em> que contendrá los usuarios y en el que registraremos la aplicación cliente.</p><div class="media" style="text-align: center"><figure><a href="assets/images/posts/2016/185/keycloak-realm.png" title="Keycloak realm" data-gallery><img src="assets/images/posts/2016/185/keycloak-realm-thumb.png"></a><a href="assets/images/posts/2016/185/keycloak-client.png" title="Keycloak client" data-gallery><img src="assets/images/posts/2016/185/keycloak-client-thumb.png"></a><figcaption></figcaption></figure><figure><a href="assets/images/posts/2016/185/keycloak-client-roles.png" title="Keycloak client roles" data-gallery><img src="assets/images/posts/2016/185/keycloak-client-roles-thumb.png"></a><a href="assets/images/posts/2016/185/keycloak-roles.png" title="Keycloak roles" data-gallery><img src="assets/images/posts/2016/185/keycloak-roles-thumb.png"></a><figcaption></figcaption></figure><figure><a href="assets/images/posts/2016/185/keycloak-users.png" title="Keycloak users" data-gallery><img src="assets/images/posts/2016/185/keycloak-users-thumb.png"></a><a href="assets/images/posts/2016/185/keycloak-users-role-mappings.png" title="Keycloak users role mappings" data-gallery><img src="assets/images/posts/2016/185/keycloak-users-role-mappings-thumb.png"></a><figcaption></figcaption></figure></div><p>Usando uno de los <a href="https://keycloak.gitbooks.io/securing-client-applications-guide/content/v/2.2/topics/overview/supported-platforms.html">adaptadores proporcionados por Keycloak</a> para la integración en servidores y aplicaciones su uso no es complicado, en este caso usaré el adaptador para Spring Boot. Usándolo básicamente deberemos proporcionar en la configuración las credenciales de la aplicación cliente que hemos registrado previamente en Keycloak. Además indicaremos que URLs de la aplicación requiere autenticación y que roles han de poseer los usuarios autenticados. Al acceder a estas URLs el adaptador de Keycloak redirigirá al servidor para que el usuario se autentique, una vez autenticado se redirigirá a la aplicación de nuevo.</p><script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=application.yml"></script><p>Autenticado el usuario podemos obtener la instancia de <a href="http://www.keycloak.org/docs/javadocs/org/keycloak/representations/AccessToken.html">AccessToken</a> que representa el <em>token</em> de OAuth, para la autorización podemos usar Apache Shiro y para ellos deberemos implementar un Realm de tipo <a href="https://shiro.apache.org/static/1.3.2/apidocs/org/apache/shiro/realm/AuthorizingRealm.html">AuthorizingRealm</a>. Tiene dos métodos que deberemos implementar <a href="https://shiro.apache.org/static/1.3.2/apidocs/org/apache/shiro/realm/AuthenticatingRealm.html#doGetAuthenticationInfo-org.apache.shiro.authc.AuthenticationToken-">doGetAuthenticationInfo</a> y <a href="https://shiro.apache.org/static/1.3.2/apidocs/org/apache/shiro/realm/AuthorizingRealm.html#doGetAuthorizationInfo-org.apache.shiro.subject.PrincipalCollection-">doGetAuthorizationInfo</a>, el primero lo usaremos para autenticar al usuario que en este caso teniendo el <em>AccessToken</em> ya estará autenticado con Keycloak y el segundo método nos permitirá obtener los roles y permisos asociados al usuario que podríamos obtenerlos de una base de datos relacional, en el ejemplo los roles también se obtienen del token. Con un filtro realizaremos el inicio de sesión de forma programática del usuario representado por el <em>AccessToken</em> cuando esté presente en la petición.</p><script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=KeycloakFilter.java"></script><script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=AppRealm.java"></script><p>Con Apache Tapestry el filtro se registra en el módulo de la aplicación y con Shiro podemos realizar la autorización necesaria en las páginas u acciones de la aplicación usando anotaciones. En este caso una página pública que no requiere estar autenticado, una página accesible por un usuario autenticado y con rol <em>user</em> y finalmente una página de administración que requiere rol <em>admin</em>.</p><script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=Index.java"></script><script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=User.java"></script><script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=Admin.java"></script><script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=Index.tml"></script><script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=User.tml"></script><script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=Admin.tml"></script><p>Como la página de inicio no requiere autenticación es accesible por cualquier usuario. Al navegar a la página de usuario o administrador se iniciará el proceso de autenticación primeramente redirigiéndonos al servidor Keycloak para que introduzcamos las credenciales.</p><div class="media" style="text-align: center"><figure><a href="assets/images/posts/2016/185/tapestry-index.png" title="Index" data-gallery><img src="assets/images/posts/2016/185/tapestry-index-thumb.png"></a><a href="assets/images/posts/2016/185/tapestry-keycloak-login.png" title="Login" data-gallery><img src="assets/images/posts/2016/185/tapestry-keycloak-login-thumb.png"></a><figcaption></figcaption></figure><figure><a href="assets/images/posts/2016/185/tapestry-user.png" title="User" data-gallery><img src="assets/images/posts/2016/185/tapestry-user-thumb.png"></a><figcaption></figcaption></figure></div><p>Si intentamos acceder a la página de usuario o administrador sin estar autenticados se nos mostrará la página de error 403 y al acceder a la página de administración con un usuario sin rol <em>admin</em> se nos mostrará la página de error 401.</p><div class="media" style="text-align: center"><figure><a href="assets/images/posts/2016/185/tapestry-error403.png" title="Error 403" data-gallery><img src="assets/images/posts/2016/185/tapestry-error403-thumb.png"></a><figcaption></figcaption></figure></div><p>Un buen libro sobre OAuth que he leído es <a href="https://amzn.to/2cUkF9d">Mastering OAuth 2.0</a> que explica detalladamente el protocolo OAuth junto con el resto de formas de obtener un <em>token</em> además del mostrado en este artículo usando las credenciales del cliente.</p><div class="media-amazon" style="text-align: center"><iframe style="width:120px;height:240px" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=blobit-21&o=30&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=1784395404&linkId=726dc0d3e4914bc672e6b127da045db2&internal=1"></iframe></div><p>Este artículo solo es introductorio a las posibilidades de OAuth y Keycloak, entre otras posibilidades que ofrece Keycloak creo que está permitir registrarse a los usuarios o personalizar los estilos y páginas de autenticación.</p><p>El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/Keycloak">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradle run</code>.</p><div class="alert alert-warning"><img src="assets/images/posts/2014/12/portada-PugInTapestry-thumb.png" alt="Portada libro: PlugIn Tapestry" title="Portada libro: PlugIn Tapestry" style="float: left; margin-right: 1.5em"><h3>Libro PlugIn Tapestry</h3><p>Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este <i>framework</i> en el formato que prefieras, <a href="http://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/">PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry</a>, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.</p><br style="clear: both"><div class="buttons"><a href="https://picodotdev.github.io/blog-bitix/assets/custom/PlugInTapestry.pdf" class="btn btn-lg btn-success">PDF</a> <a href="https://picodotdev.github.io/blog-bitix/assets/custom/PlugInTapestry.epub" class="btn btn-lg btn-success">EPUB</a> <a href="https://picodotdev.github.io/blog-bitix/assets/custom/PlugInTapestry.mobi" class="btn btn-lg btn-success">MOBI</a> <a href="https://picodotdev.github.io/blog-bitix/assets/custom/PlugInTapestry.zip" class="btn btn-lg btn-success">HTML</a></div><div class="buttons"><a href="https://github.com/picodotdev/blog-ejemplos/tree/master/PlugInTapestry" class="btn btn-lg btn-success">Código fuente ejemplos</a></div></div><div class="reference">Referencia:<br><ul><li><a href="https://oauth.net/getting-started/">OAuth Getting Started</a></li><li><a href="http://oauth.net/documentation/">OAuth Documentation</a></li><li><a href="https://www.youtube.com/watch?v=z-sUzl9eG6M">Keycloak Basics Tutorial Part 1</a></li><li><a href="https://www.youtube.com/watch?v=CXDrGJoCVhc">Keycloak Basics Tutorial Part 2</a></li><li><a href="https://www.youtube.com/watch?v=B-qIkB9lsLs">Keycloak Demo Part 1</a></li><li><a href="https://www.youtube.com/watch?v=QgWgUg5F_JQ">Keycloak Demo Part 2</a></li></ul></div></div></article></div></div><div class="row"><div class="col-md-12"><div class="sharethis-inline-share-buttons"></div></div></div><div class="row"><div class="col-md-12"><ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-3533636310991304" data-ad-slot="5966819782" data-type="leaderboard"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div><a id="comments"></a><div class="row"><div class="col-md-12"><div id="disqus_thread"></div></div></div><script type="text/javascript" async>var disqus_shortname = 'blog-bitix';
+    ga('send', 'pageview');
+  </script>  
+  <script type="text/javascript" src="assets/js/vendor.bundle.js" async></script>
+  <script type="text/javascript" src="assets/js/app-theme.bundle.js" async></script>
+  <script type="text/javascript" src="assets/js/app.bundle.js" async></script>
+
+  <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" async="async"></script>
+  <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=custom-share-buttons" async="async"></script>
+
+  
+  
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <header>
+  <div class="row">
+    <div class="col-sm-12 col-md-4"></div>
+    <div class="col-sm-12 col-md-4">
+      <h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2>
+      <div class="links">
+        
+          <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a>
+        
+        
+          <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a>
+        
+        
+          <a href="https://plus.google.com/114317443908384387611/posts" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a>
+        
+        
+          <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a>
+        
+        
+        
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-4 text-center">
+      <form name="query" class="form-inline search" onsubmit="return false;">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Buscar en Blog Bitix">
+          <span class="input-group-btn">
+            <button class="btn btn-secondary" type="submit">Buscar</button>
+          </span>
+        </div>
+      </form>
+      <form name="search" action="https://duckduckgo.com/" method="get" class="hidden" data-site="https://picodotdev.github.io/blog-bitix/">
+        <input type="hidden" name="q" value="">
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <nav class="nav nav-pills nav-fill">
+  
+    <a href="/blog-bitix/tags/java/" class="nav-item nav-link">Java</a>
+  
+    <a href="/blog-bitix/tags/gnu-linux/" class="nav-item nav-link">GNU/Linux</a>
+  
+    <a href="/blog-bitix/tags/javascript/" class="nav-item nav-link">JavaScript</a>
+  
+    <a href="/blog-bitix/tags/tapestry/" class="nav-item nav-link">Tapestry</a>
+  
+    <a href="/blog-bitix/archive/" class="nav-item nav-link">Archivo y hemeroteca</a>
+  
+    <a href="/blog-bitix/pages/links/" class="nav-item nav-link">Enlaces</a>
+  
+    <a href="/blog-bitix/pages/about/" class="nav-item nav-link">Acerca de...</a>
+  
+</nav>
+
+    </div>
+  </div>
+</header>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-8">
+        <div class="row">
+          <div class="col-md-12">
+            <article itemscope itemtype="http://schema.org/BlogPosting">
+              
+              <meta itemprop="inLanguage" content="es">
+              
+              
+                <meta itemprop="keywords" content="blog-stack, java, planeta-codigo, programacion">
+              
+              
+              <h1 itemprop="name">Integrar autenticación OAuth con Keycloak, Shiro, Apache Tapestry y Spring Boot</h1>
+              <p class="information">
+                Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2016-10-07">07/10/2016</time>, actualizado el <time itemprop="dateModified" datetime="2016-10-08">08/10/2016</time>.
+                
+                
+                  <br>
+                   <a href="tags/blog-stack/">blog-stack</a> <a href="tags/java/">java</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/programacion/">programacion</a>
+                
+                <br>
+                <a href="/blog-bitix/2016/10/integrar-autenticacion-oauth-con-keycloak-shiro-apache-tapestry-y-spring-boot/" itemprop="url">Enlace permanente</a>
+                
+                  <a href="/blog-bitix/2016/10/integrar-autenticacion-oauth-con-keycloak-shiro-apache-tapestry-y-spring-boot/#comments">Comentarios</a>
+                
+                
+              </p>
+
+              
+                <p class="summary" itemprop="about">OAuth es un protocolo usado para permitir a una aplicación acceder a los recursos de un usuario sin que este proporcione a la aplicación cliente sus credenciales y manteniendo el control de revocar los permisos concedidos. Es ampliamente usado por los servicios de redes sociales de las empresas más conocidas, también lo podemos usar en nuestras aplicaciones. En el ejemplo usaré Keycloak y una aplicación Java con Spring Boot, Apache Shiro y Apache Tapestry.</p>
+              
+              
+
+              <ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="5966819782"
+     data-type="leaderboard"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+              <div class="content" itemprop="articleBody">
+                <meta itemprop="wordCount" content="1264">
+                
+
+
+                <div class="logotypes" style="float: right;">
+    <img src="assets/images/logotipos/keycloak.png" class="right" alt="Keycloak" title="Keycloak"/>
+</div>
+
+<div class="logotypes" style="float: right; clear: right;">
+    <img src="assets/images/logotipos/java.png" class="right" alt="Java" title="Java"/>
+</div>
+
+<p>El protocolo <a href="https://oauth.net/">OAuth</a> permite a una aplicación cliente acceder a los recursos de un usuario almacenados en otra aplicación sin que el usuario proporcione a la aplicación cliente sus credenciales, además el usuario tiene la capacidad de revocar en caulquier momento los permisos concedidos a la aplicación cliente. El protocolo OAuth es ampliamente usado por empresas como <a href="https://www.google.es/">Google</a>, <a href="https://www.facebook.com/">Facebook</a>, <a href="https://twitter.com/">Twitter</a> en sus aplicaciones y servicios. También aplicando una arquitectura de microservicios, al dividir una aplicación en varios módulos o simplemente varias aplicaciones independientes pero que son usadas al mismo tiempo por el mismo usuario para evitar que el usuario se autentique en cada aplicación individualmente y que cada aplicación implemente la funcionalidad de autenticación podemos centralizarla usando OAuth a modo de autenticación única o <a href="https://es.wikipedia.org/wiki/Single_Sign-On"><abbr title="Single Sign-On">SSO</abbr></a>. Usando <a href="http://www.keycloak.org/">Keycloak</a> como servidor de OAuth podemos integrarlo en una aplicación Java que use <a href="http://shiro.apache.org/">Apache Shiro</a> para la autorización, <a href="http://projects.spring.io/spring-boot/">Spring Boot</a> para iniciar la aplicación y <a href="http://tapestry.apache.org">Apache Tapestry</a> como <em>framework</em> web.</p>
+
+<p>En el protocolo OAuth se diferencia las aplicaciones cliente que son capaces de mantener seguras sus credenciales como es el caso de una aplicación web ejecutada en el servidor o las aplicaciones que no son capaces de mantener sus credenciales seguras como es el caso de una aplicación cliente ejecutada en el navegador o en algunos casos nativa en el móvil. Independientemente de la aplicación cliente o de los <a href="https://tools.ietf.org/html/rfc6749#page-8">varios flujos de autenticación</a> el acceso a los recursos del usuario se hace mediante la obtención de un <em>token</em> que es una cadena de caracteres opaca de cierta longitud pero que descifrada contiene información del usuario autenticado también está firmada digitalmente por el servidor de OAuth para evitar alteraciones. El protocolo define varios flujos para obtener un <em>token</em>, obtenido el <em>token</em> con cualquiera de ellos el acceso a los recursos es indiferente del flujo que haya sido empleado.</p>
+
+<p>En una aplicación segura con el <em>grant</em> de tipo <em>authorization code</em> los pasos que se siguen son los siguientes:</p>
+
+<ul>
+<li>El servidor redirige al usuario al servidor de OAuth cuando intenta acceder a una URL protegida.</li>
+<li>El usuario introduce sus credenciales en una página de inicio de sesión proporcionada por el servidor OAuth, normalmente un usuario y contraseña.</li>
+<li>El servidor OAuth envía al navegador una redirección hacia la aplicación proporcionado un código de autorización en la URL que puede intercambiarse por un <em>token</em>.</li>
+<li>El navegador con la redirección envía el código de autorización al servidor, el servidor obtiene de la URL, obtiene el código de autorización y lo usa para intercambiarlo por un <em>token</em> del servidor OAuth proporcionado además las credenciales del cliente.</li>
+<li>Obtenido el <em>token</em> con los permisos adecuados la aplicación ya puede permitir acceso o acceder a los recursos.</li>
+</ul>
+
+<p>Para obtener el <em>token</em> el servidor mantiene seguras sus credenciales como cliente OAuth. Nótese también que con el <em>token</em> el servidor (cliente OAuth) no necesita comunicarse con el servidor OAuth para validar el <em>token</em> ya que está firmado digitalmente, cifrado y tiene concecido un periodo de validadez.</p>
+
+<p>Un cliente se considera inseguro si la aplicación cliente no puede mantener seguras sus credenciales, si las credenciales de la aplicación están en el navegador o en una aplicación nativa del móvil se considera que las credenciales podrían obtenerse. En una aplicación web en un servidor las credenciales de la aplicación se mantienen seguras en el servidor.</p>
+
+<p>El siguiente ejemplo muestra como autenticar con Keycloak como proveedor de OAuth una aplicación Java que usa Shiro para la autorización, Spring Boot y el <em>framework</em> web Apache Tapestry. OAuth y Keycloak también puede usarse para <a href="https://picodotdev.github.io/blog-bitix/2016/09/autenticacion-con-oauth-y-keycloak-en-un-servicio-rest-con-jax-rs-y-spring-boot/">securizar con OAuth un servicio REST con JAX-RS</a> y crear un <a href="https://picodotdev.github.io/blog-bitix/2016/10/cliente-de-un-servicio-rest-autenticado-con-oauth2-en-java/">cliente Java para acceder al servicio REST securizado con OAuth</a> emplenado el flujo <em>client credentials</em>. Lo mostrado en este artículo solo es una pequeña parte de las opciones y posibilidades que ofrece Keycloak, en las capturas de pantalla mostradas hay muchas pestañas, opciones y campos con funcionalidades adicionales.</p>
+
+<p>Iniciar el servidor OAuth de Keycloak usando <a href="https://www.docker.com/">Docker</a> es muy sencillo con el siguiente comando y archivo de <a href="https://docs.docker.com/compose/">Docker Compose</a>, en el primer acceso se nos solicitará una clave y contraseña de administración:</p>
+
+<script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=docker-compose.yml"></script>
+<script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=docker-compose.sh"></script>
+
+<p>Para el ejemplo crearé un nuevo <em>realm</em> que contendrá los usuarios y en el que registraremos la aplicación cliente.</p>
+
+<div class="media" style="text-align: center;">
+    <figure>
+  
+  <a href="assets/images/posts/2016/185/keycloak-realm.png" title="Keycloak realm" data-gallery><img src="assets/images/posts/2016/185/keycloak-realm-thumb.png"/></a>
+  
+  
+  <a href="assets/images/posts/2016/185/keycloak-client.png" title="Keycloak client" data-gallery><img src="assets/images/posts/2016/185/keycloak-client-thumb.png"/></a>
+  
+  
+  <figcaption></figcaption>
+</figure>
+
+    <figure>
+  
+  <a href="assets/images/posts/2016/185/keycloak-client-roles.png" title="Keycloak client roles" data-gallery><img src="assets/images/posts/2016/185/keycloak-client-roles-thumb.png"/></a>
+  
+  
+  <a href="assets/images/posts/2016/185/keycloak-roles.png" title="Keycloak roles" data-gallery><img src="assets/images/posts/2016/185/keycloak-roles-thumb.png"/></a>
+  
+  
+  <figcaption></figcaption>
+</figure>
+
+    <figure>
+  
+  <a href="assets/images/posts/2016/185/keycloak-users.png" title="Keycloak users" data-gallery><img src="assets/images/posts/2016/185/keycloak-users-thumb.png"/></a>
+  
+  
+  <a href="assets/images/posts/2016/185/keycloak-users-role-mappings.png" title="Keycloak users role mappings" data-gallery><img src="assets/images/posts/2016/185/keycloak-users-role-mappings-thumb.png"/></a>
+  
+  
+  <figcaption></figcaption>
+</figure>
+
+</div>
+
+<p>Usando uno de los <a href="https://keycloak.gitbooks.io/securing-client-applications-guide/content/v/2.2/topics/overview/supported-platforms.html">adaptadores proporcionados por Keycloak</a> para la integración en servidores y aplicaciones su uso no es complicado, en este caso usaré el adaptador para Spring Boot. Usándolo básicamente deberemos proporcionar en la configuración las credenciales de la aplicación cliente que hemos registrado previamente en Keycloak. Además indicaremos que URLs de la aplicación requiere autenticación y que roles han de poseer los usuarios autenticados. Al acceder a estas URLs el adaptador de Keycloak redirigirá al servidor para que el usuario se autentique, una vez autenticado se redirigirá a la aplicación de nuevo.</p>
+
+<script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=application.yml"></script>
+
+<p>Autenticado el usuario podemos obtener la instancia de <a href="http://www.keycloak.org/docs/javadocs/org/keycloak/representations/AccessToken.html">AccessToken</a> que representa el <em>token</em> de OAuth, para la autorización podemos usar Apache Shiro y para ellos deberemos implementar un Realm de tipo <a href="https://shiro.apache.org/static/1.3.2/apidocs/org/apache/shiro/realm/AuthorizingRealm.html">AuthorizingRealm</a>. Tiene dos métodos que deberemos implementar <a href="https://shiro.apache.org/static/1.3.2/apidocs/org/apache/shiro/realm/AuthenticatingRealm.html#doGetAuthenticationInfo-org.apache.shiro.authc.AuthenticationToken-">doGetAuthenticationInfo</a> y <a href="https://shiro.apache.org/static/1.3.2/apidocs/org/apache/shiro/realm/AuthorizingRealm.html#doGetAuthorizationInfo-org.apache.shiro.subject.PrincipalCollection-">doGetAuthorizationInfo</a>, el primero lo usaremos para autenticar al usuario que en este caso teniendo el <em>AccessToken</em> ya estará autenticado con Keycloak y el segundo método nos permitirá obtener los roles y permisos asociados al usuario que podríamos obtenerlos de una base de datos relacional, en el ejemplo los roles también se obtienen del token. Con un filtro realizaremos el inicio de sesión de forma programática del usuario representado por el <em>AccessToken</em> cuando esté presente en la petición.</p>
+
+<script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=KeycloakFilter.java"></script>
+<script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=AppRealm.java"></script>
+
+<p>Con Apache Tapestry el filtro se registra en el módulo de la aplicación y con Shiro podemos realizar la autorización necesaria en las páginas u acciones de la aplicación usando anotaciones. En este caso una página pública que no requiere estar autenticado, una página accesible por un usuario autenticado y con rol <em>user</em> y finalmente una página de administración que requiere rol <em>admin</em>.</p>
+
+<script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=Index.java"></script>
+<script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=User.java"></script>
+<script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=Admin.java"></script>
+<script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=Index.tml"></script>
+<script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=User.tml"></script>
+<script src="//gist.github.com/picodotdev/091f6edb2dc3eb3a825e8d76f7cdf4cc.js?file=Admin.tml"></script>
+
+<p>Como la página de inicio no requiere autenticación es accesible por cualquier usuario. Al navegar a la página de usuario o administrador se iniciará el proceso de autenticación primeramente redirigiéndonos al servidor Keycloak para que introduzcamos las credenciales.</p>
+
+<div class="media" style="text-align: center;">
+    <figure>
+  
+  <a href="assets/images/posts/2016/185/tapestry-index.png" title="Index" data-gallery><img src="assets/images/posts/2016/185/tapestry-index-thumb.png"/></a>
+  
+  
+  <a href="assets/images/posts/2016/185/tapestry-keycloak-login.png" title="Login" data-gallery><img src="assets/images/posts/2016/185/tapestry-keycloak-login-thumb.png"/></a>
+  
+  
+  <figcaption></figcaption>
+</figure>
+
+    <figure>
+  
+  <a href="assets/images/posts/2016/185/tapestry-user.png" title="User" data-gallery><img src="assets/images/posts/2016/185/tapestry-user-thumb.png"/></a>
+  
+  
+  
+  <figcaption></figcaption>
+</figure>
+
+</div>
+
+<p>Si intentamos acceder a la página de usuario o administrador sin estar autenticados se nos mostrará la página de error 403 y al acceder a la página de administración con un usuario sin rol <em>admin</em> se nos mostrará la página de error 401.</p>
+
+<div class="media" style="text-align: center;">
+    <figure>
+  
+  <a href="assets/images/posts/2016/185/tapestry-error403.png" title="Error 403" data-gallery><img src="assets/images/posts/2016/185/tapestry-error403-thumb.png"/></a>
+  
+  
+  
+  <figcaption></figcaption>
+</figure>
+
+</div>
+
+<p>Un buen libro sobre OAuth que he leído es <a href="https://amzn.to/2cUkF9d">Mastering OAuth 2.0</a> que explica detalladamente el protocolo OAuth junto con el resto de formas de obtener un <em>token</em> además del mostrado en este artículo usando las credenciales del cliente.</p>
+
+<div class="media-amazon" style="text-align: center;">
+    <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=blobit-21&o=30&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=1784395404&linkId=726dc0d3e4914bc672e6b127da045db2&internal=1"></iframe>
+</div>
+
+<p>Este artículo solo es introductorio a las posibilidades de OAuth y Keycloak, entre otras posibilidades que ofrece Keycloak creo que está permitir registrarse a los usuarios o personalizar los estilos y páginas de autenticación.</p>
+
+<p>
+    El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/Keycloak">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradle run</code>.
+</p>
+
+<div class="alert alert-warning">
+    <img src="assets/images/posts/2014/12/portada-PugInTapestry-thumb.png" alt="Portada libro: PlugIn Tapestry" title="Portada libro: PlugIn Tapestry" style="float: left; margin-right: 1.5em;">
+    <h3>Libro PlugIn Tapestry</h3>
+    <p>Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este <i>framework</i> en el formato que prefieras, <a href="http://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/">PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry</a>, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.</p>
+    <br style="clear: both;">
+    <div class="buttons">
+        <a href="https://picodotdev.github.io/blog-bitix/assets/custom/PlugInTapestry.pdf" class="btn btn-lg btn-success">PDF</a>
+        <a href="https://picodotdev.github.io/blog-bitix/assets/custom/PlugInTapestry.epub" class="btn btn-lg btn-success">EPUB</a>
+        <a href="https://picodotdev.github.io/blog-bitix/assets/custom/PlugInTapestry.mobi" class="btn btn-lg btn-success">MOBI</a>
+        <a href="https://picodotdev.github.io/blog-bitix/assets/custom/PlugInTapestry.zip" class="btn btn-lg btn-success">HTML</a>
+    </div>
+    <div class="buttons">
+        <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/PlugInTapestry" class="btn btn-lg btn-success">Código fuente ejemplos</a>
+    </div>
+</div>
+
+<div class="reference">
+    Referencia:<br>
+    <ul>
+<li><a href="https://oauth.net/getting-started/">OAuth Getting Started</a></li>
+<li><a href="http://oauth.net/documentation/">OAuth Documentation</a></li>
+<li><a href="https://www.youtube.com/watch?v=z-sUzl9eG6M">Keycloak Basics Tutorial Part 1</a></li>
+<li><a href="https://www.youtube.com/watch?v=CXDrGJoCVhc">Keycloak Basics Tutorial Part 2</a></li>
+<li><a href="https://www.youtube.com/watch?v=B-qIkB9lsLs">Keycloak Demo Part 1</a></li>
+<li><a href="https://www.youtube.com/watch?v=QgWgUg5F_JQ">Keycloak Demo Part 2</a></li>
+</ul>
+
+</div>
+
+
+
+              </div>
+            </article>
+          </div>
+        </div>
+        
+
+        
+<div class="row">
+  <div class="col-md-12">
+    <div class="sharethis-inline-share-buttons"></div>
+  </div>
+</div>
+
+
+        <div class="row">
+          <div class="col-md-12">
+            <ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="5966819782"
+     data-type="leaderboard"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+          </div>
+        </div>
+        
+  <a id="comments"></a>
+  <div class="row">
+    <div class="col-md-12">
+      <div id="disqus_thread"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript" async>
+    var disqus_shortname = 'blog-bitix';
     var disqus_identifier = 'https:\/\/picodotdev.github.io\/blog-bitix\/2016\/10\/integrar-autenticacion-oauth-con-keycloak-shiro-apache-tapestry-y-spring-boot\/';
     var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2016\/10\/integrar-autenticacion-oauth-con-keycloak-shiro-apache-tapestry-y-spring-boot\/';
     var disqus_script = 'embed.js';
@@ -17,10 +385,169 @@
       dsq.async = true;
       dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());</script></div><div class="col-md-4"><div class="row"><div class="col-md-12 text-center"><ins class="adsbygoogle" style="display:inline-block;width:300px;height:600px" data-ad-client="ca-pub-3533636310991304" data-ad-slot="9559414587" data-type="large-skycraper"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div><div class="row"><div class="col-md-12 text-center"><ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-3533636310991304" data-ad-slot="2873752587" data-type="large-rectangle"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div><div class="row text-center"><div class="col-md-12"><a href="https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/"><img src="//static.fsf.org/nosvn/images/badges/badges_es/i-support-fs_red-bg-es.png" alt="Yo apoyo al software libre"></a></div></div><div class="row"><div class="col-md-12"><hr></div></div><div class="row"><div class="col-md-12"><ul class="list-unstyled recents"><li><span class="glyphicon glyphicon-hand-right"></span> <a href="archive/">Más artículos recientes en el archivo</a></li></ul></div></div></div></div><div class="row"><div class="col-md-12"><hr></div></div><footer><div class="row"><div class="col-md-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos a la semana desde el año 2010.</p></div><div class="col-md-4 text-center menu"><ul class="list-unstyled"><li><a href="/blog-bitix/tags/java/">Java</a></li><li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li><li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li><li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li><li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li><li><a href="/blog-bitix/pages/links/">Enlaces</a></li><li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li><li><a href="/blog-bitix/pages/about/">Acerca de...</a></li></ul></div><div class="col-md-4 text-center links"><a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a><a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a><a href="https://plus.google.com/114317443908384387611/posts" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a><a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a></div></div><div class="row"><div class="col-md-12">Copyleft <span class="copyleft">&copy;</span> 2017 - <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style="border-width:0" src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" class="licencia"></a><br><a href="https://twitter.com/blogstackinfo"><img src="https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png" alt="Blog Stack" title="Blog Stack"></a><a href="https://www.planetacodigo.com/"><img src="https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png" alt="Planeta código" title="Planeta código"></a><br><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></span> by <a xmlns:cc="https://creativecommons.org/ns#" href="https://picodotdev.github.io/blog-bitix/" property="cc:attributionName" rel="cc:attributionURL">pico.dev</a> is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class="credit">Powered by <a href="https://gohugo.io/" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a></span></div></div></footer></div><div class="blueimp-gallery-container"><div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false"><div class="slides"></div><h3 class="title"></h3><a class="prev">‹</a> <a class="next">›</a> <a class="close">×</a> <a class="play-pause"></a><ol class="indicator"></ol><div class="modal fade"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" aria-hidden="true">&times;</button><h4 class="modal-title"></h4></div><div class="modal-body next"></div><div class="modal-footer"><button type="button" class="btn btn-default pull-left prev"><i class="glyphicon glyphicon-chevron-left"></i> Anterior</button> <button type="button" class="btn btn-primary next">Siguiente <i class="glyphicon glyphicon-chevron-right"></i></button></div></div></div></div></div></div><script type="text/javascript">window.cookieconsent_options = {
+    }());
+  </script>
+
+      </div>
+      <div class="col-md-4">
+        <div class="row">
+  <div class="col-md-12 text-center">
+    <ins class="adsbygoogle"
+     style="display:inline-block;width:300px;height:600px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="9559414587"
+     data-type="large-skycraper"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12 text-center">
+    <ins class="adsbygoogle"
+     style="display:inline-block;width:336px;height:280px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="2873752587"
+     data-type="large-rectangle"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+  </div>
+</div>
+<div class="row text-center">
+  <div class="col-md-12">
+    <a href="https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/"><img src="//static.fsf.org/nosvn/images/badges/badges_es/i-support-fs_red-bg-es.png" alt="Yo apoyo al software libre"></a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <hr>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <ul class="list-unstyled recents">
+      <li><span class="glyphicon glyphicon-hand-right"></span> <a href="archive/">Más artículos recientes en el archivo</a></li>
+    </ul>
+  </div>
+</div>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <hr>
+      </div>
+    </div>
+    <footer>
+  <div class="row">
+    <div class="col-sm-12 col-md-4">
+      <p><strong>Blog Bitix</strong></p>
+      <p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p>
+      <p>Publicando de uno a tres artículos a la semana desde el año 2010.</p>
+    </div>
+    <div class="col-sm-12 col-md-4 text-center menu">
+      <ul class="list-unstyled">
+        
+          <li><a href="/blog-bitix/tags/java/">Java</a></li>
+        
+          <li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li>
+        
+          <li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li>
+        
+          <li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li>
+        
+          <li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li>
+        
+          <li><a href="/blog-bitix/pages/links/">Enlaces</a></li>
+        
+          <li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li>
+        
+          <li><a href="/blog-bitix/pages/about/">Acerca de...</a></li>
+        
+      </ul>
+    </div>
+    <div class="col-sm-12 col-md-4 text-center links">
+      
+        <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a>
+      
+      
+        <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a>
+      
+      
+        <a href="https://plus.google.com/114317443908384387611/posts" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a>
+      
+      
+        <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a>
+      
+      
+      
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      Copyleft <span class="copyleft">&copy;</span> 2017 - <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style="border-width:0" src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" class="licencia"/></a><br />
+      <a href="https://twitter.com/blogstackinfo"><img src="https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png" alt="Blog Stack" title="Blog Stack"></a>
+      <a href="https://www.planetacodigo.com/"><img src="https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png" alt="Planeta código" title="Planeta código"></a>
+      <br/>
+      <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></span> by <a xmlns:cc="https://creativecommons.org/ns#" href="https://picodotdev.github.io/blog-bitix/" property="cc:attributionName" rel="cc:attributionURL">pico.dev</a> is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.
+      <br/>
+      <span class="credit">Powered by <a href="https://gohugo.io/" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a></span>
+    </div>
+  </div>
+</footer>
+
+  </div>
+  
+<div class="blueimp-gallery-container">
+  <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false">
+    
+    <div class="slides"></div>
+    
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    
+    <div class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body next"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left prev">
+              <i class="glyphicon glyphicon-chevron-left"></i>
+              Anterior
+            </button>
+            <button type="button" class="btn btn-primary next">
+              Siguiente
+              <i class="glyphicon glyphicon-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  
+<script type="text/javascript">
+    window.cookieconsent_options = {
         "message": "Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.",
         "dismiss": "Aceptar",
         "learnMore": "Más información",
         "link": null,
         "theme": "dark-bottom"
-    };</script><script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script></body></html>
+    };
+</script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script>
+</body>
+</html>

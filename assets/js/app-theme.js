@@ -1,4 +1,15 @@
-define(['jquery'], function($) {
+import $ from 'jquery';
+
+import 'bootstrap';
+import 'blueimp-helper';
+import 'blueimp-gallery';
+import 'blueimp-gallery-indicator';
+import 'blueimp-gallery-video';
+import 'blueimp-gallery-vimeo';
+import 'blueimp-gallery-youtube';
+import 'jquery-blueimp-gallery';
+
+function initBackground() {
     // Background
     function random(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
@@ -45,12 +56,17 @@ define(['jquery'], function($) {
     var i = random(0, spec.backgrounds.length - 1);
     var b = spec.backgrounds[i];
     $('body').css('background-image', 'url("assets/images/backgrounds/' + b + '")');
+}
 
+function initSearch() {
     $("form[name='query']").on('submit', function() {
-      var query = $("input[name='q']", "form[name='query']").val();
-      var site = $("form[name='search']").data('site');
-      $("input[name='q']", "form[name='search']").val(query + ' site:' + site);
-      $("form[name='search']").submit();
-      return false;
+        var query = $("input[name='q']", "form[name='query']").val();
+        var site = $("form[name='search']").data('site');
+        $("input[name='q']", "form[name='search']").val(query + ' site:' + site);
+        $("form[name='search']").submit();
+        return false;
     });
-});
+}
+
+initBackground();
+initSearch();

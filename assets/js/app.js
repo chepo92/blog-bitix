@@ -1,39 +1,42 @@
-define(['jquery'], function($) {
-  // Analytics
+import $ from 'jquery';
+
+function initGoogleAnalytics() {
   ga('send', 'event', 'client', 'protocol', window.location.protocol.replace(new RegExp(':|/', 'gi'), ''), {'nonInteraction': 1});
+  
+    $('header nav a, footer div.menu a').on('click', function() {
+      ga('send', 'event', 'link', 'click', 'menu');
+    });
+  
+    $('ul.recents a').on('click', function() {
+      ga('send', 'event', 'link', 'click', 'recent');
+    });
+  
+    $('div.featured a').on('click', function() {
+      ga('send', 'event', 'link', 'click', 'featured');
+    });
+  
+    $('div.links a').on('click', function() {
+      ga('send', 'event', 'link', 'click', 'links');
+    });
+  
+    $('ins.adsbygoogle').on('mouseenter', function() {
+      ga('send', 'event', 'ad', 'enter', $(this).attr('data-type'), {'nonInteraction': 1});
+    });
+  
+    $('ins.adsbygoogle').on('click', function() {
+      ga('send', 'event', 'ad', 'click', $(this).attr('data-type'));
+    });
+  
+    $('div.share-this-begin').on('click', function() {
+      ga('send', 'event', 'share-this', 'click', 'begin');
+    });
+  
+    $('div.share-this-end').on('click', function() {
+      ga('send', 'event', 'share-this', 'click', 'end');
+    });
+}
 
-  $('header nav a, footer div.menu a').on('click', function() {
-    ga('send', 'event', 'link', 'click', 'menu');
-  });
-
-  $('ul.recents a').on('click', function() {
-    ga('send', 'event', 'link', 'click', 'recent');
-  });
-
-  $('div.featured a').on('click', function() {
-    ga('send', 'event', 'link', 'click', 'featured');
-  });
-
-  $('div.links a').on('click', function() {
-    ga('send', 'event', 'link', 'click', 'links');
-  });
-
-  $('ins.adsbygoogle').on('mouseenter', function() {
-    ga('send', 'event', 'ad', 'enter', $(this).attr('data-type'), {'nonInteraction': 1});
-  });
-
-  $('ins.adsbygoogle').on('click', function() {
-    ga('send', 'event', 'ad', 'click', $(this).attr('data-type'));
-  });
-
-  $('div.share-this-begin').on('click', function() {
-    ga('send', 'event', 'share-this', 'click', 'begin');
-  });
-
-  $('div.share-this-end').on('click', function() {
-    ga('send', 'event', 'share-this', 'click', 'end');
-  });
-
+function initAdsense() {
   setTimeout(function() {
     var ads = $('ins.adsbygoogle');
     var adblock = (ads.length > 0 && ads.html().replace(/\s/g, '').length == 0);
@@ -53,4 +56,7 @@ define(['jquery'], function($) {
       });
     }
   }, 3000);
-});
+}
+
+initGoogleAnalytics();
+initAdsense();
