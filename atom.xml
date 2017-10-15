@@ -3,7 +3,7 @@
     <id>https://picodotdev.github.io/blog-bitix/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2017-10-14T12:00:00+02:00</updated>
+    <updated>2017-10-15T12:15:00+02:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
@@ -11,10 +11,54 @@
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
     
     <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/10/obtener-informacion-de-la-pila-de-las-excepciones/</id>
+        <title>Obtener información de la pila de las excepciones</title>        
+        <updated>2017-10-15T12:15:00+02:00</updated>
+        <published>2017-10-15T12:15:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/10/obtener-informacion-de-la-pila-de-las-excepciones/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Las excepciones son un mecanismo incorporado en algunos lenguajes como Java para el manejo de errores y condiciones de error. En la implementación de las excepciones en los lenguajes hay diferencias, por ejemplo, en Java hay &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/las-excepciones-del-lenguaje-java/&#34;&gt;excepciones checked y uncheked&lt;/a&gt; y en lenguajes como &lt;a href=&#34;http://www.microsoft.com/net&#34;&gt;C#&lt;/a&gt; o &lt;a href=&#34;http://www.groovy-lang.org/&#34;&gt;Groovy&lt;/a&gt; todas las excepciones son consideradas &lt;em&gt;unchecked&lt;/em&gt;. En cualquier caso son una mejor forma de forzar a gestionar las condiciones de error que se producen que el comprobar no obligatoriamente el valor de retorno de una función, incluso JavaScript incorpora excepciones.&lt;/p&gt;
+
+&lt;p&gt;Las palabras reservadas en Java para el manejo de excepciones son &lt;em&gt;try&lt;/em&gt;, &lt;em&gt;catch&lt;/em&gt; , &lt;em&gt;finally&lt;/em&gt;, &lt;em&gt;throw&lt;/em&gt; y &lt;em&gt;throws&lt;/em&gt;. El manejo de algunas excepciones consiste en emitir su pila de llamadas o &lt;em&gt;stacktrace&lt;/em&gt; en la terminal o en el sistema de &lt;em&gt;logging&lt;/em&gt;. El &lt;em&gt;stacktrace&lt;/em&gt; contiene un mensaje de error, los métodos de la pila de llamadas del &lt;em&gt;thread&lt;/em&gt; que la causó junto con el número de la línea. Además, las excepciones puede tener asociada una excepción causa por ejemplo un &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/sql/SQLException.html&#34;&gt;SQLException&lt;/a&gt; puede ser causado por un &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/io/IOException.html&#34;&gt;IOException&lt;/a&gt; por fallo de comunicación con el servidor de base de datos.&lt;/p&gt;
+
+&lt;p&gt;Todas las excepciones en Java heredan de &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Throwable.html&#34;&gt;Throwable&lt;/a&gt; y entre los métodos que tiene esta clase está &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Throwable.html#getStackTrace--&#34;&gt;getStackTrace()&lt;/a&gt; que devuelve un &lt;em&gt;array&lt;/em&gt; de &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/StackTraceElement.html&#34;&gt;StackTraceElement&lt;/a&gt; ordenado del último método llamado al primero. Con los métodos de la clase &lt;em&gt;StackTraceElement&lt;/em&gt; obtenemos el nombre de la clase, el archivo, el nombre del método y la linea de código de esa llamada.&lt;/p&gt;
+
+&lt;p&gt;Con esta información podemos imprimir en la terminal un informe de excepción diferente del que genera el método &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Throwable.html#printStackTrace--&#34;&gt;printStackTrace()&lt;/a&gt;. En el ejemplo limitando el informe de la pila de llamadas a los tres últimos métodos del &lt;em&gt;stacktrace&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/5138b0297f96eb67687316bdbe0482fa.js?file=Throwable.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/5138b0297f96eb67687316bdbe0482fa.js?file=jshell.out&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Si en una aplicación manejamos varios hilos con &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Thread.html#getAllStackTraces--&#34;&gt;Thread.getAllStackTraces()&lt;/a&gt; obtenemos las pilas de llamadas de todos los hilos y con &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Thread.html#getStackTrace--&#34;&gt;Thread.getStackTrace()&lt;/a&gt; el del hilo en concreto que con &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Thread.html#currentThread--&#34;&gt;Thread.currentThread()&lt;/a&gt; sería el actual. Con el &lt;em&gt;array&lt;/em&gt; de &lt;em&gt;StackTraceElement&lt;/em&gt; obtenidos de los hilos podemos obtener un informe personalizado y la situación de cada uno, el método &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Thread.html#dumpStack--&#34;&gt;dumpStack()&lt;/a&gt; genera el &lt;em&gt;stacktrace&lt;/em&gt; en la salida de error.&lt;/p&gt;
+
+&lt;p&gt;Entre &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/novedades-de-java-9-mas-alla-de-la-modularidad/&#34;&gt;las novedades de Java 9&lt;/a&gt; está la clase &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/StackWalker.html&#34;&gt;StackWalker&lt;/a&gt; para procesar los elementos de la pila del &lt;em&gt;thread&lt;/em&gt; actual usando &lt;em&gt;streams&lt;/em&gt; y funciones &lt;em&gt;lambda&lt;/em&gt;.&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="blog-stack"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/10/las-excepciones-del-lenguaje-java/</id>
         <title>Las excepciones del lenguaje Java</title>        
-        <updated>2017-10-14T12:00:00+02:00</updated>
-        <published>2017-10-14T12:00:00+02:00</published>
+        <updated>2017-10-15T11:30:00+02:00</updated>
+        <published>2017-10-15T11:30:00+02:00</published>
         <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/10/las-excepciones-del-lenguaje-java/"/>
         <author><name>pico.dev</name></author>
         <content type="html">
@@ -48,6 +92,8 @@
 &lt;li&gt;En algunos casos es mejor lanzar una excepción que un valor &lt;em&gt;null&lt;/em&gt; que posiblemente produzca un &lt;em&gt;NullPointerException&lt;/em&gt; en otra parte distante del código de dónde se devolvió el valor &lt;em&gt;null&lt;/em&gt;.&lt;/li&gt;
 &lt;li&gt;Propagar excepciones no es un signo de poca sabiduría, puede haber motivos para ello sobre todo si no se le puede dar un tratamiento adecuado.&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;Cuando se produce una excepción la clase &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Throwable.html&#34;&gt;Throwable&lt;/a&gt; posee métodos para emitir en la salida un informe de la pila de llamadas, también se puede personalizar la salida. Esta información es esencial y muy útil para conocer la causa de un error ya que indica entre otras cosas cada uno de los métodos, línea en el código fuente y clases donde se ha producido la excepción.&lt;/p&gt;
 
 
 
@@ -1337,173 +1383,6 @@ X{n,m}  X{n,m}?    X{n,m}+     X, al menos n veces pero no mas de m
                 <category term="planeta-codigo"/>
             
                 <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2017/09/seleccion-de-semillas-de-roble-comun-y-metodos-de-germinacion/</id>
-        <title>Selección de semillas de roble común y métodos de germinación</title>        
-        <updated>2017-09-03T00:20:00+02:00</updated>
-        <published>2017-09-02T11:00:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/09/seleccion-de-semillas-de-roble-comun-y-metodos-de-germinacion/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/quercus-robur.png&#34; class=&#34;right&#34; width=&#34;175&#34; alt=&#34;Quercus Robur&#34; title=&#34;Quercus Robur&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Las semillas para germinar necesitan las condiciones adecuadas. Para algunos tipos de semillas se utilizan dos procesos, la &lt;a href=&#34;http://www.botanical-online.com/escarificacion.htm&#34;&gt;escarificación&lt;/a&gt; y &lt;a href=&#34;http://www.botanical-online.com/estratificacion.htm&#34;&gt;estratificación&lt;/a&gt;, la primera simula la degradación de la semilla que se daría en condiciones naturales y la segunda simula las condiciones de frío del invierno. Simular de forma artificial la escarificación se realiza desgastando la semilla con una lija o deteriorando la cáscara de la semilla, la estratificación se simula dejando las semillas un periodo de tiempo en el frigorífico pero no en el congelador. Todas las semillas no necesitan de estos dos procesos y pueden germinar simplemente envolviéndolas con un papel de cocina húmedo mantenido así durante varios días.&lt;/p&gt;
-
-&lt;p&gt;En el caso de las semillas de roble común o &lt;em&gt;quercus robur&lt;/em&gt;, que serán las que haga germinar y posteriormente plante, en algunas páginas de internet la germinación se explica de forma diferente. En cualquier caso lo primero es obtener las semillas de la planta u árbol que deseamos hacer germinar. Para plantas de jardín hay numerosas páginas y también tiendas físicas que venden paquetes con varias semillas. En el caso de los árboles es más difícil, algunos viveros venden plantones (árboles ya germinados y con poco tiempo de vida) pero semillas es más difícil encontrar. Sin embargo, basta con buscar en nuestra zona algún ejemplar del árbol del que queramos plantar y esperar a la época en las que las producen para obtener las preciadas semillas.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/roble.jpg&#34; title=&#34;Ejemplar grande de roble&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/roble-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/roble-hojas.jpg&#34; title=&#34;Hojas y bellotas de roble&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/roble-hojas-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;Roble, hojas y bellotas&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;h3 id=&#34;selección-de-semillas&#34;&gt;Selección de semillas&lt;/h3&gt;
-
-&lt;p&gt;Para obtener una mayor tasa de éxito en la germinación hay que averiguar cuales de las semillas son viables. En el caso de las semillas o bellotas de roble común las viables son aquellas que sumergiéndolas en agua no flotan, en la foto izquierda no hay ninguna que flote ya que estas las he recogido en la temporada en curso pero en la de la derecha si hay algunas que flotan por ser de alguna temporada anterior y aunque tenga el color adecuado se consideran no viables y aptas para germinar ya que muy posiblemente tengan algún tipo de podredumbre. Las que flotan están vacías o podridas y no es probable que germinen por lo que se tiran a la basura directamente. En la recolección las mejores semillas son aquellas con color parduzco, con cierto brillo al limpiarlas, que apretándola no ceda y que tengan el mayor tamaño de las que encontremos.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/prueba-viabilidad-semillas-1.jpg&#34; title=&#34;Prueba de viabilidad de semillas&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/prueba-viabilidad-semillas-1-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/prueba-viabilidad-semillas-2.jpg&#34; title=&#34;Prueba de viabilidad de semillas (algunas flotan)&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/prueba-viabilidad-semillas-2-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;Prueba de viabilidad de semmillas&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;Si la semilla todavía tiene alguna parte de color verde en unos días adquiere el color pardo. Las semillas que tiene un color marrón ya claro se trata de una de la temporada anterior, hay que recolectar las semillas de la temporada actual ya que las de la temporada anterior pierden de su poder de germinación. Tiene que estar sin agujeros que estén causados por algún bicho o grietas para que no estén podridas.&lt;/p&gt;
-
-&lt;p&gt;En la foto de comparación de bellotas la de la izquierda es una bellota de gran calibre y las más adecuadas para seleccionar, la del centro es más pequeña pero también es posible hacerla germinar, la de la derecha es de una temporada anterior que se puede apreciar por su color marrón claro y no es adecuada.&lt;/p&gt;
-
-&lt;p&gt;La época que los robles comunes generan las semillas son a finales de septiembre o principios de octubre para ejemplares jóvenes aunque si se trata de un ejemplar grande y desarrollado como el de la foto anterior las produce a mediados de agosto y a finales de este mes ya empiezan a caer al suelo. Un ejemplar grande genera una gran cantidad de semillas y de buen tamaño y buen calibre, muchas más de las que podamos necesitar para plantar una buena cantidad de robles, las semillas más grandes son las más adecuadas ya que tienen más energía para desarrollar el plantón inicial. Esta muestra de bellotas que he recogido no son ni posiblemente el 10% de las bellotas del ejemplar de roble anterior.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/recogida-bellotas-1.jpg&#34; title=&#34;Recogida de bellotas&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/recogida-bellotas-1-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/recogida-bellotas-2.jpg&#34; title=&#34;Recogida de bellotas&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/recogida-bellotas-2-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/bellotas.jpg&#34; title=&#34;Bellotas&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/bellotas-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  &lt;figcaption&gt;Recogida y comparación de bellotas&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;h3 id=&#34;germinación&#34;&gt;Germinación&lt;/h3&gt;
-
-&lt;p&gt;Para forzar la germinación he leído varios métodos comentado en algunas páginas de internet. Uno de ellos consiste en envolver las semillas con un papel de cocina y dejarlas humedecidas de forma constante (no sumergidas) durante unos 10-15 días en un vaso. Otro método similar es en vez de usar papel de cocina usar algodón. El tercero es usar una bolsa de plástico cerrada también manteniéndola humedecida de forma constante. En los tres casos proporcionado oscuridad a las semillas.&lt;/p&gt;
-
-&lt;p&gt;El método que mejor me ha resultado a mí ha sido el de la bolsa de plástico, con mayor tasa de éxito de germinación. Además, me parece el más práctico para intentar hacer germinar a más de media docena de bellotas. Para muchas bellotas se gasta mucho papel de cocina o algodón.&lt;/p&gt;
-
-&lt;p&gt;Para que las semillas germinen antes se recomienda lijarles o desgastarles un poco la punta sin dañar el fruto. Y en el caso de la bolsa he tratado de humedecerlas cambiándoles de agua cada unos 3-4 días ya que si no la bolsa adquiere algo de olor.&lt;/p&gt;
-
-&lt;p&gt;También se pueden utilizar semilleros pero me parece mejor el método de la bolsa de plástico para plantar en tierra solo las semillas que hayan germinado. Con cualquiera de los métodos cuando hayan empezado hincharse rompiendo la cáscara y empezado a brotar la raíz y el tallo se puede plantar la semilla en tierra.&lt;/p&gt;
-
-&lt;p&gt;No todas las semillas germinarán pero las bellotas de roble tienen una buena tasa de éxito y son bastante fáciles de hacerlas germinar. Con el método de la bolsa en unos 15 días las semillas ya habrán hinchando y roto algo la cascará y en otros 15 días empezado a desarrollar la raíz y el tallo.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/bolsa-plastico-germinacion.jpg&#34; title=&#34;Germinación con bolsa de plástico&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/bolsa-plastico-germinacion-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/bellotas-germinando.jpg&#34; title=&#34;Bellotas germinando&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/bellotas-germinando-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;Germinación con bolsa de plástico y bellotas germinando&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;h3 id=&#34;plantación&#34;&gt;Plantación&lt;/h3&gt;
-
-&lt;p&gt;Una vez que la semilla ya ha empezado a brotar la raíz se recomienda plantarla de forma vertical con la raíz hacia abajo y en otras de forma horizontal sobre la tierra parcialmente tapada pero siempre intentando que el tallo quede en la parte superior para facilitar el crecimiento al futuro plantón.&lt;/p&gt;
-
-&lt;p&gt;Como recipiente para plantar las semillas en el caso de los robles comunes es recomendable un tiesto que tenga cierta profundidad ya que estos poseen unas raíces largas que durante sus primeros meses y años se dedican a hacerlas crecer más que a crecer el tallo o las hojas. En mi caso usaré cartones de leche recortados por la parte superior, con una altura para las raíces de unos 12 centímetros y con unos agujeros en la parte inferior para que el agua al regarlas drene y las raíces no se pudran con la acumulación de agua. Para que la tierra no se salga por los agujeros inferiores he puesto un trozo de papel de cocina en la parte de abajo.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/tiesto-carton-leche.jpg&#34; title=&#34;Tiesto con cartón de leche&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/256/tiesto-carton-leche-thumb.jpg&#34;/&gt;&lt;/a&gt;
-  
-  
-  
-  &lt;figcaption&gt;Tiesto con cartón de leche de 1 litro&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;Una vez plantadas no hace falta regarlas mucho una vez a la semana sin demasiada abundancia. Los plantones de roble deben tener luz pero no estar expuestos directamente la luz del sol y protegerlos de las heladas los días que haga mucho frío. Al lado de una ventana o en un balcón debería ser suficiente.&lt;/p&gt;
-
-&lt;!--
-[Fotos plantones al lado de la ventana]
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
---&gt;
-
-&lt;p&gt;En realidad se muy poco sobre en este tema, lo que comento aquí espero que sea lo adecuado para que los robles que plante crezcan y sobrevivan al primer año de vida y posteriores. Si también vas a plantar árboles elige con preferencia aquellas especies que en tu zona sean autóctonas.&lt;/p&gt;
-
-&lt;p&gt;También hay que vigilar los plantones para que no les crezcan hongos o se generen bichos en su tierra pero sobre todo&amp;hellip; tener paciencia ya que su desarrollo y crecimiento es lento.&lt;/p&gt;
-
-&lt;p&gt;Para finalizar un par de vídeos de como plantar un roble y vídeo en tiempo acelerado del nacimiento de una bellota hasta los 8 primeros meses de vida.&lt;/p&gt;
-
-&lt;div class=&#34;media media-video&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;iframe width=&#34;640&#34; height=&#34;360&#34; src=&#34;https://www.youtube.com/embed/QRCDilvqa5E&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;media media-video&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;iframe width=&#34;640&#34; height=&#34;360&#34; src=&#34;https://www.youtube.com/embed/MB-BvkOyHww&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;reference&#34;&gt;
-    Referencia:&lt;br&gt;
-    &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.lahuertinadetoni.es/como-germinar-una-bellota-o-roble/&#34;&gt;Como germinar una bellota de roble&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=aZQzbc5GYGU&#34;&gt;Como germinar bellotas&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=AQCqBzikA8c&#34;&gt;La mejor manera de germinar bellotas&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=MDHKlVJJrzg&#34;&gt;Plantación de quercus&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="jardineria"/>
-            
-                <category term="fuera-de-tema"/>
             
         
     </entry>

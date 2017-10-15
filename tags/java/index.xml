@@ -3,7 +3,7 @@
     <id>https://picodotdev.github.io/blog-bitix/tags/java/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2017-10-14T12:00:00+02:00</updated>
+    <updated>2017-10-15T12:15:00+02:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
@@ -11,10 +11,54 @@
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
     
     <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/10/obtener-informacion-de-la-pila-de-las-excepciones/</id>
+        <title>Obtener información de la pila de las excepciones</title>        
+        <updated>2017-10-15T12:15:00+02:00</updated>
+        <published>2017-10-15T12:15:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/10/obtener-informacion-de-la-pila-de-las-excepciones/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Las excepciones son un mecanismo incorporado en algunos lenguajes como Java para el manejo de errores y condiciones de error. En la implementación de las excepciones en los lenguajes hay diferencias, por ejemplo, en Java hay &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/las-excepciones-del-lenguaje-java/&#34;&gt;excepciones checked y uncheked&lt;/a&gt; y en lenguajes como &lt;a href=&#34;http://www.microsoft.com/net&#34;&gt;C#&lt;/a&gt; o &lt;a href=&#34;http://www.groovy-lang.org/&#34;&gt;Groovy&lt;/a&gt; todas las excepciones son consideradas &lt;em&gt;unchecked&lt;/em&gt;. En cualquier caso son una mejor forma de forzar a gestionar las condiciones de error que se producen que el comprobar no obligatoriamente el valor de retorno de una función, incluso JavaScript incorpora excepciones.&lt;/p&gt;
+
+&lt;p&gt;Las palabras reservadas en Java para el manejo de excepciones son &lt;em&gt;try&lt;/em&gt;, &lt;em&gt;catch&lt;/em&gt; , &lt;em&gt;finally&lt;/em&gt;, &lt;em&gt;throw&lt;/em&gt; y &lt;em&gt;throws&lt;/em&gt;. El manejo de algunas excepciones consiste en emitir su pila de llamadas o &lt;em&gt;stacktrace&lt;/em&gt; en la terminal o en el sistema de &lt;em&gt;logging&lt;/em&gt;. El &lt;em&gt;stacktrace&lt;/em&gt; contiene un mensaje de error, los métodos de la pila de llamadas del &lt;em&gt;thread&lt;/em&gt; que la causó junto con el número de la línea. Además, las excepciones puede tener asociada una excepción causa por ejemplo un &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/sql/SQLException.html&#34;&gt;SQLException&lt;/a&gt; puede ser causado por un &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/io/IOException.html&#34;&gt;IOException&lt;/a&gt; por fallo de comunicación con el servidor de base de datos.&lt;/p&gt;
+
+&lt;p&gt;Todas las excepciones en Java heredan de &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Throwable.html&#34;&gt;Throwable&lt;/a&gt; y entre los métodos que tiene esta clase está &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Throwable.html#getStackTrace--&#34;&gt;getStackTrace()&lt;/a&gt; que devuelve un &lt;em&gt;array&lt;/em&gt; de &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/StackTraceElement.html&#34;&gt;StackTraceElement&lt;/a&gt; ordenado del último método llamado al primero. Con los métodos de la clase &lt;em&gt;StackTraceElement&lt;/em&gt; obtenemos el nombre de la clase, el archivo, el nombre del método y la linea de código de esa llamada.&lt;/p&gt;
+
+&lt;p&gt;Con esta información podemos imprimir en la terminal un informe de excepción diferente del que genera el método &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Throwable.html#printStackTrace--&#34;&gt;printStackTrace()&lt;/a&gt;. En el ejemplo limitando el informe de la pila de llamadas a los tres últimos métodos del &lt;em&gt;stacktrace&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/5138b0297f96eb67687316bdbe0482fa.js?file=Throwable.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/5138b0297f96eb67687316bdbe0482fa.js?file=jshell.out&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Si en una aplicación manejamos varios hilos con &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Thread.html#getAllStackTraces--&#34;&gt;Thread.getAllStackTraces()&lt;/a&gt; obtenemos las pilas de llamadas de todos los hilos y con &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Thread.html#getStackTrace--&#34;&gt;Thread.getStackTrace()&lt;/a&gt; el del hilo en concreto que con &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Thread.html#currentThread--&#34;&gt;Thread.currentThread()&lt;/a&gt; sería el actual. Con el &lt;em&gt;array&lt;/em&gt; de &lt;em&gt;StackTraceElement&lt;/em&gt; obtenidos de los hilos podemos obtener un informe personalizado y la situación de cada uno, el método &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Thread.html#dumpStack--&#34;&gt;dumpStack()&lt;/a&gt; genera el &lt;em&gt;stacktrace&lt;/em&gt; en la salida de error.&lt;/p&gt;
+
+&lt;p&gt;Entre &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/novedades-de-java-9-mas-alla-de-la-modularidad/&#34;&gt;las novedades de Java 9&lt;/a&gt; está la clase &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/StackWalker.html&#34;&gt;StackWalker&lt;/a&gt; para procesar los elementos de la pila del &lt;em&gt;thread&lt;/em&gt; actual usando &lt;em&gt;streams&lt;/em&gt; y funciones &lt;em&gt;lambda&lt;/em&gt;.&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="blog-stack"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/10/las-excepciones-del-lenguaje-java/</id>
         <title>Las excepciones del lenguaje Java</title>        
-        <updated>2017-10-14T12:00:00+02:00</updated>
-        <published>2017-10-14T12:00:00+02:00</published>
+        <updated>2017-10-15T11:30:00+02:00</updated>
+        <published>2017-10-15T11:30:00+02:00</published>
         <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/10/las-excepciones-del-lenguaje-java/"/>
         <author><name>pico.dev</name></author>
         <content type="html">
@@ -48,6 +92,8 @@
 &lt;li&gt;En algunos casos es mejor lanzar una excepción que un valor &lt;em&gt;null&lt;/em&gt; que posiblemente produzca un &lt;em&gt;NullPointerException&lt;/em&gt; en otra parte distante del código de dónde se devolvió el valor &lt;em&gt;null&lt;/em&gt;.&lt;/li&gt;
 &lt;li&gt;Propagar excepciones no es un signo de poca sabiduría, puede haber motivos para ello sobre todo si no se le puede dar un tratamiento adecuado.&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;Cuando se produce una excepción la clase &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Throwable.html&#34;&gt;Throwable&lt;/a&gt; posee métodos para emitir en la salida un informe de la pila de llamadas, también se puede personalizar la salida. Esta información es esencial y muy útil para conocer la causa de un error ya que indica entre otras cosas cada uno de los métodos, línea en el código fuente y clases donde se ha producido la excepción.&lt;/p&gt;
 
 
 
@@ -1324,68 +1370,6 @@ X{n,m}  X{n,m}?    X{n,m}+     X, al menos n veces pero no mas de m
 &lt;/ul&gt;
 
 &lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2017/08/cache-simple-de-datos-y-con-ehcache-en-java/</id>
-        <title>Cache simple de datos y con Ehcache en Java</title>        
-        <updated>2017-08-25T11:00:00+02:00</updated>
-        <published>2017-08-25T11:00:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/08/cache-simple-de-datos-y-con-ehcache-en-java/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;En ocasiones es necesario usar una cache que contenga un número de elementos hasta un límite y que cuando se vayan añadiendo más se vayan borrando otros según algún criterio. En Java si no queremos añadir una nueva dependencia al proyecto con una librería especializada como &lt;a href=&#34;http://www.ehcache.org/&#34;&gt;Ehcache&lt;/a&gt; la clase &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/LinkedHashMap.html&#34;&gt;LinkedHashMap&lt;/a&gt; sirve para aquellos casos de uso simples sin necesidad de dependencias adicionales.&lt;/p&gt;
-
-&lt;p&gt;Si el coste de obtener algunos datos es costoso ya sean porque hay que obtenerlos de una base de datos, mediante una operación de disco o red o hay que hacer algún cálculo sobre ellos en estos casos guardar los datos en una cache supondrá un aumento notable de rendimiento de mayor o menor medida según el coste de la operación que evita la cache. Usar una cache es viable si es posible usar datos no completamente actualizados y dedicar algo de espacio en memoria para la cache. Si en la mayor parte de las búsquedas que se hacen en la cache el elemento buscado está ya presente se considera un acierto o &lt;em&gt;hit&lt;/em&gt; y si no está presente un fallo o &lt;em&gt;miss&lt;/em&gt;, cuando mayor sea el número de aciertos en la cache mayor será el aumento rendimiento percibido.&lt;/p&gt;
-
-&lt;p&gt;Para usar la clase &lt;em&gt;LinkedHashMap&lt;/em&gt; como estructura de datos para una cache simple basta que creemos una nueva clase que extienda de esta con una implementación personalizada para el método &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/LinkedHashMap.html#removeEldestEntry-java.util.Map.Entry-&#34;&gt;removeEldestEntry&lt;/a&gt; que devuelva &lt;em&gt;true&lt;/em&gt; para eliminar entrada más antigua, un caso sería cuando en el mapa se alcance el límite de elementos a almacenar como máximo.&lt;/p&gt;
-
-&lt;p&gt;En el ejemplo se crea una cache que tiene como máximo 5 elementos y se insertan en ella 15, cuando se intenta insertar en elemento más de la capacidad máxima el elemento más viejo se elimina de modo que la cache siempre tiene como máximo 5 elementos. Si la cache va a ser accedida tanto para operaciones de lectura como de escritura desde múltiples &lt;em&gt;threads&lt;/em&gt; hay que prevenir posibles problemas de concurrencia sincronizando su acceso con el método &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#synchronizedMap-java.util.Map-&#34;&gt;Collections.synchronizedMap&lt;/a&gt;.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/3770da191943f7dac30e6a37416cec0f.js?file=Main-1.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/3770da191943f7dac30e6a37416cec0f.js?file=SimpleCache.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Si son necesarias funcionalidades más avanzadas como que los elementos expiren pasado un tiempo y para mayores cantidades de datos guardar parte de la cache en disco con un límite de espacio ocupado una de las opciones más conocidas es Ehcache.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/3770da191943f7dac30e6a37416cec0f.js?file=Main-2.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Cachear datos se puede hacer en varios puntos de una aplicación, si se trata de una aplicación web &lt;a href=&#34;https://varnish-cache.org/&#34;&gt;Varnish&lt;/a&gt; cachea el HTML, CSS y JavaScript además de los códigos de estado incluso &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/07/configurar-nginx-para-cachear-respuestas-del-servidor-de-aplicaciones/&#34;&gt;nginx incorpora la funcionalidad de cache&lt;/a&gt;, la propia aplicación puede cachear ciertos datos con alguna de las formas expuestas en este artículo y las propias bases de datos pueden cachear en memoria ciertos datos para evitar acceder al sistema de ficheros o disco. En definitiva una cache usada de forma efectiva ayuda a mitigar la penalización de operaciones costosas de acceso a red o a disco comparado con el acceso a memoria.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/255/java-cache.png&#34; title=&#34;Ejecución del ejemplo&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/255/java-cache-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  
-  &lt;figcaption&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;
-    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaCache&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
-&lt;/p&gt;
 
 
 
