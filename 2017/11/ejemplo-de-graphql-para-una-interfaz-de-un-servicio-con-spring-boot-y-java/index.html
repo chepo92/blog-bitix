@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="pico.dev">
   <meta name="keywords" content="java, programacion, tapestry, linux, gnu, gnu/linux, arch, arch linux, software, software libre, html, css, javascript">
-  <meta name="description" content="Es conveniente tener monitorizado el estado de una aplicación para conocer si el servicio que ofrece está funcionando o en caso de que no conocerlo cuanto antes para restaurarlo además de conocer otra serie de métricas básicas como la cantidad de CPU que se está usando, la cantidad de memoria usada y libre, número de threads instanciados, espacio ocupado y libre en disco, actividad de entrada y salida ya sea de red o de disco, tiempo de inicio del sistema y de la aplicación. &hellip;">
+  <meta name="description" content="Con anterioridad las aplicaciones que lo necesitaban ofrecían una interfaz como un servicio mediante web services, sin embargo, esta tecnología era complicada por usar XML y no de fácil utilización en clientes JavaScript. La evolución que a día de hoy sigue siendo mayoritaria son las interfaces REST que emplean la semántica de los verbos del protocolo HTTP para realizar operaciones de búsqueda, creación, modificación y eliminación y normalmente empleando JSON como formato para intercambiar los datos. &hellip;">
   <base href="https://picodotdev.github.io/blog-bitix/">
 
-  <title>Información y métricas de la aplicación con Spring Boot Actuator</title>
+  <title>Ejemplo de GraphQL para una interfaz de un servicio con Spring Boot y Java</title>
 
   <link rel="author" type="text/plain" href="humans.txt" />
   <link rel="shortcut icon" href="assets/favicon.ico">
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/apple-touch-icon-144-precomposed.png">
-  <link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2015/12/informacion-y-metricas-de-la-aplicacion-con-spring-boot-actuator/">
+  <link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2017/11/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java/">
 
   
   <link href="index.xml" rel="alternate" type="application/rss+xml" title="Blog Bitix" />
@@ -135,24 +135,23 @@
                 <meta itemprop="keywords" content="blog-stack, java, planeta-codigo, programacion">
               
               
-              <h1 itemprop="name">Información y métricas de la aplicación con Spring Boot Actuator</h1>
+              <h1 itemprop="name">Ejemplo de GraphQL para una interfaz de un servicio con Spring Boot y Java</h1>
               <p class="information">
-                Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2015-12-04">04/12/2015</time>, actualizado el <time itemprop="dateModified" datetime="2015-12-11">11/12/2015</time>.
-                
+                Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2017-11-01">01/11/2017</time>.
                 
                   <br>
                    <a href="tags/blog-stack/">blog-stack</a> <a href="tags/java/">java</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/programacion/">programacion</a>
                 
                 <br>
-                <a href="/blog-bitix/2015/12/informacion-y-metricas-de-la-aplicacion-con-spring-boot-actuator/" itemprop="url">Enlace permanente</a>
+                <a href="/blog-bitix/2017/11/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java/" itemprop="url">Enlace permanente</a>
                 
-                  <a href="/blog-bitix/2015/12/informacion-y-metricas-de-la-aplicacion-con-spring-boot-actuator/#comments">Comentarios</a>
+                  <a href="/blog-bitix/2017/11/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java/#comments">Comentarios</a>
                 
                 
               </p>
 
               
-                <p class="summary" itemprop="about">Desarrollar una aplicación no solo implica implementar su funcionalidad, esa aplicación ha de mantenerse funcionando en su entorno de producción. Monitorizar y disponer de información sobre el estado ayuda a mantenerla funcionando sin ninguna caída de servicio u obtener métricas para mejorar su funcionamiento. Entre las numerosas funcionalidades ofrecidas por Spring para las aplicaciones Java está Spring Boot Actuator que precisamente nos proporcionará métricas e información interesantes de serie pudiendo implementar nueva según la necesidades.</p>
+                <p class="summary" itemprop="about">GraphQL es una alternativa a una interfaz REST con las ventajas de poder realizar varias consultas en una misma petición y devolviendo únicamente los datos que requiera el cliente. Es una especificación y hay una implementación para los lenguajes de programación más populares entre ellos Java. Este artículo es una introducción con un ejemplo completo que muestra cómo se hacen consultas y modificaciones en los datos.</p>
               
               
 
@@ -166,97 +165,88 @@
 </script>
 
               <div class="content" itemprop="articleBody">
-                <meta itemprop="wordCount" content="852">
+                <meta itemprop="wordCount" content="1149">
                 
 
 
                 <div class="logotypes" style="float: right;">
-    <img src="assets/images/logotipos/spring.svg" class="right" width="200" alt="Spring" title="Spring"/>
+    <img src="assets/images/logotipos/graphql.svg" class="right" width="200" alt="GraphQL" title="GraphQL"/>
 </div>
 
-<div class="logotypes" style="float: right; clear: right;">
-    <img src="assets/images/logotipos/java.svg" class="right" width="200" alt="Java" title="Java"/>
-</div>
+<p>Con anterioridad las aplicaciones que lo necesitaban ofrecían una interfaz como un servicio mediante <em>web services</em>, sin embargo, esta tecnología era complicada por usar XML y no de fácil utilización en clientes JavaScript. La evolución que a día de hoy sigue siendo mayoritaria son las interfaces <a href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> que emplean la semántica de los verbos del protocolo HTTP para realizar operaciones de búsqueda, creación, modificación y eliminación y normalmente empleando JSON como formato para intercambiar los datos. Sin embargo, REST no está exento de algunos problemas como la necesidad de realizar varias peticiones a cada uno de los recursos que ofrece si se necesitan datos de varios de ellos, otro es que los datos ofrecidos por los servicios REST está prefijados en tiempo de desarrollo no adaptándose a lo que necesita el cliente. En cierta medida estas dos cosas se pueden implementar en la interfaz REST con algunos parámetros pero requiere codificarlo explícitamente.</p>
 
-<p>Es conveniente tener monitorizado el estado de una aplicación para conocer si el servicio que ofrece está funcionando o en caso de que no conocerlo cuanto antes para restaurarlo además de conocer otra serie de métricas básicas como la cantidad de <abbr title="Central Processing Unit">CPU</abbr> que se está usando, la cantidad de memoria usada y libre, número de <em>threads</em> instanciados, espacio ocupado y libre en disco, actividad de entrada y salida ya sea de red o de disco, tiempo de inicio del sistema y de la aplicación. Otras métricas a nivel de aplicación que puede interesarnos conocer es número de usuarios conectados, número de sesiones, páginas vistas, sentencias SQL o transacciones ejecutadas, &hellip; que podemos obtener directamente desde la aplicación o combinándolo con otras herramientas como <a href="https://www.google.es/intl/es/analytics/">Google Analytics</a>.</p>
-
-<p>Monitorizar el estado de la aplicación nos permitirá conocer en poco tiempo si hay algo que va mal con la intención de restaurar el servicio con el menor tiempo de caída, también nos permitirá conociendo las métricas normales del servicio si hay algún parámetro fuera de los valores típicos como un consumo excesivo de CPU, memoria o disco, conociendo la normalidad podremos descubrir la anormalidad y después corregirla, cuanto antes sea descubierta más sencillo será determinar el cambio que la ha provocado.</p>
-
-<p>Continuando la serie de artículos sobre <a href="https://projects.spring.io/spring-boot/">Spring Boot</a> y <a href="https://projects.spring.io/spring-cloud/">Spring Cloud</a> comentaré la utilidad <a href="https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready">Spring Boot Actuator</a> que precisamente proporciona métricas y permite monitorizar una aplicación. En un aplicación que use Spring Boot simplemente incluyendo la dependencia <em>org.springframework.boot:spring-boot-starter-actuator</em> se añadirán a la aplicación varios <em>endpoints</em> para consultar información. Hay varios, estos son solo algunos de la <a href="http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready-endpoints">lista completa</a>:</p>
+<p>Más recientemente ha aparecido otra forma de implementar una interfaz de un servicio con <a href="http://graphql.org/">GraphQL</a> considerándose una <a href="https://www.howtographql.com/basics/1-graphql-is-the-better-rest/">alternativa mejor a REST</a> que solventa los dos problemas de las interfaces REST anteriores. REST ofrece en varios <em>endpoints</em> los recursos que pueden ser accedidos mediante los verbos HTTP (<em>GET</em>, <em>PUT</em>, <em>POST</em>, <em>DELETE</em>), en GraphQL por el contrario hay un único <em>endpoint</em>, los puntos de entrada al grafo y los tipos que se relacionan entre si que son consultados para obtener los datos con el lenguaje de consulta que ofrece GraphQL.</p>
 
 <ul>
-<li><em>beans</em>: permite conocer los <em>beans</em> de la aplicación.</li>
-<li><em>configprops</em>: muestra las propiedades de configuración.</li>
-<li><em>env</em>: muestra información de la clase <a href="https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/core/env/ConfigurableEnvironment.html">ConfigurableEnvironment</a> que incluye propiedades del sistema.</li>
-<li><em>health</em>: permite conocer si la aplicación está en funcionamiento.</li>
-<li><em>info</em>: muestra información arbitraria sobre la aplicacion.</li>
-<li><em>metrics</em>: permite obtener los valores de las métricas.</li>
-<li><em>trace</em>: información de las últimas peticiones a la aplicación.</li>
+<li><a href="https://www.howtographql.com/basics/0-introduction/">Basics Tutorial - Introduction</a></li>
+<li><a href="https://www.howtographql.com/basics/1-graphql-is-the-better-rest/">GraphQL is the better REST</a></li>
+<li><a href="https://www.howtographql.com/basics/2-core-concepts/">Core Concepts</a></li>
+<li><a href="https://www.howtographql.com/basics/3-big-picture/">Big Picture (Architecture)</a></li>
 </ul>
 
-<p>Salvo <em>health</em> e <em>info</em> los demás <em>endpoints</em> contienen información sensible y no son accesibles pudiendo requerir un usuario/contraseña según como se configure el permiso para su acceso. Con las propiedades de configuración booleanas <code>endpoints.[endpoint].sensitive</code> y <code>endpoints.[endpoint].enabled</code> se puede cambiar si el servicio se considera sensible y si está activado respectivamente. Para permitir el acceso sin restricciones a las métricas y habilitar el <em>endpoint</em> para detener la aplicación necesitaríamos establecer las siguientes propiedades de configuración:</p>
+<p>En GraphQL se define un <a href="http://graphql.org/learn/schema/">esquema</a> con la definición de los tipos en la API, se diferencia la obtención de los datos que es realizada por las <a href="http://graphql.org/learn/queries/"><em>queries</em></a> y de las modificaciones que es realizada por los <a href="http://graphql.org/learn/queries/#mutations"><em>mutators</em></a>. Otras tareas que pueden ser necesarias en una API son <a href="https://www.howtographql.com/graphql-java/5-authentication/">autenticación</a> que es posible capturando los datos del contexto provenientes en los datos o como cabeceras de la petición posiblemente en forma de <em>token</em> de <a href="https://oauth.net/">OAuth</a> y la autorización en la lógica del servicio en base al sujeto autenticado. Se puede <a href="http://graphql.org/learn/schema/#scalar-types">usar datos propios con <em>scalar</em></a> para los cuales se ha de proporcionar una clase que realice la transformación implementando una clase GraphQLScalarType. Posee <a href="http://graphql.org/learn/introspection/">funcionalidades de introspección</a> y también <a href="https://www.howtographql.com/graphql-java/9-filtering/">filtrado</a>, <a href="https://www.howtographql.com/graphql-java/10-pagination/">paginación</a>, <a href="https://www.howtographql.com/graphql-java/7-error-handling/">gestión de errores</a> y <a href="http://graphql.org/learn/caching/">cacheo</a> aunque esto último es menos efectivo en GraphQL al depender de los datos a devolver que solicite el cliente.</p>
 
-<script src="//gist.github.com/picodotdev/69b393c6a00fdd4f3ca3.js?file=application.yml"></script>
+<p>Para usar GraphQL hay que definir un <em>schema</em> que incluye los tipos, sus propiedades y tipos. También se pueden usar <a href="http://graphql.org/learn/caching/">fragmentos</a> para reutilizar partes de la definición de los tipos. Cada <em>type</em> representa una entidad que definen las propiedades que posee ya sean datos escalares o referencias a otras entidades formando de esta manera grafos de objetos, los tipos de las variables que poseen una exclamación al final quiere decir que son opcionales, por defecto todos los datos son distinto de nulo. Las listas se definen con corchetes y el tipo entre ellos.</p>
 
-<p>El <em>endpoint</em> <em>info</em> mostrará todas las propiedades con el patrón <code>info.*</code> y con el <em>plugin</em> de <a href="https://gradle.org/">Gradle</a> <em>com.gorylenko.gradle-git-properties</em> también podremos conocer el <em>commit</em> y rama del código fuente del archivo <em>.jar</em> en ejecución. Se pueden implementar nuevos indicadores de salud escribiendo un componente de Spring que implemente la interfaz <a href="http://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/actuate/health/HealthIndicator.html">HealthIndicator</a>. Con la propiedad de configuración <code>management.context-path</code> se puede cambiar el <em>path</em> usado para todos los <em>endpoint</em> de forma que no colisione con los propios de la aplicación. También se puede cambiar el puerto y dirección <abbr title="Internet Protocol">IP</abbr> de la aplicación en el que se ofrecen los <em>endpoints</em> con las propiedad de configuración <code>management.port</code> y <code>management.address</code> y protegerlos con un cortafuegos. Dependiendo de la combinación de seguridad requerida y consideración de sensibilidad se muestra más información o solo información de estado.</p>
+<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=library.graphqls"></script>
 
-<p>Las métricas ofrecidas en el <em>endpoint</em> <em>metrics</em> por Spring Boot Actuator muestran información del sistema (memoria total, procesadores, tipo de inicio de aplicación y sistema, carga media, memoria usada, <em>threads</em>, clases cargadas y información del recolector de basura de Java), información de los <em>datasource</em> (número de conexiones establecidas y uso actual), métricas de las caches, usando <a href="https://tomcat.apache.org/">Tomcat</a> de las sesiones (actuales y máximas). Haciendo uso de los servicios de Spring <a href="http://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/actuate/metrics/CounterService.html">CounterService</a> y <a href="http://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/actuate/metrics/GaugeService.html">GaugeService</a> se pueden establecer métricas relativas y absolutas en cualquier punto de la aplicación con la lógica que deseemos.</p>
+<p>Una definido el esquema hay que desarrollar los <em>resolvers</em> que son encargados de obtener los datos seguramente de una base de datos externa ya sea una base de datos SQL o NoSQL en este caso utilizando una clase que implementa el patrón repositorio y que abstrae del sistema de persistencia donde se almacenan los datos.</p>
 
-<p>En la aplicación Spring Boot incluyendo la dependencia de Spring Boot Actuator en el archivo <em>build.gradle</em> del proyecto podemos acceder a los <em>endpoints</em> comentados en las <abbr title="Uniform Resource Locator">URL</abbr> según el puerto y contexto de la interfaz de administración.</p>
+<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=Query.java"></script>
+<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=LibraryRepository.java"></script>
+<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=Book.java"></script>
+<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=Author.java"></script>
 
-<script src="//gist.github.com/picodotdev/69b393c6a00fdd4f3ca3.js?file=build.gradle"></script>
+<p>Los <em>mutators</em> son los encargados de procesar las peticiones de modificación.</p>
 
-<div class="media" style="text-align: center;">
-    <figure>
-  
-  <a href="assets/images/posts/2015/113/spring-boot-actuator-health.png" title="Spring Boot Actuator endpoint Health" data-gallery><img src="assets/images/posts/2015/113/spring-boot-actuator-health-thumb.png"/></a>
-  
-  
-  
-  <figcaption>Spring Boot Actuator endpoint Health</figcaption>
-</figure>
+<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=Mutation.java"></script>
 
-    <figure>
-  
-  <a href="assets/images/posts/2015/113/spring-boot-actuator-env.png" title="Spring Boot Actuator endpoint Env" data-gallery><img src="assets/images/posts/2015/113/spring-boot-actuator-env-thumb.png"/></a>
-  
-  
-  
-  <figcaption>Spring Boot Actuator endpoint Env</figcaption>
-</figure>
+<p>Usando una aplicación de <a href="https://projects.spring.io/spring-boot/">Spring Boot</a> para ofrecer el servicio hay que realizar la contribución adecuada al contenedor de dependencias, en Java GraphQL se define como un <a href="https://docs.oracle.com/javaee/7/api/javax/servlet/http/HttpServlet.html"><em>servlet</em></a> al cual hay que proporcionarle la configuración de los <em>resolvers</em>, <em>mutators</em>, procesador de contexto que en este caso se utiliza para la autenticación y definición del esquema entre otras posibles cosas.</p>
 
-    <figure>
-  
-  <a href="assets/images/posts/2015/113/spring-boot-actuator-metrics.png" title="Spring Boot Actuator endpoint Metrics" data-gallery><img src="assets/images/posts/2015/113/spring-boot-actuator-metrics-thumb.png"/></a>
-  
-  
-  
-  <figcaption>Spring Boot Actuator endpoint Metrics</figcaption>
-</figure>
+<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=Main.java"></script>
 
-    </figure>
-</div>
+<p>El lenguaje de consulta GraphQL permite consultar el grafo de objetos y recuperar los datos deseados. En el siguiente ejemplo se obtienen los libros, los autores y los libros con los datos de sus autores de una clase que implementa el patrón <em>repository</em>. En el ejemplo los datos del repositorio están definidos en la propia clase de forma estática pero como su función es abstraer de donde se obtienen los datos el cambio sería sencillo para que los obtuviese de una base de datos SQL o NoSQL ya que los cambios estarían encapsulados principalmente en esa clase. Los datos son devueltos en formato JSON.</p>
 
-<p>Spring Boot Actuator es otro de los varios módulos disponibles en Spring Boot. Para conocer más en detalle cuales son sus posibilidades el libro <a rel="nofollow" href="http://www.amazon.es/gp/product/1617292540/ref=as_li_ss_tl?ie=UTF8&camp=3626&creative=24822&creativeASIN=1617292540&linkCode=as2&tag=blobit-21">Spring Boot in Action</a><img src="https://ir-es.amazon-adsystem.com/e/ir?t=blobit-21&l=as2&o=30&a=1617292540" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /> lo explica bastante bien.</p>
+<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=curl-1.sh"></script>
 
-<div class="media-amazon" style="text-align: center;">
-    <iframe src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=blobit-21&o=30&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=1617292540&internal=1" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-</div>
+<p>Una de las ventajas de GraphQL sobre REST es que es posible realizar una única petición lo que en REST podrían ser varias. Por ejemplo, la siguiente consulta obtiene en una única consulta todos los libros, todos los autores y el autor con identificativo 1 de la biblioteca, esto mejora el rendimiento ya que en REST se hubiesen requerido varias peticiones una para obtener libros, otra para los autores y otra para el autor 1. La otra ventaja sobre REST es que se devuelven únicamente los datos que el cliente solicita y no una lista prefijada por el desarrollador de la interfaz.</p>
 
-<p>De cualquier modo conviene también tener automatizada la monitorización de las métricas. Con estos <em>endpoints</em> y una herramienta como <a href="http://prometheus.io">Prometheus</a> podemos visualizar gráficas generadas con los datos a lo largo del tiempo, con los datos visualizados de forma gráfica podremos ver rápidamente picos, cambios bruscos y tendencias en alguno de ellos o compararlos con tiempos pasados. Esta misma herramienta nos puede servir para enviar alertas y notificaciones o hacer consultas sobre los datos recolectados.</p>
+<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=curl-2.sh"></script>
 
-<p>Con Uptime Robot y el <em>endpoint</em> <em>health</em> podemos <a href="https://picodotdev.github.io/blog-bitix/2015/12/monitorizar-estado-de-sitios-web-con-uptime-robot/">monitorizar la aplicación y recibir notificaciones</a> si en algún momento la aplicación deja de responder.</p>
+<p>Las consultas puede hacerse mediante una petición <em>GET</em> o <em>POST</em> de HTTP.</p>
+
+<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=curl-3.sh"></script>
+
+<p>Las peticiones de modificación se envían mediante <em>POST</em>. Este es el caso para añadir un libro a la biblioteca y los casos de que el autor del libro no sea válido o que el usuario que añade el libro no tenga permisos. En el ejemplo los errores no son descriptivos de lo que realmente ha sucedido, habría que hacer el tratamiento de errores adecuado para que los mensajes fuesen más descriptivos.</p>
+
+<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=curl-4.sh"></script>
+<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=PermissionException.java"></script>
+<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=ValidationException.java"></script>
+
+<p>La forma explicada en las guías de GraphQL para Java es que el <em>mutator</em> reciba los datos y este delegue la funcionalidad en una clase que implemente el patrón <em>repository</em> que abstrae del sistema de almacenamiento (base de datos SQL, NoSQL o cualquier otro), además, este patrón <em>repository</em> o clase de lógica de negocio se recomienda que implemente la funcionalidad necesaria para aplicar la autorización. En el ejemplo aunque de forma sencilla solo en usuario <em>admin</em> tiene permitido añadir libros, en un proyecto es posible realizar la autenticación usando <a href="http://www.keycloak.org/">Keycloak</a> como sistema de OAuth, usar el <em>token</em> de OAuth para implementar la autorización y un <em>framework</em> de seguridad como <a href="http://shiro.apache.org/">Apache Shiro</a> para aplicar los permisos a las funcionalidades.</p>
+
+<p>Los artículos <a href="https://picodotdev.github.io/blog-bitix/2016/09/autenticacion-con-oauth-y-keycloak-en-un-servicio-rest-con-jax-rs-y-spring-boot/">Autenticación con OAuth y Keycloak en un servicio REST con JAX-RS y Spring Boot</a> y <a href="https://picodotdev.github.io/blog-bitix/2016/10/integrar-autenticacion-oauth-con-keycloak-shiro-apache-tapestry-y-spring-boot/">Integrar autenticación OAuth con Keycloak, Shiro, Apache Tapestry y Spring Boot</a> pueden servir como base para añadir autenticación OAuth a un servicio GraphQL con Keycloak.</p>
+
+<p>Finalmente, el archivo de construcción de <a href="https://gradle.org/">Gradle</a> del ejemplo con las dependencias necesarias.</p>
+
+<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=build.gradle"></script>
 
 <p>
-    El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/SpringBoot">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew run</code>.
+    El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/GraphQL">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew run</code>.
 </p>
 
 <div class="reference">
     Referencia:<br>
     <ul>
-<li><a href="https://picodotdev.github.io/blog-bitix/2015/10/aplicacion-java-autocontenida-con-spring-boot/">Aplicación Java autocontenida con Spring Boot</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2015/11/configuracion-de-una-aplicacion-en-diferentes-entornos-con-spring-cloud-config/">Configuración de una aplicación en diferentes entornos con Spring Cloud Config</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2015/12/monitorizar-estado-de-sitios-web-con-uptime-robot/">Monitorizar estado de sitios web con Uptime Robot</a></li>
+<li><a href="http://graphql.org/">GraphQL</a></li>
+<li><a href="http://graphql-java.readthedocs.io/en/v5/">Welcome to graphql-java</a></li>
+<li><a href="https://github.com/graphql-java/graphql-java">GraphQL Java implementation</a></li>
+<li><a href="https://github.com/graphql-java/graphql-java-tools">A schema-first tool for graphql-java inspired by graphql-tools for JS</a></li>
+<li><a href="http://www.graph.cool">https://www.graph.cool/</a></li>
+<li><a href="https://www.genbetadev.com/desarrollo-aplicaciones-moviles/por-que-deberiamos-abandonar-rest-y-empezar-a-usar-graphql-en-nuestras-apis">¿Por qué deberíamos abandonar REST y empezar a usar GraphQL en nuestras APIs?</a></li>
+<li><a href="https://www.paradigmadigital.com/dev/graphql-todos-uno-uno-todos/">GraphQL: ¡todos para uno y uno para todos!</a></li>
+<li><a href="https://www.adictosaltrabajo.com/tutoriales/introduccion-a-graphql/">Introducción a GraphQL</a></li>
+<li><a href="https://www.howtographql.com/graphql-java/2-queries/">https://www.howtographql.com/graphql-java/2-queries/</a></li>
 </ul>
 
 </div>
@@ -299,8 +289,8 @@
 
   <script type="text/javascript" async>
     var disqus_shortname = 'blog-bitix';
-    var disqus_identifier = 'https:\/\/picodotdev.github.io\/blog-bitix\/2015\/12\/informacion-y-metricas-de-la-aplicacion-con-spring-boot-actuator\/';
-    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2015\/12\/informacion-y-metricas-de-la-aplicacion-con-spring-boot-actuator\/';
+    var disqus_identifier = 'https:\/\/picodotdev.github.io\/blog-bitix\/2017\/11\/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java\/';
+    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2017\/11\/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java\/';
     var disqus_script = 'embed.js';
     (function () {
       var dsq = document.createElement('script'); 
