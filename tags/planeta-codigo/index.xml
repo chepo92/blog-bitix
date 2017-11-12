@@ -3,12 +3,81 @@
     <id>https://picodotdev.github.io/blog-bitix/tags/planeta-codigo/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2017-11-04T11:00:00+01:00</updated>
+    <updated>2017-11-12T11:30:00+01:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
     <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/</id>
+        <title>Devolver mensajes de error descriptivos en GraphQL</title>        
+        <updated>2017-11-12T11:30:00+01:00</updated>
+        <published>2017-11-12T11:30:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/graphql.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Por defecto &lt;a href=&#34;http://graphql.org/&#34;&gt;GraphQL&lt;/a&gt; devuelve errores con mensajes descriptivos para los errores del cliente como son los errores de sintaxis en la sentencia de consulta o mutación, en el caso de que el campo solicitado no exista o no se ha indicado ninguno. En el caso de Java si se lanza una excepción en la clase repositorio que guarda los datos o en la lógica de negocio y no se captura GraphQL indicará que se ha producido un error interno en el servidor. Esto no es muy descriptivo y es mejor indicar errores más útiles para el usuario de la API como podría ser que no se tienen permisos para realizar la modificación o el error que se ha producido al validar los datos y por los que la operación no se ha completado.&lt;/p&gt;
+
+&lt;p&gt;Los errores en GraphQL usando el lenguaje Java se gestionan implementando en una clase la interfaz &lt;a href=&#34;https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/GraphQLError.java&#34;&gt;GrapQLError&lt;/a&gt;, este podría ser en caso de una excepción que además de heredar de &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Exception.html&#34;&gt;Exception&lt;/a&gt; implemente la interfaz &lt;em&gt;GraphQLError&lt;/em&gt;. Sin embargo, GraphQL cuando una clase hereda de &lt;em&gt;Exception&lt;/em&gt; lo considera un error interno del servidor y para no dar información interna del servicio a los clientes como mensaje indica únicamente &lt;em&gt;Internal Server Error(s) while executing query&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=curl-default-errors.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Para que GraphQL muestre el error personalizado deseado lanzando excepciones hay que adaptar esa excepción y que implementa &lt;em&gt;GraphQLError&lt;/em&gt; con una clase que únicamente implemente la interfaz &lt;em&gt;GraphQLError&lt;/em&gt; pero no herede de &lt;em&gt;Exception&lt;/em&gt;. Esta sería una clase adaptador necesaria.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=GraphQLErrorAdapter.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Para adaptar las clases excepción hay que cambiar el comportamiento de la clase &lt;em&gt;GraphQLErrorHandler&lt;/em&gt; de modo que transforme las excepciones a la clase &lt;em&gt;GraphQLError&lt;/em&gt; propia. Esta clase se indica al construir el objeto &lt;em&gt;SimpleGraphQLServlet&lt;/em&gt; y &lt;em&gt;ServletRegistrationBean&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=Main.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En el caso de este ejemplo solo un usuario de nombre &lt;em&gt;admin&lt;/em&gt; tiene permitido hacer modificaciones en la colección de libros guardados en la clase repositorio &lt;em&gt;LibraryRepository&lt;/em&gt;. Por otro lado, cuando se añade un libro se hace una validación de los datos comprobando que el autor del libro a añadir exista en la librería. Estos son las peticiones válidas.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=curl.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Y estas las inválidas que devuelve los mensajes propios más descriptivos de los errores o validaciones realizadas en el servidor de más utilidad para un usuario del servicio.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=curl-custom-errors.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;La interfaz &lt;em&gt;GraphQLError&lt;/em&gt; posee el método &lt;em&gt;getMessage()&lt;/em&gt; para devolver la descripción del mensaje pero con el método &lt;em&gt;getExtensions()&lt;/em&gt; es posible incluir cualquier dato en forma de clave-valor que deseemos como un código de error o cualquier otra información deseada. El caso de la excepción &lt;em&gt;PermissionException&lt;/em&gt; devuelve dos datos adicionales &lt;em&gt;foo&lt;/em&gt; y &lt;em&gt;fizz&lt;/em&gt;, en un caso real se implementaría una lógica más útil para devolver estos datos adicionales posiblemente proporcionándolos en el constructor u obteniéndolos con la referencia a algún objeto.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=PermissionException.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/GraphQL&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java/&#34;&gt;Ejemplo de GraphQL para una interfaz de un servicio con Spring Boot y Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://graphql-java.readthedocs.io/en/v5/execution.html&#34;&gt;Execution&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/GraphQLError.java&#34;&gt;GraphQLError.java&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/11/ordenar-alfabeticamente-cadenas-con-la-clase-collator-en-java/</id>
@@ -124,7 +193,7 @@
 
 &lt;script src=&#34;//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=curl-3.sh&#34;&gt;&lt;/script&gt;
 
-&lt;p&gt;Las peticiones de modificación se envían mediante &lt;em&gt;POST&lt;/em&gt;. Este es el caso para añadir un libro a la biblioteca y los casos de que el autor del libro no sea válido o que el usuario que añade el libro no tenga permisos. En el ejemplo los errores no son descriptivos de lo que realmente ha sucedido, habría que hacer el tratamiento de errores adecuado para que los mensajes fuesen más descriptivos.&lt;/p&gt;
+&lt;p&gt;Las peticiones de modificación se envían mediante &lt;em&gt;POST&lt;/em&gt;. Este es el caso para añadir un libro a la biblioteca y los casos de que el autor del libro no sea válido o que el usuario que añade el libro no tenga permisos. En el ejemplo los errores no son descriptivos de lo que realmente ha sucedido, habría que hacer el &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/&#34;&gt;tratamiento de errores adecuado para que los mensajes fuesen más descriptivos&lt;/a&gt;.&lt;/p&gt;
 
 &lt;script src=&#34;//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=curl-4.sh&#34;&gt;&lt;/script&gt;
 &lt;script src=&#34;//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=PermissionException.java&#34;&gt;&lt;/script&gt;
@@ -1397,75 +1466,6 @@
     Referencia:&lt;br&gt;
     &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/&#34;&gt;Documentacion Javadoc del JDK&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo&#34;"/>
-            
-                <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2017/09/crear-anotaciones-de-javadoc-personalizadas-con-taglets/</id>
-        <title>Crear anotaciones de Javadoc personalizadas con taglets</title>        
-        <updated>2017-09-16T10:00:00+02:00</updated>
-        <published>2017-09-16T10:00:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/09/crear-anotaciones-de-javadoc-personalizadas-con-taglets/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/la-herramienta-de-documentacion-javadoc-de-java/&#34;&gt;La herramienta de documentación es Javadoc de Java&lt;/a&gt; permite a partir del código fuente de un programa o librería generar un conjunto de documentos en formato HTML enlazados entre si consultables con un navegador web y accesibles desde internet si son accesibles con un servidor web. La documentación se genera a partir de las clases y métodos del código fuente y también a partir de los comentarios de las clases y métodos.&lt;/p&gt;
-
-&lt;p&gt;En los comentarios se pueden incluir anotaciones que enriquecen la documentación, por ejemplo, para indicar el autor o en qué versión se incluyó una clase o método, incluir enlaces, &amp;hellip; en el propio JDK ya se incluye un amplio &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javadoc.html#javadoctags&#34;&gt;conjunto completo de anotaciones&lt;/a&gt;. Pero además de usar las anotaciones ya incorporados por defecto en la herramienta también es posible añadir nuevos propios, escribiendo un &lt;em&gt;taglet&lt;/em&gt;. Con la &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/technotes/guides/javadoc/taglet/overview.html&#34;&gt;API de los &lt;em&gt;taglets&lt;/em&gt;&lt;/a&gt; basta implementar una clase que implemente la interfaz &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/jdk/api/javadoc/taglet/com/sun/tools/doclets/Taglet.html&#34;&gt;Taglet&lt;/a&gt;. La &lt;a href=&#34;http://download.java.net/java/jdk9/docs/api/jdk/javadoc/doclet/Taglet.html&#34;&gt;interfaz Taglet de Java 9&lt;/a&gt; ha sido modificada ligeramente pero en esencia proporciona la misma información, en vez de un método para indicar si es posible el &lt;em&gt;taglet&lt;/em&gt; en una localización hay un único método que devuelve un &lt;em&gt;Set&lt;/em&gt; con todas las posibles localizaciones, en vez de necesitar un método &lt;em&gt;register&lt;/em&gt; hay un método &lt;a href=&#34;http://download.java.net/java/jdk9/docs/api/jdk/javadoc/doclet/Taglet.html#init-jdk.javadoc.doclet.DocletEnvironment-jdk.javadoc.doclet.Doclet-&#34;&gt;init&lt;/a&gt; y un único método para generar el contenido, &lt;a href=&#34;http://download.java.net/java/jdk9/docs/api/jdk/javadoc/doclet/Taglet.html#toString-java.util.List-javax.lang.model.element.Element-&#34;&gt;toString&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;La clase tiene varios métodos uno que indica el nombre único del &lt;em&gt;taglet&lt;/em&gt; que identificará la anotación en los comentarios de Javadoc, varios métodos para indicar en que localizaciones es usable y dos métodos que generan el contenido a incluir en el HTML resultante. Las clases &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/jdk/api/javadoc/doclet/com/sun/javadoc/Tag.html&#34;&gt;Tag&lt;/a&gt; que recibe el método &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/jdk/api/javadoc/taglet/com/sun/tools/doclets/Taglet.html#toString-com.sun.javadoc.Tag-&#34;&gt;Taglet.toString()&lt;/a&gt; o &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/jdk/api/javadoc/doclet/com/sun/javadoc/ParamTag.html&#34;&gt;ParamTag&lt;/a&gt; permite obtener diversa información utilizable para generar el contenido apropiado.&lt;/p&gt;
-
-&lt;p&gt;Los &lt;em&gt;taglets&lt;/em&gt; pueden ser de tipo bloque con su propia entidad o ser embebidos en linea en un comentario del &lt;em&gt;javadoc&lt;/em&gt;. En ejemplo de &lt;em&gt;taglet&lt;/em&gt; de bloque siguiente consiste en permitir incluir elementos que quedan por hacer en el código, una anotación &lt;em&gt;todo&lt;/em&gt;. Con esta anotación el desarrollador incluye un comentario descriptivo de cuales son las cosas pendientes para un futuro. El código del &lt;em&gt;taglet&lt;/em&gt; sería el siguiente.&lt;/p&gt;
-
-&lt;p&gt;&lt;script src=&#34;//gist.github.com/picodotdev/6a669ccc50047e8e9394d593f079ac9d.js?file=TodoTaglet.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/6a669ccc50047e8e9394d593f079ac9d.js?file=Main.java&#34;&gt;&lt;/script&gt;}&lt;/p&gt;
-
-&lt;p&gt;Una vez escrito el código fuente del &lt;em&gt;taglet&lt;/em&gt; hay que compilarlo e indicar su ubicación al generar la documentación con la herramienta &lt;em&gt;javadoc&lt;/em&gt;. Hay que indicar varias opciones (&lt;em&gt;tagletPath&lt;/em&gt; y &lt;em&gt;taglets&lt;/em&gt;) que también se usarían como parámetros empleando directamente la herramienta &lt;em&gt;javadoc&lt;/em&gt;, los comandos serían los siguientes usando &lt;a href=&#34;https://gradle.org/&#34;&gt;Gradle&lt;/a&gt;. También hay que incluir de forma explícita como dependencia la librería &lt;em&gt;tools.jar&lt;/em&gt; ubicado en el JDK.&lt;/p&gt;
-
-&lt;p&gt;&lt;script src=&#34;//gist.github.com/picodotdev/6a669ccc50047e8e9394d593f079ac9d.js?file=build.gradle&#34;&gt;&lt;/script&gt;}&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/261/javadoc-taglet.png&#34; title=&#34;Contenido del taglet todo en el javadoc&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/261/javadoc-taglet-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  
-  &lt;figcaption&gt;Contenido del taglet todo en el javadoc&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;/div&gt;
-
-&lt;p&gt;
-    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/Javadoc&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew javadoc&lt;/code&gt;.
-&lt;/p&gt;
-
-&lt;div class=&#34;reference&#34;&gt;
-    Referencia:&lt;br&gt;
-    &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://docs.oracle.com/javase/8/docs/technotes/guides/javadoc/index.html&#34;&gt;Javadoc Technology&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://docs.oracle.com/javase/8/docs/technotes/guides/javadoc/taglet/overview.html&#34;&gt;Taglet Overview&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;/div&gt;
