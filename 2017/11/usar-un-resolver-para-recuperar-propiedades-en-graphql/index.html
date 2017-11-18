@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="pico.dev">
   <meta name="keywords" content="java, programacion, tapestry, linux, gnu, gnu/linux, arch, arch linux, software, software libre, html, css, javascript">
-  <meta name="description" content="Por defecto GraphQL devuelve errores con mensajes descriptivos para los errores del cliente como son los errores de sintaxis en la sentencia de consulta o mutación, en el caso de que el campo solicitado no exista o no se ha indicado ninguno. En el caso de Java si se lanza una excepción en la clase repositorio que guarda los datos o en la lógica de negocio y no se captura GraphQL indicará que se ha producido un error interno en el servidor. &hellip;">
+  <meta name="description" content="Cuando en una consulta de GraphQL se indican las propiadades a devolver GraphQL usa para cada una de ellas lo que en la implementación de Java se llama un resolver y en otras implementaciones data fetcher. En la mayoría de casos las propiedades serán propiedades de un objeto y en estos casos se usará un PropertyDataFetcher usando en Java la convención de los java beans o la propiedad de un mapa. &hellip;">
   <base href="https://picodotdev.github.io/blog-bitix/">
 
-  <title>Devolver mensajes de error descriptivos en GraphQL</title>
+  <title>Usar un resolver para recuperar propiedades en GraphQL</title>
 
   <link rel="author" type="text/plain" href="humans.txt" />
   <link rel="shortcut icon" href="assets/favicon.ico">
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/apple-touch-icon-144-precomposed.png">
-  <link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/">
+  <link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2017/11/usar-un-resolver-para-recuperar-propiedades-en-graphql/">
 
   
   <link href="index.xml" rel="alternate" type="application/rss+xml" title="Blog Bitix" />
@@ -135,17 +135,17 @@
                 <meta itemprop="keywords" content="blog-stack, java, planeta-codigo, programacion">
               
               
-              <h1 itemprop="name">Devolver mensajes de error descriptivos en GraphQL</h1>
+              <h1 itemprop="name">Usar un resolver para recuperar propiedades en GraphQL</h1>
               <p class="information">
-                Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2017-11-12">12/11/2017</time>.
+                Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2017-11-18">18/11/2017</time>.
                 
                   <br>
                    <a href="tags/blog-stack/">blog-stack</a> <a href="tags/java/">java</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/programacion/">programacion</a>
                 
                 <br>
-                <a href="/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/" itemprop="url">Enlace permanente</a>
+                <a href="/blog-bitix/2017/11/usar-un-resolver-para-recuperar-propiedades-en-graphql/" itemprop="url">Enlace permanente</a>
                 
-                  <a href="/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/#comments">Comentarios</a>
+                  <a href="/blog-bitix/2017/11/usar-un-resolver-para-recuperar-propiedades-en-graphql/#comments">Comentarios</a>
                 
                 
               </p>
@@ -163,7 +163,7 @@
 </script>
 
               <div class="content" itemprop="articleBody">
-                <meta itemprop="wordCount" content="492">
+                <meta itemprop="wordCount" content="377">
                 
 
 
@@ -171,31 +171,22 @@
     <img src="assets/images/logotipos/graphql.svg" class="right" width="200" alt="GraphQL" title="GraphQL"/>
 </div>
 
-<p>Por defecto <a href="http://graphql.org/">GraphQL</a> devuelve errores con mensajes descriptivos para los errores del cliente como son los errores de sintaxis en la sentencia de consulta o mutación, en el caso de que el campo solicitado no exista o no se ha indicado ninguno. En el caso de Java si se lanza una excepción en la clase repositorio que guarda los datos o en la lógica de negocio y no se captura GraphQL indicará que se ha producido un error interno en el servidor. Esto no es muy descriptivo y es mejor indicar errores más útiles para el usuario de la API como podría ser que no se tienen permisos para realizar la modificación o el error que se ha producido al validar los datos y por los que la operación no se ha completado.</p>
+<p>Cuando en una consulta de <a href="http://graphql.org/">GraphQL</a> se indican las propiadades a devolver GraphQL usa para cada una de ellas lo que en la implementación de Java se llama un <em>resolver</em> y en otras implementaciones <em>data fetcher</em>. En la mayoría de casos las propiedades serán propiedades de un objeto y en estos casos se usará un <em>PropertyDataFetcher</em> usando en Java la convención de los <em>java beans</em> o la propiedad de un mapa. En el caso de que cierto dato no esté almacenado en el objeto sino en un repositorio externo es necesario usar un <em>resolver</em> para devolver esa propiedad en la consulta.</p>
 
-<p>Los errores en GraphQL usando el lenguaje Java se gestionan implementando en una clase la interfaz <a href="https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/GraphQLError.java">GrapQLError</a>, este podría ser en caso de una excepción que además de heredar de <a href="https://docs.oracle.com/javase/9/docs/api/java/lang/Exception.html">Exception</a> implemente la interfaz <em>GraphQLError</em>. Sin embargo, GraphQL cuando una clase hereda de <em>Exception</em> lo considera un error interno del servidor y para no dar información interna del servicio a los clientes como mensaje indica únicamente <em>Internal Server Error(s) while executing query</em>.</p>
+<p>Por ejemplo, supongamos que en el ejemplo de la librería en el caso de los libros le añadimos un nuevo dato para el ISBN que está almacenado en un sistema externo, en otro repositorio. La nueva definición del esquema quedaría de la siguiente forma, basta con añadir la nueva propiedad al tipo <em>Book</em> y su tipo que será <em>String</em>.</p>
 
-<script src="//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=curl-default-errors.sh"></script>
+<script src="//gist.github.com/picodotdev/34760803d8daad87514b967a6de0cf0c.js?file=library.graphqls"></script>
 
-<p>Para que GraphQL muestre el error personalizado deseado lanzando excepciones hay que adaptar esa excepción y que implementa <em>GraphQLError</em> con una clase que únicamente implemente la interfaz <em>GraphQLError</em> pero no herede de <em>Exception</em>. Esta sería una clase adaptador necesaria.</p>
+<p>Para que una consulta que recupere el ISBN funcione correctamente es necesario implementar un <em>resolver</em> creando una clase que implemente la interfaz <em>GraphQLResolver&lt;Book&gt;</em> en la que se incluya un método <em>get</em> por cada propiedad del tipo <em>Book</em> que esté alamcenada en otro repositorio. Estos métodos <em>get</em> reciben como parámetro el objeto <em>Book</em> a partir del cual como contexto es posible tener los datos del libro del que hay que recuperar el ISBN, posiblemente utilizando su identificativo. En el ejemplo simplemente se devuelve un dato aleatorio pero perfectamente en caso necesario se podría usar un repositorio que lo recupere del sistema de información que lo almacena.</p>
 
-<script src="//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=GraphQLErrorAdapter.java"></script>
+<script src="//gist.github.com/picodotdev/34760803d8daad87514b967a6de0cf0c.js?file=curl.sh"></script>
+<script src="//gist.github.com/picodotdev/34760803d8daad87514b967a6de0cf0c.js?file=BookResolver.java"></script>
 
-<p>Para adaptar las clases excepción hay que cambiar el comportamiento de la clase <em>GraphQLErrorHandler</em> de modo que transforme las excepciones a la clase <em>GraphQLError</em> propia. Esta clase se indica al construir el objeto <em>SimpleGraphQLServlet</em> y <em>ServletRegistrationBean</em>.</p>
+<p>A la hora de definir el servicio de GraphQL hay que proporcionar el <em>resolver</em> personalizado.</p>
 
-<script src="//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=Main.java"></script>
+<script src="//gist.github.com/picodotdev/34760803d8daad87514b967a6de0cf0c.js?file=Main.java"></script>
 
-<p>En el caso de este ejemplo solo un usuario de nombre <em>admin</em> tiene permitido hacer modificaciones en la colección de libros guardados en la clase repositorio <em>LibraryRepository</em>. Por otro lado, cuando se añade un libro se hace una validación de los datos comprobando que el autor del libro a añadir exista en la librería. Estos son las peticiones válidas.</p>
-
-<script src="//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=curl.sh"></script>
-
-<p>Y estas las inválidas que devuelve los mensajes propios más descriptivos de los errores o validaciones realizadas en el servidor de más utilidad para un usuario del servicio.</p>
-
-<script src="//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=curl-custom-errors.sh"></script>
-
-<p>La interfaz <em>GraphQLError</em> posee el método <em>getMessage()</em> para devolver la descripción del mensaje pero con el método <em>getExtensions()</em> es posible incluir cualquier dato en forma de clave-valor que deseemos como un código de error o cualquier otra información deseada. El caso de la excepción <em>PermissionException</em> devuelve dos datos adicionales <em>foo</em> y <em>fizz</em>, en un caso real se implementaría una lógica más útil para devolver estos datos adicionales posiblemente proporcionándolos en el constructor u obteniéndolos con la referencia a algún objeto.</p>
-
-<script src="//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=PermissionException.java"></script>
+<p>Los <em>resolvers</em> permiten almacenar la información en dos bases de datos distintas, una podría ser almacenar una información una base de datos relacional, otra información en una base de datos NoSQL, dos bases de datos relacionales distintas o inlcuso proporcionado por una API distinta. En cualquier caso para el usuario de la API y del servicio es transparente como esté almacenada la información.</p>
 
 <p>
     El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/GraphQL">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew run</code>.
@@ -204,9 +195,9 @@
 <div class="reference">
     Referencia:<br>
     <ul>
-<li><a href="https://picodotdev.github.io/blog-bitix/2017/11/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java/">Ejemplo de GraphQL para una interfaz de un servicio con Spring Boot y Java</a></li>
-<li><a href="https://graphql-java.readthedocs.io/en/v5/execution.html">Execution</a></li>
-<li><a href="https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/GraphQLError.java">GraphQLError.java</a></li>
+<li><a href="https://graphql-java.readthedocs.io/en/v5/schema.html">Creating a schema</a></li>
+<li><a href="https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/schema/DataFetchingEnvironment.java">DataFetchingEnvironment</a></li>
+<li><a href="https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/schema/DataFetcher.java">DataFetcher</a></li>
 </ul>
 
 </div>
@@ -275,8 +266,8 @@
 
   <script type="text/javascript" async>
     var disqus_shortname = 'blog-bitix';
-    var disqus_identifier = 'https:\/\/picodotdev.github.io\/blog-bitix\/2017\/11\/devolver-mensajes-de-error-descriptivos-en-graphql\/';
-    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2017\/11\/devolver-mensajes-de-error-descriptivos-en-graphql\/';
+    var disqus_identifier = 'https:\/\/picodotdev.github.io\/blog-bitix\/2017\/11\/usar-un-resolver-para-recuperar-propiedades-en-graphql\/';
+    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2017\/11\/usar-un-resolver-para-recuperar-propiedades-en-graphql\/';
     var disqus_script = 'embed.js';
     (function () {
       var dsq = document.createElement('script'); 
