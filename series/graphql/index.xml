@@ -3,12 +3,68 @@
     <id>https://picodotdev.github.io/blog-bitix/series/graphql/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2017-11-18T10:00:00+01:00</updated>
+    <updated>2017-11-25T10:00:00+01:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
     <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/11/consultas-con-parametros-para-filtrar-datos-en-graphql/</id>
+        <title>Consultas con parámetros para filtrar datos en GraphQL</title>        
+        <updated>2017-11-25T10:00:00+01:00</updated>
+        <published>2017-11-25T10:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/11/consultas-con-parametros-para-filtrar-datos-en-graphql/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/graphql.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;No será extraño que en una API para obtener datos esté la necesidad de realizar algún tipo de filtrado para recuperar únicamente la colección de datos deseados de todos los existentes en un repositorio. A las consultas de &lt;a href=&#34;http://graphql.org/&#34;&gt;GraphQL&lt;/a&gt; se les pueden pasar argumentos que son recibidos por los métodos que actúan como punto de entrada de las consultas. Con los argumentos es posible implementar cualquier funcionalidad que se necesite, entre ellas el filtrado. Los argumentos pueden ser datos escalares o más complejos que se definen con la palabra reservada &lt;em&gt;input&lt;/em&gt; en el esquema.&lt;/p&gt;
+
+&lt;p&gt;Usando el mismo ejemplo que he utilizado en artículos anteriores ahora en este caso implemento la funcionalidad de poder filtrar los libros de una biblioteca utilizando una expresión regular que el título del libro debe cumplir para obtenerse como resultado. El esquema del &lt;em&gt;enpoint&lt;/em&gt; de GraphQL queda de la siguiente forma para implementar el filtrado, usando el tipo definido con &lt;em&gt;input&lt;/em&gt; es posible pasar como argumentos datos complejos o agrupaciones de datos escalares.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/58fe2f31ef8b580d1f171baf615729b5.js?file=library.graphqls&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;La implementación del tipo &lt;em&gt;BookFilter&lt;/em&gt; en la implementación de Java de GraphQL es una &lt;em&gt;Java Bean&lt;/em&gt; con una propiedad por cada argumento y sus correspondientes métodos &lt;em&gt;set&lt;/em&gt; y &lt;em&gt;get&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/58fe2f31ef8b580d1f171baf615729b5.js?file=BookFilter.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;La clase &lt;em&gt;Query&lt;/em&gt; es el punto de entrada a las consultas raíz y posee un método con el mimo nombre que la consulta solicitada en GraphQL y que en este caso es &lt;em&gt;findBooks&lt;/em&gt; que recibe como argumento una instancia del objeto &lt;em&gt;BookFilter&lt;/em&gt; que a su vez se lo proporciona al servicio de repositorio independiente de GraphQL para que haga la búsqueda adecuada según corresponda en el sistema de persistencia empleado. En el caso que los datos se guarden en una base de datos relacional posiblemente el filtrado se realiza ejecutando una sentencia SQL. En el caso del ejemplo como los datos están en una colección de una estructura de datos Java el filtrado se realiza usando los &lt;em&gt;streams&lt;/em&gt;, expresiones regulares y código Java.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/58fe2f31ef8b580d1f171baf615729b5.js?file=Query.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/58fe2f31ef8b580d1f171baf615729b5.js?file=LibraryRepository.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Siguiendo la idea del ejemplo es posible realizar el filtrado de los datos con los argumentos que sean necesarios y la lógica adecuada según el repositorio donde estén almacenados los datos ya sea en un sistema con una base de datos relacional como &lt;a href=&#34;https://www.postgresql.org/&#34;&gt;PostgreSQL&lt;/a&gt; o NoSQL como &lt;a href=&#34;https://www.mongodb.com/&#34;&gt;MongoDB&lt;/a&gt;. Se podrían añadir más datos por ejemplo para filtrar por otros criterios como el número de páginas, autor o incluir otros parámetros para realizar otras funciones como especificar criterios de ordenación.&lt;/p&gt;
+
+&lt;p&gt;Esta petición busca los libros que su título comience por las letras &lt;em&gt;O&lt;/em&gt; o &lt;em&gt;R&lt;/em&gt; obteniendo dos coincidencias como resultado. En este caso entre los datos solo se devuelve el título del libro pero perfectamente podrían haber sido cualesquiera otros de entre los que posee el tipo &lt;em&gt;Book&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/58fe2f31ef8b580d1f171baf615729b5.js?file=curl.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Pero&amp;hellip; ¿que ocurre si aún con el filtrado o en una consulta el número de coincidencias son unos cuantos miles? Seguramente sean demasiadas coincidencias para devolver en una única petición y por ello es habitual realizar paginación. Eso será tema para otro de los siguientes artículos de esta serie sobre GraphQL.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/GraphQL&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/11/usar-un-resolver-para-recuperar-propiedades-en-graphql/</id>
