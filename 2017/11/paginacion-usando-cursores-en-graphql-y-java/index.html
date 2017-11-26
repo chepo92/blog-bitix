@@ -135,7 +135,8 @@
               
               <h1 itemprop="name">Paginación usando cursores en GraphQL y Java</h1>
               <p class="information">
-                Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2017-11-26">26/11/2017</time>.
+                Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2017-11-26">26/11/2017</time>, actualizado el <time itemprop="dateModified" datetime="2017-11-26">26/11/2017</time>.
+                
                 
                   <br>
                    <a href="tags/blog-stack/">blog-stack</a> <a href="tags/java/">java</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/programacion/">programacion</a>
@@ -161,7 +162,7 @@
 </script>
 
               <div class="content" itemprop="articleBody">
-                <meta itemprop="wordCount" content="1030">
+                <meta itemprop="wordCount" content="1051">
                 
 
 
@@ -173,11 +174,14 @@
 
 <p>Si esta situación es importante se suelen utilizar cursores que utilizan un parámetro para indicar el número de elementos a incluir en la página pero en vez de un <em>offset</em> utilizan el identificativo de un registro a partir del cual devolver registros de modo que aunque se inserten registros el primer elemento de la página no cambiará.</p>
 
-<p>En el caso de la <a href="http://graphql.org/learn/pagination/">paginación en GraphQL</a> se proponen varias formas de implementar la paginación, una de ellas los cursores. En la documentación se explica la teoría, para implementarla es necesario <a href="https://picodotdev.github.io/blog-bitix/2017/11/usar-un-resolver-para-recuperar-propiedades-en-GraphQL/">crear un <em>data fetcher</em> o <em>resolver</em></a> que reciba los parámetros de <em>limit</em> para indicar el número de elementos a devolver en la página y <em>after</em> para indicar a partir de que elemento devolver elementos. También es necesario modificar el esquema de la API para tener en cuenta la nueva estructura de datos.</p>
+<p>En el caso de la <a href="http://graphql.org/learn/pagination/">paginación en GraphQL</a> se proponen varias formas de implementar la paginación, una de ellas los cursores. En la documentación se explica la teoría, para implementarla es necesario <a href="https://picodotdev.github.io/blog-bitix/2017/11/usar-un-resolver-para-recuperar-propiedades-en-GraphQL/">crear un <em>data fetcher</em> o <em>resolver</em></a> que reciba los parámetros de <em>limit</em> para indicar el número de elementos a devolver en la página y <em>after</em> para indicar a partir de que elemento devolver elementos. También es necesario modificar el esquema de la API para tener en cuenta las nuevas estructuras de datos en las que se devuelven los resultados.</p>
 
-<p>En este ejemplo de una librería para mostrar la paginación he añadido a los libros una lista de comentarios que será en la que soporte paginación. La definición del esquema queda de la siguiente forma siguiendo la <a href="(https://facebook.github.io/relay/graphql/connections.htm#)">especificación de Relay</a> para lo cual se definen los tipos <em>CommentsConnection</em>, <em>CommentEdge</em> y <em>PageInfo</em>. Los cursores son un dato opaco para el cliente pero que decodificado incluye el identificativo del comentario. La propiedad <em>comments</em> utiliza un <em>resolver</em> con parámetros que se usa para realizar la búsqueda y recuperar los elementos solicitados en la consulta.</p>
+<p>En este ejemplo de una librería para mostrar la paginación he añadido a los libros una lista de comentarios que será en la que soporte paginación. La definición del esquema queda de la siguiente forma siguiendo la <a href="(https://facebook.github.io/relay/graphql/connections.htm#)">especificación de Relay</a> para lo cual se definen los tipos <em>CommentsConnection</em>, <em>CommentEdge</em> (usando <em>generics</em> no sería necesario implementar unas de estas clases por cada entidad paginable) y <em>PageInfo</em>. Los cursores son un dato opaco para el cliente pero que decodificado incluye el identificativo del comentario. La propiedad <em>comments</em> utiliza un <em>resolver</em> con parámetros que se usa para realizar la búsqueda y recuperar los elementos solicitados en la consulta.</p>
 
 <script src="//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=library.graphqls"></script>
+<script src="//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=CommentsConnection.java"></script>
+<script src="//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=CommentEdge.java"></script>
+<script src="//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=PageInfo.java"></script>
 
 <p>En el caso del ejemplo los datos se almacenan en unas listas creadas al iniciar la aplicación y la paginación y la obtención de los datos de la página se realiza usando <em>streams</em> y con código Java para implementar la lógica según los parámetros de la paginación en el método <em>findComments</em>. Si los datos estuvieran almacenados en una base de datos relacional o NoSQL se usarían las facilidades de sus lenguajes u operaciones de consulta como sería generar la sentencia SQL apropiada.</p>
 
