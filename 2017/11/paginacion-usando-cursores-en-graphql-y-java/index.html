@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="pico.dev">
   <meta name="keywords" content="java, programacion, tapestry, linux, gnu, gnu/linux, arch, arch linux, software, software libre, html, css, javascript">
-  <meta name="description" content="Con anterioridad las aplicaciones que lo necesitaban ofrecían una interfaz como un servicio mediante web services, sin embargo, esta tecnología era complicada por usar XML y no de fácil utilización en clientes JavaScript. La evolución que a día de hoy sigue siendo mayoritaria son las interfaces REST que emplean la semántica de los verbos del protocolo HTTP para realizar operaciones de búsqueda, creación, modificación y eliminación y normalmente empleando JSON como formato para intercambiar los datos. &hellip;">
+  <meta name="description" content="El conjunto de datos de una entidad en algunos casos será grande, miles o cientos de miles de registros, y por tanto no es viable devolverlos todos en una misma consulta por lo que es necesario realizar paginación devolviéndolos en pequeños grupos. La paginación se puede implementar de varias formas, habitualmente con un parámetro que limite el número de elementos a incluir en la página y otro parámetro offset que deseche los primeros elementos hasta el primero deseado. &hellip;">
   <base href="https://picodotdev.github.io/blog-bitix/">
 
-  <title>Ejemplo de GraphQL para una interfaz de un servicio con Spring Boot y Java</title>
+  <title>Paginación usando cursores en GraphQL y Java</title>
 
   <link rel="author" type="text/plain" href="humans.txt" />
   <link rel="shortcut icon" href="assets/favicon.ico">
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/apple-touch-icon-144-precomposed.png">
-  <link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2017/11/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java/">
+  <link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2017/11/paginacion-usando-cursores-en-graphql-y-java/">
 
   
   <link href="index.xml" rel="alternate" type="application/rss+xml" title="Blog Bitix" />
@@ -133,24 +133,21 @@
                 <meta itemprop="keywords" content="blog-stack, java, planeta-codigo, programacion">
               
               
-              <h1 itemprop="name">Ejemplo de GraphQL para una interfaz de un servicio con Spring Boot y Java</h1>
+              <h1 itemprop="name">Paginación usando cursores en GraphQL y Java</h1>
               <p class="information">
-                Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2017-11-01">01/11/2017</time>, actualizado el <time itemprop="dateModified" datetime="2017-11-07">07/11/2017</time>.
-                
+                Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2017-11-26">26/11/2017</time>.
                 
                   <br>
                    <a href="tags/blog-stack/">blog-stack</a> <a href="tags/java/">java</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/programacion/">programacion</a>
                 
                 <br>
-                <a href="/blog-bitix/2017/11/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java/" itemprop="url">Enlace permanente</a>
+                <a href="/blog-bitix/2017/11/paginacion-usando-cursores-en-graphql-y-java/" itemprop="url">Enlace permanente</a>
                 
-                  <a href="/blog-bitix/2017/11/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java/#comments">Comentarios</a>
+                  <a href="/blog-bitix/2017/11/paginacion-usando-cursores-en-graphql-y-java/#comments">Comentarios</a>
                 
                 
               </p>
 
-              
-                <p class="summary" itemprop="about">GraphQL es una alternativa a una interfaz REST con las ventajas de poder realizar varias consultas en una misma petición y devolviendo únicamente los datos que requiera el cliente. Es una especificación y hay una implementación para los lenguajes de programación más populares entre ellos Java. Este artículo es una introducción con un ejemplo completo que muestra cómo se hacen consultas y modificaciones en los datos.</p>
               
               
 
@@ -164,7 +161,7 @@
 </script>
 
               <div class="content" itemprop="articleBody">
-                <meta itemprop="wordCount" content="1178">
+                <meta itemprop="wordCount" content="1030">
                 
 
 
@@ -172,84 +169,41 @@
     <img src="assets/images/logotipos/graphql.svg" class="right" width="200" alt="GraphQL" title="GraphQL"/>
 </div>
 
-<p>Con anterioridad las aplicaciones que lo necesitaban ofrecían una interfaz como un servicio mediante <em>web services</em>, sin embargo, esta tecnología era complicada por usar XML y no de fácil utilización en clientes JavaScript. La evolución que a día de hoy sigue siendo mayoritaria son las interfaces <a href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> que emplean la semántica de los verbos del protocolo HTTP para realizar operaciones de búsqueda, creación, modificación y eliminación y normalmente empleando JSON como formato para intercambiar los datos. Sin embargo, REST no está exento de algunos problemas como la necesidad de realizar varias peticiones a cada uno de los recursos que ofrece si se necesitan datos de varios de ellos, otro es que los datos ofrecidos por los servicios REST está prefijados en tiempo de desarrollo no adaptándose a lo que necesita el cliente. En cierta medida estas dos cosas se pueden implementar en la interfaz REST con algunos parámetros pero requiere codificarlo explícitamente.</p>
+<p>El conjunto de datos de una entidad en algunos casos será grande, miles o cientos de miles de registros, y por tanto no es viable devolverlos todos en una misma consulta por lo que es necesario realizar paginación devolviéndolos en pequeños grupos. La paginación se puede implementar de varias formas, habitualmente con un parámetro que limite el número de elementos a incluir en la página y otro parámetro <em>offset</em> que deseche los primeros elementos hasta el primero deseado. Sin embargo, utilizar los parámetros <em>limit</em> y <em>offset</em> puede producir resultados inesperados si mientras la obtención de una página y la siguiente se insertan nuevos elementos anteriores al <em>offset</em> ocasionando que lo que sería por ejemplo el décimo elemento pase a ser el undécimo.</p>
 
-<p>Más recientemente ha aparecido otra forma de implementar una interfaz de un servicio con <a href="http://graphql.org/">GraphQL</a> considerándose una <a href="https://www.howtographql.com/basics/1-graphql-is-the-better-rest/">alternativa mejor a REST</a> que solventa los dos problemas de las interfaces REST anteriores. REST ofrece en varios <em>endpoints</em> los recursos que pueden ser accedidos mediante los verbos HTTP (<em>GET</em>, <em>PUT</em>, <em>POST</em>, <em>DELETE</em>), en GraphQL por el contrario hay un único <em>endpoint</em>, los puntos de entrada al grafo y los tipos que se relacionan entre si que son consultados para obtener los datos con el lenguaje de consulta que ofrece GraphQL.</p>
+<p>Si esta situación es importante se suelen utilizar cursores que utilizan un parámetro para indicar el número de elementos a incluir en la página pero en vez de un <em>offset</em> utilizan el identificativo de un registro a partir del cual devolver registros de modo que aunque se inserten registros el primer elemento de la página no cambiará.</p>
 
-<ul>
-<li><a href="https://www.howtographql.com/basics/0-introduction/">Basics Tutorial - Introduction</a></li>
-<li><a href="https://www.howtographql.com/basics/1-graphql-is-the-better-rest/">GraphQL is the better REST</a></li>
-<li><a href="https://www.howtographql.com/basics/2-core-concepts/">Core Concepts</a></li>
-<li><a href="https://www.howtographql.com/basics/3-big-picture/">Big Picture (Architecture)</a></li>
-</ul>
+<p>En el caso de la <a href="http://graphql.org/learn/pagination/">paginación en GraphQL</a> se proponen varias formas de implementar la paginación, una de ellas los cursores. En la documentación se explica la teoría, para implementarla es necesario <a href="https://picodotdev.github.io/blog-bitix/2017/11/usar-un-resolver-para-recuperar-propiedades-en-GraphQL/">crear un <em>data fetcher</em> o <em>resolver</em></a> que reciba los parámetros de <em>limit</em> para indicar el número de elementos a devolver en la página y <em>after</em> para indicar a partir de que elemento devolver elementos. También es necesario modificar el esquema de la API para tener en cuenta la nueva estructura de datos.</p>
 
-<p>En GraphQL se define un <a href="http://graphql.org/learn/schema/">esquema</a> con la definición de los tipos en la API, se diferencia la obtención de los datos que es realizada por las <a href="http://graphql.org/learn/queries/"><em>queries</em></a> y de las modificaciones que es realizada por los <a href="http://graphql.org/learn/queries/#mutations"><em>mutators</em></a>, el esquema se puede definir en un archivo de texto como en este ejemplo o de forma programática con código que es necesario para algunas personalizaciones. Otras tareas que pueden ser necesarias en una API son <a href="https://www.howtographql.com/graphql-java/5-authentication/">autenticación</a> que es posible capturando los datos del contexto provenientes en los datos o como cabeceras de la petición posiblemente en forma de <em>token</em> de <a href="https://oauth.net/">OAuth</a> y la autorización en la lógica del servicio en base al sujeto autenticado. Se puede <a href="http://graphql.org/learn/schema/#scalar-types">usar datos propios con <em>scalar</em></a> para los cuales se ha de proporcionar una clase que realice la transformación implementando una clase GraphQLScalarType. Posee <a href="http://graphql.org/learn/introspection/">funcionalidades de introspección</a> y también <a href="https://www.howtographql.com/graphql-java/9-filtering/">filtrado</a>, <a href="https://www.howtographql.com/graphql-java/10-pagination/">paginación</a>, <a href="https://www.howtographql.com/graphql-java/7-error-handling/">gestión de errores</a> y <a href="http://graphql.org/learn/caching/">cacheo</a> aunque esto último es menos efectivo en GraphQL al depender de los datos a devolver que solicite el cliente.</p>
+<p>En este ejemplo de una librería para mostrar la paginación he añadido a los libros una lista de comentarios que será en la que soporte paginación. La definición del esquema queda de la siguiente forma siguiendo la <a href="(https://facebook.github.io/relay/graphql/connections.htm#)">especificación de Relay</a> para lo cual se definen los tipos <em>CommentsConnection</em>, <em>CommentEdge</em> y <em>PageInfo</em>. Los cursores son un dato opaco para el cliente pero que decodificado incluye el identificativo del comentario. La propiedad <em>comments</em> utiliza un <em>resolver</em> con parámetros que se usa para realizar la búsqueda y recuperar los elementos solicitados en la consulta.</p>
 
-<p>Para usar GraphQL hay que definir un <em>schema</em> que incluye los tipos, sus propiedades y tipos. También se pueden usar <a href="http://graphql.org/learn/caching/">fragmentos</a> para reutilizar partes de la definición de los tipos. Cada <em>type</em> representa una entidad que definen las propiedades que posee ya sean datos escalares o referencias a otras entidades formando de esta manera grafos de objetos, los tipos de las variables que poseen una exclamación al final quiere decir que son opcionales, por defecto todos los datos son distinto de nulo. Las listas se definen con corchetes y el tipo entre ellos.</p>
+<script src="//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=library.graphqls"></script>
 
-<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=library.graphqls"></script>
+<p>En el caso del ejemplo los datos se almacenan en unas listas creadas al iniciar la aplicación y la paginación y la obtención de los datos de la página se realiza usando <em>streams</em> y con código Java para implementar la lógica según los parámetros de la paginación en el método <em>findComments</em>. Si los datos estuvieran almacenados en una base de datos relacional o NoSQL se usarían las facilidades de sus lenguajes u operaciones de consulta como sería generar la sentencia SQL apropiada.</p>
 
-<p>Una definido el esquema hay que desarrollar los <em>resolvers</em> que son encargados de obtener los datos seguramente de una base de datos externa ya sea una base de datos SQL o NoSQL en este caso utilizando una clase que implementa el patrón repositorio y que abstrae del sistema de persistencia donde se almacenan los datos.</p>
+<script src="//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=LibraryRepository.java"></script>
 
-<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=Query.java"></script>
-<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=LibraryRepository.java"></script>
-<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=Book.java"></script>
-<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=Author.java"></script>
+<p>Los comentarios se obtienen usando un <em>data fetcher</em> o <em>resolver</em> que si existe para una determinada propiedad tiene precedencia sobre el <em>data fetcher</em> por defecto que en Java obtiene el dato usando la convención de los <em>java beans</em>. En este caso es el <em>resolver</em> <em>BookResolver</em> siendo el método <em>getComments</em> el encargado de recuperar los datos de la propiedad <em>comments</em> cuando se solicite en una consulta de GraphQL, recibe los datos de paginación y delega la búsqueda en el repositorio para que haga la consulta apropiada.</p>
 
-<p>Los <em>mutators</em> son los encargados de procesar las peticiones de modificación.</p>
+<p>La clase repositorio abstrae al <em>resolver</em> de como o donde están guardados los datos, de esta forma se podría pasar de guardarlos en una base de datos <a href="https://www.postgresql.org/">PostgreSQL</a> a una base de datos <a href="https://www.mongodb.com/">MongoDB</a> sin que el <em>resolver</em> necesite ninguna modificación, también se podría optar por guardar los libros en una base de datos relacional y los comentarios en una base de datos MongoDB. El <em>resolver</em> se encarga de crear las instancias de objetos necesarios de los tipos <em>CommentsConnection</em>, <em>CommentEdge</em> y <em>PageInfo</em> para adaptarlos a las estructuras de datos apropiadas según la especificación de Relay en el servicio de GraphQL.</p>
 
-<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=Mutation.java"></script>
+<script src="//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=BookResolver.java"></script>
 
-<p>Usando una aplicación de <a href="https://projects.spring.io/spring-boot/">Spring Boot</a> para ofrecer el servicio hay que realizar la contribución adecuada al contenedor de dependencias, en Java GraphQL se define como un <a href="https://docs.oracle.com/javaee/7/api/javax/servlet/http/HttpServlet.html"><em>servlet</em></a> al cual hay que proporcionarle la configuración de los <em>resolvers</em>, <em>mutators</em>, procesador de contexto que en este caso se utiliza para la autenticación y definición del esquema entre otras posibles cosas.</p>
+<p>Una vez implementada la paginación en los comentarios con la siguientes consultas se obtiene un libro usando una <a href="https://picodotdev.github.io/blog-bitix/2017/11/consultas-con-parametros-para-filtrar-datos-en-graphql/">consulta con un filtro</a> todos sus comentarios, los 3 primeros comentarios usando el parámetro <em>limit</em> y los siguientes tres comentarios a partir del tercero usando los parámetros <em>limit</em> y <em>after</em>. Obteniendo como respuesta un libro con únicamente los comentarios deseados. Cada elemento en el resultado contiene los datos solicitados junto con el valor del cursor que identifica al comentario además de incluir una estructura de datos <em>pageInfo</em> con información sobre la paginación.</p>
 
-<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=Main.java"></script>
-<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=AuthContext.java"></script>
+<p>Con el valor del cursor indicado en <em>pageInfo</em> en la propiedad <em>endCursor</em> se podría obtener la siguiente página de comentarios realizando otra consulta e indicándolo en el parámetro <em>after</em>.</p>
 
-<p>El lenguaje de consulta GraphQL permite consultar el grafo de objetos y recuperar los datos deseados. En el siguiente ejemplo se obtienen los libros, los autores y los libros con los datos de sus autores de una clase que implementa el patrón <em>repository</em>. En el ejemplo los datos del repositorio están definidos en la propia clase de forma estática pero como su función es abstraer de donde se obtienen los datos el cambio sería sencillo para que los obtuviese de una base de datos SQL o NoSQL ya que los cambios estarían encapsulados principalmente en esa clase. Los datos son devueltos en formato JSON.</p>
+<script src="//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=curl-1.sh"></script>
+<script src="//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=curl-2.sh"></script>
+<script src="//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=curl-3.sh"></script>
 
-<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=curl-1.sh"></script>
+<p>Los cursores tiene la ventaja de que son opacos por lo que se evita que los clientes dependan de identificativos y podrían cambiarse sin que los clientes necesitasen modificaciones. Otra ventaja es que la especificación de Relay propone un marco y unas convenciones para estandarizar la paginación. Sin embargo, esta solo es una forma de hacer paginación y es perfectamente posible usar cualquier otra para adaptarla a las necesidades que haya por ejemplo añadiendo más datos a <em>pageInfo</em> o con más u otros parámetros para realizar la consulta de paginación.</p>
 
-<p>Una de las ventajas de GraphQL sobre REST es que es posible realizar una única petición lo que en REST podrían ser varias. Por ejemplo, la siguiente consulta obtiene en una única consulta todos los libros, todos los autores y el autor con identificativo 1 de la biblioteca, esto mejora el rendimiento ya que en REST se hubiesen requerido varias peticiones una para obtener libros, otra para los autores y otra para el autor 1. La otra ventaja sobre REST es que se devuelven únicamente los datos que el cliente solicita y no una lista prefijada por el desarrollador de la interfaz.</p>
-
-<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=curl-2.sh"></script>
-
-<p>Las consultas puede hacerse mediante una petición <em>GET</em> o <em>POST</em> de HTTP.</p>
-
-<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=curl-3.sh"></script>
-
-<p>Las peticiones de modificación se envían mediante <em>POST</em>. Este es el caso para añadir un libro a la biblioteca y los casos de que el autor del libro no sea válido o que el usuario que añade el libro no tenga permisos. En el ejemplo los errores no son descriptivos de lo que realmente ha sucedido, habría que hacer el <a href="https://picodotdev.github.io/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/">tratamiento de errores adecuado para que los mensajes fuesen más descriptivos</a>.</p>
-
-<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=curl-4.sh"></script>
-<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=PermissionException.java"></script>
-<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=ValidationException.java"></script>
-
-<p>La forma explicada en las guías de GraphQL para Java es que el <em>mutator</em> reciba los datos y este delegue la funcionalidad en una clase que implemente el patrón <em>repository</em> que abstrae del sistema de almacenamiento (base de datos SQL, NoSQL o cualquier otro), además, este patrón <em>repository</em> o clase de lógica de negocio se recomienda que implemente la funcionalidad necesaria para aplicar la autorización. En el ejemplo aunque de forma sencilla solo en usuario <em>admin</em> tiene permitido añadir libros, en un proyecto es posible realizar la autenticación usando <a href="http://www.keycloak.org/">Keycloak</a> como sistema de OAuth, usar el <em>token</em> de OAuth para implementar la autorización y un <em>framework</em> de seguridad como <a href="http://shiro.apache.org/">Apache Shiro</a> para aplicar los permisos a las funcionalidades.</p>
-
-<p>Los artículos <a href="https://picodotdev.github.io/blog-bitix/2016/09/autenticacion-con-oauth-y-keycloak-en-un-servicio-rest-con-jax-rs-y-spring-boot/">Autenticación con OAuth y Keycloak en un servicio REST con JAX-RS y Spring Boot</a> y <a href="https://picodotdev.github.io/blog-bitix/2016/10/integrar-autenticacion-oauth-con-keycloak-shiro-apache-tapestry-y-spring-boot/">Integrar autenticación OAuth con Keycloak, Shiro, Apache Tapestry y Spring Boot</a> pueden servir como base para añadir autenticación OAuth a un servicio GraphQL con Keycloak.</p>
-
-<p>Finalmente, el archivo de construcción de <a href="https://gradle.org/">Gradle</a> del ejemplo con las dependencias necesarias.</p>
-
-<script src="//gist.github.com/picodotdev/4276fa433729ff8187219939d3218a00.js?file=build.gradle"></script>
+<p>Pero&hellip; en este ejemplo por cada libro que se devuelve como resultado en la consulta se realiza una búsqueda de los comentarios ya que las propiedades de resultado en la consulta se recuperan una a una. Para la mayoría de propiedades esto no es problema ya que son propiedades que están en un objeto que no realizan consultas a una base de datos pero en el caso de los comentarios sí. Si se devolviesen muchos libros se realizaría una consulta para cada uno de ellos lo que no es eficiente. Si se devolviesen 500 libros y sus comentarios se realizarían 500 consultas para obtener los comentarios de cada libro, usando una base de datos relacional serían 1+500 consultas SQL por cada petición a GraphQL, 1 para obtener los libros y 500 para los comentarios. Como solución a este problema está la funcionalidad de <em>batching</em> de GraphQL que permite obtener todos los comentarios de los libros en una única consulta, será tema para otro de los siguientes artículos de esta serie sobre GraphQL.</p>
 
 <p>
     El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/GraphQL">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew run</code>.
 </p>
-
-<div class="reference">
-    Referencia:<br>
-    <ul>
-<li><a href="http://graphql.org/">GraphQL</a></li>
-<li><a href="https://graphql-java.readthedocs.io/en/v5/">Welcome to graphql-java</a></li>
-<li><a href="https://github.com/graphql-java/graphql-java">GraphQL Java implementation</a></li>
-<li><a href="https://www.howtographql.com/graphql-java/2-queries/">Queries</a></li>
-<li><a href="https://github.com/graphql-java/graphql-java-tools">A schema-first tool for graphql-java inspired by graphql-tools for JS</a></li>
-<li><a href="http://www.graph.cool">GraphQL Backend Development Framework</a></li>
-<li><a href="https://www.genbetadev.com/desarrollo-aplicaciones-moviles/por-que-deberiamos-abandonar-rest-y-empezar-a-usar-graphql-en-nuestras-apis">¿Por qué deberíamos abandonar REST y empezar a usar GraphQL en nuestras APIs?</a></li>
-<li><a href="https://www.paradigmadigital.com/dev/graphql-todos-uno-uno-todos/">GraphQL: ¡todos para uno y uno para todos!</a></li>
-<li><a href="https://www.adictosaltrabajo.com/tutoriales/introduccion-a-graphql/">Introducción a GraphQL</a></li>
-</ul>
-
-</div>
 
 
 
@@ -323,8 +277,8 @@
 
   <script type="text/javascript" async>
     var disqus_shortname = 'blog-bitix';
-    var disqus_identifier = 'https:\/\/picodotdev.github.io\/blog-bitix\/2017\/11\/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java\/';
-    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2017\/11\/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java\/';
+    var disqus_identifier = 'https:\/\/picodotdev.github.io\/blog-bitix\/2017\/11\/paginacion-usando-cursores-en-graphql-y-java\/';
+    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2017\/11\/paginacion-usando-cursores-en-graphql-y-java\/';
     var disqus_script = 'embed.js';
     (function () {
       var dsq = document.createElement('script'); 
