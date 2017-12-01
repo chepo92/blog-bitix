@@ -5,15 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="pico.dev">
   <meta name="keywords" content="java, programacion, tapestry, linux, gnu, gnu/linux, arch, arch linux, software, software libre, html, css, javascript">
-  <meta name="description" content="El conjunto de datos de una entidad en algunos casos será grande, miles o cientos de miles de registros, y por tanto no es viable devolverlos todos en una misma consulta por lo que es necesario realizar paginación devolviéndolos en pequeños grupos. La paginación se puede implementar de varias formas, habitualmente con un parámetro que limite el número de elementos a incluir en la página y otro parámetro offset que deseche los primeros elementos hasta el primero deseado. &hellip;">
+  <meta name="description" content="GraphQL es una alternativa a una interfaz REST con las ventajas de permitir al consumidor obtener únicamente los datos que requiere y realizar varias consultas en una misma petición.
+GraphQL por defecto soporta un conjunto de tipos escalares en los datos entre los que están varios numéricos, cadenas, booleanos, enumerados además de los tipos o estructuras de datos definidos en la interfaz del servicio. Sin embargo, si es necesario es posible definir nuevos tipos de datos escalares como podría ser el caso de un tipo de dato para representar una fecha fecha y otro de importe monetario. &hellip;">
   <base href="https://picodotdev.github.io/blog-bitix/">
 
-  <title>Paginación usando cursores en GraphQL y Java</title>
+  <title>Definir nuevos tipos de datos escalares en GraphQL</title>
 
   <link rel="author" type="text/plain" href="humans.txt" />
   <link rel="shortcut icon" href="assets/favicon.ico">
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/apple-touch-icon-144-precomposed.png">
-  <link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2017/11/paginacion-usando-cursores-en-graphql-y-java/">
+  <link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2017/12/definir-nuevos-tipos-de-datos-escalares-en-graphql/">
 
   
   <link href="index.xml" rel="alternate" type="application/rss+xml" title="Blog Bitix" />
@@ -133,18 +134,17 @@
                 <meta itemprop="keywords" content="blog-stack, java, planeta-codigo, programacion">
               
               
-              <h1 itemprop="name">Paginación usando cursores en GraphQL y Java</h1>
+              <h1 itemprop="name">Definir nuevos tipos de datos escalares en GraphQL</h1>
               <p class="information">
-                Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2017-11-26">26/11/2017</time>, actualizado el <time itemprop="dateModified" datetime="2017-11-26">26/11/2017</time>.
-                
+                Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2017-12-01">01/12/2017</time>.
                 
                   <br>
                    <a href="tags/blog-stack/">blog-stack</a> <a href="tags/java/">java</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/programacion/">programacion</a>
                 
                 <br>
-                <a href="/blog-bitix/2017/11/paginacion-usando-cursores-en-graphql-y-java/" itemprop="url">Enlace permanente</a>
+                <a href="/blog-bitix/2017/12/definir-nuevos-tipos-de-datos-escalares-en-graphql/" itemprop="url">Enlace permanente</a>
                 
-                  <a href="/blog-bitix/2017/11/paginacion-usando-cursores-en-graphql-y-java/#comments">Comentarios</a>
+                  <a href="/blog-bitix/2017/12/definir-nuevos-tipos-de-datos-escalares-en-graphql/#comments">Comentarios</a>
                 
                 
               </p>
@@ -162,7 +162,7 @@
 </script>
 
               <div class="content" itemprop="articleBody">
-                <meta itemprop="wordCount" content="1051">
+                <meta itemprop="wordCount" content="307">
                 
 
 
@@ -170,40 +170,25 @@
     <img src="assets/images/logotipos/graphql.svg" class="right" width="200" alt="GraphQL" title="GraphQL"/>
 </div>
 
-<p>El conjunto de datos de una entidad en algunos casos será grande, miles o cientos de miles de registros, y por tanto no es viable devolverlos todos en una misma consulta por lo que es necesario realizar paginación devolviéndolos en pequeños grupos. La paginación se puede implementar de varias formas, habitualmente con un parámetro que limite el número de elementos a incluir en la página y otro parámetro <em>offset</em> que deseche los primeros elementos hasta el primero deseado. Sin embargo, utilizar los parámetros <em>limit</em> y <em>offset</em> puede producir resultados inesperados si mientras la obtención de una página y la siguiente se insertan nuevos elementos anteriores al <em>offset</em> ocasionando que lo que sería por ejemplo el décimo elemento pase a ser el undécimo.</p>
+<p><a href="https://picodotdev.github.io/blog-bitix/2017/11/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java/">GraphQL es una alternativa a una interfaz REST</a> con las ventajas de permitir al consumidor obtener únicamente los datos que requiere y realizar varias consultas en una misma petición.</p>
 
-<p>Si esta situación es importante se suelen utilizar cursores que utilizan un parámetro para indicar el número de elementos a incluir en la página pero en vez de un <em>offset</em> utilizan el identificativo de un registro a partir del cual devolver registros de modo que aunque se inserten registros el primer elemento de la página no cambiará.</p>
+<p><a href="http://graphql.org/">GraphQL</a> por defecto soporta un conjunto de tipos escalares en los datos entre los que están varios numéricos, cadenas, booleanos, enumerados además de los tipos o estructuras de datos definidos en la interfaz del servicio. Sin embargo, si es necesario es posible definir nuevos tipos de datos escalares como podría ser el caso de un tipo de dato para representar una fecha fecha y otro de importe monetario.</p>
 
-<p>En el caso de la <a href="http://graphql.org/learn/pagination/">paginación en GraphQL</a> se proponen varias formas de implementar la paginación, una de ellas los cursores. En la documentación se explica la teoría, para implementarla es necesario <a href="https://picodotdev.github.io/blog-bitix/2017/11/usar-un-resolver-para-recuperar-propiedades-en-GraphQL/">crear un <em>data fetcher</em> o <em>resolver</em></a> que reciba los parámetros de <em>limit</em> para indicar el número de elementos a devolver en la página y <em>after</em> para indicar a partir de que elemento devolver elementos. También es necesario modificar el esquema de la API para tener en cuenta las nuevas estructuras de datos en las que se devuelven los resultados.</p>
+<p>El objeto en Java que representa una fecha con Java 8 sería <a href="https://docs.oracle.com/javase/9/docs/api/java/time/LocalDate.html">LocalDate</a> y la clase para el importe monetario podría ser un <a href="https://docs.oracle.com/javase/9/docs/api/java/math/BigDecimal.html">BigDecimal</a> o alguna de <a href="https://picodotdev.github.io/blog-bitix/2015/07/como-trabajar-con-importes-ratios-y-divisas-en-java/">la librería JavaMoney</a>.</p>
 
-<p>En este ejemplo de una librería para mostrar la paginación he añadido a los libros una lista de comentarios que será en la que soporte paginación. La definición del esquema queda de la siguiente forma siguiendo la <a href="(https://facebook.github.io/relay/graphql/connections.htm#)">especificación de Relay</a> para lo cual se definen los tipos <em>CommentsConnection</em>, <em>CommentEdge</em> (usando <em>generics</em> no sería necesario implementar unas de estas clases por cada entidad paginable) y <em>PageInfo</em>. Los cursores son un dato opaco para el cliente pero que decodificado incluye el identificativo del comentario. La propiedad <em>comments</em> utiliza un <em>resolver</em> con parámetros que se usa para realizar la búsqueda y recuperar los elementos solicitados en la consulta.</p>
+<p>Para que GraphQL soporte un nuevo tipo de dato escalar es necesario implementar una clase que realice la conversión. Esta clase se encarga de realizar la conversión entre el escalar añadido a una representación a devolver en las respuestas de las peticiones y la conversión entre la representación en consultas al tipo de dato hay que proporcionar al servicio. La clase debe implementar la interfaz <a href="https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/schema/Coercing.java">Coercing</a> y construyendo un objeto <a href="https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/schema/GraphQLScalarType.java">GraphQLScalarType</a> proporcionárselo a GraphQL en la definición del servicio.</p>
 
-<script src="//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=library.graphqls"></script>
-<script src="//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=CommentsConnection.java"></script>
-<script src="//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=CommentEdge.java"></script>
-<script src="//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=PageInfo.java"></script>
+<script src="//gist.github.com/picodotdev/ae1583aaa3182006533adad61ee73921.js?file=LocalDateCoercing.java"></script>
 
-<p>En el caso del ejemplo los datos se almacenan en unas listas creadas al iniciar la aplicación y la paginación y la obtención de los datos de la página se realiza usando <em>streams</em> y con código Java para implementar la lógica según los parámetros de la paginación en el método <em>findComments</em>. Si los datos estuvieran almacenados en una base de datos relacional o NoSQL se usarían las facilidades de sus lenguajes u operaciones de consulta como sería generar la sentencia SQL apropiada.</p>
+<p>Al definir el esquema se proporciona con el método <em>scalars</em> una lista con los tipos de datos escalares adicionales, en este caso una instancia de <em>GraphQLScalarType</em> con una instancia de <em>LocalDateCoercing</em>. Además en el descriptor del esquema hay que declarar el nuevo escalar con la palabra clave <em>scalar</em>.</p>
 
-<script src="//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=LibraryRepository.java"></script>
+<script src="//gist.github.com/picodotdev/ae1583aaa3182006533adad61ee73921.js?file=Main.java"></script>
+<script src="//gist.github.com/picodotdev/ae1583aaa3182006533adad61ee73921.js?file=library.graphqls"></script>
+<script src="//gist.github.com/picodotdev/ae1583aaa3182006533adad61ee73921.js?file=LibraryRepository.java"></script>
 
-<p>Los comentarios se obtienen usando un <em>data fetcher</em> o <em>resolver</em> que si existe para una determinada propiedad tiene precedencia sobre el <em>data fetcher</em> por defecto que en Java obtiene el dato usando la convención de los <em>java beans</em>. En este caso es el <em>resolver</em> <em>BookResolver</em> siendo el método <em>getComments</em> el encargado de recuperar los datos de la propiedad <em>comments</em> cuando se solicite en una consulta de GraphQL, recibe los datos de paginación y delega la búsqueda en el repositorio para que haga la consulta apropiada.</p>
+<p>Añadiendo al tipo <em>Book</em> una fecha de publicación usando este nuevo tipo escalar al realizar una consulta y devolver el dato se realiza la conversión.</p>
 
-<p>La clase repositorio abstrae al <em>resolver</em> de como o donde están guardados los datos, de esta forma se podría pasar de guardarlos en una base de datos <a href="https://www.postgresql.org/">PostgreSQL</a> a una base de datos <a href="https://www.mongodb.com/">MongoDB</a> sin que el <em>resolver</em> necesite ninguna modificación, también se podría optar por guardar los libros en una base de datos relacional y los comentarios en una base de datos MongoDB. El <em>resolver</em> se encarga de crear las instancias de objetos necesarios de los tipos <em>CommentsConnection</em>, <em>CommentEdge</em> y <em>PageInfo</em> para adaptarlos a las estructuras de datos apropiadas según la especificación de Relay en el servicio de GraphQL.</p>
-
-<script src="//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=BookResolver.java"></script>
-
-<p>Una vez implementada la paginación en los comentarios con la siguientes consultas se obtiene un libro usando una <a href="https://picodotdev.github.io/blog-bitix/2017/11/consultas-con-parametros-para-filtrar-datos-en-graphql/">consulta con un filtro</a> todos sus comentarios, los 3 primeros comentarios usando el parámetro <em>limit</em> y los siguientes tres comentarios a partir del tercero usando los parámetros <em>limit</em> y <em>after</em>. Obteniendo como respuesta un libro con únicamente los comentarios deseados. Cada elemento en el resultado contiene los datos solicitados junto con el valor del cursor que identifica al comentario además de incluir una estructura de datos <em>pageInfo</em> con información sobre la paginación.</p>
-
-<p>Con el valor del cursor indicado en <em>pageInfo</em> en la propiedad <em>endCursor</em> se podría obtener la siguiente página de comentarios realizando otra consulta e indicándolo en el parámetro <em>after</em>.</p>
-
-<script src="//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=curl-1.sh"></script>
-<script src="//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=curl-2.sh"></script>
-<script src="//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=curl-3.sh"></script>
-
-<p>Los cursores tiene la ventaja de que son opacos por lo que se evita que los clientes dependan de identificativos y podrían cambiarse sin que los clientes necesitasen modificaciones. Otra ventaja es que la especificación de Relay propone un marco y unas convenciones para estandarizar la paginación. Sin embargo, esta solo es una forma de hacer paginación y es perfectamente posible usar cualquier otra para adaptarla a las necesidades que haya por ejemplo añadiendo más datos a <em>pageInfo</em> o con más u otros parámetros para realizar la consulta de paginación.</p>
-
-<p>Pero&hellip; en este ejemplo por cada libro que se devuelve como resultado en la consulta se realiza una búsqueda de los comentarios ya que las propiedades de resultado en la consulta se recuperan una a una. Para la mayoría de propiedades esto no es problema ya que son propiedades que están en un objeto que no realizan consultas a una base de datos pero en el caso de los comentarios sí. Si se devolviesen muchos libros se realizaría una consulta para cada uno de ellos lo que no es eficiente. Si se devolviesen 500 libros y sus comentarios se realizarían 500 consultas para obtener los comentarios de cada libro, usando una base de datos relacional serían 1+500 consultas SQL por cada petición a GraphQL, 1 para obtener los libros y 500 para los comentarios. Como solución a este problema está la funcionalidad de <em>batching</em> de GraphQL que permite obtener todos los comentarios de los libros en una única consulta, será tema para otro de los siguientes artículos de esta serie sobre GraphQL.</p>
+<script src="//gist.github.com/picodotdev/ae1583aaa3182006533adad61ee73921.js?file=curl.sh"></script>
 
 <p>
     El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/GraphQL">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew run</code>.
@@ -285,8 +270,8 @@
 
   <script type="text/javascript" async>
     var disqus_shortname = 'blog-bitix';
-    var disqus_identifier = 'https:\/\/picodotdev.github.io\/blog-bitix\/2017\/11\/paginacion-usando-cursores-en-graphql-y-java\/';
-    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2017\/11\/paginacion-usando-cursores-en-graphql-y-java\/';
+    var disqus_identifier = 'https:\/\/picodotdev.github.io\/blog-bitix\/2017\/12\/definir-nuevos-tipos-de-datos-escalares-en-graphql\/';
+    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2017\/12\/definir-nuevos-tipos-de-datos-escalares-en-graphql\/';
     var disqus_script = 'embed.js';
     (function () {
       var dsq = document.createElement('script'); 
