@@ -135,7 +135,8 @@
               
               <h1 itemprop="name">Explicación del fallo de seguridad Meltdown y Spectre en los microprocesadores Intel</h1>
               <p class="information">
-                Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2018-01-06">06/01/2018</time>.
+                Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2018-01-06">06/01/2018</time>, actualizado el <time itemprop="dateModified" datetime="2018-01-07">07/01/2018</time>.
+                
                 
                   <br>
                    <a href="tags/hardware/">hardware</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/seguridad/">seguridad</a> <a href="tags/software/">software</a>
@@ -163,11 +164,15 @@
 </script>
 
               <div class="content" itemprop="articleBody">
-                <meta itemprop="wordCount" content="1982">
+                <meta itemprop="wordCount" content="2005">
                 
 
 
                 <p>El año 2018 ha empezando haciéndose público uno de los peores <em>bugs</em> de seguridad que afecta a absolutamente todos los procesadores <a href="https://www.intel.es">Intel</a> que esta compañía ha fabricado en la última década, denominado <a href="https://meltdownattack.com/"><em>Meltdown</em> y su variante <em>Spectre</em></a>, el error tiene su propio nombre, logotipo y página web. Un error de diseño en los procesadores que solo se puede corregir reemplazando el microprocesador o modificando los sistemas operativos aunque se especula con una pérdida de rendimiento en ciertas cargas de trabajo, entre un 5% y un 30%. El error es tan grave que permite leer a un programa la memoria del núcleo del sistema operativo que debería estar protegida. En la memoria del <em>kernel</em> residen las claves de acceso a sistemas o datos sensibles que obtenidos y utilizados pueden ocasionar graves problemas de seguridad con consecuencias económicas o de acceso no autorizado a información. Este error es tan grave que deja al viejo conocido <a href="https://en.wikipedia.org/wiki/Pentium_FDIV_bug">fallo de la división de los Pentium</a> a la altura de chiste. Hace unos meses por si fuera poco se conocía otro error de seguridad en el <a href="https://en.wikipedia.org/wiki/Intel_Management_Engine">Management Engine (ME)</a> de Intel.</p>
+
+<ul>
+<li><a href="https://security-center.intel.com/advisory.aspx?intelid=INTEL-SA-00088&amp;languageid=en-fr">Listado de procesadores Intel afectados por Meltdown y Spectre</a></li>
+</ul>
 
 <div class="media" style="text-align: center;">
     <figure>
@@ -205,7 +210,7 @@
 
 <h3 id="superescalar">Superescalar</h3>
 
-<p>En un microprocesador con dos <em>pipelines</em> o superescalares se pueden realizar varias operaciones simultáneamente, es decir, mientras se realiza la primera operación en la variable <em>m</em> se realiza al mismo tiempo la segunda operación de <em>n</em>, con lo que estas operaciones podrían completarse en únicamente tres ciclos de reloj con la siguiente equivalencia de programa. Ejemplos de microprocesadores superescalares son el Intel Pentium y los <a href="https://www.arm.com/">ARM</a> Cortex-A7 y Cortex-A53 estos últimos usados en la Raspberry Pi 2 y 3 respectivamente.</p>
+<p>En un microprocesador con dos <em>pipelines</em> o <a href="https://en.wikipedia.org/wiki/Superscalar_processor">superescalar</a> se pueden realizar varias operaciones simultáneamente, es decir, mientras se realiza la primera operación en la variable <em>m</em> se realiza al mismo tiempo la segunda operación de <em>n</em>, con lo que estas operaciones podrían completarse en únicamente tres ciclos de reloj con la siguiente equivalencia de programa. Ejemplos de microprocesadores superescalares son el Intel Pentium y los <a href="https://www.arm.com/">ARM</a> Cortex-A7 y Cortex-A53 estos últimos usados en la Raspberry Pi 2 y 3 respectivamente.</p>
 
 <script src="//gist.github.com/picodotdev/f4e501b7c94a9695aa784db89591afd7.js?file=superescalar-1.py"></script>
 
@@ -215,13 +220,13 @@
 
 <h3 id="fuera-de-orden">Fuera de orden</h3>
 
-<p>Los microprocesadores fuera de orden reordenan las instrucciones de la forma adecuada para que el programa sea equivalente pero manteniendo los <em>pipelines</em> llenos. Cambiando el orden entre las instrucciones <em>x</em> e <em>y</em> se consigue ejecutar las instrucciones en tres ciclos de reloj. Ejemplos de microprocesadores fuera de orden son el Pentium 2 y siguientes microprocesadores Intel y <a href="http://www.amd.com/">AMD</a> incluyendo varios ARM Cortex-A9, A15, A17 y A57.</p>
+<p>Los microprocesadores <a href="https://en.wikipedia.org/wiki/Out-of-order_execution">fuera de orden</a> reordenan las instrucciones de la forma adecuada para que el programa sea equivalente pero manteniendo los <em>pipelines</em> llenos. Cambiando el orden entre las instrucciones <em>x</em> e <em>y</em> se consigue ejecutar las instrucciones en tres ciclos de reloj. Ejemplos de microprocesadores fuera de orden son el Pentium 2 y siguientes microprocesadores Intel y <a href="http://www.amd.com/">AMD</a> incluyendo varios ARM Cortex-A9, A15, A17 y A57.</p>
 
 <script src="//gist.github.com/picodotdev/f4e501b7c94a9695aa784db89591afd7.js?file=fuera-de-orden.py"></script>
 
 <h3 id="predicción-de-salto-y-ejecución-especulativa">Predicción de salto y ejecución especulativa</h3>
 
-<p>Los programas incluyen saltos con sentencias condicionales <em>if</em> o de bucle. Los microprocesadores tratan de adivinar si una sentencia de salto se producirá o no (con heurísticas y son bastante buenos acertando) para recuperar y tener preparadas las siguientes instrucciones. Mantener los <em>pipelines</em> llenos es difícil al aumentar su número a tres o cuatro. Para tratar de mantenerlos llenos los microprocesadores usan la predicción de salto y van ejecutando las instrucciones desechando las operaciones si finalmente no se acierta en el salto pero habiendo aumentado el rendimiento si se ha acertado, realizan ejecución especulativa de las instrucciones.</p>
+<p>Los programas incluyen saltos con sentencias condicionales <em>if</em> o de bucle. Los microprocesadores tratan de adivinar si una sentencia de salto se producirá o no (con heurísticas y son bastante buenos acertando) para recuperar y tener preparadas las siguientes instrucciones. Mantener los <em>pipelines</em> llenos es difícil al aumentar su número a tres o cuatro. Para tratar de mantenerlos llenos los microprocesadores usan la predicción de salto y van ejecutando las instrucciones desechando las operaciones si finalmente no se acierta en el salto pero habiendo aumentado el rendimiento si se ha acertado, realizan <a href="https://en.wikipedia.org/wiki/Speculative_execution">ejecución especulativa</a> de las instrucciones.</p>
 
 <p>En este otro caso, <em>v</em> depende de <em>u</em> y <em>u</em> depende de <em>t</em> de modo que un microprocesador superescalar sin ejecución especulativa tardará tres ciclos computando <em>t</em>, <em>u</em> y <em>v</em> para determinar el valor de <em>v</em> en la sentencia condicional <em>if</em> (en otro ciclo) momento en que pasa otros tres ciclos calculando <em>w</em>, <em>x</em> e <em>y</em>, en total 4 o 7 ciclos dependiendo de si hay salto en la sentencia condicional.</p>
 
@@ -249,9 +254,7 @@
 
 <script src="//gist.github.com/picodotdev/f4e501b7c94a9695aa784db89591afd7.js?file=meltdown-2.py"></script>
 
-<p>El microprocesador lee de el valor de una dirección del <em>kernel</em> de forma especulativa pero el fallo en la operación de acceso no se produce hasta se conoce el valor de <em>v</em> utilizando en la sentencia condicional no es cero. Limpiando la cache previamente y haciendo que <em>v</em> de cero para que no se produzca la excepción con los valores adecuados de las variables (<em>a</em>, <em>b</em>, <em>c</em>, <em>d</em>).</p>
-
-<p>La ejecución especulativa de <code>v, y_ = u+d, user_mem[x_]</code> producirá un acceso a la dirección de memoria <em>0x000</em> o <em>0x100</em> dependiendo del valor del octavo bit que hubiese en la dirección de memoria <code>kern_mem[address]</code>. El ataque <em>side-channel</em> se produce determinando el tiempo que tarda una instrucción que utilice estas direcciones, si está o no está en la cache por el tiempo que tarda determina a que dirección de memoria se ha accedido y cual es el valor del octavo bit de una dirección del <em>kernel</em>. ¡Felicidades has leído un bit de la memoria del kernel!. Bit a bit y con tiempo se puede leer todo el contenido de la memoria del <em>kernel</em> aplicando esta operación millones de veces.</p>
+<p>El microprocesador lee de el valor de una dirección del <em>kernel</em> de forma especulativa pero el fallo en la operación de acceso no se produce hasta se conoce el valor de <em>v</em> utilizando en la sentencia condicional no es cero. Limpiando la cache previamente y haciendo que <em>v</em> de cero para que no se produzca la excepción con los valores adecuados de las variables (<em>a</em>, <em>b</em>, <em>c</em>, <em>d</em>) la ejecución especulativa de <code>v, y_ = u+d, user_mem[x_]</code> producirá un acceso a la dirección de memoria <em>0x000</em> o <em>0x100</em> dependiendo del valor del octavo bit recuperado en el acceso ilegal a la dirección de memoria <code>kern_mem[address]</code>. El ataque <em>side-channel</em> se produce midiendo el tiempo que tarda una instrucción posterior que utilice estas direcciones, si está o no está en la cache (por el tiempo que tarda) determina a que dirección de memoria se ha accedido y cual es el valor del octavo bit de una dirección del <em>kernel</em>. ¡Felicidades has leído un bit de la memoria del kernel!. Bit a bit y con tiempo se puede leer todo el contenido de la memoria del <em>kernel</em> aplicando esta operación millones de veces.</p>
 
 <h3 id="notas-finales">Notas finales</h3>
 
@@ -267,7 +270,9 @@
     Referencia:<br>
     <ul>
 <li><a href="https://www.raspberrypi.org/blog/why-raspberry-pi-isnt-vulnerable-to-spectre-or-meltdown/">Why Raspberry Pi isn’t vulnerable to Spectre or Meltdown</a></li>
+<li><a href="https://www.amd.com/en/corporate/speculative-execution">An Update on AMD Processor Security</a></li>
 <li><a href="https://lkml.org/lkml/2017/12/27/2">x86/cpu, x86/pti: Do not enable PTI on AMD processors</a></li>
+<li><a href="https://en.wikipedia.org/wiki/List_of_ARM_microarchitectures">List of ARM microarchitectures</a></li>
 <li><a href="https://geeks.ms/etomas/2018/01/05/meltdown-y-spectre-algunos-comentarios/">Meltdown y Spectre algunos comentarios</a></li>
 </ul>
 
