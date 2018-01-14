@@ -3,12 +3,106 @@
     <id>https://picodotdev.github.io/blog-bitix/tags/planeta-codigo/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2018-01-06T10:30:00+01:00</updated>
+    <updated>2018-01-13T10:30:00+01:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
     <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/01/integracion-y-entrega-continua-con-gitlab-sobre-docker/</id>
+        <title>Integración y entrega continua con GitLab sobre Docker</title>        
+        <updated>2018-01-13T10:30:00+01:00</updated>
+        <published>2018-01-13T10:30:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/01/integracion-y-entrega-continua-con-gitlab-sobre-docker/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;assets/images/logotipos/gitlab.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;GitLab&#34; title=&#34;GitLab&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://about.gitlab.com/&#34;&gt;GitLab&lt;/a&gt; es una herramienta muy completa, una de las necesidades de los proyectos es tener teses y que estos se ejecuten con cada &lt;em&gt;commit&lt;/em&gt; para asegurar que los cambios no introducen errores en las funcionalidades cubiertas por los teses, esto es la integración continua. La entrega inmediata es una vez que los teses se han ejecutado correctamente hacer el despliegue en los servidores de forma pasa el tiempo mínimo entre que una funcionalidad está desarrollada y esta se puede utilizar.&lt;/p&gt;
+
+&lt;p&gt;GitLab proporciona integración continua (&lt;em&gt;Continuos Integration&lt;/em&gt;, CI) y entrega continua (&lt;em&gt;Continuos Delivery&lt;/em&gt;, CD) sin necesidad de una herramienta externa más especializada como es &lt;a href=&#34;https://jenkins.io/&#34;&gt;Jenkins&lt;/a&gt;. En el siguiente ejemplo muestro como configurar GitLab para crear uno o varios &lt;em&gt;runner&lt;/em&gt; que son los que realizan las acciones de integración y entrega continua y el archivo descriptor &lt;em&gt;.gitlab-ci.yml&lt;/em&gt; en formato &lt;em&gt;yaml&lt;/em&gt; que define las acciones específicas del proyecto que se ejecutarán con cada &lt;em&gt;commit&lt;/em&gt; en el repositorio &lt;a href=&#34;https://git-scm.com/&#34;&gt;Git&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Jenkins es una herramienta más especializada que también sirve para realizar integración y entrega continua. En la página &lt;a href=&#34;https://about.gitlab.com/comparison/gitlab-vs-jenkins.html&#34;&gt;GitLab vs Jenkins&lt;/a&gt; se comparan las características de ambas herramientas, aunque en esa página de comparación GitLab está indicando que tiene algunas características más y aunque no tuviera tantas para la mayoría de los casos de uso es más que suficiente con la ventaja de no necesitar una herramienta más al estar estar ya integrado en GitLab que ofrece además del repositorio de código fuente, una wiki o un páginas para un sitio web.&lt;/p&gt;
+
+&lt;p&gt;Para realizar integración y entrega continua hay definir las acciones, tareas y comandos de los que se componen del &lt;em&gt;pipeline&lt;/em&gt; específico para el proyecto, la descripción del &lt;em&gt;pipeline&lt;/em&gt; se define en un archivo &lt;em&gt;.gitlab-ci.yml&lt;/em&gt; que se añade en el directorio raíz del código fuente del proyecto en su repositorio de Git. El &lt;em&gt;pipeline&lt;/em&gt; según las necesidades del proyecto consta de varios pasos o &lt;em&gt;steps&lt;/em&gt; que se ejecutan de forma secuencial. Si en un mismo paso hay varias acciones estas se ejecutan de forma paralela. En el ejemplo de proyecto &lt;em&gt;test&lt;/em&gt; con un programa &lt;em&gt;Hola Mundo&lt;/em&gt; con Java y usando la herrramienta de contrucción &lt;a href=&#34;https://gradle.org/&#34;&gt;Gradle&lt;/a&gt; el &lt;em&gt;pipeline&lt;/em&gt; consta de las acciones de compilación y de ejecución de pruebas unitarias y &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/como-generar-la-documentacion-javadoc-con-gradle/&#34;&gt;creación de documentación &lt;em&gt;javadoc&lt;/em&gt;&lt;/a&gt;. La tarea de Gradle &lt;em&gt;build&lt;/em&gt; en un proyecto Java realiza la compilación, ejecución de pruebas unitarias y genera el artefacto resultado el el directorio &lt;em&gt;build/distributions&lt;/em&gt; y la librería &lt;em&gt;jar&lt;/em&gt; con las clases compiladas en &lt;em&gt;build/libs&lt;/em&gt;, la tarea &lt;em&gt;javadoc&lt;/em&gt; genera la &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/index.html?overview-summary.html&#34;&gt;documentación Javadoc&lt;/a&gt; de las clases del proyecto.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/ba5f594ceb5a911127f81ab80ec6ce88.js?file=.gitlab-ci.yml&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Añadido el archivo del &lt;em&gt;pipeline&lt;/em&gt; al código fuente del proyecto hay que definir un &lt;em&gt;runner&lt;/em&gt; que se encargará de ejecutarlo con cada &lt;em&gt;commit&lt;/em&gt; que se envíe al repositorio de código fuente. Hay que registrarlo y se necesita un &lt;em&gt;token&lt;/em&gt; que se puede obtener desde el área de administración en &lt;em&gt;Overview &amp;gt; Runners&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;assets/images/posts/2018/294/gitlab-runners.png&#34; title=&#34;Runners&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2018/294/gitlab-runners-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;GitLab Runners&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Al registrarlo hay que especificar el tipo de &lt;em&gt;runner&lt;/em&gt;, hay varios tipos, en este caso se usa el de &lt;em&gt;docker&lt;/em&gt; para ejecutar el &lt;em&gt;pipeline&lt;/em&gt; dentro de un contenedor de &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt;. En en archivo de &lt;a href=&#34;https://docs.docker.com/compose/&#34;&gt;Docker Compose&lt;/a&gt; es necesario que el &lt;em&gt;runner&lt;/em&gt; pueda comunicarse con el servicio de Docker, para ello como punto de montaje del contenedor de &lt;em&gt;gitlab-runner&lt;/em&gt; se especificar el archivo &lt;em&gt;docker.sock&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/ba5f594ceb5a911127f81ab80ec6ce88.js?file=add-gitlab-runner.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En este ejemplo y con este &lt;em&gt;pipeline&lt;/em&gt; el artefacto distribuible de la aplicación y el Javadoc se alamacena en GitLab estando accesible para su descarga desde el panel lateral una vez finalizado el &lt;em&gt;pipeline&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+  
+  &lt;a href=&#34;assets/images/posts/2018/294/pipelines.png&#34; title=&#34;Pipelines&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2018/294/pipelines-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;assets/images/posts/2018/294/pipeline.png&#34; title=&#34;Pipeline&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2018/294/pipeline-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Pipeline&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;El descriptor usando &lt;a href=&#34;https://docs.docker.com/compose/&#34;&gt;Docker Compose&lt;/a&gt; que define el servicio de GitLab y otro para GitLab Runner es el siguiente. El nombre de dominio que he utilizado para el servidor es &lt;em&gt;gitlab&lt;/em&gt; y ha de añadirse al archivo &lt;em&gt;/etc/hosts&lt;/em&gt; para que sea resuelto localmente.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/ba5f594ceb5a911127f81ab80ec6ce88.js?file=docker-compose-all.yml&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En la sección de referencia hay unos buenos enlaces de documentación de GitLab sobre la integración continua, despliegue continuo y entrega continua.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/GitLab&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;docker-compose -f docker-compose-all.yml up&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.gitlab.com/ce/ci/&#34;&gt;GitLab Continuous Integration (GitLab CI/CD)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.gitlab.com/ce/ci/quick_start/README.html&#34;&gt;Getting started with GitLab CI/CD&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.gitlab.com/ce/ci/yaml/README.html&#34;&gt;Configuration of your jobs with .gitlab-ci.yml&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://gist.github.com/daicham/5ac8461b8b49385244aa0977638c3420&#34;&gt;A sample of .gitlab-ci.yml for a gradle project&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="software"/>
+            
+                <category term="software-libre"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/</id>
@@ -29,8 +123,8 @@
 
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
-        &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/293/meltdown.svg&#34; alt=&#34;Meltdown&#34; title=&#34;Meltdown&#34; width=&#34;200&#34; height=&#34;200&#34;/&gt;
-        &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/293/spectre.svg&#34; alt=&#34;Spectre&#34; title=&#34;Spectre&#34; width=&#34;200&#34; height=&#34;200&#34;/&gt;
+        &lt;img src=&#34;assets/images/posts/2018/293/meltdown.svg&#34; alt=&#34;Meltdown&#34; title=&#34;Meltdown&#34; width=&#34;200&#34; height=&#34;200&#34;/&gt;
+        &lt;img src=&#34;assets/images/posts/2018/293/spectre.svg&#34; alt=&#34;Spectre&#34; title=&#34;Spectre&#34; width=&#34;200&#34; height=&#34;200&#34;/&gt;
         &lt;figcaption&gt;Logotipos de Meltdown y Spectre&lt;/figcaption&gt;
     &lt;/figure&gt;
 &lt;/div&gt;
@@ -41,9 +135,9 @@
 
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
-        &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/intel.svg&#34; alt=&#34;Intel&#34; title=&#34;Intel&#34; width=&#34;200&#34;/&gt;
-        &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/amd.svg&#34; alt=&#34;AMD&#34; title=&#34;AMD&#34; width=&#34;200&#34;/&gt;
-        &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/arm.svg&#34; alt=&#34;ARM&#34; title=&#34;ARM&#34; width=&#34;200&#34;/&gt;
+        &lt;img src=&#34;assets/images/logotipos/intel.svg&#34; alt=&#34;Intel&#34; title=&#34;Intel&#34; width=&#34;200&#34;/&gt;
+        &lt;img src=&#34;assets/images/logotipos/amd.svg&#34; alt=&#34;AMD&#34; title=&#34;AMD&#34; width=&#34;200&#34;/&gt;
+        &lt;img src=&#34;assets/images/logotipos/arm.svg&#34; alt=&#34;ARM&#34; title=&#34;ARM&#34; width=&#34;200&#34;/&gt;
     &lt;/figure&gt;
 &lt;/div&gt;
 
@@ -165,8 +259,8 @@
 
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
-        &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/lineageos.svg&#34; alt=&#34;LineageOS&#34; title=&#34;LineageOS&#34; width=&#34;200&#34;/&gt;
-        &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/replicant.svg&#34; alt=&#34;Replicant&#34; title=&#34;Replicant&#34; width=&#34;200&#34;/&gt;
+        &lt;img src=&#34;assets/images/logotipos/lineageos.svg&#34; alt=&#34;LineageOS&#34; title=&#34;LineageOS&#34; width=&#34;200&#34;/&gt;
+        &lt;img src=&#34;assets/images/logotipos/replicant.svg&#34; alt=&#34;Replicant&#34; title=&#34;Replicant&#34; width=&#34;200&#34;/&gt;
     &lt;/figure&gt;
 &lt;/div&gt;
 
@@ -189,10 +283,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/292/cyanogenmod-10.2.jpg&#34; title=&#34;CynogenMod 10.2&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/292/cyanogenmod-10.2-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2018/292/cyanogenmod-10.2.jpg&#34; title=&#34;CynogenMod 10.2&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2018/292/cyanogenmod-10.2-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/292/lineageos-14.1.jpg&#34; title=&#34;LineageOS 14.1&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/292/lineageos-14.1-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2018/292/lineageos-14.1.jpg&#34; title=&#34;LineageOS 14.1&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2018/292/lineageos-14.1-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;CynogenMod 10.2 y LineageOS 14.1&lt;/figcaption&gt;
@@ -216,7 +310,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/292/replicant-6.png&#34; title=&#34;Replicant 6&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/292/replicant-6-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2018/292/replicant-6.png&#34; title=&#34;Replicant 6&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2018/292/replicant-6-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   
@@ -232,10 +326,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/292/donacion-lineageos.png&#34; title=&#34;Donación LineageOS&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/292/donacion-lineageos-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2018/292/donacion-lineageos.png&#34; title=&#34;Donación LineageOS&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2018/292/donacion-lineageos-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/292/donacion-replicant.png&#34; title=&#34;Donación Replicant&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/292/donacion-replicant-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2018/292/donacion-replicant.png&#34; title=&#34;Donación Replicant&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2018/292/donacion-replicant-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Donación LineageOS y Replicant&lt;/figcaption&gt;
@@ -287,10 +381,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/291/analytics-2017.png&#34; title=&#34;Analytics 2017 de Blog Bitix&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/291/analytics-2017-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/291/analytics-2017.png&#34; title=&#34;Analytics 2017 de Blog Bitix&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/291/analytics-2017-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/291/adsense-2017.png&#34; title=&#34;AdSense 2017 de Blog Bitix&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/291/adsense-2017-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/291/adsense-2017.png&#34; title=&#34;AdSense 2017 de Blog Bitix&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/291/adsense-2017-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Evolución visitas e ingresos de AdSense en 2017&lt;/figcaption&gt;
@@ -383,7 +477,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/291/christmas-tux-2017.jpg&#34; title=&#34;¡Buen 2018!&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/291/christmas-tux-2017-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/291/christmas-tux-2017.jpg&#34; title=&#34;¡Buen 2018!&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/291/christmas-tux-2017-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
   
@@ -425,7 +519,7 @@
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2017/12/gitlab-la-completa-herramienta-integrada-para-desarrollo-de-software/</id>
         <title>GitLab, la completa herramienta integrada para desarrollo de software</title>        
-        <updated>2017-12-23T10:00:00+01:00</updated>
+        <updated>2018-01-14T02:00:00+01:00</updated>
         <published>2017-12-23T10:00:00+01:00</published>
         <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/12/gitlab-la-completa-herramienta-integrada-para-desarrollo-de-software/"/>
         <author><name>pico.dev</name></author>
@@ -434,7 +528,7 @@
           &lt;p&gt;&lt;strong&gt;Al desarrollar software una herramienta de control de versiones como Git y otras como un gestor de peticiones, una herramienta de integración continua o despliegue contínuo o una wiki para documentación son necesarias. Hay productos específicos para cada uno de ellos pero GitLab proporciona en una único producto todas estas facilitando su instalación y administración estando integradas en el mismo producto.&lt;/strong&gt;&lt;/p&gt;
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/gitlab.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;GitLab&#34; title=&#34;GitLab&#34;/&gt;
+    &lt;img src=&#34;assets/images/logotipos/gitlab.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;GitLab&#34; title=&#34;GitLab&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Usar una herramienta de control de versiones para el código fuente de un proyecto o programa es imprescindible para recuperar versiones anteriores de los archivos, comparar y compartir los cambios con el resto de desarrolladores del equipo. Otras herramientas imprescindibles son un gestor de peticiones para documentar cuál es el trabajo a realizar, ver en que se está trabajando, priorizar el trabajo inmediato que se realizará y el estado de cada petición. Por otro lado una herramienta donde recoger documentación del proyecto ayuda a compartir información y hacer que ese conocimiento quede recogido en algún lugar que pueda ser consultado con posterioridad o para futuros desarrolladores. También en estos días es imprescindible una herramienta para automatizar la ejecución de las pruebas unitarias y funcionales en cada &lt;em&gt;commit&lt;/em&gt; al repositorio de código fuente.&lt;/p&gt;
@@ -452,10 +546,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/change-password.png&#34; title=&#34;Contraseña de root&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/change-password-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/290/change-password.png&#34; title=&#34;Contraseña de root&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/290/change-password-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/sing-in.png&#34; title=&#34;Inicio de sesión&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/sing-in-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/290/sing-in.png&#34; title=&#34;Inicio de sesión&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/290/sing-in-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Contraseña e inicio de sesión&lt;/figcaption&gt;
@@ -463,7 +557,7 @@
 
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/welcome.png&#34; title=&#34;Página de bienvenida&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/welcome-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/290/welcome.png&#34; title=&#34;Página de bienvenida&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/290/welcome-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   
@@ -472,10 +566,10 @@
 
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/profile.png&#34; title=&#34;Perfil de usuario&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/profile-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/290/profile.png&#34; title=&#34;Perfil de usuario&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/290/profile-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/admin-area.png&#34; title=&#34;Área de administración&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/admin-area-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/290/admin-area.png&#34; title=&#34;Área de administración&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/290/admin-area-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Perfil de usuario y área de administración&lt;/figcaption&gt;
@@ -488,7 +582,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/new-proyect.png&#34; title=&#34;Nuevo proyecto&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/new-proyect-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/290/new-proyect.png&#34; title=&#34;Nuevo proyecto&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/290/new-proyect-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   
@@ -497,10 +591,10 @@
 
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/new-issue.png&#34; title=&#34;Nueva petición&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/new-issue-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/290/new-issue.png&#34; title=&#34;Nueva petición&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/290/new-issue-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/issues-board.png&#34; title=&#34;Panel de peticiones&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/issues-board-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/290/issues-board.png&#34; title=&#34;Panel de peticiones&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/290/issues-board-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Nueva petición y panel de peticiones&lt;/figcaption&gt;
@@ -508,10 +602,10 @@
 
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/new-wiki-page.png&#34; title=&#34;Nueva página wiki&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/new-wiki-page-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/290/new-wiki-page.png&#34; title=&#34;Nueva página wiki&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/290/new-wiki-page-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/wiki-page.png&#34; title=&#34;Página wiki&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/wiki-page-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/290/wiki-page.png&#34; title=&#34;Página wiki&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/290/wiki-page-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Página wiki&lt;/figcaption&gt;
@@ -519,18 +613,19 @@
 
 &lt;/div&gt;
 
-&lt;p&gt;Creado un proyecto GitLab e introducida la clave pública SSH nos proporciona la dirección URL con la que se puede clonar o añadir un repositorio de Git y empezar a subir, modificar y eliminar archivos del repositorio de control de versiones. Hecho algún &lt;em&gt;commit&lt;/em&gt; y subido algún archivo desde GitLab se puede ver el contenido del repositorio de Git.&lt;/p&gt;
+&lt;p&gt;Creado un proyecto GitLab e introducida la clave pública SSH nos proporciona la dirección URL con la que se puede clonar, convertir una carpeta existente en un repositorio o añadir un repositorio existente. Una vez con el repositorio en el sistema de archivos local se puede empezar a subir, modificar y eliminar archivos del repositorio de control de versiones. Hecho algún &lt;em&gt;commit&lt;/em&gt; y subido algún archivo desde GitLab se puede ver el contenido del repositorio de Git.&lt;/p&gt;
 
-&lt;script src=&#34;//gist.github.com/picodotdev/cedbdd0dc56baf73cb38a410fbd3c4c9.js?file=clone-repository.yml&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/cedbdd0dc56baf73cb38a410fbd3c4c9.js?file=existing-folder.yml&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/cedbdd0dc56baf73cb38a410fbd3c4c9.js?file=clone-repository.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/cedbdd0dc56baf73cb38a410fbd3c4c9.js?file=existing-folder.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/cedbdd0dc56baf73cb38a410fbd3c4c9.js?file=existing-repository.sh&#34;&gt;&lt;/script&gt;
 
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/project-details-1.png&#34; title=&#34;Detalles de proyecto&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/project-details-1-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/290/project-details-1.png&#34; title=&#34;Detalles de proyecto&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/290/project-details-1-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/project-details-2.png&#34; title=&#34;Detalles de proyecto&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/project-details-2-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/290/project-details-2.png&#34; title=&#34;Detalles de proyecto&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/290/project-details-2-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Detalles de proyecto&lt;/figcaption&gt;
@@ -538,7 +633,7 @@
 
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/source-file.png&#34; title=&#34;Contenido de archivo código fuente&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/290/source-file-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/290/source-file.png&#34; title=&#34;Contenido de archivo código fuente&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/290/source-file-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   
@@ -579,11 +674,11 @@
         <content type="html">
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/gnu.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;GNU&#34; title=&#34;GNU&#34;/&gt;
+    &lt;img src=&#34;assets/images/logotipos/gnu.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;GNU&#34; title=&#34;GNU&#34;/&gt;
 &lt;/div&gt;
 
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/linux.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
+    &lt;img src=&#34;assets/images/logotipos/linux.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;En los archivos de las fotos e imágenes además de su información visual gráfica, los millones de píxeles, se guarda información adicional relacionada con la misma, por ejemplo, con que modelo de cámara se realizó, la fecha y la hora a la que se realizó, e incluso la localización si la cámara dispone de GPS u otro medio de ubicación como posicionamiento mediante la red de datos móvil o WIFI.&lt;/p&gt;
@@ -595,10 +690,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/289/visor-imagenes.png&#34; title=&#34;Visor de imágenes de GNOME&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/289/visor-imagenes-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/289/visor-imagenes.png&#34; title=&#34;Visor de imágenes de GNOME&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/289/visor-imagenes-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/289/propiedades-imagen.png&#34; title=&#34;Propiedades de imagen con metadatos&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/289/propiedades-imagen-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/289/propiedades-imagen.png&#34; title=&#34;Propiedades de imagen con metadatos&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/289/propiedades-imagen-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Imagen y propiedades con metadatos&lt;/figcaption&gt;
@@ -619,10 +714,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/289/planton-roble.jpg&#34; title=&#34;Imagen con datos EXIF&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/289/planton-roble-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/289/planton-roble.jpg&#34; title=&#34;Imagen con datos EXIF&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/289/planton-roble-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/289/planton-roble-noexif.jpg&#34; title=&#34;Imagen sin datos EXIF&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/289/planton-roble-noexif-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/289/planton-roble-noexif.jpg&#34; title=&#34;Imagen sin datos EXIF&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/289/planton-roble-noexif-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Imagen izquierda con datos EXIF, imagen derecha sin datos EXIF&lt;/figcaption&gt;
@@ -662,7 +757,7 @@
           &lt;p&gt;&lt;strong&gt;Ciertas propiedades de la programación funcional fueron una de las características más destacadas añadidas a Java 8. La librería Javaslang y más tarde renombrada a Vavr basándose en estas nueva características añade algunas otras que no están incluidas en el propio JDK y están presentes en otros lenguajes más recientes y con programación funcional desde sus inicios. En esta breve introducción a la librería Vavr comentaré cuales son las propiedades que proporciona para simplificar algunas aspectos de la tarea de programación.&lt;/strong&gt;&lt;/p&gt;
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/vavr.png&#34; class=&#34;right&#34; width=&#34;300&#34; alt=&#34;Vavr&#34; title=&#34;Vavr&#34;/&gt;
+    &lt;img src=&#34;assets/images/logotipos/vavr.png&#34; class=&#34;right&#34; width=&#34;300&#34; alt=&#34;Vavr&#34; title=&#34;Vavr&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Varv se define a si misma como una librería funcional para Java 8+. Ayuda a reducir la cantidad de código y a incrementar la robustez. Un primer paso hacia la programación funcional es empezar a pensar en valores inmutables. Vavr proporciona colecciones inmutables, las necesarias funciones y estructuras de control para operar estos valores. El resultado es bello y simplemente funciona.&lt;/p&gt;
@@ -676,7 +771,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/288/vavr-overview.png&#34; title=&#34;Jerarquía de clases de Vavr&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/288/vavr-overview-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/288/vavr-overview.png&#34; title=&#34;Jerarquía de clases de Vavr&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/288/vavr-overview-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   
@@ -708,10 +803,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/288/collections-seq.png&#34; title=&#34;Jerarquía de clases de Seq&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/288/collections-seq-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/288/collections-seq.png&#34; title=&#34;Jerarquía de clases de Seq&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/288/collections-seq-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/288/collections-set-map.png&#34; title=&#34;Jerarquía de clases de Set y Map&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/288/collections-set-map-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/288/collections-set-map.png&#34; title=&#34;Jerarquía de clases de Set y Map&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/288/collections-set-map-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Jerarquía de clases de Seq, Set y Map&lt;/figcaption&gt;
@@ -792,13 +887,13 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/287/pirates-of-silicon-valley.jpg&#34; title=&#34;Piratas de Silicon Valley&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/287/pirates-of-silicon-valley-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/287/pirates-of-silicon-valley.jpg&#34; title=&#34;Piratas de Silicon Valley&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/287/pirates-of-silicon-valley-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/287/office-space.jpg&#34; title=&#34;Trabajo basura&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/287/office-space-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/287/office-space.jpg&#34; title=&#34;Trabajo basura&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/287/office-space-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/287/wargames.jpg&#34; title=&#34;Juegos de guerra&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/287/wargames-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/287/wargames.jpg&#34; title=&#34;Juegos de guerra&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/287/wargames-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -820,13 +915,13 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/287/black-mirror.jpg&#34; title=&#34;Black Mirror&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/287/black-mirror-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/287/black-mirror.jpg&#34; title=&#34;Black Mirror&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/287/black-mirror-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/287/mr-robot.jpg&#34; title=&#34;Mr Robot&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/287/mr-robot-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/287/mr-robot.jpg&#34; title=&#34;Mr Robot&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/287/mr-robot-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/287/silicon-valley.jpg&#34; title=&#34;Silicon Valley&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/287/silicon-valley-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/287/silicon-valley.jpg&#34; title=&#34;Silicon Valley&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/287/silicon-valley-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -880,8 +975,8 @@
 
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
   &lt;figure&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/gnu.svg&#34; alt=&#34;GNU&#34; title=&#34;GNU&#34; width=&#34;200&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/linux.svg&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34; width=&#34;200&#34;&gt;
+    &lt;img src=&#34;assets/images/logotipos/gnu.svg&#34; alt=&#34;GNU&#34; title=&#34;GNU&#34; width=&#34;200&#34;&gt;
+    &lt;img src=&#34;assets/images/logotipos/linux.svg&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34; width=&#34;200&#34;&gt;
 &lt;/div&gt;
 
 &lt;h3 id=&#34;libros-y-novelas&#34;&gt;Libros y novelas&lt;/h3&gt;
@@ -900,13 +995,13 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/287/el-circulo.jpg&#34; title=&#34;El circulo&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/287/el-circulo-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/287/el-circulo.jpg&#34; title=&#34;El circulo&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/287/el-circulo-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/287/microsiervos.jpg&#34; title=&#34;Microsiervos&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/287/microsiervos-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/287/microsiervos.jpg&#34; title=&#34;Microsiervos&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/287/microsiervos-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/287/cuando-los-administradores-de-sistemas-gobernaron-tierra.jpg&#34; title=&#34;Cuando los administradores de sistemas gobernaron la tierra&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/287/cuando-los-administradores-de-sistemas-gobernaron-tierra-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/287/cuando-los-administradores-de-sistemas-gobernaron-tierra.jpg&#34; title=&#34;Cuando los administradores de sistemas gobernaron la tierra&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/287/cuando-los-administradores-de-sistemas-gobernaron-tierra-thumb.jpg&#34;/&gt;&lt;/a&gt;
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -952,7 +1047,7 @@
         <content type="html">
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/duckduckgo.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;DuckDuckGo&#34; title=&#34;DuckDuckGo&#34;/&gt;
+    &lt;img src=&#34;assets/images/logotipos/duckduckgo.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;DuckDuckGo&#34; title=&#34;DuckDuckGo&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;En la &lt;abbr title=&#34;World Wide Web&#34;&gt;WWW&lt;/abbr&gt; o simplemente en la web hay una cantidad ingente de información y conocimiento distribuido entre los millones de computadoras interconectados por internet. La creación de la WWW por &lt;a href=&#34;https://en.wikipedia.org/wiki/Tim_Berners-Lee&#34;&gt;Tim_Berners-Lee&lt;/a&gt; en 1989, hace no tanto, y su crecimiento exponencial desde entonces ha hecho que se haya convertido en uno de los recipientes de conocimiento más importantes de la humanidad. La información o conocimiento está ahí, la dificultad radica en que buscar y como encontrarla. Para atender a la necesidad de encontrar la información se han creado los buscadores, a día de hoy el más popular es &lt;a href=&#34;https://www.google.es/&#34;&gt;Google&lt;/a&gt; pero hay otros como &lt;a href=&#34;https://www.bing.com/&#34;&gt;Bing&lt;/a&gt;, &lt;a href=&#34;https://www.yahoo.com/&#34;&gt;Yahoo&lt;/a&gt; o con cierta popularidad en algunas regiones como &lt;a href=&#34;https://www.yandex.ru/&#34;&gt;Yandex&lt;/a&gt; en Rusia o &lt;a href=&#34;https://www.baidu.com/&#34;&gt;Baidu&lt;/a&gt; en China.&lt;/p&gt;
@@ -962,7 +1057,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/duckduckgo.png&#34; title=&#34;DuckDuckGo&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/duckduckgo-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/286/duckduckgo.png&#34; title=&#34;DuckDuckGo&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/286/duckduckgo-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   
@@ -973,10 +1068,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/duckduckgo-1.png&#34; title=&#34;No guardamos tu información personal&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/duckduckgo-1-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/286/duckduckgo-1.png&#34; title=&#34;No guardamos tu información personal&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/286/duckduckgo-1-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/duckduckgo-2.png&#34; title=&#34;Nosotros no te perseguimos con anuncios&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/duckduckgo-2-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/286/duckduckgo-2.png&#34; title=&#34;Nosotros no te perseguimos con anuncios&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/286/duckduckgo-2-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
@@ -984,10 +1079,10 @@
 
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/duckduckgo-3.png&#34; title=&#34;No rastreamos tu información&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/duckduckgo-3-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/286/duckduckgo-3.png&#34; title=&#34;No rastreamos tu información&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/286/duckduckgo-3-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/duckduckgo-4.png&#34; title=&#34;Cámbiate a DuckDuckGo&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/duckduckgo-4-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/286/duckduckgo-4.png&#34; title=&#34;Cámbiate a DuckDuckGo&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/286/duckduckgo-4-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Privacidad de DuckDuckGo&lt;/figcaption&gt;
@@ -997,10 +1092,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/resultados.png&#34; title=&#34;Resultados&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/resultados-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/286/resultados.png&#34; title=&#34;Resultados&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/286/resultados-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/resultados-imagenes.png&#34; title=&#34;Resultados de imágenes&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/resultados-imagenes-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/286/resultados-imagenes.png&#34; title=&#34;Resultados de imágenes&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/286/resultados-imagenes-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Resultados de DuckDuckGo&lt;/figcaption&gt;
@@ -1010,10 +1105,10 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/opciones-general.png&#34; title=&#34;Opciones general&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/opciones-general-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/286/opciones-general.png&#34; title=&#34;Opciones general&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/286/opciones-general-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/opciones-diseno.png&#34; title=&#34;Opciones diseño&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/opciones-diseno-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/286/opciones-diseno.png&#34; title=&#34;Opciones diseño&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/286/opciones-diseno-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;&lt;/figcaption&gt;
@@ -1021,10 +1116,10 @@
 
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/opciones-apariencia.png&#34; title=&#34;Opciones apariencia&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/opciones-apariencia-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/286/opciones-apariencia.png&#34; title=&#34;Opciones apariencia&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/286/opciones-apariencia-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/opciones-privacidad.png&#34; title=&#34;Opciones privacidad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/opciones-privacidad-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/286/opciones-privacidad.png&#34; title=&#34;Opciones privacidad&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/286/opciones-privacidad-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   &lt;figcaption&gt;Opciones de DuckDuckGo&lt;/figcaption&gt;
@@ -1043,7 +1138,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/firefox-duckduckgo.png&#34; title=&#34;Preferencias de buscadores en Firefox&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/286/firefox-duckduckgo-thumb.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/286/firefox-duckduckgo.png&#34; title=&#34;Preferencias de buscadores en Firefox&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/286/firefox-duckduckgo-thumb.png&#34;/&gt;&lt;/a&gt;
   
   
   
@@ -1078,7 +1173,7 @@
           &lt;p&gt;&lt;strong&gt;If Microsoft wished there would be no Windows users using it without the corresponding license. But they consents, they does not care that for a personal use it pirated. A few days after July 29, Windows 10 will appear on the file sharing networks and download pages, also a few days later a program will appear that avoids the validation system as has happened with previous versions.&lt;/strong&gt;&lt;/p&gt;
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/microsoft.png&#34; class=&#34;right&#34; alt=&#34;Microsoft&#34; title=&#34;Microsoft&#34;/&gt;
+    &lt;img src=&#34;assets/images/logotipos/microsoft.png&#34; class=&#34;right&#34; alt=&#34;Microsoft&#34; title=&#34;Microsoft&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Microsoft has released for sale and will pre-install the right-of-use (not product ownership) license of its next operating system, Windows 10. Although most will acquire this license through the &lt;a href=&#34;https://en.wikipedia.org/wiki/Bundling_of_Microsoft_Windows#The_.22Windows_tax.22&#34;&gt;Windows tax&lt;/a&gt; when buying a new computer and although (rarely) it is possible to get their reimbursement it is still with obstacles, the great majority will not request the reimbursement maybe for lack of knowledge that the equipment and its operating system are two different products (many do not know either that it is an operating system), ignorance of the possibility of reimbursement or for not making the effort (I plead guilty) of which the manufacturer is habitual that provides zero information on how to proceed and when it is done is with difficulties. Many of us pay for the Windows license even if we do not want it, and although Microsoft logically prefers you to acquire the license, I think it does not matter that you do not pay it for personal use.&lt;/p&gt;
@@ -1088,7 +1183,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/285/windows-10.png&#34; title=&#34;Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/285/windows-10.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/285/windows-10.png&#34; title=&#34;Windows 10&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/285/windows-10.png&#34;/&gt;&lt;/a&gt;
   
   
   
@@ -1102,7 +1197,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/285/linux-gnu-ditributions.png&#34; title=&#34;Linux, GNU, distribuciones&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/285/linux-gnu-ditributions.png&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/285/linux-gnu-ditributions.png&#34; title=&#34;Linux, GNU, distribuciones&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/285/linux-gnu-ditributions.png&#34;/&gt;&lt;/a&gt;
   
   
   
@@ -1118,7 +1213,7 @@
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
     &lt;figure&gt;
   
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/285/windows-genuine.jpg&#34; title=&#34;Windows Genuine&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/285/windows-genuine.jpg&#34;/&gt;&lt;/a&gt;
+  &lt;a href=&#34;assets/images/posts/2017/285/windows-genuine.jpg&#34; title=&#34;Windows Genuine&#34; data-gallery&gt;&lt;img src=&#34;assets/images/posts/2017/285/windows-genuine.jpg&#34;/&gt;&lt;/a&gt;
   
   
   
@@ -1170,7 +1265,7 @@
         <content type="html">
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/graphql.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
+    &lt;img src=&#34;assets/images/logotipos/graphql.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java/&#34;&gt;GraphQL es una alternativa a una interfaz REST&lt;/a&gt; con las ventajas de permitir al consumidor obtener únicamente los datos que requiere y realizar varias consultas en una misma petición.&lt;/p&gt;
@@ -1223,7 +1318,7 @@
         <content type="html">
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/graphql.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
+    &lt;img src=&#34;assets/images/logotipos/graphql.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;El conjunto de datos de una entidad en algunos casos será grande, miles o cientos de miles de registros, y por tanto no es viable devolverlos todos en una misma consulta por lo que es necesario realizar paginación devolviéndolos en pequeños grupos. La paginación se puede implementar de varias formas, habitualmente con un parámetro que limite el número de elementos a incluir en la página y otro parámetro &lt;em&gt;offset&lt;/em&gt; que deseche los primeros elementos hasta el primero deseado. Sin embargo, utilizar los parámetros &lt;em&gt;limit&lt;/em&gt; y &lt;em&gt;offset&lt;/em&gt; puede producir resultados inesperados si mientras la obtención de una página y la siguiente se insertan nuevos elementos anteriores al &lt;em&gt;offset&lt;/em&gt; ocasionando que lo que sería por ejemplo el décimo elemento pase a ser el undécimo.&lt;/p&gt;
@@ -1291,7 +1386,7 @@
         <content type="html">
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/graphql.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
+    &lt;img src=&#34;assets/images/logotipos/graphql.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;No será extraño que en una API para obtener datos esté la necesidad de realizar algún tipo de filtrado para recuperar únicamente la colección de datos deseados de todos los existentes en un repositorio. A las consultas de &lt;a href=&#34;http://graphql.org/&#34;&gt;GraphQL&lt;/a&gt; se les pueden pasar argumentos que son recibidos por los métodos que actúan como punto de entrada de las consultas. Con los argumentos es posible implementar cualquier funcionalidad que se necesite, entre ellas el filtrado. Los argumentos pueden ser datos escalares o más complejos que se definen con la palabra reservada &lt;em&gt;input&lt;/em&gt; en el esquema.&lt;/p&gt;
@@ -1347,7 +1442,7 @@
         <content type="html">
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/graphql.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
+    &lt;img src=&#34;assets/images/logotipos/graphql.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Cuando en una consulta de &lt;a href=&#34;http://graphql.org/&#34;&gt;GraphQL&lt;/a&gt; se indican las propiedades a devolver GraphQL usa para cada una de ellas lo que en la implementación de Java se llama un &lt;em&gt;resolver&lt;/em&gt; y en otras implementaciones &lt;em&gt;data fetcher&lt;/em&gt;. En la mayoría de casos las propiedades serán propiedades de un objeto y en estos casos se usará un &lt;em&gt;PropertyDataFetcher&lt;/em&gt; usando en Java la convención de los &lt;em&gt;java beans&lt;/em&gt; o la clave de un mapa. En el caso de que cierto dato no esté almacenado en el objeto sino en un repositorio externo es necesario usar un &lt;em&gt;resolver&lt;/em&gt; para devolver esa propiedad en la consulta.&lt;/p&gt;
@@ -1407,7 +1502,7 @@
         <content type="html">
         
         &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/graphql.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
+    &lt;img src=&#34;assets/images/logotipos/graphql.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Por defecto &lt;a href=&#34;http://graphql.org/&#34;&gt;GraphQL&lt;/a&gt; devuelve errores con mensajes descriptivos para los errores del cliente como son los errores de sintaxis en la sentencia de consulta o mutación, en el caso de que el campo solicitado no exista o no se ha indicado ninguno. En el caso de Java si se lanza una excepción en la clase repositorio que guarda los datos o en la lógica de negocio y no se captura GraphQL indicará que se ha producido un error interno en el servidor. Esto no es muy descriptivo y es mejor indicar errores más útiles para el usuario de la API como podría ser que no se tienen permisos para realizar la modificación o el error que se ha producido al validar los datos y por los que la operación no se ha completado.&lt;/p&gt;
@@ -1449,60 +1544,6 @@
 &lt;/ul&gt;
 
 &lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2017/11/ordenar-alfabeticamente-cadenas-con-la-clase-collator-en-java/</id>
-        <title>Ordenar alfabéticamente cadenas con la clase Collator en Java</title>        
-        <updated>2017-11-04T11:00:00+01:00</updated>
-        <published>2017-11-04T11:00:00+01:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/11/ordenar-alfabeticamente-cadenas-con-la-clase-collator-en-java/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;Sin usar la clase &lt;em&gt;Collator&lt;/em&gt; incluida en el JDK al ordenar alfabéticamente una lista de palabras obtendremos en algún caso un resultado que nos extrañará y seguramente no sea lo que esperamos. La clase &lt;em&gt;String&lt;/em&gt; implementa la interfaz Comprable pero esta ordenación es en base al valor del código &lt;em&gt;unicode&lt;/em&gt; sin tener en cuenta los diferentes niveles de diferencias que se pueden usar según el &lt;em&gt;Locale&lt;/em&gt; y la clase &lt;em&gt;Collator&lt;/em&gt;.&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Quizá algunos digan que la aparentemente sencilla tarea de ordenar una lista de palabras es algo fácil de hacer con cualquier lenguaje de programación. La realidad es que puede complicarse en una buena cantidad si se ha de realizar con los caracteres del alfabeto de algunos lenguajes. La ordenación no es tan simple como realizar lo siguiente en código Java:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/8869db9cbeebe22feb98d1bdab87d386.js?file=Sort.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Primeramente nos daremos cuenta de que la siguiente lista de nombres de provincias las ordena de una forma que quizá no es la que esperamos. En algunas páginas web se puede observar este error en algunos elementos de selección de opciones de nombres de paises, ciudades, provincias u otro conjunto de elementos que suelen estar ordenados alfabéticamente para facilitar el encontrar el elemento a seleccionar pero que si se da el caso de que hay variación de palabras con tildes y sin ellas y minúsculas y mayúsculas se presenta la ordenación incorrecta.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/8869db9cbeebe22feb98d1bdab87d386.js?file=Sort.out&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Como se observa las palabras con letras mayúsculas se ordenan antes que las palabras con letras en minúscula independientemente de la letra del alfabeto, seguramente esta no es la ordenación deseada. En algunos lenguajes como el español algo similar ocurre con las palabras que llevan tilde en alguna letra. Convertir las palabras a mayúsculas o minúsculas o eliminar las tildes por los mismos sin tilde previamente a hacer la ordenación además de no ser una buena solución no sirve para otros lenguajes con diferentes formas de tilde y marcas en las letras.&lt;/p&gt;
-
-&lt;p&gt;En Java la solución es utilizar la clase &lt;a href=&#34;http://docs.oracle.com/javase/9/docs/api/java/text/Collator.html&#34;&gt;Collator&lt;/a&gt;, esta clase establece varios niveles en las que las letras se consideran diferentes. Por ejemplo, en español las letras &lt;em&gt;e&lt;/em&gt; y &lt;em&gt;f&lt;/em&gt; se consideran diferencias primarias (diferentes letras), &lt;em&gt;e&lt;/em&gt; y &lt;em&gt;é&lt;/em&gt; son diferencias secundarias (diferentes tildes) y &lt;em&gt;e&lt;/em&gt; y &lt;em&gt;E&lt;/em&gt; son diferencias terciarias (diferencias entre mayúsculas y minúsculas). Las diferencias entre caracteres dependen del &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/util/Locale.html&#34;&gt;Locale&lt;/a&gt; y un &lt;em&gt;Collator&lt;/em&gt; se obtiene en base a él con el método estático &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/text/Collator.html#getInstance-java.util.Locale-&#34;&gt;getInstance​(Locale)&lt;/a&gt;. Con el método &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/text/Collator.html#setStrength-int-&#34;&gt;setStrength(int)&lt;/a&gt; se establece el nivel de diferencias deseadas.&lt;/p&gt;
-
-&lt;p&gt;Usando la clase &lt;em&gt;Collator&lt;/em&gt; y realizando la ordenación de la misma lista anterior el resultado es diferente y seguramente más apropiado. Como la clase &lt;em&gt;Collator&lt;/em&gt; implementa la interfaz &lt;em&gt;Comparable&lt;/em&gt; podemos usarla como el comparador aplicar en el método &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/util/Arrays.html#sort-T:A-java.util.Comparator-&#34;&gt;Arrays.sort(T[], Comparator&amp;lt;? super T&amp;gt;)&lt;/a&gt; o &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/util/List.html#sort-java.util.Comparator-&#34;&gt;List.sort(Comparator&amp;lt;? super E&amp;gt;)&lt;/a&gt;.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/8869db9cbeebe22feb98d1bdab87d386.js?file=Main.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/8869db9cbeebe22feb98d1bdab87d386.js?file=System.out&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Utilizando el &lt;em&gt;Collator&lt;/em&gt; con solo diferencias primarias &lt;em&gt;Cantabria&lt;/em&gt; se ordena al final de la lista por tener las letras &lt;em&gt;a&lt;/em&gt;, &lt;em&gt;A&lt;/em&gt; y &lt;em&gt;Á&lt;/em&gt; una diferencia primaria con &lt;em&gt;C&lt;/em&gt;. Con diferencias secundarias las letras &lt;em&gt;A&lt;/em&gt; y &lt;em&gt;a&lt;/em&gt; se ordenan antes que &lt;em&gt;Á&lt;/em&gt; por tener diferencias secundarias. Finalmente, con diferencias terciarias &lt;em&gt;a&lt;/em&gt; se ordena antes que &lt;em&gt;A&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;
-    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaCollator&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
-&lt;/p&gt;
 
 
 
