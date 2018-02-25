@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="pico.dev">
   <meta name="keywords" content="java, programacion, tapestry, linux, gnu, gnu/linux, arch, arch linux, software, software libre, html, css, javascript">
-  <meta name="description" content="Por defecto el directorio donde se guardan las imágenes y los contenedores junto con otros metadatos de Docker es /var/lib/docker. En mi caso hace un tiempo me compre un disco de estado sólido Samsung 840 EVO de 250 GiB y comenté en el artículo del anterior enlace. Aunque probablemente un disco SSD sea suficientemente fiable como para que antes de que falle cambiémos de ordenador porque ya es antiguo, yo trato de evitar hacer muchas escrituras al disco. &hellip;">
+  <meta name="description" content="En un artículo de introducción sobre la programación concurrente en Java explicaba cuales eran la facilidades que proporciona este lenguaje para la programación concurrente en múltiples hilos. En él exponía dos ejemplos clásicos que se estudian en las asignaturas de sistemas operativos, uno de ellos era el de la cena de los filósofos donde varios filósofos sentados en una tabla durante una cena se dedican a pensar y cuando tienen hambre comen usando para ello dos tenedores que comparten con sus compañeros que se sientan a la izquierda y derecha. &hellip;">
   <base href="https://picodotdev.github.io/blog-bitix/">
 
-  <title>Cambiar la ruta raíz del entorno de Docker</title>
+  <title>El problema de concurrencia de la cena de los filósofos resuelto con Java</title>
 
   <link rel="author" type="text/plain" href="humans.txt" />
   <link rel="shortcut icon" href="assets/favicon.ico">
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/apple-touch-icon-144-precomposed.png">
-  <link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2015/07/cambiar-la-ruta-raiz-del-entorno-de-docker/">
+  <link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2018/02/el-problema-de-concurrencia-de-la-cena-de-los-filosofos-resuelto-con-java/">
 
   
   <link href="index.xml" rel="alternate" type="application/rss+xml" title="Blog Bitix" />
@@ -130,27 +130,24 @@
               <meta itemprop="inLanguage" content="es">
               
               
-                <meta itemprop="keywords" content="blog-stack, gnu-linux, planeta-codigo, planeta-linux">
+                <meta itemprop="keywords" content="blog-stack, java, planeta-codigo, programacion">
               
               
-              <h1 itemprop="name">Cambiar la ruta raíz del entorno de Docker</h1>
+              <h1 itemprop="name">El problema de concurrencia de la cena de los filósofos resuelto con Java</h1>
               <p class="information">
-                Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2015-07-24">24/07/2015</time>, actualizado el <time itemprop="dateModified" datetime="2015-11-14">14/11/2015</time>.
-                
+                Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2018-02-25">25/02/2018</time>.
                 
                   <br>
-                   <a href="tags/blog-stack/">blog-stack</a> <a href="tags/gnu-linux/">gnu-linux</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/planeta-linux/">planeta-linux</a>
+                   <a href="tags/blog-stack/">blog-stack</a> <a href="tags/java/">java</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/programacion/">programacion</a>
                 
                 <br>
-                <a href="/blog-bitix/2015/07/cambiar-la-ruta-raiz-del-entorno-de-docker/" itemprop="url">Enlace permanente</a>
+                <a href="/blog-bitix/2018/02/el-problema-de-concurrencia-de-la-cena-de-los-filosofos-resuelto-con-java/" itemprop="url">Enlace permanente</a>
                 
-                  <a href="/blog-bitix/2015/07/cambiar-la-ruta-raiz-del-entorno-de-docker/#comments">Comentarios</a>
+                  <a href="/blog-bitix/2018/02/el-problema-de-concurrencia-de-la-cena-de-los-filosofos-resuelto-con-java/#comments">Comentarios</a>
                 
                 
               </p>
 
-              
-                <p class="summary" itemprop="about">Cambiando la ruta raíz del entorno de ejecución de docker, dónde guarda las imágenes de los contenedores, los datos de los contenedores y otros metadatos, podemos almacenar esta información en un disco duro externo o memoria USB.</p>
               
               
 
@@ -164,50 +161,79 @@
 </script>
 
               <div class="content" itemprop="articleBody">
-                <meta itemprop="wordCount" content="340">
+                <meta itemprop="wordCount" content="659">
                 
 
 
                 <div class="logotypes" style="float: right;">
-    <img src="assets/images/logotipos/docker.svg" class="right" width="200" alt="Docker" title="Docker"/>
+    <img src="assets/images/logotipos/java.svg" class="right" width="200" alt="Java" title="Java"/>
 </div>
 
-<p>Por defecto el directorio donde se guardan las imágenes y los contenedores junto con otros metadatos de <a href="https://www.docker.com/">Docker</a> es <em>/var/lib/docker</em>. En mi caso hace un tiempo me compre un <a href="https://picodotdev.github.io/blog-bitix/2014/03/desempaquetado-y-analisis-samsung-840-evo-ssd-250-gb/">disco de estado sólido Samsung 840 EVO de 250 GiB</a> y comenté en el artículo del anterior enlace. Aunque probablemente un disco SSD sea suficientemente fiable como para que antes de que falle cambiémos de ordenador porque ya es antiguo, yo trato de evitar hacer muchas escrituras al disco. Al trabajar con Docker ya sea descargando imágenes, <a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/">construyendo imágenes propias con archivos Dockerfile</a> y al arrancar contenedores cuyos procesos escriben en disco prefiero externalizar esas escrituras en una unidad USB ya sea un pendrive o un disco duro. En este artículo comentaré como modificar Docker para que las imágenes y los contenedores estén almacenados en una memoria USB o en otra localización de la por defecto.</p>
+<p>En un <a href="https://picodotdev.github.io/blog-bitix/2017/07/iniciacion-a-la-programacion-concurrente-en-java/">artículo de introducción sobre la programación concurrente en Java</a> explicaba cuales eran la facilidades que proporciona este lenguaje para la programación concurrente en múltiples hilos. En él exponía dos ejemplos clásicos que se estudian en las asignaturas de sistemas operativos, uno de ellos era el de <a href="https://es.wikipedia.org/wiki/Problema_de_la_cena_de_los_fil%C3%B3sofos">la cena de los filósofos</a> donde varios filósofos sentados en una tabla durante una cena se dedican a pensar y cuando tienen hambre comen usando para ello dos tenedores que comparten con sus compañeros que se sientan a la izquierda y derecha.</p>
 
-<p>En Arch Linux el proceso de docker se arranca con un servicio de systemd:</p>
-
-<script src="//gist.github.com/picodotdev/1dd776471f97f0c383a9.js?file=docker-start.sh"></script>
-
-<p>En la definición del servicio de docker se establecen los parámetros de inicio del demonio de docker y deberemos cambiarlo para cambiar la localización de las imágenes y contenedores. En la información de ayuda del comando de docker podemos ver que si queremos cambiar la localización por defecto de las imágenes y contenedores de docker debemos emplear la opción <em>-g &ldquo;/var/lib/docker&rdquo;</em>.</p>
-
-<script src="//gist.github.com/picodotdev/1dd776471f97f0c383a9.js?file=docker-help.sh"></script>
-
-<p>En Arch Linux el servicio de systemd de docker se guarda en <em>/usr/lib/systemd/system/docker.service</em>. Modificando el parámetro <em>ExecStart</em> de la sección <em>[Service]</em> para añadir el parámetro <em>-g</em> nos quedaría algo como:</p>
-
-<script src="//gist.github.com/picodotdev/1dd776471f97f0c383a9.js?file=docker.service"></script>
-
-<p>Iniciando ahora el servicio de Docker veremos que en el directorio que hayamos elegido se crean los metadatos y si hacemos un <em>pull</em> de una imagen se guardará en esta localización.</p>
+<p>Dado que dos filósofos no puede utilizar el mismo tenedor a la vez hay que implementar sincronización a la hora de utilizarlos. En la realidad un filósofo representa a un proceso y un tenedor representa a un recurso compartido de uso exclusivo.</p>
 
 <div class="media" style="text-align: center;">
     
 <figure>
   
-  <a href="assets/images/posts/2015/91/docker-root.png" title="Directorio raíz de docker" data-gallery><img src="assets/images/posts/2015/91/docker-root.png"/></a>
+  <a href="assets/images/posts/2018/302/dining-philosophers.png" title="La cena de los filósofos" data-gallery><img src="assets/images/posts/2018/302/dining-philosophers-thumb.png"/></a>
   
   
   
-  <figcaption>Directorio raíz de docker</figcaption>
+  <figcaption>La cena de los filósofos</figcaption>
 </figure>
 
 
 </div>
 
-<div class="alert alert-warning">
-    <p>Cada vez que se actualice el paquete de docker el archivo del servicio de systemd se sobreescribirá y perderemos la configuración, de modo que en cada actualización de docker deberemos realizar de nuevo la modificación.</p>
+<p>La solución del ejemplo que ponía en el artículo anterior no era completamente correcto ya que un filósofo si tiene mala suerte podría quedarse sin  comer o sin comer durante mucho tiempo, debido a que en esa implementación el filósofo intentaba coger los tenedores y si no podía desistía si alguno de sus compañeros los estuviese utilizando. Las reglas que ha de cumplir una solución a un problema de concurrencia para considerarse válida son:</p>
 
+<ol>
+<li>Exclusión mutua: Si un proceso se está ejecutando en su sección crítica ningún otro proceso se puede estar ejecutando en la suya.</li>
+<li>Progreso: Si ningún proceso se está ejecutando en su sección crítica y hay otros procesos que desean entrar en las suyas, entonces solo aquellos procesos que no se está ejecutando en su sección restante pueden participar en la decisión  del cuál será el siguiente en entrar en la sección crítica, y esta selección no puede postergarse indefinidamente.</li>
+<li>Espera limitada: Debe haber un límite en el número de veces que se permite que los demás procesos entren en su sección crítica después de que un proceso haya efectuado una solicitud para entrar en la suya y antes de que se conceda esa solicitud.</li>
+</ol>
+
+<p>En la implementación de este ejemplo evitaré que un filósofo pueda quedarse sin comer. La razón de que un filósofo desistiera de coger uno de los tenedores que necesita si uno de sus compañeros ya lo tuviese era para evitar un bloqueo circular en el caso de que todos los filósofos al mismo tiempo cogiesen su tenedor izquierdo, en esta situación ninguno de ellos podría coger su tenedor derecho y se quedarían todos esperando indefinidamente, se produciría un bloqueo indefinido o <em>deadlock</em>.</p>
+
+<p>Para evitar un bloqueo indefinido una de las siguientes reglas no se ha de cumplir:</p>
+
+<ol>
+<li>Exclusión mutua: Por lo menos un recurso debe retenerse en modo no compartido; es decir, sólo un proceso a la vez puede usar el recurso. Si otro proceso solicita el recurso, deberá esperar hasta que se haya liberado.</li>
+<li>Retención y espera: Debe haber un proceso que retenga por lo menos un recurso y espere adquirir otros recursos retenidos por otros procesos.</li>
+<li>No apropiación: Los recursos no se pueden quitar; es decir, un recurso solo puede ser liberado voluntariamente por el proceso que lo retiene, después de que haya cumplido su tarea.</li>
+<li>Espera circular: Debe haber un conjunto { P0, P1, &hellip;, Pn } de procesos en espera tales que P0 espera un recurso retenido por P1, P1 espera un recurso retenido por P2, &hellip; Pn-1 espera un recurso retenido por On, y Pn espera un recurso retenido por P0.</li>
+</ol>
+
+<p>En esta implementación he optado por hacer que el último filósofo en vez de ser diestro sea zurdo de modo que primero intente coger el tenedor izquierdo y luego el derecho, con este simple cambio la espera circular ya no puede producirse y con ello el bloqueo indefinido.</p>
+
+<script src="//gist.github.com/picodotdev/e732e19b68e6f1fd6b0e586dc1a5aaf7.js?file=Main.java"></script>
+<script src="//gist.github.com/picodotdev/e732e19b68e6f1fd6b0e586dc1a5aaf7.js?file=Table.java"></script>
+<script src="//gist.github.com/picodotdev/e732e19b68e6f1fd6b0e586dc1a5aaf7.js?file=Fork.java"></script>
+<script src="//gist.github.com/picodotdev/e732e19b68e6f1fd6b0e586dc1a5aaf7.js?file=Philosopher.java"></script>
+
+<div class="media" style="text-align: center;">
+    <figure>
+        <script type="text/javascript" src="https://asciinema.org/a/165278.js" id="asciicast-165278" async></script>
+        <noscript><a href="https://asciinema.org/a/165278" target="_blank"><img src="https://asciinema.org/a/165278.png" width="734"/></a></noscript>
+        
+        <figcaption>Ejemplo de concurrencia de los filósofos</figcaption>
+        
+    </figure>
 </div>
 
-<p>Este artículo es uno de otros que he publicado, en otros artículos he escrito sobre otras cosas relacionadas con docker.</p>
+<p>
+    El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/JavaConcurrency">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew run</code>.
+</p>
+
+<div class="reference">
+    Referencia:<br>
+    <ul>
+<li><a href="https://bruceeckel.github.io/2016/12/29/dining-philosophers-in-java-8/">Dining Philosophers in Java 8</a></li>
+</ul>
+
+</div>
 
 
 
@@ -216,76 +242,6 @@
           </div>
         </div>
         
-  <div class="row serie">
-    <div class="col-md-12">
-      
-        <p>
-          Este artículo forma parte de la serie <b>docker</b>:
-        </p>
-        
-        <ol class="serie-articles">
-          
-            <li>
-              <a href="https://picodotdev.github.io/blog-bitix/2014/10/introduccion-y-caracteristicas-de-docker/">Introducción y características de Docker</a>
-            </li>
-          
-            <li>
-              <a href="https://picodotdev.github.io/blog-bitix/2014/11/inicio-basico-de-docker/">Inicio básico de Docker</a>
-            </li>
-          
-            <li>
-              <a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/">Cómo crear una imagen para Docker usando un Dockerfile</a>
-            </li>
-          
-            <li>
-              <a href="https://picodotdev.github.io/blog-bitix/2014/11/integracion-entre-ansible-y-docker/">Integración entre Ansible y Docker</a>
-            </li>
-          
-            <li>
-              <a href="https://picodotdev.github.io/blog-bitix/2015/07/aplicaciones-multicontenedor-con-docker-compose/">Aplicaciones multicontenedor con Docker Compose</a>
-            </li>
-          
-            <li>
-              <a href="https://picodotdev.github.io/blog-bitix/2015/07/crear-y-usar-un-repositorio-en-docker-hub/">Crear y usar un repositorio en Docker Hub</a>
-            </li>
-          
-            <li>
-              <a href="https://picodotdev.github.io/blog-bitix/2015/07/usar-docker-con-docker-machine-en-linux-windows-o-mac/">Usar docker con Docker Machine en Linux, Windows o Mac</a>
-            </li>
-          
-            <li>
-              <a href="https://picodotdev.github.io/blog-bitix/2015/07/cambiar-la-ruta-raiz-del-entorno-de-docker/">Cambiar la ruta raíz del entorno de Docker</a>
-            </li>
-          
-            <li>
-              <a href="https://picodotdev.github.io/blog-bitix/2017/03/introduccion-y-ejemplo-de-cluster-de-contenedores-con-docker-swarm/">Introducción y ejemplo de cluster de contenedores con Docker Swarm</a>
-            </li>
-          
-            <li>
-              <a href="https://picodotdev.github.io/blog-bitix/2017/04/iniciar-un-stack-de-servicios-en-un-cluster-de-docker-swarm/">Iniciar un stack de servicios en un cluster de Docker Swarm</a>
-            </li>
-          
-            <li>
-              <a href="https://picodotdev.github.io/blog-bitix/2017/04/escalar-y-actualizar-un-servicio-de-un-cluster-de-docker-swarm/">Escalar y actualizar un servicio de un cluster de Docker Swarm</a>
-            </li>
-          
-            <li>
-              <a href="https://picodotdev.github.io/blog-bitix/2017/04/contenedores-en-docker-swarm-con-volumenes-de-datos-persistentes-usando-rex-ray-y-virtualbox/">Contenedores en Docker Swarm con volúmenes de datos persistentes usando REX-Ray y VirtualBox</a>
-            </li>
-          
-            <li>
-              <a href="https://picodotdev.github.io/blog-bitix/2017/04/informacion-sensible-en-los-contenedores-con-docker-secrets/">Información sensible en los contenedores con Docker Secrets</a>
-            </li>
-          
-            <li>
-              <a href="https://picodotdev.github.io/blog-bitix/2017/04/imagenes-de-docker-con-alpine-linux/">Imágenes de Docker con Alpine Linux</a>
-            </li>
-          
-        </ol>
-      
-    </div>
-  </div>
-
 
         
 <div class="row">
@@ -317,8 +273,8 @@
 
   <script type="text/javascript" async>
     var disqus_shortname = 'blog-bitix';
-    var disqus_identifier = 'https:\/\/picodotdev.github.io\/blog-bitix\/2015\/07\/cambiar-la-ruta-raiz-del-entorno-de-docker\/';
-    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2015\/07\/cambiar-la-ruta-raiz-del-entorno-de-docker\/';
+    var disqus_identifier = 'https:\/\/picodotdev.github.io\/blog-bitix\/2018\/02\/el-problema-de-concurrencia-de-la-cena-de-los-filosofos-resuelto-con-java\/';
+    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2018\/02\/el-problema-de-concurrencia-de-la-cena-de-los-filosofos-resuelto-con-java\/';
     var disqus_script = 'embed.js';
     (function () {
       var dsq = document.createElement('script'); 

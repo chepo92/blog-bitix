@@ -3,12 +3,107 @@
     <id>https://picodotdev.github.io/blog-bitix/tags/blog-stack/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2018-02-06T19:00:00+01:00</updated>
+    <updated>2018-02-25T10:00:00+01:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
     <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/02/el-problema-de-concurrencia-de-la-cena-de-los-filosofos-resuelto-con-java/</id>
+        <title>El problema de concurrencia de la cena de los filósofos resuelto con Java</title>        
+        <updated>2018-02-25T10:00:00+01:00</updated>
+        <published>2018-02-25T10:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/02/el-problema-de-concurrencia-de-la-cena-de-los-filosofos-resuelto-con-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En un &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/iniciacion-a-la-programacion-concurrente-en-java/&#34;&gt;artículo de introducción sobre la programación concurrente en Java&lt;/a&gt; explicaba cuales eran la facilidades que proporciona este lenguaje para la programación concurrente en múltiples hilos. En él exponía dos ejemplos clásicos que se estudian en las asignaturas de sistemas operativos, uno de ellos era el de &lt;a href=&#34;https://es.wikipedia.org/wiki/Problema_de_la_cena_de_los_fil%C3%B3sofos&#34;&gt;la cena de los filósofos&lt;/a&gt; donde varios filósofos sentados en una tabla durante una cena se dedican a pensar y cuando tienen hambre comen usando para ello dos tenedores que comparten con sus compañeros que se sientan a la izquierda y derecha.&lt;/p&gt;
+
+&lt;p&gt;Dado que dos filósofos no puede utilizar el mismo tenedor a la vez hay que implementar sincronización a la hora de utilizarlos. En la realidad un filósofo representa a un proceso y un tenedor representa a un recurso compartido de uso exclusivo.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/302/dining-philosophers.png&#34; title=&#34;La cena de los filósofos&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/302/dining-philosophers-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;La cena de los filósofos&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;p&gt;La solución del ejemplo que ponía en el artículo anterior no era completamente correcto ya que un filósofo si tiene mala suerte podría quedarse sin  comer o sin comer durante mucho tiempo, debido a que en esa implementación el filósofo intentaba coger los tenedores y si no podía desistía si alguno de sus compañeros los estuviese utilizando. Las reglas que ha de cumplir una solución a un problema de concurrencia para considerarse válida son:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Exclusión mutua: Si un proceso se está ejecutando en su sección crítica ningún otro proceso se puede estar ejecutando en la suya.&lt;/li&gt;
+&lt;li&gt;Progreso: Si ningún proceso se está ejecutando en su sección crítica y hay otros procesos que desean entrar en las suyas, entonces solo aquellos procesos que no se está ejecutando en su sección restante pueden participar en la decisión  del cuál será el siguiente en entrar en la sección crítica, y esta selección no puede postergarse indefinidamente.&lt;/li&gt;
+&lt;li&gt;Espera limitada: Debe haber un límite en el número de veces que se permite que los demás procesos entren en su sección crítica después de que un proceso haya efectuado una solicitud para entrar en la suya y antes de que se conceda esa solicitud.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;En la implementación de este ejemplo evitaré que un filósofo pueda quedarse sin comer. La razón de que un filósofo desistiera de coger uno de los tenedores que necesita si uno de sus compañeros ya lo tuviese era para evitar un bloqueo circular en el caso de que todos los filósofos al mismo tiempo cogiesen su tenedor izquierdo, en esta situación ninguno de ellos podría coger su tenedor derecho y se quedarían todos esperando indefinidamente, se produciría un bloqueo indefinido o &lt;em&gt;deadlock&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Para evitar un bloqueo indefinido una de las siguientes reglas no se ha de cumplir:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Exclusión mutua: Por lo menos un recurso debe retenerse en modo no compartido; es decir, sólo un proceso a la vez puede usar el recurso. Si otro proceso solicita el recurso, deberá esperar hasta que se haya liberado.&lt;/li&gt;
+&lt;li&gt;Retención y espera: Debe haber un proceso que retenga por lo menos un recurso y espere adquirir otros recursos retenidos por otros procesos.&lt;/li&gt;
+&lt;li&gt;No apropiación: Los recursos no se pueden quitar; es decir, un recurso solo puede ser liberado voluntariamente por el proceso que lo retiene, después de que haya cumplido su tarea.&lt;/li&gt;
+&lt;li&gt;Espera circular: Debe haber un conjunto { P0, P1, &amp;hellip;, Pn } de procesos en espera tales que P0 espera un recurso retenido por P1, P1 espera un recurso retenido por P2, &amp;hellip; Pn-1 espera un recurso retenido por On, y Pn espera un recurso retenido por P0.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;En esta implementación he optado por hacer que el último filósofo en vez de ser diestro sea zurdo de modo que primero intente coger el tenedor izquierdo y luego el derecho, con este simple cambio la espera circular ya no puede producirse y con ello el bloqueo indefinido.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/e732e19b68e6f1fd6b0e586dc1a5aaf7.js?file=Main.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/e732e19b68e6f1fd6b0e586dc1a5aaf7.js?file=Table.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/e732e19b68e6f1fd6b0e586dc1a5aaf7.js?file=Fork.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/e732e19b68e6f1fd6b0e586dc1a5aaf7.js?file=Philosopher.java&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+        &lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/165278.js&#34; id=&#34;asciicast-165278&#34; async&gt;&lt;/script&gt;
+        &lt;noscript&gt;&lt;a href=&#34;https://asciinema.org/a/165278&#34; target=&#34;_blank&#34;&gt;&lt;img src=&#34;https://asciinema.org/a/165278.png&#34; width=&#34;734&#34;/&gt;&lt;/a&gt;&lt;/noscript&gt;
+        
+        &lt;figcaption&gt;Ejemplo de concurrencia de los filósofos&lt;/figcaption&gt;
+        
+    &lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaConcurrency&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://bruceeckel.github.io/2016/12/29/dining-philosophers-in-java-8/&#34;&gt;Dining Philosophers in Java 8&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2018/02/8o-aniversario-del-blog/</id>
@@ -1505,75 +1600,6 @@
 &lt;li&gt;&lt;a href=&#34;https://graphql-java.readthedocs.io/en/v5/schema.html&#34;&gt;Creating a schema&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/schema/DataFetchingEnvironment.java&#34;&gt;DataFetchingEnvironment&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/schema/DataFetcher.java&#34;&gt;DataFetcher&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/</id>
-        <title>Devolver mensajes de error descriptivos en GraphQL</title>        
-        <updated>2017-11-12T11:30:00+01:00</updated>
-        <published>2017-11-12T11:30:00+01:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/graphql.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Por defecto &lt;a href=&#34;http://graphql.org/&#34;&gt;GraphQL&lt;/a&gt; devuelve errores con mensajes descriptivos para los errores del cliente como son los errores de sintaxis en la sentencia de consulta o mutación, en el caso de que el campo solicitado no exista o no se ha indicado ninguno. En el caso de Java si se lanza una excepción en la clase repositorio que guarda los datos o en la lógica de negocio y no se captura GraphQL indicará que se ha producido un error interno en el servidor. Esto no es muy descriptivo y es mejor indicar errores más útiles para el usuario de la API como podría ser que no se tienen permisos para realizar la modificación o el error que se ha producido al validar los datos y por los que la operación no se ha completado.&lt;/p&gt;
-
-&lt;p&gt;Los errores en GraphQL usando el lenguaje Java se gestionan implementando en una clase la interfaz &lt;a href=&#34;https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/GraphQLError.java&#34;&gt;GrapQLError&lt;/a&gt;, este podría ser en caso de una excepción que además de heredar de &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Exception.html&#34;&gt;Exception&lt;/a&gt; implemente la interfaz &lt;em&gt;GraphQLError&lt;/em&gt;. Sin embargo, GraphQL cuando una clase hereda de &lt;em&gt;Exception&lt;/em&gt; lo considera un error interno del servidor y para no dar información interna del servicio a los clientes como mensaje indica únicamente &lt;em&gt;Internal Server Error(s) while executing query&lt;/em&gt;.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=curl-default-errors.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Para que GraphQL muestre el error personalizado deseado lanzando excepciones hay que adaptar esa excepción y que implementa &lt;em&gt;GraphQLError&lt;/em&gt; con una clase que únicamente implemente la interfaz &lt;em&gt;GraphQLError&lt;/em&gt; pero no herede de &lt;em&gt;Exception&lt;/em&gt;. Esta sería una clase adaptador necesaria.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=GraphQLErrorAdapter.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Para adaptar las clases excepción hay que cambiar el comportamiento de la clase &lt;em&gt;GraphQLErrorHandler&lt;/em&gt; de modo que transforme las excepciones a la clase &lt;em&gt;GraphQLError&lt;/em&gt; propia. Esta clase se indica al construir el objeto &lt;em&gt;SimpleGraphQLServlet&lt;/em&gt; y &lt;em&gt;ServletRegistrationBean&lt;/em&gt;.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=Main.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;En el caso de este ejemplo solo un usuario de nombre &lt;em&gt;admin&lt;/em&gt; tiene permitido hacer modificaciones en la colección de libros guardados en la clase repositorio &lt;em&gt;LibraryRepository&lt;/em&gt;. Por otro lado, cuando se añade un libro se hace una validación de los datos comprobando que el autor del libro a añadir exista en la librería. Estos son las peticiones válidas.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=curl.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Y estas las inválidas que devuelve los mensajes propios más descriptivos de los errores o validaciones realizadas en el servidor de más utilidad para un usuario del servicio.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=curl-custom-errors.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;La interfaz &lt;em&gt;GraphQLError&lt;/em&gt; posee el método &lt;em&gt;getMessage()&lt;/em&gt; para devolver la descripción del mensaje pero con el método &lt;em&gt;getExtensions()&lt;/em&gt; es posible incluir cualquier dato en forma de clave-valor que deseemos como un código de error o cualquier otra información deseada. El caso de la excepción &lt;em&gt;PermissionException&lt;/em&gt; devuelve dos datos adicionales &lt;em&gt;foo&lt;/em&gt; y &lt;em&gt;fizz&lt;/em&gt;, en un caso real se implementaría una lógica más útil para devolver estos datos adicionales posiblemente proporcionándolos en el constructor u obteniéndolos con la referencia a algún objeto.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=PermissionException.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;
-    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/GraphQL&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
-&lt;/p&gt;
-
-&lt;div class=&#34;reference&#34;&gt;
-    Referencia:&lt;br&gt;
-    &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java/&#34;&gt;Ejemplo de GraphQL para una interfaz de un servicio con Spring Boot y Java&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://graphql-java.readthedocs.io/en/v5/execution.html&#34;&gt;Execution&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/GraphQLError.java&#34;&gt;GraphQLError.java&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;/div&gt;
