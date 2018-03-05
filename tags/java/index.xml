@@ -3,12 +3,85 @@
     <id>https://picodotdev.github.io/blog-bitix/tags/java/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2018-02-25T10:00:00+01:00</updated>
+    <updated>2018-03-05T19:00:00+01:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
     <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/03/el-problema-de-concurrencia-de-los-fumadores-resuelto-en-java/</id>
+        <title>El problema de concurrencia de los fumadores resuelto en Java</title>        
+        <updated>2018-03-05T19:00:00+01:00</updated>
+        <published>2018-03-05T19:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/03/el-problema-de-concurrencia-de-los-fumadores-resuelto-en-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Junto con los ejemplos de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/02/el-problema-de-concurrencia-de-la-cena-de-los-filosofos-resuelto-con-java/&#34;&gt;la cena de los filósofos&lt;/a&gt; y &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/iniciacion-a-la-programacion-concurrente-en-java/&#34;&gt;la barbería&lt;/a&gt; el de los fumadores es otro ejemplo clásico que se estudia en las asignaturas de sistemas operativos. Estos ejemplos necesitan de mecanismos de sincronización y concurrencia para su correcto funcionamiento al haber varios procesos y recursos compartidos que los procesos intentan utilizar de forma concurrente pero que no se debe permitir utilizando notificaciones entre procesos o &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/iniciacion-a-la-programacion-concurrente-en-java/&#34;&gt;algunas primitivas de sincronización, concurrencia e hilos que posee Java&lt;/a&gt; como &lt;em&gt;mutex&lt;/em&gt;, &lt;em&gt;locks&lt;/em&gt; o semáforos.&lt;/p&gt;
+
+&lt;p&gt;El caso de los fumadores consiste en un grupo de fumadores que para fumar necesitan los ingredientes que les faltan para hacer un cigarrillo y fumárselo, poseen un ingrediente en cantidades ilimitadas pero les faltan otros dos. El agente posee cantidades ilimitadas de todos los ingredientes que son papel, tabaco y cerillas pero solo deja en una mesa dos de estos ingredientes a la vez. Cada fumador posee un ingrediente distinto de los tres necesarios y según los ingredientes que deje el agente uno de los fumadores podrá fumar con los dos ingredientes que el agente deja.&lt;/p&gt;
+
+&lt;p&gt;El agente y los fumadores representan en la realidad a procesos y los ingredientes a los recursos de un sistema. La dificultad radica en sincronizar los agentes y fumadores para que el agente cuando deje ingredientes en la mesa el fumador correcto fume cuando.&lt;/p&gt;
+
+&lt;p&gt;A primera vista podríamos intentar que cada uno de los fumadores tomase cada uno de los ingredientes que le falta y se pusiese a fumar representando un ingrediente como un semáforo, sin embargo, esta solución puede producir un bloqueo si uno de los otros fumadores que no pueden fumar según los ingredientes que ha dejado el agente le quitan al que podría fumar uno de los ingredientes que necesita. Por ejemplo, un caso de bloqueo sería el caso de que el agente deje en la mesa los ingredientes de tabaco y cerillas el fumador que podría fumar sería el 1 pero si el fumador 2 es más rápido y se ejecuta antes tomando el tabaco el fumador 1 se quedaría esperando a tomar tabaco y el fumador 2 también por no haber dejado el agente papel sino cerillas.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=SmokersDeadlock.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Para la solución hay que optar por otra estrategia, en el ejemplo de código he creado tres clases que representa a cada una de las entidades, una clase &lt;em&gt;Agent&lt;/em&gt;, una clase &lt;em&gt;Smoker&lt;/em&gt; y una clase &lt;em&gt;Table&lt;/em&gt;, adicionalmente una clase &lt;em&gt;Pusher&lt;/em&gt; que se encargará de despertar al &lt;em&gt;Smoker&lt;/em&gt; correcto según los ingredientes de la mesa. Todas las clases implementan la interfaz &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Runnable.html&#34;&gt;Runnable&lt;/a&gt; para convertir cada una de las instancias en un hilo de ejecución. Cuando un agente deja ingredientes en la mesa se notifica a todos los incitadores  o &lt;em&gt;pushers&lt;/em&gt; para indicarles que hay ingredientes listos, el &lt;em&gt;pusher&lt;/em&gt; adquiere el ingrediente que tiene asignado para tomar y comprueba cual es el único ingrediente que falta en la mesa, si no lo sabe porque falten varios ingredientes indica que en la mesa está su ingrediente y deja el trabajo de despertar al fumador al siguiente &lt;em&gt;pusher&lt;/em&gt;. El &lt;em&gt;pusher&lt;/em&gt; que sepa que dos ingredientes hay en la mesa despierta al fumador que puede fumar con el ingrediente que tiene y los dos que hay en la mesa. El fumador se pone a fumar y cuando termina se indica al agente que genere otros dos ingredientes.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=Component.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=Table.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=Smoker.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=Agent.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=Pusher.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=Main.java&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+        &lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/167230.js&#34; id=&#34;asciicast-167230&#34; async&gt;&lt;/script&gt;
+        &lt;noscript&gt;&lt;a href=&#34;https://asciinema.org/a/167230&#34; target=&#34;_blank&#34;&gt;&lt;img src=&#34;https://asciinema.org/a/167230.png&#34; width=&#34;734&#34;/&gt;&lt;/a&gt;&lt;/noscript&gt;
+        
+        &lt;figcaption&gt;Ejemplo de concurrencia del agente y los fumadores&lt;/figcaption&gt;
+        
+    &lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En el siguiente &lt;a href=&#34;https://cse.yeditepe.edu.tr/~kserdaroglu/spring2014/cse331/labnotes/WEEK%205%20-%20SEMAPHORES/mysemaphoreexamplesMOE.pdf&#34;&gt;documento con varios de los problemas de concurrencia y sincronización&lt;/a&gt; está muy bien explicado la solución a este problema de los fumadores y de los otros casos. En algunos otros sitios este caso lo convierten en un problema de sincronización en vez de uno de concurrencia.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaConcurrency&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Cigarette_smokers_problem&#34;&gt;Cigarette smokers problem&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/iniciacion-a-la-programacion-concurrente-en-java/&#34;&gt;Introducción sobre la programación concurrente en Java&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2018/02/el-problema-de-concurrencia-de-la-cena-de-los-filosofos-resuelto-con-java/</id>
@@ -1230,50 +1303,6 @@
                 <category term="blog-stack"/>
             
                 <category term="java"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2017/10/obtener-informacion-de-la-pila-de-las-excepciones/</id>
-        <title>Obtener información de la pila de las excepciones</title>        
-        <updated>2017-10-15T12:15:00+02:00</updated>
-        <published>2017-10-15T12:15:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/10/obtener-informacion-de-la-pila-de-las-excepciones/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right&#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Las excepciones son un mecanismo incorporado en algunos lenguajes como Java para el manejo de errores y condiciones de error. En la implementación de las excepciones en los lenguajes hay diferencias, por ejemplo, en Java hay &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/las-excepciones-del-lenguaje-java/&#34;&gt;excepciones checked y uncheked&lt;/a&gt; y en lenguajes como &lt;a href=&#34;http://www.microsoft.com/net&#34;&gt;C#&lt;/a&gt; o &lt;a href=&#34;http://www.groovy-lang.org/&#34;&gt;Groovy&lt;/a&gt; todas las excepciones son consideradas &lt;em&gt;unchecked&lt;/em&gt;. En cualquier caso son una mejor forma de forzar a gestionar las condiciones de error que se producen que el comprobar no obligatoriamente el valor de retorno de una función, incluso JavaScript incorpora excepciones.&lt;/p&gt;
-
-&lt;p&gt;Las palabras reservadas en Java para el manejo de excepciones son &lt;em&gt;try&lt;/em&gt;, &lt;em&gt;catch&lt;/em&gt; , &lt;em&gt;finally&lt;/em&gt;, &lt;em&gt;throw&lt;/em&gt; y &lt;em&gt;throws&lt;/em&gt;. El manejo de algunas excepciones consiste en emitir su pila de llamadas o &lt;em&gt;stacktrace&lt;/em&gt; en la terminal o en el sistema de &lt;em&gt;logging&lt;/em&gt;. El &lt;em&gt;stacktrace&lt;/em&gt; contiene un mensaje de error, los métodos de la pila de llamadas del &lt;em&gt;thread&lt;/em&gt; que la causó junto con el número de la línea. Además, las excepciones puede tener asociada una excepción causa por ejemplo un &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/sql/SQLException.html&#34;&gt;SQLException&lt;/a&gt; puede ser causado por un &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/io/IOException.html&#34;&gt;IOException&lt;/a&gt; por fallo de comunicación con el servidor de base de datos.&lt;/p&gt;
-
-&lt;p&gt;Todas las excepciones en Java heredan de &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Throwable.html&#34;&gt;Throwable&lt;/a&gt; y entre los métodos que tiene esta clase está &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Throwable.html#getStackTrace--&#34;&gt;getStackTrace()&lt;/a&gt; que devuelve un &lt;em&gt;array&lt;/em&gt; de &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/StackTraceElement.html&#34;&gt;StackTraceElement&lt;/a&gt; ordenado del último método llamado al primero. Con los métodos de la clase &lt;em&gt;StackTraceElement&lt;/em&gt; obtenemos el nombre de la clase, el archivo, el nombre del método y la linea de código de esa llamada.&lt;/p&gt;
-
-&lt;p&gt;Con esta información podemos imprimir en la terminal un informe de excepción diferente del que genera el método &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Throwable.html#printStackTrace--&#34;&gt;printStackTrace()&lt;/a&gt;. En el ejemplo limitando el informe de la pila de llamadas a los tres últimos métodos del &lt;em&gt;stacktrace&lt;/em&gt;.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/5138b0297f96eb67687316bdbe0482fa.js?file=Throwable.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/5138b0297f96eb67687316bdbe0482fa.js?file=jshell.out&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Si en una aplicación manejamos varios hilos con &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Thread.html#getAllStackTraces--&#34;&gt;Thread.getAllStackTraces()&lt;/a&gt; obtenemos las pilas de llamadas de todos los hilos y con &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Thread.html#getStackTrace--&#34;&gt;Thread.getStackTrace()&lt;/a&gt; el del hilo en concreto que con &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Thread.html#currentThread--&#34;&gt;Thread.currentThread()&lt;/a&gt; sería el actual. Con el &lt;em&gt;array&lt;/em&gt; de &lt;em&gt;StackTraceElement&lt;/em&gt; obtenidos de los hilos podemos obtener un informe personalizado y la situación de cada uno, el método &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Thread.html#dumpStack--&#34;&gt;dumpStack()&lt;/a&gt; genera el &lt;em&gt;stacktrace&lt;/em&gt; en la salida de error.&lt;/p&gt;
-
-&lt;p&gt;Entre &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/novedades-de-java-9-mas-alla-de-la-modularidad/&#34;&gt;las novedades de Java 9&lt;/a&gt; está la clase &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/StackWalker.html&#34;&gt;StackWalker&lt;/a&gt; para procesar los elementos de la pila del &lt;em&gt;thread&lt;/em&gt; actual usando &lt;em&gt;streams&lt;/em&gt; y funciones &lt;em&gt;lambda&lt;/em&gt;.&lt;/p&gt;
-
-
-
-        </content>
-        
-            
-                <category term="java"/>
-            
-                <category term="blog-stack"/>
             
                 <category term="planeta-codigo"/>
             
