@@ -1,5 +1,5 @@
 require(['jquery'], function($) {
-    function initGoogleAnalytics() {
+    function initAnalytics() {
         ga('send', 'event', 'client', 'protocol', window.location.protocol.replace(new RegExp(':|/', 'gi'), ''), {'nonInteraction': 1});
       
         $('header nav a, footer div.menu a').on('click', function() {
@@ -42,21 +42,20 @@ require(['jquery'], function($) {
             ga('send', 'event', 'client', 'adblock', (adblock) ? 'true' : 'false', {'nonInteraction': 1});
     
             if (adblock) {
-                ads.each(function(i, e) {
-                    var html = [
-                        '<div style="' + $(e).attr('style') + '; height: 100%; text-align: left;" class="adblock">',
-                        ' <p class="text-center"><strong><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Parece que tienes activado un bloqueador de anuncios</strong></p>',
-                        ' <p>Los anuncios de este blog <strong>no son intrusivos</strong> y con ellos hago <a href="https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/">pequeñas donaciones al software libre</a>. Considera <a href="https://adblockplus.org/es/faq_basics#disable" target="_blank">desactivar el bloqueador de anuncios</a> en <strong>Blog Bitix</strong>.</p>',
-                        ' <p></p>',
-                        '</div>'
-                    ].join('');
-                    var dom = $(html);
-                    var element = $(e).after(dom);
-                });
+                var ad = ads.filter('[data-type="large-skycraper"]').first() || ads.filter('[data-type="leaderboard"]').first();
+                var html = [
+                    '<div style="' + $(ad).attr('style') + '; height: 100%; text-align: left;" class="adblock">',
+                    ' <p class="text-center"><strong><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Parece que tienes activado un bloqueador de anuncios</strong></p>',
+                    ' <p>Los anuncios de este blog <strong>no son intrusivos</strong> y con ellos hago <a href="https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/">pequeñas donaciones al software libre</a>. Considera <a href="https://adblockplus.org/es/faq_basics#disable" target="_blank">desactivar el bloqueador de anuncios</a> en <strong>Blog Bitix</strong>.</p>',
+                    ' <p></p>',
+                    '</div>'
+                ].join('');
+                var dom = $(html);
+                var element = $(ad).after(dom);
             }
         }, 3000);
     }
 
-    initGoogleAnalytics();
+    initAnalytics();
     initAdsense();
 });
