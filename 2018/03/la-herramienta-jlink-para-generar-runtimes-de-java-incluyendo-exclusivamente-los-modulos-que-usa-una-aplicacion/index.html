@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="pico.dev">
+  <meta name="keywords" content="java, programacion, tapestry, linux, gnu, gnu/linux, arch, arch linux, software, software libre, html, css, javascript">
+  <meta name="description" content="En versiones anteriores de Java 9 había un único runtime para ejecutar cualquier aplicación que debía ser instalado previamente para la ejecución de la aplicación. Aunque la aplicación no usase Swing por ser una aplicación web o cosas como CORBA ya en desuso aún estaban disponibles en el runtime por motivos de no romper la compatibilidad con versiones anteriores.
+Esto hacía que las aplicaciones no fuesen lo más eficiente posible y aumenta el tamaño necesario de disco con ahora con las imágenes de contenedores como Docker estas tuviesen un tamaño mayor del imprescindible, además de hacer que el tiempo de arranque sea algo mayor e incluir clases que aumentan la superficie de ataque ante un fallo de seguridad. &hellip;">
+  <base href="https://picodotdev.github.io/blog-bitix/">
+
+  <title>La herramienta jlink para generar runtimes de Java incluyendo exclusivamente los módulos que usa una aplicación</title>
+
+  <link rel="author" type="text/plain" href="humans.txt" />
+  <link rel="shortcut icon" href="assets/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/apple-touch-icon-144-precomposed.png">
+  <link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2018/03/la-herramienta-jlink-para-generar-runtimes-de-java-incluyendo-exclusivamente-los-modulos-que-usa-una-aplicacion/">
+
+  
+  <link href="index.xml" rel="alternate" type="application/rss+xml" title="Blog Bitix" />
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=PT+Serif:400,700italic,700,400italic">
+  
+  <link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-4.0.0/css/bootstrap.min.css">
+  
+  <link rel="stylesheet" type="text/css" href="assets/libs/Gallery-2.30.0/css/blueimp-gallery.min.css">
+  
+  <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+
+  
+  <script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script>
+  <script type="text/javascript">
+    (adsbygoogle = window.adsbygoogle || []).push({
+      google_ad_client: 'ca-pub-3533636310991304',
+      enable_page_level_ads: true
+    });
+  </script>
+  <script type="text/javascript" async>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-12874075-4', 'picodotdev.github.io');
+    ga('send', 'pageview');
+  </script>
+  <script type="text/javascript" src="assets/libs/require.js"></script>
+  <script type="text/javascript" src="assets/js/main.js"></script>
+  <script type="text/javascript" src="assets/js/theme.js" async></script>
+
+  <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" async></script>
+
+  
+  <script type="text/javascript" src="assets/js/app.js" async></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <header>
+  <div class="row">
+    <div class="col-12 col-lg-4"></div>
+    <div class="col-12 col-lg-4">
+      <h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2>
+      <div class="links">
+        
+          <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a>
+        
+        
+          <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a>
+        
+        
+          <a href="https://plus.google.com/114317443908384387611/" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a>
+        
+        
+          <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a>
+        
+        
+        
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 text-center">
+      <form name="query" class="form-inline search" onsubmit="return false;">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Buscar en Blog Bitix">
+          <span class="input-group-btn">
+            <button class="btn btn-secondary" type="submit">Buscar</button>
+          </span>
+        </div>
+      </form>
+      <form name="search" action="https://duckduckgo.com/" method="get" class="hidden" data-site="https://picodotdev.github.io/blog-bitix/">
+        <input type="hidden" name="q" value="">
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <nav class="nav nav-pills nav-fill">
+  
+    <a href="/blog-bitix/tags/java/" class="nav-item nav-link">Java</a>
+  
+    <a href="/blog-bitix/tags/gnu-linux/" class="nav-item nav-link">GNU/Linux</a>
+  
+    <a href="/blog-bitix/tags/javascript/" class="nav-item nav-link">JavaScript</a>
+  
+    <a href="/blog-bitix/tags/tapestry/" class="nav-item nav-link">Tapestry</a>
+  
+    <a href="/blog-bitix/archive/" class="nav-item nav-link">Archivo y hemeroteca</a>
+  
+    <a href="/blog-bitix/pages/links/" class="nav-item nav-link">Enlaces</a>
+  
+    <a href="/blog-bitix/pages/about/" class="nav-item nav-link">Acerca de...</a>
+  
+</nav>
+
+    </div>
+  </div>
+</header>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-lg-8">
+        <div class="row">
+          <div class="col-12">
+            <article itemscope itemtype="http://schema.org/BlogPosting">
+              
+              <meta itemprop="inLanguage" content="es">
+              
+              
+                <meta itemprop="keywords" content="blog-stack, java, planeta-codigo, programacion">
+              
+              
+              <h1 itemprop="name">La herramienta jlink para generar runtimes de Java incluyendo exclusivamente los módulos que usa una aplicación</h1>
+              <p class="information">
+                Publicado por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2018-03-24">24/03/2018</time>.
+                
+                  <br>
+                   <a href="tags/blog-stack/">blog-stack</a> <a href="tags/java/">java</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/programacion/">programacion</a>
+                
+                <br>
+                <a href="/blog-bitix/2018/03/la-herramienta-jlink-para-generar-runtimes-de-java-incluyendo-exclusivamente-los-modulos-que-usa-una-aplicacion/" itemprop="url">Enlace permanente</a>
+                
+                  <a href="/blog-bitix/2018/03/la-herramienta-jlink-para-generar-runtimes-de-java-incluyendo-exclusivamente-los-modulos-que-usa-una-aplicacion/#comments">Comentarios</a>
+                
+                
+              </p>
+
+              
+              
+
+              <ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="5966819782"
+     data-type="leaderboard"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+              <div class="content" itemprop="articleBody">
+                <meta itemprop="wordCount" content="556">
+                
+
+
+                <div class="logotypes" style="float: right;">
+    <img src="assets/images/logotipos/java.svg" class="right " width="200" alt="Java" title="Java"/>
+</div>
+
+<p>En versiones anteriores de Java 9 había un único <em>runtime</em> para ejecutar cualquier aplicación que debía ser instalado previamente para la ejecución de la aplicación. Aunque la aplicación no usase <em>Swing</em> por ser una aplicación web o cosas como <a href="https://es.wikipedia.org/wiki/CORBA">CORBA</a> ya en desuso aún estaban disponibles en el <em>runtime</em> por motivos de no romper la compatibilidad con versiones anteriores.</p>
+
+<p>Esto hacía que las aplicaciones no fuesen lo más eficiente posible y aumenta el tamaño necesario de disco con ahora con las imágenes de contenedores como <a href="https://www.docker.com/">Docker</a> estas tuviesen un tamaño mayor del imprescindible, además de hacer que el tiempo de arranque sea algo mayor e incluir clases que aumentan la superficie de ataque ante un fallo de seguridad. Entre las <a href="https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/">novedades de Java 8</a> se añadieron los <a href="http://www.oracle.com/technetwork/java/embedded/resources/tech/compact-profiles-overview-2157132.html"><em>compact profiles</em></a> que eran subconjuntos más reducidos del <em>runtime</em> pero eran conjuntos prefijados, las aplicaciones debían usar el mínimo que necesitasen si querían usar alguno.</p>
+
+<p>Con la incorporación de la modularidad a Java 9 se posibilita generar <em>runtimes</em> con exclusivamente los módulos que necesite la aplicación, si la aplicación solo necesita el módulo <em>java.base</em> por ser muy sencilla se puede generar un <em>runtime</em> con solo este módulo. Los módulos son una mejora conveniente para la tendencia en el desarrollo de aplicaciones en forma de microservicios y ejecución con contenedores. La herramienta que posibilita generar <em>runtimes</em> personalizados en <a href="https://docs.oracle.com/javase/9/tools/jlink.htm">jlink</a> que pueden ser ejecutandos sin instalar previamente ningún JDK en el sistema y posibilitando que cada aplicación pueda usar su propio <em>runtime</em>.</p>
+
+<p>Usando como ejemplo el caso de la <a href="https://picodotdev.github.io/blog-bitix/2016/02/introduccion-al-protocolo-http-2/">aplicación con el cliente de HTTP/2</a> que tiene como dependencias únicamente el módulo <em>jdk.incubator.httpclient</em> de forma explícita y <em>java.base</em> de forma implícita en su definición de módulo la forma de generar un runtime específico para esta aplicación con <em>jlink</em> es la siguiente que utiliza el archivo con las depednecias de módulos declarados en el archivo <em>module-info.java</em>.</p>
+
+<script src="//gist.github.com/picodotdev/2e113967c3823da21308e8f2a9adbd4f.js?file=module-info.java"></script>
+
+<p>Usando la linea de comandos o con una tarea de <a href="https://gradle.org/">Grade</a> se genera el <em>runtime</em> para la aplicación con <em>jlink</em>. El módulo ha de compilarse previamente. Con la opción <em>&ndash;launcher</em> se crea un <em>script</em> para lanzar la aplicación con la clase <em>main</em> indicada como punto de entrada, la opción <em>&ndash;output</em> indica donde se genera el contenido del <em>runtime</em>.</p>
+
+<script src="//gist.github.com/picodotdev/2e113967c3823da21308e8f2a9adbd4f.js?file=jlink.sh"></script>
+
+<p>El espacio total del <em>runtime</em> es de 38 MiB. Comparados con los casi 200 MiB que ocupa el <a href="http://openjdk.java.net/">OpenJDK</a> comprimido que incluye todos los módulos, aproximadamente 500 MiB instalado y alrededor de entre 600 y 900 MiB dependiendo de la imagen base de Docker que se use se aprecia que el ahorro de espacio es considerable lo que redunda en tiempos de transferencia por red menores y un inicio más rápido de las aplicaciones.</p>
+
+<p>El contenido del <em>runtime</em> y de su estructura de directorios es la indicada a continuación. Listando los módulos incluidos en este <em>runtime</em> en vez de todos los del JDK se observa que solo están incluidos los necesarios por la aplicación.</p>
+
+<script src="//gist.github.com/picodotdev/2e113967c3823da21308e8f2a9adbd4f.js?file=info.sh"></script>
+
+<script src="//gist.github.com/picodotdev/2e113967c3823da21308e8f2a9adbd4f.js?file=build.gradle"></script>
+
+<p>Una vez generado el <em>runtime</em> su uso es el siguiente:</p>
+
+<script src="//gist.github.com/picodotdev/2e113967c3823da21308e8f2a9adbd4f.js?file=run.sh"></script>
+
+<p>En el vídeo <a href="https://www.oracle.com/java/java9-screencasts.html?bcid=5582437011001&amp;playerType=single-social&amp;size=events">Java in a World of Containers</a> se comenta otra serie de características y opciones incluidas en Java para hacer de esta plataforma más consciente de las condiciones de ejecución propias de los contenedores.</p>
+
+<p>
+    El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/JavaHttp2">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradew jlink</code>.
+</p>
+
+
+
+              </div>
+            </article>
+          </div>
+        </div>
+        
+
+        
+<div class="row">
+  <div class="col-md-12">
+    <div class="sharethis-inline-share-buttons"></div>
+  </div>
+</div>
+
+
+        <div class="row">
+          <div class="col-12">
+            <ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="5966819782"
+     data-type="leaderboard"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+          </div>
+        </div>
+        
+  <a id="comments"></a>
+  <div class="row">
+    <div class="col-md-12">
+      <div id="disqus_thread"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript" async>
+    var disqus_shortname = 'blog-bitix';
+    var disqus_identifier = 'https:\/\/picodotdev.github.io\/blog-bitix\/2018\/03\/la-herramienta-jlink-para-generar-runtimes-de-java-incluyendo-exclusivamente-los-modulos-que-usa-una-aplicacion\/';
+    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2018\/03\/la-herramienta-jlink-para-generar-runtimes-de-java-incluyendo-exclusivamente-los-modulos-que-usa-una-aplicacion\/';
+    var disqus_script = 'embed.js';
+    (function () {
+      var dsq = document.createElement('script'); 
+      dsq.type = 'text/javascript'; 
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+  </script>
+
+      </div>
+      <div class="col-12 col-lg-4">
+        <div class="row">
+  <div class="col-md-12 text-center">
+    <ins class="adsbygoogle"
+     style="display:inline-block;width:300px;height:600px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="9559414587"
+     data-type="large-skycraper"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12 text-center">
+    <ins class="adsbygoogle"
+     style="display:inline-block;width:336px;height:280px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="2873752587"
+     data-type="large-rectangle"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+  </div>
+</div>
+<div class="row text-center banner">
+  <div class="col-12">
+    <a href="https://paysuites.me/website/11383/" rel="nofollow" target="_blank"><img src="assets/images/paysuites-banner-250-v3.jpg" alt="Publicidad con Paysuites"></a>
+  </div>
+</div>
+<div class="row text-center banner">
+  <div class="col-12">
+    <a href="https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/"><img src="//static.fsf.org/nosvn/images/badges/badges_es/i-support-fs_red-bg-es.png" alt="Yo apoyo al software libre"></a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <hr>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <ul class="list-unstyled recents">
+      <li><span class="glyphicon glyphicon-hand-right"></span> <a href="archive/">Más artículos recientes en el archivo</a></li>
+    </ul>
+  </div>
+</div>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <hr>
+      </div>
+    </div>
+    <footer>
+  <div class="row">
+    <div class="col-12 col-sm-4">
+      <p><strong>Blog Bitix</strong></p>
+      <p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p>
+      <p>Publicando de uno a tres artículos a la semana desde el año 2010.</p>
+    </div>
+    <div class="col-12 col-sm-4 text-center menu">
+      <ul class="list-unstyled">
+        
+          <li><a href="/blog-bitix/tags/java/">Java</a></li>
+        
+          <li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li>
+        
+          <li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li>
+        
+          <li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li>
+        
+          <li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li>
+        
+          <li><a href="/blog-bitix/pages/links/">Enlaces</a></li>
+        
+          <li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li>
+        
+          <li><a href="/blog-bitix/pages/donate/">Donaciones</a></li>
+        
+          <li><a href="/blog-bitix/pages/about/">Acerca de...</a></li>
+        
+      </ul>
+    </div>
+    <div class="col-12 col-sm-4 text-center links">
+      
+        <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a>
+      
+      
+        <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a>
+      
+      
+        <a href="https://plus.google.com/114317443908384387611/" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a>
+      
+      
+        <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a>
+      
+      
+      
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      Copyleft <span class="copyleft">&copy;</span> 2018 - <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="nofollow" rel="license"><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style="border-width:0" src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" class="licencia"/></a><br />
+      <a href="https://twitter.com/blogstackinfo" rel="nofollow"><img src="https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png" alt="Blog Stack" title="Blog Stack"></a>
+      <a href="https://www.planetacodigo.com/" rel="nofollow"><img src="https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png" alt="Planeta código" title="Planeta código"></a>
+      <br/>
+      <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="https://picodotdev.github.io/blog-bitix/" rel="nofollow">Blog Bitix</a></span> by <a xmlns:cc="https://creativecommons.org/ns#" href="https://picodotdev.github.io/blog-bitix/" property="cc:attributionName" rel="cc:attributionURL">pico.dev</a> is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.
+      <br/>
+      <span class="credit">Powered by <a href="https://gohugo.io/" rel="nofollow" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a>.</span>
+      <span class="credit">Background patterns from <a href="https://www.toptal.com/designers/subtlepatterns" rel="nofollow">Subtle Patterns</a>.</span>
+    </div>
+  </div>
+</footer>
+
+  </div>
+  
+<div class="blueimp-gallery-container">
+  <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false">
+    
+    <div class="slides"></div>
+    
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    
+    <div class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body next"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left prev">
+              <i class="glyphicon glyphicon-chevron-left"></i>
+              Anterior
+            </button>
+            <button type="button" class="btn btn-primary next">
+              Siguiente
+              <i class="glyphicon glyphicon-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  
+<script type="text/javascript">
+    window.cookieconsent_options = {
+        "message": "Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.",
+        "dismiss": "Aceptar",
+        "learnMore": "Más información",
+        "link": null,
+        "theme": "dark-bottom"
+    };
+</script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script>
+</body>
+</html>
