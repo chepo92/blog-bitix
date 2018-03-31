@@ -3,12 +3,66 @@
     <id>https://picodotdev.github.io/blog-bitix/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2018-03-24T23:30:00+01:00</updated>
+    <updated>2018-03-31T10:30:00+02:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
     <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/03/que-es-y-como-funciona-el-type-erasure-en-java/</id>
+        <title>Qué es y cómo funciona el type erasure en Java</title>        
+        <updated>2018-03-31T10:30:00+02:00</updated>
+        <published>2018-03-31T10:30:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/03/que-es-y-como-funciona-el-type-erasure-en-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Los tipos genéricos en Java se implementaron usando &lt;em&gt;type erasure&lt;/em&gt; por simplicidad en la implementación, no incurrir en penalizaciones de rendimiento o memoria y por mantener la compatibilidad con versiones anteriores de Java. Son varios los conceptos que están asociados a la implementación de los tipos genéricos en Java que es recomendable conocer como &lt;em&gt;type erasure&lt;/em&gt;  y métodos &lt;em&gt;bridge&lt;/em&gt; de este artículo pero también &lt;em&gt;heap pollution&lt;/em&gt;, &lt;em&gt;non-reifiable&lt;/em&gt;, &lt;em&gt;wildcards&lt;/em&gt; y &lt;em&gt;bound type parameters&lt;/em&gt;.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En la introducción de los &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/04/tutorial-sobre-los-tipos-genericos-de-java/&#34;&gt;tipos genéricos en Java&lt;/a&gt; con la versión 1.5 se decidió implementarlo usando &lt;em&gt;type erasuse&lt;/em&gt; que consiste en que en tiempo de ejecución se pierde la información de los tipos genéricos y para la máquina virtual no son distintos de un tipo no genérico, es un proceso que realiza el compilador. Esto tiene sus ventajas y algunas desventajas pero hay dos buenos motivos por los que en Java se decidió implementar los tipos genéricos usando &lt;em&gt;type erasuse&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Un motivo es que los tipos al ser en tiempo de ejecución exactamente iguales que los no genéricos de versiones anteriores se mantiene la compatibilidad hacia atrás tanto a nivel de código como a nivel binario lo que significa en un caso que el código fuente no es necesario que sea modificado y en otro que no es necesario recompilarlo y esto es importante para usar nuevas versiones de Java sin ningún tipo de modificación y para que programas antiguos sigan funcionando. El segundo motivo es que el mismo tipo sirve para todas las posibles instancias del tipo genérico, de forma que es eficiente y no se incurre en ninguna penalización de rendimiento o memoria.&lt;/p&gt;
+
+&lt;p&gt;La desventaja del &lt;em&gt;type erasure&lt;/em&gt; es que en tiempo de ejecución no se pueden hacer algunas optimizaciones, en computación y uso de memoria. Sin embargo, evaluando las ventajas y desventajas los desarrolladores de Java siempre han dado gran importancia en la compatibilidad hacia atrás y por ello prefirieron implementar los &lt;em&gt;generics&lt;/em&gt; usando &lt;em&gt;type erasure&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;El proceso de eliminar los tipos de los genéricos se realiza eliminando todos los parámetros de los tipos parametrizados siendo reemplazados con su restricción (&lt;em&gt;bound&lt;/em&gt;), con el tipo &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/Object.html&#34;&gt;Object&lt;/a&gt; o con con su restricción, si tiene múltiples restricciones se usa la primera.&lt;/p&gt;
+
+&lt;p&gt;En Java dos métodos distintos no pueden tener la misma firma, dado que los &lt;em&gt;generics&lt;/em&gt; han sido implementados con &lt;em&gt;type erasure&lt;/em&gt; también se ha de cumplir que dos métodos no pueden tener la misma firma una vez aplicado el &lt;em&gt;erasure&lt;/em&gt;. Para no perder las validaciones de tipos el compilador inserta los &lt;em&gt;cast&lt;/em&gt; necesarios. El código fuente de una clase genérica sería el siguiente, que el compilador transformaría siguiendo las reglas del &lt;em&gt;type erasure&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/fe9adde28f19c10787720a7db6a4a840.js?file=Generic.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/fe9adde28f19c10787720a7db6a4a840.js?file=Erased.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Al mismo tiempo que el compilador inserta los &lt;em&gt;cast&lt;/em&gt; necesarios para mantener la validación de tipos inserta métodos &lt;em&gt;bridge&lt;/em&gt; para mantener el polimorfismo en las clases que extienden de tipos genéricos. Si se extiende la clase &lt;em&gt;Node&lt;/em&gt; anterior y se aplica &lt;em&gt;type erasure&lt;/em&gt; la firma del método &lt;em&gt;setData&lt;/em&gt; de &lt;em&gt;IntegerNode&lt;/em&gt; no coincide con el de la clase &lt;em&gt;Node&lt;/em&gt;. Para solventar este problema el compilador inserta un método &lt;em&gt;bridge&lt;/em&gt; para el método &lt;em&gt;setData&lt;/em&gt; con un parámetro &lt;em&gt;Object&lt;/em&gt; que se encarga de hacer de puente y llamar al método &lt;em&gt;setData&lt;/em&gt; que recibe un &lt;em&gt;Integer&lt;/em&gt; aplicando un &lt;em&gt;cast&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/tutorial/java/generics/erasure.html&#34;&gt;Type Erasure&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/05/que-es-el-concepto-de-heap-pollution-en-java/&#34;&gt;Qué es el concepto de Heap Pollution en Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.quora.com/What-are-the-pros-and-cons-of-having-Generics-as-erasure-or-reifiable?share=1&#34;&gt;What are the pros and cons of having Generics as erasure or reifiable?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2018/03/la-herramienta-jlink-para-generar-runtimes-de-java-incluyendo-exclusivamente-los-modulos-que-usa-una-aplicacion/</id>
@@ -1896,144 +1950,6 @@
                 <category term="software"/>
             
                 <category term="software-libre"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/</id>
-        <title>Explicación del fallo de seguridad Meltdown y Spectre en los microprocesadores Intel</title>        
-        <updated>2018-01-07T01:30:00+01:00</updated>
-        <published>2018-01-06T10:30:00+01:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;Los procesadores Intel se han visto afectados por un grave error de seguridad debido a que fueron diseñados con ejecución especulativa sin tener algunas consideraciones de seguridad, técnica empleada para aumentar el rendimiento pero que tiene efectos colaterales en la cache que pueden se aprovechados para realizar ataques &lt;em&gt;side-channel&lt;/em&gt; con los que leer el contenido de la memoria del &lt;em&gt;kernel&lt;/em&gt;, independientemente del sistema operativo utilizado.&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;p&gt;El año 2018 ha empezando haciéndose público uno de los peores &lt;em&gt;bugs&lt;/em&gt; de seguridad que afecta a absolutamente todos los procesadores &lt;a href=&#34;https://www.intel.es&#34;&gt;Intel&lt;/a&gt; que esta compañía ha fabricado en la última década, denominado &lt;a href=&#34;https://meltdownattack.com/&#34;&gt;&lt;em&gt;Meltdown&lt;/em&gt; y su variante &lt;em&gt;Spectre&lt;/em&gt;&lt;/a&gt;, el error tiene su propio nombre, logotipo y página web. Un error de diseño en los procesadores que solo se puede corregir reemplazando el microprocesador o modificando los sistemas operativos aunque se especula con una pérdida de rendimiento en ciertas cargas de trabajo, entre un 5% y un 30%. El error es tan grave que permite leer a un programa la memoria del núcleo del sistema operativo que debería estar protegida. En la memoria del &lt;em&gt;kernel&lt;/em&gt; residen las claves de acceso a sistemas o datos sensibles que obtenidos y utilizados pueden ocasionar graves problemas de seguridad con consecuencias económicas o de acceso no autorizado a información. Este error es tan grave que deja al viejo conocido &lt;a href=&#34;https://en.wikipedia.org/wiki/Pentium_FDIV_bug&#34;&gt;fallo de la división de los Pentium&lt;/a&gt; a la altura de chiste. Hace unos meses por si fuera poco se conocía otro error de seguridad en el &lt;a href=&#34;https://en.wikipedia.org/wiki/Intel_Management_Engine&#34;&gt;Management Engine (ME)&lt;/a&gt; de Intel.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://security-center.intel.com/advisory.aspx?intelid=INTEL-SA-00088&amp;amp;languageid=en-fr&#34;&gt;Listado de procesadores Intel afectados por Meltdown y Spectre&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-        &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/293/meltdown.svg&#34; alt=&#34;Meltdown&#34; title=&#34;Meltdown&#34; width=&#34;200&#34; height=&#34;200&#34;/&gt;
-        &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/293/spectre.svg&#34; alt=&#34;Spectre&#34; title=&#34;Spectre&#34; width=&#34;200&#34; height=&#34;200&#34;/&gt;
-        &lt;figcaption&gt;Logotipos de Meltdown y Spectre&lt;/figcaption&gt;
-    &lt;/figure&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Reemplazar todos los microprocesadores es tremendamente caro además de que primero hay que diseñar y fabricar unos que estén exentos del &lt;em&gt;bug&lt;/em&gt; que lleva tiempo, meses o años hasta que estén preparados, por lo que la solución hasta el momento pasa por hacer modificaciones en el software y en los sistemas operativos, compiladores y programas para resolver o mitigar el problema. En el sistema operativo la solución consiste en separar el espacio de direcciones del &lt;em&gt;kernel&lt;/em&gt; de la de los programas, sin embargo, cada vez que el microprocesador cambia entre un espacio de direcciones a otro hay una penalización en tiempo por lo que en ciertas cargas de trabajo muy intensivas en las que se cambia frecuentemente de contextos como operaciones de red, de almacenamiento rápido o E/S el rendimiento se ve afectado. Para un usuario doméstico, ofimático o juegos la perdida de rendimiento será insignificante y no será apreciable ya que en estos casos el microprocesador no trabaja a la máxima carga o no está cambiando frecuentemente del espacio de direcciones del &lt;em&gt;kernel&lt;/em&gt; al de usuario. En grandes centros de datos como la computación en la nube de &lt;a href=&#34;https://aws.amazon.com/es/&#34;&gt;Amazon Web Services&lt;/a&gt;, &lt;a href=&#34;https://cloud.google.com/&#34;&gt;Google Cloud Platform&lt;/a&gt; o &lt;a href=&#34;http://azure.microsoft.com/es-es/&#34;&gt;Microsoft Azure&lt;/a&gt; el rendimiento será más apreciable.&lt;/p&gt;
-
-&lt;p&gt;Como usuarios domésticos para estar protegidos conviene descargar únicamente software de fuentes confiables pero para los usuarios empresariales con sus servicios en la nube en donde los sistemas están aislados pero usando infraestructura compartida y con el descubrimiento de este &lt;em&gt;bug&lt;/em&gt; es más grave si no se parchea, los proveedores de infraestructura en la nube ya han planificando tareas de mantenimiento y reinicios obligatorios.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-        &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/intel.svg&#34; alt=&#34;Intel&#34; title=&#34;Intel&#34; width=&#34;200&#34;/&gt;
-        &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/amd.svg&#34; alt=&#34;AMD&#34; title=&#34;AMD&#34; width=&#34;200&#34;/&gt;
-        &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/arm.svg&#34; alt=&#34;ARM&#34; title=&#34;ARM&#34; width=&#34;200&#34;/&gt;
-    &lt;/figure&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&#34;técnicas-para-aumentar-el-rendimiento&#34;&gt;Técnicas para aumentar el rendimiento&lt;/h3&gt;
-
-&lt;p&gt;Los microprocesadores modernos implementan varias técnicas para aumentar el rendimiento. Una de las mas simples es aumentar la frecuencia de trabajo del microprocesador, uno de los primeros Pentium trabajaba únicamente a 100 Mhz y los actuales llegan hasta los 3 Ghz, casi 30 veces más. Pero aumentar la frecuencia solo es posible hasta cierto límite a partir del cual el microprocesador se calienta mucho y consume mucha energía. Por lo que hay que emplear otras técnicas al mismo tiempo.&lt;/p&gt;
-
-&lt;p&gt;Otra de las mas simples es reducir el tamaño de los transistores, unos transistores más pequeños hace que sea posible incluir más transistores en el mismo espacio físico para incluir caches de mayor tamaño o nuevas funcionalidades, con más velocidad y con menor consumo de energía. El tamaño de los transistores de los Pentium originales era de 800 nanómetros e incluía 3.1 millones, los Intel Core de octava generación se fabrican a 14 nanómetros incluyendo unos 5000 millones, unas 60 veces más pequeños. Aún así cada vez es más difícil cumplir con la &lt;a href=&#34;https://es.wikipedia.org/wiki/Ley_de_Moore&#34;&gt;ley de Moore&lt;/a&gt; ya que se está llegando a límite físico de los átomos de los materiales, consistía en que cada dos años se duplica el número de transistores de un microprocesador.&lt;/p&gt;
-
-&lt;p&gt;Con la ayuda de unos transistores más pequeños y más espacio se aprovecha para aumentar el rendimiento incluyendo más núcleos de cómputo. Pero para aumentar el rendimiento de un núcleo de cómputo individual o el &lt;abbr title=&#34;Instructions Per Cicle&#34;&gt;IPC&lt;/abbr&gt; se emplean otras técnicas como utilizar múltiples &lt;em&gt;pipelines&lt;/em&gt; para ejecutar varias instrucciones simultáneamente, ejecución fuera de orden para reorganizar las instrucciones y la ejecución especulativa para mantener llenos esos &lt;em&gt;pipelines&lt;/em&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;escalar&#34;&gt;Escalar&lt;/h3&gt;
-
-&lt;p&gt;En un microprocesador escalar se ejecuta una instrucción por ciclo, por ejemplo, en esta secuencia de instrucciones que realizan unas sumas se tardarían 6 ciclos de reloj. A estos microprocesadores que ejecutan una instrucción por ciclo de reloj se les denomina escalares, siendo ejemplos el Intel 486 y el ARM1176 usado en la Raspberry Pi 1.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/f4e501b7c94a9695aa784db89591afd7.js?file=escalar.py&#34;&gt;&lt;/script&gt;
-
-&lt;h3 id=&#34;superescalar&#34;&gt;Superescalar&lt;/h3&gt;
-
-&lt;p&gt;En un microprocesador con dos &lt;em&gt;pipelines&lt;/em&gt; o &lt;a href=&#34;https://en.wikipedia.org/wiki/Superscalar_processor&#34;&gt;superescalar&lt;/a&gt; se pueden realizar varias operaciones simultáneamente, es decir, mientras se realiza la primera operación en la variable &lt;em&gt;m&lt;/em&gt; se realiza al mismo tiempo la segunda operación de &lt;em&gt;n&lt;/em&gt;, con lo que estas operaciones podrían completarse en únicamente tres ciclos de reloj con la siguiente equivalencia de programa. Ejemplos de microprocesadores superescalares son el Intel Pentium y los &lt;a href=&#34;https://www.arm.com/&#34;&gt;ARM&lt;/a&gt; Cortex-A7 y Cortex-A53 estos últimos usados en la Raspberry Pi 2 y 3 respectivamente.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/f4e501b7c94a9695aa784db89591afd7.js?file=superescalar-1.py&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Sin embargo, hacer la suma de &lt;em&gt;o&lt;/em&gt; y &lt;em&gt;x&lt;/em&gt; al mismo tiempo no es posible ya que antes de calcular &lt;em&gt;x&lt;/em&gt; hay que calcular &lt;em&gt;o&lt;/em&gt; debido a que uno de los operandos en la suma de &lt;em&gt;x&lt;/em&gt; es &lt;em&gt;o&lt;/em&gt;, es decir, hay una dependencia en estas instrucciones y se han de ejecutar una después de otra. Con lo que en vez de tres ciclos habría que conformase en ejecutar estas instrucciones en cuatro ciclos.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/f4e501b7c94a9695aa784db89591afd7.js?file=suprescalar-2.py&#34;&gt;&lt;/script&gt;
-
-&lt;h3 id=&#34;fuera-de-orden&#34;&gt;Fuera de orden&lt;/h3&gt;
-
-&lt;p&gt;Los microprocesadores &lt;a href=&#34;https://en.wikipedia.org/wiki/Out-of-order_execution&#34;&gt;fuera de orden&lt;/a&gt; reordenan las instrucciones de la forma adecuada para que el programa sea equivalente pero manteniendo los &lt;em&gt;pipelines&lt;/em&gt; llenos. Cambiando el orden entre las instrucciones &lt;em&gt;x&lt;/em&gt; e &lt;em&gt;y&lt;/em&gt; se consigue ejecutar las instrucciones en tres ciclos de reloj. Ejemplos de microprocesadores fuera de orden son el Pentium 2 y siguientes microprocesadores Intel y &lt;a href=&#34;http://www.amd.com/&#34;&gt;AMD&lt;/a&gt; incluyendo varios ARM Cortex-A9, A15, A17 y A57.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/f4e501b7c94a9695aa784db89591afd7.js?file=fuera-de-orden.py&#34;&gt;&lt;/script&gt;
-
-&lt;h3 id=&#34;predicción-de-salto-y-ejecución-especulativa&#34;&gt;Predicción de salto y ejecución especulativa&lt;/h3&gt;
-
-&lt;p&gt;Los programas incluyen saltos con sentencias condicionales &lt;em&gt;if&lt;/em&gt; o de bucle. Los microprocesadores tratan de adivinar si una sentencia de salto se producirá o no (con heurísticas y son bastante buenos acertando) para recuperar y tener preparadas las siguientes instrucciones. Mantener los &lt;em&gt;pipelines&lt;/em&gt; llenos es difícil al aumentar su número a tres o cuatro. Para tratar de mantenerlos llenos los microprocesadores usan la predicción de salto y van ejecutando las instrucciones desechando las operaciones si finalmente no se acierta en el salto pero habiendo aumentado el rendimiento si se ha acertado, realizan &lt;a href=&#34;https://en.wikipedia.org/wiki/Speculative_execution&#34;&gt;ejecución especulativa&lt;/a&gt; de las instrucciones.&lt;/p&gt;
-
-&lt;p&gt;En este otro caso, &lt;em&gt;v&lt;/em&gt; depende de &lt;em&gt;u&lt;/em&gt; y &lt;em&gt;u&lt;/em&gt; depende de &lt;em&gt;t&lt;/em&gt; de modo que un microprocesador superescalar sin ejecución especulativa tardará tres ciclos computando &lt;em&gt;t&lt;/em&gt;, &lt;em&gt;u&lt;/em&gt; y &lt;em&gt;v&lt;/em&gt; para determinar el valor de &lt;em&gt;v&lt;/em&gt; en la sentencia condicional &lt;em&gt;if&lt;/em&gt; (en otro ciclo) momento en que pasa otros tres ciclos calculando &lt;em&gt;w&lt;/em&gt;, &lt;em&gt;x&lt;/em&gt; e &lt;em&gt;y&lt;/em&gt;, en total 4 o 7 ciclos dependiendo de si hay salto en la sentencia condicional.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/f4e501b7c94a9695aa784db89591afd7.js?file=ejecucion-especulativa-1.py&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Si el predictor de salto determina que es probable que la condición sea cierta la ejecución especulativa reordena el programa de la siguiente manera:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/f4e501b7c94a9695aa784db89591afd7.js?file=ejecucion-especulativa-2.py&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Y con la ejecución superescalar se mantiene los &lt;em&gt;pipelines&lt;/em&gt; ocupados de modo que el ejemplo tiene la siguiente equivalencia y tardando aproximadamente 3 ciclos cuando antes se necesitaban 7.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/f4e501b7c94a9695aa784db89591afd7.js?file=ejecucion-especulativa-3.py&#34;&gt;&lt;/script&gt;
-
-&lt;h3 id=&#34;cache&#34;&gt;Cache&lt;/h3&gt;
-
-&lt;p&gt;Los microprocesadores son muy rápidos comparados con la memoria o el acceso al almacenamiento secundario. Un Cortex-A53 de una Raspberry Pi puede ejecutar una instrucción en 0.5 nanosegundos pero el acceso a memoria costar 100 nanosegundos. Esto no es bueno pero por fortuna los accesos a memoria siguen patrones, accediendo repetidamente a variables recientemente accedidas y accediendo a variables en posiciones cercanas, de forma que colocando estas variables en una cache más rápida y cercana al procesador que la memoria principal se mitiga en gran medida el problema.&lt;/p&gt;
-
-&lt;h3 id=&#34;relación-entre-ejecución-especulativa-cache-y-meltdown-y-spectre&#34;&gt;Relación entre ejecución especulativa, cache y &lt;em&gt;Meltdown&lt;/em&gt; y &lt;em&gt;Spectre&lt;/em&gt;&lt;/h3&gt;
-
-&lt;p&gt;La ejecución especulativa tiene el efecto colateral de colocar datos en la memoria cache del microprocesador y esto es utilizado para realizar una forma de &lt;a href=&#34;https://en.wikipedia.org/wiki/Side-channel_attack&#34;&gt;ataque side-channel&lt;/a&gt;. Desde el punto de vista de &lt;em&gt;Meltdown&lt;/em&gt; y &lt;em&gt;Spectre&lt;/em&gt; y la ejecución especulativa lo importante es que midiendo el tiempo que tarda el acceso a memoria se puede conocer si el dato está en la cache (tarda poco) o no (tarda mucho).&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/f4e501b7c94a9695aa784db89591afd7.js?file=meltdown-1.py&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;&lt;em&gt;u&lt;/em&gt; tiene una dependencia sobre &lt;em&gt;t&lt;/em&gt; y &lt;em&gt;v&lt;/em&gt; sobre &lt;em&gt;u&lt;/em&gt; con lo que el microprocesador usando la superescalabilidad, la ejecución fuera de orden y ejecución especulativa acabaría transformando el programa en la siguiente secuencia de operaciones:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/f4e501b7c94a9695aa784db89591afd7.js?file=meltdown-2.py&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;El microprocesador lee de el valor de una dirección del &lt;em&gt;kernel&lt;/em&gt; de forma especulativa pero el fallo en la operación de acceso no se produce hasta se conoce el valor de &lt;em&gt;v&lt;/em&gt; utilizando en la sentencia condicional no es cero. Limpiando la cache previamente y haciendo que &lt;em&gt;v&lt;/em&gt; de cero para que no se produzca la excepción con los valores adecuados de las variables (&lt;em&gt;a&lt;/em&gt;, &lt;em&gt;b&lt;/em&gt;, &lt;em&gt;c&lt;/em&gt;, &lt;em&gt;d&lt;/em&gt;) la ejecución especulativa de &lt;code&gt;v, y_ = u+d, user_mem[x_]&lt;/code&gt; producirá un acceso a la dirección de memoria &lt;em&gt;0x000&lt;/em&gt; o &lt;em&gt;0x100&lt;/em&gt; dependiendo del valor del octavo bit recuperado en el acceso ilegal a la dirección de memoria &lt;code&gt;kern_mem[address]&lt;/code&gt;. El ataque &lt;em&gt;side-channel&lt;/em&gt; se produce midiendo el tiempo que tarda una instrucción posterior que utilice estas direcciones, si está o no está en la cache (por el tiempo que tarda) determina a que dirección de memoria se ha accedido y cual es el valor del octavo bit de una dirección del &lt;em&gt;kernel&lt;/em&gt;. ¡Felicidades has leído un bit de la memoria del kernel!. Bit a bit y con tiempo se puede leer todo el contenido de la memoria del &lt;em&gt;kernel&lt;/em&gt; aplicando esta operación millones de veces.&lt;/p&gt;
-
-&lt;h3 id=&#34;notas-finales&#34;&gt;Notas finales&lt;/h3&gt;
-
-&lt;p&gt;Los microprocesadores ARM1176, Cortex-A7, and Cortex-A53 usados en la Raspberry Pi no se ven afectados por el &lt;em&gt;Meltdown&lt;/em&gt; ya que no poseen ejecución especulativa, los AMD Ryzen tampoco se ven afectados por el &lt;em&gt;Meltdown&lt;/em&gt; ya que aunque si soportan ejecución especulativa al contrario de Intel la ejecución especulativa no se permite entre diferentes anillos de seguridad, el &lt;em&gt;kernel&lt;/em&gt; se ejecuta en el anillo 0 y las aplicaciones en el anillo 3. Sin embargo, una variante de &lt;em&gt;Meltdown&lt;/em&gt; es &lt;em&gt;Spectre&lt;/em&gt; que es el mismo caso pero en vez de con la memoria del &lt;em&gt;kernel&lt;/em&gt; con la memoria de otra aplicación. Como las aplicaciones se ejecutan en el mismo anillo en este caso los AMD Ryzen y algunos modelos de ARM si se ven afectados por &lt;em&gt;Spectre&lt;/em&gt; al igual que también los Intel.&lt;/p&gt;
-
-&lt;p&gt;La ejecución especulativa hace más rápidos los microprocesadores pero habiéndose descubierto este fallo muy inseguros en el caso de los Intel ya que se ve afectados por &lt;em&gt;Meltdown&lt;/em&gt; y &lt;em&gt;Spectre&lt;/em&gt; a menos que se implementen parches por software ya que por microcódigo no es posible darle solución. &lt;em&gt;Meltdown&lt;/em&gt; es más grave pero se puede corregir modificando el &lt;em&gt;kernel&lt;/em&gt; aún con una pérdida de rendimiento, &lt;em&gt;Spectre&lt;/em&gt; es más difícil de explotar pero más difícil de corregir y lo que se hará en este último caso es mitigar el problema modificando el sistema operativo, compilador y aplicaciones.&lt;/p&gt;
-
-&lt;p&gt;Intel tiene un problema importante, con AMD y sus Ryzen a buen precio, con buen rendimiento y&amp;hellip; sin el problema del &lt;em&gt;Meltdown&lt;/em&gt;. Para corregir el fallo en el diseño de la arquitectura del hardware Intel va a tener que rediseñar en parte su arquitectura y esto le va a llevar meses hasta tener preparados nuevos modelos de microprocesadores sin el error.&lt;/p&gt;
-
-&lt;p&gt;En el &lt;em&gt;kernel&lt;/em&gt; de Linux 4.14.11 ya se han aplicado varios parches al igual que posteriormente se implementarán en Windows y macOS. Yo como usuario de Linux con un Intel Core i5-3210M que posee la característica &lt;em&gt;pcid&lt;/em&gt; y esa versión del &lt;em&gt;kernel&lt;/em&gt; no he notado ninguna perdida de rendimiento apreciable.&lt;/p&gt;
-
-&lt;div class=&#34;reference&#34;&gt;
-    Referencia:&lt;br&gt;
-    &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.raspberrypi.org/blog/why-raspberry-pi-isnt-vulnerable-to-spectre-or-meltdown/&#34;&gt;Why Raspberry Pi isn’t vulnerable to Spectre or Meltdown&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://pdfs.semanticscholar.org/2209/42809262c17b6631c0f6536c91aaf7756857.pdf&#34;&gt;The Intel 80x86 Processor Architecture: Pitfalls for Secure Systems&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.amd.com/en/corporate/speculative-execution&#34;&gt;An Update on AMD Processor Security&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://lkml.org/lkml/2017/12/27/2&#34;&gt;x86/cpu, x86/pti: Do not enable PTI on AMD processors&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/List_of_ARM_microarchitectures&#34;&gt;List of ARM microarchitectures&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://geeks.ms/etomas/2018/01/05/meltdown-y-spectre-algunos-comentarios/&#34;&gt;Meltdown y Spectre algunos comentarios&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="hardware"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="seguridad"/>
-            
-                <category term="software"/>
             
         
     </entry>

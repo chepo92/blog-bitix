@@ -3,12 +3,66 @@
     <id>https://picodotdev.github.io/blog-bitix/tags/programacion/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2018-03-24T23:30:00+01:00</updated>
+    <updated>2018-03-31T10:30:00+02:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
     <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/03/que-es-y-como-funciona-el-type-erasure-en-java/</id>
+        <title>Qué es y cómo funciona el type erasure en Java</title>        
+        <updated>2018-03-31T10:30:00+02:00</updated>
+        <published>2018-03-31T10:30:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/03/que-es-y-como-funciona-el-type-erasure-en-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Los tipos genéricos en Java se implementaron usando &lt;em&gt;type erasure&lt;/em&gt; por simplicidad en la implementación, no incurrir en penalizaciones de rendimiento o memoria y por mantener la compatibilidad con versiones anteriores de Java. Son varios los conceptos que están asociados a la implementación de los tipos genéricos en Java que es recomendable conocer como &lt;em&gt;type erasure&lt;/em&gt;  y métodos &lt;em&gt;bridge&lt;/em&gt; de este artículo pero también &lt;em&gt;heap pollution&lt;/em&gt;, &lt;em&gt;non-reifiable&lt;/em&gt;, &lt;em&gt;wildcards&lt;/em&gt; y &lt;em&gt;bound type parameters&lt;/em&gt;.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En la introducción de los &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/04/tutorial-sobre-los-tipos-genericos-de-java/&#34;&gt;tipos genéricos en Java&lt;/a&gt; con la versión 1.5 se decidió implementarlo usando &lt;em&gt;type erasuse&lt;/em&gt; que consiste en que en tiempo de ejecución se pierde la información de los tipos genéricos y para la máquina virtual no son distintos de un tipo no genérico, es un proceso que realiza el compilador. Esto tiene sus ventajas y algunas desventajas pero hay dos buenos motivos por los que en Java se decidió implementar los tipos genéricos usando &lt;em&gt;type erasuse&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Un motivo es que los tipos al ser en tiempo de ejecución exactamente iguales que los no genéricos de versiones anteriores se mantiene la compatibilidad hacia atrás tanto a nivel de código como a nivel binario lo que significa en un caso que el código fuente no es necesario que sea modificado y en otro que no es necesario recompilarlo y esto es importante para usar nuevas versiones de Java sin ningún tipo de modificación y para que programas antiguos sigan funcionando. El segundo motivo es que el mismo tipo sirve para todas las posibles instancias del tipo genérico, de forma que es eficiente y no se incurre en ninguna penalización de rendimiento o memoria.&lt;/p&gt;
+
+&lt;p&gt;La desventaja del &lt;em&gt;type erasure&lt;/em&gt; es que en tiempo de ejecución no se pueden hacer algunas optimizaciones, en computación y uso de memoria. Sin embargo, evaluando las ventajas y desventajas los desarrolladores de Java siempre han dado gran importancia en la compatibilidad hacia atrás y por ello prefirieron implementar los &lt;em&gt;generics&lt;/em&gt; usando &lt;em&gt;type erasure&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;El proceso de eliminar los tipos de los genéricos se realiza eliminando todos los parámetros de los tipos parametrizados siendo reemplazados con su restricción (&lt;em&gt;bound&lt;/em&gt;), con el tipo &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/Object.html&#34;&gt;Object&lt;/a&gt; o con con su restricción, si tiene múltiples restricciones se usa la primera.&lt;/p&gt;
+
+&lt;p&gt;En Java dos métodos distintos no pueden tener la misma firma, dado que los &lt;em&gt;generics&lt;/em&gt; han sido implementados con &lt;em&gt;type erasure&lt;/em&gt; también se ha de cumplir que dos métodos no pueden tener la misma firma una vez aplicado el &lt;em&gt;erasure&lt;/em&gt;. Para no perder las validaciones de tipos el compilador inserta los &lt;em&gt;cast&lt;/em&gt; necesarios. El código fuente de una clase genérica sería el siguiente, que el compilador transformaría siguiendo las reglas del &lt;em&gt;type erasure&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/fe9adde28f19c10787720a7db6a4a840.js?file=Generic.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/fe9adde28f19c10787720a7db6a4a840.js?file=Erased.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Al mismo tiempo que el compilador inserta los &lt;em&gt;cast&lt;/em&gt; necesarios para mantener la validación de tipos inserta métodos &lt;em&gt;bridge&lt;/em&gt; para mantener el polimorfismo en las clases que extienden de tipos genéricos. Si se extiende la clase &lt;em&gt;Node&lt;/em&gt; anterior y se aplica &lt;em&gt;type erasure&lt;/em&gt; la firma del método &lt;em&gt;setData&lt;/em&gt; de &lt;em&gt;IntegerNode&lt;/em&gt; no coincide con el de la clase &lt;em&gt;Node&lt;/em&gt;. Para solventar este problema el compilador inserta un método &lt;em&gt;bridge&lt;/em&gt; para el método &lt;em&gt;setData&lt;/em&gt; con un parámetro &lt;em&gt;Object&lt;/em&gt; que se encarga de hacer de puente y llamar al método &lt;em&gt;setData&lt;/em&gt; que recibe un &lt;em&gt;Integer&lt;/em&gt; aplicando un &lt;em&gt;cast&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/tutorial/java/generics/erasure.html&#34;&gt;Type Erasure&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/05/que-es-el-concepto-de-heap-pollution-en-java/&#34;&gt;Qué es el concepto de Heap Pollution en Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.quora.com/What-are-the-pros-and-cons-of-having-Generics-as-erasure-or-reifiable?share=1&#34;&gt;What are the pros and cons of having Generics as erasure or reifiable?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2018/03/la-herramienta-jlink-para-generar-runtimes-de-java-incluyendo-exclusivamente-los-modulos-que-usa-una-aplicacion/</id>
@@ -1430,75 +1484,6 @@
 &lt;li&gt;&lt;a href=&#34;https://graphql-java.readthedocs.io/en/v5/schema.html&#34;&gt;Creating a schema&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/schema/DataFetchingEnvironment.java&#34;&gt;DataFetchingEnvironment&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/schema/DataFetcher.java&#34;&gt;DataFetcher&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/</id>
-        <title>Devolver mensajes de error descriptivos en GraphQL</title>        
-        <updated>2017-11-12T11:30:00+01:00</updated>
-        <published>2017-11-12T11:30:00+01:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/graphql.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Por defecto &lt;a href=&#34;http://graphql.org/&#34;&gt;GraphQL&lt;/a&gt; devuelve errores con mensajes descriptivos para los errores del cliente como son los errores de sintaxis en la sentencia de consulta o mutación, en el caso de que el campo solicitado no exista o no se ha indicado ninguno. En el caso de Java si se lanza una excepción en la clase repositorio que guarda los datos o en la lógica de negocio y no se captura GraphQL indicará que se ha producido un error interno en el servidor. Esto no es muy descriptivo y es mejor indicar errores más útiles para el usuario de la API como podría ser que no se tienen permisos para realizar la modificación o el error que se ha producido al validar los datos y por los que la operación no se ha completado.&lt;/p&gt;
-
-&lt;p&gt;Los errores en GraphQL usando el lenguaje Java se gestionan implementando en una clase la interfaz &lt;a href=&#34;https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/GraphQLError.java&#34;&gt;GrapQLError&lt;/a&gt;, este podría ser en caso de una excepción que además de heredar de &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Exception.html&#34;&gt;Exception&lt;/a&gt; implemente la interfaz &lt;em&gt;GraphQLError&lt;/em&gt;. Sin embargo, GraphQL cuando una clase hereda de &lt;em&gt;Exception&lt;/em&gt; lo considera un error interno del servidor y para no dar información interna del servicio a los clientes como mensaje indica únicamente &lt;em&gt;Internal Server Error(s) while executing query&lt;/em&gt;.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=curl-default-errors.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Para que GraphQL muestre el error personalizado deseado lanzando excepciones hay que adaptar esa excepción y que implementa &lt;em&gt;GraphQLError&lt;/em&gt; con una clase que únicamente implemente la interfaz &lt;em&gt;GraphQLError&lt;/em&gt; pero no herede de &lt;em&gt;Exception&lt;/em&gt;. Esta sería una clase adaptador necesaria.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=GraphQLErrorAdapter.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Para adaptar las clases excepción hay que cambiar el comportamiento de la clase &lt;em&gt;GraphQLErrorHandler&lt;/em&gt; de modo que transforme las excepciones a la clase &lt;em&gt;GraphQLError&lt;/em&gt; propia. Esta clase se indica al construir el objeto &lt;em&gt;SimpleGraphQLServlet&lt;/em&gt; y &lt;em&gt;ServletRegistrationBean&lt;/em&gt;.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=Main.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;En el caso de este ejemplo solo un usuario de nombre &lt;em&gt;admin&lt;/em&gt; tiene permitido hacer modificaciones en la colección de libros guardados en la clase repositorio &lt;em&gt;LibraryRepository&lt;/em&gt;. Por otro lado, cuando se añade un libro se hace una validación de los datos comprobando que el autor del libro a añadir exista en la librería. Estos son las peticiones válidas.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=curl.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Y estas las inválidas que devuelve los mensajes propios más descriptivos de los errores o validaciones realizadas en el servidor de más utilidad para un usuario del servicio.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=curl-custom-errors.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;La interfaz &lt;em&gt;GraphQLError&lt;/em&gt; posee el método &lt;em&gt;getMessage()&lt;/em&gt; para devolver la descripción del mensaje pero con el método &lt;em&gt;getExtensions()&lt;/em&gt; es posible incluir cualquier dato en forma de clave-valor que deseemos como un código de error o cualquier otra información deseada. El caso de la excepción &lt;em&gt;PermissionException&lt;/em&gt; devuelve dos datos adicionales &lt;em&gt;foo&lt;/em&gt; y &lt;em&gt;fizz&lt;/em&gt;, en un caso real se implementaría una lógica más útil para devolver estos datos adicionales posiblemente proporcionándolos en el constructor u obteniéndolos con la referencia a algún objeto.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/403fbd324011c33f4e53a0b6b4992950.js?file=PermissionException.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;
-    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/GraphQL&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
-&lt;/p&gt;
-
-&lt;div class=&#34;reference&#34;&gt;
-    Referencia:&lt;br&gt;
-    &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java/&#34;&gt;Ejemplo de GraphQL para una interfaz de un servicio con Spring Boot y Java&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://graphql-java.readthedocs.io/en/v5/execution.html&#34;&gt;Execution&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/GraphQLError.java&#34;&gt;GraphQLError.java&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;/div&gt;
