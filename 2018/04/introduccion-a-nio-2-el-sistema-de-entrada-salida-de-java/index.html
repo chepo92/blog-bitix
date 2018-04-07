@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="pico.dev">
   <meta name="keywords" content="java, programacion, tapestry, linux, gnu, gnu/linux, arch, arch linux, software, software libre, html, css, javascript">
-  <meta name="description" content="Java a partir de la versión 7 del JDK ofrece el soporte para recibir notificaciones de cambios en el sistema de archivos sin tener que estar monitorizándolos constantemente en busca de actividad. No tener que estar monitorizando los archivos de forma «polling» para buscar cambios además de hacer que el código sea más sencillo desde el punto de vista de la programación hace que no se malgasten recursos del sistema si los cambios son esporádicos. &hellip;">
+  <meta name="description" content="En las primeras versiones de Java el sistema de entrada/salida proporcionado en el paquete java.io era básico. En la versión 1.4 de Java se añadió un nuevo sistema de entrada/salida llamado NIO para suplir algunas de sus deficiencias que posteriormente en Java 7 se mejoró aún más con NIO.2. Entre las mejoras se incluyen permitir navegación de directorios sencillo, soporte para reconocer enlaces simbólicos, leer atributos de ficheros como permisos e información como última fecha de modificación, soporte de entrada/salida asíncrona y soporte para operaciones básicas sobre ficheros como copiar y mover ficheros. &hellip;">
   <base href="https://picodotdev.github.io/blog-bitix/">
 
-  <title>Monitorizar archivos con Java</title>
+  <title>Introducción a NIO.2, el sistema de entrada/salida de Java</title>
 
   <link rel="author" type="text/plain" href="humans.txt" />
   <link rel="shortcut icon" href="assets/favicon.ico">
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/apple-touch-icon-144-precomposed.png">
-  <link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2014/09/monitorizar-archivos-con-java/">
+  <link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/">
 
   
   <link href="index.xml" rel="alternate" type="application/rss+xml" title="Blog Bitix" />
@@ -130,24 +130,26 @@
               <meta itemprop="inLanguage" content="es">
               
               
-                <meta itemprop="keywords" content="software, programacion, java, planeta-codigo, blog-stack">
+                <meta itemprop="keywords" content="blog, java, planeta-codigo, programacion">
               
               
-              <h1 itemprop="name">Monitorizar archivos con Java</h1>
+              <h1 itemprop="name">Introducción a NIO.2, el sistema de entrada/salida de Java</h1>
               <p class="information">
-                Escrito por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2014-09-20">20/09/2014</time>.
+                Escrito por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2018-04-07">07/04/2018</time>.
                 
                   <br>
-                   <a href="tags/software/">software</a> <a href="tags/programacion/">programacion</a> <a href="tags/java/">java</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/blog-stack/">blog-stack</a>
+                   <a href="tags/blog/">blog</a> <a href="tags/java/">java</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/programacion/">programacion</a>
                 
                 <br>
-                <a href="/blog-bitix/2014/09/monitorizar-archivos-con-java/" itemprop="url">Enlace permanente</a>
+                <a href="/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/" itemprop="url">Enlace permanente</a>
                 
-                  <a href="/blog-bitix/2014/09/monitorizar-archivos-con-java/#comments">Comentarios</a>
+                  <a href="/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/#comments">Comentarios</a>
                 
                 
               </p>
 
+              
+                <p class="summary" itemprop="about">Una de las tareas más importante que realizan algunas aplicaciones es el manejo de la entrada y salida ya sea al sistema de ficheros o a la red. Desde las versiones iniciales de Java se ha mejorado soporte añadiendo programación asíncrona de E/S, permitir obtener información de atributos propios del sistema de archivos, reconocimiento de enlaces simbólicos y facilitado de algunas operaciones básicas.</p>
               
               
 
@@ -161,7 +163,7 @@
 </script>
 
               <div class="content" itemprop="articleBody">
-                <meta itemprop="wordCount" content="405">
+                <meta itemprop="wordCount" content="599">
                 
 
 
@@ -169,40 +171,65 @@
     <img src="assets/images/logotipos/java.svg" class="right " width="200" alt="Java" title="Java"/>
 </div>
 
-<p>Java a partir de la versión 7 del JDK ofrece el soporte para recibir notificaciones de cambios en el sistema de archivos sin tener que estar monitorizándolos constantemente en busca de actividad. No tener que estar monitorizando los archivos de <a href="https://es.wikipedia.org/wiki/Polling">forma «polling»</a> para buscar cambios además de hacer que el código sea más sencillo desde el punto de vista de la programación hace que no se malgasten recursos del sistema si los cambios son esporádicos.</p>
+<p>En las primeras versiones de Java el sistema de entrada/salida proporcionado en el paquete <a href="https://docs.oracle.com/javase/10/docs/api/java/io/package-summary.html"><em>java.io</em></a> era básico. En la versión 1.4 de Java se añadió un nuevo sistema de entrada/salida llamado NIO para suplir algunas de sus deficiencias que posteriormente en Java 7 se mejoró aún más con NIO.2. Entre las mejoras se incluyen permitir navegación de directorios sencillo, soporte para reconocer enlaces simbólicos, leer atributos de ficheros como permisos e información como última fecha de modificación, soporte de entrada/salida asíncrona y soporte para operaciones básicas sobre ficheros como copiar y mover ficheros.</p>
 
-<p>Para ofrecer esta funcionalidad y a partir de Java 7 hay disponibles unas pocas nuevas clases dentro de lo que se conoce como la <a href="http://docs.oracle.com/javase/7/docs/api/java/nio/package-summary.html">nueva API de entrada y salida (NIO)</a> que sustituye al método tradicional de entrada y salida con las clases del paquete <a href="http://docs.oracle.com/javase/7/docs/api/java/io/package-summary.html">java.io</a> entre otras cosas para trabajar con el sistema de archivos.</p>
+<p>Las clases principales de esta nueva API para el manejo de rutas, ficheros y operaciones de entrada/salida son las siguientes:</p>
 
-<p>Para monitorizar los archivos y recibir notificaciones cuando se produzcan cambios en ellos deberemos emplear las clases <a href="http://docs.oracle.com/javase/7/docs/api/java/nio/file/Path.html">Path</a> y <a href="http://docs.oracle.com/javase/7/docs/api/java/nio/file/WatchService.html">WatchService</a>. Empleando estas dos clases el código para monitorizar cambios en los archivos de un directorio sería: registrar el servicio de monitorización obtenido de la clase <a href="http://docs.oracle.com/javase/7/docs/api/java/nio/file/FileSystems.html">FileSystems</a>, escuchar los eventos cuando se produzcan y procesarlos de forma secuencial en un bucle. En el ejemplo se monitoriza el archivo <a href="https://picodotdev.github.io/blog-bitix/2014/09/compilar-y-cargar-de-forma-dinamica-una-clase-java/">fuente de una clase Java que es compilado en memoria e instanciada</a> como explicaba en el anterior artículo:</p>
+<ul>
+<li><a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html">Path</a>: es una abstracción sobre una ruta de un sistema de ficheros. No tiene porque existir en el sistema de ficheros pero si si cuando se hacen algunas operaciones como la lectura del fichero que representa. Puede usarse como reemplazo completo de <a href="https://docs.oracle.com/javase/10/docs/api/java/io/File.html">java.io.File</a> pero si fuera necesario con los métodos <a href="https://docs.oracle.com/javase/10/docs/api/java/io/File.html#toPath()">File.toPath()</a> y <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#toFile()">Path.toFile()</a> se ofrece compatibilidad entre ambas representaciones.</li>
+<li><a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html">Files</a>: es una clase de utilidad con operaciones básicas sobre ficheros.</li>
+<li><a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/FileSystems.html">FileSystems</a>: otra clase de utilidad como punto de entrada para obtener referencias a sistemas de archivos.</li>
+</ul>
 
-<script src="//gist.github.com/picodotdev/841924ef8ff4a108d84f.js?file=ConfiguracionManager.java"></script>
+<p>Con la clase <em>Path</em> se pueden hacer operaciones sobre rutas como obtener la ruta absoluta de un <em>Path</em> relativo o el <em>Path</em> relativo de una ruta absoluta, de cuanto elementos se compone la ruta, obtener el <em>Path</em> padre o una parte de una ruta. Otros métodos interesantes son <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#relativize(java.nio.file.Path)">relativize()</a>, <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#normalize()">normalize()</a>, <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#toAbsolutePath()">toAbsolutePath()</a>, <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#resolve(java.nio.file.Path)">resolve()</a>, <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#startsWith(java.nio.file.Path)">startsWith()</a> y <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#endsWith(java.nio.file.Path)">endsWith()</a>.</p>
 
-<p>En este ejemplo solo se monitorizan los cambios de los archivos pero usando otras propiedades se pueden monitorizar la eliminación y creación, en la clase <a href="http://docs.oracle.com/javase/7/docs/api/java/nio/file/StandardWatchEventKinds.html">StandardWatchEventKinds</a> pueden verse estas propiedades. Una cosa a tener en cuenta es que se pueden monitorizar directorios no archivos en concreto, pero como en el ejemplo una vez que recibimos las notificaciones de monitorización es algo que podemos hacer nosotros. Ejecutando el programa una salida del su funcionamiento podría ser la siguiente en el que la clase se recarga cuando se detectan cambios en ella variando los valores que se emiten en la consola.</p>
+<script src="//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=Main-1.java"></script>
 
-<div class="media" style="text-align: center;">
-    
-<figure>
-  
-  <a href="assets/images/posts/2014/43/main.png" title="Salida programa Main.java" data-gallery><img src="assets/images/posts/2014/43/main.png"/></a>
-  
-  
-  
-  <figcaption></figcaption>
-</figure>
+<p>Utilizando estas clases expondré algunos ejemplos siendo el primero recorrer el listado de archivos o también se podría hacer el listado de forma recursiva de un directorio e imprimir la información de cada archivo como nombre, si es un enlace simbólico, permisos propietario, fecha de última modificación y tamaño utilizando los siguiente métodos similar a lo que hace el comando <em>ls</em> de GNU/Linux:</p>
 
+<ul>
+<li><a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#walkFileTree(java.nio.file.Path,java.nio.file.FileVisitor)">Files.walkFileTree()</a></li>
+<li><a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#isSymbolicLink(java.nio.file.Path)">Files.isSymbolicLink()</a></li>
+<li><a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#readAttributes(java.nio.file.Path,java.lang.String,java.nio.file.LinkOption...)">Files.readAttributes()</a></li>
+<li><a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/attribute/PosixFilePermissions.html">PosixFilePermissions</a></li>
+<li><a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/FileVisitor.html">FileVisitor</a>, <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/SimpleFileVisitor.html">SimpleFileVisitor</a></li>
+</ul>
 
+<p>Al igual que es posible leer los permisos también es posible establecerlos con el método <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#setPosixFilePermissions(java.nio.file.Path,java.util.Set)">Files.setPosixFilePermissions()</a>.</p>
+
+<script src="//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=Main-2.java"></script>
+<script src="//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=ls.out"></script>
+
+<p>Las operaciones de crear directorios o archivos, copiar archivos, moverlos y eliminarlos son muy comunes de modo que la clase <em>Files</em> ofrece varios métodos que con una única línea permite hacer estas operaciones de forma sencilla. El siguiente ejemplo crea un archivo, lo copia, lo mueve y finalmente lo elimina.</p>
+
+<script src="//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=Main-3.java"></script>
+
+<p>Para leer el contenido de archivos la clase <em>Files</em> ofrece los métodos <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newBufferedReader(java.nio.file.Path)">newBufferedReader()</a>, <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newBufferedWriter(java.nio.file.Path,java.nio.charset.Charset,java.nio.file.OpenOption...)">newBufferedWrite()</a>, <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newInputStream(java.nio.file.Path,java.nio.file.OpenOption...)">newInputStream()</a> y <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newOutputStream(java.nio.file.Path,java.nio.file.OpenOption...)">newOutputStream()</a> junto con otros como <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#readAllLines(java.nio.file.Path,java.nio.charset.Charset)">readAllLines()</a> y <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#readAllBytes(java.nio.file.Path)">readAllBytes()</a>.</p>
+
+<script src="//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=Main-4.java"></script>
+
+<p>En cuanto a la programación de entrada/salida asíncrona se ofrecen dos paradigmas uno basado en la clase <a href="https://docs.oracle.com/javase/10/docs/api/java/util/concurrent/Future.html">Future</a> y otro en funciones de rellamada o <em>callbacks</em>. La programación asíncrona evita bloquear el hilo que ejecuta el código y aprovecha mejor los procesadores multinúcleo con lo que se mejora el rendimiento de las aplicaciones. Para los ficheros se usa la clase <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/channels/AsynchronousFileChannel.html">AsynchronousFileChannel</a> y para flujos de red <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/channels/AsynchronousSocketChannel.html">AsynchronousSocketChannel</a>.</p>
+
+<script src="//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=Main-5.java"></script>
+<script src="//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=Main-6.java"></script>
+
+<p>Si se desea profundizar más en NIO y NIO.2 el libro <a href="https://amzn.to/2JsEIao">The Well-Grounded Java Developer</a> dedica un capítulo introductorio en el que me he basado para realizar este artículo, el libro <a href="https://amzn.to/2q7qMdN">Java I/O, NIO and NIO.2</a> está completamente dedicado al nuevo sistema de entrada/salida de Java y el tutorial <a href="https://docs.oracle.com/javase/tutorial/essential/io/index.html">Java Basic I/O</a> también está muy bien como introducción.</p>
+
+<div class="media-amazon" style="text-align: center;">
+    <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=blobit-21&o=30&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=1617290068&linkId=61507308185711a0af4b5ed5ab70b62b"></iframe>
+    <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=blobit-21&o=30&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=1484215664&linkId=d748ea086bd02aa68dd0b27945514558"></iframe>
 </div>
 
-<p>Esta funcionalidad de monitorización de cambios de archivos junto con la <a href="https://picodotdev.github.io/blog-bitix/2014/09/compilar-y-cargar-de-forma-dinamica-una-clase-java/">compilación y carga dinámica de archivos con código fuente Java</a> puede utilizarse para hacer que la configuración de una aplicación esté definida en código Java y se cargue dinámicamente sin tener que reiniciar la aplicación. Y esto es lo que mostraré en la siguiente entrada y explicaré con más detalles que ventajas tienen esta idea.</p>
+<p>En el artículo <a href="https://picodotdev.github.io/blog-bitix/2014/09/monitorizar-archivos-con-java/">monitorizar archivos con Java</a> muestro como recibir eventos cuando se añade, elimina o modifica algún archivo de los observados usando la clase <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/WatchService.html">WatchService</a>.</p>
 
-<p>El código fuente completo puede encontrarse en el <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/ConfiguracionJava">siguiente repositorio de GitHub</a>.</p>
+<p>
+    El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/JavaNIO">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew run</code>.
+</p>
 
 <div class="reference">
     Referencia:<br>
     <ul>
-<li><a href="http://docs.oracle.com/javase/7/docs/api/java/nio/file/Path.html">Path</a></li>
-<li><a href="http://docs.oracle.com/javase/7/docs/api/java/nio/file/WatchService.html">WatchService</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/">Introducción a NIO.2, el sistema de entrada/salida de Java</a></li>
+<li><a href="http://www.javamagazine.mozaicreader.com/JulyAug2016/Twitter#&amp;pageSet=0&amp;page=0&amp;contentItem=0">Artículo NIO.2, Java Magazine Jul/Ago 2016</a></li>
 </ul>
 
 </div>
@@ -245,8 +272,8 @@
 
   <script type="text/javascript" async>
     var disqus_shortname = 'blog-bitix';
-    var disqus_identifier = 'https:\/\/picodotdev.github.io\/blog-bitix\/2014\/09\/monitorizar-archivos-con-java\/';
-    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2014\/09\/monitorizar-archivos-con-java\/';
+    var disqus_identifier = 'https:\/\/picodotdev.github.io\/blog-bitix\/2018\/04\/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java\/';
+    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2018\/04\/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java\/';
     var disqus_script = 'embed.js';
     (function () {
       var dsq = document.createElement('script'); 
