@@ -3,12 +3,64 @@
     <id>https://picodotdev.github.io/blog-bitix/post/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2018-04-14T00:30:00+02:00</updated>
+    <updated>2018-04-20T17:00:00+02:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
     <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/04/la-controversia-sobre-las-excepciones-checked-y-uncheked/</id>
+        <title>La controversia sobre las excepciones checked y uncheked</title>        
+        <updated>2018-04-20T17:00:00+02:00</updated>
+        <published>2018-04-20T17:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/04/la-controversia-sobre-las-excepciones-checked-y-uncheked/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Las excepciones son una forma de gestionar las condiciones de error que se dan en los programas. En el lenguaje C se utiliza el valor de retorno de la función para determinar la condición de error que se ha producido, el problema es que comprobar el valor de retorno puede ignorarse y la gestión de errores está mezclada con la tarea del programa.&lt;/p&gt;
+
+&lt;p&gt;El lenguaje Java utiliza un mecanismo de excepciones, las excepciones son objetos que se lanzan cuando se produce una condición de error. Todas las excepciones en Java heredan de &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/Throwable.html&#34;&gt;Throwable&lt;/a&gt; subdividiéndose en &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/Error.html&#34;&gt;Error&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/Exception.html&#34;&gt;Exception&lt;/a&gt;, las primeras son condiciones de error del sistema y las segundas condiciones de error del programa. A su vez las &lt;em&gt;Exception&lt;/em&gt; pueden ser &lt;em&gt;checked&lt;/em&gt; si heredan de esta y son aquellas que el compilador fuerza a que sean capturadas no pudiendo ignorarse, han de capturarse en una construcción &lt;em&gt;try catch&lt;/em&gt; o declarar que el método puede lanzar la excepción no capturada. Las excepciones &lt;em&gt;uncheked&lt;/em&gt; heredan de &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/RuntimeException.html&#34;&gt;RuntimeException&lt;/a&gt; que heredan a su vez de &lt;em&gt;Exception&lt;/em&gt; pero tienen la particularidad de que no es necesario capturarlas ni declararlas como que se pueden lanzar debido a que se consideran condiciones de error en la programación como un acceso a un &lt;em&gt;array&lt;/em&gt; fuera de rango que produce un &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/ArrayIndexOutOfBoundsException.html&#34;&gt;ArrayIndexOutOfBounds&lt;/a&gt;, el conocido &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/NullPointerException.html&#34;&gt;NullPointerException&lt;/a&gt; cuando se utiliza una referencia nula, otro es &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/ArithmeticException.html&#34;&gt;ArithmeticException&lt;/a&gt; que se produce al dividir por 0.&lt;/p&gt;
+
+&lt;p&gt;Hay una cierta polémica sobre si las excepciones &lt;em&gt;checked&lt;/em&gt; son una buena idea. Entre los motivos que se alegan en contra de su uso están que cambiar la firma de un método añadiendo una nueva excepción como lanzable hace que el código que usase ese método podría ocasionar errores de compilación y que hace necesario el tratarla o declararla en la cadena de métodos hasta que sea tratada. Otro motivo es que a mayor nivel en la jerarquía de llamada en los métodos se necesitarán manejar una lista amplia de excepciones.&lt;/p&gt;
+
+&lt;p&gt;En el lado contrario las excepciones se consideran que son buenas porque conocer las condiciones de error o excepción que puede lanzar el método forma parte de la firma del método y es necesario para realizar un correcto manejo de errores. Las excepciones que heredan de &lt;em&gt;RuntimeException&lt;/em&gt; no se obliga a controlarlas ya que son errores producidos por un error en la programación.&lt;/p&gt;
+
+&lt;p&gt;Las excepciones &lt;em&gt;checked&lt;/em&gt; pueden parecer un incordio pero son necesarias para hacer un correcto manejo de errores y evitar que el programa falle por no capturarlas. Por otro lado no deberían silenciarse con un bloque &lt;em&gt;catch&lt;/em&gt; vacío sin una buena razón.&lt;/p&gt;
+
+&lt;p&gt;En el siguiente código se observa como capturar, lanzar y declarar excepciones en las firmas de los métodos en Java en una construcción &lt;em&gt;try catch finally&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/c0fc9936712783e76b22088e5b8f2b2e.js?file=Bank.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/c0fc9936712783e76b22088e5b8f2b2e.js?file=Main.java&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/tutorial/essential/exceptions/runtime.html&#34;&gt;Unchecked Exceptions — The Controversy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/124143/why-are-exceptions-not-checked-in-net#126122&#34;&gt;Why are Exceptions not Checked in .NET?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.artima.com/intv/handcuffs.html&#34;&gt;The Trouble with Checked Exceptions&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2018/04/prompt-de-la-terminal-personalizado-en-carpetas-de-git-con-el-interprete-bash/</id>
@@ -1732,109 +1784,6 @@
                 <category term="planeta-codigo"/>
             
                 <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2018/02/8o-aniversario-del-blog/</id>
-        <title>8º aniversario del blog</title>        
-        <updated>2018-02-07T18:30:00+01:00</updated>
-        <published>2018-02-06T19:00:00+01:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/02/8o-aniversario-del-blog/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/hugo.png&#34; class=&#34;right &#34; alt=&#34;Hugo&#34; title=&#34;Hugo&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Hoy se cumplen 8 años desde que creé y empecé a escribir en un blog, primeramente &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es&#34;&gt;El blog de pico.dev&lt;/a&gt; y más tarde en Blog Bitix. Durante este tiempo he escrito 485 artículos entre ambos blogs, en Blog Bitix ya tengo más artículos escritos y publicados de los que he tenido en El blog de pico.dev. Ocho años ya son una cifra considerable y requiere gran constancia, dedicación, motivación, perseverancia y gran cantidad de tiempo. Muchos blogs no llegan a esta cifra.&lt;/p&gt;
-
-&lt;p&gt;Trato de compartir el conocimiento que voy aprendiendo según leo libros, uso &lt;a href=&#34;https://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;https://www.linux.com/&#34;&gt;Linux&lt;/a&gt; o me pregunto como se haría tal cosa con el lenguaje que uso principalmente, Java. El tener documentación es vital para un programador o en la tecnología y lo que comparto trato de que para el siguiente que tenga el mismo problema o se pregunte como se hace algo lo tenga más fácil y al mismo tiempo aprenda. Aparte de compartir conocimiento el blog me gustaría que me sirviese en mi vida profesional, ya sea para encontrar un nuevo trabajo o para profundizar aún en algún conocimiento. Por el momento este objetivo no lo considero del todo cumplido ya que a pesar de lo fan que soy de Java realmente trabajo a día de hoy con &lt;a href=&#34;http://www.groovy-lang.org/&#34;&gt;Groovy&lt;/a&gt; y &lt;a href=&#34;https://grails.org/&#34;&gt;Grails&lt;/a&gt;, son un lenguaje de programación y un framework web de la plataforma Java pero salvo la API del JDK tiene poco que ver y no me permiten seguir aprendiendo todo lo que me gustaría de esta plataforma, en el trabajo con otros aspectos tengo alguna otra compensación. Escribo y leo mucho pero por falta de uso una buena parte al cabo de varios meses voy olvidando.&lt;/p&gt;
-
-&lt;p&gt;Tengo bastantes artículos ya escritos pero pendientes publicar, tengo esta reserva de artículos por si alguna semana no me apetece escribir, no puedo o por si un ejemplo funcional de código se me complica disponer de algún artículo para publicar. Veo la fecha de algunos que escribí y no miento si digo que para varios ya han pasado ¡dos! años estando ahí pendientes de publicar. No me faltan ideas en un documento voy priorizando los artículos siguientes que escribiré y en otro documento voy recogiendo las ideas para nuevos artículos, pues bien, estos documentos tienen una longitud de 12 y 32 páginas donde cada idea de artículo solo ocupa el título y una pequeña descripción y algún enlace, por si fuera poco en un tercer documento recojo las ideas de artículos de opinión ya que estos no requieren crear un ejemplo de código y en este sentido me resulta más sencillo escribirlos. También es cierto que finalmente algunas ideas desecho. Lo que si me falta es tiempo para dedicarlo al blog, por el trabajo y por no ser el trabajo y el blog la únicas cosas que hago.&lt;/p&gt;
-
-&lt;p&gt;Cada cierto tiempo reviso y publico los datos de las visitas mensuales que tengo, lentamente pero de forma constante van aumentando y comprobando la diferencia de año en año por el momento el aumento es significativo para un blog con una temática bastante especializada. Sin embargo hasta el momento no he dado más detalles de estos datos en grandes números. Después de un crecimiento notable en el mes de mayo de 2017 las visitas han vuelto a los números de los meses anteriores y parece que se han estancado, veré como evolucionan en los siguientes meses, diciembre y enero por las vacaciones y días festivos no son de los mejores meses.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    
-&lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/298/paginas-vistas.png&#34; title=&#34;Páginas vistas&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/298/paginas-vistas-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  
-  &lt;figcaption&gt;Páginas vistas&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-
-&lt;/div&gt;
-
-&lt;p&gt;Un poco menos de la mitad de los usuarios los recibo desde España y la otra mitad de varios países de latinoamérica ya que por compartir el lenguaje los buscadores devuelven referencias a alguno de mis artículos. A parte de España con un 35% entre los países de latinoamérica están México 17%, Argentina 8%, Colombia 8%, Chile 6%, Perú 5,3%, Ecuador 3%, Venezuela 2,5%, Estados Unidos 1,76% o Bolivia 1,25%.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    
-&lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/298/pais.png&#34; title=&#34;Ubicación por país&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/298/pais-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  
-  &lt;figcaption&gt;Ubicación por país&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-
-&lt;/div&gt;
-
-&lt;p&gt;En cuanto al navegador usado por los usuarios la mayor cuota de uso es &lt;a href=&#34;https://www.google.es/chrome/browser/desktop/&#34;&gt;Chrome&lt;/a&gt; con un 71%, luego &lt;a href=&#34;https://www.mozilla.org/es-ES/firefox/new/&#34;&gt;Firefox&lt;/a&gt; con un 17% y en menores porcentajes Safari con un 3,7% y Edge con un pequeño 2,5% aún con la cuota de mercado de Windows. A pesar de publicar artículos sobre GNU/Linux la mayoría de usuarios usan &lt;a href=&#34;https://www.microsoft.com/es-es/windows/&#34;&gt;Windows&lt;/a&gt; con un 72% pero me sorprende el 10,23% de Android incluso por delante de GNU/Linux con otro 10% y un 4,5% de Macintosh, finalmente está iOS con un 2,76%.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    
-&lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/298/navegador.png&#34; title=&#34;Navegador&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/298/navegador-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/298/sistema-operativo.png&#34; title=&#34;Sistema operativo&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/298/sistema-operativo-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  &lt;figcaption&gt;Navegador y sistema operativo&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-
-&lt;/div&gt;
-
-&lt;p&gt;En un porcentaje aplastante la mayoría de usuarios proviene del buscador Google con un 91% y un 4,8% para el tráfico directo.&lt;/p&gt;
-
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    
-&lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/298/fuente.png&#34; title=&#34;Fuente&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/298/fuente-thumb.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  
-  &lt;figcaption&gt;Fuente&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-
-&lt;/div&gt;
-
-&lt;p&gt;Con toda la intención publiqué varios artículos sobre Windows contando mi experiencia al usar sin licencia tanto Windows como &lt;a href=&#34;https://products.office.com/es-es/home&#34;&gt;Office&lt;/a&gt;, pues estos son de los artículos más visitados en mi blog con diferencia. Dada la cuota de uso de Windows y que a nivel hogar muchos usuarios optan por usar sin licencia estos productos de &lt;a href=&#34;https://www.microsoft.com/&#34;&gt;Microsoft&lt;/a&gt; es normal que estos artículos sean de los más visitados en mi blog. No se cuan efectivo será pero en esos artículos indico que existen las distribuciones GNU/Linux y que hay alternativas a Microsoft Office para la mayoría de usuarios perfectamente válidos.&lt;/p&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog"/>
-            
-                <category term="blog-stack"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="planeta-linux"/>
             
         
     </entry>
