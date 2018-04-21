@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="pico.dev">
+  <meta name="keywords" content="java, programacion, software, hardware, tapestry, software libre, gnu, linux, gnu/linux, unix, arch, arch linux, html, css, javascript">
+  <meta name="description" content="En el artículo cómo crear clases factoría sin usar if-else se comentan varias formas para conseguirlo. Las soluciones que se proponen son usar:
+ Reflection: sin embargo esta solución obliga a que el cliente de la factoría conozca el nombre completo de la clase a crear incluyendo el paquete en el que está y hace que la factoría no abstraiga al cliente de conocerlo que puede ser uno de sus objetivos. &hellip;">
+  <base href="https://picodotdev.github.io/blog-bitix/">
+
+  <title>Cómo crear clases factoría sin usar if-else</title>
+
+  <link rel="author" type="text/plain" href="humans.txt" />
+  <link rel="shortcut icon" href="assets/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/apple-touch-icon-144-precomposed.png">
+  <link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2015/10/como-crear-clases-factoria-sin-usar-if-else/">
+
+  
+  <link href="index.xml" rel="alternate" type="application/rss+xml" title="Blog Bitix" />
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=PT+Serif:400,700italic,700,400italic">
+  
+  <link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-4.0.0/css/bootstrap.min.css">
+  
+  <link rel="stylesheet" type="text/css" href="assets/libs/Gallery-2.30.0/css/blueimp-gallery.min.css">
+  
+  <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+
+  
+  <script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script>
+  <script type="text/javascript">
+    (adsbygoogle = window.adsbygoogle || []).push({
+      google_ad_client: 'ca-pub-3533636310991304',
+      enable_page_level_ads: true
+    });
+  </script>
+  <script type="text/javascript" async>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-12874075-4', 'picodotdev.github.io');
+    ga('send', 'pageview');
+  </script>
+  <script type="text/javascript" src="assets/libs/require.js"></script>
+  <script type="text/javascript" src="assets/js/main.js"></script>
+  <script type="text/javascript" src="assets/js/theme.js" async></script>
+
+  <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" async></script>
+
+  
+  <script type="text/javascript" src="assets/js/app.js" async></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <header>
+  <div class="row">
+    <div class="col-12 col-lg-4"></div>
+    <div class="col-12 col-lg-4">
+      <h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2>
+      <div class="links">
+        
+          <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a>
+        
+        
+          <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a>
+        
+        
+          <a href="https://plus.google.com/114317443908384387611/" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a>
+        
+        
+          <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a>
+        
+        
+        
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 text-center">
+      <form name="query" class="form-inline search" onsubmit="return false;">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Buscar en Blog Bitix">
+          <span class="input-group-btn">
+            <button class="btn btn-secondary" type="submit">Buscar</button>
+          </span>
+        </div>
+      </form>
+      <form name="search" action="https://duckduckgo.com/" method="get" class="hidden" data-site="https://picodotdev.github.io/blog-bitix/">
+        <input type="hidden" name="q" value="">
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <nav class="nav nav-pills nav-fill">
+  
+    <a href="/blog-bitix/tags/java/" class="nav-item nav-link">Java</a>
+  
+    <a href="/blog-bitix/tags/gnu-linux/" class="nav-item nav-link">GNU/Linux</a>
+  
+    <a href="/blog-bitix/tags/javascript/" class="nav-item nav-link">JavaScript</a>
+  
+    <a href="/blog-bitix/tags/tapestry/" class="nav-item nav-link">Tapestry</a>
+  
+    <a href="/blog-bitix/archive/" class="nav-item nav-link">Archivo y hemeroteca</a>
+  
+    <a href="/blog-bitix/pages/links/" class="nav-item nav-link">Enlaces</a>
+  
+    <a href="/blog-bitix/pages/about/" class="nav-item nav-link">Acerca de...</a>
+  
+</nav>
+
+    </div>
+  </div>
+</header>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-lg-8">
+        <div class="row">
+          <div class="col-12">
+            <article itemscope itemtype="http://schema.org/BlogPosting">
+              
+              <meta itemprop="inLanguage" content="es">
+              
+              
+                <meta itemprop="keywords" content="blog-stack, java, planeta-codigo, programacion">
+              
+              
+              <h1 itemprop="name">Cómo crear clases factoría sin usar if-else</h1>
+              <p class="information">
+                Escrito por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2015-10-18">18/10/2015</time>, actualizado el <time itemprop="dateModified" datetime="2015-10-19">19/10/2015</time>.
+                
+                
+                  <br>
+                   <a href="tags/blog-stack/">blog-stack</a> <a href="tags/java/">java</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/programacion/">programacion</a>
+                
+                <br>
+                <a href="/blog-bitix/2015/10/como-crear-clases-factoria-sin-usar-if-else/" itemprop="url">Enlace permanente</a>
+                
+                  <a href="/blog-bitix/2015/10/como-crear-clases-factoria-sin-usar-if-else/#comments">Comentarios</a>
+                
+                
+              </p>
+
+              
+              
+
+              <ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="5966819782"
+     data-type="leaderboard"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+              <div class="content" itemprop="articleBody">
+                <meta itemprop="wordCount" content="556">
+                
+
+
+                <div class="logotypes" style="float: right;">
+    <img src="assets/images/logotipos/java.svg" class="right " width="200" alt="Java" title="Java"/>
+</div>
+
+<p>En el artículo <a href="http://www.javacodegeeks.com/2014/10/factory-without-if-else.html">cómo crear clases factoría sin usar if-else</a> se comentan varias formas para conseguirlo. Las soluciones que se proponen son usar:</p>
+
+<ul>
+<li><a href="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/package-summary.html"><em>Reflection</em></a>: sin embargo esta solución obliga a que el cliente de la factoría conozca el nombre completo de la clase a crear incluyendo el paquete en el que está y hace que la factoría no abstraiga al cliente de conocerlo que puede ser uno de sus objetivos. Además el parámetro es un <em>String</em> con lo que en los <em>refactors</em> el compilador no nos ayudará, el compilador es una de <a href="https://picodotdev.github.io/blog-bitix/2015/05/10-razones-para-seguir-usando-java/">mis 10 razones para seguir usando Java</a>.</li>
+<li><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html"><em>Map</em></a>: en esta solución se asocia una clave (en String) con la clase que devuelve la factoría. Igualmente usar un <em>String</em> como clave es algo a evitar ya que es propenso a errores al no tener ayuda del compilador en los valores de los Strings si estas cambian.</li>
+<li><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html"><em>Enum</em></a>: en esta solución para eliminar los <em>if-else</em> se aprovecha de la propiedad del <a href="https://en.wikipedia.org/wiki/Polymorphism_%28computer_science%29">polimorfismo</a> de los lenguajes orientados a objetos. El tipo <em>Enum</em> usado tiene un método que es implementado en cada uno de los tipos concretos de enum, en función de que utilice se crea la instancia adecuada del objeto.</li>
+</ul>
+
+<p>Hay que notar otra diferencia entre la soluciones con <em>if-else</em>, <em>Reflection</em> y <em>Enum</em> y por otra parte la solución con <em>Map</em> y es que en el ejemplo las tres primeras crean una nueva instancia del validador cada vez que se llama a <em>newInstance</em> mientras que en la solución Map solo devuelve la instancia puesta en el mapa.</p>
+
+<p>La solución del <em>Enum</em> el código resultante es bastante verboso y menos legible que las otras soluciones aún usando polimorfismo (en mi humilde opinión), por otra parte crear una nueva instancia de validador cada vez que se invoca a <em>newInstance</em> en la factoría puede que no sea lo que queramos (o quizá sí). Por esto voy a plantear una nueva solución que es usando un <em>Enum</em> como clave de un <em>Map</em>, que es una variante de la solución comentada en el artículo con <em>Map</em>. Es código de la nueva solución es el siguiente:</p>
+
+<script src="//gist.github.com/picodotdev/3b4623579955cd66751d.js?file=ValidatorFactory.java"></script>
+
+<p>Si necesitásemos que la factoría devolviese una nueva instancia de <em>Validator</em> en cada llamada a <em>newInstance</em> (por ejemplo, porque no es <em>thread-safe</em>) podemos poner en el mapa una instancia de <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html">Supplier</a> haciendo uso de las funciones <em>lambda</em> incluidas como una de las <a href="https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/">nuevas características incorporadas en Java 8</a>.</p>
+
+<p>Cómo se comenta en los recomendables libros <a href="http://www.amazon.es/gp/product/0201485672/ref=as_li_ss_tl?ie=UTF8&camp=3626&creative=24822&creativeASIN=0201485672&linkCode=as2&tag=blobit-21">Refactoring: Improving the Design of Existing Code</a><img src="https://ir-es.amazon-adsystem.com/e/ir?t=blobit-21&l=as2&o=30&a=0201485672" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /> y <a href="http://www.amazon.es/gp/product/0321356683/ref=as_li_ss_tl?ie=UTF8&camp=3626&creative=24822&creativeASIN=0321356683&linkCode=as2&tag=blobit-21">Effective Java</a><img src="https://ir-es.amazon-adsystem.com/e/ir?t=blobit-21&l=as2&o=30&a=0321356683" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /> los <em>if-else</em> o <em>switches</em> son algo a evitar ya que se prefiere la pauta «abierto a extensión, cerrado a modificación», si necesitamos modificar código existente puede que introduzcamos algún error o se nos olvide modificar algún punto del código, por ello se prefiere el polimorfismo siendo la solución del <em>Enum</em> la más cercana a este principio o alguna de las otras soluciones. En el libro <a href="http://www.amazon.es/gp/product/0321356683/ref=as_li_ss_tl?ie=UTF8&camp=3626&creative=24822&creativeASIN=0321356683&linkCode=as2&tag=blobit-21">Effective Java</a><img src="https://ir-es.amazon-adsystem.com/e/ir?t=blobit-21&l=as2&o=30&a=0321356683" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /> además se comentan ideas interesantes y ventajas sobre por que usar factorías (en ciertas situaciones) en vez de la palabra clave reservada <em>new</em>. Sin embargo, hay que saber cuando aplicar cierto patrón ya que son soluciones en algún sentido mejor pero que añaden algo de complejidad, nos tocará en función de las modificaciones que preveamos que pueda tener el código, de las necesidades o experiencia saber cual aplicar.</p>
+
+<div class="reference">
+    Referencia:<br>
+    <ul>
+<li><a href="http://www.javacodegeeks.com/2014/10/factory-without-if-else.html">Factory without if-else</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/12/8-plus-libros-para-mejorar-como-programadores/">8+ libros para mejorar como programadores</a></li>
+</ul>
+
+</div>
+
+
+
+              </div>
+            </article>
+          </div>
+        </div>
+        
+
+        
+<div class="row">
+  <div class="col-md-12">
+    <div class="sharethis-inline-share-buttons"></div>
+  </div>
+</div>
+
+
+        <div class="row">
+          <div class="col-12">
+            <ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="5966819782"
+     data-type="leaderboard"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+          </div>
+        </div>
+        
+  <a id="comments"></a>
+  <div class="row">
+    <div class="col-md-12">
+      <div id="disqus_thread"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript" async>
+    var disqus_shortname = 'blog-bitix';
+    var disqus_identifier = 'https:\/\/picodotdev.github.io\/blog-bitix\/2015\/10\/como-crear-clases-factoria-sin-usar-if-else\/';
+    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2015\/10\/como-crear-clases-factoria-sin-usar-if-else\/';
+    var disqus_script = 'embed.js';
+    (function () {
+      var dsq = document.createElement('script'); 
+      dsq.type = 'text/javascript'; 
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+  </script>
+
+      </div>
+      <div class="col-12 col-lg-4">
+        <div class="row">
+  <div class="col-md-12 text-center">
+    <ins class="adsbygoogle"
+     style="display:inline-block;width:300px;height:600px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="9559414587"
+     data-type="large-skycraper"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12 text-center">
+    <ins class="adsbygoogle"
+     style="display:inline-block;width:336px;height:280px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="2873752587"
+     data-type="large-rectangle"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+  </div>
+</div>
+<div class="row text-center banner">
+  <div class="col-12">
+    <a href="https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/"><img src="//static.fsf.org/nosvn/images/badges/badges_es/i-support-fs_red-bg-es.png" alt="Yo apoyo al software libre"></a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <hr>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <ul class="list-unstyled recents">
+      <li><span class="glyphicon glyphicon-hand-right"></span> <a href="archive/">Más artículos recientes en el archivo</a></li>
+    </ul>
+  </div>
+</div>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <hr>
+      </div>
+    </div>
+    <footer>
+  <div class="row">
+    <div class="col-12 col-sm-4">
+      <p><strong>Blog Bitix</strong></p>
+      <p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p>
+      <p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p>
+    </div>
+    <div class="col-12 col-sm-4 text-center menu">
+      <ul class="list-unstyled">
+        
+          <li><a href="/blog-bitix/tags/java/">Java</a></li>
+        
+          <li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li>
+        
+          <li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li>
+        
+          <li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li>
+        
+          <li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li>
+        
+          <li><a href="/blog-bitix/pages/links/">Enlaces</a></li>
+        
+          <li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li>
+        
+          <li><a href="/blog-bitix/pages/donate/">Donaciones</a></li>
+        
+          <li><a href="/blog-bitix/pages/about/">Acerca de...</a></li>
+        
+      </ul>
+    </div>
+    <div class="col-12 col-sm-4 text-center links">
+      
+        <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a>
+      
+      
+        <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a>
+      
+      
+        <a href="https://plus.google.com/114317443908384387611/" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a>
+      
+      
+        <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a>
+      
+      
+      
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      Copyleft <span class="copyleft">&copy;</span> 2018 - <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="nofollow" rel="license"><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style="border-width:0" src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" class="licencia"/></a><br />
+      <a href="https://twitter.com/blogstackinfo" rel="nofollow"><img src="https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png" alt="Blog Stack" title="Blog Stack"></a>
+      <a href="https://www.planetacodigo.com/" rel="nofollow"><img src="https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png" alt="Planeta código" title="Planeta código"></a>
+      <br/>
+      <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="https://picodotdev.github.io/blog-bitix/" rel="nofollow">Blog Bitix</a></span> by <a xmlns:cc="https://creativecommons.org/ns#" href="https://picodotdev.github.io/blog-bitix/" property="cc:attributionName" rel="cc:attributionURL">pico.dev</a> is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.
+      <br/>
+      <span class="credit">Powered by <a href="https://gohugo.io/" rel="nofollow" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a>.</span>
+      <span class="credit">Background patterns from <a href="https://www.toptal.com/designers/subtlepatterns" rel="nofollow">Subtle Patterns</a>.</span>
+    </div>
+  </div>
+</footer>
+
+  </div>
+  
+<div class="blueimp-gallery-container">
+  <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false">
+    
+    <div class="slides"></div>
+    
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    
+    <div class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body next"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left prev">
+              <i class="glyphicon glyphicon-chevron-left"></i>
+              Anterior
+            </button>
+            <button type="button" class="btn btn-primary next">
+              Siguiente
+              <i class="glyphicon glyphicon-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  
+<script type="text/javascript">
+    window.cookieconsent_options = {
+        "message": "Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.",
+        "dismiss": "Aceptar",
+        "learnMore": "Más información",
+        "link": null,
+        "theme": "dark-bottom"
+    };
+</script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script>
+</body>
+</html>

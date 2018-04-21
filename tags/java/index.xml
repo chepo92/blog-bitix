@@ -1,0 +1,1237 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://picodotdev.github.io/blog-bitix/tags/java/</id>
+    <title type="text">Blog Bitix</title>
+    <subtitle>Recent content on Blog Bitix</subtitle>
+    <updated>2018-04-20T17:00:00+02:00</updated>
+    <author><name>pico.dev</name></author>
+    <generator>Hugo</generator>
+    <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
+    <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
+    <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/04/la-controversia-sobre-las-excepciones-checked-y-unchecked/</id>
+        <title>La controversia sobre las excepciones checked y unchecked</title>        
+        <updated>2018-04-20T17:00:00+02:00</updated>
+        <published>2018-04-20T17:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/04/la-controversia-sobre-las-excepciones-checked-y-unchecked/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Las excepciones son una forma de gestionar las condiciones de error que se dan en los programas. En el lenguaje C se utiliza el valor de retorno de la función para determinar la condición de error que se ha producido, el problema es que comprobar el valor de retorno puede ignorarse y la gestión de errores está mezclada con la tarea del programa.&lt;/p&gt;
+
+&lt;p&gt;El lenguaje Java utiliza un mecanismo de excepciones, las excepciones son objetos que se lanzan cuando se produce una condición de error. Todas las excepciones en Java heredan de &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/Throwable.html&#34;&gt;Throwable&lt;/a&gt; subdividiéndose en &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/Error.html&#34;&gt;Error&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/Exception.html&#34;&gt;Exception&lt;/a&gt;, las primeras son condiciones de error del sistema y las segundas condiciones de error del programa. A su vez las &lt;em&gt;Exception&lt;/em&gt; pueden ser &lt;em&gt;checked&lt;/em&gt; si heredan de esta y son aquellas que el compilador fuerza a que sean capturadas no pudiendo ignorarse, han de capturarse en una construcción &lt;em&gt;try catch&lt;/em&gt; o declarar que el método puede lanzar la excepción no capturada. Las excepciones &lt;em&gt;uncheked&lt;/em&gt; heredan de &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/RuntimeException.html&#34;&gt;RuntimeException&lt;/a&gt; que heredan a su vez de &lt;em&gt;Exception&lt;/em&gt; pero tienen la particularidad de que no es necesario capturarlas ni declararlas como que se pueden lanzar debido a que se consideran condiciones de error en la programación como un acceso a un &lt;em&gt;array&lt;/em&gt; fuera de rango que produce un &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/ArrayIndexOutOfBoundsException.html&#34;&gt;ArrayIndexOutOfBounds&lt;/a&gt;, el conocido &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/NullPointerException.html&#34;&gt;NullPointerException&lt;/a&gt; cuando se utiliza una referencia nula, otro es &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/ArithmeticException.html&#34;&gt;ArithmeticException&lt;/a&gt; que se produce al dividir por 0.&lt;/p&gt;
+
+&lt;p&gt;Algunas ventajas de las excepciones son:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Separar el código que gestiona los errores del código con el caso principal del programa.&lt;/li&gt;
+&lt;li&gt;Propagar errores hacia arriba en la pila de llamadas.&lt;/li&gt;
+&lt;li&gt;Agrupar y diferenciar entre diferentes tipos de errores.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Hay una cierta polémica sobre si las excepciones &lt;em&gt;checked&lt;/em&gt; son una buena idea. Entre los motivos que se alegan en contra de su uso están que cambiar la firma de un método añadiendo una nueva excepción como lanzable hace que el código que usase ese método podría ocasionar errores de compilación y que hace necesario el tratarla o declararla en la cadena de métodos hasta que sea tratada. Otro motivo es que a mayor nivel en la jerarquía de llamada en los métodos se necesitarán manejar una lista amplia de excepciones.&lt;/p&gt;
+
+&lt;p&gt;En el lado contrario las excepciones se consideran que son buenas porque conocer las condiciones de error o excepción que puede lanzar el método forma parte del contrato del método y es necesario para realizar un correcto manejo de errores. Las excepciones &lt;em&gt;checked&lt;/em&gt; pueden parecer un incordio pero son necesarias para hacer un correcto manejo de errores y evitar que el programa falle por no tratar las condiciones de error de las que advertirían. Por otro lado no deberían silenciarse con un bloque &lt;em&gt;catch&lt;/em&gt; vacío sin una buena razón. En las excepciones &lt;em&gt;checked&lt;/em&gt; el compilador es capaz de advertir si alguna excepción no ha sido capturada o lanzada.&lt;/p&gt;
+
+&lt;p&gt;Como regla general las excepciones &lt;em&gt;checked&lt;/em&gt; se usan cuando el programa es capaz de recuperarse del error y tratarlo adecuadamente, las &lt;em&gt;uncheked&lt;/em&gt; cuando se trata de un error de programación o no se puede hacer nada para recuperarse.&lt;/p&gt;
+
+&lt;p&gt;En el siguiente código se observa como capturar, lanzar y declarar excepciones en las firmas de los métodos en Java en una construcción &lt;em&gt;try catch finally&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/c0fc9936712783e76b22088e5b8f2b2e.js?file=Bank.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/c0fc9936712783e76b22088e5b8f2b2e.js?file=Main.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En el aparatado referncia incluyo unos buenos enlaces que amplian y detallan más apropiadamente la controversia sobre las excepciones &lt;em&gt;checked&lt;/em&gt; y &lt;em&gt;unchecked&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/tutorial/essential/exceptions/index.html&#34;&gt;Exceptions tutorial&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/tutorial/essential/exceptions/runtime.html&#34;&gt;Unchecked Exceptions — The Controversy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/tutorial/essential/exceptions/advantages.html&#34;&gt;Advantages of Exceptions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/124143/why-are-exceptions-not-checked-in-net#126122&#34;&gt;Why are Exceptions not Checked in .NET?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.artima.com/intv/handcuffs.html&#34;&gt;The Trouble with Checked Exceptions&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/</id>
+        <title>Introducción a NIO.2, el sistema de entrada/salida de Java</title>        
+        <updated>2018-04-07T14:00:00+02:00</updated>
+        <published>2018-04-07T10:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Una de las tareas más importante que realizan algunas aplicaciones es el manejo de la entrada y salida ya sea al sistema de ficheros o a la red. Desde las versiones iniciales de Java se ha mejorado soporte añadiendo programación asíncrona de E/S, permitir obtener información de atributos propios del sistema de archivos, reconocimiento de enlaces simbólicos y facilitado de algunas operaciones básicas.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En las primeras versiones de Java el sistema de entrada/salida proporcionado en el paquete &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/io/package-summary.html&#34;&gt;&lt;em&gt;java.io&lt;/em&gt;&lt;/a&gt; era básico. En la versión 1.4 de Java se añadió un nuevo sistema de entrada/salida llamado NIO para suplir algunas de sus deficiencias que posteriormente en Java 7 se mejoró aún más con NIO.2. Entre las mejoras se incluyen permitir navegación de directorios sencillo, soporte para reconocer enlaces simbólicos, leer atributos de ficheros como permisos e información como última fecha de modificación, soporte de entrada/salida asíncrona y soporte para operaciones básicas sobre ficheros como copiar y mover ficheros.&lt;/p&gt;
+
+&lt;p&gt;Las clases principales de esta nueva API para el manejo de rutas, ficheros y operaciones de entrada/salida son las siguientes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html&#34;&gt;Path&lt;/a&gt;: es una abstracción sobre una ruta de un sistema de ficheros. No tiene porque existir en el sistema de ficheros pero si si cuando se hacen algunas operaciones como la lectura del fichero que representa. Puede usarse como reemplazo completo de &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/io/File.html&#34;&gt;java.io.File&lt;/a&gt; pero si fuera necesario con los métodos &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/io/File.html#toPath()&#34;&gt;File.toPath()&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#toFile()&#34;&gt;Path.toFile()&lt;/a&gt; se ofrece compatibilidad entre ambas representaciones.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html&#34;&gt;Files&lt;/a&gt;: es una clase de utilidad con operaciones básicas sobre ficheros.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/FileSystems.html&#34;&gt;FileSystems&lt;/a&gt;: otra clase de utilidad como punto de entrada para obtener referencias a sistemas de archivos.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Con la clase &lt;em&gt;Path&lt;/em&gt; se pueden hacer operaciones sobre rutas como obtener la ruta absoluta de un &lt;em&gt;Path&lt;/em&gt; relativo o el &lt;em&gt;Path&lt;/em&gt; relativo de una ruta absoluta, de cuanto elementos se compone la ruta, obtener el &lt;em&gt;Path&lt;/em&gt; padre o una parte de una ruta. Otros métodos interesantes son &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#relativize(java.nio.file.Path)&#34;&gt;relativize()&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#normalize()&#34;&gt;normalize()&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#toAbsolutePath()&#34;&gt;toAbsolutePath()&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#resolve(java.nio.file.Path)&#34;&gt;resolve()&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#startsWith(java.nio.file.Path)&#34;&gt;startsWith()&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#endsWith(java.nio.file.Path)&#34;&gt;endsWith()&lt;/a&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=Main-1.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=info.out&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Utilizando estas clases expondré algunos ejemplos siendo el primero recorrer el listado de archivos o también se podría hacer el listado de forma recursiva de un directorio e imprimir la información de cada archivo como nombre, si es un enlace simbólico, permisos propietario, fecha de última modificación y tamaño utilizando los siguiente métodos similar a lo que hace el comando &lt;em&gt;ls&lt;/em&gt; de GNU/Linux:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#walkFileTree(java.nio.file.Path,java.nio.file.FileVisitor)&#34;&gt;Files.walkFileTree()&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#isSymbolicLink(java.nio.file.Path)&#34;&gt;Files.isSymbolicLink()&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#readAttributes(java.nio.file.Path,java.lang.String,java.nio.file.LinkOption...)&#34;&gt;Files.readAttributes()&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/attribute/PosixFilePermissions.html&#34;&gt;PosixFilePermissions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/FileVisitor.html&#34;&gt;FileVisitor&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/SimpleFileVisitor.html&#34;&gt;SimpleFileVisitor&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Al igual que es posible leer los permisos también es posible establecerlos con el método &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#setPosixFilePermissions(java.nio.file.Path,java.util.Set)&#34;&gt;Files.setPosixFilePermissions()&lt;/a&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=Main-2.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=ls.out&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Las operaciones de crear directorios o archivos, copiar archivos, moverlos y eliminarlos son muy comunes de modo que la clase &lt;em&gt;Files&lt;/em&gt; ofrece varios métodos que con una única línea permite hacer estas operaciones de forma sencilla. El siguiente ejemplo crea un archivo, lo copia, lo mueve y finalmente lo elimina.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=Main-3.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Para leer el contenido de archivos la clase &lt;em&gt;Files&lt;/em&gt; ofrece los métodos &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newBufferedReader(java.nio.file.Path)&#34;&gt;newBufferedReader()&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newBufferedWriter(java.nio.file.Path,java.nio.charset.Charset,java.nio.file.OpenOption...)&#34;&gt;newBufferedWrite()&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newInputStream(java.nio.file.Path,java.nio.file.OpenOption...)&#34;&gt;newInputStream()&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newOutputStream(java.nio.file.Path,java.nio.file.OpenOption...)&#34;&gt;newOutputStream()&lt;/a&gt; junto con otros como &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#readAllLines(java.nio.file.Path,java.nio.charset.Charset)&#34;&gt;readAllLines()&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#readAllBytes(java.nio.file.Path)&#34;&gt;readAllBytes()&lt;/a&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=Main-4.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En cuanto a la programación de entrada/salida asíncrona se ofrecen dos paradigmas uno basado en la clase &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/concurrent/Future.html&#34;&gt;Future&lt;/a&gt; y otro en funciones de rellamada o &lt;em&gt;callbacks&lt;/em&gt;. La programación asíncrona evita bloquear el hilo que ejecuta el código y aprovecha mejor los procesadores multinúcleo con lo que se mejora el rendimiento de las aplicaciones. Para los ficheros se usa la clase &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/channels/AsynchronousFileChannel.html&#34;&gt;AsynchronousFileChannel&lt;/a&gt; y para flujos de red &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/channels/AsynchronousSocketChannel.html&#34;&gt;AsynchronousSocketChannel&lt;/a&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=Main-5.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=Main-6.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Si se desea profundizar más en NIO y NIO.2 el libro &lt;a href=&#34;https://amzn.to/2JsEIao&#34;&gt;The Well-Grounded Java Developer&lt;/a&gt; dedica un capítulo introductorio en el que me he basado para realizar este artículo, el libro &lt;a href=&#34;https://amzn.to/2q7qMdN&#34;&gt;Java I/O, NIO and NIO.2&lt;/a&gt; está completamente dedicado al nuevo sistema de entrada/salida de Java y el tutorial &lt;a href=&#34;https://docs.oracle.com/javase/tutorial/essential/io/index.html&#34;&gt;Java Basic I/O&lt;/a&gt; también está muy bien como introducción.&lt;/p&gt;
+
+&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1617290068&amp;linkId=61507308185711a0af4b5ed5ab70b62b&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1484215664&amp;linkId=d748ea086bd02aa68dd0b27945514558&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En el artículo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/09/monitorizar-archivos-con-java/&#34;&gt;monitorizar archivos con Java&lt;/a&gt; muestro como recibir eventos cuando se añade, elimina o modifica algún archivo de los observados usando la clase &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/WatchService.html&#34;&gt;WatchService&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaNIO&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.javamagazine.mozaicreader.com/JulyAug2016/Twitter#&amp;amp;pageSet=0&amp;amp;page=0&amp;amp;contentItem=0&#34;&gt;Artículo NIO.2, Java Magazine Jul/Ago 2016&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/03/que-es-y-como-funciona-el-type-erasure-en-java/</id>
+        <title>Qué es y cómo funciona el type erasure en Java</title>        
+        <updated>2018-03-31T10:30:00+02:00</updated>
+        <published>2018-03-31T10:30:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/03/que-es-y-como-funciona-el-type-erasure-en-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Los tipos genéricos en Java se implementaron usando &lt;em&gt;type erasure&lt;/em&gt; por simplicidad en la implementación, no incurrir en penalizaciones de rendimiento o memoria y por mantener la compatibilidad con versiones anteriores de Java. Son varios los conceptos que están asociados a la implementación de los tipos genéricos en Java que es recomendable conocer como &lt;em&gt;type erasure&lt;/em&gt;  y métodos &lt;em&gt;bridge&lt;/em&gt; de este artículo pero también &lt;em&gt;heap pollution&lt;/em&gt;, &lt;em&gt;non-reifiable&lt;/em&gt;, &lt;em&gt;wildcards&lt;/em&gt; y &lt;em&gt;bound type parameters&lt;/em&gt;.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En la introducción de los &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/04/tutorial-sobre-los-tipos-genericos-de-java/&#34;&gt;tipos genéricos en Java&lt;/a&gt; con la versión 1.5 se decidió implementarlo usando &lt;em&gt;type erasuse&lt;/em&gt; que consiste en que en tiempo de ejecución se pierde la información de los tipos genéricos y para la máquina virtual no son distintos de un tipo no genérico, es un proceso que realiza el compilador. Esto tiene sus ventajas y algunas desventajas pero hay dos buenos motivos por los que en Java se decidió implementar los tipos genéricos usando &lt;em&gt;type erasuse&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Un motivo es que los tipos al ser en tiempo de ejecución exactamente iguales que los no genéricos de versiones anteriores se mantiene la compatibilidad hacia atrás tanto a nivel de código como a nivel binario lo que significa en un caso que el código fuente no es necesario que sea modificado y en otro que no es necesario recompilarlo y esto es importante para usar nuevas versiones de Java sin ningún tipo de modificación y para que programas antiguos sigan funcionando. El segundo motivo es que el mismo tipo sirve para todas las posibles instancias del tipo genérico, de forma que es eficiente y no se incurre en ninguna penalización de rendimiento o memoria.&lt;/p&gt;
+
+&lt;p&gt;La desventaja del &lt;em&gt;type erasure&lt;/em&gt; es que en tiempo de ejecución no se pueden hacer algunas optimizaciones, en computación y uso de memoria. Sin embargo, evaluando las ventajas y desventajas los desarrolladores de Java siempre han dado gran importancia en la compatibilidad hacia atrás y por ello prefirieron implementar los &lt;em&gt;generics&lt;/em&gt; usando &lt;em&gt;type erasure&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;El proceso de eliminar los tipos de los genéricos se realiza eliminando todos los parámetros de los tipos parametrizados siendo reemplazados con su restricción (&lt;em&gt;bound&lt;/em&gt;), con el tipo &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/Object.html&#34;&gt;Object&lt;/a&gt; o con con su restricción, si tiene múltiples restricciones se usa la primera.&lt;/p&gt;
+
+&lt;p&gt;En Java dos métodos distintos no pueden tener la misma firma, dado que los &lt;em&gt;generics&lt;/em&gt; han sido implementados con &lt;em&gt;type erasure&lt;/em&gt; también se ha de cumplir que dos métodos no pueden tener la misma firma una vez aplicado el &lt;em&gt;erasure&lt;/em&gt;. Para no perder las validaciones de tipos el compilador inserta los &lt;em&gt;cast&lt;/em&gt; necesarios. El código fuente de una clase genérica sería el siguiente, que el compilador transformaría siguiendo las reglas del &lt;em&gt;type erasure&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/fe9adde28f19c10787720a7db6a4a840.js?file=Generic.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/fe9adde28f19c10787720a7db6a4a840.js?file=Erased.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Al mismo tiempo que el compilador inserta los &lt;em&gt;cast&lt;/em&gt; necesarios para mantener la validación de tipos inserta métodos &lt;em&gt;bridge&lt;/em&gt; para mantener el polimorfismo en las clases que extienden de tipos genéricos. Si se extiende la clase &lt;em&gt;Node&lt;/em&gt; anterior y se aplica &lt;em&gt;type erasure&lt;/em&gt; la firma del método &lt;em&gt;setData&lt;/em&gt; de &lt;em&gt;IntegerNode&lt;/em&gt; no coincide con el de la clase &lt;em&gt;Node&lt;/em&gt;. Para solventar este problema el compilador inserta un método &lt;em&gt;bridge&lt;/em&gt; para el método &lt;em&gt;setData&lt;/em&gt; con un parámetro &lt;em&gt;Object&lt;/em&gt; que se encarga de hacer de puente y llamar al método &lt;em&gt;setData&lt;/em&gt; que recibe un &lt;em&gt;Integer&lt;/em&gt; aplicando un &lt;em&gt;cast&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/tutorial/java/generics/erasure.html&#34;&gt;Type Erasure&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/05/que-es-el-concepto-de-heap-pollution-en-java/&#34;&gt;Qué es el concepto de Heap Pollution en Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.quora.com/What-are-the-pros-and-cons-of-having-Generics-as-erasure-or-reifiable?share=1&#34;&gt;What are the pros and cons of having Generics as erasure or reifiable?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/03/la-herramienta-jlink-para-generar-runtimes-de-java-incluyendo-exclusivamente-los-modulos-que-usa-una-aplicacion/</id>
+        <title>La herramienta jlink para generar runtimes de Java incluyendo exclusivamente los módulos que usa una aplicación</title>        
+        <updated>2018-03-24T23:30:00+01:00</updated>
+        <published>2018-03-24T23:30:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/03/la-herramienta-jlink-para-generar-runtimes-de-java-incluyendo-exclusivamente-los-modulos-que-usa-una-aplicacion/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En versiones anteriores de Java 9 había un único &lt;em&gt;runtime&lt;/em&gt; para ejecutar cualquier aplicación que debía ser instalado previamente para la ejecución de la aplicación. Aunque la aplicación no usase &lt;em&gt;Swing&lt;/em&gt; por ser una aplicación web o cosas como &lt;a href=&#34;https://es.wikipedia.org/wiki/CORBA&#34;&gt;CORBA&lt;/a&gt; ya en desuso aún estaban disponibles en el &lt;em&gt;runtime&lt;/em&gt; por motivos de no romper la compatibilidad con versiones anteriores.&lt;/p&gt;
+
+&lt;p&gt;Esto hacía que las aplicaciones no fuesen lo más eficiente posible y aumenta el tamaño necesario ahora de las imágenes de contenedores como &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt; estas tuviesen un tamaño mayor del imprescindible, además de hacer que el tiempo de arranque sea algo mayor e incluir clases que aumentan la superficie de ataque ante un fallo de seguridad. Entre las &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/&#34;&gt;novedades de Java 8&lt;/a&gt; se añadieron los &lt;a href=&#34;http://www.oracle.com/technetwork/java/embedded/resources/tech/compact-profiles-overview-2157132.html&#34;&gt;&lt;em&gt;compact profiles&lt;/em&gt;&lt;/a&gt; que eran subconjuntos más reducidos del &lt;em&gt;runtime&lt;/em&gt; pero eran conjuntos prefijados, las aplicaciones debían usar el mínimo que necesitasen si querían usar alguno. La solución de Java 8 fue una solución intermedia, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/novedades-y-nuevas-caracteristicas-de-java-9-los-modulos/&#34;&gt;los módulos de Java 9&lt;/a&gt; han sido la solución completa.&lt;/p&gt;
+
+&lt;p&gt;Con la incorporación de la modularidad a Java 9 se posibilita generar &lt;em&gt;runtimes&lt;/em&gt; con exclusivamente los módulos que necesite la aplicación, si la aplicación solo necesita el módulo &lt;em&gt;java.base&lt;/em&gt; por ser muy sencilla se puede generar un &lt;em&gt;runtime&lt;/em&gt; con solo este módulo. Los módulos son una mejora conveniente para la tendencia en el desarrollo de aplicaciones en forma de microservicios y ejecución con contenedores. La herramienta que posibilita generar &lt;em&gt;runtimes&lt;/em&gt; personalizados con &lt;a href=&#34;https://docs.oracle.com/javase/9/tools/jlink.htm&#34;&gt;jlink&lt;/a&gt; que pueden ser ejecutandos sin instalar previamente ningún JDK en el sistema y posibilitando que cada aplicación pueda usar su propio &lt;em&gt;runtime&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Usando como ejemplo el caso de la &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/ejemplo-con-el-cliente-http-2-de-java/&#34;&gt;aplicación con el cliente de HTTP/2&lt;/a&gt; que tiene como dependencias únicamente el módulo &lt;em&gt;jdk.incubator.httpclient&lt;/em&gt; de forma explícita y &lt;em&gt;java.base&lt;/em&gt; de forma implícita en su definición de módulo la forma de generar un runtime específico para esta aplicación con &lt;em&gt;jlink&lt;/em&gt; es la siguiente que utiliza el archivo con las dependencias de módulos declarados en el archivo &lt;em&gt;module-info.java&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/2e113967c3823da21308e8f2a9adbd4f.js?file=module-info.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Usando la linea de comandos o con una tarea de &lt;a href=&#34;https://gradle.org/&#34;&gt;Gradle&lt;/a&gt; se genera el &lt;em&gt;runtime&lt;/em&gt; para la aplicación con &lt;em&gt;jlink&lt;/em&gt;. El módulo ha de compilarse previamente. Con la opción &lt;em&gt;&amp;ndash;launcher&lt;/em&gt; se crea un &lt;em&gt;script&lt;/em&gt; para lanzar la aplicación con la clase que contiene el método &lt;em&gt;main&lt;/em&gt; indicada como punto de entrada, la opción &lt;em&gt;&amp;ndash;output&lt;/em&gt; indica donde se genera el contenido del &lt;em&gt;runtime&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/2e113967c3823da21308e8f2a9adbd4f.js?file=jlink.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El espacio total del &lt;em&gt;runtime&lt;/em&gt; en este caso de es de solo 38 MiB. Comparados con los casi 200 MiB que ocupa el &lt;a href=&#34;http://openjdk.java.net/&#34;&gt;OpenJDK&lt;/a&gt; comprimido que incluye todos los módulos, aproximadamente 500 MiB instalado y alrededor de entre 600 y 900 MiB dependiendo de la imagen base de Docker que se use se aprecia que el ahorro de espacio es considerable lo que redunda en tiempos de transferencia por red menores y un inicio más rápido de las aplicaciones.&lt;/p&gt;
+
+&lt;p&gt;El contenido del &lt;em&gt;runtime&lt;/em&gt; y de su estructura de directorios es la indicada a continuación. Listando los módulos incluidos en este &lt;em&gt;runtime&lt;/em&gt; en vez de todos los del JDK se observa que solo están incluidos los necesarios por la aplicación.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/2e113967c3823da21308e8f2a9adbd4f.js?file=info.sh&#34;&gt;&lt;/script&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/2e113967c3823da21308e8f2a9adbd4f.js?file=build.gradle&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Una vez generado el &lt;em&gt;runtime&lt;/em&gt; su uso es el siguiente:&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/2e113967c3823da21308e8f2a9adbd4f.js?file=run.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En el vídeo &lt;a href=&#34;https://www.oracle.com/java/java9-screencasts.html?bcid=5582437011001&amp;amp;playerType=single-social&amp;amp;size=events&#34;&gt;Java in a World of Containers&lt;/a&gt; se comenta otra serie de características y opciones incluidas en Java para hacer de esta plataforma más consciente de las condiciones de ejecución propias de los contenedores.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaHttp2&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradew jlink&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/03/novedades-de-java-10/</id>
+        <title>Novedades de Java 10</title>        
+        <updated>2018-03-27T17:00:00+01:00</updated>
+        <published>2018-03-23T20:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/03/novedades-de-java-10/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Oracle y los ingenieros a cargo del desarrollo de Java están haciendo en mi opinión un buen trabajo que se han materializado en las versiones Java 8 con las &lt;em&gt;lambdas&lt;/em&gt;, en Java 9 con los módulos y en Java 10 con la mejora en la inferencia de tipos. Todo ello está haciendo que la plataforma evolucione más rápido y significativamente que lo que hasta hace unos años estábamos acostumbrados.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;El 20 de marzo de 2018 se publicó la que es la versión 10 de Java siguiendo el nuevo calendario de publicar una nueva versión cada seis meses, Java 9 fue publicado en septiembre del año anterior. Con este nuevo calendario no pasarán tantos años entre cada nueva versión que era la queja de algunos desarrolladores y el motivo de que la plataforma Java no evolucionar tan rápidamente como algunos desarrolladores desean, quizá ahora la queja sea al contrario que se publican demasiadas versiones y no da tiempo a asimilar los cambios. Para dar cabida a ambas necesidades y garantizar un soporte prolongado cada año y medio será declarada una versión como de soporte a plazo largo o &lt;em&gt;LTS&lt;/em&gt; para que las empresas tengan seguridad en las aplicaciones que desarrollen.&lt;/p&gt;
+
+&lt;p&gt;Lo mejor de este nuevo calendario de publicaciones cada seis meses es que las empresas y programadores tienen predictibilidad de cuándo se lanzará la siguiente versión aunque las nuevas características que tenga no está predeterminado ya no pasarán varios años entre versiones visibilizando que la plataforma evoluciona continuamente en pequeños saltos cada poco tiempo en vez de saltos grandes cada mucho tiempo que son más disruptivos y hace más difícil la adopción.&lt;/p&gt;
+
+&lt;p&gt;Es un principio no añadir características según lo que está de moda sino pensando en décadas futuras. Java 10 tiene una lista más reducida de cambios que Java 9 pero importantes y significativos. Java es el último en unirse a la fiesta de la inferencia de tipos pero ha sido de forma intencionada ya que el coste de implementarla de forma incorrecta supone un alto coste que hay que mantener en adelante. Otras ideas que ha sido implementadas el lenguajes de programación funcional y están listas para su uso masivo tomarán su propio camino en futuras versiones de Java por ejemplo &lt;em&gt;pattern matching&lt;/em&gt; y &lt;em&gt;value types&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;La lista más relevante de novedades de Java 10 es la siguiente:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;286: &lt;a href=&#34;http://openjdk.java.net/jeps/286&#34;&gt;Local-Variable Type Inference&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;296: &lt;a href=&#34;http://openjdk.java.net/jeps/296&#34;&gt;Consolidate the JDK Forest into a Single Repository&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;304: &lt;a href=&#34;http://openjdk.java.net/jeps/304&#34;&gt;Garbage-Collector Interface&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;307: &lt;a href=&#34;http://openjdk.java.net/jeps/307&#34;&gt;Parallel Full GC for G1&lt;/a&gt;, se ha mejorado el recolector de basura G1 añadiendo soporte para paralelismo y mejorado las pausas en los peores escenarios.&lt;/li&gt;
+&lt;li&gt;310: &lt;a href=&#34;http://openjdk.java.net/jeps/310&#34;&gt;Application Class-Data Sharing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;312: &lt;a href=&#34;http://openjdk.java.net/jeps/312&#34;&gt;Thread-Local Handshakes&lt;/a&gt;, mejora interna en la sincronización y pausas en los &lt;em&gt;threads&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;313: &lt;a href=&#34;http://openjdk.java.net/jeps/313&#34;&gt;Remove the Native-Header Generation Tool (javah)&lt;/a&gt;, se elimina la funcionalidad de &lt;em&gt;javah&lt;/em&gt; al haber sido sustituida y mejorada por funcionalidad añadida en &lt;em&gt;javac&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;314: &lt;a href=&#34;http://openjdk.java.net/jeps/314&#34;&gt;Additional Unicode Language-Tag Extensions&lt;/a&gt;, se añade alguna nueva extensión de Unicode.&lt;/li&gt;
+&lt;li&gt;316: &lt;a href=&#34;http://openjdk.java.net/jeps/316&#34;&gt;Heap Allocation on Alternative Memory Devices&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;317: &lt;a href=&#34;http://openjdk.java.net/jeps/317&#34;&gt;Experimental Java-Based JIT Compiler&lt;/a&gt;, se añade en forma experimental el compilador JIT Graal implementado en Java en la plataforma Linux.&lt;/li&gt;
+&lt;li&gt;319: &lt;a href=&#34;http://openjdk.java.net/jeps/319&#34;&gt;Root Certificates&lt;/a&gt;, se han añadido varios certificados raíz al &lt;em&gt;keystore&lt;/em&gt; incluído para permitir que las conexiones TLS funcionen por defecto.&lt;/li&gt;
+&lt;li&gt;322: &lt;a href=&#34;http://openjdk.java.net/jeps/322&#34;&gt;Time-Based Release Versioning&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;inferencia-de-tipos-para-variables-locales&#34;&gt;Inferencia de tipos para variables locales&lt;/h3&gt;
+
+&lt;p&gt;De las novedades la inferencia de tipos para variables locales es la más destacada en cuanto a cambios en el lenguaje con la adición de la nueva palabra reservada &lt;em&gt;var&lt;/em&gt;, esto ayuda a no tener que repetir varias veces los tipos en la construcción de un objeto. En las &lt;em&gt;lambdas&lt;/em&gt; los parámetros no es necesario declararlos infiriéndose de la interfaz que implementan. La inferencia de tipos es la idea que permite al compilador obtener el tipo estático sin que sea necesario escribirlo de forma explícita.&lt;/p&gt;
+
+&lt;p&gt;Java no es el único o primer lenguaje en incluir la inferencia de tipos para variables. Ha sido usado en otros lenguajes durante décadas. En realidad la inferencia de tipos incluida en Java 10 con &lt;em&gt;var&lt;/em&gt; es muy limitada y restringida de manera intencionada. Si no fuese así el &lt;a href=&#34;https://en.wikipedia.org/wiki/Hindley-Milner_type_system&#34;&gt;algoritmo Hindley-Milner&lt;/a&gt; usado para la inferencia de tipos usado en la mayoría de lenguajes que toma un tiempo exponencial en el peor de los casos potencialmente disminuiría la velocidad de &lt;em&gt;javac&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;La inferencia de tipos para variables locales hace que el código no sea tan verboso sin perder en gran medida la legibilidad ya que solo es para las variables locales. El siguiente ejemplo muestra la evolución de la inferencia de tipos desde Java 5 pasando por Java 8 donde se incluyeron algunas mejoras y el que puede utilizarse a partir de Java 10.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/d4ff7ac7eecda8504ee0834593d70929.js?file=JavaTypeInference.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Los tipos en la parte izquierda pueden parecer redundantes y obvios. Tradicionalmente la filosofía de Java es declarar de forma estática los tipos para todo incluyendo las expresiones más simples. Ciertamente definir los tipos para propiedades y en las firmas de los métodos impone un contrato que es necesario respetar y esto ayuda en el mantenimiento asi como a su entendimiento. Sin embargo, declarar los tipos para expresiones intermedias puede parecer menos útil e incómodo.&lt;/p&gt;
+
+&lt;p&gt;En el artículo &lt;a href=&#34;https://developer.oracle.com/java/jdk-10-local-variable-type-inference&#34;&gt;Java 10 Local Variable Type Inference&lt;/a&gt; y vídeo de Youtube &lt;a href=&#34;https://www.youtube.com/watch?v=Le1DbpRZdRQ&#34;&gt;First contact with &amp;lsquo;var&amp;rsquo; in Java 10&lt;/a&gt; hay una explicación más detallada de esta nueva característica y se aprecia claramente en los siguientes ejemplos que muestran la evolución de la inferencia de tipos.&lt;/p&gt;
+
+&lt;p&gt;No solo hay una mejora de legibilidad aquí, también hay una ventaja en términos de evolución y mantenimiento de código. Si tomamos el mismo código con tipos explícitos para la variable &lt;em&gt;userChannels&lt;/em&gt; y reemplazamos el tipo del canal representado con un &lt;em&gt;String&lt;/em&gt; con un objeto de dominio &lt;em&gt;Channel&lt;/em&gt; que pudiese tener información adicional acerca del canal entonces necesitaríamos reescribir los tipos de todo el código que dependa de este nuevo tipo.&lt;/p&gt;
+
+&lt;p&gt;La inferencia de tipos definitivamente reduce la cantidad de tiempo para escribir código Java pero mejor es la mejora en legibilidad del código. Los desarrolladores dedican mucho más tiempo a leer código fuente que el que dedican a escribirlo de manera que definitivamente hay que optimizar para la facilidad de lectura sobre la facilidad de escritura. Aunque &lt;em&gt;var&lt;/em&gt; no siempre es una mejora en cuanto a legibilidad ya que se pierde la información del tipo su uso se guía por el principio de no tanto para optimizar la escritura o lectura sino generalizando más para la facilidad de mantenimiento, escribir algunos tipos genéricos no triviales es complicado aún con la ayuda de asistencia de un entorno integrado de desarrollo.&lt;/p&gt;
+
+&lt;p&gt;No está permitido en retornos, parámetros, propiedades, variables sin inicializar, ni asignar &lt;em&gt;null&lt;/em&gt; pero en Java 11 el uso de &lt;em&gt;var&lt;/em&gt; se permitirá en los parámetros de una expresión &lt;em&gt;lambda&lt;/em&gt; que será útil porque permite un parámetro formal cuyo tipo es inferido pero que además en el que se pueden usar anotaciones.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/d4ff7ac7eecda8504ee0834593d70929.js?file=JavaLambdaVarAnnotation.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Con la inferencia de tipos los nombres de las variables cobran mayor importancia dado que &lt;em&gt;var&lt;/em&gt; elimina la posibilidad al lector del código adivinar la intención de una variable a partir del tipo. Ya es difícil asignar nombres adecuados ahora supondrá mayor importancia.&lt;/p&gt;
+
+&lt;p&gt;El tipo en las variables locales no es tan importante ya que normalmente los nombres de las variables son el del tipo. Con &lt;em&gt;var&lt;/em&gt; se evita repetición entre el tipo y el nombre de la variable, la brevedad de &lt;em&gt;var&lt;/em&gt; hace destacar el nombre de la variable y proporciona mayor claridad además de tener que escribir menos código repetitivo.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/d4ff7ac7eecda8504ee0834593d70929.js?file=NamesAlign.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Con &lt;em&gt;var&lt;/em&gt; se evita la longitud variable de los tipos y la no alineación de los nombres de las variables, permite quitar los nombres largos de algunos tipos que son comunes en las aplicaciones empresariales como cosas como &lt;em&gt;DefaultListenerFactory&lt;/em&gt; con vocablos que se van añadiendo uno detras de otro hasta formar un largo nombre.&lt;/p&gt;
+
+&lt;p&gt;Utilizar &lt;em&gt;var&lt;/em&gt; no tiene por que suponer una perdida de legibilidad del código, un buen nombre de variable da más información que el tipo. Por ejemplo, &lt;em&gt;List&amp;lt;User&amp;gt;&lt;/em&gt; parece ser una lista de usuarios, utilizando el nombre de la variable &lt;em&gt;admins&lt;/em&gt; obtendríamos que son una parte más concreta de usuarios en el contexto local en el que se está usando. Por lo que no tener el tipo no es dramático si es suplido con un buen nombre de variable que capture su contenido correctamente.&lt;/p&gt;
+
+&lt;p&gt;La palabra reservada &lt;em&gt;var&lt;/em&gt; no hace de Java un lenguaje dinámico, sigue siendo estático y fuertemente tipado. Solo que ahora los tipos no hace falta declararlos explícitamente y es el compilador el que se encarga de inferirlos según el contexto. En tiempo de ejecución nada cambia, el rendimiento sigue siendo el mismo y solo es una característica en tiempo de compilación.&lt;/p&gt;
+
+&lt;p&gt;La existencia de &lt;em&gt;var&lt;/em&gt; no significa que haya de usarse de forma indiscriminada para todas las variables locales sino juiciosamente. En este caso quizá es preferible declarar el tipo por no ser obvio lo que retorna el método &lt;em&gt;getCities()&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/d4ff7ac7eecda8504ee0834593d70929.js?file=TypeVsVar.java&#34;&gt;&lt;/script&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://openjdk.java.net/projects/amber/LVTIstyle.html&#34;&gt;Style Guidelines for Local Variable Type Inference in Java&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Los entornos integrados de desarrollo tardarán un tiempo en implementar la inferencia de tipos para variables locales hasta que lancen nuevas versiones.&lt;/p&gt;
+
+&lt;h3 id=&#34;otras-novedades&#34;&gt;Otras novedades&lt;/h3&gt;
+
+&lt;p&gt;El tiempo para iniciar el interprete REPL de &lt;a href=&#34;https://docs.oracle.com/javase/9/jshell/introduction-jshell.htm&#34;&gt;JShell&lt;/a&gt; ha sido reducido significativamente especialmente en casos donde se inicia con un archivo que incluye varios &lt;em&gt;snippets&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Se han añadido mejoras en la herramienta de documentación de las clases Javadoc como soporte para varias hojas de estilo, agrupar métodos redefinidos que no cambian la especificación o nueva etiqueta &lt;em&gt;summary&lt;/em&gt; como resumen de la API.&lt;/p&gt;
+
+&lt;p&gt;Se han añadido varios métodos para crear copias no modificables con &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/List.html#copyOf(java.util.Collection)&#34;&gt;List.copyOf()&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/Set.html#copyOf(java.util.Collection)&#34;&gt;Set.copyOf()&lt;/a&gt;, and &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/Map.html#copyOf(java.util.Map)&#34;&gt;Map.copyOf()&lt;/a&gt;. Se han añadido nuevos métodos a la clase &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/stream/Collectors.html&#34;&gt;Collectors&lt;/a&gt; para devolver una lista no modificable con &lt;em&gt;toUnmodifiableList&lt;/em&gt;, &lt;em&gt;toUnmodifiableSet&lt;/em&gt;, and &lt;em&gt;toUnmodifiableMap&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Se añade el método &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/Optional.html#orElseThrow()&#34;&gt;Optional.orElseThrow()&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Algunas &lt;a href=&#34;http://www.oracle.com/technetwork/java/javase/10-relnote-issues-4108729.html#Removed&#34;&gt;otras características ya obsoletas se han eliminado&lt;/a&gt; y &lt;a href=&#34;http://www.oracle.com/technetwork/java/javase/10-relnote-issues-4108729.html#Deprecated&#34;&gt;otras se han marcado como &lt;em&gt;deprecated&lt;/em&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;el-posible-futuro-jdk-11&#34;&gt;El posible futuro JDK 11+&lt;/h3&gt;
+
+&lt;p&gt;Está planificado en seis meses después de Java 10 y con soporte extendido, el soporte de Java 10 durará tan solo hasta 2018.09, el de Java 11 al ser una &lt;em&gt;LTS&lt;/em&gt; durará un periodo de 8 años hasta el 2026.09.&lt;/p&gt;
+
+&lt;p&gt;En el nuevo modelo las nuevas características no se añaden hasta que están preparadas. Tentativamente las &lt;a href=&#34;http://openjdk.java.net/projects/jdk/11/&#34;&gt;características de JDK 11&lt;/a&gt; no están completamente determinadas pero se están evaluando grandes proyectos como &lt;a href=&#34;http://openjdk.java.net/projects/valhalla/&#34;&gt;Valhalla&lt;/a&gt; para hacer más eficiente el tratamiento de datos que no requieran la indentidad de objetos con los denominados &lt;a href=&#34;http://openjdk.java.net/jeps/169&#34;&gt;Value Types&lt;/a&gt; útil para la programación funcional con datos puros optimizados para computaciones en paralelo. El proyecto &lt;a href=&#34;http://openjdk.java.net/projects/loom/&#34;&gt;Loom&lt;/a&gt; que posibilita una versión más ligera aún que los &lt;em&gt;threads&lt;/em&gt; o hilos con &lt;em&gt;fibers&lt;/em&gt; o fibras, &lt;em&gt;continuations&lt;/em&gt; o &lt;em&gt;coroutine&lt;/em&gt; y &lt;a href=&#34;https://en.wikipedia.org/wiki/Tail_call&#34;&gt;Tail Call&lt;/a&gt;. El proyecto &lt;a href=&#34;http://openjdk.java.net/projects/panama/&#34;&gt;Panama&lt;/a&gt; hará más fácil trabajar con código nativo o el proyecto &lt;a href=&#34;http://openjdk.java.net/projects/zgc/&#34;&gt;ZGC&lt;/a&gt; para crear un recolector de basura que pueda manejar gigabytes y terabytes con pausas menores a 10ms. O el proyecto &lt;a href=&#34;http://openjdk.java.net/projects/amber/&#34;&gt;Amber&lt;/a&gt; con unas pequeñas mejoras pero muy cómodas para el programador como la de los literales &lt;em&gt;strings raw&lt;/em&gt;. En la &lt;a href=&#34;http://openjdk.java.net/&#34;&gt;página del OpenJDK&lt;/a&gt; hay más proyectos que en un futuro quizá sean implementados y publicados en alguna versión.&lt;/p&gt;
+
+&lt;p&gt;En la sección final de referencia incluyo varios artículos y vídeos de los que he obtenido la información para hacer este resumen de las novedades de Java 10. Algunos son muy interesantes y amplían en gran medida lo comentado y lo que posiblemente llegue en un futuro.&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=Le1DbpRZdRQ&#34;&gt;First contact with &amp;lsquo;var&amp;rsquo; in Java 10&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://youtu.be/84mCmmzksGI?t=47m43s&#34;&gt;Keynotes: Oracle Code Chicago&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://developer.oracle.com/java/java10&#34;&gt;Introducing Java SE 10&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://developer.oracle.com/java/jdk-10-local-variable-type-inference&#34;&gt;Java 10 Local Variable Type Inference&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://marketplace.eclipse.org/content/java-10-support-oxygen&#34;&gt;Java 10 Support for Oxygen&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://jdk.java.net/10/&#34;&gt;JDK 10 General-Availability Release&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.oracle.com/technetwork/java/javase/10-relnote-issues-4108729.html&#34;&gt;JDK 10 Release Notes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.oracle.com/corporate/pressrelease/Java-10-032018.html&#34;&gt;Oracle Java SE 10 Release Arrives&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.infoworld.com/article/3230507/java/java-jdk-10-what-new-features-to-expect-in-the-next-java.html&#34;&gt;JDK 10: What’s new in Java 10&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.forbes.com/sites/oracle/2018/03/20/what-java-10-and-javas-new-6-month-release-cadence-mean-for-developers/&#34;&gt;What Java 10 And Java&amp;rsquo;s New 6-Month Release Cadence Mean For Developers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://cr.openjdk.java.net/~rpressler/loom/Loom-Proposal.html&#34;&gt;Project Loom: Fibers and Continuations for the Java Virtual Machine&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.azul.com/the-incredible-shrinking-java-platform/&#34;&gt;The Incredible Shrinking Java Platform&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.oracle.com/technetwork/java/eol-135779.html&#34;&gt;Oracle Java SE Support Roadmap&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.opsian.com/blog/java-on-docker/&#34;&gt;Java on Docker will no longer suck: improvements coming in Java 10&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/03/el-problema-de-concurrencia-del-agente-y-los-fumadores-resuelto-en-java/</id>
+        <title>El problema de concurrencia del agente y los fumadores resuelto en Java</title>        
+        <updated>2018-03-05T19:00:00+01:00</updated>
+        <published>2018-03-05T19:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/03/el-problema-de-concurrencia-del-agente-y-los-fumadores-resuelto-en-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Junto con los ejemplos de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/02/el-problema-de-concurrencia-de-la-cena-de-los-filosofos-resuelto-con-java/&#34;&gt;la cena de los filósofos&lt;/a&gt; y &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/iniciacion-a-la-programacion-concurrente-en-java/&#34;&gt;la barbería&lt;/a&gt; el de los fumadores es otro ejemplo clásico que se estudia en las asignaturas de sistemas operativos. Estos ejemplos necesitan de mecanismos de sincronización y concurrencia para su correcto funcionamiento al haber varios procesos y recursos compartidos que los procesos intentan utilizar de forma concurrente pero que no se debe permitir utilizando notificaciones entre procesos o &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/iniciacion-a-la-programacion-concurrente-en-java/&#34;&gt;algunas primitivas de sincronización, concurrencia e hilos que posee Java&lt;/a&gt; como &lt;em&gt;mutex&lt;/em&gt;, &lt;em&gt;locks&lt;/em&gt; o semáforos.&lt;/p&gt;
+
+&lt;p&gt;El caso de los fumadores consiste en un grupo de fumadores que para fumar necesitan los ingredientes que les faltan para hacer un cigarrillo y fumárselo, poseen un ingrediente en cantidades ilimitadas pero les faltan otros dos. El agente posee cantidades ilimitadas de todos los ingredientes que son papel, tabaco y cerillas pero solo deja en una mesa dos de estos ingredientes a la vez. Cada fumador posee un ingrediente distinto de los tres necesarios y según los ingredientes que deje el agente uno de los fumadores podrá fumar con los dos ingredientes que el agente deja.&lt;/p&gt;
+
+&lt;p&gt;El agente y los fumadores representan en la realidad a procesos y los ingredientes a los recursos de un sistema. La dificultad radica en sincronizar los agentes y fumadores para que el agente cuando deje ingredientes en la mesa el fumador correcto fume cuando.&lt;/p&gt;
+
+&lt;p&gt;A primera vista podríamos intentar que cada uno de los fumadores tomase cada uno de los ingredientes que le falta y se pusiese a fumar representando un ingrediente como un semáforo, sin embargo, esta solución puede producir un bloqueo si uno de los otros fumadores que no pueden fumar según los ingredientes que ha dejado el agente le quitan al que podría fumar uno de los ingredientes que necesita. Por ejemplo, un caso de bloqueo sería el caso de que el agente deje en la mesa los ingredientes de tabaco y cerillas el fumador que podría fumar sería el 1 pero si el fumador 2 es más rápido y se ejecuta antes tomando el tabaco el fumador 1 se quedaría esperando a tomar tabaco y el fumador 2 también por no haber dejado el agente papel sino cerillas.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=SmokersDeadlock.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Para la solución hay que optar por otra estrategia, en el ejemplo de código he creado tres clases que representa a cada una de las entidades, una clase &lt;em&gt;Agent&lt;/em&gt;, una clase &lt;em&gt;Smoker&lt;/em&gt; y una clase &lt;em&gt;Table&lt;/em&gt;, adicionalmente una clase &lt;em&gt;Pusher&lt;/em&gt; que se encargará de despertar al &lt;em&gt;Smoker&lt;/em&gt; correcto según los ingredientes de la mesa. Todas las clases implementan la interfaz &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Runnable.html&#34;&gt;Runnable&lt;/a&gt; para convertir cada una de las instancias en un hilo de ejecución. Cuando un agente deja ingredientes en la mesa se notifica a todos los incitadores  o &lt;em&gt;pushers&lt;/em&gt; para indicarles que hay ingredientes listos, el &lt;em&gt;pusher&lt;/em&gt; adquiere el ingrediente que tiene asignado para tomar y comprueba cual es el único ingrediente que falta en la mesa, si no lo sabe porque falten varios ingredientes indica que en la mesa está su ingrediente y deja el trabajo de despertar al fumador al siguiente &lt;em&gt;pusher&lt;/em&gt;. El &lt;em&gt;pusher&lt;/em&gt; que sepa que dos ingredientes hay en la mesa despierta al fumador que puede fumar con el ingrediente que tiene y los dos que hay en la mesa. El fumador se pone a fumar y cuando termina se indica al agente que genere otros dos ingredientes.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=Component.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=Table.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=Smoker.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=Agent.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=Pusher.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=Main.java&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+        &lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/167230.js&#34; id=&#34;asciicast-167230&#34; async&gt;&lt;/script&gt;
+        &lt;noscript&gt;&lt;a href=&#34;https://asciinema.org/a/167230&#34; target=&#34;_blank&#34;&gt;&lt;img src=&#34;https://asciinema.org/a/167230.png&#34; width=&#34;734&#34;/&gt;&lt;/a&gt;&lt;/noscript&gt;
+        
+        &lt;figcaption&gt;Ejemplo de concurrencia del agente y los fumadores&lt;/figcaption&gt;
+        
+    &lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En el siguiente &lt;a href=&#34;https://cse.yeditepe.edu.tr/~kserdaroglu/spring2014/cse331/labnotes/WEEK%205%20-%20SEMAPHORES/mysemaphoreexamplesMOE.pdf&#34;&gt;documento con varios de los problemas de concurrencia y sincronización&lt;/a&gt; está muy bien explicado la solución a este problema de los fumadores y de los otros casos. En algunos otros sitios este caso lo convierten en un problema de sincronización en vez de uno de concurrencia.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaConcurrency&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Cigarette_smokers_problem&#34;&gt;Cigarette smokers problem&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/iniciacion-a-la-programacion-concurrente-en-java/&#34;&gt;Introducción sobre la programación concurrente en Java&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/02/el-problema-de-concurrencia-de-la-cena-de-los-filosofos-resuelto-con-java/</id>
+        <title>El problema de concurrencia de la cena de los filósofos resuelto con Java</title>        
+        <updated>2018-02-25T10:00:00+01:00</updated>
+        <published>2018-02-25T10:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/02/el-problema-de-concurrencia-de-la-cena-de-los-filosofos-resuelto-con-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En un &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/iniciacion-a-la-programacion-concurrente-en-java/&#34;&gt;artículo de introducción sobre la programación concurrente en Java&lt;/a&gt; explicaba cuales eran la facilidades que proporciona este lenguaje para la programación concurrente en múltiples hilos. En él exponía dos ejemplos clásicos que se estudian en las asignaturas de sistemas operativos, uno de ellos era el de &lt;a href=&#34;https://es.wikipedia.org/wiki/Problema_de_la_cena_de_los_fil%C3%B3sofos&#34;&gt;la cena de los filósofos&lt;/a&gt; donde varios filósofos sentados en una tabla durante una cena se dedican a pensar y cuando tienen hambre comen usando para ello dos tenedores que comparten con sus compañeros que se sientan a la izquierda y derecha.&lt;/p&gt;
+
+&lt;p&gt;Dado que dos filósofos no puede utilizar el mismo tenedor a la vez hay que implementar sincronización a la hora de utilizarlos. En la realidad un filósofo representa a un proceso y un tenedor representa a un recurso compartido de uso exclusivo.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/302/dining-philosophers.png&#34; title=&#34;La cena de los filósofos&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/302/dining-philosophers-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;La cena de los filósofos&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;p&gt;La solución del ejemplo que ponía en el artículo anterior no era completamente correcto ya que un filósofo si tiene mala suerte podría quedarse sin  comer o sin comer durante mucho tiempo, debido a que en esa implementación el filósofo intentaba coger los tenedores y si no podía desistía si alguno de sus compañeros los estuviese utilizando. Las reglas que ha de cumplir una solución a un problema de concurrencia para considerarse válida son:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Exclusión mutua: Si un proceso se está ejecutando en su sección crítica ningún otro proceso se puede estar ejecutando en la suya.&lt;/li&gt;
+&lt;li&gt;Progreso: Si ningún proceso se está ejecutando en su sección crítica y hay otros procesos que desean entrar en las suyas, entonces solo aquellos procesos que no se está ejecutando en su sección restante pueden participar en la decisión  del cuál será el siguiente en entrar en la sección crítica, y esta selección no puede postergarse indefinidamente.&lt;/li&gt;
+&lt;li&gt;Espera limitada: Debe haber un límite en el número de veces que se permite que los demás procesos entren en su sección crítica después de que un proceso haya efectuado una solicitud para entrar en la suya y antes de que se conceda esa solicitud.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;En la implementación de este ejemplo evitaré que un filósofo pueda quedarse sin comer. La razón de que un filósofo desistiera de coger uno de los tenedores que necesita si uno de sus compañeros ya lo tuviese era para evitar un bloqueo circular en el caso de que todos los filósofos al mismo tiempo cogiesen su tenedor izquierdo, en esta situación ninguno de ellos podría coger su tenedor derecho y se quedarían todos esperando indefinidamente, se produciría un bloqueo indefinido o &lt;em&gt;deadlock&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Para evitar un bloqueo indefinido una de las siguientes reglas no se ha de cumplir:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Exclusión mutua: Por lo menos un recurso debe retenerse en modo no compartido; es decir, sólo un proceso a la vez puede usar el recurso. Si otro proceso solicita el recurso, deberá esperar hasta que se haya liberado.&lt;/li&gt;
+&lt;li&gt;Retención y espera: Debe haber un proceso que retenga por lo menos un recurso y espere adquirir otros recursos retenidos por otros procesos.&lt;/li&gt;
+&lt;li&gt;No apropiación: Los recursos no se pueden quitar; es decir, un recurso solo puede ser liberado voluntariamente por el proceso que lo retiene, después de que haya cumplido su tarea.&lt;/li&gt;
+&lt;li&gt;Espera circular: Debe haber un conjunto { P0, P1, &amp;hellip;, Pn } de procesos en espera tales que P0 espera un recurso retenido por P1, P1 espera un recurso retenido por P2, &amp;hellip; Pn-1 espera un recurso retenido por On, y Pn espera un recurso retenido por P0.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;En esta implementación he optado por hacer que el último filósofo en vez de ser diestro sea zurdo de modo que primero intente coger el tenedor izquierdo y luego el derecho, con este simple cambio la espera circular ya no puede producirse y con ello el bloqueo indefinido.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/e732e19b68e6f1fd6b0e586dc1a5aaf7.js?file=Main.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/e732e19b68e6f1fd6b0e586dc1a5aaf7.js?file=Table.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/e732e19b68e6f1fd6b0e586dc1a5aaf7.js?file=Fork.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/e732e19b68e6f1fd6b0e586dc1a5aaf7.js?file=Philosopher.java&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+        &lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/165278.js&#34; id=&#34;asciicast-165278&#34; async&gt;&lt;/script&gt;
+        &lt;noscript&gt;&lt;a href=&#34;https://asciinema.org/a/165278&#34; target=&#34;_blank&#34;&gt;&lt;img src=&#34;https://asciinema.org/a/165278.png&#34; width=&#34;734&#34;/&gt;&lt;/a&gt;&lt;/noscript&gt;
+        
+        &lt;figcaption&gt;Ejemplo de concurrencia de los filósofos&lt;/figcaption&gt;
+        
+    &lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaConcurrency&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://bruceeckel.github.io/2016/12/29/dining-philosophers-in-java-8/&#34;&gt;Dining Philosophers in Java 8&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/02/referencias-a-grupos-de-captura-en-expresiones-regulares-y-reemplazos/</id>
+        <title>Referencias a grupos de captura en expresiones regulares y reemplazos</title>        
+        <updated>2018-02-17T17:00:00+01:00</updated>
+        <published>2018-02-17T17:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/02/referencias-a-grupos-de-captura-en-expresiones-regulares-y-reemplazos/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Las expresiones regulares definen un patrón que permite encontrar coincidencias en cadenas de caracteres, reemplazar coincidencias o validar que las cadenas de caracteres cumplen el patrón. Las expresiones regulares son potentes expresiones que resultan útiles en muchos casos pero son expresiones que pueden llegar a ser complejas cuyo uso se aprende con la experiencia. Una de las funcionalidades que poseen es hacer referencia a grupos de captura anteriores en la propia expresión regular o en la cadena de reemplazo.&lt;/p&gt;
+
+&lt;p&gt;Hacer referencia al grupo de captura en las cadenas de reemplazo es especialmente útil ya que sirve no solo para reemplazar coincidencias por cadenas previamente conocidas sino para transformar las coincidencias encontradas por otras expresiones. El caso de las cuentas de correo a continuación es un ejemplo práctico donde se aprecia este uso.&lt;/p&gt;
+
+&lt;p&gt;Supongamos que queremos corregir un texto en el que por error hay palabras repetidas de forma seguida y queremos eliminar esos duplicados de palabras. Por ejemplo, tenemos un texto como el siguiente en el algunas palabras como &lt;em&gt;ipsum&lt;/em&gt;, &lt;em&gt;eiusmod&lt;/em&gt;, &lt;em&gt;fugiat&lt;/em&gt;, &lt;em&gt;sint&lt;/em&gt; y &lt;em&gt;proident&lt;/em&gt; están repetidas:&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/dd337be3c01de7b5e3783b34e8ccc274.js?file=lorem-ipsum.txt&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;La expresión regular para encontrar las coincidencias deberá para cada palabra comprobar si la siguiente es la misma. Cada palabra la incluimos en un grupo y posteriormente hacemos referencia a ese grupo con &lt;em&gt;\1&lt;/em&gt; para ver si la siguiente palabra es la misma. Con la siguiente expresión regular y código encontraremos las palabras repetidas una a continuación de la otra.&lt;/p&gt;
+
+&lt;p&gt;Para hacer referencia en los grupos de coindiciendia en la cadena de reemplazo hay que usar un caracter &lt;em&gt;$&lt;/em&gt; y un número con la posición del grupo de reemplazo.&lt;/p&gt;
+
+&lt;p&gt;Un ejemplo más útil de los grupos de referencia en la cadena de reemplazo sería reemplazar en un texto plano las direcciones de correo electrónico por sus enlaces en HTML. Usando una expresión regular para encontrar las direcciones de correo electrónico y sustituirlas por los enlaces HTML haciendo uso de los grupos de captura y referencias a ellos.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/dd337be3c01de7b5e3783b34e8ccc274.js?file=Main.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;La salida del ejemplo en la terminal es el siguiente.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/dd337be3c01de7b5e3783b34e8ccc274.js?file=system.out&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;A los grupos de captura se les puede dar un nombre y referenciarlos por él en vez de por un número identificador como en el de este ejemplo. A un grupo de captura se le da un nombre con la siguiente expresión &lt;em&gt;(?&amp;lt;name&amp;gt;X)&lt;/em&gt; donde &lt;em&gt;name&lt;/em&gt; es el nombre del grupo de captura de la expresión &lt;em&gt;X&lt;/em&gt;. Posteriormente con la expresión &lt;em&gt;${name}&lt;/em&gt; se hace referencia al grupo de captura, también en la cadena de reemplazo.&lt;/p&gt;
+
+&lt;p&gt;En la &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/util/regex/Pattern.html&#34;&gt;documentación Javadoc de la clase Pattern&lt;/a&gt; está detallado el soporte en Java para usar expresiones regulares.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRegexpReferenceGroups&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/05/extraer-elementos-de-una-cadena-con-una-expresion-regular/&#34;&gt;Extraer elementos de una cadena con una expresión regular&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/los-cuantificadores-greedy-reluctant-y-possessive-en-expresiones-regulares/&#34;&gt;Los cuantificadores greedy, reluctant y possessive en expresiones regulares&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://stackoverflow.com/questions/415580/regex-named-groups-in-java&#34;&gt;Regex Named Groups in Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://stackoverflow.com/questions/201323/using-a-regular-expression-to-validate-an-email-address&#34;&gt;Using a regular expression to validate an email address&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/02/analisis-estatico-de-codigo-con-pmd-y-un-ejemplo/</id>
+        <title>Análisis estático de código con PMD y un ejemplo</title>        
+        <updated>2018-02-05T17:00:00+01:00</updated>
+        <published>2018-02-03T22:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/02/analisis-estatico-de-codigo-con-pmd-y-un-ejemplo/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/pmd.png&#34; class=&#34;right &#34; width=&#34;300&#34; alt=&#34;PMD&#34; title=&#34;PMD&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;El mantenimiento de un programa es la parte que más tiempo consume en su desarrollo y realmente son más los proyectos que hay que mantener que los que se empiezan desde cero. Por lo tanto el software se debe diseñar además de para funcionar correctamente y de forma suficientemente eficiente de tal forma que los futuros cambios sean en la medida de lo posible sencillos de realizar. Hay varios motivos por los que un software necesita mantenimiento según sus categorías:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Correctivo: por la necesidad de corregir errores.&lt;/li&gt;
+&lt;li&gt;Adaptativo: por adaptación a un nuevo entorno o mejora con un nuevo sistema operativo o tecnologías.&lt;/li&gt;
+&lt;li&gt;Perfeccionamiento: corrección de errores o adición de nuevas funcionalidades.&lt;/li&gt;
+&lt;li&gt;Preventivo: para mejorar la calidad o prevenir futuros errores.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;En el libro &lt;a href=&#34;http://amzn.to/2BSalVR&#34;&gt;Building Maintable Software (Java Edidtion)&lt;/a&gt; en varios capítulos repasan varios aspectos y proporciona consejos sobre cómo desarrollar software más fácilmente mantenible. Algunos son tan sencillos como evitar métodos con muchas líneas de código, con muchos parámetros, con muchas bifurcaciones por sentencias condicionales o de retorno. Estos aspectos influyen en la facilidad de realizar teses, la facilidad de reutilizar el código siendo más fácil probar y reutilizar métodos que hacen pocas cosas que otros que hacen muchas o son complejos.&lt;/p&gt;
+
+&lt;p&gt;Estos aspectos del código requiere analizar el código. Si la base de código del software es grande será tedioso y costoso revisarlo manualmente sin embargo hay herramientas como &lt;a href=&#34;https://pmd.github.io/&#34;&gt;PMD&lt;/a&gt; que nos permite automatizar la tarea de análisis. PMD además se puede utilizar para comprobar que el código sigue las normas de estilo definidas para el proyecto o en una organización además de esos otros aspectos que afectan a la facilidad de mantenimiento del software también útil cuando se incorpora una nueva persona a un proyecto para que siga las normas ya establecidas. Al igual que se deben tener teses unitarios y de integración para comprobar el correcto funcionamiento del software con PMD se obtiene un informe con las violaciones de las reglas que quieran aplicar al analizar el código.&lt;/p&gt;
+
+&lt;p&gt;En la documentación del proyecto PMD en la sección &lt;em&gt;Rule Reference&lt;/em&gt; están la reglas que se puede aplicar y configurar en el análisis, hay una buena cantidad de ellas que en algunos casos permiten modificar los umbrales u otras propiedades para adaptar la validación a lo deseado. Desde convenciones al formatear el código, uso de llaves, tamaño de código, comentarios, de diseño, bloques de código vacíos en sentencias &lt;em&gt;try-catch&lt;/em&gt;, &lt;em&gt;if&lt;/em&gt;, &amp;hellip;, &lt;em&gt;imports&lt;/em&gt; duplicados, no usados o del mismo paquete y por tanto innecesarios, usos innecesarios de nombres completamente cualificados, de nomenclatura de variables por ejemplo si son demasiado cortas o largas, optimizaciones, código innecesario o no usado que se puede eliminar.&lt;/p&gt;
+
+&lt;p&gt;Al heredar un nuevo proyecto cuyo mantenimiento es complicado y grande por no cumplir varias de las reglas anteriores no es posible revisar todo el código completamente manualmente, se puede intuir cuales son algunos de los problemas haciendo una revisión a algunas partes y suponer que en el resto también están. Un buen paso es utilizar PMD para detectar de forma precisa una buena cantidad e ir corrigiéndolas a medida que se van haciendo cambios al código, con el paso del tiempo el mantenimiento si sigue siendo difícil no será por que hay código innecesario, no usado bloques de código vacíos o &lt;em&gt;imports&lt;/em&gt; no usados que son completamente innecesarios y eliminables sin riesgo.&lt;/p&gt;
+
+&lt;p&gt;Usando la &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2012/03/herramienta-de-construccion-gradle.html&#34;&gt;herramienta de construcción Gradle&lt;/a&gt; y su &lt;a href=&#34;https://docs.gradle.org/current/userguide/pmd_plugin.html&#34;&gt;&lt;em&gt;plugin&lt;/em&gt; de PMD&lt;/a&gt; es posible realizar el análisis automatizado del código. Hay una serie de reglas predefinidas que se pueden aplicar con valores generalmente aceptados pero que es posible personalizar.&lt;/p&gt;
+
+&lt;p&gt;Suponiendo que con la intención de hacer el software más mantenible se define que el código debe seguir las normas de estilo de Java, en el caso del ejemplo que los métodos no tengan más de 50 líneas, en un informe en formato HTML o XML PMD genera las violaciones a las reglas que encuentre y posteriormente corregirlas si se considera adecuado. Este es un ejemplo de archivo de Gradle de que solo pongo la parte relevante para el ejemplo para usar PMD aplicando unas pocas reglas ya incorporadas en PMD y la de la longitud de los métodos personalizada a una valor de 50 líneas:&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/f992fce42bee4815393571c842a15498.js?file=build.gradle&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/f992fce42bee4815393571c842a15498.js?file=ruleset.xml&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Aplicado el &lt;em&gt;plugin&lt;/em&gt; y definidas las reglas en las construcción del proyecto se revisarán y generará un informe con el comando &lt;code&gt;./gradlew check&lt;/code&gt;. En el directorio &lt;em&gt;build/reports/pmd/&lt;/em&gt; relativo a la raíz del proyecto se genera un conjunto de archivos HTML y XML con los informes del análisis del código. En el informe se indica la clase, la linea y el error que se ha encontrado, con esta información es sencillo modificar el código para que en la siguiente ejecución de la validación el error desaparezca del informe, la myoría de reglas son fáciles de corregir.&lt;/p&gt;
+
+&lt;p&gt;Para que en el informe aparezcan datos he cambiado la configuración de longitud a 10 líneas por método como máximo.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/297/pmd-report.png&#34; title=&#34;Informe de PMD con violaciones a las reglas&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/297/pmd-report-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Informe de PMD con violaciones a las reglas&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/PlugInTapestry&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew check&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/12/hemeroteca-12/</id>
+        <title>Hemeroteca #12</title>        
+        <updated>2018-01-13T11:35:00+01:00</updated>
+        <published>2017-12-30T09:30:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/12/hemeroteca-12/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;p&gt;Cuarto año de Blog Bitix y en febrero serán siete desde que empecé con &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es&#34;&gt;El blog del pico.dev&lt;/a&gt;. En los últimos seis meses he seguido publicando casi a dos artículos por semana y durante el 2017 ha sido casi siempre así, en este semestre han sido 48 artículos, que juntos con los 39 del primero son 87 durante el año 2017, mi mayor tasa de publicación en un año.&lt;/p&gt;
+
+&lt;p&gt;En estas hemerotecas siempre repaso cual es la evolución de visitas e ingresos de AdSense que quizá a alguien más le resulte de interés. En Junio y Julio alcance unas 50K páginas vistas el mayor pico de visitas, aunque en meses posteriores han descendido, al principio lo achacaba a los meses vacacionales de verano pero luego se han mantenido no se si por alguna penalización de Google o algún artículo que recibía muchas visitas y haya descendido en su posicionamiento. En cualquier caso en los últimos meses del año las visitas han tenido una tendencia ascendente, de unas 40K páginas vistas y superior respecto a las de hace una año que comparándolas han sido de 25K en 2016 y de 38K en 2017 un crecimiento de un 85%. No está mal, si el año siguiente fuese igual me daría por muy satisfecho.&lt;/p&gt;
+
+&lt;p&gt;En el apartado de ingresos por la publicidad AdSense, algunos artículos patrocinados y enlaces de afiliación también ha estado bien. En estos momentos por AdSense es raro el día que no recibo al menos un euro y algún día excepcional he recibido 8, otros algo menos de 2 y 3, mensualmente ya es habitual que esté en un rango de 30 y 45€, los ingresos de AdSense se relacionan en gran medida con el número de visitas. Al final el artículo que publiqué sobre los &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/cursos-de-formacion-de-keepcoding/&#34;&gt;cursos de formación de KeepCoding&lt;/a&gt; han merecido la pena como artículo patrocinado con la compra de dos usuario de tres cursos (aunque la mayoría de gente se registran a los cursos gratuitos), pero esto junto con los artículos patrocinados es más esporádico y por el momento poco habitual para mi.&lt;/p&gt;
+
+&lt;p&gt;En alguna ocasión me han comentado que me donarían algo por los artículos que escribo, una posibilidad sería usar &lt;a href=&#34;https://www.patreon.com/&#34;&gt;Patreon&lt;/a&gt; o &lt;a href=&#34;https://www.paypal.com/&#34;&gt;PayPal&lt;/a&gt;, sin embargo, no me convence mucho la donación directa por ser demasiado generosa y he preferido añadir una &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/series/donacion/&#34;&gt;página con ciertos productos tecnológicos y &lt;em&gt;gamers&lt;/em&gt; seleccionados&lt;/a&gt; para que si alguien le gusta mis artículos, se acuerda y quiere donarme algo lo haga a través de estos enlaces de afiliación. Al que compra le cuesta lo mismo pero yo recibo una comisión. Esto me recuerda que debería hacer alguna nueva donación a proyectos de software libre y estoy pensando en &lt;a href=&#34;https://lineageos.org/&#34;&gt;Lineage OS&lt;/a&gt; y &lt;a href=&#34;https://www.replicant.us/&#34;&gt;Replicant&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Quien crea que es mucho que pruebe a crearse una bitácora, un canal en &lt;a href=&#34;https://www.youtube.com/&#34;&gt;YouTube&lt;/a&gt; o un &lt;em&gt;podcast&lt;/em&gt; y verá rápidamente que o se acierta en la temática y se es muy bueno creando contenido que genera interés o primero verá que han de pasar dos años y dedicar una ingente cantidad de horas a crear ese contenido para llegar a estas cifras que tampoco son altas, no en vano muchos de estos proyectos son abandonados al cabo de unos meses, por algo será.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/291/analytics-2017.png&#34; title=&#34;Analytics 2017 de Blog Bitix&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/291/analytics-2017-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/291/adsense-2017.png&#34; title=&#34;AdSense 2017 de Blog Bitix&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/291/adsense-2017-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Evolución visitas e ingresos de AdSense en 2017&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;p&gt;Pero por otra parte he recibido buenos comentarios sobre lo que escribo en Blog Bitix, por algunas personas vía &lt;a href=&#34;https://twitter.com/&#34;&gt;Twitter&lt;/a&gt; y otras en algún comentario que me anima a seguir escribiendo y compartiendo como hasta ahora lo que voy aprendiendo e investigando que algún día espero utilizar en algún trabajo antes de que me jubile o pruebe ser un jardinero o barrendero.&lt;/p&gt;
+
+&lt;p&gt;Este semestre me propuse publicar una mayor cantidad de artículos relacionados con el lenguaje de programación Java con motivo de la pasada publicación de Java 9. Pero primero empecé con un par de artículos sobre &lt;em&gt;portlets&lt;/em&gt; y &lt;a href=&#34;http://tapestry.apache.org&#34;&gt;Apache Tapestry&lt;/a&gt; que en algún momento espero añadirlos en alguna sección del libro &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/08/actualizacion-del-libro-plugin-tapestry/&#34;&gt;PlugIn Tapestry&lt;/a&gt;. Por supuesto, varios artículos comentando las novedades más relevantes de Java 9 publicado en septiembre entre ellas la modularidad y otras no menos notables.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/introduccion-a-los-portales-y-ejemplo-de-portlet-con-liferay/&#34;&gt;Introducción a los portales y ejemplo de portlet con Liferay&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/portlets-con-el-framework-apache-tapestry-y-apache-pluto/&#34;&gt;Portlets con el framework Apache Tapestry y Apache Pluto&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/iniciar-rapido-un-proyecto-de-java-con-gradle-o-de-spring-con-spring-initializr/&#34;&gt;Iniciar rápido un proyecto de Java con Gradle o de Spring con Spring Initializr&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/iniciacion-a-la-programacion-concurrente-en-java/&#34;&gt;Iniciación a la programación concurrente en Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/4-formas-de-hacer-un-bucle-for-en-java/&#34;&gt;4 formas de hacer un bucle for en Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/ejecutar-varias-tareas-de-forma-concurrente-en-java/&#34;&gt;Ejecutar varias tareas de forma concurrente en Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/08/el-antipatron-de-inicializacion-de-variables-con-dobles-llaves-en-java/&#34;&gt;El antipatrón de inicialización de variables con dobles llaves en Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/08/cache-simple-de-datos-y-con-ehcache-en-java/&#34;&gt;Cache simple de datos y con Ehcache en Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/los-cuantificadores-greedy-reluctant-y-possessive-en-expresiones-regulares/&#34;&gt;Los cuantificadores greedy, reluctant y possessive en expresiones regulares&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/los-tipos-de-referencias-debiles-soft-weak-y-phantom-en-java/&#34;&gt;Los tipos de referencias débiles soft, weak y phantom en Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/la-herramienta-de-documentacion-javadoc-de-java/&#34;&gt;La herramienta de documentación Javadoc de Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/como-generar-la-documentacion-javadoc-con-gradle/&#34;&gt;Cómo generar la documentación Javadoc con Gradle&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/crear-anotaciones-de-javadoc-personalizadas-con-taglets/&#34;&gt;Crear anotaciones de Javadoc personalizadas con taglets&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/cambiar-y-personalizar-los-estilos-de-la-documentacion-javadoc/&#34;&gt;Cambiar y personalizar los estilos de la documentación Javadoc&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/novedades-y-nuevas-caracteristicas-de-java-9-los-modulos/&#34;&gt;Novedades y nuevas características de Java 9, los módulos&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/novedades-de-java-9-mas-alla-de-la-modularidad/&#34;&gt;Novedades de Java 9, más allá de la modularidad&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/jshell-la-herramienta-repl-incorporada-en-java-9/&#34;&gt;JShell la herramienta REPL incorporada en Java 9&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/evitar-niveles-de-anidacion-de-sentencias-condicionales-con-guard-clauses/&#34;&gt;Evitar niveles de anidación de sentencias condicionales con guard clauses&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/ejemplo-con-el-cliente-http-2-de-java/&#34;&gt;Ejemplo con el cliente HTTP/2 de Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/obtener-el-minimo-o-maximo-de-dos-una-lista-o-stream-de-valores-en-java/&#34;&gt;Obtener el mínimo o máximo de dos, una lista o stream de valores en Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/las-excepciones-del-lenguaje-java/&#34;&gt;Las excepciones del lenguaje Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/obtener-informacion-de-la-pila-de-las-excepciones/&#34;&gt;Obtener información de la pila de las excepciones&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/implementar-funcionalidades-comunes-en-java-con-la-libreria-lombok/&#34;&gt;Implementar funcionalidades comunes en Java con la librería Lombok&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/visualizar-datos-y-generar-graficas-en-java-con-jfreechart/&#34;&gt;Visualizar datos y generar gráficas en Java con JFreeChart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/ordenar-alfabeticamente-cadenas-con-la-clase-collator-en-java/&#34;&gt;Ordenar alfabéticamente cadenas con la clase Collator en Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/introduccion-a-la-programacion-funcional-con-java-y-la-libreria-vavr/&#34;&gt;Introducción a la programación funcional con Java y la librería Vavr&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Una serie de artículos sobre &lt;a href=&#34;http://graphql.org/&#34;&gt;GraphQL&lt;/a&gt; como alternativa a una API REST que tiene algunas ventajas. Aún me queda publicar uno de esta serie, en cuanto se acepte un &lt;em&gt;pull request&lt;/em&gt; a raíz de una petición que cree con &lt;a href=&#34;https://github.com/graphql-java/graphql-java-tools/issues/93&#34;&gt;un problema que me encontré&lt;/a&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java/&#34;&gt;Ejemplo de GraphQL para una interfaz de un servicio con Spring Boot y Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/usar-un-resolver-para-recuperar-propiedades-en-graphql/&#34;&gt;Usar un resolver para recuperar propiedades en GraphQL&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/consultas-con-parametros-para-filtrar-datos-en-graphql/&#34;&gt;Consultas con parámetros para filtrar datos en GraphQL&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/paginacion-usando-cursores-en-graphql-y-java/&#34;&gt;Paginación usando cursores en GraphQL y Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/definir-nuevos-tipos-de-datos-escalares-en-graphql/&#34;&gt;Definir nuevos tipos de datos escalares en GraphQL&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/&#34;&gt;Devolver mensajes de error descriptivos en GraphQL&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;De los menos en este semestre están relacionados con el software libre. De &lt;a href=&#34;https://about.gitlab.com/&#34;&gt;GitLab&lt;/a&gt; tengo otro par de artículos por publicar para realizar integración continua y mostrando más en detalles su gestión de peticiones, wiki y páginas. Si estas navidades tienes algún momento para ver la televisión en uno de los siguientes artículos encontrarás varias ideas relacionadas con la tecnología.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/08/instalar-y-renovar-un-certificado-de-lets-encrypt-en-nginx/&#34;&gt;Instalar y renovar un certificado de Let&amp;rsquo;s Encrypt en Nginx&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/el-buscador-que-respeta-tu-privacidad-duckduckgo/&#34;&gt;El buscador que respeta tu privacidad, DuckDuckGo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/peliculas-sobre-tecnologia-o-informatica-series-documentales-videos-libros-gnu-linux-y-software-libre/&#34;&gt;Películas sobre tecnología o informática, series, documentales, vídeos, libros, GNU/Linux y software libre&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/como-eliminar-metainformacion-de-las-fotos-en-gnu-linux/&#34;&gt;Como eliminar metainformación de las fotos en GNU/Linux&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/gitlab-la-completa-herramienta-integrada-para-desarrollo-de-software/&#34;&gt;GitLab, la completa herramienta integrada para desarrollo de software&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;O de opinión.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/la-triste-realidad-de-java-versiones-antiguas/&#34;&gt;La triste realidad de Java, versiones antiguas&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/consejos-para-empresas-y-gente-de-recursos-humanos-que-busquen-talento/&#34;&gt;Consejos para empresas y gente de recursos humanos que busquen talento&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/microsoft-does-not-care-if-you-use-windows-or-office-without-a-license/&#34;&gt;Microsoft does not care if you use Windows or Office without a license&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Algunos artículos de tema alternativos en la temática principal de este blog pero que también me gusta compartir, comentando el cambio que hice de compañía eléctrica a &lt;a href=&#34;https://www.holaluz.com/&#34;&gt;Holaluz&lt;/a&gt;, de caldera a termo eléctrico y la diferencia en la factura entre tener caldera y tener termo eléctrico. Un par de artículos de los robles que he plantado que espero prosperen, publicaré alguno más. También algún artículo de desempaquetado.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/desempaquetado-maletin-herramientas-mannesmann-y-bandejas-melamina-balvi/&#34;&gt;Desempaquetado maletín herramientas Mannesmann y bandejas melamina Balvi&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/la-busqueda-de-ejemplares-de-roble-comun/&#34;&gt;La búsqueda de ejemplares de roble común&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/seleccion-de-semillas-de-roble-comun-y-metodos-de-germinacion/&#34;&gt;Selección de semillas de roble común y métodos de germinación&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/08/sustituir-caldera-de-gas-por-un-termo-electrico-fleck-duo-7-50/&#34;&gt;Sustituir caldera de gas por un termo eléctrico Fleck Duo 7 50&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/comparando-la-factura-entre-caldera-de-gas-y-termo-electrico/&#34;&gt;Comparando la factura entre caldera de gas y termo eléctrico&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/me-cambio-a-la-electrica-holaluz/&#34;&gt;Me cambio a la eléctrica Holaluz&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Una buena colección de libros técnicos que he leído durante el último trío de años y me han gustado junto con una selección de productos tecnológicos.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/08/37-buenos-libros-sobre-sobre-java-linux-devops-y-desarrollo-que-he-leido/&#34;&gt;37 buenos libros sobre sobre Java, Linux, DevOps y desarrollo que he leído&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/productos-tecnologicos-para-comprar-o-regalar/&#34;&gt;Productos tecnológicos para comprar o regalar&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Espero seguir escribiendo como hasta ahora en el 2018 si el tiempo del que dispongo me lo permite y continuo con motivación. Por lo pronto son unos cuantos artículos que ya tengo escritos a falta de retocar en el momento que los publique. Puedes aprovechar para repasar esta lista y leer alguno si te lo perdiste, por supuesto si aún no lo has hecho, suscríbete con tu lector preferido al &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/index.xml&#34;&gt;&lt;em&gt;feed&lt;/em&gt; a Blog Bitix&lt;/a&gt;. Finalmente, ya solo me queda desearos con la siguiente imagen linuxera de &lt;a href=&#34;http://www.klowner.com/&#34;&gt;Klouner&lt;/a&gt;&amp;hellip; ¡Buen &lt;strike&gt;2016&lt;/strike&gt; 2018!&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/291/christmas-tux-2017.jpg&#34; title=&#34;¡Buen 2018!&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/291/christmas-tux-2017-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;¡Buen 2018!&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog"/>
+            
+                <category term="blog-stack"/>
+            
+                <category term="hemeroteca"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="planeta-linux"/>
+            
+                <category term="programacion"/>
+            
+                <category term="software"/>
+            
+                <category term="software-libre"/>
+            
+                <category term="tapestry"/>
+            
+                <category term="gnu-linux"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/12/introduccion-a-la-programacion-funcional-con-java-y-la-libreria-vavr/</id>
+        <title>Introducción a la programación funcional con Java y la librería Vavr</title>        
+        <updated>2017-12-15T23:00:00+01:00</updated>
+        <published>2017-12-15T23:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/12/introduccion-a-la-programacion-funcional-con-java-y-la-libreria-vavr/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Ciertas propiedades de la programación funcional fueron una de las características más destacadas añadidas a Java 8. La librería Javaslang y más tarde renombrada a Vavr basándose en estas nueva características añade algunas otras que no están incluidas en el propio JDK y están presentes en otros lenguajes más recientes y con programación funcional desde sus inicios. En esta breve introducción a la librería Vavr comentaré cuales son las propiedades que proporciona para simplificar algunas aspectos de la tarea de programación.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/vavr.png&#34; class=&#34;right &#34; width=&#34;300&#34; alt=&#34;Vavr&#34; title=&#34;Vavr&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Varv se define a si misma como una librería funcional para Java 8+. Ayuda a reducir la cantidad de código y a incrementar la robustez. Un primer paso hacia la programación funcional es empezar a pensar en valores inmutables. Vavr proporciona colecciones inmutables, las necesarias funciones y estructuras de control para operar estos valores. El resultado es bello y simplemente funciona.&lt;/p&gt;
+
+&lt;p&gt;Dicho esto un código no se evalúa únicamente por la cantidad de lineas de código que contiene menos lineas no siempre es mejor si otra variable a tener en cuenta es la legibilidad que facilite la compresión del código a otra persona y a uno mismo en un futuro.&lt;/p&gt;
+
+&lt;p&gt;Me parece que ha sido hace mucho menos pero Java 8 fue publicado ya nada más y nada menos que hace casi cuatro años, una de las mayores modificaciones al lenguaje Java desde Java 5. Una de la nuevas características añadidas más destacadas fue la incorporación de las funciones &lt;em&gt;lambda&lt;/em&gt; que posibilitan la programación funcional. Las &lt;em&gt;lambdas&lt;/em&gt; combinado con los &lt;em&gt;streams&lt;/em&gt;, otra de las nuevas características, en las colecciones hacen posible escribir con muchas menos líneas de código y de una forma mucho más natural y legible para la misma funcionalidad que en versiones anteriores. Las &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/&#34;&gt;nuevas características añadidas al lenguaje en Java 8&lt;/a&gt; ya por si solas son una gran mejora sin embargo a algunos no les parecen suficientes, una de las librerías Java del momento es &lt;a href=&#34;http://www.vavr.io/&#34;&gt;Vavr&lt;/a&gt; que mejora y añade nuevas funcionalidades basándose en las novedades básicas añadidas al lenguaje en la versión 8.&lt;/p&gt;
+
+&lt;p&gt;Java 8 no las incorpora todo lo que podría en el JDK por decisión de los desarrolladores, ya que una de los principios que guían el desarrollo de Java es la compatibilidad hacia atrás e incorporar cosas en el lenguaje o JDK que en un momento determinado hasta que no demuestran que son realmente útiles y beneficiosas. Conservar la compatibilidad hacia atrás es una fortaleza pero que puede dar la sensación que Java siempre va un paso por detrás en incorporar novedades, aún así complementado con librerías como Vavr en el caso de las programación funcional se echa de menos menos otros lenguajes como &lt;a href=&#34;https://kotlinlang.org/&#34;&gt;Kotlin&lt;/a&gt; o &lt;a href=&#34;https://clojure.org/&#34;&gt;Clojure&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/288/vavr-overview.png&#34; title=&#34;Jerarquía de clases de Vavr&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/288/vavr-overview-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Jerarquía de clases de Vavr&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;p&gt;Los principios que sigue la librería Vavr y que forman la tendencia en la programación y la programación funcional son:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Efectos colaterales: los cambios de estado son considerados dañinos si afectan al programa de una forma no deseada.&lt;/li&gt;
+&lt;li&gt;Transparencia referencial: una función o expresión tiene esta propiedad si puede ser reemplazada por su valor sin afectar al comportamiento del programa. Dicho de otra forma, dados los mismos datos de entrada el resultado de la función o expresión es el mismo. Una función es &lt;em&gt;pura&lt;/em&gt; si todas las expresiones que contiene tienen la propiedad de &lt;em&gt;transparencia referencial&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;Pensar en valores: los valores más interesantes son aquellos que son inmutables ya que son &lt;em&gt;thread-safe&lt;/em&gt; no necesitando mecanismos de sincronización en su acceso o modificación, son estables para las funciones &lt;em&gt;equals&lt;/em&gt; y &lt;em&gt;hashCode&lt;/em&gt; siendo confiables como claves &lt;em&gt;hash&lt;/em&gt; y no necesitan ser clonados.&lt;/li&gt;
+&lt;li&gt;Estructuras de datos: proporciona una colección rica de estructuras de datos funcionales apoyándose en la funciones &lt;em&gt;lambda&lt;/em&gt;. Son un reemplazo para las colecciones estándar de Java, la única interfaz que comparten es &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Iterable.html&#34;&gt;Iterable&lt;/a&gt;. Las colecciones de Java ocultan los detalles de implementación y las estructuras de datos internas pero son &lt;em&gt;colecciones mutables&lt;/em&gt;. Las &lt;em&gt;colecciones inmutables&lt;/em&gt; en Java se proporcionan como envoltorios que lanzan una excepción al intentarlas modificar. La &lt;em&gt;colecciones persistentes&lt;/em&gt; son efectivamente inmutables realizando pequeñas modificaciones y conservando las estructuras anteriores y nuevas y permitiendo consultar y modificar cualquiera de sus versiones.&lt;/li&gt;
+&lt;li&gt;Estructuras de datos funcionales: son aquellas estructuras de datos inmutables, persistentes y los métodos tienen la propiedad de transparencia referencial.&lt;/li&gt;
+&lt;li&gt;Colecciones: los &lt;em&gt;stream&lt;/em&gt; de Java para las colecciones son una forma de recorrerlas, realizar una computación y obtener una nueva colección. Los &lt;em&gt;stream&lt;/em&gt; de Vavr no están tan relacionados con las colecciones.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Vavr proporciona una representación bien diseñada de algunos de los tipos más básicos que aparentemente están ausentes o son rudimentarios en Java: &lt;em&gt;Tuple&lt;/em&gt;, &lt;em&gt;Value&lt;/em&gt; y &lt;em&gt;λ&lt;/em&gt; (función &lt;em&gt;lambda&lt;/em&gt;). Entre las funcionalidades proporcionadas por Vavr están:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Tuplas: son una caja para contener varios objetos evitando la necesidad de crear una clase especifica si esta no tiene ningún comportamiento asociado. Vavr proporciona tuplas hasta de 8 elementos, de &lt;a href=&#34;http://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/Tuple0.html&#34;&gt;Tuple0&lt;/a&gt; a &lt;a href=&#34;http://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/Tuple8.html&#34;&gt;Tuple8&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Funciones: la programación funcional se basa en los valores y la transformación de esos valores usando funciones. Java 8 proporciona la clase &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/util/function/package-summary.html&#34;&gt;Function&lt;/a&gt; que acepta solo un parámetro y la clase &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/util/function/package-summary.html&#34;&gt;BiFunction&lt;/a&gt; que acepta dos. En Vavr las interfaces funcionales van de &lt;a href=&#34;http://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/Function0.html&#34;&gt;Function0&lt;/a&gt; hasta &lt;a href=&#34;http://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/Function8.html&#34;&gt;Function8&lt;/a&gt;. Es posible aplicar conceptos como &lt;em&gt;composition&lt;/em&gt;, &lt;em&gt;lifting&lt;/em&gt;, &lt;em&gt;partial application&lt;/em&gt;, &lt;em&gt;currying&lt;/em&gt; o &lt;em&gt;memoization&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;Valores: los valores en Vavr son inmutables. Algunos objetos &lt;a href=&#34;http://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/Value.html&#34;&gt;Value&lt;/a&gt; proporcionados son: &lt;a href=&#34;http://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/control/Option.html&#34;&gt;Option&lt;/a&gt;, &lt;a href=&#34;http://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/control/Try.html&#34;&gt;Try&lt;/a&gt;, &lt;a href=&#34;http://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/Lazy.html&#34;&gt;Lazy&lt;/a&gt;, &lt;a href=&#34;http://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/control/Either.html&#34;&gt;Either&lt;/a&gt;, &lt;a href=&#34;http://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/concurrent/Future.html&#34;&gt;Future&lt;/a&gt;, &lt;a href=&#34;http://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/control/Validation.html&#34;&gt;Validation&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Colecciones: se ha diseñado una nueva librería de colecciones para Java que cumple con los requerimientos de la programación funcional e inmutabilidad. &lt;a href=&#34;http://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/collection/List.html&#34;&gt;List&lt;/a&gt;, &lt;a href=&#34;http://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/collection/Queue.html&#34;&gt;Queue&lt;/a&gt;, &lt;a href=&#34;http://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/collection/SortedSet.html&#34;&gt;SortedSet&lt;/a&gt;, &lt;a href=&#34;http://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/collection/Seq.html&#34;&gt;Seq&lt;/a&gt;, &lt;a href=&#34;http://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/collection/Set.html&#34;&gt;Set&lt;/a&gt;, &lt;a href=&#34;http://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/collection/Map.html&#34;&gt;Map&lt;/a&gt;, &lt;a href=&#34;http://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/collection/Stream.html&#34;&gt;Stream&lt;/a&gt;, &lt;a href=&#34;http://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/collection/Traversable.html&#34;&gt;Traversable&lt;/a&gt;, &amp;hellip;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/288/collections-seq.png&#34; title=&#34;Jerarquía de clases de Seq&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/288/collections-seq-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/288/collections-set-map.png&#34; title=&#34;Jerarquía de clases de Set y Map&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/288/collections-set-map-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Jerarquía de clases de Seq, Set y Map&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Pattern matching&lt;/em&gt;: son una especie de sentencia &lt;em&gt;switch&lt;/em&gt; que son evaluadas como una expresión y que retornan un valor.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Entre la &lt;a href=&#34;http://www.vavr.io/vavr-docs&#34;&gt;documentación de Varv&lt;/a&gt; hay numerosos ejemplos de código de todo lo anterior que recomiendo leer. En el siguiente ejemplo de código incluyo algunos posibles casos de uso de varias de las funcionalidades anteriores. En definitiva la librería Vavr complementa y añade a Java algunas de las características presentes en la programación funcional de otros lenguajes.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/ded3b49eeeac8f33bac3e7ad050393e9.js?file=Main.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/ded3b49eeeac8f33bac3e7ad050393e9.js?file=System.out&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/ded3b49eeeac8f33bac3e7ad050393e9.js?file=build.gradle&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;La librería Varv es una de las que pongo como ejemplo en el artículo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/la-triste-realidad-de-java-versiones-antiguas/&#34;&gt;La triste realidad de Java, versiones antiguas&lt;/a&gt;, si es útil no usarla puede hacer que programar en Java no sea todo lo placentero que podría ser. Algunas de las críticas que recibe Java no tienen validez usando las herramientas o librerías adecuadas porque en cierta medida las herramientas importan aunque por ahí circule la idea de que las herramientas no importan, para una persona de negocio quizá no sin embargo para un desarrollador sí.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/Vavr&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://docs.vavr.io/&#34;&gt;Documentación de Vavr&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.javadoc.io/doc/io.vavr/vavr&#34;&gt;Javadoc de Vavr&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/12/definir-nuevos-tipos-de-datos-escalares-en-graphql/</id>
+        <title>Definir nuevos tipos de datos escalares en GraphQL</title>        
+        <updated>2017-12-01T10:00:00+01:00</updated>
+        <published>2017-12-01T10:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/12/definir-nuevos-tipos-de-datos-escalares-en-graphql/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/graphql.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java/&#34;&gt;GraphQL es una alternativa a una interfaz REST&lt;/a&gt; con las ventajas de permitir al consumidor obtener únicamente los datos que requiere y realizar varias consultas en una misma petición.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://graphql.org/&#34;&gt;GraphQL&lt;/a&gt; por defecto soporta un conjunto de tipos escalares en los datos entre los que están varios numéricos, cadenas, booleanos, enumerados además de los tipos o estructuras de datos definidos en la interfaz del servicio. Sin embargo, si es necesario es posible definir nuevos tipos de datos escalares como podría ser el caso de un tipo de dato para representar una fecha fecha y otro de importe monetario.&lt;/p&gt;
+
+&lt;p&gt;El objeto en Java que representa una fecha con Java 8 sería &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/time/LocalDate.html&#34;&gt;LocalDate&lt;/a&gt; y la clase para el importe monetario podría ser un &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/math/BigDecimal.html&#34;&gt;BigDecimal&lt;/a&gt; o alguna de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/07/como-trabajar-con-importes-ratios-y-divisas-en-java/&#34;&gt;la librería JavaMoney&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Para que GraphQL soporte un nuevo tipo de dato escalar es necesario implementar una clase que realice la conversión. Esta clase se encarga de realizar la conversión entre el escalar añadido a una representación a devolver en las respuestas de las peticiones y la conversión entre la representación en consultas al tipo de dato hay que proporcionar al servicio. La clase debe implementar la interfaz &lt;a href=&#34;https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/schema/Coercing.java&#34;&gt;Coercing&lt;/a&gt; y construyendo un objeto &lt;a href=&#34;https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/schema/GraphQLScalarType.java&#34;&gt;GraphQLScalarType&lt;/a&gt; proporcionárselo a GraphQL en la definición del servicio.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/ae1583aaa3182006533adad61ee73921.js?file=LocalDateCoercing.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Al definir el esquema se proporciona con el método &lt;em&gt;scalars&lt;/em&gt; una lista con los tipos de datos escalares adicionales, en este caso una instancia de &lt;em&gt;GraphQLScalarType&lt;/em&gt; con una instancia de &lt;em&gt;LocalDateCoercing&lt;/em&gt;. Además en el descriptor del esquema hay que declarar el nuevo escalar con la palabra clave &lt;em&gt;scalar&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/ae1583aaa3182006533adad61ee73921.js?file=Main.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/ae1583aaa3182006533adad61ee73921.js?file=library.graphqls&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/ae1583aaa3182006533adad61ee73921.js?file=LibraryRepository.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Añadiendo al tipo &lt;em&gt;Book&lt;/em&gt; una fecha de publicación usando este nuevo tipo escalar al realizar una consulta y devolver el dato se realiza la conversión.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/ae1583aaa3182006533adad61ee73921.js?file=curl.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/GraphQL&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/11/paginacion-usando-cursores-en-graphql-y-java/</id>
+        <title>Paginación usando cursores en GraphQL y Java</title>        
+        <updated>2017-11-26T14:30:00+01:00</updated>
+        <published>2017-11-26T10:30:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/11/paginacion-usando-cursores-en-graphql-y-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/graphql.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;El conjunto de datos de una entidad en algunos casos será grande, miles o cientos de miles de registros, y por tanto no es viable devolverlos todos en una misma consulta por lo que es necesario realizar paginación devolviéndolos en pequeños grupos. La paginación se puede implementar de varias formas, habitualmente con un parámetro que limite el número de elementos a incluir en la página y otro parámetro &lt;em&gt;offset&lt;/em&gt; que deseche los primeros elementos hasta el primero deseado. Sin embargo, utilizar los parámetros &lt;em&gt;limit&lt;/em&gt; y &lt;em&gt;offset&lt;/em&gt; puede producir resultados inesperados si mientras la obtención de una página y la siguiente se insertan nuevos elementos anteriores al &lt;em&gt;offset&lt;/em&gt; ocasionando que lo que sería por ejemplo el décimo elemento pase a ser el undécimo.&lt;/p&gt;
+
+&lt;p&gt;Si esta situación es importante se suelen utilizar cursores que utilizan un parámetro para indicar el número de elementos a incluir en la página pero en vez de un &lt;em&gt;offset&lt;/em&gt; utilizan el identificativo de un registro a partir del cual devolver registros de modo que aunque se inserten registros el primer elemento de la página no cambiará.&lt;/p&gt;
+
+&lt;p&gt;En el caso de la &lt;a href=&#34;http://graphql.org/learn/pagination/&#34;&gt;paginación en GraphQL&lt;/a&gt; se proponen varias formas de implementar la paginación, una de ellas los cursores. En la documentación se explica la teoría, para implementarla es necesario &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/usar-un-resolver-para-recuperar-propiedades-en-graphql/&#34;&gt;crear un &lt;em&gt;data fetcher&lt;/em&gt; o &lt;em&gt;resolver&lt;/em&gt;&lt;/a&gt; que reciba los parámetros de &lt;em&gt;limit&lt;/em&gt; para indicar el número de elementos a devolver en la página y &lt;em&gt;after&lt;/em&gt; para indicar a partir de que elemento devolver elementos. También es necesario modificar el esquema de la API para tener en cuenta las nuevas estructuras de datos en las que se devuelven los resultados.&lt;/p&gt;
+
+&lt;p&gt;En este ejemplo de una librería para mostrar la paginación he añadido a los libros una lista de comentarios que será en la que soporte paginación. La definición del esquema queda de la siguiente forma siguiendo la &lt;a href=&#34;https://facebook.github.io/relay/graphql/connections.htm&#34;&gt;especificación de Relay&lt;/a&gt; para lo cual se definen los tipos &lt;em&gt;CommentsConnection&lt;/em&gt;, &lt;em&gt;CommentEdge&lt;/em&gt; (usando &lt;em&gt;generics&lt;/em&gt; no sería necesario implementar unas de estas clases por cada entidad paginable) y &lt;em&gt;PageInfo&lt;/em&gt;. Los cursores son un dato opaco para el cliente pero que decodificado incluye el identificativo del comentario. La propiedad &lt;em&gt;comments&lt;/em&gt; utiliza un &lt;em&gt;resolver&lt;/em&gt; con parámetros que se usa para realizar la búsqueda y recuperar los elementos solicitados en la consulta.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=library.graphqls&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=CommentsConnection.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=CommentEdge.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=PageInfo.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En el caso del ejemplo los datos se almacenan en unas listas creadas al iniciar la aplicación y la paginación y la obtención de los datos de la página se realiza usando &lt;em&gt;streams&lt;/em&gt; y con código Java para implementar la lógica según los parámetros de la paginación en el método &lt;em&gt;findComments&lt;/em&gt;. Si los datos estuvieran almacenados en una base de datos relacional o NoSQL se usarían las facilidades de sus lenguajes u operaciones de consulta como sería generar la sentencia SQL apropiada.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=LibraryRepository.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Los comentarios se obtienen usando un &lt;em&gt;data fetcher&lt;/em&gt; o &lt;em&gt;resolver&lt;/em&gt; que si existe para una determinada propiedad tiene precedencia sobre el &lt;em&gt;data fetcher&lt;/em&gt; por defecto que en Java obtiene el dato usando la convención de los &lt;em&gt;java beans&lt;/em&gt;. En este caso es el &lt;em&gt;resolver&lt;/em&gt; &lt;em&gt;BookResolver&lt;/em&gt; siendo el método &lt;em&gt;getComments&lt;/em&gt; el encargado de recuperar los datos de la propiedad &lt;em&gt;comments&lt;/em&gt; cuando se solicite en una consulta de GraphQL, recibe los datos de paginación y delega la búsqueda en el repositorio para que haga la consulta apropiada.&lt;/p&gt;
+
+&lt;p&gt;La clase repositorio abstrae al &lt;em&gt;resolver&lt;/em&gt; de como o donde están guardados los datos, de esta forma se podría pasar de guardarlos en una base de datos &lt;a href=&#34;https://www.postgresql.org/&#34;&gt;PostgreSQL&lt;/a&gt; a una base de datos &lt;a href=&#34;https://www.mongodb.com/&#34;&gt;MongoDB&lt;/a&gt; sin que el &lt;em&gt;resolver&lt;/em&gt; necesite ninguna modificación, también se podría optar por guardar los libros en una base de datos relacional y los comentarios en una base de datos MongoDB. El &lt;em&gt;resolver&lt;/em&gt; se encarga de crear las instancias de objetos necesarios de los tipos &lt;em&gt;CommentsConnection&lt;/em&gt;, &lt;em&gt;CommentEdge&lt;/em&gt; y &lt;em&gt;PageInfo&lt;/em&gt; para adaptarlos a las estructuras de datos apropiadas según la especificación de Relay en el servicio de GraphQL.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=BookResolver.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Una vez implementada la paginación en los comentarios con la siguientes consultas se obtiene un libro usando una &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/consultas-con-parametros-para-filtrar-datos-en-graphql/&#34;&gt;consulta con un filtro&lt;/a&gt; todos sus comentarios, los 3 primeros comentarios usando el parámetro &lt;em&gt;limit&lt;/em&gt; y los siguientes tres comentarios a partir del tercero usando los parámetros &lt;em&gt;limit&lt;/em&gt; y &lt;em&gt;after&lt;/em&gt;. Obteniendo como respuesta un libro con únicamente los comentarios deseados. Cada elemento en el resultado contiene los datos solicitados junto con el valor del cursor que identifica al comentario además de incluir una estructura de datos &lt;em&gt;pageInfo&lt;/em&gt; con información sobre la paginación.&lt;/p&gt;
+
+&lt;p&gt;Con el valor del cursor indicado en &lt;em&gt;pageInfo&lt;/em&gt; en la propiedad &lt;em&gt;endCursor&lt;/em&gt; se podría obtener la siguiente página de comentarios realizando otra consulta e indicándolo en el parámetro &lt;em&gt;after&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=curl-1.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=curl-2.sh&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/27db805fa81666ce6ca248c4e7409021.js?file=curl-3.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Los cursores tiene la ventaja de que son opacos por lo que se evita que los clientes dependan de identificativos y podrían cambiarse sin que los clientes necesitasen modificaciones. Otra ventaja es que la especificación de Relay propone un marco y unas convenciones para estandarizar la paginación. Sin embargo, esta solo es una forma de hacer paginación y es perfectamente posible usar cualquier otra para adaptarla a las necesidades que haya por ejemplo añadiendo más datos a &lt;em&gt;pageInfo&lt;/em&gt; o con más u otros parámetros para realizar la consulta de paginación.&lt;/p&gt;
+
+&lt;p&gt;Pero&amp;hellip; en este ejemplo por cada libro que se devuelve como resultado en la consulta se realiza una búsqueda de los comentarios ya que las propiedades de resultado en la consulta se recuperan una a una. Para la mayoría de propiedades esto no es problema ya que son propiedades que están en un objeto que no realizan consultas a una base de datos pero en el caso de los comentarios sí. Si se devolviesen muchos libros se realizaría una consulta para cada uno de ellos lo que no es eficiente. Si se devolviesen 500 libros y sus comentarios se realizarían 500 consultas para obtener los comentarios de cada libro, usando una base de datos relacional serían 1+500 consultas SQL por cada petición a GraphQL, 1 para obtener los libros y 500 para los comentarios. Como solución a este problema está la funcionalidad de &lt;em&gt;batching&lt;/em&gt; de GraphQL que permite obtener todos los comentarios de los libros en una única consulta, será tema para otro de los siguientes artículos de esta serie sobre GraphQL.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/GraphQL&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/11/consultas-con-parametros-para-filtrar-datos-en-graphql/</id>
+        <title>Consultas con parámetros para filtrar datos en GraphQL</title>        
+        <updated>2017-11-25T10:00:00+01:00</updated>
+        <published>2017-11-25T10:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/11/consultas-con-parametros-para-filtrar-datos-en-graphql/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/graphql.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;No será extraño que en una API para obtener datos esté la necesidad de realizar algún tipo de filtrado para recuperar únicamente la colección de datos deseados de todos los existentes en un repositorio. A las consultas de &lt;a href=&#34;http://graphql.org/&#34;&gt;GraphQL&lt;/a&gt; se les pueden pasar argumentos que son recibidos por los métodos que actúan como punto de entrada de las consultas. Con los argumentos es posible implementar cualquier funcionalidad que se necesite, entre ellas el filtrado. Los argumentos pueden ser datos escalares o más complejos que se definen con la palabra reservada &lt;em&gt;input&lt;/em&gt; en el esquema.&lt;/p&gt;
+
+&lt;p&gt;Usando el mismo ejemplo que he utilizado en artículos anteriores ahora en este caso implemento la funcionalidad de poder filtrar los libros de una biblioteca utilizando una expresión regular que el título del libro debe cumplir para obtenerse como resultado. El esquema del &lt;em&gt;enpoint&lt;/em&gt; de GraphQL queda de la siguiente forma para implementar el filtrado, usando el tipo definido con &lt;em&gt;input&lt;/em&gt; es posible pasar como argumentos datos complejos o agrupaciones de datos escalares.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/58fe2f31ef8b580d1f171baf615729b5.js?file=library.graphqls&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;La implementación del tipo &lt;em&gt;BookFilter&lt;/em&gt; en la implementación de Java de GraphQL es una &lt;em&gt;Java Bean&lt;/em&gt; con una propiedad por cada argumento y sus correspondientes métodos &lt;em&gt;set&lt;/em&gt; y &lt;em&gt;get&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/58fe2f31ef8b580d1f171baf615729b5.js?file=BookFilter.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;La clase &lt;em&gt;Query&lt;/em&gt; es el punto de entrada a las consultas raíz y posee un método con el mimo nombre que la consulta solicitada en GraphQL y que en este caso es &lt;em&gt;findBooks&lt;/em&gt; que recibe como argumento una instancia del objeto &lt;em&gt;BookFilter&lt;/em&gt; que a su vez se lo proporciona al servicio de repositorio independiente de GraphQL para que haga la búsqueda adecuada según corresponda en el sistema de persistencia empleado. En el caso que los datos se guarden en una base de datos relacional posiblemente el filtrado se realiza ejecutando una sentencia SQL. En el caso del ejemplo como los datos están en una colección de una estructura de datos Java el filtrado se realiza usando los &lt;em&gt;streams&lt;/em&gt;, expresiones regulares y código Java.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/58fe2f31ef8b580d1f171baf615729b5.js?file=Query.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/58fe2f31ef8b580d1f171baf615729b5.js?file=LibraryRepository.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Siguiendo la idea del ejemplo es posible realizar el filtrado de los datos con los argumentos que sean necesarios y la lógica adecuada según el repositorio donde estén almacenados los datos ya sea en un sistema con una base de datos relacional como &lt;a href=&#34;https://www.postgresql.org/&#34;&gt;PostgreSQL&lt;/a&gt; o NoSQL como &lt;a href=&#34;https://www.mongodb.com/&#34;&gt;MongoDB&lt;/a&gt;. Se podrían añadir más datos por ejemplo para filtrar por otros criterios como el número de páginas, autor o incluir otros parámetros para realizar otras funciones como especificar criterios de ordenación.&lt;/p&gt;
+
+&lt;p&gt;Esta petición busca los libros que su título comience por las letras &lt;em&gt;O&lt;/em&gt; o &lt;em&gt;R&lt;/em&gt; obteniendo dos coincidencias como resultado. En este caso entre los datos solo se devuelve el título del libro pero perfectamente podrían haber sido cualesquiera otros de entre los que posee el tipo &lt;em&gt;Book&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/58fe2f31ef8b580d1f171baf615729b5.js?file=curl.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Pero&amp;hellip; ¿que ocurre si aún con el filtrado o en una consulta el número de coincidencias son unos cuantos miles? Seguramente sean demasiadas coincidencias para devolver en una única petición y por ello es habitual &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/paginacion-usando-cursores-en-graphql-y-java/&#34;&gt;realizar paginación en GraphQL&lt;/a&gt;. Eso será tema para otro de los siguientes artículos de esta serie sobre GraphQL.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/GraphQL&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2017/11/usar-un-resolver-para-recuperar-propiedades-en-graphql/</id>
+        <title>Usar un resolver para recuperar propiedades en GraphQL</title>        
+        <updated>2017-11-18T10:00:00+01:00</updated>
+        <published>2017-11-18T10:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/11/usar-un-resolver-para-recuperar-propiedades-en-graphql/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/graphql.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Cuando en una consulta de &lt;a href=&#34;http://graphql.org/&#34;&gt;GraphQL&lt;/a&gt; se indican las propiedades a devolver GraphQL usa para cada una de ellas lo que en la implementación de Java se llama un &lt;em&gt;resolver&lt;/em&gt; y en otras implementaciones &lt;em&gt;data fetcher&lt;/em&gt;. En la mayoría de casos las propiedades serán propiedades de un objeto y en estos casos se usará un &lt;em&gt;PropertyDataFetcher&lt;/em&gt; usando en Java la convención de los &lt;em&gt;java beans&lt;/em&gt; o la clave de un mapa. En el caso de que cierto dato no esté almacenado en el objeto sino en un repositorio externo es necesario usar un &lt;em&gt;resolver&lt;/em&gt; para devolver esa propiedad en la consulta.&lt;/p&gt;
+
+&lt;p&gt;Por ejemplo, supongamos que en el ejemplo de la librería en el caso de los libros le añadimos un nuevo dato para el ISBN que está almacenado en un sistema externo, en otro repositorio. La nueva definición del esquema quedaría de la siguiente forma, basta con añadir la nueva propiedad al tipo &lt;em&gt;Book&lt;/em&gt; y su tipo que será &lt;em&gt;String&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/34760803d8daad87514b967a6de0cf0c.js?file=library.graphqls&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Para que una consulta que recupere el ISBN funcione correctamente es necesario implementar un &lt;em&gt;resolver&lt;/em&gt; creando una clase que implemente la interfaz &lt;em&gt;GraphQLResolver&amp;lt;Book&amp;gt;&lt;/em&gt; en la que se incluya un método &lt;em&gt;get&lt;/em&gt; por cada propiedad del tipo &lt;em&gt;Book&lt;/em&gt; que esté alamcenada en otro repositorio. Estos métodos &lt;em&gt;get&lt;/em&gt; reciben como parámetro el objeto &lt;em&gt;Book&lt;/em&gt; a partir del cual como contexto es posible tener los datos del libro del que hay que recuperar el ISBN, posiblemente utilizando su identificativo. En el ejemplo simplemente se devuelve un dato aleatorio pero perfectamente en caso necesario se podría usar un repositorio que lo recupere del sistema de información que lo almacena.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/34760803d8daad87514b967a6de0cf0c.js?file=BookResolver.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/34760803d8daad87514b967a6de0cf0c.js?file=curl.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;A la hora de definir el servicio de GraphQL hay que proporcionar el &lt;em&gt;resolver&lt;/em&gt; personalizado.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/34760803d8daad87514b967a6de0cf0c.js?file=Main.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Los &lt;em&gt;resolvers&lt;/em&gt; permiten almacenar la información en dos bases de datos distintas, una podría ser almacenar una información una base de datos relacional, otra información en una base de datos NoSQL, dos bases de datos relacionales distintas o inlcuso proporcionado por una API distinta. En cualquier caso para el usuario de la API y del servicio es transparente como esté almacenada la información.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/GraphQL&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://graphql-java.readthedocs.io/en/v5/schema.html&#34;&gt;Creating a schema&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/schema/DataFetchingEnvironment.java&#34;&gt;DataFetchingEnvironment&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/schema/DataFetcher.java&#34;&gt;DataFetcher&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog-stack"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+</feed>

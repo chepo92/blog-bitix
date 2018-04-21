@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="pico.dev">
+  <meta name="keywords" content="java, programacion, software, hardware, tapestry, software libre, gnu, linux, gnu/linux, unix, arch, arch linux, html, css, javascript">
+  <meta name="description" content="Hace un tiempo escribí una serie de artículos mostrando el uso de varias de la librerías de JavaScript, el primer artículo fue sobre una introducción sobre RequireJS hasta un Ejemplo lista de tareas con Backbone y React pasando por otra serie de herramientas útiles en una aplicación que tiene una parte importante en el navegador como:
+ Plantillas con Mustache Logging log4javascript Capturar errores de JavaScript Modelos con Backbone Ejemplo de lista de tareas con Backbone, RESTEasy y Tapestry Pruebas unitarias con Jasmine y Sinon El mismo ejemplo de lista de tareas con Marionette Una vez más el mismo ejemplo de lista de tareas con Backbone y React opción que me gustó más que con Marionette Internacionalización (i18n) en JavaScript  En este artículo comentaré otra librería de JavaScript que nos será de utilidad para el trabajo con datos de tipo fecha en el navegador, la librería es Moment. &hellip;">
+  <base href="https://picodotdev.github.io/blog-bitix/">
+
+  <title>Moment.js, librería JavaScript para fechas</title>
+
+  <link rel="author" type="text/plain" href="humans.txt" />
+  <link rel="shortcut icon" href="assets/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/apple-touch-icon-144-precomposed.png">
+  <link rel="canonical" href="https://picodotdev.github.io/blog-bitix/2016/06/moment-js-libreria-javascript-para-fechas/">
+
+  
+  <link href="index.xml" rel="alternate" type="application/rss+xml" title="Blog Bitix" />
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=PT+Serif:400,700italic,700,400italic">
+  
+  <link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-4.0.0/css/bootstrap.min.css">
+  
+  <link rel="stylesheet" type="text/css" href="assets/libs/Gallery-2.30.0/css/blueimp-gallery.min.css">
+  
+  <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+
+  
+  <script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script>
+  <script type="text/javascript">
+    (adsbygoogle = window.adsbygoogle || []).push({
+      google_ad_client: 'ca-pub-3533636310991304',
+      enable_page_level_ads: true
+    });
+  </script>
+  <script type="text/javascript" async>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-12874075-4', 'picodotdev.github.io');
+    ga('send', 'pageview');
+  </script>
+  <script type="text/javascript" src="assets/libs/require.js"></script>
+  <script type="text/javascript" src="assets/js/main.js"></script>
+  <script type="text/javascript" src="assets/js/theme.js" async></script>
+
+  <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" async></script>
+
+  
+  <script type="text/javascript" src="assets/js/app.js" async></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <header>
+  <div class="row">
+    <div class="col-12 col-lg-4"></div>
+    <div class="col-12 col-lg-4">
+      <h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2>
+      <div class="links">
+        
+          <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a>
+        
+        
+          <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a>
+        
+        
+          <a href="https://plus.google.com/114317443908384387611/" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a>
+        
+        
+          <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a>
+        
+        
+        
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 text-center">
+      <form name="query" class="form-inline search" onsubmit="return false;">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Buscar en Blog Bitix">
+          <span class="input-group-btn">
+            <button class="btn btn-secondary" type="submit">Buscar</button>
+          </span>
+        </div>
+      </form>
+      <form name="search" action="https://duckduckgo.com/" method="get" class="hidden" data-site="https://picodotdev.github.io/blog-bitix/">
+        <input type="hidden" name="q" value="">
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <nav class="nav nav-pills nav-fill">
+  
+    <a href="/blog-bitix/tags/java/" class="nav-item nav-link">Java</a>
+  
+    <a href="/blog-bitix/tags/gnu-linux/" class="nav-item nav-link">GNU/Linux</a>
+  
+    <a href="/blog-bitix/tags/javascript/" class="nav-item nav-link">JavaScript</a>
+  
+    <a href="/blog-bitix/tags/tapestry/" class="nav-item nav-link">Tapestry</a>
+  
+    <a href="/blog-bitix/archive/" class="nav-item nav-link">Archivo y hemeroteca</a>
+  
+    <a href="/blog-bitix/pages/links/" class="nav-item nav-link">Enlaces</a>
+  
+    <a href="/blog-bitix/pages/about/" class="nav-item nav-link">Acerca de...</a>
+  
+</nav>
+
+    </div>
+  </div>
+</header>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-lg-8">
+        <div class="row">
+          <div class="col-12">
+            <article itemscope itemtype="http://schema.org/BlogPosting">
+              
+              <meta itemprop="inLanguage" content="es">
+              
+              
+                <meta itemprop="keywords" content="blog-stack, javascript, planeta-codigo, programacion">
+              
+              
+              <h1 itemprop="name">Moment.js, librería JavaScript para fechas</h1>
+              <p class="information">
+                Escrito por <span itemscope itemtype="http://schema.org/Person"><span itemprop="name">pico.dev</span></span> el <time itemprop="datePublished" datetime="2016-06-05">05/06/2016</time>, actualizado el <time itemprop="dateModified" datetime="2016-06-05">05/06/2016</time>.
+                
+                
+                  <br>
+                   <a href="tags/blog-stack/">blog-stack</a> <a href="tags/javascript/">javascript</a> <a href="tags/planeta-codigo/">planeta-codigo</a> <a href="tags/programacion/">programacion</a>
+                
+                <br>
+                <a href="/blog-bitix/2016/06/moment-js-libreria-javascript-para-fechas/" itemprop="url">Enlace permanente</a>
+                
+                  <a href="/blog-bitix/2016/06/moment-js-libreria-javascript-para-fechas/#comments">Comentarios</a>
+                
+                
+              </p>
+
+              
+              
+
+              <ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="5966819782"
+     data-type="leaderboard"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+              <div class="content" itemprop="articleBody">
+                <meta itemprop="wordCount" content="281">
+                
+
+
+                <div class="logotypes" style="float: right;">
+    <img src="assets/images/logotipos/javascript.png" class="right " alt="JavaScript" title="JavaScript"/>
+</div>
+
+<p>Hace un tiempo escribí una serie de artículos mostrando el uso de varias de la librerías de JavaScript, el primer artículo fue sobre una <a href="http://elblogdepicodev.blogspot.com.es/2013/03/introduccion-y-ejemplo-de-requirejs.html">introducción sobre RequireJS</a> hasta un <a href="https://picodotdev.github.io/blog-bitix/2014/04/ejemplo-lista-de-tareas-con-backbone-y-react/">Ejemplo lista de tareas con Backbone y React</a> pasando por otra serie de herramientas útiles en una aplicación que tiene una parte importante en el navegador como:</p>
+
+<ul>
+<li><a href="http://elblogdepicodev.blogspot.com.es/2013/03/introduccion-y-ejemplo-de-mustache.htmlf">Plantillas con Mustache</a></li>
+<li><a href="http://elblogdepicodev.blogspot.com.es/2013/03/logging-en-javascript-con-log4javascript.html"><em>Logging</em> log4javascript</a></li>
+<li><a href="http://elblogdepicodev.blogspot.com.es/2013/04/capturar-errores-de-javascript.html">Capturar errores de JavaScript</a></li>
+<li><a href="http://elblogdepicodev.blogspot.com.es/2013/04/introduccion-y-ejemplo-de-backbonejs.html">Modelos con Backbone</a></li>
+<li><a href="http://elblogdepicodev.blogspot.com.es/2013/04/ejemplo-lista-de-tareas-con-backbone.html">Ejemplo de lista de tareas con Backbone, RESTEasy y Tapestry</a></li>
+<li><a href="http://elblogdepicodev.blogspot.com.es/2013/05/ejemplo-de-pruebas-unitarias-en.html">Pruebas unitarias con Jasmine y Sinon</a></li>
+<li>El mismo <a href="http://elblogdepicodev.blogspot.com.es/2013/08/ejemplo-lista-de-tareas-con-marionette.html">ejemplo de lista de tareas con Marionette</a></li>
+<li>Una vez más el mismo <a href="https://picodotdev.github.io/blog-bitix/2014/04/ejemplo-lista-de-tareas-con-backbone-y-react/">ejemplo de lista de tareas con Backbone y React</a> opción que me gustó más que con <a href="https://marionettejs.com/">Marionette</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2015/01/internacionalizacion-i18n-en-javascript/">Internacionalización (i18n) en JavaScript</a></li>
+</ul>
+
+<p>En este artículo comentaré otra librería de JavaScript que nos será de utilidad para el trabajo con datos de tipo fecha en el navegador, la librería es <a href="http://momentjs.com/">Moment.js</a>.</p>
+
+<p>La librería Moment.js permite en el lado del cliente formatear fechas según un patrón, manipular fechas añadiendo o restando días, comparar fechas, hacer consultas como si es un año bisiesto o la fecha está usando una zona horaria de verano o según calendario, soporta diferentes lenguajes además de permitirnos trabajar con diferentes zonas horarias y periodos de tiempo. En la propia <a href="http://momentjs.com/">página de inicio del proyecto</a> y la <a href="http://momentjs.com/timezone/">sección de zonas horarias</a> están incluidos diferentes ejemplos de cada una de estas posibilidades. El la <a href="http://momentjs.com/docs/">documentación</a> están explicadas más detalladamente todas las opciones, como usarlo con <a href="http://requirejs.org/">Require.js</a> y el gestor de paquetes <a href="http://bower.io/">Bower</a> o con <a href="https://www.npmjs.com/">npm</a>.</p>
+
+<p>En este artículo no incluiré un ejemplo de código ya que en la página de inicio del proyecto está muy bien explicado, la documentación parece bastante completa.</p>
+
+<div class="reference">
+    Referencia:<br>
+    <ul>
+<li><a href="http://momentjs.com/">Moment.js</a></li>
+</ul>
+
+</div>
+
+
+
+              </div>
+            </article>
+          </div>
+        </div>
+        
+
+        
+<div class="row">
+  <div class="col-md-12">
+    <div class="sharethis-inline-share-buttons"></div>
+  </div>
+</div>
+
+
+        <div class="row">
+          <div class="col-12">
+            <ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="5966819782"
+     data-type="leaderboard"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+          </div>
+        </div>
+        
+  <a id="comments"></a>
+  <div class="row">
+    <div class="col-md-12">
+      <div id="disqus_thread"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript" async>
+    var disqus_shortname = 'blog-bitix';
+    var disqus_identifier = 'https:\/\/picodotdev.github.io\/blog-bitix\/2016\/06\/moment-js-libreria-javascript-para-fechas\/';
+    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2016\/06\/moment-js-libreria-javascript-para-fechas\/';
+    var disqus_script = 'embed.js';
+    (function () {
+      var dsq = document.createElement('script'); 
+      dsq.type = 'text/javascript'; 
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+  </script>
+
+      </div>
+      <div class="col-12 col-lg-4">
+        <div class="row">
+  <div class="col-md-12 text-center">
+    <ins class="adsbygoogle"
+     style="display:inline-block;width:300px;height:600px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="9559414587"
+     data-type="large-skycraper"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12 text-center">
+    <ins class="adsbygoogle"
+     style="display:inline-block;width:336px;height:280px"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="2873752587"
+     data-type="large-rectangle"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+  </div>
+</div>
+<div class="row text-center banner">
+  <div class="col-12">
+    <a href="https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/"><img src="//static.fsf.org/nosvn/images/badges/badges_es/i-support-fs_red-bg-es.png" alt="Yo apoyo al software libre"></a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <hr>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <ul class="list-unstyled recents">
+      <li><span class="glyphicon glyphicon-hand-right"></span> <a href="archive/">Más artículos recientes en el archivo</a></li>
+    </ul>
+  </div>
+</div>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <hr>
+      </div>
+    </div>
+    <footer>
+  <div class="row">
+    <div class="col-12 col-sm-4">
+      <p><strong>Blog Bitix</strong></p>
+      <p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p>
+      <p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p>
+    </div>
+    <div class="col-12 col-sm-4 text-center menu">
+      <ul class="list-unstyled">
+        
+          <li><a href="/blog-bitix/tags/java/">Java</a></li>
+        
+          <li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li>
+        
+          <li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li>
+        
+          <li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li>
+        
+          <li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li>
+        
+          <li><a href="/blog-bitix/pages/links/">Enlaces</a></li>
+        
+          <li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li>
+        
+          <li><a href="/blog-bitix/pages/donate/">Donaciones</a></li>
+        
+          <li><a href="/blog-bitix/pages/about/">Acerca de...</a></li>
+        
+      </ul>
+    </div>
+    <div class="col-12 col-sm-4 text-center links">
+      
+        <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="assets/images/rss.png" class="icon"></a>
+      
+      
+        <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="assets/images/twitter.svg" class="icon"></a>
+      
+      
+        <a href="https://plus.google.com/114317443908384387611/" title="¡Sigue a Blog Bitix en Google&#43;!"><img src="assets/images/google-plus.svg" class="icon"></a>
+      
+      
+        <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="assets/images/github.svg" class="icon"></a>
+      
+      
+      
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      Copyleft <span class="copyleft">&copy;</span> 2018 - <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="nofollow" rel="license"><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style="border-width:0" src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" class="licencia"/></a><br />
+      <a href="https://twitter.com/blogstackinfo" rel="nofollow"><img src="https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png" alt="Blog Stack" title="Blog Stack"></a>
+      <a href="https://www.planetacodigo.com/" rel="nofollow"><img src="https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png" alt="Planeta código" title="Planeta código"></a>
+      <br/>
+      <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="https://picodotdev.github.io/blog-bitix/" rel="nofollow">Blog Bitix</a></span> by <a xmlns:cc="https://creativecommons.org/ns#" href="https://picodotdev.github.io/blog-bitix/" property="cc:attributionName" rel="cc:attributionURL">pico.dev</a> is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.
+      <br/>
+      <span class="credit">Powered by <a href="https://gohugo.io/" rel="nofollow" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a>.</span>
+      <span class="credit">Background patterns from <a href="https://www.toptal.com/designers/subtlepatterns" rel="nofollow">Subtle Patterns</a>.</span>
+    </div>
+  </div>
+</footer>
+
+  </div>
+  
+<div class="blueimp-gallery-container">
+  <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false">
+    
+    <div class="slides"></div>
+    
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    
+    <div class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body next"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left prev">
+              <i class="glyphicon glyphicon-chevron-left"></i>
+              Anterior
+            </button>
+            <button type="button" class="btn btn-primary next">
+              Siguiente
+              <i class="glyphicon glyphicon-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  
+<script type="text/javascript">
+    window.cookieconsent_options = {
+        "message": "Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.",
+        "dismiss": "Aceptar",
+        "learnMore": "Más información",
+        "link": null,
+        "theme": "dark-bottom"
+    };
+</script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script>
+</body>
+</html>

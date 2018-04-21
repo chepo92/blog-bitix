@@ -1,0 +1,1803 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://picodotdev.github.io/blog-bitix/post/</id>
+    <title type="text">Blog Bitix</title>
+    <subtitle>Recent content on Blog Bitix</subtitle>
+    <updated>2018-04-20T17:00:00+02:00</updated>
+    <author><name>pico.dev</name></author>
+    <generator>Hugo</generator>
+    <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
+    <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
+    <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/04/la-controversia-sobre-las-excepciones-checked-y-unchecked/</id>
+        <title>La controversia sobre las excepciones checked y unchecked</title>        
+        <updated>2018-04-20T17:00:00+02:00</updated>
+        <published>2018-04-20T17:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/04/la-controversia-sobre-las-excepciones-checked-y-unchecked/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Las excepciones son una forma de gestionar las condiciones de error que se dan en los programas. En el lenguaje C se utiliza el valor de retorno de la función para determinar la condición de error que se ha producido, el problema es que comprobar el valor de retorno puede ignorarse y la gestión de errores está mezclada con la tarea del programa.&lt;/p&gt;
+
+&lt;p&gt;El lenguaje Java utiliza un mecanismo de excepciones, las excepciones son objetos que se lanzan cuando se produce una condición de error. Todas las excepciones en Java heredan de &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/Throwable.html&#34;&gt;Throwable&lt;/a&gt; subdividiéndose en &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/Error.html&#34;&gt;Error&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/Exception.html&#34;&gt;Exception&lt;/a&gt;, las primeras son condiciones de error del sistema y las segundas condiciones de error del programa. A su vez las &lt;em&gt;Exception&lt;/em&gt; pueden ser &lt;em&gt;checked&lt;/em&gt; si heredan de esta y son aquellas que el compilador fuerza a que sean capturadas no pudiendo ignorarse, han de capturarse en una construcción &lt;em&gt;try catch&lt;/em&gt; o declarar que el método puede lanzar la excepción no capturada. Las excepciones &lt;em&gt;uncheked&lt;/em&gt; heredan de &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/RuntimeException.html&#34;&gt;RuntimeException&lt;/a&gt; que heredan a su vez de &lt;em&gt;Exception&lt;/em&gt; pero tienen la particularidad de que no es necesario capturarlas ni declararlas como que se pueden lanzar debido a que se consideran condiciones de error en la programación como un acceso a un &lt;em&gt;array&lt;/em&gt; fuera de rango que produce un &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/ArrayIndexOutOfBoundsException.html&#34;&gt;ArrayIndexOutOfBounds&lt;/a&gt;, el conocido &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/NullPointerException.html&#34;&gt;NullPointerException&lt;/a&gt; cuando se utiliza una referencia nula, otro es &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/ArithmeticException.html&#34;&gt;ArithmeticException&lt;/a&gt; que se produce al dividir por 0.&lt;/p&gt;
+
+&lt;p&gt;Algunas ventajas de las excepciones son:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Separar el código que gestiona los errores del código con el caso principal del programa.&lt;/li&gt;
+&lt;li&gt;Propagar errores hacia arriba en la pila de llamadas.&lt;/li&gt;
+&lt;li&gt;Agrupar y diferenciar entre diferentes tipos de errores.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Hay una cierta polémica sobre si las excepciones &lt;em&gt;checked&lt;/em&gt; son una buena idea. Entre los motivos que se alegan en contra de su uso están que cambiar la firma de un método añadiendo una nueva excepción como lanzable hace que el código que usase ese método podría ocasionar errores de compilación y que hace necesario el tratarla o declararla en la cadena de métodos hasta que sea tratada. Otro motivo es que a mayor nivel en la jerarquía de llamada en los métodos se necesitarán manejar una lista amplia de excepciones.&lt;/p&gt;
+
+&lt;p&gt;En el lado contrario las excepciones se consideran que son buenas porque conocer las condiciones de error o excepción que puede lanzar el método forma parte del contrato del método y es necesario para realizar un correcto manejo de errores. Las excepciones &lt;em&gt;checked&lt;/em&gt; pueden parecer un incordio pero son necesarias para hacer un correcto manejo de errores y evitar que el programa falle por no tratar las condiciones de error de las que advertirían. Por otro lado no deberían silenciarse con un bloque &lt;em&gt;catch&lt;/em&gt; vacío sin una buena razón. En las excepciones &lt;em&gt;checked&lt;/em&gt; el compilador es capaz de advertir si alguna excepción no ha sido capturada o lanzada.&lt;/p&gt;
+
+&lt;p&gt;Como regla general las excepciones &lt;em&gt;checked&lt;/em&gt; se usan cuando el programa es capaz de recuperarse del error y tratarlo adecuadamente, las &lt;em&gt;uncheked&lt;/em&gt; cuando se trata de un error de programación o no se puede hacer nada para recuperarse.&lt;/p&gt;
+
+&lt;p&gt;En el siguiente código se observa como capturar, lanzar y declarar excepciones en las firmas de los métodos en Java en una construcción &lt;em&gt;try catch finally&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/c0fc9936712783e76b22088e5b8f2b2e.js?file=Bank.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/c0fc9936712783e76b22088e5b8f2b2e.js?file=Main.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En el aparatado referncia incluyo unos buenos enlaces que amplian y detallan más apropiadamente la controversia sobre las excepciones &lt;em&gt;checked&lt;/em&gt; y &lt;em&gt;unchecked&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/tutorial/essential/exceptions/index.html&#34;&gt;Exceptions tutorial&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/tutorial/essential/exceptions/runtime.html&#34;&gt;Unchecked Exceptions — The Controversy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/tutorial/essential/exceptions/advantages.html&#34;&gt;Advantages of Exceptions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/124143/why-are-exceptions-not-checked-in-net#126122&#34;&gt;Why are Exceptions not Checked in .NET?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.artima.com/intv/handcuffs.html&#34;&gt;The Trouble with Checked Exceptions&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/04/prompt-de-la-terminal-personalizado-en-carpetas-de-git-con-el-interprete-bash/</id>
+        <title>Prompt de la terminal personalizado en carpetas de git con el intérprete Bash</title>        
+        <updated>2018-04-14T00:30:00+02:00</updated>
+        <published>2018-04-14T00:30:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/04/prompt-de-la-terminal-personalizado-en-carpetas-de-git-con-el-interprete-bash/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/gnu.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;GNU&#34; title=&#34;GNU&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/linux.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Uno de los sistemas de control de versiones más utilizado es &lt;a href=&#34;https://git-scm.com/&#34;&gt;Git&lt;/a&gt;. &lt;a href=&#34;https://es.wikipedia.org/wiki/Bash&#34;&gt;Bash&lt;/a&gt; es el intérprete de comandos por defecto en la mayoría de distribuciones &lt;a href=&#34;https://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;https://www.linux.com/&#34;&gt;Linux&lt;/a&gt;. A la hora de trabajar en la terminal y estando como directorio actual en un directorio que está bajo el control de versiones de git bash por defecto no muestra ninguna información del estado de los archivos en su repositorio en el símbolo del sistema o &lt;em&gt;prompt&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;El intérprete &lt;a href=&#34;http://zsh.sourceforge.net/&#34;&gt;Zsh&lt;/a&gt; y &lt;a href=&#34;http://ohmyz.sh/&#34;&gt;Oh-My-Zsh&lt;/a&gt; ofrece mediante sus temas soporte para los repositorios de git modificando el símbolo del sistema para mostrar más información acerca del estado. En Bash también es posible añadir soporte para que muestre información como la rama actual en la que se está trabajando, si hay archivos modificados o no añadidos al control de versiones, si hay archivos en el &lt;em&gt;stash&lt;/em&gt; y una comparación entre la rama actual y la del origen o &lt;em&gt;upstream&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+
+
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+&lt;figure&gt;
+    
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/blog-bitix/2018/04/prompt-de-la-terminal-personalizado-en-carpetas-de-git-con-el-interprete-bash/images/terminal_hu6d4cd90f7258a5b4f3fa9ff1cd70710c_8935_2560x1440_fit_box_2.png&#34; title=&#34;Prompt de la terminal por defecto&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/blog-bitix/2018/04/prompt-de-la-terminal-personalizado-en-carpetas-de-git-con-el-interprete-bash/images/terminal_hu6d4cd90f7258a5b4f3fa9ff1cd70710c_8935_300x200_fit_box_2.png&#34; width=&#34;300&#34; height=&#34;191&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/blog-bitix/2018/04/prompt-de-la-terminal-personalizado-en-carpetas-de-git-con-el-interprete-bash/images/git-bash_hu4332dbb3d900d0136c532c59777fc2b2_50870_2560x1440_fit_box_2.png&#34; title=&#34;Prompt de la terminal en carpeta git&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/blog-bitix/2018/04/prompt-de-la-terminal-personalizado-en-carpetas-de-git-con-el-interprete-bash/images/git-bash_hu4332dbb3d900d0136c532c59777fc2b2_50870_300x200_fit_box_2.png&#34; width=&#34;300&#34; height=&#34;191&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Prompt de la terminal por defecto y en carpeta de git&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;ul&gt;
+&lt;li&gt;* la presencia de este caracter indica que hay cambios en alguno de los archivos bajo el control de versiones.&lt;/li&gt;
+&lt;li&gt;+ indica que hay archivos añadidos al &lt;em&gt;stash&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;=&lt;/em&gt; indica que la rama está en el mismo estado que en &lt;em&gt;upstream&lt;/em&gt;, en su lugar puede mostrarse el caracter &lt;em&gt;&amp;gt;&lt;/em&gt; para indicar que la rama en local está por delante de la rama en remoto o mostrarse &lt;em&gt;&amp;lt;&lt;/em&gt; para lo contrario.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;El &lt;em&gt;script&lt;/em&gt; necesario para añadir el soporte a repositorios git en Bash es &lt;a href=&#34;https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh&#34;&gt;git-prompt.sh&lt;/a&gt;. Una vez descargado su funcionalidad se personaliza con varias variables de entorno tal y como está documentado en el comentario al inicio de este &lt;em&gt;script&lt;/em&gt; que se añaden en el archivo de perfil del usuario de inicio &lt;em&gt;.bashrc&lt;/em&gt;. Añadidas unas variables de entorno que empiezan por &lt;em&gt;GIT_PS1&lt;/em&gt; y hecho el &lt;em&gt;source&lt;/em&gt; del script junto con la utilización de la variable &lt;em&gt;PROMPT_COMMAND&lt;/em&gt; en lugar de &lt;em&gt;PS1&lt;/em&gt; para posibilitar la información de estado con colores al estar en un directorio git se muestra el &lt;em&gt;prompt&lt;/em&gt; del ejemplo anterior.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/31f86e3c7593a50b012e1296eb458be9.js?file=install.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Este es el archivo &lt;em&gt;.bashrc&lt;/em&gt; completo de la distribución &lt;a href=&#34;https://www.archlinux.org/&#34;&gt;Arch Linux&lt;/a&gt; con el soporte para el &lt;em&gt;script&lt;/em&gt; &lt;em&gt;git-prompt.sh&lt;/em&gt; y algunas opciones personalizadas.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/31f86e3c7593a50b012e1296eb458be9.js?file=.bashrc&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;La documentación completa con todas las opciones de personalización están en las primeras líneas de comentario del &lt;em&gt;script&lt;/em&gt;.&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="gnu-linux"/>
+            
+                <category term="planeta-codigo"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/04/sobre-el-slimbook-aio-curve/</id>
+        <title>Sobre el Slimbook AIO Curve</title>        
+        <updated>2018-04-09T22:00:00+02:00</updated>
+        <published>2018-04-09T22:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/04/sobre-el-slimbook-aio-curve/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/slimbook.jpg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Slimbook&#34; title=&#34;Slimbook&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Hace unos días &lt;a href=&#34;https://slimbook.es/&#34;&gt;Slimbook&lt;/a&gt; presentaba el nuevo equipo &lt;a href=&#34;https://slimbook.es/aio-curve-el-all-in-one-curvo-de-gnu-linux&#34;&gt;AIO Curve&lt;/a&gt; con una pantalla de 24 pulgadas ampliando su catálogo de productos en una nueva categoría, un todo en uno, &lt;em&gt;all-in-one&lt;/em&gt; o AIO. Como es el caso de estos modelos el equipo consta de un monitor en el que en parte trasera de la pantalla está integrada el procesador, memoria, almacenamiento SSD, todas las piezas como salida de red, wifi, audio y conexiones. La características de estos equipos es que no necesitan de mucho espacio, solo el que ocupe el monitor, son silenciosos y requiere de algún cable menos.&lt;/p&gt;
+
+&lt;p&gt;El nuevo modelo que parte de los 849€ con un &lt;a href=&#34;https://ark.intel.com/es-es/products/95443/Intel-Core-i5-7200U-Processor-3M-Cache-up-to-3_10-GHz&#34;&gt;Intel Core i5-7200&lt;/a&gt; y 8 GiB de RAM y de 949€ con un &lt;a href=&#34;https://ark.intel.com/es-es/products/95451/Intel-Core-i7-7500U-Processor-4M-Cache-up-to-3_50-GHz-&#34;&gt;Intel Core i7-7500&lt;/a&gt; con la misma cantidad de RAM. Se le puede ampliar la RAM, poner discos SSD con interfaz SATA y NVMe así como un disco mecánico para mayor capacidad de almacenamiento y WiFi AC, tiene varios puertos USB 2.0 y 3.0, salida de red ethernet Gigabit y audio. Sin tener que pagar &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2011/05/impuesto-windows.html&#34;&gt;el impuesto Windows&lt;/a&gt; y con procesadores Intel aunque con &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/&#34;&gt;el fallo de seguridad Meltdown y Spectre&lt;/a&gt; incluido. La pantalla es de 24 pulgadas en formato algo curvado con una resolución de 1920x1080 con unos bordes de pantalla muy reducidos salvo en la parte inferior.&lt;/p&gt;
+
+&lt;p&gt;Varios medios se hacía eco de la presentación:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.omgubuntu.co.uk/2018/04/the-slimbook-curve-is-a-stunning-all-in-one-linux-pc&#34;&gt;The Slimbook Curve is a Stunning All-in-One Linux PC&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.muylinux.com/2018/04/03/slimbook-curve-aio/&#34;&gt;Slimbook anuncia Curve, su primer All in One&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.gizlogic.com/slimbook-curve-un-fantastico-all-in-one/&#34;&gt;SlimBook Curve, fantástico All In One con Linux&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+&lt;figure&gt;
+    
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/blog-bitix/2018/04/sobre-el-slimbook-aio-curve/images/slimbook-curve-1_hua0f7e1666c48fe34f77c3117ae953405_426288_2560x1440_fit_q90_box.jpg&#34; title=&#34;Slimbook AIO Curve&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/blog-bitix/2018/04/sobre-el-slimbook-aio-curve/images/slimbook-curve-1_hua0f7e1666c48fe34f77c3117ae953405_426288_650x450_fit_q90_box.jpg&#34; width=&#34;650&#34; height=&#34;277&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+    
+
+
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+
+
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+&lt;figure&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/blog-bitix/2018/04/sobre-el-slimbook-aio-curve/images/slimbook-curve-2_hue4c6285c6132b953dd6ae7d52ba2348f_274109_2560x1440_fit_q90_box.jpg&#34; title=&#34;Slimbook AIO Curve&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/blog-bitix/2018/04/sobre-el-slimbook-aio-curve/images/slimbook-curve-2_hue4c6285c6132b953dd6ae7d52ba2348f_274109_300x200_fit_q90_box.jpg&#34; width=&#34;300&#34; height=&#34;171&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/blog-bitix/2018/04/sobre-el-slimbook-aio-curve/images/slimbook-curve-3_hu0d6c9a6f9c76e9f38b10efff8bfa8795_533433_2560x1440_fit_q90_box.jpg&#34; title=&#34;Slimbook AIO Curve&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/blog-bitix/2018/04/sobre-el-slimbook-aio-curve/images/slimbook-curve-3_hu0d6c9a6f9c76e9f38b10efff8bfa8795_533433_300x200_fit_q90_box.jpg&#34; width=&#34;300&#34; height=&#34;171&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+    
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+
+
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+&lt;figure&gt;
+    
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/blog-bitix/2018/04/sobre-el-slimbook-aio-curve/images/slimbook-curve-4_hu00cf42b4c3d3607816c830104460a3d0_589569_2560x1440_fit_q90_box.jpg&#34; title=&#34;Slimbook AIO Curve&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/blog-bitix/2018/04/sobre-el-slimbook-aio-curve/images/slimbook-curve-4_hu00cf42b4c3d3607816c830104460a3d0_589569_300x200_fit_q90_box.jpg&#34; width=&#34;300&#34; height=&#34;163&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/blog-bitix/2018/04/sobre-el-slimbook-aio-curve/images/slimbook-curve-5_hu6d31952ed4fdca8e7f1772857b03ec6b_233337_2560x1440_fit_q90_box.jpg&#34; title=&#34;Slimbook AIO Curve&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/blog-bitix/2018/04/sobre-el-slimbook-aio-curve/images/slimbook-curve-5_hu6d31952ed4fdca8e7f1772857b03ec6b_233337_300x200_fit_q90_box.jpg&#34; width=&#34;300&#34; height=&#34;128&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Slimbook AIO Curve&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;p&gt;Hasta aquí los hechos. Siendo usuario de GNU/Linux y estando &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/04/intentando-elegir-portatil-nuc-o-mini-itx-para-comprar-nuevo-equipo/&#34;&gt;intentando buscar un nuevo equipo pequeño y silencioso&lt;/a&gt; y siendo Slimbook una de las marcas que estoy siguiendo como candidata para comprar uno de sus equipos me voy a permitir el lujo como posible cliente de dar mi opinión de por que el Slimbook AIO Curve no me lo planteo como una opción que evaluar.&lt;/p&gt;
+
+&lt;p&gt;Uno de los motivos que no me convencen es que por ser un AIO da poca flexibilidad al no poder elegir el monitor que uno desee, no se puede personalizar el monitor y hace inútil el aprovechar el monitor que uno ya tuviese (salvo que uno quiera tener una segunda pantalla) o poder usarlo junto con un monitor de mayor resolución ahora que están apareciendo los monitores 2K y 4K a unos precios todavía abultados pero alcanzables si uno quiere pagar el capricho. No permite quedarse con el monitor y cambiar el equipo o al contrario, es más difícil de reparar y más fácilmente obsolescente, su característica principal que lo define, con la integración entre equipo y monitor es su defecto. Lo mismo pienso de los iMac.&lt;/p&gt;
+
+&lt;p&gt;El segundo motivo es que veo poco útil que el monitor sea curvo en una pantalla tan relativamente pequeña, esta característica me parece algo más estético, moda y publicitario que práctico. En una pantalla de 27&amp;rdquo; o 32&amp;rdquo; puede tener más sentido pero en una de 24&amp;rdquo; creo que más bien no. Además, que la pantalla sea curva no es del agrado de todo el mundo, más bien al contrario, al igual que en los televisores.&lt;/p&gt;
+
+&lt;p&gt;El tercer motivo es que no aporta mucho más que un &lt;a href=&#34;https://slimbook.es/one-minipc-potente&#34;&gt;Slimbook ONE&lt;/a&gt; combinado un monitor. El Slimbook ONE más el monitor hace ya la misma función que este nuevo AIO Curve. El ONE se puede adosar a la parte trasera de los monitores haciendo uso del soporte estándar VESA y estéticamente creo que no quedaría diferente para aquellos que busquen un equipo que ocupe solo el espacio del monitor. Además el ONE y el monitor separado me parece mejor opción por no adolecer de los problemas comentados uno y dos (si uno no quiere pantalla curva) con la ventaja de que el usuario puede decidir la disposición que desea de su equipo, si adosado en la parte trasera del monitor o sobre el escritorio para mayor facilidad de conectar cables y dispositivos.&lt;/p&gt;
+
+&lt;p&gt;En cuanto a precio el Slimbook ONE que parte de los 459€ más lo que costase un monitor Full HD (sobre los 150€) es más barato y con un monitor mejor de incluso 2K y 4K de precio aproximado 300€ se queda más o menos en el precio del AIO Curve, lo único que tendría peor el ONE es una generación anterior de procesador.&lt;/p&gt;
+
+&lt;p&gt;El AIO Curve y ONE son dos productos diferentes que entran en competencia en el mismo catálogo y en rango de precios, este nuevo es un equipo por estos motivos para mí que calificaré de incierto éxito y existiendo el ONE prescindible. En portátiles &lt;em&gt;ultrabook&lt;/em&gt; con el PRO2 tienen el que creo mejor modelo del mercado por precio, características y opciones de configuración. Mucho mejor incluso comparándolos con los MacBook y marcas mas grandes como Asus, Acer, Dell, Lenovo, HP, &amp;hellip; no es poca cosa para un ensamblador y distribuidor del tamaño que tendrá Slimbook respecto a sus competidores.&lt;/p&gt;
+
+&lt;p&gt;Hubiese actualizado el ONE a una generación de procesadores más nueva y añadido un monitor al catálogo. No se que éxito tendrá el AIO Curve, dudo que sea una opción tan popular como los &lt;a href=&#34;https://slimbook.es/pro-ultrabook-13-aluminio&#34;&gt;Slimbook PRO2&lt;/a&gt; o &lt;a href=&#34;https://slimbook.es/katana-2-ultrabook-de-aluminio&#34;&gt;Katana&lt;/a&gt; pero no se puede comparar con estos, sí sería curioso conocer los números de pedidos comparados con el ONE.&lt;/p&gt;
+
+&lt;p&gt;Varios comentarios en el artículo de MuyLinux están en la misma línea que comento aquí y al igual que alguno pienso que sacar un ONE con un AMD Ryzen sería algo diferenciador ya que no hay ningún NUC/Brix/Cubi/similar en este formato que no utilice micros &lt;a href=&#34;https://www.intel.es&#34;&gt;Intel&lt;/a&gt;, más arriesgado por novedoso y desconozco si factible por el soporte de los fabricantes de componentes. Los &lt;a href=&#34;https://www.amd.com/es/ryzen&#34;&gt;AMD Ryzen&lt;/a&gt; tiene buen rendimiento, precio y parece que &lt;a href=&#34;https://www.amd.com/es&#34;&gt;AMD&lt;/a&gt; está haciendo un buen trabajo en los controladores gráficos para GNU/Linux. Por otro lado un mini ITX o incorporar un monitor creo que hubiese aportado algo más a su catálogo por complementar su oferta de portátiles ya que muchos usuarios usan portátiles pero al mismo tiempo con una pantalla externa. Pero esta solo es mi opinión.&lt;/p&gt;
+
+&lt;p&gt;Así que por mi parte tendré que seguir esperando si no me puede el ansia antes&amp;hellip; y creo que durante un buen rato por resistirme a comprar un procesador Intel defectuoso, hasta que saquen nuevos modelos arreglados pasarán varios meses, semestres y quizá algún año. Podría ser que no esperase tanto si hubiese algún modelo con procesador AMD, como decía en este caso solo me queda la opción en formato mini ITX con sus propios contras.&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="hardware"/>
+            
+                <category term="opinion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/</id>
+        <title>Introducción a NIO.2, el sistema de entrada/salida de Java</title>        
+        <updated>2018-04-07T14:00:00+02:00</updated>
+        <published>2018-04-07T10:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Una de las tareas más importante que realizan algunas aplicaciones es el manejo de la entrada y salida ya sea al sistema de ficheros o a la red. Desde las versiones iniciales de Java se ha mejorado soporte añadiendo programación asíncrona de E/S, permitir obtener información de atributos propios del sistema de archivos, reconocimiento de enlaces simbólicos y facilitado de algunas operaciones básicas.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En las primeras versiones de Java el sistema de entrada/salida proporcionado en el paquete &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/io/package-summary.html&#34;&gt;&lt;em&gt;java.io&lt;/em&gt;&lt;/a&gt; era básico. En la versión 1.4 de Java se añadió un nuevo sistema de entrada/salida llamado NIO para suplir algunas de sus deficiencias que posteriormente en Java 7 se mejoró aún más con NIO.2. Entre las mejoras se incluyen permitir navegación de directorios sencillo, soporte para reconocer enlaces simbólicos, leer atributos de ficheros como permisos e información como última fecha de modificación, soporte de entrada/salida asíncrona y soporte para operaciones básicas sobre ficheros como copiar y mover ficheros.&lt;/p&gt;
+
+&lt;p&gt;Las clases principales de esta nueva API para el manejo de rutas, ficheros y operaciones de entrada/salida son las siguientes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html&#34;&gt;Path&lt;/a&gt;: es una abstracción sobre una ruta de un sistema de ficheros. No tiene porque existir en el sistema de ficheros pero si si cuando se hacen algunas operaciones como la lectura del fichero que representa. Puede usarse como reemplazo completo de &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/io/File.html&#34;&gt;java.io.File&lt;/a&gt; pero si fuera necesario con los métodos &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/io/File.html#toPath()&#34;&gt;File.toPath()&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#toFile()&#34;&gt;Path.toFile()&lt;/a&gt; se ofrece compatibilidad entre ambas representaciones.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html&#34;&gt;Files&lt;/a&gt;: es una clase de utilidad con operaciones básicas sobre ficheros.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/FileSystems.html&#34;&gt;FileSystems&lt;/a&gt;: otra clase de utilidad como punto de entrada para obtener referencias a sistemas de archivos.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Con la clase &lt;em&gt;Path&lt;/em&gt; se pueden hacer operaciones sobre rutas como obtener la ruta absoluta de un &lt;em&gt;Path&lt;/em&gt; relativo o el &lt;em&gt;Path&lt;/em&gt; relativo de una ruta absoluta, de cuanto elementos se compone la ruta, obtener el &lt;em&gt;Path&lt;/em&gt; padre o una parte de una ruta. Otros métodos interesantes son &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#relativize(java.nio.file.Path)&#34;&gt;relativize()&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#normalize()&#34;&gt;normalize()&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#toAbsolutePath()&#34;&gt;toAbsolutePath()&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#resolve(java.nio.file.Path)&#34;&gt;resolve()&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#startsWith(java.nio.file.Path)&#34;&gt;startsWith()&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#endsWith(java.nio.file.Path)&#34;&gt;endsWith()&lt;/a&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=Main-1.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=info.out&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Utilizando estas clases expondré algunos ejemplos siendo el primero recorrer el listado de archivos o también se podría hacer el listado de forma recursiva de un directorio e imprimir la información de cada archivo como nombre, si es un enlace simbólico, permisos propietario, fecha de última modificación y tamaño utilizando los siguiente métodos similar a lo que hace el comando &lt;em&gt;ls&lt;/em&gt; de GNU/Linux:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#walkFileTree(java.nio.file.Path,java.nio.file.FileVisitor)&#34;&gt;Files.walkFileTree()&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#isSymbolicLink(java.nio.file.Path)&#34;&gt;Files.isSymbolicLink()&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#readAttributes(java.nio.file.Path,java.lang.String,java.nio.file.LinkOption...)&#34;&gt;Files.readAttributes()&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/attribute/PosixFilePermissions.html&#34;&gt;PosixFilePermissions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/FileVisitor.html&#34;&gt;FileVisitor&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/SimpleFileVisitor.html&#34;&gt;SimpleFileVisitor&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Al igual que es posible leer los permisos también es posible establecerlos con el método &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#setPosixFilePermissions(java.nio.file.Path,java.util.Set)&#34;&gt;Files.setPosixFilePermissions()&lt;/a&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=Main-2.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=ls.out&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Las operaciones de crear directorios o archivos, copiar archivos, moverlos y eliminarlos son muy comunes de modo que la clase &lt;em&gt;Files&lt;/em&gt; ofrece varios métodos que con una única línea permite hacer estas operaciones de forma sencilla. El siguiente ejemplo crea un archivo, lo copia, lo mueve y finalmente lo elimina.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=Main-3.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Para leer el contenido de archivos la clase &lt;em&gt;Files&lt;/em&gt; ofrece los métodos &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newBufferedReader(java.nio.file.Path)&#34;&gt;newBufferedReader()&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newBufferedWriter(java.nio.file.Path,java.nio.charset.Charset,java.nio.file.OpenOption...)&#34;&gt;newBufferedWrite()&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newInputStream(java.nio.file.Path,java.nio.file.OpenOption...)&#34;&gt;newInputStream()&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newOutputStream(java.nio.file.Path,java.nio.file.OpenOption...)&#34;&gt;newOutputStream()&lt;/a&gt; junto con otros como &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#readAllLines(java.nio.file.Path,java.nio.charset.Charset)&#34;&gt;readAllLines()&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#readAllBytes(java.nio.file.Path)&#34;&gt;readAllBytes()&lt;/a&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=Main-4.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En cuanto a la programación de entrada/salida asíncrona se ofrecen dos paradigmas uno basado en la clase &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/concurrent/Future.html&#34;&gt;Future&lt;/a&gt; y otro en funciones de rellamada o &lt;em&gt;callbacks&lt;/em&gt;. La programación asíncrona evita bloquear el hilo que ejecuta el código y aprovecha mejor los procesadores multinúcleo con lo que se mejora el rendimiento de las aplicaciones. Para los ficheros se usa la clase &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/channels/AsynchronousFileChannel.html&#34;&gt;AsynchronousFileChannel&lt;/a&gt; y para flujos de red &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/channels/AsynchronousSocketChannel.html&#34;&gt;AsynchronousSocketChannel&lt;/a&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=Main-5.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/3bb11076a051490963a68625b9c1b388.js?file=Main-6.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Si se desea profundizar más en NIO y NIO.2 el libro &lt;a href=&#34;https://amzn.to/2JsEIao&#34;&gt;The Well-Grounded Java Developer&lt;/a&gt; dedica un capítulo introductorio en el que me he basado para realizar este artículo, el libro &lt;a href=&#34;https://amzn.to/2q7qMdN&#34;&gt;Java I/O, NIO and NIO.2&lt;/a&gt; está completamente dedicado al nuevo sistema de entrada/salida de Java y el tutorial &lt;a href=&#34;https://docs.oracle.com/javase/tutorial/essential/io/index.html&#34;&gt;Java Basic I/O&lt;/a&gt; también está muy bien como introducción.&lt;/p&gt;
+
+&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1617290068&amp;linkId=61507308185711a0af4b5ed5ab70b62b&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1484215664&amp;linkId=d748ea086bd02aa68dd0b27945514558&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En el artículo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/09/monitorizar-archivos-con-java/&#34;&gt;monitorizar archivos con Java&lt;/a&gt; muestro como recibir eventos cuando se añade, elimina o modifica algún archivo de los observados usando la clase &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/nio/file/WatchService.html&#34;&gt;WatchService&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaNIO&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.javamagazine.mozaicreader.com/JulyAug2016/Twitter#&amp;amp;pageSet=0&amp;amp;page=0&amp;amp;contentItem=0&#34;&gt;Artículo NIO.2, Java Magazine Jul/Ago 2016&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="blog"/>
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/04/intentando-elegir-portatil-nuc-o-mini-itx-para-comprar-nuevo-equipo/</id>
+        <title>Intentando elegir portátil, NUC o mini ITX para comprar nuevo equipo</title>        
+        <updated>2018-04-01T10:00:00+02:00</updated>
+        <published>2018-04-01T10:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/04/intentando-elegir-portatil-nuc-o-mini-itx-para-comprar-nuevo-equipo/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/intel.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Intel&#34; title=&#34;Intel&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/amd.svg&#34; class=&#34;right &#34; width=&#34;300&#34; alt=&#34;AMD&#34; title=&#34;AMD&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ya he comentado que &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/03/tu-con-mac-yo-con-mi-gnu-linux/&#34;&gt;a mi los Mac ni macOS me convencen&lt;/a&gt; por varios motivos, por su precio, por el software libre y porque lo que he podido comprobar no me ha parecido que tenga nada de lo que &lt;a href=&#34;https://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;https://www.linux.com/&#34;&gt;Linux&lt;/a&gt; hoy en día tenga algo que envidiar, algunas cosas en macOS quizá sean algo mejor pero otras en GNU/Linux también en él lo son.&lt;/p&gt;
+
+&lt;p&gt;Tras regalar &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2012/12/desempaquetado-sony-vaio-e-14p.html&#34;&gt;mi antiguo portátil Sony VAIO&lt;/a&gt; ahora estoy buscando nuevo equipo y barajando opciones. El Sony era y es un buen equipo con el que he estado muy contento, tenía un &lt;a href=&#34;https://www.intel.es&#34;&gt;Intel&lt;/a&gt; Core i5 3210M Ivy Bridge de 22 nanómetros con dos núcleos y 4 hilos con &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/&#34;&gt;el &lt;em&gt;bug&lt;/em&gt; Meltdown y Spectre&lt;/a&gt;, 8 GiB de memoria RAM, un disco SSD de 256 GiB SATA de almacenamiento y una pantalla de resolución 1600x900, la gráfica era un integrada Intel HD 4000 básica pero más que suficiente para un entorno de escritorio y con buen soporte en GNU/Linux por sus controladores de código abierto. Sin embargo, aunque era un portátil lo usaba únicamente como equipo de escritorio sin moverlo en ningún momento y en cuanto a memoria los 8 GiB de memoria sigue siendo perfectamente útiles pero en mi uso en algunos casos se me quedaban cortos al virtualizar o usar varios contenedores Docker.&lt;/p&gt;
+
+&lt;p&gt;Por otro lado me paso mucho tiempo y leyendo y trabajando delante del ordenador y la pantalla quizá con el entorno de escritorio integrado Java se queda algo escaso, eso o tener dos pantallas sería mejor para no tener que estar constantemente usando la combinación de tecla &lt;em&gt;alt+tab&lt;/em&gt; para intercambiar entre ventanas o poder visualizar dos contenidos a la vez por lo que además estoy evaluando independientemente de lo que elija una pantalla 2K o 4K de 27 pulgadas.&lt;/p&gt;
+
+&lt;p&gt;Estoy barajando tres opciones: un portátil, un Intel NUC o montarme un equipo de escritorio mini ITX. Aún no estoy decidido y estoy escribiendo este artículo también para plasmar por escrito las ideas que tengo.&lt;/p&gt;
+
+&lt;h3 id=&#34;el-portátil&#34;&gt;El portátil&lt;/h3&gt;
+
+&lt;p&gt;En caso de que me decidiese por otro portátil tengo claro que la opción sería un &lt;a href=&#34;https://slimbook.es/pro-ultrabook-13-aluminio&#34;&gt;Slimbook PRO2&lt;/a&gt;. Porque es un equipo potente, más incluso que un MacBook Pro que cuesta el doble de precio, porque es un equipo ensamblado por una empresa española, porque el soporte para GNU/Linux que tiene es bueno y está libre de adquirir licencia Windows aunque se puede si uno quisiese. En el 2012 no conocía opciones de portátil sin tener que pagar el &lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2011/05/impuesto-windows.html&#34;&gt;impuesto Windows&lt;/a&gt;, hoy hay varias opciones entre las que los usuarios de GNU/Linux podemos elegir para no tener que pagarlo.&lt;/p&gt;
+
+&lt;p&gt;Se le puede instalar hasta 32 GiB de memoria, pantalla de resolución QHD+ 3200x1800, un disco NVMe en formato M.2 con una velocidad de 3000 MiB/s de lectura y 1900 MB/s de escritura, si los SSD SATA ya son rápidos con una velocidad de unos 500 MiB/s por segundo en lectura y escritura en formato NVMe debe ser algo impensable hasta hace unos años con los discos tradicionales que no pasaban de los 100 MB/s.&lt;/p&gt;
+
+&lt;p&gt;Lo que no me gusta es que montan un Intel de 8ª generación con el grave fallo de seguridad Meltdown y Spectre que aún se está intentando mitigar sin que afecte al rendimiento con parches de software porque ni con microcódigo se puede por estar el fallo en el hardware. Slimbook no ofrece en ninguno de sus modelos uno de los nuevos &lt;a href=&#34;https://www.amd.com/es/ryzen&#34;&gt;AMD Ryzen&lt;/a&gt; que están demostrando ser muy competitivos y no estar afectados por el Meltdown y solo por alguna de las variantes de Spectre, más graves por más difíciles de ser explotadas.&lt;/p&gt;
+
+&lt;p&gt;Un portátil me permitiría tener una segunda pantalla pero la batería, la portabilidad por ser un portátil es algo que en este momento no me interesa y por solo ofrecer procesadores Intel defectuosos estoy barajando otras opciones.&lt;/p&gt;
+
+&lt;h3 id=&#34;un-nuc-brix-cubi-o-similar&#34;&gt;Un NUC, Brix, Cubi o similar&lt;/h3&gt;
+
+&lt;p&gt;Estos pequeños equipos de escritorio aún con su pequeño tamaño se les puede instalar hasta 32 GiB, usando los mismos procesadores de los portátiles de última generación tienen 4 núcleos físicos y 8 hilos lo que es el doble de lo que tenía con el 3210M y con esa cantidad de memoria 4 veces más y que al menos por un lustro espero me sea más que suficiente.&lt;/p&gt;
+
+&lt;p&gt;Varias marcas ofrecen modelos utilizando el mismo formato. Están los &lt;a href=&#34;https://www.intel.com/content/www/us/en/products/boards-kits/nuc.html&#34;&gt;Intel NUC&lt;/a&gt;, &lt;a href=&#34;https://www.gigabyte.com/Mini-PcBarebone/BRIX&#34;&gt;Gigabyte BRIX&lt;/a&gt;, &lt;a href=&#34;https://es.msi.com/Desktop/Cubi.html&#34;&gt;MSI Cubi&lt;/a&gt;, &lt;a href=&#34;https://www.asus.com/es/Mini-PCs/VivoMini-Products/&#34;&gt;ASUS Vivo&lt;/a&gt; y algun otro de &lt;a href=&#34;https://www.zotac.com/product/mini_pcs/zbox_m_series&#34;&gt;Zotac&lt;/a&gt; e inlcuso Slimbook ofrece el &lt;a href=&#34;https://slimbook.es/one-minipc-potente&#34;&gt;ONE&lt;/a&gt; pero que utiliza procesadores ya no de última generación y solo se les puede equipar hasta 16 GiB de memoria por lo menos hasta que no lo renueven.&lt;/p&gt;
+
+&lt;p&gt;Es la opción que en este momento me convence más pero al igual que en los portátiles no es ya que la mayoría equipen procesadores Intel defectuosos sino que no he visto que ninguno utilice un AMD Ryzen, quizá ahora que han salido las APU de AMD de la serie 2000 con una gráfica mucho más capaz que cualquiera de las Intel integradas y también 4 núcleos y 8 hilos algún fabricante espero que se decida a ofrecer algún modelo ya sea con un AMD Ryzen 2200G o 2400G.&lt;/p&gt;
+
+&lt;p&gt;Ocupan poco incluso se les puede instalar detrás del monitor, son muy silenciosos, se les puede instalar una buena cantidad de memoria y en el momento que a mi ya no me sirva es fácilmente transferible. Con un Ryzen no me lo pensaría tanto.&lt;/p&gt;
+
+&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B01N245UXY&amp;linkId=4167a48557ef5e7857822661ca9e88bf&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B01MFGYDW9&amp;linkId=5ca6b59bb1159b756e60d0666c05ff1d&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B06XHW943T&amp;linkId=edd1ea955806cd870b11246f90214d77&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B01M3Y8TFJ&amp;linkId=e671c5b8d5be144ad2bb72b8ec5b9abb&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;un-mini-itx&#34;&gt;Un mini ITX&lt;/h3&gt;
+
+&lt;p&gt;Dado que en los casos anteriores solo encuentro procesadores Intel defectuosos me planteo montar mi propio equipo en formato mini ITX, no quiero sea tan grande como un micro ATX o ATX. Esta opción ya si en este momento me permite tener un AMD Ryzen. Una micro ATX o ATX podría tener incluso más de esos 32 GiB de memoria, hasta 64 GiB y más núcleos pudiendo incluso 8 núcleos y 16 hilos, sin embargo, una de las cosas que valoro de forma alta es el espacio que ocupa el ordenador y el ruido que haga que si no es silencioso me molestaría, al menos le pediría que navegando o leyendo documentos fuese muy silencioso o inaudible cosa que no si habrá mejorado desde el 2008 de mi último equipo en este formato. No se si aún en tamaño mini ITX serán todo lo silenciosos que requiero.&lt;/p&gt;
+
+&lt;p&gt;Por otro lado por los componentes que he visto en este caso parece que los fabricantes se enfocan más a los usuarios jugadores que a los usuarios que quieren el equipo para cualesquiera otra cosa que no sea utilizarlos para jugar. Esta opción me requiere más investigación ya que me requiere buscar componentes y ensamblarlos en vez de adquirir un equipo ya ensamblado como en las otras opciones. Procesador, memoria, disco NVMe, disipador, ventiladores, fuente de alimentación, caja, &amp;hellip; Por un lado me atrae la idea de montar mi propio equipo pero por otro en igual medida me da miedo que alguna de las piezas al ensamblarlas me de algún tipo de problema.&lt;/p&gt;
+
+&lt;p&gt;Estos son los componentes que hasta el momento he buscado, la memoria DDR4 está especialmente cara, montar 64 GiB sería elevado incluso para mi que no tengo un límite de presupuesto superior estricto.&lt;/p&gt;
+
+&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B079D8FD28&amp;linkId=60efa75a30c9193b7625be14bad9fcac&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B073R8DB3G&amp;linkId=d6647b9468e1ac93aea24cda4cad2891&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B019FRCV9G&amp;linkId=744f1a26e7728ba34266d0777ceee688&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B01M20VBU7&amp;linkId=dc2f26e47fd5ab2d92601fa783616577&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B019NWTCEA&amp;linkId=5db6b69bc063e2b13570b5cc9cbf8a21&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B015UDUAKG&amp;linkId=91931702412d5216a901b8501380834e&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;conclusión&#34;&gt;Conclusión&lt;/h3&gt;
+
+&lt;p&gt;Todavía no estoy decidido. Ninguna opción en este momento cumple posiblemente todo lo que pido o me genera alguna duda. Quizá tenga preguntar en algún foro especializado para recabar opiniones, o que esperar a que Intel saque nuevos procesadores sin fallos de seguridad, o por lo menos no conocidos hasta pasado un tiempo. No se si saldrá algunos portátiles de calidad o formato NUC pero con AMD. Y es que me paso el tiempo esperando&amp;hellip; en otros casos y en este también hasta estar en buena medida convencido.&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="hardware"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/03/que-es-y-como-funciona-el-type-erasure-en-java/</id>
+        <title>Qué es y cómo funciona el type erasure en Java</title>        
+        <updated>2018-03-31T10:30:00+02:00</updated>
+        <published>2018-03-31T10:30:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/03/que-es-y-como-funciona-el-type-erasure-en-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Los tipos genéricos en Java se implementaron usando &lt;em&gt;type erasure&lt;/em&gt; por simplicidad en la implementación, no incurrir en penalizaciones de rendimiento o memoria y por mantener la compatibilidad con versiones anteriores de Java. Son varios los conceptos que están asociados a la implementación de los tipos genéricos en Java que es recomendable conocer como &lt;em&gt;type erasure&lt;/em&gt;  y métodos &lt;em&gt;bridge&lt;/em&gt; de este artículo pero también &lt;em&gt;heap pollution&lt;/em&gt;, &lt;em&gt;non-reifiable&lt;/em&gt;, &lt;em&gt;wildcards&lt;/em&gt; y &lt;em&gt;bound type parameters&lt;/em&gt;.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En la introducción de los &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/04/tutorial-sobre-los-tipos-genericos-de-java/&#34;&gt;tipos genéricos en Java&lt;/a&gt; con la versión 1.5 se decidió implementarlo usando &lt;em&gt;type erasuse&lt;/em&gt; que consiste en que en tiempo de ejecución se pierde la información de los tipos genéricos y para la máquina virtual no son distintos de un tipo no genérico, es un proceso que realiza el compilador. Esto tiene sus ventajas y algunas desventajas pero hay dos buenos motivos por los que en Java se decidió implementar los tipos genéricos usando &lt;em&gt;type erasuse&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Un motivo es que los tipos al ser en tiempo de ejecución exactamente iguales que los no genéricos de versiones anteriores se mantiene la compatibilidad hacia atrás tanto a nivel de código como a nivel binario lo que significa en un caso que el código fuente no es necesario que sea modificado y en otro que no es necesario recompilarlo y esto es importante para usar nuevas versiones de Java sin ningún tipo de modificación y para que programas antiguos sigan funcionando. El segundo motivo es que el mismo tipo sirve para todas las posibles instancias del tipo genérico, de forma que es eficiente y no se incurre en ninguna penalización de rendimiento o memoria.&lt;/p&gt;
+
+&lt;p&gt;La desventaja del &lt;em&gt;type erasure&lt;/em&gt; es que en tiempo de ejecución no se pueden hacer algunas optimizaciones, en computación y uso de memoria. Sin embargo, evaluando las ventajas y desventajas los desarrolladores de Java siempre han dado gran importancia en la compatibilidad hacia atrás y por ello prefirieron implementar los &lt;em&gt;generics&lt;/em&gt; usando &lt;em&gt;type erasure&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;El proceso de eliminar los tipos de los genéricos se realiza eliminando todos los parámetros de los tipos parametrizados siendo reemplazados con su restricción (&lt;em&gt;bound&lt;/em&gt;), con el tipo &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/Object.html&#34;&gt;Object&lt;/a&gt; o con con su restricción, si tiene múltiples restricciones se usa la primera.&lt;/p&gt;
+
+&lt;p&gt;En Java dos métodos distintos no pueden tener la misma firma, dado que los &lt;em&gt;generics&lt;/em&gt; han sido implementados con &lt;em&gt;type erasure&lt;/em&gt; también se ha de cumplir que dos métodos no pueden tener la misma firma una vez aplicado el &lt;em&gt;erasure&lt;/em&gt;. Para no perder las validaciones de tipos el compilador inserta los &lt;em&gt;cast&lt;/em&gt; necesarios. El código fuente de una clase genérica sería el siguiente, que el compilador transformaría siguiendo las reglas del &lt;em&gt;type erasure&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/fe9adde28f19c10787720a7db6a4a840.js?file=Generic.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/fe9adde28f19c10787720a7db6a4a840.js?file=Erased.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Al mismo tiempo que el compilador inserta los &lt;em&gt;cast&lt;/em&gt; necesarios para mantener la validación de tipos inserta métodos &lt;em&gt;bridge&lt;/em&gt; para mantener el polimorfismo en las clases que extienden de tipos genéricos. Si se extiende la clase &lt;em&gt;Node&lt;/em&gt; anterior y se aplica &lt;em&gt;type erasure&lt;/em&gt; la firma del método &lt;em&gt;setData&lt;/em&gt; de &lt;em&gt;IntegerNode&lt;/em&gt; no coincide con el de la clase &lt;em&gt;Node&lt;/em&gt;. Para solventar este problema el compilador inserta un método &lt;em&gt;bridge&lt;/em&gt; para el método &lt;em&gt;setData&lt;/em&gt; con un parámetro &lt;em&gt;Object&lt;/em&gt; que se encarga de hacer de puente y llamar al método &lt;em&gt;setData&lt;/em&gt; que recibe un &lt;em&gt;Integer&lt;/em&gt; aplicando un &lt;em&gt;cast&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/tutorial/java/generics/erasure.html&#34;&gt;Type Erasure&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/05/que-es-el-concepto-de-heap-pollution-en-java/&#34;&gt;Qué es el concepto de Heap Pollution en Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.quora.com/What-are-the-pros-and-cons-of-having-Generics-as-erasure-or-reifiable?share=1&#34;&gt;What are the pros and cons of having Generics as erasure or reifiable?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/03/la-herramienta-jlink-para-generar-runtimes-de-java-incluyendo-exclusivamente-los-modulos-que-usa-una-aplicacion/</id>
+        <title>La herramienta jlink para generar runtimes de Java incluyendo exclusivamente los módulos que usa una aplicación</title>        
+        <updated>2018-03-24T23:30:00+01:00</updated>
+        <published>2018-03-24T23:30:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/03/la-herramienta-jlink-para-generar-runtimes-de-java-incluyendo-exclusivamente-los-modulos-que-usa-una-aplicacion/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En versiones anteriores de Java 9 había un único &lt;em&gt;runtime&lt;/em&gt; para ejecutar cualquier aplicación que debía ser instalado previamente para la ejecución de la aplicación. Aunque la aplicación no usase &lt;em&gt;Swing&lt;/em&gt; por ser una aplicación web o cosas como &lt;a href=&#34;https://es.wikipedia.org/wiki/CORBA&#34;&gt;CORBA&lt;/a&gt; ya en desuso aún estaban disponibles en el &lt;em&gt;runtime&lt;/em&gt; por motivos de no romper la compatibilidad con versiones anteriores.&lt;/p&gt;
+
+&lt;p&gt;Esto hacía que las aplicaciones no fuesen lo más eficiente posible y aumenta el tamaño necesario ahora de las imágenes de contenedores como &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt; estas tuviesen un tamaño mayor del imprescindible, además de hacer que el tiempo de arranque sea algo mayor e incluir clases que aumentan la superficie de ataque ante un fallo de seguridad. Entre las &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/&#34;&gt;novedades de Java 8&lt;/a&gt; se añadieron los &lt;a href=&#34;http://www.oracle.com/technetwork/java/embedded/resources/tech/compact-profiles-overview-2157132.html&#34;&gt;&lt;em&gt;compact profiles&lt;/em&gt;&lt;/a&gt; que eran subconjuntos más reducidos del &lt;em&gt;runtime&lt;/em&gt; pero eran conjuntos prefijados, las aplicaciones debían usar el mínimo que necesitasen si querían usar alguno. La solución de Java 8 fue una solución intermedia, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/novedades-y-nuevas-caracteristicas-de-java-9-los-modulos/&#34;&gt;los módulos de Java 9&lt;/a&gt; han sido la solución completa.&lt;/p&gt;
+
+&lt;p&gt;Con la incorporación de la modularidad a Java 9 se posibilita generar &lt;em&gt;runtimes&lt;/em&gt; con exclusivamente los módulos que necesite la aplicación, si la aplicación solo necesita el módulo &lt;em&gt;java.base&lt;/em&gt; por ser muy sencilla se puede generar un &lt;em&gt;runtime&lt;/em&gt; con solo este módulo. Los módulos son una mejora conveniente para la tendencia en el desarrollo de aplicaciones en forma de microservicios y ejecución con contenedores. La herramienta que posibilita generar &lt;em&gt;runtimes&lt;/em&gt; personalizados con &lt;a href=&#34;https://docs.oracle.com/javase/9/tools/jlink.htm&#34;&gt;jlink&lt;/a&gt; que pueden ser ejecutandos sin instalar previamente ningún JDK en el sistema y posibilitando que cada aplicación pueda usar su propio &lt;em&gt;runtime&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Usando como ejemplo el caso de la &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/ejemplo-con-el-cliente-http-2-de-java/&#34;&gt;aplicación con el cliente de HTTP/2&lt;/a&gt; que tiene como dependencias únicamente el módulo &lt;em&gt;jdk.incubator.httpclient&lt;/em&gt; de forma explícita y &lt;em&gt;java.base&lt;/em&gt; de forma implícita en su definición de módulo la forma de generar un runtime específico para esta aplicación con &lt;em&gt;jlink&lt;/em&gt; es la siguiente que utiliza el archivo con las dependencias de módulos declarados en el archivo &lt;em&gt;module-info.java&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/2e113967c3823da21308e8f2a9adbd4f.js?file=module-info.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Usando la linea de comandos o con una tarea de &lt;a href=&#34;https://gradle.org/&#34;&gt;Gradle&lt;/a&gt; se genera el &lt;em&gt;runtime&lt;/em&gt; para la aplicación con &lt;em&gt;jlink&lt;/em&gt;. El módulo ha de compilarse previamente. Con la opción &lt;em&gt;&amp;ndash;launcher&lt;/em&gt; se crea un &lt;em&gt;script&lt;/em&gt; para lanzar la aplicación con la clase que contiene el método &lt;em&gt;main&lt;/em&gt; indicada como punto de entrada, la opción &lt;em&gt;&amp;ndash;output&lt;/em&gt; indica donde se genera el contenido del &lt;em&gt;runtime&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/2e113967c3823da21308e8f2a9adbd4f.js?file=jlink.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El espacio total del &lt;em&gt;runtime&lt;/em&gt; en este caso de es de solo 38 MiB. Comparados con los casi 200 MiB que ocupa el &lt;a href=&#34;http://openjdk.java.net/&#34;&gt;OpenJDK&lt;/a&gt; comprimido que incluye todos los módulos, aproximadamente 500 MiB instalado y alrededor de entre 600 y 900 MiB dependiendo de la imagen base de Docker que se use se aprecia que el ahorro de espacio es considerable lo que redunda en tiempos de transferencia por red menores y un inicio más rápido de las aplicaciones.&lt;/p&gt;
+
+&lt;p&gt;El contenido del &lt;em&gt;runtime&lt;/em&gt; y de su estructura de directorios es la indicada a continuación. Listando los módulos incluidos en este &lt;em&gt;runtime&lt;/em&gt; en vez de todos los del JDK se observa que solo están incluidos los necesarios por la aplicación.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/2e113967c3823da21308e8f2a9adbd4f.js?file=info.sh&#34;&gt;&lt;/script&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/2e113967c3823da21308e8f2a9adbd4f.js?file=build.gradle&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Una vez generado el &lt;em&gt;runtime&lt;/em&gt; su uso es el siguiente:&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/2e113967c3823da21308e8f2a9adbd4f.js?file=run.sh&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En el vídeo &lt;a href=&#34;https://www.oracle.com/java/java9-screencasts.html?bcid=5582437011001&amp;amp;playerType=single-social&amp;amp;size=events&#34;&gt;Java in a World of Containers&lt;/a&gt; se comenta otra serie de características y opciones incluidas en Java para hacer de esta plataforma más consciente de las condiciones de ejecución propias de los contenedores.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaHttp2&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradew jlink&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/03/novedades-de-java-10/</id>
+        <title>Novedades de Java 10</title>        
+        <updated>2018-03-27T17:00:00+01:00</updated>
+        <published>2018-03-23T20:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/03/novedades-de-java-10/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Oracle y los ingenieros a cargo del desarrollo de Java están haciendo en mi opinión un buen trabajo que se han materializado en las versiones Java 8 con las &lt;em&gt;lambdas&lt;/em&gt;, en Java 9 con los módulos y en Java 10 con la mejora en la inferencia de tipos. Todo ello está haciendo que la plataforma evolucione más rápido y significativamente que lo que hasta hace unos años estábamos acostumbrados.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;El 20 de marzo de 2018 se publicó la que es la versión 10 de Java siguiendo el nuevo calendario de publicar una nueva versión cada seis meses, Java 9 fue publicado en septiembre del año anterior. Con este nuevo calendario no pasarán tantos años entre cada nueva versión que era la queja de algunos desarrolladores y el motivo de que la plataforma Java no evolucionar tan rápidamente como algunos desarrolladores desean, quizá ahora la queja sea al contrario que se publican demasiadas versiones y no da tiempo a asimilar los cambios. Para dar cabida a ambas necesidades y garantizar un soporte prolongado cada año y medio será declarada una versión como de soporte a plazo largo o &lt;em&gt;LTS&lt;/em&gt; para que las empresas tengan seguridad en las aplicaciones que desarrollen.&lt;/p&gt;
+
+&lt;p&gt;Lo mejor de este nuevo calendario de publicaciones cada seis meses es que las empresas y programadores tienen predictibilidad de cuándo se lanzará la siguiente versión aunque las nuevas características que tenga no está predeterminado ya no pasarán varios años entre versiones visibilizando que la plataforma evoluciona continuamente en pequeños saltos cada poco tiempo en vez de saltos grandes cada mucho tiempo que son más disruptivos y hace más difícil la adopción.&lt;/p&gt;
+
+&lt;p&gt;Es un principio no añadir características según lo que está de moda sino pensando en décadas futuras. Java 10 tiene una lista más reducida de cambios que Java 9 pero importantes y significativos. Java es el último en unirse a la fiesta de la inferencia de tipos pero ha sido de forma intencionada ya que el coste de implementarla de forma incorrecta supone un alto coste que hay que mantener en adelante. Otras ideas que ha sido implementadas el lenguajes de programación funcional y están listas para su uso masivo tomarán su propio camino en futuras versiones de Java por ejemplo &lt;em&gt;pattern matching&lt;/em&gt; y &lt;em&gt;value types&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;La lista más relevante de novedades de Java 10 es la siguiente:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;286: &lt;a href=&#34;http://openjdk.java.net/jeps/286&#34;&gt;Local-Variable Type Inference&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;296: &lt;a href=&#34;http://openjdk.java.net/jeps/296&#34;&gt;Consolidate the JDK Forest into a Single Repository&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;304: &lt;a href=&#34;http://openjdk.java.net/jeps/304&#34;&gt;Garbage-Collector Interface&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;307: &lt;a href=&#34;http://openjdk.java.net/jeps/307&#34;&gt;Parallel Full GC for G1&lt;/a&gt;, se ha mejorado el recolector de basura G1 añadiendo soporte para paralelismo y mejorado las pausas en los peores escenarios.&lt;/li&gt;
+&lt;li&gt;310: &lt;a href=&#34;http://openjdk.java.net/jeps/310&#34;&gt;Application Class-Data Sharing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;312: &lt;a href=&#34;http://openjdk.java.net/jeps/312&#34;&gt;Thread-Local Handshakes&lt;/a&gt;, mejora interna en la sincronización y pausas en los &lt;em&gt;threads&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;313: &lt;a href=&#34;http://openjdk.java.net/jeps/313&#34;&gt;Remove the Native-Header Generation Tool (javah)&lt;/a&gt;, se elimina la funcionalidad de &lt;em&gt;javah&lt;/em&gt; al haber sido sustituida y mejorada por funcionalidad añadida en &lt;em&gt;javac&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;314: &lt;a href=&#34;http://openjdk.java.net/jeps/314&#34;&gt;Additional Unicode Language-Tag Extensions&lt;/a&gt;, se añade alguna nueva extensión de Unicode.&lt;/li&gt;
+&lt;li&gt;316: &lt;a href=&#34;http://openjdk.java.net/jeps/316&#34;&gt;Heap Allocation on Alternative Memory Devices&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;317: &lt;a href=&#34;http://openjdk.java.net/jeps/317&#34;&gt;Experimental Java-Based JIT Compiler&lt;/a&gt;, se añade en forma experimental el compilador JIT Graal implementado en Java en la plataforma Linux.&lt;/li&gt;
+&lt;li&gt;319: &lt;a href=&#34;http://openjdk.java.net/jeps/319&#34;&gt;Root Certificates&lt;/a&gt;, se han añadido varios certificados raíz al &lt;em&gt;keystore&lt;/em&gt; incluído para permitir que las conexiones TLS funcionen por defecto.&lt;/li&gt;
+&lt;li&gt;322: &lt;a href=&#34;http://openjdk.java.net/jeps/322&#34;&gt;Time-Based Release Versioning&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;inferencia-de-tipos-para-variables-locales&#34;&gt;Inferencia de tipos para variables locales&lt;/h3&gt;
+
+&lt;p&gt;De las novedades la inferencia de tipos para variables locales es la más destacada en cuanto a cambios en el lenguaje con la adición de la nueva palabra reservada &lt;em&gt;var&lt;/em&gt;, esto ayuda a no tener que repetir varias veces los tipos en la construcción de un objeto. En las &lt;em&gt;lambdas&lt;/em&gt; los parámetros no es necesario declararlos infiriéndose de la interfaz que implementan. La inferencia de tipos es la idea que permite al compilador obtener el tipo estático sin que sea necesario escribirlo de forma explícita.&lt;/p&gt;
+
+&lt;p&gt;Java no es el único o primer lenguaje en incluir la inferencia de tipos para variables. Ha sido usado en otros lenguajes durante décadas. En realidad la inferencia de tipos incluida en Java 10 con &lt;em&gt;var&lt;/em&gt; es muy limitada y restringida de manera intencionada. Si no fuese así el &lt;a href=&#34;https://en.wikipedia.org/wiki/Hindley-Milner_type_system&#34;&gt;algoritmo Hindley-Milner&lt;/a&gt; usado para la inferencia de tipos usado en la mayoría de lenguajes que toma un tiempo exponencial en el peor de los casos potencialmente disminuiría la velocidad de &lt;em&gt;javac&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;La inferencia de tipos para variables locales hace que el código no sea tan verboso sin perder en gran medida la legibilidad ya que solo es para las variables locales. El siguiente ejemplo muestra la evolución de la inferencia de tipos desde Java 5 pasando por Java 8 donde se incluyeron algunas mejoras y el que puede utilizarse a partir de Java 10.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/d4ff7ac7eecda8504ee0834593d70929.js?file=JavaTypeInference.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Los tipos en la parte izquierda pueden parecer redundantes y obvios. Tradicionalmente la filosofía de Java es declarar de forma estática los tipos para todo incluyendo las expresiones más simples. Ciertamente definir los tipos para propiedades y en las firmas de los métodos impone un contrato que es necesario respetar y esto ayuda en el mantenimiento asi como a su entendimiento. Sin embargo, declarar los tipos para expresiones intermedias puede parecer menos útil e incómodo.&lt;/p&gt;
+
+&lt;p&gt;En el artículo &lt;a href=&#34;https://developer.oracle.com/java/jdk-10-local-variable-type-inference&#34;&gt;Java 10 Local Variable Type Inference&lt;/a&gt; y vídeo de Youtube &lt;a href=&#34;https://www.youtube.com/watch?v=Le1DbpRZdRQ&#34;&gt;First contact with &amp;lsquo;var&amp;rsquo; in Java 10&lt;/a&gt; hay una explicación más detallada de esta nueva característica y se aprecia claramente en los siguientes ejemplos que muestran la evolución de la inferencia de tipos.&lt;/p&gt;
+
+&lt;p&gt;No solo hay una mejora de legibilidad aquí, también hay una ventaja en términos de evolución y mantenimiento de código. Si tomamos el mismo código con tipos explícitos para la variable &lt;em&gt;userChannels&lt;/em&gt; y reemplazamos el tipo del canal representado con un &lt;em&gt;String&lt;/em&gt; con un objeto de dominio &lt;em&gt;Channel&lt;/em&gt; que pudiese tener información adicional acerca del canal entonces necesitaríamos reescribir los tipos de todo el código que dependa de este nuevo tipo.&lt;/p&gt;
+
+&lt;p&gt;La inferencia de tipos definitivamente reduce la cantidad de tiempo para escribir código Java pero mejor es la mejora en legibilidad del código. Los desarrolladores dedican mucho más tiempo a leer código fuente que el que dedican a escribirlo de manera que definitivamente hay que optimizar para la facilidad de lectura sobre la facilidad de escritura. Aunque &lt;em&gt;var&lt;/em&gt; no siempre es una mejora en cuanto a legibilidad ya que se pierde la información del tipo su uso se guía por el principio de no tanto para optimizar la escritura o lectura sino generalizando más para la facilidad de mantenimiento, escribir algunos tipos genéricos no triviales es complicado aún con la ayuda de asistencia de un entorno integrado de desarrollo.&lt;/p&gt;
+
+&lt;p&gt;No está permitido en retornos, parámetros, propiedades, variables sin inicializar, ni asignar &lt;em&gt;null&lt;/em&gt; pero en Java 11 el uso de &lt;em&gt;var&lt;/em&gt; se permitirá en los parámetros de una expresión &lt;em&gt;lambda&lt;/em&gt; que será útil porque permite un parámetro formal cuyo tipo es inferido pero que además en el que se pueden usar anotaciones.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/d4ff7ac7eecda8504ee0834593d70929.js?file=JavaLambdaVarAnnotation.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Con la inferencia de tipos los nombres de las variables cobran mayor importancia dado que &lt;em&gt;var&lt;/em&gt; elimina la posibilidad al lector del código adivinar la intención de una variable a partir del tipo. Ya es difícil asignar nombres adecuados ahora supondrá mayor importancia.&lt;/p&gt;
+
+&lt;p&gt;El tipo en las variables locales no es tan importante ya que normalmente los nombres de las variables son el del tipo. Con &lt;em&gt;var&lt;/em&gt; se evita repetición entre el tipo y el nombre de la variable, la brevedad de &lt;em&gt;var&lt;/em&gt; hace destacar el nombre de la variable y proporciona mayor claridad además de tener que escribir menos código repetitivo.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/d4ff7ac7eecda8504ee0834593d70929.js?file=NamesAlign.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Con &lt;em&gt;var&lt;/em&gt; se evita la longitud variable de los tipos y la no alineación de los nombres de las variables, permite quitar los nombres largos de algunos tipos que son comunes en las aplicaciones empresariales como cosas como &lt;em&gt;DefaultListenerFactory&lt;/em&gt; con vocablos que se van añadiendo uno detras de otro hasta formar un largo nombre.&lt;/p&gt;
+
+&lt;p&gt;Utilizar &lt;em&gt;var&lt;/em&gt; no tiene por que suponer una perdida de legibilidad del código, un buen nombre de variable da más información que el tipo. Por ejemplo, &lt;em&gt;List&amp;lt;User&amp;gt;&lt;/em&gt; parece ser una lista de usuarios, utilizando el nombre de la variable &lt;em&gt;admins&lt;/em&gt; obtendríamos que son una parte más concreta de usuarios en el contexto local en el que se está usando. Por lo que no tener el tipo no es dramático si es suplido con un buen nombre de variable que capture su contenido correctamente.&lt;/p&gt;
+
+&lt;p&gt;La palabra reservada &lt;em&gt;var&lt;/em&gt; no hace de Java un lenguaje dinámico, sigue siendo estático y fuertemente tipado. Solo que ahora los tipos no hace falta declararlos explícitamente y es el compilador el que se encarga de inferirlos según el contexto. En tiempo de ejecución nada cambia, el rendimiento sigue siendo el mismo y solo es una característica en tiempo de compilación.&lt;/p&gt;
+
+&lt;p&gt;La existencia de &lt;em&gt;var&lt;/em&gt; no significa que haya de usarse de forma indiscriminada para todas las variables locales sino juiciosamente. En este caso quizá es preferible declarar el tipo por no ser obvio lo que retorna el método &lt;em&gt;getCities()&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/d4ff7ac7eecda8504ee0834593d70929.js?file=TypeVsVar.java&#34;&gt;&lt;/script&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://openjdk.java.net/projects/amber/LVTIstyle.html&#34;&gt;Style Guidelines for Local Variable Type Inference in Java&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Los entornos integrados de desarrollo tardarán un tiempo en implementar la inferencia de tipos para variables locales hasta que lancen nuevas versiones.&lt;/p&gt;
+
+&lt;h3 id=&#34;otras-novedades&#34;&gt;Otras novedades&lt;/h3&gt;
+
+&lt;p&gt;El tiempo para iniciar el interprete REPL de &lt;a href=&#34;https://docs.oracle.com/javase/9/jshell/introduction-jshell.htm&#34;&gt;JShell&lt;/a&gt; ha sido reducido significativamente especialmente en casos donde se inicia con un archivo que incluye varios &lt;em&gt;snippets&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Se han añadido mejoras en la herramienta de documentación de las clases Javadoc como soporte para varias hojas de estilo, agrupar métodos redefinidos que no cambian la especificación o nueva etiqueta &lt;em&gt;summary&lt;/em&gt; como resumen de la API.&lt;/p&gt;
+
+&lt;p&gt;Se han añadido varios métodos para crear copias no modificables con &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/List.html#copyOf(java.util.Collection)&#34;&gt;List.copyOf()&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/Set.html#copyOf(java.util.Collection)&#34;&gt;Set.copyOf()&lt;/a&gt;, and &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/Map.html#copyOf(java.util.Map)&#34;&gt;Map.copyOf()&lt;/a&gt;. Se han añadido nuevos métodos a la clase &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/stream/Collectors.html&#34;&gt;Collectors&lt;/a&gt; para devolver una lista no modificable con &lt;em&gt;toUnmodifiableList&lt;/em&gt;, &lt;em&gt;toUnmodifiableSet&lt;/em&gt;, and &lt;em&gt;toUnmodifiableMap&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Se añade el método &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/Optional.html#orElseThrow()&#34;&gt;Optional.orElseThrow()&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Algunas &lt;a href=&#34;http://www.oracle.com/technetwork/java/javase/10-relnote-issues-4108729.html#Removed&#34;&gt;otras características ya obsoletas se han eliminado&lt;/a&gt; y &lt;a href=&#34;http://www.oracle.com/technetwork/java/javase/10-relnote-issues-4108729.html#Deprecated&#34;&gt;otras se han marcado como &lt;em&gt;deprecated&lt;/em&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;el-posible-futuro-jdk-11&#34;&gt;El posible futuro JDK 11+&lt;/h3&gt;
+
+&lt;p&gt;Está planificado en seis meses después de Java 10 y con soporte extendido, el soporte de Java 10 durará tan solo hasta 2018.09, el de Java 11 al ser una &lt;em&gt;LTS&lt;/em&gt; durará un periodo de 8 años hasta el 2026.09.&lt;/p&gt;
+
+&lt;p&gt;En el nuevo modelo las nuevas características no se añaden hasta que están preparadas. Tentativamente las &lt;a href=&#34;http://openjdk.java.net/projects/jdk/11/&#34;&gt;características de JDK 11&lt;/a&gt; no están completamente determinadas pero se están evaluando grandes proyectos como &lt;a href=&#34;http://openjdk.java.net/projects/valhalla/&#34;&gt;Valhalla&lt;/a&gt; para hacer más eficiente el tratamiento de datos que no requieran la indentidad de objetos con los denominados &lt;a href=&#34;http://openjdk.java.net/jeps/169&#34;&gt;Value Types&lt;/a&gt; útil para la programación funcional con datos puros optimizados para computaciones en paralelo. El proyecto &lt;a href=&#34;http://openjdk.java.net/projects/loom/&#34;&gt;Loom&lt;/a&gt; que posibilita una versión más ligera aún que los &lt;em&gt;threads&lt;/em&gt; o hilos con &lt;em&gt;fibers&lt;/em&gt; o fibras, &lt;em&gt;continuations&lt;/em&gt; o &lt;em&gt;coroutine&lt;/em&gt; y &lt;a href=&#34;https://en.wikipedia.org/wiki/Tail_call&#34;&gt;Tail Call&lt;/a&gt;. El proyecto &lt;a href=&#34;http://openjdk.java.net/projects/panama/&#34;&gt;Panama&lt;/a&gt; hará más fácil trabajar con código nativo o el proyecto &lt;a href=&#34;http://openjdk.java.net/projects/zgc/&#34;&gt;ZGC&lt;/a&gt; para crear un recolector de basura que pueda manejar gigabytes y terabytes con pausas menores a 10ms. O el proyecto &lt;a href=&#34;http://openjdk.java.net/projects/amber/&#34;&gt;Amber&lt;/a&gt; con unas pequeñas mejoras pero muy cómodas para el programador como la de los literales &lt;em&gt;strings raw&lt;/em&gt;. En la &lt;a href=&#34;http://openjdk.java.net/&#34;&gt;página del OpenJDK&lt;/a&gt; hay más proyectos que en un futuro quizá sean implementados y publicados en alguna versión.&lt;/p&gt;
+
+&lt;p&gt;En la sección final de referencia incluyo varios artículos y vídeos de los que he obtenido la información para hacer este resumen de las novedades de Java 10. Algunos son muy interesantes y amplían en gran medida lo comentado y lo que posiblemente llegue en un futuro.&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=Le1DbpRZdRQ&#34;&gt;First contact with &amp;lsquo;var&amp;rsquo; in Java 10&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://youtu.be/84mCmmzksGI?t=47m43s&#34;&gt;Keynotes: Oracle Code Chicago&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://developer.oracle.com/java/java10&#34;&gt;Introducing Java SE 10&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://developer.oracle.com/java/jdk-10-local-variable-type-inference&#34;&gt;Java 10 Local Variable Type Inference&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://marketplace.eclipse.org/content/java-10-support-oxygen&#34;&gt;Java 10 Support for Oxygen&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://jdk.java.net/10/&#34;&gt;JDK 10 General-Availability Release&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.oracle.com/technetwork/java/javase/10-relnote-issues-4108729.html&#34;&gt;JDK 10 Release Notes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.oracle.com/corporate/pressrelease/Java-10-032018.html&#34;&gt;Oracle Java SE 10 Release Arrives&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.infoworld.com/article/3230507/java/java-jdk-10-what-new-features-to-expect-in-the-next-java.html&#34;&gt;JDK 10: What’s new in Java 10&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.forbes.com/sites/oracle/2018/03/20/what-java-10-and-javas-new-6-month-release-cadence-mean-for-developers/&#34;&gt;What Java 10 And Java&amp;rsquo;s New 6-Month Release Cadence Mean For Developers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://cr.openjdk.java.net/~rpressler/loom/Loom-Proposal.html&#34;&gt;Project Loom: Fibers and Continuations for the Java Virtual Machine&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.azul.com/the-incredible-shrinking-java-platform/&#34;&gt;The Incredible Shrinking Java Platform&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.oracle.com/technetwork/java/eol-135779.html&#34;&gt;Oracle Java SE Support Roadmap&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.opsian.com/blog/java-on-docker/&#34;&gt;Java on Docker will no longer suck: improvements coming in Java 10&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/03/tu-con-mac-yo-con-mi-gnu-linux/</id>
+        <title>Tú con tu Mac, yo con mi GNU/Linux</title>        
+        <updated>2018-03-18T17:00:00+01:00</updated>
+        <published>2018-03-17T14:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/03/tu-con-mac-yo-con-mi-gnu-linux/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/macos.png&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;macOS&#34; title=&#34;macOS&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/windows-10.svg&#34; class=&#34;right &#34; width=&#34;350&#34; alt=&#34;Windows&#34; title=&#34;Windows&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/gnu.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;GNU&#34; title=&#34;GNU&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/linux.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Por motivos laborales y por política de la empresa tuve que elegir como equipo un portátil de &lt;a href=&#34;https://www.apple.com/&#34;&gt;Apple&lt;/a&gt;, en concreto un MacBook Pro con procesador Intel Core i5, 16 GiB de memoria y 512 GiB de almacenamiento SSD. Prácticamente el mejor portátil que había en su momento en el catálogo de la manzana que tendría un precio seguro más de 2000€ y quizá 2500€. Este cambio me ha permitido poder comparar con mi propio portátil, un Sony Vaio con procesador Intel Core i5 3210, 8 GiB de memoria y 250 GiB de almacenamiento SSD y la distribución &lt;a href=&#34;https://www.archlinux.org/&#34;&gt;Arch Linux&lt;/a&gt; de &lt;a href=&#34;https://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;https://www.linux.com/&#34;&gt;Linux&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Tenía la duda de si esta experiencia me iba a convencer de pasarme al lado oscuro. Llevo usando el MacBook desde hace un año siendo este &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/11/mi-primer-mac-yo-usuario-de-gnu-linux/&#34;&gt;mi primer contacto con un Mac&lt;/a&gt; y puedo decir de momento que no hay nada en los Mac que me convezca de adquirir uno de los portátiles de Apple. Sí no son feos, tenían (en pasado) alguna cosa distinta como los &lt;em&gt;magsafe&lt;/em&gt; en el adaptador de corriente, no tienen elementos obsoletos como una salida VGA o grabadora DVD, una buena pantalla y un buen &lt;em&gt;touchpad&lt;/em&gt; pero a un precio exagerado. Aún así y ahora que he probado tanto Windows, macOS como GNU/Linux no tengo nada que envidiar a los portátiles de Apple ni a macOS por mi parte, es más estoy más convencido de usar GNU/Linux.&lt;/p&gt;
+
+&lt;h3 id=&#34;software&#34;&gt;Software&lt;/h3&gt;
+
+&lt;p&gt;Empezando por el software libre, ¿hace falta que mecione &lt;a href=&#34;https://www.gnu.org/philosophy/free-sw.es.html&#34;&gt;las cuatro libertades esenciales&lt;/a&gt;? o la posibilidad de elegir la distribución o entorno de escritorio que más me guste o mejor se adapte a mis requerimientos. Pensando mal, en el portátil Mac no estoy seguro de que no tengan algún tipo de software espía, algún tipo de monitorización o telemetría.&lt;/p&gt;
+
+&lt;p&gt;Para cualquier necesidad en Linux seguramente hay una aplicación que realice esa funcionalidad, editor de documentos, reproductor de vídeo, edición fotográfica, navegador, administrador de ebooks, entorno de desarrollo, editor de código, descargas torrent. Las principales aplicaciones están disponibles para ambas plataformas: &lt;a href=&#34;https://www.libreoffice.org/&#34;&gt;LibreOffice&lt;/a&gt;, &lt;a href=&#34;https://www.videolan.org/vlc/&#34;&gt;VLC&lt;/a&gt;, &lt;a href=&#34;https://www.gimp.org/&#34;&gt;GIMP&lt;/a&gt;, &lt;a href=&#34;https://www.mozilla.org/es-ES/firefox/new/&#34;&gt;Firefox&lt;/a&gt;, &lt;a href=&#34;http://calibre-ebook.com/&#34;&gt;Calibre&lt;/a&gt;, &lt;a href=&#34;https://www.jetbrains.com/idea/&#34;&gt;IntelliJ&lt;/a&gt;, &lt;a href=&#34;https://code.visualstudio.com/&#34;&gt;Visual Studio Code&lt;/a&gt;, &lt;a href=&#34;https://transmissionbt.com/&#34;&gt;Tranmission&lt;/a&gt;, &amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;Sin embargo, para algunas otras necesidades en Mac seguramente hay que sacar otra vez la tarjeta de crédito para compra alguna aplicación que realice la tarea que en GNU/Linux está disponible gratuitamente y es software libre. Por ejemplo, para convertir un vídeo a otro formato, para convertir a MP3 un CD de audio o un simple compresor/descompresor de archivos. Menos mal que en mac también se puede acceder a todo ese catálogo de software libre.&lt;/p&gt;
+
+&lt;p&gt;Y &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/08/22-plus-buenos-juegos-en-gnu-linux/&#34;&gt;en GNU/Linux también hay juegos de buena calidad&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;hardware&#34;&gt;Hardware&lt;/h3&gt;
+
+&lt;p&gt;El hardware de Apple es bonito y es un aspecto que lo cuidan mucho al menos más que en los típicos portátiles de la mayoría de las marcas que fabrican para Windows. Sin embargo, en cuanto a características no es de lo mejor que uno puede encontrar y a un precio significativamente mayor.&lt;/p&gt;
+
+&lt;p&gt;Mi equipo es del 2012 y el Mac que uso del 2015, realmente lo único que echo de menos es la resolución de la pantalla que en el Mac es de 2560x1600 nativa y de 1650x1050 escalada lo que hace que se vea el texto muy bien. El &lt;em&gt;magic mouse&lt;/em&gt; al ser táctil también está bien aunque a veces detecte gestos incorrectos pero el hecho de que cuando esté cargándose no se pueda utilizar es un fallo de diseño.&lt;/p&gt;
+
+&lt;p&gt;Compara el &lt;a href=&#34;https://slimbook.es/&#34;&gt;Slimbook Pro 2&lt;/a&gt; y el &lt;a href=&#34;https://www.apple.com/es/macbook-pro/&#34;&gt;MacBook Pro&lt;/a&gt;, para empezar en el Slimbook se pueden instalar 32 GiB de memoria en el Mac solo 16 GiB, a características similares con disco SSD de 512 GiB y pantalla de HiDPI el Slimbook está sobre los 1000€ y los Mac empezando por 1500€.&lt;/p&gt;
+
+&lt;h3 id=&#34;entorno-de-escritorio&#34;&gt;Entorno de escritorio&lt;/h3&gt;
+
+&lt;p&gt;El entorno de escritorio en lo personal uso &lt;a href=&#34;https://www.gnome.org/&#34;&gt;GNOME&lt;/a&gt; y en ciertos aspectos tiene similitudes como la barra superior, la vista de ventas o la gestión de escritorios. GNOME ha evolucionado de forma muy notable desde las primeras versiones 3.0 añadiendo muchas nuevas funcionalidades y mejorando varios aspectos visuales en cada ciclo de desarrollo de seis meses. KDE también ha mejorado mucho.&lt;/p&gt;
+
+&lt;p&gt;GNOME puede personalizarse en cierta medida con algunos complementos para por ejemplo hacer que la barra de aplicaciones se muestre siempre. Algunos otros aspectos de GNOME me gustan más como el menú agrupado para varios de los iconos, en Mac cada icono tiene su propio menú de acciones. En la vista de aplicaciones de GNOME estás pueden cerrarse sin tener que seleccionar la aplicación. Tanto GNOME como macOS soportan escritorios virtuales.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/305/gnome-overview.jpg&#34; title=&#34;GNOME&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/305/gnome-overview-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/305/macos-overview.jpg&#34; title=&#34;macOS&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/305/macos-overview-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Comparación entre el entorno de escritotio de GNOME y macOS&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;p&gt;GNOME incluye todo lo que un usuario necesita desde navegador de archivos, visor de fotos, visor de documentos, aplicación de correo electrónico, terminal, editor de texto plano. Y GNOME no es la única opción también está &lt;a href=&#34;https://www.kde.org/&#34;&gt;KDE&lt;/a&gt; o &lt;a href=&#34;https://xfce.org/&#34;&gt;XFCE&lt;/a&gt; por nombrar solo dos de los otros entornos e escritorio más conocidos.&lt;/p&gt;
+
+&lt;h3 id=&#34;gestor-de-paquetes&#34;&gt;Gestor de paquetes&lt;/h3&gt;
+
+&lt;p&gt;La forma de instalar y actualizar aplicaciones de las distribuciones GNU/Linux con los gestores y repositorios de paquetes es muy sencillo. En Arch Linux que es una distribución &lt;a href=&#34;https://en.wikipedia.org/wiki/Rolling_release&#34;&gt;rolling release&lt;/a&gt; cada vez que hago una actualización tengo las últimas versiones de cada paquete y aplicación.&lt;/p&gt;
+
+&lt;p&gt;En los Mac se puede utilizar algo similar con &lt;a href=&#34;https://brew.sh/&#34;&gt;Homebrew&lt;/a&gt; y menos mal que existe para hacer más fácil instalar y sobre todo matener actualizados los programas a las últimas versiones.&lt;/p&gt;
+
+&lt;h3 id=&#34;precio&#34;&gt;Precio&lt;/h3&gt;
+
+&lt;p&gt;No se cuanto costaría exactamente el equipo Mac pero con su configuración al menos unos 2000€. Pues bien un Slimbook a día de hoy con con una configuración del modelo tal que Intel Core i5 8250U (4 núcleos, 8 hilos), 32 GiB de memoria, 250 GiB de almacenamiento SSD con interfaz NVMe y pantalla QHD+ 3200 x 1800 HiDPI cuesta unos 1400€ siendo el tope de gama. Eso para los usuarios que necesiten tal ingente cantidad de memoria y en una de las configuraciones más completas.&lt;/p&gt;
+
+&lt;p&gt;El MacBook Pro más barato empieza en 1500€ y con únicamente 8 GiB de memoria y solo 128 GiB de SSD, con 16 GiB de memoria y 256 GiB de SSD se va a los 2000€.&lt;/p&gt;
+
+&lt;h3 id=&#34;obsolescencia&#34;&gt;Obsolescencia&lt;/h3&gt;
+
+&lt;p&gt;Es Apple quien decide cuando deja de dar soporte a sus equipos, en forma de actualizaciones de seguridad o nuevas versiones de macOS, 6+ años aproximadamente lo que me parece poco tiempo, posiblemente en ese momento uno ya se platee comprar otro pero también el equipo seguramente se útil para ciertos propósitos. En GNU/Linux los equipos siguen teniendo actualizaciones y siguen siendo usables incluso con 10 años. Dejan de ser válidos cuando el software demanda más al equipo del lo que es capaz principalmente por la cantidad de memoria. Pero aún en estos casos utilizando una distribución que consuma pocos recursos siguen siendo usables para ciertas tareas.&lt;/p&gt;
+
+&lt;h3 id=&#34;mi-conclusión&#34;&gt;Mi conclusión&lt;/h3&gt;
+
+&lt;p&gt;La marca Apple tiene un halo de idolatración, de que no hay nada mejor ya sea en el hardware o en el software y si se me permite de elitismo, superioridad, ir a contracorriente, tener algo diferenciativo o exclusividad. Por mi experiencia no creo que GNU/Linux hoy día tenga mucho envidiar, ni sea más difícil de instalar o usar, quizá un buen soporte de hardware desde el primer día pero eso es consecuencia de la cuota de uso de GNU/Linux en el escritorio, aún así las cosas han mejorado mucho en la última década.&lt;/p&gt;
+
+&lt;p&gt;¿Quieres un equipo para trabajar sin preocuparte mucho de dedicarle tiempo a mantenerlo? usa una versión con soporte prolongado (LTS) de &lt;a href=&#34;https://www.ubuntu.com/&#34;&gt;Ubuntu&lt;/a&gt;, ¿quieres una distribución con el software actualizado? usa Arch Linux o una de sus derivadas, ¿quieres un equipo potente, configurable, ligero y bonito? échale un vistazo a los Slimbook.&lt;/p&gt;
+
+&lt;p&gt;Pasado este tiempo usando un Mac a mi no me han convencido de cambiar y comprar uno de ellos. La plataforma del pingüino también tiene defectos al igual que macOS no está exento de ellos, los dos alguna vez se me han bloqueado, pero después de probar un Mac la verdad es que no entiendo la idolatración y lo fieles que son algunos de sus usuarios a esta marca. Al pagar lo que hay que pagar por un Mac uno debe pensar que con legitimidad van a recibir a cambio algo acorde a sus expectativas más cuanto mayor sea el precio, quizá si el precio es elevado cuesta más reconocer los defectos. Quédate con tu Mac, a mi dame mi GNU/Linux.&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.soydemac.com/apple-actualiza-la-lista-de-mac-y-otros-dispositivos-vintage-y-obsoletos/&#34;&gt;Apple actualiza la lista de Mac y otros dispositivos “vintage y obsoletos”&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="apple"/>
+            
+                <category term="gnu-linux"/>
+            
+                <category term="microsoft"/>
+            
+                <category term="opinion"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="windows"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/03/7-plus-computadoras-baratas-del-tamano-de-una-tarjeta-de-credito-basadas-en-gnu-linux-y-arm/</id>
+        <title>7&#43; computadoras baratas del tamaño de una tarjeta de crédito basadas en GNU/Linux y ARM</title>        
+        <updated>2018-03-17T19:00:00+01:00</updated>
+        <published>2018-03-10T10:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/03/7-plus-computadoras-baratas-del-tamano-de-una-tarjeta-de-credito-basadas-en-gnu-linux-y-arm/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/linux.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/gnu.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;GNU&#34; title=&#34;GNU&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/arm.svg&#34; class=&#34;right &#34; width=&#34;350&#34; alt=&#34;ARM&#34; title=&#34;ARM&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Una de las tendencias de la tecnología desde sus inicios es que en todo momento está en constante evolución y mejora. Cada vez es más potente, más pequeña y más barata. Hay multitud de ejemplos en cualquier dispositivo electrónico que se use para ver su evolución desde &lt;a href=&#34;https://en.wikipedia.org/wiki/History_of_IBM_magnetic_disk_drives#IBM&#39;s_first_HDD_versus_its_last_HDDs&#34;&gt;discos duros de 5 megas que ocupaban un armario y pesaban varias decenas de kilos&lt;/a&gt; a ahora las tarjetas microSD del tamaño de una uña con una capacidad de 256 GiB, de procesadores que en los años 70 funcionaban a una frecuencia de unos pocos megahercios a ahora varios gigahercios, de memorias RAM de unos pocos kilobytes a ahora varios gigabytes, de &lt;em&gt;chips&lt;/em&gt; con &lt;a href=&#34;https://en.wikipedia.org/wiki/Transistor_count&#34;&gt;unos miles de transistores&lt;/a&gt;, ya no digamos válvulas de vacío, a varios miles de millones de transistores que emplean ahora las GPU de las tarjetas gráficas.&lt;/p&gt;
+
+&lt;p&gt;En poco más de dos décadas ha habido un salto de entre dos y tres órdenes de magnitud. Mi primer ordenador en 1996 fué un Intel Pentium a 120 Mhz con 8 MiB de memoria RAM que luego amplié a 32 MiB y un disco duro de 1 GiB que utilicé en mis años de universidad. En el 2002 cambié a un AMD 1800+ con 512 MiB, 60 GiB de disco duro y una gráfica Nvidia GeForce 2 MX creo que con 32 MiB de memoria gráfica con un monitor de 17&amp;rdquo; de tubo que pesaba más de 10 kilos seguro. En el 2008 dejé el ordenador de escritorio y pase a un portátil Dell, del que no me quiero acordar mucho por lo malo que resultó, con un Intel Core 2 Duo 8100 fabricado un una litografía de 45 nanómetros, 4 GiB de RAM, un disco duro de 320 GiB y una gráfica Nvidia 8600 con 256 MiB de memoria gráfica. Finalmente ya casi en el 2013 a mi siguiente equipo como portátil con un Intel i3-3210 de 2 núcleos y 4 hilos fabricado a 22 nanómetros, 8 GiB de memoria e inicialmente un disco duro de 500 GiB que posteriormente cambié por un SSD de 250 GiB. Y actualmente si cambiase de equipo optaría seguramente por un AMD basado en la arquitectura Zen que han aumentado de forma significativa los núcleos e hilos de los procesadores, iría a por 32 GiB para virtualizar a gusto o 64 GiB si fuese posible y la memoria DDR4 estuviese a precios más asequibles, un monitor 2K o 4K y un disco SSD basado en NVMe que aumenta más la tasa de transferencia incluso sobre la interfaz SATA. Eso en los computadores tradicionales pero ya algunos modelos de móviles de gama alta poseen más memoria que varios portátiles de la gama básica y en el tamaño de 5 pulgadas.&lt;/p&gt;
+
+&lt;p&gt;En otro artículo algo comentaba &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/10/sobre-el-rapido-avance-de-la-tecnologia/&#34;&gt;Sobre el rápido avance de la tecnología&lt;/a&gt; y básicamente sacaba dos conclusiones. Una no merece comprar tecnología hasta que realmente es necesario pero tampoco esperar indefinidamente a lo siguiente mejor y como segunda conclusión que no hace falta tener lo último para hacer lo mismo que ya es posible con lo anterior.&lt;/p&gt;
+
+&lt;p&gt;Una de las últimas adquisiciones que hice fué en 2012, uno de los primeros modelos de la popular computadora del tamaño de una tarjeta de crédito Raspberry Pi con un procesador ARM con el juego de instrucciones &lt;em&gt;armv6h&lt;/em&gt; y 256 MiB que he utilizado mayoritariamente para realizar descargas y compartir archivos &lt;em&gt;torrent&lt;/em&gt; o algunas pruebas de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/&#34;&gt;utilización de sensores y dispositivos de entrada y salida con Java&lt;/a&gt; o para &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/08/instalar-y-renovar-un-certificado-de-lets-encrypt-en-nginx/&#34;&gt;usar un certificador de Let&amp;rsquo;s Encrypt en un servidor Nginx&lt;/a&gt;. El siguiente uso que le daré es como &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/02/consola-de-juegos-retro-con-lakka-y-una-raspberry-pi/&#34;&gt;consola de juegos retro&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Ya había placas de tamaño reducido con un computador completo similares a la Raspberry Pi pero la Raspberry Pi ha sido la placa con más éxito y que sigue teniendo uno de los mejores soportes y comunidad. Su propósito original es el aprendizaje a nivel educativo sin embargo su precio reducido de unos 36€ por los que se puede &lt;a href=&#34;http://amzn.to/2EP9mHX&#34;&gt;comprar ahora en Amazon&lt;/a&gt; ha sido gran parte de su éxito junto con una labor de promoción muy bien realizada en internet que contribuyó a crear gran expectación superando con creces la demanda esperada por los propios creadores en los meses iniciales. Han sido elaborados nuevos modelos más capaces con 4 núcleos a más velocidad y basados en un procesador de arquitectura ARM Cortex-A53 de 64 bits, con WiFi y Bluetooth, pero con solo 1 GiB de memoria.&lt;/p&gt;
+
+&lt;p&gt;La Raspberry Pi es la más popular y con mejor soporte pero no es la mini placa más capaz ni incluso la más barata, debido a su éxito han surgido numerosas placas similares. La totalidad de estas placas usan alguna distribución de GNU/Linux y procesadores ARM ya sea &lt;a href=&#34;https://www.debian.org/&#34;&gt;Debian&lt;/a&gt;, &lt;a href=&#34;https://www.ubuntu.com/&#34;&gt;Ubuntu&lt;/a&gt;, &lt;a href=&#34;https://www.android.com/&#34;&gt;Android&lt;/a&gt;, &lt;a href=&#34;https://archlinuxarm.org/&#34;&gt;Arch Linux ARM&lt;/a&gt;, &lt;a href=&#34;https://www.armbian.com/&#34;&gt;Armbian&lt;/a&gt; o algunas distribuciones especializadas como &lt;a href=&#34;https://www.lakka.tv/&#34;&gt;Lakka&lt;/a&gt; para consola de juegos retro y &lt;a href=&#34;https://libreelec.tv/&#34;&gt;LibreELEC&lt;/a&gt; o &lt;a href=&#34;https://kodi.tv/&#34;&gt;Kodi&lt;/a&gt; para centro multimedia de salón.&lt;/p&gt;
+
+&lt;p&gt;El uso que se les puede dar a estas computadores es muy diverso quizá no como para sustituir a un ordenador de escritorio o portátil basado en procesadores &lt;a href=&#34;https://www.intel.es&#34;&gt;Intel&lt;/a&gt; o &lt;a href=&#34;https://www.amd.com/es&#34;&gt;AMD&lt;/a&gt; pero si para otros propósitos como servidor de descargas, centro multimedia, servidor web, cluster de servidores con &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt;, servicio en la nube propio con &lt;a href=&#34;https://owncloud.org/&#34;&gt;OwnCloud&lt;/a&gt;, servidor de código fuente con &lt;a href=&#34;https://about.gitlab.com/&#34;&gt;GitLab&lt;/a&gt;, servidor de integración continua con &lt;a href=&#34;https://jenkins.io/&#34;&gt;Jenkins&lt;/a&gt;, base de datos &lt;a href=&#34;https://www.postgresql.org/&#34;&gt;PostgreSQL&lt;/a&gt; o los mencionados consola de juegos retro y centro multimedia entre cualesquiera otros usos que queramos mientras el software necesario esté disponible y la cantidad memoria de la computadora sea suficiente.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/304/arm-powered.svg&#34; width=&#34;300&#34; alt=&#34;ARM Powered&#34; title=&#34;ARM Powered&#34;&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;raspberry-pi&#34;&gt;Raspberry Pi&lt;/h3&gt;
+
+&lt;p&gt;Cuando apareció en el 2012 ya había placas similares pero su bajo precio y &lt;em&gt;marketing&lt;/em&gt; ha sido la que ha alcanzado la mayor popularidad sin ser la más potente. Gracias a su éxito con más de 14 millones de unidades vendidas es la mejor opción por su gran soporte de la comunidad aunque para algunos casos de uso su gigabyte de memoria en el modelo &lt;a href=&#34;https://www.raspberrypi.org/magpi/raspberry-pi-3-specs-benchmarks/&#34;&gt;Raspberry Pi 3&lt;/a&gt; puede quedarse escaso. Su &lt;em&gt;SoC&lt;/em&gt; BCM2837 de Broadcom no es el más capaz tanto en CPU (&lt;em&gt;quad-core&lt;/em&gt; ARM Cortex-A53 a 1.4 GHz) como en GPU (VideoCore IV) y con su gigabit ethernet compartida con los puertos USB y limitada lo que es un inconveniente importante en las transferencias de datos.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;CPU Broadcom BCM2837B0, 4 x Cortex-A53 (ARMv8) 64-bit SoC @ 1.4GHz&lt;/li&gt;
+&lt;li&gt;GPU VideoCore IV&lt;/li&gt;
+&lt;li&gt;Memoria 1GB LPDDR2 SDRAM&lt;/li&gt;
+&lt;li&gt;WiFi 2.4GHz and 5GHz IEEE 802.11.b/g/n/ac wireless LAN, Bluetooth 4.2, BLE&lt;/li&gt;
+&lt;li&gt;Red Gigabit Ethernet over USB 2.0 (maximum throughput 300 Mbps)&lt;/li&gt;
+&lt;li&gt;Extended 40-pin GPIO header&lt;/li&gt;
+&lt;li&gt;Full-size HDMI&lt;/li&gt;
+&lt;li&gt;4 USB 2.0 ports&lt;/li&gt;
+&lt;li&gt;CSI camera port for connecting a Raspberry Pi camera&lt;/li&gt;
+&lt;li&gt;DSI display port for connecting a Raspberry Pi touchscreen display&lt;/li&gt;
+&lt;li&gt;4-pole stereo output and composite video port&lt;/li&gt;
+&lt;li&gt;Micro SD port for loading your operating system and storing data&lt;/li&gt;
+&lt;li&gt;5V/2.5A DC power input&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Power-over-Ethernet (PoE) support (requires separate PoE HAT)&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://es.wikipedia.org/wiki/Raspberry_Pi&#34;&gt;Raspberry Pi&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/304/raspberrypi3b.jpg&#34; title=&#34;Raspberry Pi 3&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/304/raspberrypi3b-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Raspberry Pi 3&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;h3 id=&#34;rock64&#34;&gt;Rock64&lt;/h3&gt;
+
+&lt;p&gt;El segundo modelo que destacaré es este de &lt;a href=&#34;https://www.pine64.org/&#34;&gt;PINE64&lt;/a&gt; porque posee versiones de 1, 2 y 4 GiB de memoria, gigabit ethernet y 1 puerto USB 3.0 a un precio similar al de una Raspberry Pi, lo único que le falta es WiFi para superar en todo a la RPi. También posee un módulo eMMC más rápido que las tarjetas microSD, SPI de 128 MiB para prescincir de tarjeta microSD en el arranque, salida de audio, otros 2 puertos USB 2.0, salida HDMI con soporte para 4K@60fps HDR10, botones dedicados de encendido y reinicio y los 40 pines para usar sensores. El &lt;em&gt;SoC&lt;/em&gt; es un &lt;a href=&#34;http://www.rock-chips.com/a/en/products/RK33_Series/2017/0118/829.html&#34;&gt;Rockchip RK3328&lt;/a&gt; &lt;em&gt;quad-core&lt;/em&gt; ARM Cortex-A53 y la GPU &lt;a href=&#34;https://developer.arm.com/products/graphics-and-multimedia/mali-gpus/mali-450-gpu&#34;&gt;ARM Mali-450MP2&lt;/a&gt; con capacidad para OpenGL ES 1.1 / 2.0.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;CPU Rockchip RK3328, 4 x Cortex-A53 (ARMv8) 64-bit SoC @ 1.4GHz&lt;/li&gt;
+&lt;li&gt;GPU ARM Mali-450MP2&lt;/li&gt;
+&lt;li&gt;Memoria 1 / 2 / 4 GiB 1600 MHz LPDDR3 SDRAM&lt;/li&gt;
+&lt;li&gt;128 Mb SPI Flash&lt;/li&gt;
+&lt;li&gt;eMMC Module Socket, eMMC Jumper&lt;/li&gt;
+&lt;li&gt;MicroSD Card Slot (Bottom)&lt;/li&gt;
+&lt;li&gt;3.5mm Barrel Power Jack (5V3A)&lt;/li&gt;
+&lt;li&gt;4K60P HDR Digital Output&lt;/li&gt;
+&lt;li&gt;A/V Jack&lt;/li&gt;
+&lt;li&gt;Red Gigabit Ethernet&lt;/li&gt;
+&lt;li&gt;2 x USB 2.0 Dedicated Host, 1 x USB 3.0 Dedicated Host&lt;/li&gt;
+&lt;li&gt;Pi-P5+ Bus&lt;/li&gt;
+&lt;li&gt;Pi-2 Bus&lt;/li&gt;
+&lt;li&gt;Power, Reset and Recovery Buttons&lt;/li&gt;
+&lt;li&gt;IR Receiver Port&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/304/rock64.jpg&#34; title=&#34;Rock64&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/304/rock64-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Rock64&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;p&gt;Para suplir la carencia de WiFi en su tienda hay disponible un accesorio conectable a un puerto USB, también tienen la posibilidad de comprar el alimentador de corriente, mando a distancia, caja acrílica y un &lt;em&gt;splitter&lt;/em&gt; con &lt;em&gt;Power Over Ethernet&lt;/em&gt; o &lt;em&gt;PoE&lt;/em&gt; que hace innecesario el alimentador de corriente si poseemos o adquirimos un &lt;em&gt;switch&lt;/em&gt; con esa función, tarjetas eMMC de 16, 32 y 64 GiB. Su precio de unos $45 para el modelo de 4 GiB.&lt;/p&gt;
+
+&lt;div class=&#34;media media-video&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;iframe width=&#34;640&#34; height=&#34;360&#34; src=&#34;https://www.youtube.com/embed/ZejkWra-Mfc&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En el momento de escribir el artículo están preparando el lanzamiento de la placa Rock64Pro con un mejor &lt;em&gt;SoC&lt;/em&gt; &lt;a href=&#34;http://www.rock-chips.com/a/en/products/RK33_Series/2016/0419/758.html&#34;&gt;Rockchip RK3399&lt;/a&gt; &lt;em&gt;hexa-core&lt;/em&gt; con dos Cortex-A72 y 4 Cortex-A53 además de un puerto USB Type-C y mejor GPU con una &lt;a href=&#34;https://developer.arm.com/products/graphics-and-multimedia/mali-gpus/mali-t860-and-mali-t880-gpus&#34;&gt;ARM Mali-T860MP4&lt;/a&gt; &lt;em&gt;quad-core&lt;/em&gt; con soporte para OpenGL ES 1.1 / 2.0 / 3.0 and OpenCL 1.2.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/304/rock64pro.jpg&#34; title=&#34;Rock64Pro&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/304/rock64pro-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Rock64Pro&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;p&gt;Estas placas de PINE64 son de lo mejor en la relación características hardware y precio, donde adolecen es en el software y es que aún con un tiempo relativamente corto de un año de vida es en el software donde pueden presentar algún problema. Conforme pase el tiempo mejorarán pero quizá no sea el modelo más adecuado para aquellos usuarios que no deseen encontrase problemas en su uso y no estén dispuestos buscar información o a resolver los que se presenten.&lt;/p&gt;
+
+&lt;p&gt;Aunque no es como los modelos anteriores de placas base este es destacable por ser un portátil basado en un procesador ARM a un precio de $90. Pantalla de 11&amp;rdquo; o 14&amp;rdquo; con una resolución de 1366x768, 2 GiB de memoria, WiFi, microSD, mini HDMI, 16GB eMMC, dos puertos USB 2.0, salida de audio, cámara web y batería de 10000mAH, teclado y &lt;em&gt;touchpad&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/304/pinebook-11-inch.jpg&#34; title=&#34;PineBook (11 pulgadas)&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/304/pinebook-11-inch-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;PineBook (11 pulgadas)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;h3 id=&#34;asus-tinker-board&#34;&gt;ASUS Tinker Board&lt;/h3&gt;
+
+&lt;p&gt;La &lt;a href=&#34;https://www.asus.com/uk/Single-Board-Computer/Tinker-Board/overview/&#34;&gt;ASUS Tinker Board&lt;/a&gt; también está basada en un &lt;em&gt;SoC&lt;/em&gt; de Rockchip pero en este caso el modelo &lt;a href=&#34;http://www.rock-chips.com/a/en/products/RK32_Series/2014/0504/484.html&#34;&gt;RK3288&lt;/a&gt; que como CPU tiene el modelo más potente de 32 bits con una ARM Cortex-A17 &lt;em&gt;quad-core&lt;/em&gt; e incorporando una GPU Mali-T764 mejor que la Mali de la Rock64. Tiene 2 GiB de memoria e incorpora de serie WiFi N y Bluetooth 4.0.&lt;/p&gt;
+
+&lt;p&gt;Su precio es algo más elevado que la Rock64 y tiene menos memoria pero más que la Raspberry Pi, aún así incorpora de serie WiFi y Bluetooth por lo que no sería necesario comprar elementos adicionales.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;CPU Rockchip Quad-Core RK3288 processor&lt;/li&gt;
+&lt;li&gt;Memoria 2GB Dual Channel DDR3&lt;/li&gt;
+&lt;li&gt;GPU ARM Mali-T764&lt;/li&gt;
+&lt;li&gt;Micro SD(TF) card slot&lt;/li&gt;
+&lt;li&gt;Red Gigabit Ethernet&lt;/li&gt;
+&lt;li&gt;WiFi 802.11 b/g/n, Bluetooth V4.0 + EDR&lt;/li&gt;
+&lt;li&gt;Audio RTL ALC4040 CODEC&lt;/li&gt;
+&lt;li&gt;4 x USB 2.0&lt;/li&gt;
+&lt;li&gt;GPIO 40-pin header, up to 28 x GPIO pins, up to 2 x SPI bus, up to 2 x I2C bus, up to 4 x UART, up to 2 x PWM, up to 1 x PCM/I2S, 2 x 5V power pins, 2 x 3.3V power pins, 8 x ground pins, 1 x PWM, 1 x S/PDIF, 1 x 15-pin MIPI DSI, 1 x 15-pin MIPI CSI&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/304/asus-tinker-board.jpg&#34; title=&#34;ASUS Tinker Board&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/304/asus-tinker-board-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;ASUS Tinker Board&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;h3 id=&#34;cubox&#34;&gt;Cubox&lt;/h3&gt;
+
+&lt;p&gt;Aunque los modelos de &lt;a href=&#34;https://www.solid-run.com/&#34;&gt;SolidRun&lt;/a&gt; son significativamente más caros poseen buenas especificaciones como el modelo &lt;a href=&#34;https://www.solid-run.com/product/cubox-i4x4/&#34;&gt;CuBox i4x4&lt;/a&gt; con un procesador &lt;em&gt;quad core&lt;/em&gt; aunque en si versión ARMv7 de 32 bits pero con 4 GiB de memoria, gigabit ethernet, WiFi y blutooth incluido en un formato de cubo de 2 pugadas. Como decía a un precio mas elevado, $170.&lt;/p&gt;
+
+&lt;p&gt;El modelo mas reciente &lt;a href=&#34;https://www.solid-run.com/nxp-family/cubox-pulse/&#34;&gt;Cubox Pulse&lt;/a&gt; incorpora un procesador &lt;a href=&#34;https://www.nxp.com/products/processors-and-microcontrollers/applications-processors/i.mx-applications-processors/i.mx-8-processors:IMX8-SERIES&#34;&gt;NXP i.MX8M&lt;/a&gt; ya a 64 bits pero con el precio igualmente abultado respecto a otras opciones de 170€.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;CPU i.MX8M Dual/Quad core ARM Cortex A53 up to 1.5Ghz (with ARM M4 GPP)&lt;/li&gt;
+&lt;li&gt;Memoria up to 4GB LPDDR4&lt;/li&gt;
+&lt;li&gt;MicroSD&lt;/li&gt;
+&lt;li&gt;eMMC&lt;/li&gt;
+&lt;li&gt;2 x USB 3.0, 1 x HDMI 2.0, 1 x RJ45&lt;/li&gt;
+&lt;li&gt;Power on button&lt;/li&gt;
+&lt;li&gt;Indication LEDs&lt;/li&gt;
+&lt;li&gt;RTC&lt;/li&gt;
+&lt;li&gt;IR receiver&lt;/li&gt;
+&lt;li&gt;PoE sink support&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/304/cubox.jpg&#34; title=&#34;Cubox&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/304/cubox-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/304/cubox-pulse.jpg&#34; title=&#34;Cubox Pulse&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/304/cubox-pulse-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Cubox y Cubox Pulse&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;h3 id=&#34;odroid&#34;&gt;ODROID&lt;/h3&gt;
+
+&lt;p&gt;Otro distribuidor importante es &lt;a href=&#34;http://www.hardkernel.com&#34;&gt;Hardkernel&lt;/a&gt; con sus modelos ODROID de pequeñas computadoras basadas en ARM con varios modelos entre ellos el &lt;a href=&#34;http://www.hardkernel.com/main/products/prdt_info.php?g_code=G145457216438&#34;&gt;ODROID C2&lt;/a&gt; que posee un procesador ARM Cortex-A53 &lt;em&gt;quad-core&lt;/em&gt;, 2 GiB de memoria, gigabit ethernet, soporta HDMI 2.0 4K@60fps, eMMC, 4 puertos USB 2.0 pero sin WiFi ni bluetooth. A un precio de $46.&lt;/p&gt;
+
+&lt;p&gt;Están preparando el modelo &lt;a href=&#34;https://forum.armbian.com/topic/6496-odroid-n1-not-a-review-yet/&#34;&gt;ODROID N1&lt;/a&gt; tambien basada en el &lt;em&gt;SoC&lt;/em&gt; Rockchip RK3399.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/304/odroid-c2.jpg&#34; title=&#34;ODROID C2&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/304/odroid-c2-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;ODROID C2&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;h3 id=&#34;nanopi-orangepi-y-bananapi&#34;&gt;NanoPi, OrangePi y BananaPi&lt;/h3&gt;
+
+&lt;p&gt;De &lt;a href=&#34;http://nanopi.org/&#34;&gt;NanoPi&lt;/a&gt; voy a destacar el modelo &lt;a href=&#34;http://nanopi.org/NanoPi-K2_Feature.html&#34;&gt;NanoPi K2&lt;/a&gt; con 2 GiB de memoria, procesador quad core, con WiFi y bluetooth y gigabit ethernet y soporte de 4K@60fps y H.265 10bit, H.264 a un precio de $50.&lt;/p&gt;
+
+&lt;p&gt;Parece que con la costumbre de denominar a estas placas bases el nombre de frutos están &lt;a href=&#34;http://www.orangepi.org/orangepiplus2/&#34;&gt;OrangePi Plus 2&lt;/a&gt; y &lt;a href=&#34;http://www.banana-pi.org/m3.html&#34;&gt;BananaPi M3&lt;/a&gt;, el primero a un precio de 45€ con 2 GiB de memoria y soporte para HDMI 4K además de incluir gigabit ethernet y WiFi. El modelo de Banana Pi se diferencia en tener un procesador &lt;em&gt;octa-core&lt;/em&gt;, un puerto SATA y un precio superior de 85€.&lt;/p&gt;
+
+&lt;h3 id=&#34;conclusión&#34;&gt;Conclusión&lt;/h3&gt;
+
+&lt;p&gt;Estos no son los únicos modelos que existen pero son algunos de los más destacables. Si queremos 4 GiB de memoria la opción preferente es la Rock64 con la posibilidad de añadirle en un puerto USB la conectividad WiFi. Si con 2 GiB es suficiente está la la ODROID C2, si se desea que tenga WiFI sin adaptadores adicionales la opción preferente es la NanoPi K2 o la ASUS Tinker Board.&lt;/p&gt;
+
+&lt;p&gt;A pesar de que las alternativas de placas bases sean más capaces que la Raspberry Pi esta les gana en mejor soporte del software como distribuciones GNU/Linux y programas como Kodi que también es algo a tener muy en cuenta y este posiblemente es el motivo de que aún siendo menos capaz tiene más éxito e igualmente una muy buena opción. Quizá con algunas de estas placas alternativas hay que leer la documentación que tengan, algún foro y probar más cosas de las que requeriría una Raspberry Pi.&lt;/p&gt;
+
+&lt;p&gt;Hasta el 2019 no se lanzará un nuevo modelo de Rasbperry Pi lo que sería la versión 4 y, sin embargo, y ójala me equivoque, cuando salga no creo que sea mucho más potente ni tenga más memoria que la que ya hoy tiene la Rock64, posiblemente el 3.14 del 2019 (día catorce del mes tres, por el día Pi) se comprobará.&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.arm.com/products/processors/cortex-a&#34;&gt;Procesadores ARM Cortex-A&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://es.wikipedia.org/wiki/Arquitectura_ARM&#34;&gt;Arquitectura ARM&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.arm.com/products/graphics-and-multimedia/mali-gpu&#34;&gt;GPUs ARM Mali&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.arm.com/products/graphics-and-multimedia/mali-gpu&#34;&gt;GPUs ARM Mali (wkipedia)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/VideoCore&#34;&gt;VideoCore&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.khronos.org/opengles/&#34;&gt;OpenGL ES&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.khronos.org/opencl/&#34;&gt;OpenCL&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.khronos.org/openvg/&#34;&gt;OpenVG&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="gnu-linux"/>
+            
+                <category term="hardware"/>
+            
+                <category term="planeta-codigo"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/03/el-problema-de-concurrencia-del-agente-y-los-fumadores-resuelto-en-java/</id>
+        <title>El problema de concurrencia del agente y los fumadores resuelto en Java</title>        
+        <updated>2018-03-05T19:00:00+01:00</updated>
+        <published>2018-03-05T19:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/03/el-problema-de-concurrencia-del-agente-y-los-fumadores-resuelto-en-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Junto con los ejemplos de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/02/el-problema-de-concurrencia-de-la-cena-de-los-filosofos-resuelto-con-java/&#34;&gt;la cena de los filósofos&lt;/a&gt; y &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/iniciacion-a-la-programacion-concurrente-en-java/&#34;&gt;la barbería&lt;/a&gt; el de los fumadores es otro ejemplo clásico que se estudia en las asignaturas de sistemas operativos. Estos ejemplos necesitan de mecanismos de sincronización y concurrencia para su correcto funcionamiento al haber varios procesos y recursos compartidos que los procesos intentan utilizar de forma concurrente pero que no se debe permitir utilizando notificaciones entre procesos o &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/iniciacion-a-la-programacion-concurrente-en-java/&#34;&gt;algunas primitivas de sincronización, concurrencia e hilos que posee Java&lt;/a&gt; como &lt;em&gt;mutex&lt;/em&gt;, &lt;em&gt;locks&lt;/em&gt; o semáforos.&lt;/p&gt;
+
+&lt;p&gt;El caso de los fumadores consiste en un grupo de fumadores que para fumar necesitan los ingredientes que les faltan para hacer un cigarrillo y fumárselo, poseen un ingrediente en cantidades ilimitadas pero les faltan otros dos. El agente posee cantidades ilimitadas de todos los ingredientes que son papel, tabaco y cerillas pero solo deja en una mesa dos de estos ingredientes a la vez. Cada fumador posee un ingrediente distinto de los tres necesarios y según los ingredientes que deje el agente uno de los fumadores podrá fumar con los dos ingredientes que el agente deja.&lt;/p&gt;
+
+&lt;p&gt;El agente y los fumadores representan en la realidad a procesos y los ingredientes a los recursos de un sistema. La dificultad radica en sincronizar los agentes y fumadores para que el agente cuando deje ingredientes en la mesa el fumador correcto fume cuando.&lt;/p&gt;
+
+&lt;p&gt;A primera vista podríamos intentar que cada uno de los fumadores tomase cada uno de los ingredientes que le falta y se pusiese a fumar representando un ingrediente como un semáforo, sin embargo, esta solución puede producir un bloqueo si uno de los otros fumadores que no pueden fumar según los ingredientes que ha dejado el agente le quitan al que podría fumar uno de los ingredientes que necesita. Por ejemplo, un caso de bloqueo sería el caso de que el agente deje en la mesa los ingredientes de tabaco y cerillas el fumador que podría fumar sería el 1 pero si el fumador 2 es más rápido y se ejecuta antes tomando el tabaco el fumador 1 se quedaría esperando a tomar tabaco y el fumador 2 también por no haber dejado el agente papel sino cerillas.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=SmokersDeadlock.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Para la solución hay que optar por otra estrategia, en el ejemplo de código he creado tres clases que representa a cada una de las entidades, una clase &lt;em&gt;Agent&lt;/em&gt;, una clase &lt;em&gt;Smoker&lt;/em&gt; y una clase &lt;em&gt;Table&lt;/em&gt;, adicionalmente una clase &lt;em&gt;Pusher&lt;/em&gt; que se encargará de despertar al &lt;em&gt;Smoker&lt;/em&gt; correcto según los ingredientes de la mesa. Todas las clases implementan la interfaz &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/lang/Runnable.html&#34;&gt;Runnable&lt;/a&gt; para convertir cada una de las instancias en un hilo de ejecución. Cuando un agente deja ingredientes en la mesa se notifica a todos los incitadores  o &lt;em&gt;pushers&lt;/em&gt; para indicarles que hay ingredientes listos, el &lt;em&gt;pusher&lt;/em&gt; adquiere el ingrediente que tiene asignado para tomar y comprueba cual es el único ingrediente que falta en la mesa, si no lo sabe porque falten varios ingredientes indica que en la mesa está su ingrediente y deja el trabajo de despertar al fumador al siguiente &lt;em&gt;pusher&lt;/em&gt;. El &lt;em&gt;pusher&lt;/em&gt; que sepa que dos ingredientes hay en la mesa despierta al fumador que puede fumar con el ingrediente que tiene y los dos que hay en la mesa. El fumador se pone a fumar y cuando termina se indica al agente que genere otros dos ingredientes.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=Component.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=Table.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=Smoker.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=Agent.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=Pusher.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/bb2b37bba770d2d09d97d92ff82bfd1a.js?file=Main.java&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+        &lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/167230.js&#34; id=&#34;asciicast-167230&#34; async&gt;&lt;/script&gt;
+        &lt;noscript&gt;&lt;a href=&#34;https://asciinema.org/a/167230&#34; target=&#34;_blank&#34;&gt;&lt;img src=&#34;https://asciinema.org/a/167230.png&#34; width=&#34;734&#34;/&gt;&lt;/a&gt;&lt;/noscript&gt;
+        
+        &lt;figcaption&gt;Ejemplo de concurrencia del agente y los fumadores&lt;/figcaption&gt;
+        
+    &lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En el siguiente &lt;a href=&#34;https://cse.yeditepe.edu.tr/~kserdaroglu/spring2014/cse331/labnotes/WEEK%205%20-%20SEMAPHORES/mysemaphoreexamplesMOE.pdf&#34;&gt;documento con varios de los problemas de concurrencia y sincronización&lt;/a&gt; está muy bien explicado la solución a este problema de los fumadores y de los otros casos. En algunos otros sitios este caso lo convierten en un problema de sincronización en vez de uno de concurrencia.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaConcurrency&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Cigarette_smokers_problem&#34;&gt;Cigarette smokers problem&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/iniciacion-a-la-programacion-concurrente-en-java/&#34;&gt;Introducción sobre la programación concurrente en Java&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/02/el-problema-de-concurrencia-de-la-cena-de-los-filosofos-resuelto-con-java/</id>
+        <title>El problema de concurrencia de la cena de los filósofos resuelto con Java</title>        
+        <updated>2018-02-25T10:00:00+01:00</updated>
+        <published>2018-02-25T10:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/02/el-problema-de-concurrencia-de-la-cena-de-los-filosofos-resuelto-con-java/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En un &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/iniciacion-a-la-programacion-concurrente-en-java/&#34;&gt;artículo de introducción sobre la programación concurrente en Java&lt;/a&gt; explicaba cuales eran la facilidades que proporciona este lenguaje para la programación concurrente en múltiples hilos. En él exponía dos ejemplos clásicos que se estudian en las asignaturas de sistemas operativos, uno de ellos era el de &lt;a href=&#34;https://es.wikipedia.org/wiki/Problema_de_la_cena_de_los_fil%C3%B3sofos&#34;&gt;la cena de los filósofos&lt;/a&gt; donde varios filósofos sentados en una tabla durante una cena se dedican a pensar y cuando tienen hambre comen usando para ello dos tenedores que comparten con sus compañeros que se sientan a la izquierda y derecha.&lt;/p&gt;
+
+&lt;p&gt;Dado que dos filósofos no puede utilizar el mismo tenedor a la vez hay que implementar sincronización a la hora de utilizarlos. En la realidad un filósofo representa a un proceso y un tenedor representa a un recurso compartido de uso exclusivo.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/302/dining-philosophers.png&#34; title=&#34;La cena de los filósofos&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/302/dining-philosophers-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;La cena de los filósofos&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;p&gt;La solución del ejemplo que ponía en el artículo anterior no era completamente correcto ya que un filósofo si tiene mala suerte podría quedarse sin  comer o sin comer durante mucho tiempo, debido a que en esa implementación el filósofo intentaba coger los tenedores y si no podía desistía si alguno de sus compañeros los estuviese utilizando. Las reglas que ha de cumplir una solución a un problema de concurrencia para considerarse válida son:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Exclusión mutua: Si un proceso se está ejecutando en su sección crítica ningún otro proceso se puede estar ejecutando en la suya.&lt;/li&gt;
+&lt;li&gt;Progreso: Si ningún proceso se está ejecutando en su sección crítica y hay otros procesos que desean entrar en las suyas, entonces solo aquellos procesos que no se está ejecutando en su sección restante pueden participar en la decisión  del cuál será el siguiente en entrar en la sección crítica, y esta selección no puede postergarse indefinidamente.&lt;/li&gt;
+&lt;li&gt;Espera limitada: Debe haber un límite en el número de veces que se permite que los demás procesos entren en su sección crítica después de que un proceso haya efectuado una solicitud para entrar en la suya y antes de que se conceda esa solicitud.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;En la implementación de este ejemplo evitaré que un filósofo pueda quedarse sin comer. La razón de que un filósofo desistiera de coger uno de los tenedores que necesita si uno de sus compañeros ya lo tuviese era para evitar un bloqueo circular en el caso de que todos los filósofos al mismo tiempo cogiesen su tenedor izquierdo, en esta situación ninguno de ellos podría coger su tenedor derecho y se quedarían todos esperando indefinidamente, se produciría un bloqueo indefinido o &lt;em&gt;deadlock&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Para evitar un bloqueo indefinido una de las siguientes reglas no se ha de cumplir:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Exclusión mutua: Por lo menos un recurso debe retenerse en modo no compartido; es decir, sólo un proceso a la vez puede usar el recurso. Si otro proceso solicita el recurso, deberá esperar hasta que se haya liberado.&lt;/li&gt;
+&lt;li&gt;Retención y espera: Debe haber un proceso que retenga por lo menos un recurso y espere adquirir otros recursos retenidos por otros procesos.&lt;/li&gt;
+&lt;li&gt;No apropiación: Los recursos no se pueden quitar; es decir, un recurso solo puede ser liberado voluntariamente por el proceso que lo retiene, después de que haya cumplido su tarea.&lt;/li&gt;
+&lt;li&gt;Espera circular: Debe haber un conjunto { P0, P1, &amp;hellip;, Pn } de procesos en espera tales que P0 espera un recurso retenido por P1, P1 espera un recurso retenido por P2, &amp;hellip; Pn-1 espera un recurso retenido por On, y Pn espera un recurso retenido por P0.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;En esta implementación he optado por hacer que el último filósofo en vez de ser diestro sea zurdo de modo que primero intente coger el tenedor izquierdo y luego el derecho, con este simple cambio la espera circular ya no puede producirse y con ello el bloqueo indefinido.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/e732e19b68e6f1fd6b0e586dc1a5aaf7.js?file=Main.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/e732e19b68e6f1fd6b0e586dc1a5aaf7.js?file=Table.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/e732e19b68e6f1fd6b0e586dc1a5aaf7.js?file=Fork.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/e732e19b68e6f1fd6b0e586dc1a5aaf7.js?file=Philosopher.java&#34;&gt;&lt;/script&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;figure&gt;
+        &lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/165278.js&#34; id=&#34;asciicast-165278&#34; async&gt;&lt;/script&gt;
+        &lt;noscript&gt;&lt;a href=&#34;https://asciinema.org/a/165278&#34; target=&#34;_blank&#34;&gt;&lt;img src=&#34;https://asciinema.org/a/165278.png&#34; width=&#34;734&#34;/&gt;&lt;/a&gt;&lt;/noscript&gt;
+        
+        &lt;figcaption&gt;Ejemplo de concurrencia de los filósofos&lt;/figcaption&gt;
+        
+    &lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaConcurrency&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://bruceeckel.github.io/2016/12/29/dining-philosophers-in-java-8/&#34;&gt;Dining Philosophers in Java 8&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/02/consola-de-juegos-retro-con-lakka-y-una-raspberry-pi/</id>
+        <title>Consola de juegos retro con Lakka y una Raspberry Pi</title>        
+        <updated>2018-03-05T19:30:00+01:00</updated>
+        <published>2018-02-23T23:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/02/consola-de-juegos-retro-con-lakka-y-una-raspberry-pi/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;El propósito original de las Raspberry Pi era educativo y se ha hecho muy popular debido a su bajo precio y un buen trabajo de &lt;em&gt;marketing&lt;/em&gt;. Sin embargo, puede utilizarse para muchos otros propósitos desde aprendizaje a programación, electrónica, servidor de archivos personales, descarga de películas, series y libros con torrent y también como una consola de juegos antiguos de arcade.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/lakka.png&#34; class=&#34;right &#34; width=&#34;250&#34; alt=&#34;Lakka&#34; title=&#34;Lakka&#34;/&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/linux.svg&#34; class=&#34;right &#34; width=&#34;250&#34; alt=&#34;Linux&#34; title=&#34;Linux&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Desde que compré la &lt;a href=&#34;https://www.raspberrypi.org/&#34;&gt;Raspberry Pi&lt;/a&gt; en el año 2012, el modelo inicial B con 256 MiB de memoria, me ha dado y me esta dando un estupendo servicio. Principalmente la he estado usando para descargar películas y libros vía &lt;em&gt;torrent&lt;/em&gt; con &lt;a href=&#34;https://transmissionbt.com/&#34;&gt;Transmission&lt;/a&gt; usando la distribución &lt;a href=&#34;https://archlinuxarm.org/&#34;&gt;Arch Linux para ARM&lt;/a&gt;. Sin embargo, ya estoy pensando en sustituirla por algo más potente para hacer algunas pruebas con &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt;, &lt;a href=&#34;https://www.ansible.com/&#34;&gt;Ansible&lt;/a&gt; y algunas pruebas más que se me ocurran aparte de seguir queriendo hacer descargas o en un futuro con la función de SmartTV. De la Raspberry Pi no se lanzará un nuevo modelo, el que sería el 4, hasta el 2019 y cuando salga no creo que sea más potente que una &lt;a href=&#34;https://www.pine64.org/?page_id=7147&#34;&gt;Rock64&lt;/a&gt; que ya a día de hoy incorporan hasta 4 GiB de memoria, tienen Gigabit Ethernet y un puerto USB 3.0 con precio similar a la Raspberry Pi, lo único que le falta respecto al modelo de la RPi 3 es WiFi y Bluetooth pero a cambio se puede tener 4 veces más memoria, Gigabit Ethernet y un puerto USB 3.0. El mayor problema de la Rock64 es su soporte tanto en distribuciones, software y comunidad, en estos es donde la Raspberry Pi no tiene competidor.&lt;/p&gt;
+
+&lt;p&gt;Pero antes estoy pensando en el uso que le puedo dar a la Raspberry Pi para que no se quede en un cajón cogiendo polvo. Y he pensado en utilizarla como consola de juegos retro con &lt;a href=&#34;https://www.lakka.tv/&#34;&gt;Lakka&lt;/a&gt; para mis sobrinos que ahora usan PlayStation 1 pero que ya tiene los cables de los mandos estropeados de tanto doblarlos al guardarlos, de tanto uso ya no funcionan bien.&lt;/p&gt;
+
+&lt;p&gt;Lo primero que he hecho es comprar unos &lt;a href=&#34;http://amzn.to/2Cg6035&#34;&gt;mandos similares a los de la antigua Super NES&lt;/a&gt;, aunque con un teclado USB también se puede jugar es más cómodo con los mandos, además de poder jugar a dos jugadores. En muchos juegos de &lt;em&gt;arcade&lt;/em&gt; antiguos es posible incluso a tres o cuatro jugadores.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/retroarch.png&#34; width=&#34;600&#34; alt=&#34;Retroarch&#34; title=&#34;Retroarch&#34;&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Los elementos necesarios para tener tener una consola retro son los siguientes: una &lt;a href=&#34;http://amzn.to/2EP9mHX&#34;&gt;Raspberry Pi 3&lt;/a&gt;, un &lt;a href=&#34;http://amzn.to/2Cf9Vxp&#34;&gt;cargador USB&lt;/a&gt; adecuado, una &lt;a href=&#34;http://amzn.to/2EP9uXX&#34;&gt;tarjeta microSD de 32 GiB&lt;/a&gt; o más, &lt;a href=&#34;http://amzn.to/2Cg6035&#34;&gt;dos mandos para consola USB&lt;/a&gt; o un &lt;a href=&#34;http://amzn.to/2ou0QHD&#34;&gt;teclado USB&lt;/a&gt;, un &lt;a href=&#34;http://amzn.to/2sPcjqz&#34;&gt;cable HDMI&lt;/a&gt; y si se quiere una &lt;a href=&#34;http://amzn.to/2Fvtyjy&#34;&gt;caja&lt;/a&gt;. Por unos 65 € se pueden adquirir los elementos imprescindibles en la tienda de &lt;a href=&#34;https://amzn.to/2flFhHA&#34;&gt;Amazon&lt;/a&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://amzn.to/2EP9mHX&#34;&gt;Raspberry Pi 3&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://amzn.to/2Cf9Vxp&#34;&gt;Cargador USB&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://amzn.to/2EP9uXX&#34;&gt;Tarjeta microSD de 32 GiB&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://amzn.to/2sPcjqz&#34;&gt;Cable HDMI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://amzn.to/2Cg6035&#34;&gt;Mandos USB&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://amzn.to/2ou0QHD&#34;&gt;Teclado USB&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.lakka.tv/&#34;&gt;Software Lakka&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://archive.org/details/datomatic.no-intro.org&#34;&gt;ROMs de juegos&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B01CD5VC92&amp;linkId=e16de107a3b45aa06c042744e18fc33a&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B06XFSZGCC&amp;linkId=132bc906913976b2a43c4582b23f5fb5&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B01N59IUV5&amp;linkId=0bcc896ec870ce504e2c4c0acfaa8870&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B06ZZJ5KVX&amp;linkId=acb19b6a6d9a6e3504f3b52fcb45ff72&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B00NW4SJRM&amp;linkId=7bf1d9cf65b79b18155abd26c96831d5&#34;&gt;&lt;/iframe&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B00564GWEI&amp;linkId=2264c2741c0914e881d4e70b36b927da&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;El software para usar la Raspberry Pi como consola retro que he utilizado es Lakka que es una distribución &lt;a href=&#34;https://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;https://www.linux.com/&#34;&gt;Linux&lt;/a&gt; especifica para convertir un ordenador en una consola de juegos retro. Para instalarlo en la tarjeta microSD hay que &lt;a href=&#34;http://www.lakka.tv/get/&#34;&gt;descargar la imagen de Lakka&lt;/a&gt; y una forma simple de grabarla en la tarjeta microSD es utilizando &lt;a href=&#34;https://etcher.io/&#34;&gt;Etcher&lt;/a&gt;, basta instalarlo, iniciarlo, seleccionar la imagen de Lakka una vez descomprimido su archivo zip, seleccionar la unidad de la tarjeta SD (si es necesario ya que Etcher puede seleccionarla automáticamente) y pulsar el botón &lt;em&gt;Flash!&lt;/em&gt;, después de unos pocos minutos la imagen está grabada y la tarjeta microSD lista para usarla en la Raspberry Pi y efectuar el primer inicio.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/etcher.png&#34; title=&#34;Etcher&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/etcher-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Etcher&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;p&gt;Los juegos se distribuyen en archivos denominados ROM y estos se pueden descargar de ciertas páginas, una de ellas es de &lt;a href=&#34;https://archive.org/&#34;&gt;Internet Archive&lt;/a&gt; donde está una &lt;a href=&#34;https://archive.org/details/datomatic.no-intro.org&#34;&gt;colección de juegos&lt;/a&gt; de las consolas más populares o si sabemos el nombre del juego de &lt;em&gt;arcade&lt;/em&gt; descargarlo individualmente de &lt;a href=&#34;http://coolrom.com/&#34;&gt;CoolROM&lt;/a&gt;. Hay miles de juegos por lo que es importante conocer su nombre para hacer la búsqueda. En otro artículo hice una pequeña &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/08/jugar-a-videojuegos-clasicos-y-miticos-de-arcade-con-mame-en-gnu-linux/&#34;&gt;recopilación de juegos míticos de arcade&lt;/a&gt; y en otros blog están recopilados otra selección de juegos:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://mundogeek.net/archivos/2009/11/16/los-10-mejores-juegos-de-mame-para-nostalgicos/&#34;&gt;Los 10 mejores juegos de MAME para nostálgicos&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://lopezpino.com/2010/08/24/los-mejores-juegos-de-mame/&#34;&gt;Los mejores juegos de MAME&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.taringa.net/comunidades/mame-arcade/4629126/Los-Mejores-234-Juegos-de-Mame-Por-Mediafire.html&#34;&gt;Los Mejores 234 Juegos de Mame Por Mediafire&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.hobbyconsolas.com/reportajes/100-juegos-miticos-nes-49310&#34;&gt;Los 100 juegos míticos de NES&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Algunas de las consolas emuladas son:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Nintendo Entertainment System, Super Nintendo Entertainment System, Nintendo 64, Nintendo GameCube, Game Boy&lt;/li&gt;
+&lt;li&gt;Sega Master System, Genesis, Saturn, Dreamcast, Game Gear&lt;/li&gt;
+&lt;li&gt;MSX, MSX 2&lt;/li&gt;
+&lt;li&gt;Atari 2600, 5200, 7800, Lynx, Jaguar&lt;/li&gt;
+&lt;li&gt;Varias más y juegos de máquinas recreativas con FBA Alpha y MAME&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;En el primer inicio Lakka debe hacer una serie de tareas para inicializar el sistema durante unos minutos, recomiendo no conectar el cable de red  ni ningún mando o teclado en este paso. Una vez se completa este primer inicio el siguiente paso es copiar las ROMs, hay varias formas una de ellas es desde un equipo con GNU/Linux y copiar los archivos al directorio &lt;em&gt;/storage/ROMs/&lt;/em&gt; directamente a la tarjeta microSD desde un ordenador. En otros sistemas que no saben como acceder a las particiones &lt;em&gt;ext4&lt;/em&gt; de Linux la más sencilla es activando el protocolo SAMBA en Lakka y copiarlos por la red, aunque tarda más. SAMBA se activa desde el menú &lt;em&gt;Settings &amp;gt; Services &amp;gt; SAMBA Enable&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/lakka.jpg&#34; title=&#34;Lakka&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/lakka-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Raspberry Pi ejecutando Lakka (La televisión va acorde con los juegos XD)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;p&gt;Con el cable de red conectado a la Rasberry Pi al &lt;em&gt;router&lt;/em&gt; y desde un equipo con Windows, macOS o GNU/Linux y probando la dirección IP que el &lt;em&gt;router&lt;/em&gt; le ha asignado a la Raspberry Pi se accede a los directorios compartidos por red poniendo en el explorador de archivos &lt;em&gt;\\192.168.0.2&lt;/em&gt;, &lt;em&gt;\\192.168.0.3&lt;/em&gt; o &lt;em&gt;\\192.168.0.4&lt;/em&gt;, &amp;hellip; o posteriores números dependiendo de los dispositivos conectados en la red, también podría ser &lt;em&gt;\\192.168.1.2&lt;/em&gt;, &lt;em&gt;\\192.168.1.3&lt;/em&gt;, &lt;em&gt;\\192.168.1.4&lt;/em&gt;, &amp;hellip; Con acceso en el explorador de archivos ya solo queda copiar las ROMs a la carpeta compartida ROMs. En macOS macOS con &lt;em&gt;Finder&lt;/em&gt; en la opción &lt;em&gt;Ir &amp;gt; Conectar al servidor&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/lakka-samba-1.png&#34; title=&#34;Carpetas compartidas por Lakka mediante SAMBA&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/lakka-samba-1-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/lakka-samba-2.png&#34; title=&#34;Archivos de ROMs vía SAMBA&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/lakka-samba-2-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;figcaption&gt;Carpetas compartidas por Lakka mediante SAMBA&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;p&gt;Copiados los archivos de las ROMs a la Raspberry Pi desde la opción &lt;em&gt;Import Content &amp;gt; Scan Directory&lt;/em&gt; de Lakka esta detectará todos los juegos que encuentre en su base de datos añadiéndolos en varios menús según el sistema emulado del juego en las últimas opciones del menú horizontal de Lakka.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/lakka-games.jpg&#34; title=&#34;Juegos Lakka&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/lakka-games-thumb.jpg&#34;/&gt;&lt;/a&gt;
+  
+  
+  
+  &lt;figcaption&gt;Juegos Lakka&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;p&gt;Detectadas las ROMS iniciar un juego basta con seleccionarlo desde los menús e iniciarlo. La mayoría funcionará con un rendimiento óptimo tanto el fluidez de imagen como en sonido, la Raspberry Pi es mucho más potente que los sistemas antiguos que emula, el modelo Raspberry Pi 3 incluso funcionará mejor. Aún asi algunos pueden ir un poco lentos o el sonido no ser completamente fiel al original.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/the-legend-of-zelda.png&#34; title=&#34;The Legend of Zelda&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/the-legend-of-zelda-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/zelda-II-the-adventure-of-link.png&#34; title=&#34;Zelda-II: The Adventure of Link&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/zelda-II-the-adventure-of-link-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/super-mario-bros-3.png&#34; title=&#34;Super Mario Bros 3&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/super-mario-bros-3-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+    
+&lt;figure&gt;
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/mega-man-5.png&#34; title=&#34;Mega Man 5&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/mega-man-5-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/1943.png&#34; title=&#34;1943&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/1943-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/sonic-the-hedgehog.png&#34; title=&#34;Sonic The Hedgehog&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/sonic-the-hedgehog-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;Varios juegos de la NES y Sega&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;p&gt;Tenía dudas por la calidad de los mandos por si eran demasiado frágiles, sin embargo, cuando me han llegado y los he visto me han parecido muy decentes y creo que tratándolos bien van a aguantar mucho tiempo. Además, la Raspberry Pi y Lakka los han reconocido sin ningún tipo de problema tanto conectando uno individualmente o los dos al mismo tiempo reconociendo correctamente todos los botones. Lo único que he tenido que hacer es configurar en el menú &lt;em&gt;Input &amp;gt; Menu Toggle Gamepad Combo&lt;/em&gt; (se elige con la cruceta a derecha e izquierda) un botón para salir de un juego pulsando a la vez los botones &lt;em&gt;Start + Select&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Tampoco he tenido ningún problema para que me funcione por el HDMI como también por la salida de vídeo RCA y el sonido por el jack de 3.5mm que posee la Raspberry Pi 1 original que tengo, todo me ha funcionado sin haya tenido que realizar ninguna acción.&lt;/p&gt;
+
+&lt;p&gt;Si añadimos algunos juegos de &lt;em&gt;arcade&lt;/em&gt; que Lakka no reconoce es posible crear una &lt;a href=&#34;http://www.lakka.tv/doc/Playlists/&#34;&gt;lista personalizada de juegos&lt;/a&gt;, el nombre de la lista determina los iconos de los juegos y las &lt;a href=&#34;https://forums.libretro.com/t/megathread-which-roms-work-with-lakka/5566&#34;&gt;rutas de los &lt;em&gt;cores&lt;/em&gt;&lt;/a&gt; dependen del sistema a emular, es probable que funcionen con &lt;em&gt;FB Alpha - Arcade Games&lt;/em&gt; o &lt;em&gt;MAME&lt;/em&gt;. Es importante no renombrar los nombres de los archivos zip de las ROMs ya que es necesario que tengan el nombre original para funcionar bien.&lt;/p&gt;
+
+&lt;p&gt;También es posible crear una lista de juegos favoritos (muy útil si tenemos muchos juegos), para ello hay que una vez iniciado el juego salir al menú con la conbinación de teclas configurada en &lt;em&gt;Settings &amp;gt; Input &amp;gt; Menu Toggle Gamepad Combo&lt;/em&gt; y usar la opción &lt;em&gt;Add to favorites&lt;/em&gt;. Desde el mismo menú es posible salir del juego u obtener una captura de pantalla. La lista de favoritos se guarda en &lt;em&gt;Configfiles &amp;gt; retroarch &amp;gt; content_favorites.lpl&lt;/em&gt; y el historial en &lt;em&gt;Configfiles &amp;gt; retroarch &amp;gt; content_history.lpl&lt;/em&gt; por si se quiere editar manualmente.&lt;/p&gt;
+
+&lt;p&gt;Como son muchas ROMs reconocer una entre las muchas que hay o ver como es el juego sin entrar en él está la opción de descargar imágenes del juego y elegir ver una imagen de como es el juego, su portada o su pantalla inicial. Las imágenes se pueden descargar desde la opcion &lt;em&gt;Main Menu &amp;gt; Online Updater &amp;gt; Thumbnails Updater&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Al obtener ROMs de forma individual a veces es difícil dar con una que funcione, de algunos juegos hay varias versiones y es posible que algunas de ellas fallen al cargarse, hay que tener un poco de paciencia para encontrar la correcta.&lt;/p&gt;
+
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+    
+&lt;figure&gt;
+  
+  
+  
+  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/the-legend-of-zelda-screenshot.png&#34; title=&#34;The Legend of Zelda&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2018/301/the-legend-of-zelda-screenshot-thumb.png&#34;/&gt;&lt;/a&gt;
+  
+  &lt;figcaption&gt;Juego The Legend of Zelda de NES&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+&lt;/div&gt;
+
+&lt;p&gt;Ya solo queda pasar algunos buenos momentos con estos juegos antiguos pero entretenidos, nosotros o los más pequeños de la casa. Otra opción alternativa a Lakka para el mismo propósito es &lt;a href=&#34;https://retropie.org.uk&#34;&gt;RetroPie&lt;/a&gt; aunque la primera soporta algunos modelos mas de placas similares a la Raspberry Pi.&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://elblogdepicodev.blogspot.com.es/2012/05/raspberry-pi-desempaquetado-unboxing.html&#34;&gt;Raspberry Pi, desempaquetado&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://thumbnailpacks.libretro.com/&#34;&gt;Imágenes juegos&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Nintendo_video_game_consoles&#34;&gt;Nintendo video game consoles&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/List_of_Sega_video_game_consoles&#34;&gt;Sega video game consoles&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="gnu-linux"/>
+            
+                <category term="juegos"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="software-libre"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/02/referencias-a-grupos-de-captura-en-expresiones-regulares-y-reemplazos/</id>
+        <title>Referencias a grupos de captura en expresiones regulares y reemplazos</title>        
+        <updated>2018-02-17T17:00:00+01:00</updated>
+        <published>2018-02-17T17:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/02/referencias-a-grupos-de-captura-en-expresiones-regulares-y-reemplazos/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Las expresiones regulares definen un patrón que permite encontrar coincidencias en cadenas de caracteres, reemplazar coincidencias o validar que las cadenas de caracteres cumplen el patrón. Las expresiones regulares son potentes expresiones que resultan útiles en muchos casos pero son expresiones que pueden llegar a ser complejas cuyo uso se aprende con la experiencia. Una de las funcionalidades que poseen es hacer referencia a grupos de captura anteriores en la propia expresión regular o en la cadena de reemplazo.&lt;/p&gt;
+
+&lt;p&gt;Hacer referencia al grupo de captura en las cadenas de reemplazo es especialmente útil ya que sirve no solo para reemplazar coincidencias por cadenas previamente conocidas sino para transformar las coincidencias encontradas por otras expresiones. El caso de las cuentas de correo a continuación es un ejemplo práctico donde se aprecia este uso.&lt;/p&gt;
+
+&lt;p&gt;Supongamos que queremos corregir un texto en el que por error hay palabras repetidas de forma seguida y queremos eliminar esos duplicados de palabras. Por ejemplo, tenemos un texto como el siguiente en el algunas palabras como &lt;em&gt;ipsum&lt;/em&gt;, &lt;em&gt;eiusmod&lt;/em&gt;, &lt;em&gt;fugiat&lt;/em&gt;, &lt;em&gt;sint&lt;/em&gt; y &lt;em&gt;proident&lt;/em&gt; están repetidas:&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/dd337be3c01de7b5e3783b34e8ccc274.js?file=lorem-ipsum.txt&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;La expresión regular para encontrar las coincidencias deberá para cada palabra comprobar si la siguiente es la misma. Cada palabra la incluimos en un grupo y posteriormente hacemos referencia a ese grupo con &lt;em&gt;\1&lt;/em&gt; para ver si la siguiente palabra es la misma. Con la siguiente expresión regular y código encontraremos las palabras repetidas una a continuación de la otra.&lt;/p&gt;
+
+&lt;p&gt;Para hacer referencia en los grupos de coindiciendia en la cadena de reemplazo hay que usar un caracter &lt;em&gt;$&lt;/em&gt; y un número con la posición del grupo de reemplazo.&lt;/p&gt;
+
+&lt;p&gt;Un ejemplo más útil de los grupos de referencia en la cadena de reemplazo sería reemplazar en un texto plano las direcciones de correo electrónico por sus enlaces en HTML. Usando una expresión regular para encontrar las direcciones de correo electrónico y sustituirlas por los enlaces HTML haciendo uso de los grupos de captura y referencias a ellos.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/dd337be3c01de7b5e3783b34e8ccc274.js?file=Main.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;La salida del ejemplo en la terminal es el siguiente.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/dd337be3c01de7b5e3783b34e8ccc274.js?file=system.out&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;A los grupos de captura se les puede dar un nombre y referenciarlos por él en vez de por un número identificador como en el de este ejemplo. A un grupo de captura se le da un nombre con la siguiente expresión &lt;em&gt;(?&amp;lt;name&amp;gt;X)&lt;/em&gt; donde &lt;em&gt;name&lt;/em&gt; es el nombre del grupo de captura de la expresión &lt;em&gt;X&lt;/em&gt;. Posteriormente con la expresión &lt;em&gt;${name}&lt;/em&gt; se hace referencia al grupo de captura, también en la cadena de reemplazo.&lt;/p&gt;
+
+&lt;p&gt;En la &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/util/regex/Pattern.html&#34;&gt;documentación Javadoc de la clase Pattern&lt;/a&gt; está detallado el soporte en Java para usar expresiones regulares.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRegexpReferenceGroups&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&#34;reference&#34;&gt;
+    Referencia:&lt;br&gt;
+    &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/05/extraer-elementos-de-una-cadena-con-una-expresion-regular/&#34;&gt;Extraer elementos de una cadena con una expresión regular&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/los-cuantificadores-greedy-reluctant-y-possessive-en-expresiones-regulares/&#34;&gt;Los cuantificadores greedy, reluctant y possessive en expresiones regulares&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://stackoverflow.com/questions/415580/regex-named-groups-in-java&#34;&gt;Regex Named Groups in Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://stackoverflow.com/questions/201323/using-a-regular-expression-to-validate-an-email-address&#34;&gt;Using a regular expression to validate an email address&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/02/las-6-plus-2-formas-normales-de-las-bases-de-datos-relacionales/</id>
+        <title>Las 6&#43;2 formas normales de las bases de datos relacionales</title>        
+        <updated>2018-02-10T13:00:00+01:00</updated>
+        <published>2018-02-10T13:00:00+01:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/02/las-6-plus-2-formas-normales-de-las-bases-de-datos-relacionales/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;En la universidad se explican las formas normales, en mi caso que yo recuerde hasta la tercera forma normal. Conocer la tercera forma normal suele ser suficiente pero en la teoría existe hasta la sexta forma normal. Cumplir las formas normales evita redundancias e inconsistencias en los datos a costa de crear más tablas que en algunos consultas puede hacerlas lentas. El proceso contrario de la normalización es la desnormalización, puede producir inconsistencias pero los datos son más sencillos y en algunos casos más rápido de consultar.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;p&gt;Las bases de datos relacionales desarrolladas en los años 70 son la forma más utilizada aún en la actualidad para almacenar la información en la mayoría de las aplicaciones informáticas de cualquier ámbito. Los datos se guardan en tablas separadas en campos y con un tipo, los datos almacenados en cada tabla están relacionados entre sí, por ejemplo, podría ser la información de una persona, nombre, apellidos, fecha de nacimiento, ciudad de residencia, teléfono, &amp;hellip; Además las tablas pueden relacionarse con otras tablas. Siguiendo el ejemplo podríamos tener una tabla de películas o libros y relacionarlas con la tabla de personas de forma que conozcamos que películas ha visto o libros ha leído una persona, de cada película podemos guardar su director, de los libros el autor y de cada uno de ellos los actores o personajes.&lt;/p&gt;
+
+&lt;p&gt;Al almacenar la información en la base de datos debemos evitar las redundancias e inconsistencias de forma que la información que obtengamos al consultarla esté libre de inconsistencias. Por ejemplo, guardando la ciudad de residencia en la tabla persona deberemos actualizar todos los registros de las personas que residan en ella al cambiar de nombre a una ciudad o acabaremos con que la misma ciudad está referida por varios términos. Para evitar inconsistencias en las bases de datos se definieron las formas normales, hay seis formas normales y dos adicionales aunque normalmente con aplicar hasta la tercera es suficiente ya que por las relaciones de los datos no es necesario aplicar formas normales superiores. Hasta la tercera forma normal se pueden aplicar independientemente del dominio tratado, a partir de la cuarta forma normal las relaciones las cumplen o no en función de las reglas y condiciones que se establezcan para el dominio. Cuanto mayor sea la forma normal de una tabla o una base de datos menos casos existirán de que contengan inconsistencias, una tabla que cumpla una forma normal cumple las formas normales de menor nivel. Las formas normales son las siguientes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://es.wikipedia.org/wiki/Forma_normal_(base_de_datos)&#34;&gt;Forma normal de base de datos&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://es.wikipedia.org/wiki/1NF&#34;&gt;Primera forma normal, 1FN&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://es.wikipedia.org/wiki/2NF&#34;&gt;Segunda forma normal, 2FN&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://es.wikipedia.org/wiki/3NF&#34;&gt;Tercera forma normal, 3FN&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://es.wikipedia.org/wiki/BCNF&#34;&gt;Forma normal de Boyce-Codd, BCNF&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://es.wikipedia.org/wiki/4NF&#34;&gt;Cuarta forma normal, 4FN&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://es.wikipedia.org/wiki/5NF&#34;&gt;Quinta forma normal, 5FN&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Sixth_normal_form&#34;&gt;Sexta forna normal, 6FN&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://es.wikipedia.org/wiki/DKNF&#34;&gt;Forma normal de dominio/clave, DNFN&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://es.wikipedia.org/wiki/Denormalizaci%C3%B3n_(base_de_datos)&#34;&gt;Desnormalización&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;En los enlaces de la wikipedia está incluida una explicación más detallada de cada forma normal, a continuación solo haré un breve resumen. En anexo final del libro &lt;a href=&#34;http://amzn.to/2G2oRN1&#34;&gt;SQL Antipattens&lt;/a&gt; también hay una explicación muy detallada de las diferentes formas normales, que problemas pueden ocasionar y como corregirlos.&lt;/p&gt;
+
+&lt;div class=&#34;media-amazon&#34; style=&#34;text-align: center;&#34;&gt;
+    &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1934356557&amp;linkId=5952266d59f312e39e2a850c1dc3a54a&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;primera-forma-normal-1fn&#34;&gt;Primera forma normal, 1FN&lt;/h3&gt;
+
+&lt;p&gt;No hay grupos repetidos de columnas, ni una columna guarda múltiples valores. Por ejemplo, si de una persona queremos guardar varios teléfonos deberíamos crear una tabla de teléfonos y relacionarla con la tabla de usuarios.&lt;/p&gt;
+
+&lt;p&gt;En el caso del ejemplo los grupos repetidos de columnas implica que de una persona solo se pueden guardar hasta tres teléfonos como máximo, han de crearse las columnas por adelantado aunque no se usen y si hay que actualizar un telefono no sabríamos en que campo de la tabla está obligando a realizar una consulta de actualización en los tres campos.&lt;/p&gt;
+
+&lt;p&gt;Las columnas con múltiples valores son difíciles de actualizar con sentencias SQL por el formato que emplea la columna para guardar el dato, en este caso utilizando una barra como separador.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/b0a638123e3888d2c3ee1d7a5d9d3668.js?file=1fn.txt&#34;&gt;&lt;/script&gt;
+
+&lt;h3 id=&#34;segunda-forma-normal-2fn&#34;&gt;Segunda forma normal, 2FN&lt;/h3&gt;
+
+&lt;p&gt;Cada columna de una tabla está relacionada con todas las columnas de la clave primaria y no solo por una combinación de parte de la clave primaria. En este caso en que se guarda las las persona que trabajan en una empresa, cumple la 1FN al no tener columnas repetidas ni múltiples valores en una columna pero no cumple la 2FN estando la clave primaria formada por los campos &lt;em&gt;id_persona&lt;/em&gt; e &lt;em&gt;id_empresa&lt;/em&gt; y el campo &lt;em&gt;direccion_empresa&lt;/em&gt; siendo solo dependiente del campo &lt;em&gt;id_empresa&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;En este caso el problema además de contener posibles inconsistencias en los valores de las direcciones es que si se quisiera actualizar la dirección de una empresa habría que actualizar todos los registros de los empleados y empresa.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/b0a638123e3888d2c3ee1d7a5d9d3668.js?file=2fn.txt&#34;&gt;&lt;/script&gt;
+
+&lt;h3 id=&#34;tercera-forma-normal-3fn&#34;&gt;Tercera forma normal, 3FN&lt;/h3&gt;
+
+&lt;p&gt;Cada columna de una tabla está relacionada directamente con las columnas de la clave primaria, no de forma transitiva a través de otro campo. En el mismo caso anterior que cumple la 2FN no cumple la tercera si el campo &lt;em&gt;horas semanales&lt;/em&gt; depende del puesto.&lt;/p&gt;
+
+&lt;p&gt;Podría haber inconsistenias de datos si dos personas tuviesen diferentes horas semanales para el mismo puesto.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/b0a638123e3888d2c3ee1d7a5d9d3668.js?file=3fn.txt&#34;&gt;&lt;/script&gt;
+
+&lt;h3 id=&#34;forma-normal-de-boyce-codd-bcnf&#34;&gt;Forma normal de Boyce-Codd, BCNF&lt;/h3&gt;
+
+&lt;p&gt;Una tabla está en BCNF y está en 3FN y todos los campos tienen como deteminante (dependen) la clave primaria. En un caso en que un trabajador trabaja en varias empresas con un responsable asignado e introduciendo la restricción de que en una empresa solo hay un responsable para todos los trabajadores, el campo &lt;em&gt;id_responsable&lt;/em&gt; tiene una dependencia sobre el campo &lt;em&gt;id_empresa&lt;/em&gt; que no es clave primaria.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/b0a638123e3888d2c3ee1d7a5d9d3668.js?file=bcfn.txt&#34;&gt;&lt;/script&gt;
+ 
+
+&lt;h3 id=&#34;cuarta-forma-normal-4fn&#34;&gt;Cuarta forma normal, 4FN&lt;/h3&gt;
+
+&lt;p&gt;No existen dos o más relaciones independientes en una misma tabla. En una relación que guarde las empresas de un trabajador y las localidades en las que trabaja, si las empresas y las localidades son independientes hay redundancia de datos por guardar para cada empresa cada una de las localidades del trabajador. Aplicando la 4FN en vez de utilizar 6 filas se utilizan 2 y 3 filas en las tablas &lt;em&gt;Trabajador&lt;/em&gt; y &lt;em&gt;Localidad&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/b0a638123e3888d2c3ee1d7a5d9d3668.js?file=4fn.txt&#34;&gt;&lt;/script&gt;
+
+&lt;h3 id=&#34;quinta-forma-normal-5fn&#34;&gt;Quinta forma normal, 5FN&lt;/h3&gt;
+
+&lt;p&gt;En el mismo caso anterior si se intodujese una realación entre empresa y localidades en las que trabaja y la condición de que es cierto que las localidades de un trabajador están incluídas en el conjunto de las localidades de una empresa si no se aplicase la 5FN y un trabajador empezase a trabajar en una nueva empresa habría que insertar una fila nueva en la tabla &lt;em&gt;Zona&lt;/em&gt; por cada localidad del trabajador.&lt;/p&gt;
+
+&lt;p&gt;Si el trabajador 1 empezase a trabajar en la empresa 2 sin aplicar la 5FN habría que insertar dos nuevas filas en la trabla &lt;em&gt;Zona&lt;/em&gt;. Aplicando la 5FN bastaría con insertar una en la tabla &lt;em&gt;TrabajadorEmpresa&lt;/em&gt; (id_persona: 1, id_empresa: 2).&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/b0a638123e3888d2c3ee1d7a5d9d3668.js?file=5fn.txt&#34;&gt;&lt;/script&gt;
+
+&lt;h3 id=&#34;sexta-forma-normal-6fn&#34;&gt;Sexta forma normal, 6FN&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Sixth_normal_form&#34;&gt;Sixth normal form&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;forma-normal-de-dominio-clave-dnfn&#34;&gt;Forma normal de dominio/clave, DNFN&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://es.wikipedia.org/wiki/Forma_normal_de_dominio/clave&#34;&gt;Forma normal de dominio/clave&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;desnormalización&#34;&gt;Desnormalización&lt;/h3&gt;
+
+&lt;p&gt;Aplicar las reglas de las formas normales para cumplirlas implica separar los datos que antes estaban en una tabla en varias, con las formas normales evitaremos inconsistencias pero consultar los datos de forma agrupada puede ser más lento al tener la base de datos que unir las tablas. Normalmente, llegar al nivel de 3FN es suficiente si los datos no tienen reglas especiales y si cumple la 3FN es habitual que cumpla la 5FN sin cambios adicionales.&lt;/p&gt;
+
+&lt;p&gt;La desnormalización consiste el proceso contrario tratando de balancear la rapidez de consulta con el hecho de obtener datos inconsistentes. Dependiendo de los datos y sus reglas se puede aceptar cierto grado de desnormalización. Algunas bases de datos tienen un concepto similar al que existe en la base de datos &lt;a href=&#34;https://www.postgresql.org/&#34;&gt;PostgesSQL&lt;/a&gt;, las &lt;a href=&#34;https://www.postgresql.org/docs/current/static/rules-materializedviews.html&#34;&gt;materialized views&lt;/a&gt;. Las vistas materializadas son vistas de los datos pero cuyos datos son guardados de forma similar a una tabla, esto tiene la ventaja de que consultar la vista basta para consultar los datos que es más rápido que realizar de nuevo la consulta original de la vista. Con las vistas y las vistas materializadas podemos guardar los datos en la forma normal que consideremos y si por rendimiento debemos realizar una desnormalización con las vistas y vistas materializadas podemos hacerlo, en el caso de las vistas materializadas deberemos refrescarlas de forma regular.&lt;/p&gt;
+
+&lt;p&gt;La información es una de las cosas más importantes para una organización y por tanto también para las aplicaciones. En el libro &lt;a href=&#34;http://amzn.to/2G2oRN1&#34;&gt;SQL Antipatterns&lt;/a&gt; se comentan varios situaciones en las bases de datos que conviene conocer para evitarlos, que problemas causan, cuando son aplicables y cuales son las soluciones. En libro muy recomendable y útil ya que independientemente del lenguaje o tipo de aplicación este conocimiento sobre las bases de datos relacionales es de provecho, como en la práctica totalidad de las aplicaciones se usa una base de datos relacional para persistir los datos será en casi todos los casos.&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
+    
+</feed>
