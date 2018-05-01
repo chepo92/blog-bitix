@@ -3,12 +3,77 @@
     <id>https://picodotdev.github.io/blog-bitix/tags/planeta-codigo/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2018-04-29T10:30:00+02:00</updated>
+    <updated>2018-05-01T10:30:00+02:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
     <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/05/plantillas-con-etiquetas-no-balanceadas-en-apache-tapestry/</id>
+        <title>Plantillas con etiquetas no balanceadas en Apache Tapestry</title>        
+        <updated>2018-05-01T10:30:00+02:00</updated>
+        <published>2018-05-01T10:30:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/05/plantillas-con-etiquetas-no-balanceadas-en-apache-tapestry/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+          &lt;p&gt;&lt;strong&gt;Tapestry es uno de los mejores &lt;em&gt;frameworks&lt;/em&gt; web para Java que he usado, sin embargo, también tiene sus cosas. Una de ellas es que las plantillas han de ser xml bien formado y en este caso que comento en el que necesitaríamos una plantilla con etiquetas desbalanceadas nos obliga a buscar una solución, esta es la que uso.&lt;/strong&gt;&lt;/p&gt;
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/apache-tapestry-5.svg&#34; class=&#34;right &#34; width=&#34;400&#34; alt=&#34;Apache Tapestry&#34; title=&#34;Apache Tapestry&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Las plantillas en &lt;a href=&#34;https://tapestry.apache.org/&#34;&gt;Apache Tapestry&lt;/a&gt; son XHTML, esto quere decir que al ser &lt;a href=&#34;http://es.wikipedia.org/wiki/Validaci%C3%B3n_XML#Documento_Bien_Formado&#34;&gt;archivos xml han de estar bien formados&lt;/a&gt; con sus etiquetas bien balanceadas y anidadas. Esto tiene la ventaja de que Tapestry nos avisará cuando se intente generar código HTML mal formado con el contenido de plantilla, una especie de compilación que si no es correcta no pasará desapercibida como en otros &lt;em&gt;frameworks&lt;/em&gt; y que puede generar otro tipo de errores. Sin embargo, también tiene una desventaja y es que si necesitamos generar una etiqueta de inicio dentro de un componente &lt;em&gt;if&lt;/em&gt; la plantilla no será válida.&lt;/p&gt;
+
+&lt;p&gt;Supongamos que queremos generar un contenido a tres columnas de una serie de elementos, en cada tercer elemento de la fila tendremos que cerrar la fila anterior y abrir una nueva. El ejemplo de lo que no se puede hacer es el siguiente:&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/72a843db91d1bc57442ed771f835adf0.js?file=template-1.tml&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En este ejemplo las etiquetas &lt;em&gt;div&lt;/em&gt; de apertura y cierre hacen que el XML de la plantilla no esté bien balanceado. No se si habrá otra forma mejor pero esta es el rodeo que uso para tener una plantilla bien balanceada y generar el contenido HTML necesario. En el código Java del componente creo un método que devuelve un mapa de trozos de HTML que no podría incluir en la propia plantilla, cada trozo de HTML tiene una clave asociada por la que identificarlo, en este caso &lt;em&gt;open&lt;/em&gt; y &lt;em&gt;close&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/72a843db91d1bc57442ed771f835adf0.js?file=Component.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Usando estos métodos en la plantilla el código de la plantilla &lt;em&gt;tml&lt;/em&gt; ya bien formado quedaría de la siguiente manera, usando el componente &lt;a href=&#34;http://tapestry.apache.org/current/apidocs/org/apache/tapestry5/corelib/components/OutputRaw.html&#34;&gt;OutputRaw&lt;/a&gt; se emite el trozo HTML de apertura o cierre:&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/72a843db91d1bc57442ed771f835adf0.js?file=template-2.tml&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Esta pequeña «ñapa» que no es muy habitual en las plantillas pero que en algún caso puede ser necesario emplear es una forma de hacer las plantillas &lt;em&gt;tml&lt;/em&gt; bien formadas en circunstancias donde incluyéndolo en la plantilla no lo sería.&lt;/p&gt;
+
+&lt;p&gt;Prefiero que Tapestry me valide que el XML de la plantilla esté bien formado evitando que se pudiera generar HTML con etiquetas no balanceadas y me obligue a hacer este rodeo que la posibilidad de generar HTML con etiquetas mal balanceadas que los navegadores aceptan pero que en algún caso podría provocar una desmaquetación, aunque en los casos que se aplique esta solución hay que tener especial cuidado ya que como no se realiza ninguna validación al emitir etiquetas de forma «cruda» el HTML generado podría estar mal balanceado.&lt;/p&gt;
+
+&lt;div class=&#34;alert alert-warning&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2014/12/portada-PugInTapestry-thumb.png&#34; alt=&#34;Portada libro: PlugIn Tapestry&#34; title=&#34;Portada libro: PlugIn Tapestry&#34; style=&#34;float: left; margin-right: 1.5em;&#34;&gt;
+    &lt;h3&gt;Libro PlugIn Tapestry&lt;/h3&gt;
+    &lt;p&gt;Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este &lt;i&gt;framework&lt;/i&gt; en el formato que prefieras, &lt;a href=&#34;http://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/&#34;&gt;PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry&lt;/a&gt;, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.&lt;/p&gt;
+    &lt;br style=&#34;clear: both;&#34;&gt;
+    &lt;div class=&#34;buttons&#34;&gt;
+        &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/custom/PlugInTapestry.pdf&#34; class=&#34;btn btn-lg btn-success&#34;&gt;PDF&lt;/a&gt;
+        &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/custom/PlugInTapestry.epub&#34; class=&#34;btn btn-lg btn-success&#34;&gt;EPUB&lt;/a&gt;
+        &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/custom/PlugInTapestry.mobi&#34; class=&#34;btn btn-lg btn-success&#34;&gt;MOBI&lt;/a&gt;
+        &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/custom/PlugInTapestry.zip&#34; class=&#34;btn btn-lg btn-success&#34;&gt;HTML&lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;buttons&#34;&gt;
+        &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/PlugInTapestry&#34; class=&#34;btn btn-lg btn-success&#34;&gt;Código fuente ejemplos&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+                <category term="tapestry"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2018/04/personalizar-el-prompt-del-sistema-del-interprete-de-comandos-bash/</id>
@@ -1620,72 +1685,6 @@
                 <category term="planeta-codigo"/>
             
                 <category term="software-libre"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2018/02/referencias-a-grupos-de-captura-en-expresiones-regulares-y-reemplazos/</id>
-        <title>Referencias a grupos de captura en expresiones regulares y reemplazos</title>        
-        <updated>2018-02-17T17:00:00+01:00</updated>
-        <published>2018-02-17T17:00:00+01:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/02/referencias-a-grupos-de-captura-en-expresiones-regulares-y-reemplazos/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Las expresiones regulares definen un patrón que permite encontrar coincidencias en cadenas de caracteres, reemplazar coincidencias o validar que las cadenas de caracteres cumplen el patrón. Las expresiones regulares son potentes expresiones que resultan útiles en muchos casos pero son expresiones que pueden llegar a ser complejas cuyo uso se aprende con la experiencia. Una de las funcionalidades que poseen es hacer referencia a grupos de captura anteriores en la propia expresión regular o en la cadena de reemplazo.&lt;/p&gt;
-
-&lt;p&gt;Hacer referencia al grupo de captura en las cadenas de reemplazo es especialmente útil ya que sirve no solo para reemplazar coincidencias por cadenas previamente conocidas sino para transformar las coincidencias encontradas por otras expresiones. El caso de las cuentas de correo a continuación es un ejemplo práctico donde se aprecia este uso.&lt;/p&gt;
-
-&lt;p&gt;Supongamos que queremos corregir un texto en el que por error hay palabras repetidas de forma seguida y queremos eliminar esos duplicados de palabras. Por ejemplo, tenemos un texto como el siguiente en el algunas palabras como &lt;em&gt;ipsum&lt;/em&gt;, &lt;em&gt;eiusmod&lt;/em&gt;, &lt;em&gt;fugiat&lt;/em&gt;, &lt;em&gt;sint&lt;/em&gt; y &lt;em&gt;proident&lt;/em&gt; están repetidas:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/dd337be3c01de7b5e3783b34e8ccc274.js?file=lorem-ipsum.txt&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;La expresión regular para encontrar las coincidencias deberá para cada palabra comprobar si la siguiente es la misma. Cada palabra la incluimos en un grupo y posteriormente hacemos referencia a ese grupo con &lt;em&gt;\1&lt;/em&gt; para ver si la siguiente palabra es la misma. Con la siguiente expresión regular y código encontraremos las palabras repetidas una a continuación de la otra.&lt;/p&gt;
-
-&lt;p&gt;Para hacer referencia en los grupos de coindiciendia en la cadena de reemplazo hay que usar un caracter &lt;em&gt;$&lt;/em&gt; y un número con la posición del grupo de reemplazo.&lt;/p&gt;
-
-&lt;p&gt;Un ejemplo más útil de los grupos de referencia en la cadena de reemplazo sería reemplazar en un texto plano las direcciones de correo electrónico por sus enlaces en HTML. Usando una expresión regular para encontrar las direcciones de correo electrónico y sustituirlas por los enlaces HTML haciendo uso de los grupos de captura y referencias a ellos.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/dd337be3c01de7b5e3783b34e8ccc274.js?file=Main.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;La salida del ejemplo en la terminal es el siguiente.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/dd337be3c01de7b5e3783b34e8ccc274.js?file=system.out&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;A los grupos de captura se les puede dar un nombre y referenciarlos por él en vez de por un número identificador como en el de este ejemplo. A un grupo de captura se le da un nombre con la siguiente expresión &lt;em&gt;(?&amp;lt;name&amp;gt;X)&lt;/em&gt; donde &lt;em&gt;name&lt;/em&gt; es el nombre del grupo de captura de la expresión &lt;em&gt;X&lt;/em&gt;. Posteriormente con la expresión &lt;em&gt;${name}&lt;/em&gt; se hace referencia al grupo de captura, también en la cadena de reemplazo.&lt;/p&gt;
-
-&lt;p&gt;En la &lt;a href=&#34;https://docs.oracle.com/javase/9/docs/api/java/util/regex/Pattern.html&#34;&gt;documentación Javadoc de la clase Pattern&lt;/a&gt; está detallado el soporte en Java para usar expresiones regulares.&lt;/p&gt;
-
-&lt;p&gt;
-    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRegexpReferenceGroups&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
-&lt;/p&gt;
-
-&lt;div class=&#34;reference&#34;&gt;
-    Referencia:&lt;br&gt;
-    &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/05/extraer-elementos-de-una-cadena-con-una-expresion-regular/&#34;&gt;Extraer elementos de una cadena con una expresión regular&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/los-cuantificadores-greedy-reluctant-y-possessive-en-expresiones-regulares/&#34;&gt;Los cuantificadores greedy, reluctant y possessive en expresiones regulares&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://stackoverflow.com/questions/415580/regex-named-groups-in-java&#34;&gt;Regex Named Groups in Java&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://stackoverflow.com/questions/201323/using-a-regular-expression-to-validate-an-email-address&#34;&gt;Using a regular expression to validate an email address&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="programacion"/>
             
         
     </entry>
