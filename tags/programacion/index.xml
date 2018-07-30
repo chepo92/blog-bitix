@@ -3,12 +3,72 @@
     <id>https://picodotdev.github.io/blog-bitix/tags/programacion/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2018-07-15T01:00:00+02:00</updated>
+    <updated>2018-07-30T19:45:00+02:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
     <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/07/indentificar-todas-las-trazas-de-una-peticion-en-una-aplicacion-web-con-log4j/</id>
+        <title>Indentificar todas las trazas de una petición en una aplicación web con log4j</title>        
+        <updated>2018-07-30T19:45:00+02:00</updated>
+        <published>2018-07-30T19:45:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/07/indentificar-todas-las-trazas-de-una-peticion-en-una-aplicacion-web-con-log4j/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En una aplicación web hay múltiples usuarios realizando peticiones al servidor de modo que al usar una librería de &lt;em&gt;logging&lt;/em&gt; como &lt;a href=&#34;https://logging.apache.org/log4j/2.x/&#34;&gt;log4j&lt;/a&gt; las trazas de información de los diferentes usuarios aparecerán intercaladas. En esta maraña de trazas resulta difícil obtener la secuencia de trazas de una petición, sin embargo, la librería log4j proporciona un mecanismo para seguir la secuencia completa de trazas de una petición con el &lt;a href=&#34;https://logging.apache.org/log4j/2.x/manual/thread-context.html&#34;&gt;concepto denominado &lt;em&gt;fish tagging&lt;/em&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;En el contexto de una aplicación web para seguir la secuencia de trazas de una petición consiste en asignar variables con información al &lt;em&gt;thread&lt;/em&gt; que ejecuta la petición, el contenido de estas variables está disponible para emitirse en la traza. Asignando a cada petición un identificativo aleatorio cuando se inicia la petición, en una aplicacion web Java podría ser en un filtro, las trazas emitidas de cada petición quedarán relacionadas por compartir el mismo identificativo de contexto.&lt;/p&gt;
+
+&lt;p&gt;El filtro podría ser el siguiente, el identificativo se genera de forma aleatoria con la clase &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/UUID.html&#34;&gt;UUID&lt;/a&gt; del JDK de Java, se asigna al &lt;a href=&#34;https://logging.apache.org/log4j/2.0/log4j-api/apidocs/org/apache/logging/log4j/ThreadContext.html&#34;&gt;ThreadContext&lt;/a&gt; y al finalizar se limpia de información la variable de contexto en la cláusula &lt;em&gt;finally&lt;/em&gt; de un &lt;em&gt;try-catch&lt;/em&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/420204fcf404f709aea82c9785511a8c.js?file=AppFilter.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;El emitir trazas no cambia en absoluto si utilizamos esta técnica para identificar trazas.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/420204fcf404f709aea82c9785511a8c.js?file=Index.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En el formato usado para determinar el contenido de la trazas se pueden referenciar las variables deseadas a incluir en la traza.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;%X&lt;/em&gt; muestra el contenido completo del &lt;em&gt;Map&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;%X{key}&lt;/em&gt; muestra el valor de una clave especifica del &lt;em&gt;Map&lt;/em&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/420204fcf404f709aea82c9785511a8c.js?file=log4j2.yaml&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Y este es el resultado de emitir varias trazas habiendo establecido un identificativo en el &lt;em&gt;ThreadContext&lt;/em&gt;, todas las trazas emitidas por ese &lt;em&gt;Thread&lt;/em&gt; incluirán el mismo identificativo.&lt;/p&gt;
+
+&lt;p&gt;En este conjunto las tres primeras corresponden a la petición de una página en la siguiendo el ciclo de vida de una página de &lt;a href=&#34;https://tapestry.apache.org/&#34;&gt;Apache Tapestry&lt;/a&gt; se llama primero al método &lt;em&gt;activate&lt;/em&gt; y posteriormente al método &lt;em&gt;setupRender&lt;/em&gt;, estas tres poseen el mismo &lt;em&gt;UUID&lt;/em&gt; ya que se ejecutan en la misma petición. Las otras dos corresponden cada una de ellas a una petición AJAX que realiza la página &lt;em&gt;Index&lt;/em&gt; al cargarse en el navegador del cliente, cada una de estas dos peticiones AJAX se procesan en un nuevo hilo y por consiguiente poseen un &lt;em&gt;UUID&lt;/em&gt; diferente.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/420204fcf404f709aea82c9785511a8c.js?file=System.out&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;Para emitir trazas de forma relacionada esta no es la única posibilidad, también puede interesar &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/01/logging-usando-marcadores-con-slf4j-y-logback/&#34;&gt;identificar con marcadores las trazas realacionadas emitidas en diferentes clases de una aplicación&lt;/a&gt; en diferentes clases pero pertenecientes a la misma funcionalidad, contexto delimitado o &lt;em&gt;bounded context&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/PlugInTapstry&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2018/07/la-libreria-log4j-para-emitir-trazas-en-aplicaciones-java/</id>
@@ -1899,62 +1959,6 @@
     &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/las-excepciones-del-lenguaje-java/&#34;&gt;Las excepciones del lenguaje Java&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://dzone.com/articles/one-dollar-solution-to-avoid-null-pointer-exceptio&#34;&gt;The $1 Solution to Avoid the Null Pointer Exception&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2018/04/la-sentencia-try-with-resources-de-java/</id>
-        <title>La sentencia try-with-resources de Java</title>        
-        <updated>2018-04-21T14:30:00+02:00</updated>
-        <published>2018-04-21T14:30:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/04/la-sentencia-try-with-resources-de-java/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Una de las novedades que incorporó Java 7 es la sentencia &lt;em&gt;try-with-resources&lt;/em&gt; con el objetivo de cerrar los recursos de forma automática en la sentencia &lt;em&gt;try-catch-finally&lt;/em&gt; y hacer más simple el código. Aquellas varaibles cuyas clases implementan la interfaz &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/AutoCloseable.html&#34;&gt;AutoCloseable&lt;/a&gt; pueden declararse en el bloque de inicialización de la sentencia &lt;em&gt;try-with-resources&lt;/em&gt; y sus métodos &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/AutoCloseable.html#close()&#34;&gt;close()&lt;/a&gt; serán llamados después del bloque &lt;em&gt;finally&lt;/em&gt; como si su código estuviese de forma explícita.&lt;/p&gt;
-
-&lt;p&gt;Un ejemplo de código que lee una línea de un fichero usando la sentencia &lt;em&gt;try-with-resources&lt;/em&gt; es la siguiente de Java 7. Como se observa no es necesario llamar de forma explícita al método &lt;em&gt;close&lt;/em&gt; para liberar los recursos de la instancia de la clase &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/io/BufferedReader.html&#34;&gt;BufferedReader&lt;/a&gt;.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/9779dde2d563dcf7e8bb114f44966003.js?file=Java7.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Anteriormente a Java 7 esto se debía hacer de la siguiente manera con unas pocas lineas más de código algo menos legibles.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/9779dde2d563dcf7e8bb114f44966003.js?file=Java6.java&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;El código es similar pero no es equivalente. Observesé que require declarar la variable &lt;em&gt;br&lt;/em&gt; fuera del ámbito de la sentencia &lt;em&gt;try-catch-finally&lt;/em&gt; donde se usa. Además, si se produce una excepción en el bloque &lt;em&gt;try&lt;/em&gt; y posteriormente en el bloque &lt;em&gt;finally&lt;/em&gt; en Java 6 la excepción del bloque &lt;em&gt;try&lt;/em&gt; se enmascara y la que se lanza es la del bloque &lt;em&gt;finally&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;La excepción que se lanza en el bloque &lt;em&gt;try&lt;/em&gt; y usando el método &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/Throwable.html#addSuppressed(java.lang.Throwable)&#34;&gt;Throwable.addSuppressed()&lt;/a&gt; que se añadió en la API en Java 7 junto con el método &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/Throwable.html#getSuppressed()&#34;&gt;Throwable.getSuppressed()&lt;/a&gt; se obtienen las excepciones enmascaradas o suprimidas en la sentencia &lt;em&gt;try-with-resources&lt;/em&gt;. El orden de ejecución de los bloques de una sentencia &lt;em&gt;try-with-resources&lt;/em&gt; es el indicado en los números emitidos con el método &lt;em&gt;println&lt;/em&gt;.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/9779dde2d563dcf7e8bb114f44966003.js?file=Main.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/9779dde2d563dcf7e8bb114f44966003.js?file=System.out&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;La mayoría de clases relacionadas con entrada y salida implementan la interfaz &lt;em&gt;AutoCloseable&lt;/em&gt; como las relacionadas con el sistema de ficheros y flujos de red como &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/io/InputStream.html&#34;&gt;InputStream&lt;/a&gt;, también las relacionadas con la conexión de base de datos mediante JDBC con &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/sql/Connection.html&#34;&gt;Connection&lt;/a&gt;.&lt;/p&gt;
-
-&lt;div class=&#34;reference&#34;&gt;
-    Referencia:&lt;br&gt;
-    &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html&#34;&gt;The try-with-resources Statement&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://tutorials.jenkov.com/java-exception-handling/try-with-resources.html&#34;&gt;Try-with-resources in Java 7&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://stackoverflow.com/a/27033358&#34;&gt;What is a suppressed exception?&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;/div&gt;
