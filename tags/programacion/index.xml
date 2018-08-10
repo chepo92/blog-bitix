@@ -3,12 +3,70 @@
     <id>https://picodotdev.github.io/blog-bitix/tags/programacion/</id>
     <title type="text">Blog Bitix</title>
     <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2018-07-30T19:45:00+02:00</updated>
+    <updated>2018-08-10T18:00:00+02:00</updated>
     <author><name>pico.dev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
     <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2018/08/personalizar-el-mensaje-emitido-de-un-objeto-en-log4j/</id>
+        <title>Personalizar el mensaje emitido de un objeto en log4j</title>        
+        <updated>2018-08-10T18:00:00+02:00</updated>
+        <published>2018-08-10T18:00:00+02:00</published>
+        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/08/personalizar-el-mensaje-emitido-de-un-objeto-en-log4j/"/>
+        <author><name>pico.dev</name></author>
+        <content type="html">
+        
+        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Usar una librería como &lt;a href=&#34;https://logging.apache.org/log4j/2.x/&#34;&gt;log4j&lt;/a&gt; es probablemente indispensable en una aplicación para obtener información de su funcionamiento, mensajes informativos, advertencias, errores o excepciones que se están produciendo o se han producido. Los mensajes que se emiten contienen información útil para monitorización en tiempo real o su inspección pasado un tiempo.&lt;/p&gt;
+
+&lt;p&gt;En cada punto de la aplicación en la que se desea emitir una traza es necesario proporcionar el formato del mensaje y sus parámetros extraídos de las propiedades de los objetos con la intención obtener una traza con los valores de determinadas propiedades. Si es habitual emitir una traza de ciertas clases para evitar poner la misma traza en diferentes puntos de la aplicación log4j posee una funcionalidad para transformar en objeto en un mensaje personalizado como se comenta en su &lt;a href=&#34;https://logging.apache.org/log4j/2.x/manual/messages.html&#34;&gt;documentación para mensajes&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;El método &lt;em&gt;toString()&lt;/em&gt; muy posiblemente no es la mejor solución para transformar un objeto a un &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/String.html&#34;&gt;String&lt;/a&gt; de modo que sea emitido por log4j, quizá su valor no sea lo desedeado, se use este método para otro tipo de funcionalidad y no sirve en el caso de querer diferentes mensajes en diferentes lugares de la aplicación.&lt;/p&gt;
+
+&lt;p&gt;En log4j implementando una clase de tipo &lt;a href=&#34;http://logging.apache.org/log4j/log4j-2.3/log4j-api/apidocs/org/apache/logging/log4j/message/Message.html&#34;&gt;Message&lt;/a&gt; se transforman esas instancias en el mensaje de información personalizado. En el caso de la implementación de &lt;em&gt;Message&lt;/em&gt; en &lt;em&gt;SimpleProductMessage&lt;/em&gt; genera una traza con solo su identificativo y su nombre para la clase &lt;em&gt;Product&lt;/em&gt;. En el caso de &lt;em&gt;ProductMessage&lt;/em&gt; genera una traza más completa con su identificativo, nombre y color.&lt;/p&gt;
+
+&lt;p&gt;El método heredado de &lt;a href=&#34;http://logging.apache.org/log4j/log4j-2.3/log4j-api/apidocs/org/apache/logging/log4j/message/Message.html#getFormattedMessage()&#34;&gt;getFormattedMessage()&lt;/a&gt; es el encargado de generar la traza en este caso utilizando como apoyo los métodos también heredados &lt;a href=&#34;http://logging.apache.org/log4j/log4j-2.3/log4j-api/apidocs/org/apache/logging/log4j/message/Message.html#getFormat()&#34;&gt;getFormat()&lt;/a&gt; que contiene el patrón del mensaje y &lt;a href=&#34;http://logging.apache.org/log4j/log4j-2.3/log4j-api/apidocs/org/apache/logging/log4j/message/Message.html#getParameters()&#34;&gt;getParameters()&lt;/a&gt; que devuelve como parámetros para el patrón del mensaje los valores de las propiedades.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/5bb6211d0e2e9e9dba94bbc1faf6fbde.js?file=SimpleProductMessage.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/5bb6211d0e2e9e9dba94bbc1faf6fbde.js?file=ProductMessage.java&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/5bb6211d0e2e9e9dba94bbc1faf6fbde.js?file=Product.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En los siguientes casos se utilizan diferentes formas para emitir la traza. En el primer caso se utiliza la forma habitual de proporcionar el patrón y sus parámetros, el segundo caso utiliza el método &lt;em&gt;toString()&lt;/em&gt; del objeto. En el tercer y cuarto caso se utilizan las clases que implementan la interfaz &lt;em&gt;Message&lt;/em&gt; emitiendo un mensaje diferente cada una de ellas sin tener que proporcionar el patrón ni extraer las propiedades de la clase &lt;em&gt;Producto&lt;/em&gt; ya que son estas implementaciones en las que se delega esto.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/5bb6211d0e2e9e9dba94bbc1faf6fbde.js?file=Main.java&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En todos estos casos las trazas emitidas son las mismas salvo en el caso de &lt;em&gt;ProductMessage&lt;/em&gt; que muestra una traza con más información.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/5bb6211d0e2e9e9dba94bbc1faf6fbde.js?file=System.out&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;En la &lt;a href=&#34;https://logging.apache.org/log4j/2.x/log4j-api/apidocs/index.html&#34;&gt;API de log4j&lt;/a&gt; hay multitud de clases &lt;a href=&#34;https://logging.apache.org/log4j/2.x/log4j-api/apidocs/index.html&#34;&gt;Message&lt;/a&gt; ya implementadas, por ejemplo, &lt;a href=&#34;https://logging.apache.org/log4j/2.x/log4j-api/apidocs/org/apache/logging/log4j/message/MapMessage.html&#34;&gt;MapMessage&lt;/a&gt; para objetos del tipo &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/Map.html&#34;&gt;Map&lt;/a&gt; entre otros muchos.&lt;/p&gt;
+
+&lt;script src=&#34;//gist.github.com/picodotdev/5bb6211d0e2e9e9dba94bbc1faf6fbde.js?file=build.gradle&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;//gist.github.com/picodotdev/5bb6211d0e2e9e9dba94bbc1faf6fbde.js?file=log4j2.yaml&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;
+    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/Log4j&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+
+
+
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+                <category term="programacion"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2018/07/identificar-todas-las-trazas-de-una-peticion-en-una-aplicacion-web-java-con-log4j/</id>
@@ -116,7 +174,7 @@
 
 &lt;p&gt;Las trazas son muy importantes por la valiosa información que proporcionan de lo que está sucediendo en una aplicación a los que recurriendo es posible obtener la valiosa información que permite saber que ha sucedido en una determinada acción o que permite descubrir mucho más rápidamente la causa de un error.&lt;/p&gt;
 
-&lt;p&gt;En otro artículo ya he comentado &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/01/logging-usando-marcadores-con-slf4j-y-logback/&#34;&gt;como usar marcadores con sl4j y logback&lt;/a&gt; para relacionar trazas que son emitidas en diferentes clases o módulos de la aplicación, también se puede hacer con log4j. En siguientes artículos comentaré &lt;em&gt;como transformar un objeto a un mensaje&lt;/em&gt; sin necesidad de convertir ese objeto a un String en cada traza de la aplicación donde se use su información y otra forma de relacionar trazas muy útil en aplicaciones web &lt;em&gt;asignando un indenticador única en cada petición y emitiendolo en todas sus trazas&lt;/em&gt;, esto permite saber todo lo que ha ocurrido en una petición entre las muchas que se ejecutan concurrentemente por todos los usuarios de la aplicación.&lt;/p&gt;
+&lt;p&gt;En otro artículo ya he comentado &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/01/logging-usando-marcadores-con-slf4j-y-logback/&#34;&gt;como usar marcadores con sl4j y logback&lt;/a&gt; para relacionar trazas que son emitidas en diferentes clases o módulos de la aplicación, también se puede hacer con log4j. En siguientes artículos comentaré &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/08/personalizar-el-mensaje-emitido-de-un-objeto-en-log4j/&#34;&gt;como transformar un objeto a un mensaje&lt;/a&gt; sin necesidad de convertir ese objeto a un String en cada traza de la aplicación donde se use su información y otra forma de relacionar trazas muy útil en aplicaciones web &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/07/identificar-todas-las-trazas-de-una-peticion-en-una-aplicacion-web-java-con-log4j/&#34;&gt;asignando un indenticador única en cada petición y emitiendolo en todas sus trazas&lt;/a&gt;, esto permite saber todo lo que ha ocurrido en una petición entre las muchas que se ejecutan concurrentemente por todos los usuarios de la aplicación.&lt;/p&gt;
 
 &lt;p&gt;
     El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/PlugInTapestry&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
@@ -1925,54 +1983,6 @@
                 <category term="programacion"/>
             
                 <category term="tapestry"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2018/04/la-clase-optional-de-java-para-evitar-la-excepcion-nullpointerexception/</id>
-        <title>La clase Optional de Java para evitar la excepción NullPointerException</title>        
-        <updated>2018-04-28T00:00:00+02:00</updated>
-        <published>2018-04-28T00:00:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/04/la-clase-optional-de-java-para-evitar-la-excepcion-nullpointerexception/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;Con la clase &lt;em&gt;Optional&lt;/em&gt; añadida en el JDK en la versión 8 del lenguaje Java se puede evitar una de las excepciones más comunes que se produce cuando se hace uso de una referencia nula a un objeto.&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Una de las excepciones que más se producen en un programa hecho con el lenguaje Java es la conocida &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/NullPointerException.html&#34;&gt;NullPointerExpcetion&lt;/a&gt; que ocurre cuando se hace uso de una variable que referencia a un objeto pero que el contenido de la variable es &lt;em&gt;null&lt;/em&gt;, sin valor o sin contener una referencia a un objeto de modo que la llamada al método no es posible. La excepción &lt;em&gt;NullPointerException&lt;/em&gt; extiende de &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/lang/RuntimeException.html&#34;&gt;RuntimeException&lt;/a&gt; por lo que es una &lt;em&gt;unchecked exception&lt;/em&gt; y por ello no es necesario capturarla o lanzarla, cuando se produce hay un error en el programa.&lt;/p&gt;
-
-&lt;p&gt;Entre las &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/&#34;&gt;novedades que Java 8 incluyó en el lenguaje y JDK&lt;/a&gt; está la inclusión de la clase &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/Optional.html&#34;&gt;Optional&lt;/a&gt; con la que haciendo uso de ella se pueden evitar los &lt;em&gt;NullPointerException&lt;/em&gt;. Un objeto de tipo &lt;em&gt;Optional&lt;/em&gt; contiene o no una referencia a otro tipo de objeto. Por ejemplo, una variable de tipo &lt;em&gt;Optional&amp;lt;String&amp;gt;&lt;/em&gt; contiene una referencia a un objeto &lt;em&gt;Optional&lt;/em&gt; que a su vez contiene o no una referencia a una cadena &lt;em&gt;String&lt;/em&gt;. El uso de la variable &lt;em&gt;Optional&lt;/em&gt; no producirá un &lt;em&gt;NullPointerException&lt;/em&gt; y con sus métodos es posible saber si contiene o no una referencia al tipo usado en el genérico. Con el método &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/Optional.html#isPresent()&#34;&gt;isPresent()&lt;/a&gt; es posible saber si el &lt;em&gt;Optional&lt;/em&gt; contiene una referencia, con &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/Optional.html#orElse(T)&#34;&gt;orElse()&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/Optional.html#orElseGet(java.util.function.Supplier)&#34;&gt;orElseGet()&lt;/a&gt; se obtiene la referencia que indiquemos en caso de que no tenga una referencia y con los métodos estáticos a modo de constructores &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/Optional.html#of(T)&#34;&gt;of()&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/Optional.html#ofNullable(T)&#34;&gt;ofNullable()&lt;/a&gt; se obtiene respectivamente una instancia de &lt;em&gt;Optional&lt;/em&gt; con la referencia indicada que no puede ser nula o un &lt;em&gt;Optional&lt;/em&gt; que podría contener una referencia nula.&lt;/p&gt;
-
-&lt;p&gt;Usar un objeto &lt;em&gt;Optional&lt;/em&gt; advierte al programador de que la referencia que contiene puede ser nula y usada correctamente evita los &lt;em&gt;NullPointerException&lt;/em&gt; aunque usarla indiscriminadamente hace del código más incómodo de escribir y leer, en variables locales es prescindible su uso pero útil en algunos valores de retorno o parámetros de métodos.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/9552591792afa8d6d44d11d25a380f6d.js?file=jshell.sh&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;Hay algunos métodos más en la clase &lt;em&gt;Optional&lt;/em&gt; con algunas funcionalidades adicionales que hace uso de las nuevas capacidades funcionales del lenguaje como convertir un &lt;em&gt;Optional&lt;/em&gt; a un &lt;a href=&#34;https://docs.oracle.com/javase/10/docs/api/java/util/stream/Stream.html&#34;&gt;Stream&lt;/a&gt;.&lt;/p&gt;
-
-&lt;div class=&#34;reference&#34;&gt;
-    Referencia:&lt;br&gt;
-    &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/las-excepciones-del-lenguaje-java/&#34;&gt;Las excepciones del lenguaje Java&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://dzone.com/articles/one-dollar-solution-to-avoid-null-pointer-exceptio&#34;&gt;The $1 Solution to Avoid the Null Pointer Exception&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="programacion"/>
             
         
     </entry>
