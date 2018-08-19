@@ -1,263 +1,100 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://picodotdev.github.io/blog-bitix/series/jooq/</id>
-    <title type="text">Blog Bitix</title>
-    <subtitle>Recent content on Blog Bitix</subtitle>
-    <updated>2015-11-17T19:00:00+01:00</updated>
-    <author><name>pico.dev</name></author>
-    <generator>Hugo</generator>
-    <icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon>
-    <logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo>
-    <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2015/11/validar-objetos-con-spring-validation-ejemplo-registros-de-jooq/</id>
-        <title>Validar objetos con Spring Validation, ejemplo registros de jOOQ</title>        
-        <updated>2015-11-17T19:20:00+01:00</updated>
-        <published>2015-11-17T19:00:00+01:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2015/11/validar-objetos-con-spring-validation-ejemplo-registros-de-jooq/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;jOOQ es una alternativa a Hibernate que devuelve la base de datos a primer plano en una aplicación. Por la importancia en cualquier aplicación de los datos propone que la base de datos sea la única fuente de la verdad. Para los modelos es patente al generarse a partir del esquema de la base de datos para las validaciones se puede hacer con restricciones de integridad pero si queremos conocer los errores detalladamente que se produzcan puede que deseemos usar Spring Validation.&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/series/jooq/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2015-11-17T19:00:00+01:00</updated><author><name>pico.dev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2015/11/validar-objetos-con-spring-validation-ejemplo-registros-de-jooq/</id><title>Validar objetos con Spring Validation, ejemplo registros de jOOQ</title><updated>2015-11-17T19:20:00+01:00</updated><published>2015-11-17T19:00:00+01:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2015/11/validar-objetos-con-spring-validation-ejemplo-registros-de-jooq/"/><author><name>pico.dev</name></author><content type="html">
+&lt;p&gt;&lt;strong&gt;jOOQ es una alternativa a Hibernate que devuelve la base de datos a primer plano en una aplicación. Por la importancia en cualquier aplicación de los datos propone que la base de datos sea la única fuente de la verdad. Para los modelos es patente al generarse a partir del esquema de la base de datos para las validaciones se puede hacer con restricciones de integridad pero si queremos conocer los errores detalladamente que se produzcan puede que deseemos usar Spring Validation.&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
-
 &lt;p&gt;En la documentación de &lt;a href=&#34;https://www.jooq.org/&#34;&gt;jOOQ&lt;/a&gt; no he encontrado nada referente a cómo realizar validaciones antes de guardar los datos en la base de datos. Pero con la herramienta de generación se puede indicar que las clases Java generadas se anoten con las anotaciones de validación de la especificación JSR-303 según las restricciones encontradas en la base de datos. Las clases contendrán validaciones básicas como &lt;a href=&#34;http://docs.oracle.com/javaee/7/api/javax/validation/constraints/NotNull.html&#34;&gt;@NotNull&lt;/a&gt; o &lt;a href=&#34;http://docs.oracle.com/javaee/7/api/javax/validation/constraints/Size.html&#34;&gt;@Size&lt;/a&gt; pero no he visto nada más allá de estas simples validaciones. Si tenemos validaciones dependientes entre campos o más complejas como una expresión regular necesitaremos algo más.&lt;/p&gt;
-
 &lt;p&gt;Si queremos ser puristas las validaciones deberíamos hacerlas en la base de datos usando &lt;em&gt;constraints&lt;/em&gt; impidiendo de esta manera que se guarden datos inválidos independientemente de la aplicación o microservicio que intente guardar algo en la base de datos. Sin embargo, realizando solo las validaciones en la base de datos puede que perdamos qué campo o campos son erróneos y los motivos por los que son erróneos, información que seguramente nos interese para indicar detalladamente los datos no válidos al usuario permitiéndole corregirlos.&lt;/p&gt;
-
 &lt;p&gt;Usando &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/05/alternativa-a-hibernate-u-orm-y-ejemplo-de-jooq/&#34;&gt;jOOQ como alternativa a Hibernate&lt;/a&gt; deberemos realizar las validaciones nosotros de alguna forma. jOOQ aboga por que la base de datos sea la única fuente de la verdad, claramente es así para los modelos o &lt;em&gt;records&lt;/em&gt; de datos que se generan a partir de las tablas y la relaciones entre ellas. Deberemos tener en cuenta los problemas de tener dos fuentes de la verdad o de realizar las validaciones a nivel de la aplicación en vez de en la base de datos pero si así lo deseamos podemos usar &lt;a href=&#34;https://spring.io/guides/gs/validating-form-input/&#34;&gt;Spring Validation&lt;/a&gt;.&lt;/p&gt;
-
 &lt;p&gt;Con Spring Validation tenemos diferentes formas de realizar las validaciones, dos de ellas son con las anotaciones de la &lt;a href=&#34;http://beanvalidation.org/&#34;&gt;especificación de validación&lt;/a&gt; JSR-303 o implementando una clase de la interfaz &lt;a href=&#34;http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/validation/Validator.html&#34;&gt;Validator&lt;/a&gt;. En el siguiente ejemplo se muestra una combinación de ambos, un Validator que valida primeramente las anotaciones de JSR-303 para una clase &lt;em&gt;record&lt;/em&gt; de jOOQ y posteriormente unas validaciones adicionales propias de la aplicación u en otro caso para campos campos dependientes. A través de las clases &lt;a href=&#34;https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/validation/DataBinder.html&#34;&gt;DataBinder&lt;/a&gt; y el &lt;a href=&#34;https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/validation/beanvalidation/SpringValidatorAdapter.html&#34;&gt;SpringValidationAdapter&lt;/a&gt; validaremos un objeto con las anotaciones de &lt;a href=&#34;https://docs.oracle.com/javaee/7/api/javax/validation/package-summary.html&#34;&gt;javax.validation&lt;/a&gt; y las propias de Spring además de adaptar los errores a la interfaz &lt;a href=&#34;http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/validation/Errors.html&#34;&gt;Errors&lt;/a&gt; con la que inspeccionaremos los errores. Perfectamente podemos usar únicamente los &lt;em&gt;Validator&lt;/em&gt; de Spring sin tener en cuenta las anotaciones de &lt;em&gt;javax.validation&lt;/em&gt;, nótese también que podemos implementar múltiples validadores de Spring con diferentes criterios de validación.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=EmployeeValidator.java&#34;&gt;&lt;/script&gt;
-
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=EmployeeValidator.java&#34;&gt;&lt;/script&gt;
 &lt;p&gt;En un determinado servicio donde implementaremos la lógica de negocio realizaremos la validación de forma explícita antes de guardar el registro, para ello inyectaremos en el servicio la referencia al validador de Spring con la &lt;a href=&#34;https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/beans/factory/annotation/Autowired.html&#34;&gt;anotación Autowired&lt;/a&gt; y usaremos uno de sus métodos sobrecargados &lt;a href=&#34;http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/validation/beanvalidation/SpringValidatorAdapter.html#validate-java.lang.Object-org.springframework.validation.Errors-&#34;&gt;&lt;em&gt;validate&lt;/em&gt;&lt;/a&gt; para que compruebe las validaciones que haya definidas para ese registro.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=%20DefaultAppService.java&#34;&gt;&lt;/script&gt;
-
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=%20DefaultAppService.java&#34;&gt;&lt;/script&gt;
 &lt;p&gt;Realmente aunque el ejemplo muestra como validar un objeto de tipo &lt;a href=&#34;http://www.jooq.org/javadoc/latest/org/jooq/Record.html&#34;&gt;Record&lt;/a&gt; de jOOQ lo mismo puede ser aplicado para validar cualquier otro tipo de objeto Java con Spring Validation. Las clases &lt;em&gt;record&lt;/em&gt; generadas por jOOQ implementan una interfaz en la que se exponen los métodos &lt;em&gt;get&lt;/em&gt; y &lt;em&gt;set&lt;/em&gt; con las columnas de la tabla.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=IEmployee.java&#34;&gt;&lt;/script&gt;
-
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=IEmployee.java&#34;&gt;&lt;/script&gt;
 &lt;p&gt;En la salida en al terminal de la &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/10/aplicacion-java-autocontenida-con-spring-boot/&#34;&gt;aplicación de ejemplo con Spring Boot&lt;/a&gt; se observa que se producen varios errores de validación para un objeto empleado, al validarlo le falta un valor para los campos &lt;em&gt;id&lt;/em&gt;, &lt;em&gt;name&lt;/em&gt; por restricciones de base de datos detectadas con las anotaciones @NotNull y al tener una fecha posterior a la actual también falla una validación propia de la aplicación. El campo &lt;em&gt;id&lt;/em&gt; lo asignará jOOQ cuando se guarde en base de datos por lo que esta validación no deberemos tenerla en cuenta al guardar registros nuevos.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=Main.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=System.out&#34;&gt;&lt;/script&gt;
-
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=Main.java&#34;&gt;&lt;/script&gt;
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/e5d6b0adc0c24eb5dfce.js?file=System.out&#34;&gt;&lt;/script&gt;
 &lt;p&gt;
-    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/SpringBoot&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew updateDatabase &amp;amp;&amp;amp; ./gradlew generateModels &amp;amp;&amp;amp; ./gradlew run&lt;/code&gt;.
-&lt;/p&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2015/11/obtener-datos-de-multiples-tablas-con-jooq/</id>
-        <title>Obtener datos de múltiples tablas con jOOQ</title>        
-        <updated>2015-11-17T19:20:00+01:00</updated>
-        <published>2015-11-14T19:00:00+01:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2015/11/obtener-datos-de-multiples-tablas-con-jooq/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;jOOQ no proporciona la misma transparencia de acceso a una base de datos relacional que un ORM. Para validar los datos podemos usar Spring Validation y para obtener datos de múltiples tablas lo que comento en este artículo. Usando jOOQ podemos exprimir todo el potencial del lenguaje SQL, comprobación de tipos por el compilador de argumentos y resultados, usar la base de datos como única fuente de la verdad, diferentes formas de acceso a la base de datos usando el patrón Active Record, directamente SQL, &amp;hellip;&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/SpringBoot&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew updateDatabase &amp;amp;&amp;amp; ./gradlew generateModels &amp;amp;&amp;amp; ./gradlew run&lt;/code&gt;.
+&lt;/p&gt;</content><category term="blog-stack"/><category term="java"/><category term="planeta-codigo"/><category term="programacion"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2015/11/obtener-datos-de-multiples-tablas-con-jooq/</id><title>Obtener datos de múltiples tablas con jOOQ</title><updated>2015-11-17T19:20:00+01:00</updated><published>2015-11-14T19:00:00+01:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2015/11/obtener-datos-de-multiples-tablas-con-jooq/"/><author><name>pico.dev</name></author><content type="html">
+&lt;p&gt;&lt;strong&gt;jOOQ no proporciona la misma transparencia de acceso a una base de datos relacional que un ORM. Para validar los datos podemos usar Spring Validation y para obtener datos de múltiples tablas lo que comento en este artículo. Usando jOOQ podemos exprimir todo el potencial del lenguaje SQL, comprobación de tipos por el compilador de argumentos y resultados, usar la base de datos como única fuente de la verdad, diferentes formas de acceso a la base de datos usando el patrón Active Record, directamente SQL, &amp;hellip;&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
-
 &lt;p&gt;Una de las facilidades que proporciona la librería de persistencia &lt;a href=&#34;https://hibernate.org/&#34;&gt;Hibernate&lt;/a&gt; usada ampliamente en aplicaciones Java como buen &lt;abbr title=&#34;Object/Relational Mapping&#34;&gt;ORM&lt;/abbr&gt; es la navegación de las relaciones a través de los métodos del modelo de objetos de forma transparente a las consultas SQL que se necesiten lanzar a la base de datos para ir obteniendo los resultados. Sin embargo, pensar únicamente en este modelo orientado a objetos o abusar de él sin tener en cuenta el número de consultas SQL que estamos realizando al modelo relacional provocará que la aplicación sea lenta, poco eficiente y sobrecargue el servidor de base de datos. Como ejemplo usando un ORM es habitual provocar un &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/05/detectar-problema-n-plus-1-y-obtener-estadisticas-de-hibernate-con-grails/&#34;&gt;problema de N+1 o 1+N que deberemos detectar&lt;/a&gt; y corregir.&lt;/p&gt;
-
 &lt;p&gt;Por el contrario &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/05/alternativa-a-hibernate-u-orm-y-ejemplo-de-jooq/&#34;&gt;jOOQ se postula como alternativa a Hibernate&lt;/a&gt; para proporcionar persistencia en base de datos relacionales. Se basa en proporcionar un acceso usando un DSL más cercano al lenguaje SQL de la base de datos en vez de proporcionar una capa de abstracción para el modelo de objetos, la forma de acceder a la base de datos es muy flexible pudiéndose emplear para generar consultas SQL en forma de &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/lang/String.html&#34;&gt;String&lt;/a&gt; que lanzaremos con &lt;abbr title=&#34;Java Database Connectivity&#34;&gt;JDBC&lt;/abbr&gt; o con la clase &lt;a href=&#34;https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/jdbc/core/JdbcTemplate.html&#34;&gt;JdbcTemplate&lt;/a&gt; de &lt;a href=&#34;https://spring.io/&#34;&gt;Spring&lt;/a&gt;. Las SQL son construidas con una &lt;abbr title=&#34;Application Programming Interface&#34;&gt;API&lt;/abbr&gt; en forma de &lt;abrr title=&#34;Domain-specific language&#34;&gt;DSL&lt;/abbr&gt; o usando el patrón ActiveRecord con la posibilidad de que el compilador realice la validación de tipos tanto para los parámetros como para los resultados.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=SnippetQueries.java&#34;&gt;&lt;/script&gt;
-
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=SnippetQueries.java&#34;&gt;&lt;/script&gt;
 &lt;p&gt;Sin embargo, aunque jOOQ permite también navegar las relaciones entre las entidades implementadas con el patrón ActiveRecord puede sucedernos que se nos presente el mismo problema 1+N de Hibernate si por ejemplo obtenemos una lista departamentos con 1 SQL y posteriormente 1 consulta más para obtener los empleados según se itera cada departamento en un bucle, en total 1+N consultas para los departamentos y sus empleados. Como sería el siguiente caso.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=SnippetRelations.java&#34;&gt;&lt;/script&gt;
-
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=SnippetRelations.java&#34;&gt;&lt;/script&gt;
 &lt;p&gt;Si sabemos que vamos a necesitar una entidad y las relacionadas, como en un departamento y sus empleados, es mejor obtener todos los datos en una única consulta. Una de las formas en que jOOQ devuelve resultados es a través de objetos &lt;em&gt;Record&lt;/em&gt; que representa a los datos de resultado de la SQL, por otro lado jOOQ genera un objeto &lt;em&gt;Record&lt;/em&gt; por cada tabla de la base de datos. Si en una consulta necesitamos únicamente los datos de una tabla podemos obtener los datos en el ActiveRecord que jOOQ genera para esa tabla. Si queremos obtener datos de múltiples tablas deberemos emplear otra forma, por ejemplo, podemos recoger los resultados en un objeto de tipo &lt;em&gt;Record&lt;/em&gt; genérico y posteriormente extraer los datos a los diferentes &lt;em&gt;Record&lt;/em&gt; concretos de la aplicación.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=SnippetMultipletables.java&#34;&gt;&lt;/script&gt;
-
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=SnippetMultipletables.java&#34;&gt;&lt;/script&gt;
 &lt;p&gt;El objeto &lt;em&gt;RecordContainer&lt;/em&gt; es el siguiente, con una propiedad por cada posible &lt;em&gt;Record&lt;/em&gt; que pudiese recuperar. Solo necesitaremos crear uno que incluya una propiedad con todos los posibles &lt;em&gt;Record&lt;/em&gt; que necesitemos.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=RecordContainer.java&#34;&gt;&lt;/script&gt;
-
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=RecordContainer.java&#34;&gt;&lt;/script&gt;
 &lt;p&gt;Las clases completas &lt;em&gt;Main.java&lt;/em&gt; y &lt;em&gt;AppServiceImpl.java&lt;/em&gt; son las siguientes.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=Main.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=AppServiceImpl.java&#34;&gt;&lt;/script&gt;
-
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=Main.java&#34;&gt;&lt;/script&gt;
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=AppServiceImpl.java&#34;&gt;&lt;/script&gt;
 &lt;p&gt;La salida en la terminal de esta aplicación al iniciarse es la siguiente:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=System.out&#34;&gt;&lt;/script&gt;
-
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/63dcc9d0d6c2b2b459fb.js?file=System.out&#34;&gt;&lt;/script&gt;
 &lt;p&gt;jOOQ presenta varias cosas interesantes sobre Hibernate, ya es en una alternativa con un enfoque diferente, con ideas interesantes, algunas ventajas y el tiempo dirá si se convierte en el nuevo estándar para la persistencia en las aplicaciones Java. Otra de las cosas comunes que necesitaremos en una aplicación es validar los objetos &lt;em&gt;Record&lt;/em&gt;, una posibilidad es usando Spring Validation.&lt;/p&gt;
-
 &lt;p&gt;
-    El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/SpringBoot&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew updateDatabase &amp;amp;&amp;amp; ./gradlew generateModels &amp;amp;&amp;amp; ./gradlew run&lt;/code&gt;.
-&lt;/p&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/</id>
-        <title>Múltiples esquemas o bases de datos con jOOQ y Spring en Java</title>        
-        <updated>2015-11-10T19:00:00+01:00</updated>
-        <published>2015-10-27T19:00:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;Aún en las aplicaciones monolíticas que comparten una única base de datos tratamos de dividirla en varios servicios que manejen cierto nicho de información con la intención de que un cambio en una parte sea transparente para las otras partes. Cada servicio de la aplicación monolítica podría potencialmente convertirse en un microservicio y en este caso para que cada micoservicio tenga un ciclo de vida independiente compartir la base de datos es algo a evitar. Incluso en las aplicaciones monolíticas podemos querer guardar cada nicho de información en su propio esquema para evitar acoplamiento entre las diferentes partes o también como forma de tener varios servidores de bases de datos y escalar la aplicación en cierta forma. En estos casos necesitaremos que la aplicación acceda a varios esquemas o bases de datos simultáneamente, con jOOQ y Spring es bastante sencillo.&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/SpringBoot&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew updateDatabase &amp;amp;&amp;amp; ./gradlew generateModels &amp;amp;&amp;amp; ./gradlew run&lt;/code&gt;.
+&lt;/p&gt;</content><category term="blog-stack"/><category term="java"/><category term="planeta-codigo"/><category term="programacion"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/</id><title>Múltiples esquemas o bases de datos con jOOQ y Spring en Java</title><updated>2015-11-10T19:00:00+01:00</updated><published>2015-10-27T19:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/"/><author><name>pico.dev</name></author><content type="html">
+&lt;p&gt;&lt;strong&gt;Aún en las aplicaciones monolíticas que comparten una única base de datos tratamos de dividirla en varios servicios que manejen cierto nicho de información con la intención de que un cambio en una parte sea transparente para las otras partes. Cada servicio de la aplicación monolítica podría potencialmente convertirse en un microservicio y en este caso para que cada micoservicio tenga un ciclo de vida independiente compartir la base de datos es algo a evitar. Incluso en las aplicaciones monolíticas podemos querer guardar cada nicho de información en su propio esquema para evitar acoplamiento entre las diferentes partes o también como forma de tener varios servidores de bases de datos y escalar la aplicación en cierta forma. En estos casos necesitaremos que la aplicación acceda a varios esquemas o bases de datos simultáneamente, con jOOQ y Spring es bastante sencillo.&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
-
 &lt;p&gt;En el libro &lt;a href=&#34;http://www.amazon.es/gp/product/1491950358/ref=as_li_ss_tl?ie=UTF8&amp;camp=3626&amp;creative=24822&amp;creativeASIN=1491950358&amp;linkCode=as2&amp;tag=blobit-21&#34;&gt;Building Microservices&lt;/a&gt;&lt;img src=&#34;https://ir-es.amazon-adsystem.com/e/ir?t=blobit-21&amp;l=as2&amp;o=30&amp;a=1491950358&#34; width=&#34;1&#34; height=&#34;1&#34; border=&#34;0&#34; alt=&#34;&#34; style=&#34;border:none !important; margin:0px !important;&#34;&gt; se pone de manifiesto que cada microservicio gira alrededor de un concepto que denomina &lt;em&gt;seam&lt;/em&gt;, nicho o área de negocio. Este &lt;em&gt;seam&lt;/em&gt; es el nicho de información que va a manejar el microservicio. Para hacer que los múltiples microservicios sean independientes y tengan su propio ciclo de vida este nicho de información se guarda en una base de datos o esquema propio de cada uno de modo que un cambio en el sistema en que guarda la información no afecte a otros microservicios como ocurriría si compartiesen la base de datos. Si un microservicio necesita información de otro la solicita mediante una API ya sea &lt;a href=&#34;https://es.wikipedia.org/wiki/Representational_State_Transfer&#34;&gt;REST&lt;/a&gt;, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/03/introduccion-y-ejemplo-de-api-rpc-con-apache-thrift/&#34;&gt;usando Apache Thift&lt;/a&gt;, &lt;a href=&#34;https://grpc.io/&#34;&gt;gRPC&lt;/a&gt; o de otro tipo evitando el acoplamiento a través de la base de datos y evitando que un microservicio conozca detalles internos de otro.&lt;/p&gt;
-
 &lt;p&gt;Imaginemos el caso de una empresa dedicada al comercio electrónico que ofrece productos a través de internet, un nicho de información podría ser el inventario formado por los productos ofrecidos y sus existencias, otro podría ser las compras. Los nichos podrían ser otros distintos, más numerosos o incluso los comentados más subdivididos, si una aplicación o proceso necesita acceder a todos estos nichos de información simultáneamente o tenemos una aplicación monolítica pero queremos tener cada nicho de información en varios esquemas o bases de datos, con &lt;a href=&#34;https://www.jooq.org/&#34;&gt;jOOQ&lt;/a&gt; y &lt;a href=&#34;https://spring.io/&#34;&gt;Spring&lt;/a&gt; podemos acceder simultáneamente a múltiples esquemas o bases de datos de una forma bastante sencilla. Es importante tener en cuenta que con varios esquemas podremos mantener la integridad referencial de los datos a través de las claves externas, con varias bases de datos no.&lt;/p&gt;
-
 &lt;p&gt;Siguiendo el ejemplo de la empresa expuesta tendríamos dos bases de datos: &lt;em&gt;inventory&lt;/em&gt; y &lt;em&gt;purchases&lt;/em&gt;. Podemos tener un servicio que sea &lt;em&gt;InventoryService&lt;/em&gt; y otro servicio que sea &lt;em&gt;PurchasesService&lt;/em&gt; que contengan la lógica de negocio de cada área de negocio.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=InventoryService.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=DefaultInventoryService.java&#34;&gt;&lt;/script&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=PurchasesService.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=DefaultPurchasesService.java&#34;&gt;&lt;/script&gt;
-
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=InventoryService.java&#34;&gt;&lt;/script&gt;
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=DefaultInventoryService.java&#34;&gt;&lt;/script&gt;
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=PurchasesService.java&#34;&gt;&lt;/script&gt;
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=DefaultPurchasesService.java&#34;&gt;&lt;/script&gt;
 &lt;p&gt;Al realizarse una compra a través del servicio &lt;em&gt;PurchasesService&lt;/em&gt; se ha de modificar el inventario del producto cosa que no se hace en el propio servicio de compras sino que se llama al servicio &lt;em&gt;InventoryService&lt;/em&gt; para que haga lo que deba, en el ejemplo modificar el inventario pero en un futuro podría ser enviar además una notificación o correo electrónico indicando que el &lt;em&gt;stock&lt;/em&gt; es bajo si cae por debajo de determinado número, el servicio de compras no debe conocer nada de esto ya que el inventario no forma parte de su nicho de información. En el ejemplo es una llamada usando un método de una clase pero podría ser una llamada a una &lt;abbr title=&#34;Application Programming Interface&#34;&gt;API&lt;/abbr&gt; &lt;abbr title=&#34;Representational State Transfer&#34;&gt;REST&lt;/abbr&gt; o &lt;abbr title=&#34;Remote Procedure Call&#34;&gt;RPC&lt;/abbr&gt; si realmente fueran microservicios.&lt;/p&gt;
-
 &lt;p&gt;Las sencillas clases &lt;em&gt;Item&lt;/em&gt; y &lt;em&gt;Purchase&lt;/em&gt; generadas con jOOQ implementan las siguientes interfaces:&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=IItem.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=IPurchase.java&#34;&gt;&lt;/script&gt;
-
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=IItem.java&#34;&gt;&lt;/script&gt;
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=IPurchase.java&#34;&gt;&lt;/script&gt;
 &lt;p&gt;El acceso a una base de datos usando jOOQ se consigue a través de la clase &lt;a href=&#34;http://www.jooq.org/javadoc/latest/org/jooq/DSLContext.html&#34;&gt;DSLContext&lt;/a&gt;, cada servicio recibe uno diferente que debemos definir en el contenedor de dependencias de Spring. Si fuesen dos bases de datos diferentes realmente debería haber definidos dos &lt;em&gt;bean&lt;/em&gt; &lt;em&gt;DataSource&lt;/em&gt; uno para cada servicio pero solo hay uno porque en el ejemplo se usa la base de datos &lt;a href=&#34;http://www.h2database.com/html/main.html&#34;&gt;H2&lt;/a&gt; y se accede no con un servidor sino al fichero directamente. También en el ejemplo realmente no son necesarios dos (uno para cada servicio) &lt;em&gt;TransactionManager&lt;/em&gt;, &lt;em&gt;TransactionAwareDataSourceProxy&lt;/em&gt;, &lt;em&gt;ConnectionProvider&lt;/em&gt;, &lt;em&gt;Config&lt;/em&gt; y &lt;em&gt;DSLContext&lt;/em&gt; pues solo hay una base de datos pero por mostrar más fielmente como sería el caso siendo dos bases de datos completamente diferentes lo he puesto así.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=AppConfiguration.java&#34;&gt;&lt;/script&gt;
-
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=AppConfiguration.java&#34;&gt;&lt;/script&gt;
 &lt;p&gt;Podemos crear la base de datos y los dos esquemas con una tarea de &lt;a href=&#34;https://gradle.org/&#34;&gt;Gradle&lt;/a&gt; y con &lt;a href=&#34;http://www.liquibase.org/&#34;&gt;Liquibase&lt;/a&gt;, con el comando &lt;code&gt;./gradlew updateDatabase&lt;/code&gt;, a continuación solo una parte del &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/blob/master/Multidatabase/build.gradle&#34;&gt;archivo &lt;em&gt;build.gradle&lt;/em&gt; completo&lt;/a&gt; y los archivos XML de actualización de los esquemas.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=build-liquibase.gradle&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=inventory-changelog.xml&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=purchases-changelog.xml&#34;&gt;&lt;/script&gt;
-
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=build-liquibase.gradle&#34;&gt;&lt;/script&gt;
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=inventory-changelog.xml&#34;&gt;&lt;/script&gt;
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=purchases-changelog.xml&#34;&gt;&lt;/script&gt;
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    
 &lt;figure&gt;
-  
-  &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2015/106/basededatos.png&#34; title=&#34;Base de datos con varios esquemas&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2015/106/basededatos.png&#34;/&gt;&lt;/a&gt;
-  
-  
-  
-  &lt;figcaption&gt;Base de datos con varios esquemas, inventory y purchases&lt;/figcaption&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2015/106/basededatos.png&#34; title=&#34;Base de datos con varios esquemas&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2015/106/basededatos.png&#34;/&gt;&lt;/a&gt;
+&lt;figcaption&gt;Base de datos con varios esquemas, inventory y purchases&lt;/figcaption&gt;
 &lt;/figure&gt;
-
-
 &lt;/div&gt;
-
 &lt;p&gt;Como en jOOQ la fuente de la verdad es la base de datos los modelos se generan a partir de ella usando otra tarea de Gradle, generará las clases con las que trabajaremos en la aplicación con el comando &lt;code&gt;./gradlew generateModels&lt;/code&gt;. Las clases son las del paquete &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/Multidatabase/src/main/java/io/github/picodotdev/blogbitix/multidatabase/jooq&#34;&gt;io.github.picodotdev.blogbitix.multidatabase.jooq&lt;/a&gt;.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=build-jooq.gradle&#34;&gt;&lt;/script&gt;
-
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=build-jooq.gradle&#34;&gt;&lt;/script&gt;
 &lt;p&gt;Este sería el programa de ejemplo iniciado con &lt;a href=&#34;https://projects.spring.io/spring-boot/&#34;&gt;Spring Boot&lt;/a&gt; que usa ambos servicios, el de inventario y el de compras, creando un producto y haciendo una compra junto con su salida en la terminal. Ejecutándolo repetidamente con &lt;code&gt;./gradlew run&lt;/code&gt; veremos aumenta el número de productos y compras guardados en cada tabla de los dos esquemas.&lt;/p&gt;
-
-&lt;p&gt;&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=Main.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=System.out&#34;&gt;&lt;/script&gt;
+&lt;p&gt;&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=Main.java&#34;&gt;&lt;/script&gt;
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/247d4c1189e851d89d85.js?file=System.out&#34;&gt;&lt;/script&gt;
 &lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-    &lt;figure&gt;
-        &lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/28856.js&#34; id=&#34;asciicast-28856&#34; async&gt;&lt;/script&gt;
-        &lt;noscript&gt;&lt;a href=&#34;https://asciinema.org/a/28856&#34; target=&#34;_blank&#34;&gt;&lt;img src=&#34;https://asciinema.org/a/28856.png&#34; width=&#34;734&#34;/&gt;&lt;/a&gt;&lt;/noscript&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    &amp;lt;figcaption&amp;gt;Ejecución del ejemplo multidatabase&amp;lt;/figcaption&amp;gt;
-
+&lt;figure&gt;
+&lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/28856.js&#34; id=&#34;asciicast-28856&#34; async&gt;&lt;/script&gt;
+&lt;noscript&gt;&lt;a href=&#34;https://asciinema.org/a/28856&#34; target=&#34;_blank&#34;&gt;&lt;img src=&#34;https://asciinema.org/a/28856.png&#34; width=&#34;734&#34;/&gt;&lt;/a&gt;&lt;/noscript&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; &amp;lt;figcaption&amp;gt;Ejecución del ejemplo multidatabase&amp;lt;/figcaption&amp;gt;
 &amp;lt;/figure&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;&lt;/div&gt;&lt;/p&gt;
-
 &lt;p&gt;Si quieres obtener más información sobre varias de las herramientas como jOOQ, Liquibase, Gradle o Spring Boot que forman en el momento de escribir este artículo el actual estado del arte en Java puedes leer los diferentes artículos que he he escrito sobre ellos de forma específica:&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/05/alternativa-a-hibernate-u-orm-y-ejemplo-de-jooq/&#34;&gt;jOOQ&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2013/05/modificar-la-base-de-datos-con-liquibase.html&#34;&gt;Liquibase&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2012/03/herramienta-de-construccion-gradle.html&#34;&gt;Gradle&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/10/aplicacion-java-autocontenida-con-spring-boot/&#34;&gt;Spring Boot&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
-&lt;p&gt;El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/Multidatabase&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
-
-
-
-        </content>
-        
-            
-                <category term="blog-stack"/>
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="programacion"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2015/05/alternativa-a-hibernate-u-orm-y-ejemplo-de-jooq/</id>
-        <title>Alternativa a Hibernate u ORM y ejemplo de jOOQ</title>        
-        <updated>2017-06-18T12:00:00+02:00</updated>
-        <published>2015-05-29T20:00:00+02:00</published>
-        <link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2015/05/alternativa-a-hibernate-u-orm-y-ejemplo-de-jooq/"/>
-        <author><name>pico.dev</name></author>
-        <content type="html">
-        
-          &lt;p&gt;&lt;strong&gt;Los ORMs nos han facilitado el acceso a los datos de una base de datos relacional. Han solucionado algunos problemas pero traído consigo otros nuevos como el problema N+1 o la pérdida de control del modelo relacional. jOOQ forma parte de una nueva generación de herramientas que puede sustituir o complementar a otras como Hibernate. Y después de haberlo usado considero que puede ser factible.&lt;/strong&gt;&lt;/p&gt;
-        
-        &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-    &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/jooq.png&#34; class=&#34;right &#34; alt=&#34;jOOQ&#34; title=&#34;jOOQ&#34;/&gt;
+&lt;p&gt;El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/Multidatabase&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;</content><category term="blog-stack"/><category term="java"/><category term="planeta-codigo"/><category term="programacion"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2015/05/alternativa-a-hibernate-u-orm-y-ejemplo-de-jooq/</id><title>Alternativa a Hibernate u ORM y ejemplo de jOOQ</title><updated>2017-06-18T12:00:00+02:00</updated><published>2015-05-29T20:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2015/05/alternativa-a-hibernate-u-orm-y-ejemplo-de-jooq/"/><author><name>pico.dev</name></author><content type="html">
+&lt;p&gt;&lt;strong&gt;Los ORMs nos han facilitado el acceso a los datos de una base de datos relacional. Han solucionado algunos problemas pero traído consigo otros nuevos como el problema N+1 o la pérdida de control del modelo relacional. jOOQ forma parte de una nueva generación de herramientas que puede sustituir o complementar a otras como Hibernate. Y después de haberlo usado considero que puede ser factible.&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/jooq.png&#34; class=&#34;right &#34; alt=&#34;jOOQ&#34; title=&#34;jOOQ&#34;/&gt;
 &lt;/div&gt;
-
 &lt;p&gt;Con el auge de los lenguajes de programación orientados a objetos han surgido varias herramientas que intentan hacer que el trabajo de unir el mundo orientado a objetos del lenguaje que empleemos y el modelo relacional de las bases de datos sea más transparente, estas herramientas son conocidas como &lt;a href=&#34;https://es.wikipedia.org/wiki/Mapeo_objeto-relacional&#34;&gt;Object Realtional Mapping&lt;/a&gt; (ORM). Una de las más conocidas y usada en la plataforma Java es &lt;a href=&#34;https://hibernate.org/&#34;&gt;Hibernate&lt;/a&gt;. Sin embargo, aunque facilitan el acceso a los datos no están exentas de problemas y están surgiendo nuevas alternativas para tratar de solventar algunos de ellos, una de ellas es &lt;a href=&#34;https://www.jooq.org/&#34;&gt;jOOQ&lt;/a&gt;.&lt;/p&gt;
-
 &lt;p&gt;Si hemos usado Hibernate sabremos que aunque este ampliamente usado facilitando la conversión entre el modelo relacional en base de datos y el modelo orientado a objetos del lenguaje Java también presenta problemas. Uno de los problemas es que al abstraer el acceso a base de datos no somos tan conscientes de las sentencias SQL que se envían a la base de datos provocando los problemas &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/05/detectar-problema-n-plus-1-y-obtener-estadisticas-de-hibernate-con-grails/&#34;&gt;N+1&lt;/a&gt; y que la aplicación sea lenta, poco eficiente y sobrecargar la base de datos en el caso de realizar demasiadas consultas SQL. Otro problema es que cuando necesitamos realizar una consulta compleja o avanzada el &lt;a href=&#34;https://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html#hql&#34;&gt;lenguaje HQL&lt;/a&gt; no nos ofrezca todo lo que necesitamos haciendo que tengamos que escribir directamente la consulta en lenguaje SQL con lo que perdemos la validación del compilador y si usamos una funcionalidad específica de un motor de base de datos la independencia del mismo. También puede ocurrirnos que diseñamos los modelos para complacer al &lt;em&gt;framework&lt;/em&gt; de persistencia ORM.&lt;/p&gt;
-
 &lt;p&gt;jOOQ es una herramienta que facilita el acceso a la base de datos usando un enfoque diferente de los ORM, no trata de crear una abstracción sobre la base de datos relacional sino que pone el modelo relacional como elemento central de la aplicación en cuanto a la persistencia. Algunas de las características destacables de jOOQ son:&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;La base de datos primero: los datos son probablemente lo más importante de una aplicación. En los ORM los modelos de objetos dirigen el modelo de base de datos, no siempre es sencillo (más) en bases de datos heredadas que no tienen la estructura necesaria usable por los ORMs. En jOOQ el modelo relacional dirige el modelo de objetos, para jOOQ el modelo relacional es más importante que el modelo de objetos.&lt;/li&gt;
 &lt;li&gt;jOOQ usa SQL como elemento central: en jOOQ se pueden construir las SQLs usando una API fluida con la que el compilador puede validar la sintaxis, metadatos y tipos de datos. Se evitan y se detectan rápidamente los errores de sintaxis con la ayuda del compilador y con la ayuda de un IDE se ofrece asistencia de código que facilita el uso de la API. Está a un nivel bastante cercano al lenguaje SQL.&lt;/li&gt;
@@ -269,41 +106,25 @@
 &lt;li&gt;Ciclo de vida de las consultas: proporciona llamadas o &lt;em&gt;hooks&lt;/em&gt; de forma que se puedan añadir comportamientos, por ejemplo para &lt;em&gt;logging&lt;/em&gt;, manejo de transacciones, generación de identificadores, transformación de SQLs y más cosas.&lt;/li&gt;
 &lt;li&gt;Procedimientos almacenados: los procedimientos almacenados son ciudadanos de primera clase y pueden usarse de forma simple al contrario de lo que sucede en los ORM. Para algunas tareas los procedimientos almacenados son muy útiles y más eficientes.&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;Los ORMs ofrecen como ventajas sobre el uso directo de JDBC la implementación de las operaciones CRUD, construir las SQLs con una API en vez de concatenando &lt;em&gt;Strings&lt;/em&gt; propensos a errores al modificarlos y la independencia del motor de base de datos usado pudiendo cambiar a otro sin afectar al código de la aplicación. La navegación de las relaciones es más explícita que en Hibernate y &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/11/obtener-datos-de-multiples-tablas-con-jooq/&#34;&gt;obtener datos de múltiples tablas con jOOQ&lt;/a&gt; diferente.&lt;/p&gt;
-
 &lt;p&gt;Si nos convencen estas características y propiedades de jOOQ podemos empezar leyendo la &lt;a href=&#34;http://www.jooq.org/doc/3.6/manual/getting-started/tutorials/jooq-in-7-steps/&#34;&gt;guía de inicio&lt;/a&gt; donde se comenta los primeros pasos para usarlo. La &lt;a href=&#34;http://www.jooq.org/doc/3.6/manual-single-page/&#34;&gt;documentación de jOOQ&lt;/a&gt; está bastante bien explicada pero no se comentan algunas cosas que al usarlo en un proyecto tendremos que buscar.&lt;/p&gt;
-
 &lt;p&gt;En el siguiente ejemplo mostraré como usar jOOQ y la configuración necesaria para emplearlo junto con &lt;a href=&#34;https://spring.io/&#34;&gt;Spring&lt;/a&gt;. En la siguiente configuración de Spring usando únicamente código Java se construye un &lt;em&gt;DataSource&lt;/em&gt;, un &lt;em&gt;Datasource&lt;/em&gt; con soporte de transacciones para el acceso a la base de datos, un &lt;a href=&#34;http://www.jooq.org/javadoc/latest/org/jooq/ConnectionProvider.html&#34;&gt;&lt;em&gt;ConnectionProvider&lt;/em&gt;&lt;/a&gt; de jOOQ que usará el &lt;em&gt;DataSource&lt;/em&gt; para obtener las conexiones a la base de datos, con la clase &lt;a href=&#34;http://www.jooq.org/javadoc/latest/org/jooq/Configuration.html&#34;&gt;&lt;em&gt;Configuration&lt;/em&gt;&lt;/a&gt; realizamos la configuración de jOOQ y finalmente &lt;a href=&#34;http://www.jooq.org/javadoc/latest/org/jooq/DSLContext.html&#34;&gt;&lt;em&gt;DSLContext&lt;/em&gt;&lt;/a&gt; es el objeto que usaremos para construir las sentencias SQL.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/940750739d639f0c46f5.js?file=AppConfiguration.java&#34;&gt;&lt;/script&gt;
-
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/940750739d639f0c46f5.js?file=AppConfiguration.java&#34;&gt;&lt;/script&gt;
 &lt;p&gt;Una de las cosas que tendremos que resolver es que al generar código y usar el patrón &lt;em&gt;Active Record&lt;/em&gt;, si lo usamos ya que podemos usar jOOQ para generar únicamente las sentencias SQL o en los casos que lo hagamos pudiendo combiar &lt;em&gt;Active Records&lt;/em&gt; para unos casos y sentencias SQL con JDBC para otros, puede que necesitemos incluir campos adicionales a los presentes en la base de datos que manejen cierta lógica en la aplicación, también puede que necesitemos incluir métodos de lógica de negocio adicionales. Para incluir estos datos y métodos tendremos que extender la clase &lt;em&gt;Active Record&lt;/em&gt; que genera jOOQ. En aquellos sitios de la aplicación que necesitemos usar esas propiedades y métodos adicionales deberemos transformar la instancia de la clase que usa jOOQ (&lt;em&gt;PostRecord&lt;/em&gt;) por la clase que tenga esos datos adicionales (&lt;em&gt;AppPostRecord&lt;/em&gt;). Para ello la API de la clase &lt;a href=&#34;http://www.jooq.org/javadoc/3.6.x/org/jooq/Record.html&#34;&gt;Record&lt;/a&gt; ofrece el método &lt;a href=&#34;http://www.jooq.org/javadoc/3.6.x/org/jooq/Record.html#into-java.lang.Class-&#34;&gt;&lt;em&gt;into&lt;/em&gt;&lt;/a&gt; o &lt;a href=&#34;http://www.jooq.org/javadoc/3.6.x/org/jooq/Record.html#from-java.lang.Object-&#34;&gt;&lt;em&gt;from&lt;/em&gt;&lt;/a&gt; como muestro en el código de &lt;em&gt;AppPostRecord&lt;/em&gt; a continuación. Esta es la solución que he usado en &lt;a href=&#34;https://twitter.com/blogstackinfo&#34;&gt;Blog Stack&lt;/a&gt;.&lt;/p&gt;
-
 &lt;p&gt;jOOQ genera automáticamente las clases que implementa el patrón &lt;em&gt;Active Record&lt;/em&gt; y dispondremos de los métodos CRUD heredados de la clase &lt;a href=&#34;http://www.jooq.org/javadoc/3.6.x/org/jooq/Record.html&#34;&gt;Record&lt;/a&gt;.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/940750739d639f0c46f5.js?file=AppPostRecord.java&#34;&gt;&lt;/script&gt;
-
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/940750739d639f0c46f5.js?file=AppPostRecord.java&#34;&gt;&lt;/script&gt;
 &lt;p&gt;&lt;a href=&#34;http://blog.jooq.org/2014/09/12/why-you-should-not-implement-layered-architecture/&#34;&gt;Los desarrolladores de jOOQ abogan por la eliminación de capas&lt;/a&gt; en la arquitectura de la aplicación pero puede que aún preferimos desarrollar una capa que contenga las consultas a la base de datos que sea usada y compartida por el resto la aplicación para el acceso los datos, quizá más que una capa en este caso es una forma de organizar el código. Los &lt;em&gt;Active Records&lt;/em&gt; proporcionan algunos métodos de consulta pero probablemente necesitaremos más. En el siguiente ejemplo podemos ver como son las consultas con jOOQ. Si necesitamos métodos de búsqueda adicionales a los que por defecto jOOQ proporciona en Blog Stack he creado una clase &lt;a href=&#34;https://es.wikipedia.org/wiki/Data_Access_Object&#34;&gt;DAO&lt;/a&gt; por cada entidad de la base de datos. En el siguiente ejemplo se puede ver como se construyen las sentencias SQL con jOOQ usando su API fluida.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/940750739d639f0c46f5.js?file=PostDAO.java&#34;&gt;&lt;/script&gt;
-&lt;script src=&#34;//gist.github.com/picodotdev/940750739d639f0c46f5.js?file=PostDAOImpl.java&#34;&gt;&lt;/script&gt;
-
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/940750739d639f0c46f5.js?file=PostDAO.java&#34;&gt;&lt;/script&gt;
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/940750739d639f0c46f5.js?file=PostDAOImpl.java&#34;&gt;&lt;/script&gt;
 &lt;p&gt;Para usar el generador de código de jOOQ con &lt;a href=&#34;https://gradle.org/&#34;&gt;Gradle&lt;/a&gt; debemos añadir la siguiente configuración al archivo de construcción del proyecto, este generador se conectará a la base de datos, obtendrá los datos de esquema y generará todas las clases del paquete &lt;a href=&#34;https://github.com/picodotdev/blog-stack/tree/master/src/main/java/info/blogstack/persistence/jooq&#34;&gt;info.blogstack.persistence.jooq&lt;/a&gt;. Por ejemplo, puede que queramos usar &lt;a href=&#34;http://www.joda.org/joda-time/&#34;&gt;JodaTime&lt;/a&gt; en vez de las clases &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/Date.html&#34;&gt;Date&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/sql/Timestamp.html&#34;&gt;Timesptamp&lt;/a&gt; de la API de Java al menos si no usamos aún &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/&#34;&gt;Java 8 y sus novedades&lt;/a&gt;.&lt;/p&gt;
-
-&lt;script src=&#34;//gist.github.com/picodotdev/940750739d639f0c46f5.js?file=build.gradle&#34;&gt;&lt;/script&gt;
-
+&lt;script type=&#34;application/javascript&#34; src=&#34;//gist.github.com/picodotdev/940750739d639f0c46f5.js?file=build.gradle&#34;&gt;&lt;/script&gt;
 &lt;p&gt;Otra alternativa con algunas similitudes a jOOQ es &lt;a href=&#34;http://jdbi.org/&#34;&gt;JDBI&lt;/a&gt; pero en esta las consultas no tienen el soporte del compilador que ofrece jOOQ, otra es &lt;a href=&#34;http://slick.typesafe.com/&#34;&gt;Slick&lt;/a&gt; para &lt;a href=&#34;https://www.scala-lang.org/&#34;&gt;Scala&lt;/a&gt;. También tiene cierta similitud con &lt;a href=&#34;https://mybatis.github.io/mybatis-3/es/&#34;&gt;MyBatis&lt;/a&gt; que existe desde hace bastante tiempo aunque jOOQ ofrece más posibilidades.&lt;/p&gt;
-
-&lt;p&gt;En el &lt;a href=&#34;https://github.com/picodotdev/blog-stack/tree/master&#34;&gt;código fuente de Blog Stack&lt;/a&gt; está el código completo de uso de jOOQ, en el paquete &lt;a href=&#34;https://github.com/picodotdev/blog-stack/tree/master/src/main/java/info/blogstack/persistence&#34;&gt;info.blogstack.persistence&lt;/a&gt; están las clases relacionadas con la persistencia en una base de datos &lt;a href=&#34;http://www.h2database.com/html/main.html&#34;&gt;H2&lt;/a&gt;, usa Spring para los servicios y la transaccionalidad, en la clase &lt;a href=&#34;https://github.com/picodotdev/blog-stack/blob/master/src/main/java/info/blogstack/services/spring/AppConfiguration.java&#34;&gt;AppConfiguration&lt;/a&gt; se encuentra la definición de ambas cosas y la integración con jOOQ. En  la &lt;a href=&#34;https://github.com/picodotdev/blog-stack/releases/tag/0.1&#34;&gt;versión 0.1&lt;/a&gt; está la misma aplicación pero usando Hibernate.&lt;/p&gt;
-
+&lt;p&gt;En el &lt;a href=&#34;https://github.com/picodotdev/blog-stack/tree/master&#34;&gt;código fuente de Blog Stack&lt;/a&gt; está el código completo de uso de jOOQ, en el paquete &lt;a href=&#34;https://github.com/picodotdev/blog-stack/tree/master/src/main/java/info/blogstack/persistence&#34;&gt;info.blogstack.persistence&lt;/a&gt; están las clases relacionadas con la persistencia en una base de datos &lt;a href=&#34;http://www.h2database.com/html/main.html&#34;&gt;H2&lt;/a&gt;, usa Spring para los servicios y la transaccionalidad, en la clase &lt;a href=&#34;https://github.com/picodotdev/blog-stack/blob/master/src/main/java/info/blogstack/services/spring/AppConfiguration.java&#34;&gt;AppConfiguration&lt;/a&gt; se encuentra la definición de ambas cosas y la integración con jOOQ. En la &lt;a href=&#34;https://github.com/picodotdev/blog-stack/releases/tag/0.1&#34;&gt;versión 0.1&lt;/a&gt; está la misma aplicación pero usando Hibernate.&lt;/p&gt;
 &lt;p&gt;Como comentan en su propio blog &lt;a href=&#34;http://blog.jooq.org/2013/08/06/use-modelmapper-and-jooq-to-regain-control-of-your-domain-model/&#34;&gt;usa ModelMapper y jOOQ para recuperar el control de tu modelo de dominio&lt;/a&gt; que probablemente no es nada menos que lo más importante de tu aplicación o negocio. Herramientas como jOOQ contribuyen a que haya &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/05/10-razones-para-seguir-usando-java/&#34;&gt;razones para seguir usando Java&lt;/a&gt;.&lt;/p&gt;
-
 &lt;p&gt;jOOQ está &lt;a href=&#34;http://www.jooq.org/legal/licensing&#34;&gt;licenciado&lt;/a&gt; de forma dual, &lt;a href=&#34;http://www.apache.org/licenses/LICENSE-2.0&#34;&gt;ASL&lt;/a&gt; para la versión &lt;em&gt;community&lt;/em&gt; que ofrece soporte para las bases de datos &lt;a href=&#34;https://www.mysql.com/&#34;&gt;MySQL&lt;/a&gt;, &lt;a href=&#34;https://www.postgresql.org/&#34;&gt;PostgreSQL&lt;/a&gt;, SQLite, H2 y alguna más y una licencia comercial que ofrece soporte para bases de datos como &lt;a href=&#34;https://products.office.com/es-ES/access&#34;&gt;Microsoft Access&lt;/a&gt;, &lt;a href=&#34;https://www.oracle.com/database/index.html&#34;&gt;Oracle&lt;/a&gt; y &lt;a href=&#34;https://www.microsoft.com/en-us/sql-server/sql-server-2016&#34;&gt;Microsoft SQL Server&lt;/a&gt;.&lt;/p&gt;
-
 &lt;div class=&#34;reference&#34;&gt;
-    Referencia:&lt;br&gt;
-    &lt;ul&gt;
+Referencia:&lt;br&gt;
+&lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.jooq.org/&#34;&gt;jOOQ&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://modelmapper.org/&#34;&gt;ModelMapper&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://modelmapper.org/user-manual/jooq-integration/&#34;&gt;Integración entre jOOQ y ModelMapper&lt;/a&gt;&lt;/li&gt;
@@ -312,23 +133,4 @@
 &lt;li&gt;&lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2012/03/herramienta-de-construccion-gradle.html&#34;&gt;Introducción a Gradle&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://elblogdepicodev.blogspot.com.es/2012/08/jodatime-y-como-integrarlo-con-hibernate.html&#34;&gt;Usar DateTime en Hibernate&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
-&lt;/div&gt;
-
-
-
-        </content>
-        
-            
-                <category term="java"/>
-            
-                <category term="programacion"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="blog-stack"/>
-            
-        
-    </entry>
-    
-</feed>
+&lt;/div&gt;</content><category term="java"/><category term="programacion"/><category term="planeta-codigo"/><category term="blog-stack"/></entry></feed>
