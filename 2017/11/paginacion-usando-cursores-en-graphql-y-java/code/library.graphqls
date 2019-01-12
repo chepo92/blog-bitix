@@ -1,0 +1,53 @@
+type Book {
+    id: Long
+    title: String
+    author: Author
+    isbn: String
+    comments(after: String, limit: Long): CommentsConnection
+}
+
+type Comment {
+    id: Long
+    text: String
+}
+
+type Author {
+    id: Long
+    name: String
+}
+
+input BookFilter {
+    title: String
+}
+
+type CommentsConnection {
+    edges: [CommentEdge]
+    pageInfo: PageInfo
+}
+
+type CommentEdge {
+    node: Comment
+    cursor: String
+}
+
+type PageInfo {
+    startCursor: String
+    endCursor: String
+    hasNextPage: Boolean
+}
+
+type Query {
+    books(filter: BookFilter): [Book]!
+    book(id: Long): Book!
+    authors: [Author]!
+    author(id: Long): Author!
+}
+
+type Mutation {
+    addBook(title: String, author: Long): Book
+}
+
+schema {
+    query: Query
+    mutation: Mutation
+}

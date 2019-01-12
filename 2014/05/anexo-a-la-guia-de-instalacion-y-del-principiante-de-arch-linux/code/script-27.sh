@@ -1,0 +1,1 @@
+# efibootmgr -b xxxx -B

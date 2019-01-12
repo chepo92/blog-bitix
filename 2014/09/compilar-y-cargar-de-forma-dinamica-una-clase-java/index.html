@@ -1,5 +1,5 @@
 <!doctype html><html lang=es><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content=picodotdev><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="Desde la versión 1.6 del JDK disponemos de una API para acceder al compilador desde un programa Java. En el ejemplo de este artículo utilizaré varias clases de esa API para conseguir compilar un archivo con la definición de una clase Java y posteriormente instanciarla y usarla. En posteriores artículos comentaré un ejemplo práctico y muy útil con el que podemos sacar provecho de esta funcionalidad.
-Las clases que necesitaremos de esa API son: &hellip;"><base href=https://picodotdev.github.io/blog-bitix/><title>Compilar y cargar de forma dinámica una clase Java</title><link rel=author type=text/plain href=humans.txt><link rel="shortcut icon" href=assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=assets/apple-touch-icon-144-precomposed.png><link rel=canonical href=https://picodotdev.github.io/blog-bitix/2014/09/compilar-y-cargar-de-forma-dinamica-una-clase-java/><link href=index.xml rel=alternate type=application/rss+xml title="Blog Bitix"><link rel=stylesheet type=text/css href="//fonts.googleapis.com/css?family=PT+Serif:400,700italic,700,400italic"><link rel=stylesheet type=text/css href=assets/libs/bootstrap-4.0.0/css/bootstrap.min.css><link rel=stylesheet type=text/css href=assets/libs/Gallery-2.30.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=assets/css/main.css><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js async></script><script type=text/javascript>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript async>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script type=text/javascript src=assets/libs/require.js></script><script type=text/javascript src=assets/js/main.js></script><script type=text/javascript src=assets/js/theme.js async></script><script type=text/javascript src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" async></script><script type=text/javascript src=assets/js/app.js async></script></head><body><div class=container><div class=row><div class=col><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+Las clases que necesitaremos de esa API son: &hellip;"><base href=https://picodotdev.github.io/blog-bitix/><title>Compilar y cargar de forma dinámica una clase Java</title><link rel=author type=text/plain href=humans.txt><link rel="shortcut icon" href=assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=assets/apple-touch-icon-144-precomposed.png><link rel=canonical href=https://picodotdev.github.io/blog-bitix/2014/09/compilar-y-cargar-de-forma-dinamica-una-clase-java/><link href=index.xml rel=alternate type=application/rss+xml title="Blog Bitix"><link rel=stylesheet type=text/css href="//fonts.googleapis.com/css?family=PT+Serif:400,700italic,700,400italic"><link rel=stylesheet type=text/css href=assets/libs/bootstrap-4.0.0/css/bootstrap.min.css><link rel=stylesheet type=text/css href=assets/libs/Gallery-2.30.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=assets/css/syntax.css><link rel=stylesheet type=text/css href=assets/css/main.css><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js async></script><script type=text/javascript>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript async>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script type=text/javascript src=assets/libs/require.js></script><script type=text/javascript src=assets/js/main.js></script><script type=text/javascript src=assets/js/theme.js async></script><script type=text/javascript src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" async></script><script type=text/javascript src=assets/js/app.js async></script></head><body><div class=container><div class=row><div class=col><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
 <a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
 <a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class="col-12 col-lg-4 text-center"><form name=query class="form-inline search" onsubmit="return false;"><div class=input-group><input type=text name=q class=form-control placeholder="Buscar en Blog Bitix">
 <span class=input-group-btn><button class="btn btn-secondary" type=submit>Buscar</button></span></div></form><form name=search action=https://duckduckgo.com/ method=get class=hidden data-site=https://picodotdev.github.io/blog-bitix/><input type=hidden name=q></form></div></div><div class=row><div class=col-12><nav class="nav nav-pills nav-fill"><a href=/blog-bitix/tags/java/ class="nav-item nav-link">Java</a>
@@ -9,7 +9,431 @@ Las clases que necesitaremos de esa API son: &hellip;"><base href=https://picodo
 <a href=/blog-bitix/archive/ class="nav-item nav-link">Archivo y hemeroteca</a>
 <a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
 <a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 col-lg-8"><div class=row><div class=col-12><article itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content=es><meta itemprop=keywords content="software, programacion, java, planeta-codigo, blog-stack"><h1 itemprop=name>Compilar y cargar de forma dinámica una clase Java</h1><p class=information>Escrito por <span itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2014-09-12>12/09/2014</time>, actualizado el <time itemprop=dateModified datetime=2015-05-30>30/05/2015</time>.<br><a href=tags/software/>software</a> <a href=tags/programacion/>programacion</a> <a href=tags/java/>java</a> <a href=tags/planeta-codigo/>planeta-codigo</a> <a href=tags/blog-stack/>blog-stack</a><br><a href=/blog-bitix/2014/09/compilar-y-cargar-de-forma-dinamica-una-clase-java/ itemprop=url>Enlace permanente</a>
-<a href=/blog-bitix/2014/09/compilar-y-cargar-de-forma-dinamica-una-clase-java/#comments>Comentarios</a></p><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><div class=content itemprop=articleBody><meta itemprop=wordCount content=532><div class=logotypes style=float:right><img src=assets/images/logotipos/java.svg class=right width=200 alt=Java title=Java></div><p>Desde la versión 1.6 del JDK disponemos de una API para acceder al compilador desde un programa Java. En el ejemplo de este artículo utilizaré varias clases de esa API para conseguir compilar un archivo con la definición de una clase Java y posteriormente instanciarla y usarla. En posteriores artículos comentaré un ejemplo práctico y muy útil con el que podemos sacar provecho de esta funcionalidad.</p><p>Las clases que necesitaremos de esa API son:</p><ul><li><a href=http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCompiler.html>JavaCompiler</a> que es la interfaz para acceder al compilador desde un programa Java.</li><li><a href=http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaFileManager.html>JavaFileManager</a> que es una abstracción para gestionar los archivos fuente y las clases. Usaremos uno propio llamado ClassFileManager.</li><li><a href=http://docs.oracle.com/javase/7/docs/api/javax/tools/SimpleJavaFileObject.html>SimpleJavaFileObject</a> clase que contiene el código fuente Java.</li></ul><p>Y también necesitaremos redefinir algunas:</p><ul><li>La clase ClassFileManager que extiende <a href=http://docs.oracle.com/javase/7/docs/api/javax/tools/ForwardingJavaFileManager.html>ForwardingJavaFileManager</a> y se encargará de cargar los objetos JavaClassObject con un ClassLoader.</li><li>La clase JavaClassObject que extiende <a href=http://docs.oracle.com/javase/7/docs/api/javax/tools/SimpleJavaFileObject.html>SimpleJavaFileObject</a> y contendrá el código bytecode generado en memoria por el compilador.</li><li>CharSequenceJavaFileObject clase que extiende <a href=http://docs.oracle.com/javase/7/docs/api/javax/tools/SimpleJavaFileObject.html>SimpleJavaFileObject</a> y que contiene el código fuente en un objeto de tipo CharSequence.</li><li>La interfaz Configuracion es la interfaz que debe cumplir la clase Java que compilaremos, cargaremos de forma dinámica en la aplicación y posteriormente invocaremos sus métodos.</li></ul><p>En el javadoc de las clases hay una descripción más amplia de cada una de ellas.</p><p>En el siguiente código suponiendo que disponemos en la variable source de un código Java a compilar y de la que crearemos mas tarde una instancia de la clase que define podemos hacerlo de la forma indicada continuación. Antes de mostrar el código código la clase a compilar y a cargar de forma dinámica en este ejemplo debe cumplir el contrato definido en una determinada interfaz de modo que una vez compilada y cargada sepamos que métodos podemos invocar de esa clase. En este caso el código fuente de la clase a compilar está hardcodeada en un String en el propio programa pero perfectamente podría haber obtenido su contenido de un archivo del disco duro o de una base de datos.</p><script type=application/javascript src="//gist.github.com/picodotdev/bb8fafe477c926a26986.js?file=Main1.java"></script><script type=application/javascript src="//gist.github.com/picodotdev/bb8fafe477c926a26986.js?file=Configuracion.java"></script><p>Con este ejemplo puede intuirse el ejemplo práctico que comentaré que no es más que utilizar código Java para definir la configuración de una aplicación, esto tiene varias ventajas sobre utilizar un xml u otro tipo de formato de archivo de configuración de la aplicación (una de ellas que utilizando un IDE el compilador nos informará de errores y nos ofrecerá asistencia al escribir código). Esta idea junto con la posibilidad de monitorizar un archivo para ver si se han producido cambios en él (también con la API de Java) y recargarlo puede darnos como resultado una funcionalidad en la que la configuración se basa en código Java y que la configuración pueda recargarse de forma dinámica, si la aplicación se utiliza en un servidor de aplicaciones podríamos cambiar la configuración sin tener que reiniciar la aplicación.</p><div class=media style=text-align:center><figure><a href=assets/images/posts/2014/42/main1.png title="Salida programa Main1.java" data-gallery><img src=assets/images/posts/2014/42/main1.png></a></figure></div><p>Casi para terminar las clases de utilidad:</p><script type=application/javascript src="//gist.github.com/picodotdev/bb8fafe477c926a26986.js?file=ClassFileManager.java"></script><script type=application/javascript src="//gist.github.com/picodotdev/bb8fafe477c926a26986.js?file=CharSequenceJavaFileObject.java"></script><script type=application/javascript src="//gist.github.com/picodotdev/bb8fafe477c926a26986.js?file=JavaClassObject.java"></script><p>El código fuente completo puede encontrarse en el <a href=https://github.com/picodotdev/blog-ejemplos/tree/master/ConfiguracionJava>siguiente repositorio de GitHub</a>.</p><p>En el siguiente artículo comentaré como <a href=https://picodotdev.github.io/blog-bitix/2014/09/monitorizar-archivos-con-java/>monitorizar un archivo con código fuente Java</a> para ver si se han producido cambios en él. Y basándome en estos dos artículos comentaré como disponer de <a href=https://picodotdev.github.io/blog-bitix/2014/09/monitorizar-archivos-con-java/>un archivo de configuración que se recargue al detectase cambios en él</a>.</p></div></article></div></div><div class="row related"><div class=col-md-12><h3>Artículos relacionados:</h3><ul><li><a href=/blog-bitix/2014/08/actualizacion-del-libro-plugin-tapestry/>Actualización del libro PlugIn Tapestry</a></li><li><a href=/blog-bitix/2014/08/doble-barra-de-botones-con-apache-tapestry/>Doble barra de botones con Apache Tapestry</a></li><li><a href=/blog-bitix/2014/08/forzar-el-uso-del-protocolo-https-en-apache-tapestry/>Forzar el uso del protocolo https en Apache Tapestry</a></li><li><a href=/blog-bitix/2014/07/usar-apache-tapestry-en-una-aplicacion-standalone/>Usar Apache Tapestry en una aplicación «standalone»</a></li><li><a href=/blog-bitix/2014/07/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry/>Servir recursos estáticos desde un CDN en Apache Tapestry</a></li></ul></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class=col-12><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><a id=comments></a><div class=row><div class=col-md-12><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='https:\/\/picodotdev.github.io\/blog-bitix\/2014\/09\/compilar-y-cargar-de-forma-dinamica-una-clase-java\/';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2014\/09\/compilar-y-cargar-de-forma-dinamica-una-clase-java\/';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script></div><div class="col-12 col-lg-4"><div class=row><div class="col-md-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:300px;height:600px data-ad-client=ca-pub-3533636310991304 data-ad-slot=9559414587 data-type=large-skycraper></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><div class=row><div class="col-md-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:336px;height:280px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2873752587 data-type=large-rectangle></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><div class="row text-center banner"><div class=col-12><a href=https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/><img src=//static.fsf.org/nosvn/images/badges/badges_es/i-support-fs_red-bg-es.png alt="Yo apoyo al software libre"></a></div></div><div class=row><div class=col-md-12><hr></div></div><div class=row><div class=col-md-12><ul class="list-unstyled recents"><li><span class="glyphicon glyphicon-hand-right"></span><a href=archive/>Más artículos recientes en el archivo</a></li></ul></div></div></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<a href=/blog-bitix/2014/09/compilar-y-cargar-de-forma-dinamica-una-clase-java/#comments>Comentarios</a></p><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><div class=content itemprop=articleBody><meta itemprop=wordCount content=1475><div class=logotypes style=float:right><img src=assets/images/logotipos/java.svg class=right width=200 alt=Java title=Java></div><p>Desde la versión 1.6 del JDK disponemos de una API para acceder al compilador desde un programa Java. En el ejemplo de este artículo utilizaré varias clases de esa API para conseguir compilar un archivo con la definición de una clase Java y posteriormente instanciarla y usarla. En posteriores artículos comentaré un ejemplo práctico y muy útil con el que podemos sacar provecho de esta funcionalidad.</p><p>Las clases que necesitaremos de esa API son:</p><ul><li><a href=http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCompiler.html>JavaCompiler</a> que es la interfaz para acceder al compilador desde un programa Java.</li><li><a href=http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaFileManager.html>JavaFileManager</a> que es una abstracción para gestionar los archivos fuente y las clases. Usaremos uno propio llamado ClassFileManager.</li><li><a href=http://docs.oracle.com/javase/7/docs/api/javax/tools/SimpleJavaFileObject.html>SimpleJavaFileObject</a> clase que contiene el código fuente Java.</li></ul><p>Y también necesitaremos redefinir algunas:</p><ul><li>La clase ClassFileManager que extiende <a href=http://docs.oracle.com/javase/7/docs/api/javax/tools/ForwardingJavaFileManager.html>ForwardingJavaFileManager</a> y se encargará de cargar los objetos JavaClassObject con un ClassLoader.</li><li>La clase JavaClassObject que extiende <a href=http://docs.oracle.com/javase/7/docs/api/javax/tools/SimpleJavaFileObject.html>SimpleJavaFileObject</a> y contendrá el código bytecode generado en memoria por el compilador.</li><li>CharSequenceJavaFileObject clase que extiende <a href=http://docs.oracle.com/javase/7/docs/api/javax/tools/SimpleJavaFileObject.html>SimpleJavaFileObject</a> y que contiene el código fuente en un objeto de tipo CharSequence.</li><li>La interfaz Configuracion es la interfaz que debe cumplir la clase Java que compilaremos, cargaremos de forma dinámica en la aplicación y posteriormente invocaremos sus métodos.</li></ul><p>En el javadoc de las clases hay una descripción más amplia de cada una de ellas.</p><p>En el siguiente código suponiendo que disponemos en la variable source de un código Java a compilar y de la que crearemos mas tarde una instancia de la clase que define podemos hacerlo de la forma indicada continuación. Antes de mostrar el código código la clase a compilar y a cargar de forma dinámica en este ejemplo debe cumplir el contrato definido en una determinada interfaz de modo que una vez compilada y cargada sepamos que métodos podemos invocar de esa clase. En este caso el código fuente de la clase a compilar está hardcodeada en un String en el propio programa pero perfectamente podría haber obtenido su contenido de un archivo del disco duro o de una base de datos.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.config</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>java.util.ArrayList</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.util.List</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>javax.tools.JavaCompiler</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.tools.JavaFileManager</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.tools.JavaFileObject</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.tools.ToolProvider</span><span class=o>;</span>
+
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>Main1</span> <span class=o>{</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+        <span class=c1>// Definir la clase
+</span><span class=c1></span>     <span class=n>String</span><span class=o>[]</span> <span class=n>sources</span> <span class=o>=</span> <span class=k>new</span> <span class=n>String</span><span class=o>[]</span> <span class=o>{</span> <span class=s>&#34;package io.github.picodotdev.blogbitix.config;&#34;</span><span class=o>,</span>
+                <span class=s>&#34;import java.util.HashMap;&#34;</span><span class=o>,</span>
+                <span class=s>&#34;import java.util.Map;&#34;</span><span class=o>,</span>
+                <span class=s>&#34;public class AppConfiguracion implements Configuracion {&#34;</span><span class=o>,</span>
+                    <span class=s>&#34;private static Map config;&#34;</span><span class=o>,</span>
+                    <span class=s>&#34;static {&#34;</span><span class=o>,</span>
+                        <span class=s>&#34;config = new HashMap();&#34;</span><span class=o>,</span>
+                        <span class=s>&#34;config.put(\&#34;propiedad\&#34;, 11);&#34;</span><span class=o>,</span>
+                    <span class=s>&#34;}&#34;</span><span class=o>,</span>
+                    <span class=s>&#34;public Map get() {&#34;</span><span class=o>,</span>
+                        <span class=s>&#34;return config;&#34;</span><span class=o>,</span>
+                    <span class=s>&#34;}&#34;</span><span class=o>,</span>
+                <span class=s>&#34;}&#34;</span> <span class=o>};</span>
+
+        <span class=n>String</span> <span class=n>source</span> <span class=o>=</span> <span class=n>join</span><span class=o>(</span><span class=n>sources</span><span class=o>);</span>
+        <span class=n>String</span> <span class=n>name</span> <span class=o>=</span> <span class=s>&#34;io.github.picodotdev.blogbitix.config.AppConfiguracion&#34;</span><span class=o>;</span>
+    
+        <span class=c1>// Compilar la clase
+</span><span class=c1></span>     <span class=n>JavaCompiler</span> <span class=n>compiler</span> <span class=o>=</span> <span class=n>ToolProvider</span><span class=o>.</span><span class=na>getSystemJavaCompiler</span><span class=o>();</span>
+        <span class=n>JavaFileManager</span> <span class=n>manager</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ClassFileManager</span><span class=o>(</span><span class=n>compiler</span><span class=o>.</span><span class=na>getStandardFileManager</span><span class=o>(</span><span class=kc>null</span><span class=o>,</span> <span class=kc>null</span><span class=o>,</span> <span class=kc>null</span><span class=o>));</span>
+
+        <span class=n>List</span><span class=o>&lt;</span><span class=n>JavaFileObject</span><span class=o>&gt;</span> <span class=n>files</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;</span><span class=n>JavaFileObject</span><span class=o>&gt;();</span>
+        <span class=n>files</span><span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=k>new</span> <span class=n>CharSequenceJavaFileObject</span><span class=o>(</span><span class=n>name</span><span class=o>,</span> <span class=n>source</span><span class=o>));</span>
+
+        <span class=n>compiler</span><span class=o>.</span><span class=na>getTask</span><span class=o>(</span><span class=k>new</span> <span class=n>NullWriter</span><span class=o>(),</span> <span class=n>manager</span><span class=o>,</span> <span class=kc>null</span><span class=o>,</span> <span class=kc>null</span><span class=o>,</span> <span class=kc>null</span><span class=o>,</span> <span class=n>files</span><span class=o>).</span><span class=na>call</span><span class=o>();</span>
+
+        <span class=c1>// Cargar e instanciar la clase
+</span><span class=c1></span>     <span class=n>Configuracion</span> <span class=n>configuracion</span> <span class=o>=</span> <span class=o>(</span><span class=n>Configuracion</span><span class=o>)</span> <span class=n>manager</span><span class=o>.</span><span class=na>getClassLoader</span><span class=o>(</span><span class=kc>null</span><span class=o>).</span><span class=na>loadClass</span><span class=o>(</span><span class=n>name</span><span class=o>).</span><span class=na>newInstance</span><span class=o>();</span>
+        
+        <span class=c1>// Invocar un método de la clase
+</span><span class=c1></span>     <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>configuracion</span><span class=o>.</span><span class=na>get</span><span class=o>());</span>
+    <span class=o>}</span>
+
+    <span class=kd>private</span> <span class=kd>static</span> <span class=n>String</span> <span class=nf>join</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>s</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>StringBuffer</span> <span class=n>sb</span> <span class=o>=</span> <span class=k>new</span> <span class=n>StringBuffer</span><span class=o>();</span>
+        <span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>s</span><span class=o>.</span><span class=na>length</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
+            <span class=n>sb</span><span class=o>.</span><span class=na>append</span><span class=o>(</span><span class=n>s</span><span class=o>[</span><span class=n>i</span><span class=o>]);</span>
+        <span class=o>}</span>
+        <span class=k>return</span> <span class=n>sb</span><span class=o>.</span><span class=na>toString</span><span class=o>();</span>
+    <span class=o>}</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2014/09/compilar-y-cargar-de-forma-dinamica-una-clase-java/code/Main1.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2014/09/compilar-y-cargar-de-forma-dinamica-una-clase-java/code/Main1.java target=_blank>Main1.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.config</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>java.util.Map</span><span class=o>;</span>
+
+<span class=kd>public</span> <span class=kd>interface</span> <span class=nc>Configuracion</span> <span class=o>{</span>
+
+    <span class=n>Map</span> <span class=nf>get</span><span class=o>();</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2014/09/compilar-y-cargar-de-forma-dinamica-una-clase-java/code/Configuracion.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2014/09/compilar-y-cargar-de-forma-dinamica-una-clase-java/code/Configuracion.java target=_blank>Configuracion.java</a></div></div><p>Con este ejemplo puede intuirse el ejemplo práctico que comentaré que no es más que utilizar código Java para definir la configuración de una aplicación, esto tiene varias ventajas sobre utilizar un xml u otro tipo de formato de archivo de configuración de la aplicación (una de ellas que utilizando un IDE el compilador nos informará de errores y nos ofrecerá asistencia al escribir código). Esta idea junto con la posibilidad de monitorizar un archivo para ver si se han producido cambios en él (también con la API de Java) y recargarlo puede darnos como resultado una funcionalidad en la que la configuración se basa en código Java y que la configuración pueda recargarse de forma dinámica, si la aplicación se utiliza en un servidor de aplicaciones podríamos cambiar la configuración sin tener que reiniciar la aplicación.</p><div class=media style=text-align:center><figure><a href=assets/images/posts/2014/42/main1.png title="Salida programa Main1.java" data-gallery><img src=assets/images/posts/2014/42/main1.png></a></figure></div><p>Casi para terminar las clases de utilidad:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.config</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>java.io.IOException</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.security.SecureClassLoader</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.util.HashMap</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.util.Map</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>javax.tools.FileObject</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.tools.ForwardingJavaFileManager</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.tools.JavaFileObject</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.tools.JavaFileObject.Kind</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.tools.StandardJavaFileManager</span><span class=o>;</span>
+
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>ClassFileManager</span> <span class=kd>extends</span> <span class=n>ForwardingJavaFileManager</span> <span class=o>{</span>
+
+    <span class=kd>private</span> <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>classes</span><span class=o>;</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Will initialize the manager with the specified standard java file manager
+</span><span class=cm>     * 
+</span><span class=cm>     * @param standardManger
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=nf>ClassFileManager</span><span class=o>(</span><span class=n>StandardJavaFileManager</span> <span class=n>standardManager</span><span class=o>)</span> <span class=o>{</span>
+        <span class=kd>super</span><span class=o>(</span><span class=n>standardManager</span><span class=o>);</span>
+        <span class=n>classes</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HashMap</span><span class=o>&lt;&gt;();</span>
+    <span class=o>}</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Will be used by us to get the class loader for our compiled class. It creates an anonymous
+</span><span class=cm>     * class extending the SecureClassLoader which uses the byte code created by the compiler and
+</span><span class=cm>     * stored in the JavaClassObject, and returns the Class for it
+</span><span class=cm>     */</span>
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=n>ClassLoader</span> <span class=nf>getClassLoader</span><span class=o>(</span><span class=n>Location</span> <span class=n>location</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=k>new</span> <span class=n>SecureClassLoader</span><span class=o>()</span> <span class=o>{</span>
+            <span class=nd>@Override</span>
+            <span class=kd>public</span> <span class=n>Class</span><span class=o>&lt;?&gt;</span> <span class=n>loadClass</span><span class=o>(</span><span class=n>String</span> <span class=n>name</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>ClassNotFoundException</span> <span class=o>{</span>
+                <span class=n>Object</span> <span class=n>o</span> <span class=o>=</span> <span class=n>classes</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>name</span><span class=o>);</span>
+                <span class=k>if</span> <span class=o>(</span><span class=n>o</span> <span class=k>instanceof</span> <span class=n>Class</span><span class=o>)</span> <span class=o>{</span>
+                    <span class=k>return</span> <span class=o>(</span><span class=n>Class</span><span class=o>)</span> <span class=n>o</span><span class=o>;</span>
+                <span class=o>}</span> <span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=n>o</span> <span class=k>instanceof</span> <span class=n>JavaClassObject</span><span class=o>)</span> <span class=o>{</span>
+                    <span class=n>JavaClassObject</span> <span class=n>object</span> <span class=o>=</span> <span class=o>(</span><span class=n>JavaClassObject</span><span class=o>)</span> <span class=n>o</span><span class=o>;</span>
+                    <span class=kt>byte</span><span class=o>[]</span> <span class=n>b</span> <span class=o>=</span> <span class=n>object</span><span class=o>.</span><span class=na>getBytes</span><span class=o>();</span>
+                    <span class=n>Class</span><span class=o>&lt;?&gt;</span> <span class=n>clazz</span> <span class=o>=</span> <span class=n>defineClass</span><span class=o>(</span><span class=n>name</span><span class=o>,</span> <span class=n>object</span><span class=o>.</span><span class=na>getBytes</span><span class=o>(),</span> <span class=n>0</span><span class=o>,</span> <span class=n>b</span><span class=o>.</span><span class=na>length</span><span class=o>);</span>
+                    <span class=n>classes</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>name</span><span class=o>,</span> <span class=n>clazz</span><span class=o>);</span>
+                    <span class=k>return</span> <span class=n>clazz</span><span class=o>;</span>
+                <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+                    <span class=k>return</span> <span class=kd>super</span><span class=o>.</span><span class=na>loadClass</span><span class=o>(</span><span class=n>name</span><span class=o>);</span>                    
+                <span class=o>}</span> 
+            <span class=o>}</span>
+        <span class=o>};</span>
+    <span class=o>}</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Gives the compiler an instance of the JavaClassObject so that the compiler can write the byte
+</span><span class=cm>     * code into it.
+</span><span class=cm>     */</span>
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=n>JavaFileObject</span> <span class=nf>getJavaFileForOutput</span><span class=o>(</span><span class=n>Location</span> <span class=n>location</span><span class=o>,</span> <span class=n>String</span> <span class=n>className</span><span class=o>,</span> <span class=n>Kind</span> <span class=n>kind</span><span class=o>,</span> <span class=n>FileObject</span> <span class=n>sibling</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>IOException</span> <span class=o>{</span>
+        <span class=n>JavaClassObject</span> <span class=n>object</span> <span class=o>=</span> <span class=k>new</span> <span class=n>JavaClassObject</span><span class=o>(</span><span class=n>className</span><span class=o>,</span> <span class=n>kind</span><span class=o>);</span>
+        <span class=n>classes</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>className</span><span class=o>,</span> <span class=n>object</span><span class=o>);</span>
+        <span class=k>return</span> <span class=n>object</span><span class=o>;</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2014/09/compilar-y-cargar-de-forma-dinamica-una-clase-java/code/ClassFileManager.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2014/09/compilar-y-cargar-de-forma-dinamica-una-clase-java/code/ClassFileManager.java target=_blank>ClassFileManager.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.config</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>java.net.URI</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>javax.tools.SimpleJavaFileObject</span><span class=o>;</span>
+
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>CharSequenceJavaFileObject</span> <span class=kd>extends</span> <span class=n>SimpleJavaFileObject</span> <span class=o>{</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * CharSequence representing the source code to be compiled
+</span><span class=cm>     */</span>
+    <span class=kd>private</span> <span class=n>CharSequence</span> <span class=n>content</span><span class=o>;</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * This constructor will store the source code in the internal &#34;content&#34; variable and register
+</span><span class=cm>     * it as a source code, using a URI containing the class full name
+</span><span class=cm>     * 
+</span><span class=cm>     * @param className
+</span><span class=cm>     *            name of the public class in the source code
+</span><span class=cm>     * @param content
+</span><span class=cm>     *            source code to compile
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=nf>CharSequenceJavaFileObject</span><span class=o>(</span><span class=n>String</span> <span class=n>className</span><span class=o>,</span> <span class=n>CharSequence</span> <span class=n>content</span><span class=o>)</span> <span class=o>{</span>
+        <span class=kd>super</span><span class=o>(</span><span class=n>URI</span><span class=o>.</span><span class=na>create</span><span class=o>(</span><span class=s>&#34;string:///&#34;</span> <span class=o>+</span> <span class=n>className</span><span class=o>.</span><span class=na>replace</span><span class=o>(</span><span class=sc>&#39;.&#39;</span><span class=o>,</span> <span class=sc>&#39;/&#39;</span><span class=o>)</span> <span class=o>+</span> <span class=n>Kind</span><span class=o>.</span><span class=na>SOURCE</span><span class=o>.</span><span class=na>extension</span><span class=o>),</span> <span class=n>Kind</span><span class=o>.</span><span class=na>SOURCE</span><span class=o>);</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>content</span> <span class=o>=</span> <span class=n>content</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Answers the CharSequence to be compiled. It will give the source code stored in variable
+</span><span class=cm>     * &#34;content&#34;
+</span><span class=cm>     */</span>
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=n>CharSequence</span> <span class=nf>getCharContent</span><span class=o>(</span><span class=kt>boolean</span> <span class=n>ignoreEncodingErrors</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>content</span><span class=o>;</span>
+    <span class=o>}</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2014/09/compilar-y-cargar-de-forma-dinamica-una-clase-java/code/CharSequenceJavaFileObject.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2014/09/compilar-y-cargar-de-forma-dinamica-una-clase-java/code/CharSequenceJavaFileObject.java target=_blank>CharSequenceJavaFileObject.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.config</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>java.io.ByteArrayOutputStream</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.io.IOException</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.io.OutputStream</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.net.URI</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>javax.tools.SimpleJavaFileObject</span><span class=o>;</span>
+
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>JavaClassObject</span> <span class=kd>extends</span> <span class=n>SimpleJavaFileObject</span> <span class=o>{</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Byte code created by the compiler will be stored in this ByteArrayOutputStream so that we can
+</span><span class=cm>     * later get the byte array out of it and put it in the memory as an instance of our class.
+</span><span class=cm>     */</span>
+    <span class=kd>protected</span> <span class=kd>final</span> <span class=n>ByteArrayOutputStream</span> <span class=n>bos</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ByteArrayOutputStream</span><span class=o>();</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Registers the compiled class object under URI containing the class full name
+</span><span class=cm>     * 
+</span><span class=cm>     * @param name
+</span><span class=cm>     *            Full name of the compiled class
+</span><span class=cm>     * @param kind
+</span><span class=cm>     *            Kind of the data. It will be CLASS in our case
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=nf>JavaClassObject</span><span class=o>(</span><span class=n>String</span> <span class=n>name</span><span class=o>,</span> <span class=n>Kind</span> <span class=n>kind</span><span class=o>)</span> <span class=o>{</span>
+        <span class=kd>super</span><span class=o>(</span><span class=n>URI</span><span class=o>.</span><span class=na>create</span><span class=o>(</span><span class=s>&#34;string:///&#34;</span> <span class=o>+</span> <span class=n>name</span><span class=o>.</span><span class=na>replace</span><span class=o>(</span><span class=sc>&#39;.&#39;</span><span class=o>,</span> <span class=sc>&#39;/&#39;</span><span class=o>)</span> <span class=o>+</span> <span class=n>kind</span><span class=o>.</span><span class=na>extension</span><span class=o>),</span> <span class=n>kind</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Will be used by our file manager to get the byte code that can be put into memory to
+</span><span class=cm>     * instantiate our class
+</span><span class=cm>     * 
+</span><span class=cm>     * @return compiled byte code
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=kt>byte</span><span class=o>[]</span> <span class=nf>getBytes</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>bos</span><span class=o>.</span><span class=na>toByteArray</span><span class=o>();</span>
+    <span class=o>}</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Will provide the compiler with an output stream that leads to our byte array. This way the
+</span><span class=cm>     * compiler will write everything into the byte array that we will instantiate later
+</span><span class=cm>     */</span>
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=n>OutputStream</span> <span class=nf>openOutputStream</span><span class=o>()</span> <span class=kd>throws</span> <span class=n>IOException</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>bos</span><span class=o>;</span>
+    <span class=o>}</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2014/09/compilar-y-cargar-de-forma-dinamica-una-clase-java/code/JavaClassObject.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2014/09/compilar-y-cargar-de-forma-dinamica-una-clase-java/code/JavaClassObject.java target=_blank>JavaClassObject.java</a></div></div><p>El código fuente completo puede encontrarse en el <a href=https://github.com/picodotdev/blog-ejemplos/tree/master/ConfiguracionJava>siguiente repositorio de GitHub</a>.</p><p>En el siguiente artículo comentaré como <a href=https://picodotdev.github.io/blog-bitix/2014/09/monitorizar-archivos-con-java/>monitorizar un archivo con código fuente Java</a> para ver si se han producido cambios en él. Y basándome en estos dos artículos comentaré como disponer de <a href=https://picodotdev.github.io/blog-bitix/2014/09/monitorizar-archivos-con-java/>un archivo de configuración que se recargue al detectase cambios en él</a>.</p></div></article></div></div><div class="row related"><div class=col-md-12><h3>Artículos relacionados:</h3><ul><li><a href=/blog-bitix/2014/08/actualizacion-del-libro-plugin-tapestry/>Actualización del libro PlugIn Tapestry</a></li><li><a href=/blog-bitix/2014/08/doble-barra-de-botones-con-apache-tapestry/>Doble barra de botones con Apache Tapestry</a></li><li><a href=/blog-bitix/2014/08/forzar-el-uso-del-protocolo-https-en-apache-tapestry/>Forzar el uso del protocolo https en Apache Tapestry</a></li><li><a href=/blog-bitix/2014/07/usar-apache-tapestry-en-una-aplicacion-standalone/>Usar Apache Tapestry en una aplicación «standalone»</a></li><li><a href=/blog-bitix/2014/07/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry/>Servir recursos estáticos desde un CDN en Apache Tapestry</a></li></ul></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class=col-12><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><a id=comments></a><div class=row><div class=col-md-12><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='https:\/\/picodotdev.github.io\/blog-bitix\/2014\/09\/compilar-y-cargar-de-forma-dinamica-una-clase-java\/';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2014\/09\/compilar-y-cargar-de-forma-dinamica-una-clase-java\/';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script></div><div class="col-12 col-lg-4"><div class=row><div class="col-md-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:300px;height:600px data-ad-client=ca-pub-3533636310991304 data-ad-slot=9559414587 data-type=large-skycraper></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><div class=row><div class="col-md-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:336px;height:280px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2873752587 data-type=large-rectangle></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><div class="row text-center banner"><div class=col-12><a href=https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/><img src=//static.fsf.org/nosvn/images/badges/badges_es/i-support-fs_red-bg-es.png alt="Yo apoyo al software libre"></a></div></div><div class=row><div class=col-md-12><hr></div></div><div class=row><div class=col-md-12><ul class="list-unstyled recents"><li><span class="glyphicon glyphicon-hand-right"></span><a href=archive/>Más artículos recientes en el archivo</a></li></ul></div></div></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
 <a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
 <a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2019 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow rel=license><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style=border-width:0 src=https://licensebuttons.net/l/by-sa/4.0/80x15.png class=licencia></a><br><a href=https://twitter.com/blogstackinfo rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png alt="Blog Stack" title="Blog Stack"></a>
 <a href=https://www.planetacodigo.com/ rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png alt="Planeta código" title="Planeta código"></a><br><span xmlns:dct=http://purl.org/dc/terms/ property=dct:title><a href=https://picodotdev.github.io/blog-bitix/ rel=nofollow>Blog Bitix</a></span> by <a xmlns:cc=https://creativecommons.org/ns# href=https://picodotdev.github.io/blog-bitix/ property=cc:attributionName rel=cc:attributionurl>pico.dev</a> is licensed under a <a rel=license href=https://creativecommons.org/licenses/by-sa/4.0/>Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class=credit>Powered by <a href=https://gohugo.io/ rel=nofollow title="A fast and modern static website engine">Hugo</a> and <a href=https://pages.github.com/ title="Websites for you and your projects">GitHub Pages</a>.</span>

@@ -1,5 +1,5 @@
 <!doctype html><html lang=es><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content=picodotdev><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="Entre los varios sensores incluídos en el kit de iniciación para la Raspberry Pi está el sensor de temperatura y humedad con el modelo DHT11. El DHT11 es un sensor muy básico pero suficiente y válido si el objetivo es trastear un poco con hardware.
-En la especificación del sensor DHT11 está descrita su funcionamiento y forma de comunicación. Utiliza 3 cables, uno para la corriente de 3.3V, otro para tierra y finalmente uno de datos que se conecta a cualquier pin GPIO de la Raspberry Pi. &hellip;"><base href=https://picodotdev.github.io/blog-bitix/><title>Obtener la temperatura y humedad con el sensor DHT11, la Raspberry Pi, C y Java</title><link rel=author type=text/plain href=humans.txt><link rel="shortcut icon" href=assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=assets/apple-touch-icon-144-precomposed.png><link rel=canonical href=https://picodotdev.github.io/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/><link href=index.xml rel=alternate type=application/rss+xml title="Blog Bitix"><link rel=stylesheet type=text/css href="//fonts.googleapis.com/css?family=PT+Serif:400,700italic,700,400italic"><link rel=stylesheet type=text/css href=assets/libs/bootstrap-4.0.0/css/bootstrap.min.css><link rel=stylesheet type=text/css href=assets/libs/Gallery-2.30.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=assets/css/main.css><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js async></script><script type=text/javascript>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript async>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script type=text/javascript src=assets/libs/require.js></script><script type=text/javascript src=assets/js/main.js></script><script type=text/javascript src=assets/js/theme.js async></script><script type=text/javascript src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" async></script><script type=text/javascript src=assets/js/app.js async></script></head><body><div class=container><div class=row><div class=col><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+En la especificación del sensor DHT11 está descrita su funcionamiento y forma de comunicación. Utiliza 3 cables, uno para la corriente de 3.3V, otro para tierra y finalmente uno de datos que se conecta a cualquier pin GPIO de la Raspberry Pi. &hellip;"><base href=https://picodotdev.github.io/blog-bitix/><title>Obtener la temperatura y humedad con el sensor DHT11, la Raspberry Pi, C y Java</title><link rel=author type=text/plain href=humans.txt><link rel="shortcut icon" href=assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=assets/apple-touch-icon-144-precomposed.png><link rel=canonical href=https://picodotdev.github.io/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/><link href=index.xml rel=alternate type=application/rss+xml title="Blog Bitix"><link rel=stylesheet type=text/css href="//fonts.googleapis.com/css?family=PT+Serif:400,700italic,700,400italic"><link rel=stylesheet type=text/css href=assets/libs/bootstrap-4.0.0/css/bootstrap.min.css><link rel=stylesheet type=text/css href=assets/libs/Gallery-2.30.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=assets/css/syntax.css><link rel=stylesheet type=text/css href=assets/css/main.css><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js async></script><script type=text/javascript>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript async>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script type=text/javascript src=assets/libs/require.js></script><script type=text/javascript src=assets/js/main.js></script><script type=text/javascript src=assets/js/theme.js async></script><script type=text/javascript src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" async></script><script type=text/javascript src=assets/js/app.js async></script></head><body><div class=container><div class=row><div class=col><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
 <a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
 <a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class="col-12 col-lg-4 text-center"><form name=query class="form-inline search" onsubmit="return false;"><div class=input-group><input type=text name=q class=form-control placeholder="Buscar en Blog Bitix">
 <span class=input-group-btn><button class="btn btn-secondary" type=submit>Buscar</button></span></div></form><form name=search action=https://duckduckgo.com/ method=get class=hidden data-site=https://picodotdev.github.io/blog-bitix/><input type=hidden name=q></form></div></div><div class=row><div class=col-12><nav class="nav nav-pills nav-fill"><a href=/blog-bitix/tags/java/ class="nav-item nav-link">Java</a>
@@ -9,9 +9,499 @@ En la especificación del sensor DHT11 está descrita su funcionamiento y forma 
 <a href=/blog-bitix/archive/ class="nav-item nav-link">Archivo y hemeroteca</a>
 <a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
 <a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 col-lg-8"><div class=row><div class=col-12><article itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content=es><meta itemprop=keywords content="blog-stack, gnu-linux, java, planeta-codigo, planeta-linux, programacion"><h1 itemprop=name>Obtener la temperatura y humedad con el sensor DHT11, la Raspberry Pi, C y Java</h1><p class=information>Escrito por <span itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2017-03-31>31/03/2017</time>, actualizado el <time itemprop=dateModified datetime=2017-04-02>02/04/2017</time>.<br><a href=tags/blog-stack/>blog-stack</a> <a href=tags/gnu-linux/>gnu-linux</a> <a href=tags/java/>java</a> <a href=tags/planeta-codigo/>planeta-codigo</a> <a href=tags/planeta-linux/>planeta-linux</a> <a href=tags/programacion/>programacion</a><br><a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/ itemprop=url>Enlace permanente</a>
-<a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/#comments>Comentarios</a></p><p class=summary itemprop=about>El <em>kit</em> de iniciación a la electrónica para la Raspberry Pi tiene un sensor para la temperatura y humedad, el modelo DHT11. Obtener la información requiere restricciones de tiempo, este es un caso de uso justificado para usar lenguaje C y JNI para integrarlo con Java. En el ejemplo el código C llama a un método de una clase Java con dos valores enteros o lanza una excepción en caso de que al realizar la lectura haya habido algún error en la transmisión de los bits.</p><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><div class=content itemprop=articleBody><meta itemprop=wordCount content=1077><div class=logotypes style=float:right><img src=assets/images/logotipos/raspberrypi.svg class=right width=200 alt="Raspberry Pi" title="Raspberry Pi"></div><div class=logotypes style=float:right;clear:right><img src=assets/images/logotipos/java.svg class=right width=200 alt=Java title=Java></div><p>Entre los varios sensores incluídos en el <a href=https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/>kit de iniciación para la Raspberry Pi</a> está el sensor de temperatura y humedad con el modelo DHT11. El DHT11 es un sensor muy básico pero suficiente y válido si el objetivo es trastear un poco con hardware.</p><p>En la <a href=http://www.micropik.com/PDF/dht11.pdf>especificación del sensor DHT11</a> está descrita su funcionamiento y forma de comunicación. Utiliza 3 cables, uno para la corriente de 3.3V, otro para tierra y finalmente uno de datos que se conecta a cualquier <em>pin</em> <abbr title="General Purpose Input Output">GPIO</abbr> de la Raspberry Pi. Según la especificación el sensor proporciona sus datos en unos 4 ms cuando se le emite un pulso bajo durante unos pocos microsegundos y a continuación uno alto durante otros pocos microsegundos, momento a partir del cual el sensor emite 40 bits de información empezando por un pulso bajo de inicio y a continuación el propio bit con un pulso alto, según sea la duración del pulso alto el bit se considera un 0 si es menor de unos 27μs y un 1 si dura más de ese tiempo hasta unos 80μs momento en el que se emite el siguiente bit de información. Los primeros 8 bits corresponden a la parte entera de la humedad, los siguientes 8 bits a la parte decimal de la humedad, el tercer grupo de 8 bits a la parte entera de la temperatura y 8 bits más para la parte decimal. El último grupo de 8 bits hasta completar los 40 bits son de <em>checksum</em> para detectar errores en la transmisión. El porcentaje de errores en la transmisión significativo en este sensor y quizá haya que realizar varias lecturas del sensor para obtener una correcta.</p><p>Dada las restricciones de tiempo que utiliza el sensor en el ejemplo usaré el lenguaje C para obtener los valores de temperatura y humedad y <abbr title="Java Native Interface">JNI</abbr> para acceder a ellos desde Java. Aún usando C se producen errores en la obtención de los valores ya que el método usado por el sensor y transmitir los datos basados en tiempo de microsegundos no es muy fiable. Usando Java la situación sería peor por las restricciones que impone la máquina virtual con sus paradas para la recolección de basura por ejemplo. Así que el ejemplo consistirá en una combinación de C y Java con JNI un poco más avanzado que el <a href=https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-de-jni-usar-codigo-en-c-desde-java/>Ejemplo de JNI, usar código en C desde Java</a>.</p><div class=media style=text-align:center><figure><a href=assets/images/posts/2017/219/dht11-1.jpg title="Sensor DHT11" data-gallery><img src=assets/images/posts/2017/219/dht11-1-thumb.jpg></a>
-<a href=assets/images/posts/2017/219/dht11-2.jpg title="Sensor DHT11" data-gallery><img src=assets/images/posts/2017/219/dht11-2-thumb.jpg></a><figcaption>Sensor DHT11</figcaption></figure></div><p>Lo primero que deberemos hacer para acceder a la información del sensor desde Java es crear una clase que contenga un método nativo que realizará la lectura de la información en C. Con la utilidad <em>javah</em> obtendremos el archivo de cabecera que implementará el programa en C. Finalmente, siguiendo la especificación se escribe el código C que realice la lectura que en este caso usará la librería <a href=http://wiringpi.com/>wiringPi</a> para la interacción con los pines GPIO de la Raspberry Pi.</p><p>El código en C invocará el método <em>setTemperatureHumidity</em> pasando como parámetros los datos de temperatura y humedad leídos del sensor, el método nativo <em>read</em> es utilizado por el código Java que controla el sensor para realizar la lectura en el código C.</p><script type=application/javascript src="//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=Dht11.java"></script><script type=application/javascript src="//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=Dht11.h"></script><script type=application/javascript src="//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=Dht11.c"></script><p>El código en C del sensor hay que compilarlo en la Raspberry Pi con el compilador <a href=https://gcc.gnu.org/>gcc</a> obteniendo una librería con código nativo que Java y JNI cargará y enlazará de forma dinámica en el programa Java. Ya que el código C usa la librería wiringPi ha de instalarse previamente junto con el compilador gcc. Obtenida la librería la copiamos mediante FTP o SSH de la Raspberry Pi a nuestro equipo de desarrollo. El código C realiza la lectura usando la librería wiringPi siguiendo la especificación de como se transmiten los datos por el sensor, realizada una lectura correcta usa varias de las funciones de la estructura <a href=http://xdprof.sourceforge.net/doxygen/structJNIEnv__.html>JNIEnv</a> para obtener la referencia a un método de la clase DHT11 e invocarlo con los valores obtenidos del sensor o lanza una excepción si la lectura ha sido errónea.</p><script type=application/javascript src="//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=install-packages.sh"></script><p>El comando para compilar la librería de código nativo a partir del código en C y el archivo de cabecera generado con <em>javah</em> es el siguiente.</p><script type=application/javascript src="//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=compile.sh"></script><p>Para facilitar la ejecución la librería la proporcionó ya compilada y ubicada en el directorio <em>src/main/resources</em> de modo que será incluida en el archivo <em>jar</em> generado por <a href=https://gradle.org/>Gradle</a> en el ejemplo y que la clase DHT11 extraerá al directorio temporal del sistema y cargará para su uso.</p><p>La clase Java del ejemplo que hace uso del sensor realiza una lectura cada 3 segundos e imprime en la terminal y en el <em>display</em> 1602 el último valor obtenido correctamente de la temperatura y humedad.</p><script type=application/javascript src="//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=TemperatureHumidity.java"></script><p>Este es el esquema de conexiones que he utilizado para el ejemplo y una foto del cableado real, he usado del <em>pin</em> GPIO número 2 según la nomenclatura de wiringPi para el cable de datos del sensor DHT11 que se corresponde con pin número 13 según la nomenclatura del <em>header</em> de la Raspberry Pi. Para ver el cableado del <em>display</em> 1602 más detalladamente y la activación del bus de comunicación I2C que necesita consulta el artículo <a href=https://picodotdev.github.io/blog-bitix/2017/03/controlar-un-display-lcd-1602-para-mostrar-texto-con-la-raspberry-pi-y-java/>Controlar un display LCD 1602 para mostrar texto con la Raspberry Pi y Java</a>.</p><div class=media style=text-align:center><figure><a href=assets/images/posts/2017/219/cableado.jpg title="Cableado sensor DHT11 y display 1602" data-gallery><img src=assets/images/posts/2017/219/cableado-thumb.jpg></a><figcaption>Cableado sensor DHT11 y display 1602</figcaption></figure></div><p>Ejecutando el programa del ejemplo y usando el display 1602 (16 columnas y 2 filas) se muestra la temperatura y humedad obtenida del sensor.</p><div class=media style=text-align:center><figure><a href=assets/images/posts/2017/219/temperature-humidity.jpg title="Cableado ejemplo y funcionando" data-gallery><img src=assets/images/posts/2017/219/temperature-humidity-thumb.jpg></a>
-<a href=assets/images/posts/2017/219/display.jpg title="Cableado ejemplo y funcionando" data-gallery><img src=assets/images/posts/2017/219/display-thumb.jpg></a><figcaption>Cableado ejemplo y funcionando</figcaption></figure></div><p>En el kernel de Linux hay un módulo que proporciona también los valores del sensor, sin embargo, no he conseguido obtener la temperatura y humedad usándolo. Lo he probado con el kernel 4.4 de Arch Linux ARM y en la versión 4.9 veo que hay cambios en este módulo que quizá lo hagan funcionar. Para usar el módulo del kernel hay que añadir un poco de configuración para el inicio de la Raspberry Pi. En los archivos <em>/sys/devices/platform/dht11@0/iio:device0/in_temp_input</em> y <em>/sys/devices/platform/dht11@0/iio:device0/in_temp_input</em> estarán la temperatura y humedad respectivamente.</p><script type=application/javascript src="//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=kernel-module-config.txt"></script><script type=application/javascript src="//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=cat.sh"></script><p>Para ejecutar el ejemplo con ya todo instalado uso uno de los siguientes dos comandos.</p><script type=application/javascript src="//gist.github.com/picodotdev/c77e19703a53924171a6a4144a1b46a7.js?file=execute.sh"></script><p>El <a href=https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi>código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href=https://github.com/>GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew executeTemperatureHumidity</code>.</p><div class=reference>Referencia:<br><ul><li><a href=https://www.ibm.com/developerworks/java/tutorials/j-jni/j-jni.html>Java programming with JNI</a></li><li><a href="http://hirt.se/blog/?p=493">Accessing 1-wire Protocol Devices from Java</a></li><li><a href=http://www.circuitbasics.com/how-to-set-up-the-dht11-humidity-sensor-on-the-raspberry-pi/>How to Set Up the DHT11 Humidity Sensor on the Raspberry Pi</a></li><li><a href=http://www.prometec.net/sensores-dht11/>Sensores de temperatura DHT11</a></li><li><a href=https://github.com/Hexalyse/RPi-weather-log/blob/master/dht11.c>dht11.c</a></li><li><a href=http://www.uugear.com/portfolio/read-dht1122-temperature-humidity-sensor-from-raspberry-pi/>Read DHT11/22 Temperature &amp; Humidity Sensor from Raspberry Pi</a></li><li><a href=https://arduino-info.wikispaces.com/DHT11-Humidity-TempSensor>Digital output temperature and humidity sensor DHT11 - DHT22</a></li><li><a href=http://playground.arduino.cc/Main/DHT11Lib>A DHT11 Class for Arduino</a></li><li><a href=https://github.com/torvalds/linux/blob/master/drivers/iio/humidity/dht11.c>torvalds/linux/blob/master/drivers/iio/humidity/dht11.c</a></li><li><a href=http://www.tortosaforum.com/raspberrypi/dht11driver.htm>RaspberryPi DHT11 temperature and humidity sensor driver</a></li></ul></div></div></article></div></div><div class="row serie"><div class=col-md-12><h3>Este artículo forma parte de la serie <strong>electronica</strong>:</h3><ol class=serie-articles><li><a href=https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/>Desempaquetado del kit de iniciación a la electrónica para la Raspberry Pi</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-hello-world-con-java-en-la-raspberry-pi/>Ejemplo Hello World con Java en la Raspberry Pi</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-encender-y-apagar-diodo-led-con-la-raspberry-pi-en-java/>Ejemplo encender y apagar diodo LED con la Raspberry Pi en Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/03/controlar-un-display-lcd-1602-para-mostrar-texto-con-la-raspberry-pi-y-java/>Controlar un display LCD 1602 para mostrar texto con la Raspberry Pi y Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-de-jni-usar-codigo-en-c-desde-java/>Ejemplo de JNI, usar código en C desde Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/>Obtener la temperatura y humedad con el sensor DHT11, la Raspberry Pi, C y Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/04/como-usar-un-diodo-led-un-pulsador-y-un-zumbador-con-la-raspberry-pi-y-java/>Cómo usar un diodo LED, un pulsador y un zumbador con la Raspberry Pi y Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/04/ejemplo-sensor-de-golpes-y-detector-de-movimiento-en-la-raspberry-pi-con-java/>Ejemplo sensor de golpes y detector de movimiento en la Raspberry Pi con Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/05/controlar-un-servomotor-con-la-raspberry-pi-y-java/>Controlar un servomotor con la Raspberry Pi y Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/05/luces-navidenas-con-la-raspberry-pi-y-java/>Luces navideñas con la Raspberry Pi y Java</a></li></ol></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class=col-12><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><a id=comments></a><div class=row><div class=col-md-12><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='https:\/\/picodotdev.github.io\/blog-bitix\/2017\/03\/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java\/';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2017\/03\/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java\/';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script></div><div class="col-12 col-lg-4"><div class=row><div class="col-md-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:300px;height:600px data-ad-client=ca-pub-3533636310991304 data-ad-slot=9559414587 data-type=large-skycraper></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><div class=row><div class="col-md-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:336px;height:280px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2873752587 data-type=large-rectangle></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><div class="row text-center banner"><div class=col-12><a href=https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/><img src=//static.fsf.org/nosvn/images/badges/badges_es/i-support-fs_red-bg-es.png alt="Yo apoyo al software libre"></a></div></div><div class=row><div class=col-md-12><hr></div></div><div class=row><div class=col-md-12><ul class="list-unstyled recents"><li><span class="glyphicon glyphicon-hand-right"></span><a href=archive/>Más artículos recientes en el archivo</a></li></ul></div></div></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/#comments>Comentarios</a></p><p class=summary itemprop=about>El <em>kit</em> de iniciación a la electrónica para la Raspberry Pi tiene un sensor para la temperatura y humedad, el modelo DHT11. Obtener la información requiere restricciones de tiempo, este es un caso de uso justificado para usar lenguaje C y JNI para integrarlo con Java. En el ejemplo el código C llama a un método de una clase Java con dos valores enteros o lanza una excepción en caso de que al realizar la lectura haya habido algún error en la transmisión de los bits.</p><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><div class=content itemprop=articleBody><meta itemprop=wordCount content=1966><div class=logotypes style=float:right><img src=assets/images/logotipos/raspberrypi.svg class=right width=200 alt="Raspberry Pi" title="Raspberry Pi"></div><div class=logotypes style=float:right;clear:right><img src=assets/images/logotipos/java.svg class=right width=200 alt=Java title=Java></div><p>Entre los varios sensores incluídos en el <a href=https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/>kit de iniciación para la Raspberry Pi</a> está el sensor de temperatura y humedad con el modelo DHT11. El DHT11 es un sensor muy básico pero suficiente y válido si el objetivo es trastear un poco con hardware.</p><p>En la <a href=http://www.micropik.com/PDF/dht11.pdf>especificación del sensor DHT11</a> está descrita su funcionamiento y forma de comunicación. Utiliza 3 cables, uno para la corriente de 3.3V, otro para tierra y finalmente uno de datos que se conecta a cualquier <em>pin</em> <abbr title="General Purpose Input Output">GPIO</abbr> de la Raspberry Pi. Según la especificación el sensor proporciona sus datos en unos 4 ms cuando se le emite un pulso bajo durante unos pocos microsegundos y a continuación uno alto durante otros pocos microsegundos, momento a partir del cual el sensor emite 40 bits de información empezando por un pulso bajo de inicio y a continuación el propio bit con un pulso alto, según sea la duración del pulso alto el bit se considera un 0 si es menor de unos 27μs y un 1 si dura más de ese tiempo hasta unos 80μs momento en el que se emite el siguiente bit de información. Los primeros 8 bits corresponden a la parte entera de la humedad, los siguientes 8 bits a la parte decimal de la humedad, el tercer grupo de 8 bits a la parte entera de la temperatura y 8 bits más para la parte decimal. El último grupo de 8 bits hasta completar los 40 bits son de <em>checksum</em> para detectar errores en la transmisión. El porcentaje de errores en la transmisión significativo en este sensor y quizá haya que realizar varias lecturas del sensor para obtener una correcta.</p><p>Dada las restricciones de tiempo que utiliza el sensor en el ejemplo usaré el lenguaje C para obtener los valores de temperatura y humedad y <abbr title="Java Native Interface">JNI</abbr> para acceder a ellos desde Java. Aún usando C se producen errores en la obtención de los valores ya que el método usado por el sensor y transmitir los datos basados en tiempo de microsegundos no es muy fiable. Usando Java la situación sería peor por las restricciones que impone la máquina virtual con sus paradas para la recolección de basura por ejemplo. Así que el ejemplo consistirá en una combinación de C y Java con JNI un poco más avanzado que el <a href=https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-de-jni-usar-codigo-en-c-desde-java/>Ejemplo de JNI, usar código en C desde Java</a>.</p><div class=media style=text-align:center><figure><a href=assets/images/posts/2017/219/dht11-1.jpg title="Sensor DHT11" data-gallery><img src=assets/images/posts/2017/219/dht11-1-thumb.jpg></a>
+<a href=assets/images/posts/2017/219/dht11-2.jpg title="Sensor DHT11" data-gallery><img src=assets/images/posts/2017/219/dht11-2-thumb.jpg></a><figcaption>Sensor DHT11</figcaption></figure></div><p>Lo primero que deberemos hacer para acceder a la información del sensor desde Java es crear una clase que contenga un método nativo que realizará la lectura de la información en C. Con la utilidad <em>javah</em> obtendremos el archivo de cabecera que implementará el programa en C. Finalmente, siguiendo la especificación se escribe el código C que realice la lectura que en este caso usará la librería <a href=http://wiringpi.com/>wiringPi</a> para la interacción con los pines GPIO de la Raspberry Pi.</p><p>El código en C invocará el método <em>setTemperatureHumidity</em> pasando como parámetros los datos de temperatura y humedad leídos del sensor, el método nativo <em>read</em> es utilizado por el código Java que controla el sensor para realizar la lectura en el código C.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span><span class=lnt>82
+</span><span class=lnt>83
+</span><span class=lnt>84
+</span><span class=lnt>85
+</span><span class=lnt>86
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.javaraspberrypi</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>java.io.File</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.io.IOException</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.io.InputStream</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.nio.file.Files</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.nio.file.Path</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.nio.file.StandardCopyOption</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.time.LocalDateTime</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.util.Optional</span><span class=o>;</span>
+
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>Dht11</span> <span class=o>{</span>
+
+    <span class=kd>static</span> <span class=o>{</span>
+        <span class=n>String</span> <span class=n>architecture</span> <span class=o>=</span> <span class=n>System</span><span class=o>.</span><span class=na>getProperty</span><span class=o>(</span><span class=s>&#34;os.arch&#34;</span><span class=o>);</span>
+        <span class=n>String</span> <span class=n>library</span> <span class=o>=</span> <span class=n>String</span><span class=o>.</span><span class=na>format</span><span class=o>(</span><span class=s>&#34;/libdht11-%s.so&#34;</span><span class=o>,</span> <span class=n>architecture</span><span class=o>);</span>
+        <span class=k>try</span> <span class=o>(</span><span class=n>InputStream</span> <span class=n>is</span> <span class=o>=</span> <span class=n>Dht11</span><span class=o>.</span><span class=na>class</span><span class=o>.</span><span class=na>getResourceAsStream</span><span class=o>(</span><span class=n>library</span><span class=o>))</span> <span class=o>{</span>
+            <span class=n>Path</span> <span class=n>path</span> <span class=o>=</span> <span class=n>File</span><span class=o>.</span><span class=na>createTempFile</span><span class=o>(</span><span class=s>&#34;libdht11&#34;</span><span class=o>,</span> <span class=s>&#34;so&#34;</span><span class=o>).</span><span class=na>toPath</span><span class=o>();</span>
+            <span class=n>Files</span><span class=o>.</span><span class=na>copy</span><span class=o>(</span><span class=n>is</span><span class=o>,</span> <span class=n>path</span><span class=o>,</span> <span class=n>StandardCopyOption</span><span class=o>.</span><span class=na>REPLACE_EXISTING</span><span class=o>);</span>
+            <span class=n>System</span><span class=o>.</span><span class=na>load</span><span class=o>(</span><span class=n>path</span><span class=o>.</span><span class=na>toAbsolutePath</span><span class=o>().</span><span class=na>toString</span><span class=o>());</span>
+        <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>IOException</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
+            <span class=n>e</span><span class=o>.</span><span class=na>printStackTrace</span><span class=o>();</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+
+    <span class=kd>private</span> <span class=kt>int</span> <span class=n>gpio</span><span class=o>;</span>
+    <span class=kd>private</span> <span class=n>Optional</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=n>temperature</span><span class=o>;</span>
+    <span class=kd>private</span> <span class=n>Optional</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=n>humidity</span><span class=o>;</span>
+    <span class=kd>private</span> <span class=n>Optional</span><span class=o>&lt;</span><span class=n>LocalDateTime</span><span class=o>&gt;</span> <span class=n>date</span><span class=o>;</span>
+
+    <span class=kd>public</span> <span class=nf>Dht11</span><span class=o>(</span><span class=kt>int</span> <span class=n>gpio</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>gpio</span> <span class=o>=</span> <span class=n>gpio</span><span class=o>;</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>temperature</span> <span class=o>=</span> <span class=n>Optional</span><span class=o>.</span><span class=na>empty</span><span class=o>();</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>humidity</span> <span class=o>=</span> <span class=n>Optional</span><span class=o>.</span><span class=na>empty</span><span class=o>();</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>date</span> <span class=o>=</span> <span class=n>Optional</span><span class=o>.</span><span class=na>empty</span><span class=o>();</span>
+
+        <span class=n>init</span><span class=o>();</span>
+    <span class=o>}</span>
+
+    <span class=kd>private</span> <span class=kd>native</span> <span class=kt>void</span> <span class=nf>init</span><span class=o>();</span>
+    <span class=kd>private</span> <span class=kd>native</span> <span class=kt>void</span> <span class=nf>read</span><span class=o>(</span><span class=kt>int</span> <span class=n>gpio</span><span class=o>);</span>
+
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>update</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>try</span> <span class=o>{</span>
+            <span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>5</span><span class=o>;</span> <span class=o>++</span><span class=n>i</span><span class=o>)</span> <span class=o>{</span>
+                <span class=k>try</span> <span class=o>{</span>
+                    <span class=n>read</span><span class=o>(</span><span class=n>gpio</span><span class=o>);</span>
+                    <span class=k>break</span><span class=o>;</span>
+                <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>Exception</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
+                    <span class=n>Thread</span><span class=o>.</span><span class=na>sleep</span><span class=o>(</span><span class=n>3000</span><span class=o>);</span>
+                <span class=o>}</span>
+            <span class=o>}</span>
+        <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>Exception</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
+            <span class=n>e</span><span class=o>.</span><span class=na>printStackTrace</span><span class=o>();</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=n>Optional</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=nf>getTemperature</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>temperature</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=n>Optional</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=nf>getHumidity</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>humidity</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=n>Optional</span><span class=o>&lt;</span><span class=n>LocalDateTime</span><span class=o>&gt;</span> <span class=nf>getDate</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>date</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>setTemperatureHumidity</span><span class=o>(</span><span class=kt>int</span> <span class=n>temperature</span><span class=o>,</span> <span class=kt>int</span> <span class=n>humidity</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>temperature</span> <span class=o>=</span> <span class=n>Optional</span><span class=o>.</span><span class=na>of</span><span class=o>(</span><span class=n>temperature</span><span class=o>);</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>humidity</span> <span class=o>=</span> <span class=n>Optional</span><span class=o>.</span><span class=na>of</span><span class=o>(</span><span class=n>humidity</span><span class=o>);</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>date</span> <span class=o>=</span> <span class=n>Optional</span><span class=o>.</span><span class=na>of</span><span class=o>(</span><span class=n>LocalDateTime</span><span class=o>.</span><span class=na>now</span><span class=o>());</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>Dht11</span> <span class=n>sensor</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Dht11</span><span class=o>(</span><span class=n>2</span><span class=o>);</span>
+        <span class=n>sensor</span><span class=o>.</span><span class=na>update</span><span class=o>();</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>sensor</span><span class=o>.</span><span class=na>getTemperature</span><span class=o>().</span><span class=na>isPresent</span><span class=o>()</span> <span class=o>&amp;&amp;</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getHumidity</span><span class=o>().</span><span class=na>isPresent</span><span class=o>())</span> <span class=o>{</span>
+            <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;Temperature (C): %f, Humidity: %f%n&#34;</span><span class=o>,</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getTemperature</span><span class=o>().</span><span class=na>get</span><span class=o>(),</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getHumidity</span><span class=o>().</span><span class=na>get</span><span class=o>());</span>
+        <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+            <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;No temperature/humidity&#34;</span><span class=o>);</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/Dht11.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/Dht11.java target=_blank>Dht11.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-C data-lang=C><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-C data-lang=C><span class=cm>/* DO NOT EDIT THIS FILE - it is machine generated */</span>
+<span class=cp>#include</span> <span class=cpf>&lt;jni.h&gt;</span><span class=cp>
+</span><span class=cp></span><span class=cm>/* Header for class io_github_picodotdev_blogbitix_javaraspberrypi_Dht11 */</span>
+
+<span class=cp>#ifndef _Included_io_github_picodotdev_blogbitix_javaraspberrypi_Dht11
+</span><span class=cp>#define _Included_io_github_picodotdev_blogbitix_javaraspberrypi_Dht11
+</span><span class=cp>#ifdef __cplusplus
+</span><span class=cp></span><span class=k>extern</span> <span class=s>&#34;C&#34;</span> <span class=p>{</span>
+<span class=cp>#endif
+</span><span class=cp></span><span class=cm>/*
+</span><span class=cm> * Class:     io_github_picodotdev_blogbitix_javaraspberrypi_Dht11
+</span><span class=cm> * Method:    init
+</span><span class=cm> * Signature: ()V
+</span><span class=cm> */</span>
+<span class=n>JNIEXPORT</span> <span class=kt>void</span> <span class=n>JNICALL</span> <span class=n>Java_io_github_picodotdev_blogbitix_javaraspberrypi_Dht11_init</span>
+  <span class=p>(</span><span class=n>JNIEnv</span> <span class=o>*</span><span class=p>,</span> <span class=n>jobject</span><span class=p>);</span>
+
+<span class=cm>/*
+</span><span class=cm> * Class:     io_github_picodotdev_blogbitix_javaraspberrypi_Dht11
+</span><span class=cm> * Method:    read
+</span><span class=cm> * Signature: (I)V
+</span><span class=cm> */</span>
+<span class=n>JNIEXPORT</span> <span class=kt>void</span> <span class=n>JNICALL</span> <span class=nf>Java_io_github_picodotdev_blogbitix_javaraspberrypi_Dht11_read</span>
+  <span class=p>(</span><span class=n>JNIEnv</span> <span class=o>*</span><span class=p>,</span> <span class=n>jobject</span><span class=p>,</span> <span class=n>jint</span><span class=p>);</span>
+
+<span class=cp>#ifdef __cplusplus
+</span><span class=cp></span><span class=p>}</span>
+<span class=cp>#endif
+</span><span class=cp>#endif
+</span><span class=cp></span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/Dht11.h target=_blank>view raw</a></span>
+<a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/Dht11.h target=_blank>Dht11.h</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-C data-lang=C><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-C data-lang=C><span class=cp>#include</span> <span class=cpf>&lt;stdio.h&gt;</span><span class=cp>
+</span><span class=cp>#include</span> <span class=cpf>&lt;stdio.h&gt;</span><span class=cp>
+</span><span class=cp>#include</span> <span class=cpf>&lt;stdlib.h&gt;</span><span class=cp>
+</span><span class=cp>#include</span> <span class=cpf>&lt;stdint.h&gt;</span><span class=cp>
+</span><span class=cp>#include</span> <span class=cpf>&lt;wiringPi.h&gt;</span><span class=cp>
+</span><span class=cp></span>  
+<span class=cp>#include</span> <span class=cpf>&#34;io_github_picodotdev_blogbitix_javaraspberrypi_Dht11.h&#34;</span><span class=cp>
+</span><span class=cp></span>
+<span class=cp>#define MAXTIMINGS 85
+</span><span class=cp></span><span class=kt>int</span> <span class=n>dht11_dat</span><span class=p>[</span><span class=mi>5</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span> <span class=mi>0</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=mi>0</span> <span class=p>};</span>
+
+<span class=n>JNIEXPORT</span> <span class=kt>void</span> <span class=n>JNICALL</span> <span class=nf>Java_io_github_picodotdev_blogbitix_javaraspberrypi_Dht11_init</span><span class=p>(</span><span class=n>JNIEnv</span> <span class=o>*</span><span class=n>env</span><span class=p>,</span> <span class=n>jobject</span> <span class=n>obj</span><span class=p>)</span>
+<span class=p>{</span>
+    <span class=n>wiringPiSetup</span><span class=p>();</span>
+<span class=p>}</span>
+
+<span class=n>JNIEXPORT</span> <span class=kt>void</span> <span class=n>JNICALL</span> <span class=nf>Java_io_github_picodotdev_blogbitix_javaraspberrypi_Dht11_read</span><span class=p>(</span><span class=n>JNIEnv</span> <span class=o>*</span><span class=n>env</span><span class=p>,</span> <span class=n>jobject</span> <span class=n>obj</span><span class=p>,</span> <span class=n>jint</span> <span class=n>gpio</span><span class=p>)</span>
+<span class=p>{</span>
+    <span class=n>uint8_t</span> <span class=n>state</span> <span class=o>=</span> <span class=n>HIGH</span><span class=p>;</span>
+    <span class=n>uint8_t</span> <span class=n>counter</span>   <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+    <span class=n>uint8_t</span> <span class=n>j</span>     <span class=o>=</span> <span class=mi>0</span><span class=p>,</span> <span class=n>i</span><span class=p>;</span>
+
+    <span class=n>dht11_dat</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span> <span class=o>=</span> <span class=n>dht11_dat</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span> <span class=o>=</span> <span class=n>dht11_dat</span><span class=p>[</span><span class=mi>2</span><span class=p>]</span> <span class=o>=</span> <span class=n>dht11_dat</span><span class=p>[</span><span class=mi>3</span><span class=p>]</span> <span class=o>=</span> <span class=n>dht11_dat</span><span class=p>[</span><span class=mi>4</span><span class=p>]</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+
+    <span class=n>pinMode</span><span class=p>(</span><span class=n>gpio</span><span class=p>,</span> <span class=n>OUTPUT</span><span class=p>);</span>
+    <span class=n>digitalWrite</span><span class=p>(</span><span class=n>gpio</span><span class=p>,</span> <span class=n>LOW</span><span class=p>);</span>
+    <span class=n>delay</span><span class=p>(</span><span class=mi>18</span><span class=p>);</span>
+    <span class=n>digitalWrite</span><span class=p>(</span><span class=n>gpio</span><span class=p>,</span> <span class=n>HIGH</span><span class=p>);</span>
+    <span class=n>delayMicroseconds</span><span class=p>(</span><span class=mi>40</span><span class=p>);</span>
+    <span class=n>pinMode</span><span class=p>(</span><span class=n>gpio</span><span class=p>,</span> <span class=n>INPUT</span><span class=p>);</span>
+
+    <span class=k>for</span> <span class=p>(</span><span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>MAXTIMINGS</span><span class=p>;</span> <span class=n>i</span><span class=o>++</span><span class=p>)</span>
+    <span class=p>{</span>
+        <span class=n>counter</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+        <span class=k>while</span> <span class=p>(</span><span class=n>digitalRead</span><span class=p>(</span><span class=n>gpio</span><span class=p>)</span> <span class=o>==</span> <span class=n>state</span><span class=p>)</span>
+        <span class=p>{</span>
+            <span class=n>counter</span><span class=o>++</span><span class=p>;</span>
+            <span class=n>delayMicroseconds</span><span class=p>(</span><span class=mi>1</span><span class=p>);</span>
+            <span class=k>if</span> <span class=p>(</span><span class=n>counter</span> <span class=o>==</span> <span class=mi>255</span><span class=p>)</span>
+            <span class=p>{</span>
+                <span class=k>break</span><span class=p>;</span>
+            <span class=p>}</span>
+        <span class=p>}</span>
+        <span class=n>state</span> <span class=o>=</span> <span class=n>digitalRead</span><span class=p>(</span><span class=n>gpio</span><span class=p>);</span>
+
+        <span class=k>if</span> <span class=p>(</span><span class=n>counter</span> <span class=o>==</span> <span class=mi>255</span><span class=p>)</span>
+            <span class=k>break</span><span class=p>;</span>
+
+        <span class=k>if</span> <span class=p>((</span><span class=n>i</span> <span class=o>&gt;=</span> <span class=mi>4</span><span class=p>)</span> <span class=o>&amp;&amp;</span> <span class=p>(</span><span class=n>i</span> <span class=o>%</span> <span class=mi>2</span> <span class=o>==</span> <span class=mi>0</span><span class=p>))</span>
+        <span class=p>{</span>
+            <span class=n>dht11_dat</span><span class=p>[</span><span class=n>j</span> <span class=o>/</span> <span class=mi>8</span><span class=p>]</span> <span class=o>&lt;&lt;=</span> <span class=mi>1</span><span class=p>;</span>
+            <span class=k>if</span> <span class=p>(</span><span class=n>counter</span> <span class=o>&gt;</span> <span class=mi>16</span><span class=p>)</span>
+                <span class=n>dht11_dat</span><span class=p>[</span><span class=n>j</span> <span class=o>/</span> <span class=mi>8</span><span class=p>]</span> <span class=o>|=</span> <span class=mi>1</span><span class=p>;</span>
+            <span class=n>j</span><span class=o>++</span><span class=p>;</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+
+    <span class=k>if</span> <span class=p>((</span><span class=n>j</span> <span class=o>&gt;=</span> <span class=mi>40</span><span class=p>)</span> <span class=o>&amp;&amp;</span> <span class=p>(</span><span class=n>dht11_dat</span><span class=p>[</span><span class=mi>4</span><span class=p>]</span> <span class=o>==</span> <span class=p>((</span><span class=n>dht11_dat</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span> <span class=o>+</span> <span class=n>dht11_dat</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span> <span class=o>+</span> <span class=n>dht11_dat</span><span class=p>[</span><span class=mi>2</span><span class=p>]</span> <span class=o>+</span> <span class=n>dht11_dat</span><span class=p>[</span><span class=mi>3</span><span class=p>])</span> <span class=o>&amp;</span> <span class=mh>0xFF</span><span class=p>)))</span>
+    <span class=p>{</span>
+        <span class=n>jclass</span> <span class=n>clazz</span> <span class=o>=</span> <span class=p>(</span><span class=o>*</span><span class=n>env</span><span class=p>)</span><span class=o>-&gt;</span><span class=n>GetObjectClass</span><span class=p>(</span><span class=n>env</span><span class=p>,</span> <span class=n>obj</span><span class=p>);</span>
+        <span class=n>jmethodID</span> <span class=n>method</span> <span class=o>=</span> <span class=p>(</span><span class=o>*</span><span class=n>env</span><span class=p>)</span><span class=o>-&gt;</span><span class=n>GetMethodID</span><span class=p>(</span><span class=n>env</span><span class=p>,</span> <span class=n>clazz</span><span class=p>,</span> <span class=s>&#34;setTemperatureHumidity&#34;</span><span class=p>,</span> <span class=s>&#34;(II)V&#34;</span><span class=p>);</span>
+        <span class=p>(</span><span class=o>*</span><span class=n>env</span><span class=p>)</span><span class=o>-&gt;</span><span class=n>CallVoidMethod</span><span class=p>(</span><span class=n>env</span><span class=p>,</span> <span class=n>obj</span><span class=p>,</span> <span class=n>method</span><span class=p>,</span> <span class=n>dht11_dat</span><span class=p>[</span><span class=mi>2</span><span class=p>],</span> <span class=n>dht11_dat</span><span class=p>[</span><span class=mi>0</span><span class=p>]);</span>
+    <span class=p>}</span>
+    <span class=k>else</span> <span class=p>{</span>
+         <span class=n>jclass</span> <span class=n>clazz</span> <span class=o>=</span> <span class=p>(</span><span class=o>*</span><span class=n>env</span><span class=p>)</span><span class=o>-&gt;</span><span class=n>FindClass</span><span class=p>(</span><span class=n>env</span><span class=p>,</span> <span class=s>&#34;java/io/IOException&#34;</span><span class=p>);</span>
+         <span class=p>(</span><span class=o>*</span><span class=n>env</span><span class=p>)</span><span class=o>-&gt;</span><span class=n>ThrowNew</span><span class=p>(</span><span class=n>env</span><span class=p>,</span> <span class=n>clazz</span><span class=p>,</span> <span class=s>&#34;Failed read&#34;</span><span class=p>);</span>
+    <span class=p>}</span>
+
+    <span class=k>return</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/Dht11.c target=_blank>view raw</a></span>
+<a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/Dht11.c target=_blank>Dht11.c</a></div></div><p>El código en C del sensor hay que compilarlo en la Raspberry Pi con el compilador <a href=https://gcc.gnu.org/>gcc</a> obteniendo una librería con código nativo que Java y JNI cargará y enlazará de forma dinámica en el programa Java. Ya que el código C usa la librería wiringPi ha de instalarse previamente junto con el compilador gcc. Obtenida la librería la copiamos mediante FTP o SSH de la Raspberry Pi a nuestro equipo de desarrollo. El código C realiza la lectura usando la librería wiringPi siguiendo la especificación de como se transmiten los datos por el sensor, realizada una lectura correcta usa varias de las funciones de la estructura <a href=http://xdprof.sourceforge.net/doxygen/structJNIEnv__.html>JNIEnv</a> para obtener la referencia a un método de la clase DHT11 e invocarlo con los valores obtenidos del sensor o lanza una excepción si la lectura ha sido errónea.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=c1># pacman -S wiringpi gcc</span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/install-packages.sh target=_blank>view raw</a></span>
+<a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/install-packages.sh target=_blank>install-packages.sh</a></div></div><p>El comando para compilar la librería de código nativo a partir del código en C y el archivo de cabecera generado con <em>javah</em> es el siguiente.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ gcc -I<span class=s2>&#34;/usr/lib/jvm/java-8-openjdk/include&#34;</span> -I<span class=s2>&#34;/usr/lib/jvm/java-8-openjdk/include/linux&#34;</span> -shared -fPIC -L/usr/lib -lwiringPi -o libdht11-arm.so Dht11.c
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/compile.sh target=_blank>view raw</a></span>
+<a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/compile.sh target=_blank>compile.sh</a></div></div><p>Para facilitar la ejecución la librería la proporcionó ya compilada y ubicada en el directorio <em>src/main/resources</em> de modo que será incluida en el archivo <em>jar</em> generado por <a href=https://gradle.org/>Gradle</a> en el ejemplo y que la clase DHT11 extraerá al directorio temporal del sistema y cargará para su uso.</p><p>La clase Java del ejemplo que hace uso del sensor realiza una lectura cada 3 segundos e imprime en la terminal y en el <em>display</em> 1602 el último valor obtenido correctamente de la temperatura y humedad.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.javaraspberrypi</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>com.diozero.I2CLcd</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>com.diozero.api.I2CConstants</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>java.nio.ByteOrder</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.time.format.DateTimeFormatter</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.util.concurrent.Executors</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.util.concurrent.ScheduledExecutorService</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.util.concurrent.TimeUnit</span><span class=o>;</span>
+
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>TemperatureHumidity</span> <span class=o>{</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+        <span class=n>Dht11</span> <span class=n>sensor</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Dht11</span><span class=o>(</span><span class=n>2</span><span class=o>);</span>
+        <span class=n>ScheduledExecutorService</span> <span class=n>service</span> <span class=o>=</span> <span class=n>Executors</span><span class=o>.</span><span class=na>newSingleThreadScheduledExecutor</span><span class=o>();</span>
+
+        <span class=k>try</span> <span class=o>(</span><span class=n>I2CLcd</span> <span class=n>lcd</span> <span class=o>=</span> <span class=k>new</span> <span class=n>I2CLcd</span><span class=o>(</span><span class=n>I2CConstants</span><span class=o>.</span><span class=na>BUS_0</span><span class=o>,</span> <span class=n>I2CLcd</span><span class=o>.</span><span class=na>DEFAULT_DEVICE_ADDRESS</span><span class=o>,</span> <span class=n>ByteOrder</span><span class=o>.</span><span class=na>LITTLE_ENDIAN</span><span class=o>,</span> <span class=n>16</span><span class=o>,</span> <span class=n>2</span><span class=o>))</span> <span class=o>{</span>
+            <span class=n>Runnable</span> <span class=n>monitor</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Runnable</span><span class=o>()</span> <span class=o>{</span>
+                <span class=nd>@Override</span>
+                <span class=kd>public</span> <span class=kt>void</span> <span class=nf>run</span><span class=o>()</span> <span class=o>{</span>
+                    <span class=k>try</span> <span class=o>{</span>
+                        <span class=n>sensor</span><span class=o>.</span><span class=na>update</span><span class=o>();</span>
+
+                        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;Temperature: %dºC, Humidity: %d%%, Date: %s%n&#34;</span><span class=o>,</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getTemperature</span><span class=o>().</span><span class=na>get</span><span class=o>(),</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getHumidity</span><span class=o>().</span><span class=na>get</span><span class=o>(),</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getDate</span><span class=o>().</span><span class=na>get</span><span class=o>().</span><span class=na>format</span><span class=o>(</span><span class=n>DateTimeFormatter</span><span class=o>.</span><span class=na>ISO_DATE_TIME</span><span class=o>));</span>
+
+                        <span class=k>if</span> <span class=o>(</span><span class=n>sensor</span><span class=o>.</span><span class=na>getTemperature</span><span class=o>().</span><span class=na>isPresent</span><span class=o>()</span> <span class=o>&amp;&amp;</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getHumidity</span><span class=o>().</span><span class=na>isPresent</span><span class=o>()</span> <span class=o>&amp;&amp;</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getDate</span><span class=o>().</span><span class=na>isPresent</span><span class=o>())</span> <span class=o>{</span>
+                            <span class=n>lcd</span><span class=o>.</span><span class=na>setText</span><span class=o>(</span><span class=n>0</span><span class=o>,</span> <span class=n>String</span><span class=o>.</span><span class=na>format</span><span class=o>(</span><span class=s>&#34;T: %dC, H: %d%% &#34;</span><span class=o>,</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getTemperature</span><span class=o>().</span><span class=na>get</span><span class=o>(),</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getHumidity</span><span class=o>().</span><span class=na>get</span><span class=o>()));</span>
+                            <span class=n>lcd</span><span class=o>.</span><span class=na>setText</span><span class=o>(</span><span class=n>1</span><span class=o>,</span> <span class=n>String</span><span class=o>.</span><span class=na>format</span><span class=o>(</span><span class=s>&#34;%s&#34;</span><span class=o>,</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getDate</span><span class=o>().</span><span class=na>get</span><span class=o>().</span><span class=na>format</span><span class=o>(</span><span class=n>DateTimeFormatter</span><span class=o>.</span><span class=na>ofPattern</span><span class=o>(</span><span class=s>&#34;HH:mm:ss&#34;</span><span class=o>))));</span>
+                        <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+                            <span class=n>lcd</span><span class=o>.</span><span class=na>setText</span><span class=o>(</span><span class=n>0</span><span class=o>,</span> <span class=n>String</span><span class=o>.</span><span class=na>format</span><span class=o>(</span><span class=s>&#34;No data&#34;</span><span class=o>));</span>
+                        <span class=o>}</span>
+                    <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>Exception</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
+                        <span class=n>e</span><span class=o>.</span><span class=na>printStackTrace</span><span class=o>();</span>
+                    <span class=o>}</span>
+                <span class=o>}</span>
+            <span class=o>};</span>
+
+            <span class=n>service</span><span class=o>.</span><span class=na>scheduleAtFixedRate</span><span class=o>(</span><span class=n>monitor</span><span class=o>,</span> <span class=n>1</span><span class=o>,</span> <span class=n>5</span><span class=o>,</span> <span class=n>TimeUnit</span><span class=o>.</span><span class=na>SECONDS</span><span class=o>);</span>
+            <span class=n>Thread</span><span class=o>.</span><span class=na>sleep</span><span class=o>(</span><span class=n>60000</span><span class=o>);</span>
+        <span class=o>}</span> <span class=k>finally</span> <span class=o>{</span>
+            <span class=n>service</span><span class=o>.</span><span class=na>shutdown</span><span class=o>();</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/TemperatureHumidity.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/TemperatureHumidity.java target=_blank>TemperatureHumidity.java</a></div></div><p>Este es el esquema de conexiones que he utilizado para el ejemplo y una foto del cableado real, he usado del <em>pin</em> GPIO número 2 según la nomenclatura de wiringPi para el cable de datos del sensor DHT11 que se corresponde con pin número 13 según la nomenclatura del <em>header</em> de la Raspberry Pi. Para ver el cableado del <em>display</em> 1602 más detalladamente y la activación del bus de comunicación I2C que necesita consulta el artículo <a href=https://picodotdev.github.io/blog-bitix/2017/03/controlar-un-display-lcd-1602-para-mostrar-texto-con-la-raspberry-pi-y-java/>Controlar un display LCD 1602 para mostrar texto con la Raspberry Pi y Java</a>.</p><div class=media style=text-align:center><figure><a href=assets/images/posts/2017/219/cableado.jpg title="Cableado sensor DHT11 y display 1602" data-gallery><img src=assets/images/posts/2017/219/cableado-thumb.jpg></a><figcaption>Cableado sensor DHT11 y display 1602</figcaption></figure></div><p>Ejecutando el programa del ejemplo y usando el display 1602 (16 columnas y 2 filas) se muestra la temperatura y humedad obtenida del sensor.</p><div class=media style=text-align:center><figure><a href=assets/images/posts/2017/219/temperature-humidity.jpg title="Cableado ejemplo y funcionando" data-gallery><img src=assets/images/posts/2017/219/temperature-humidity-thumb.jpg></a>
+<a href=assets/images/posts/2017/219/display.jpg title="Cableado ejemplo y funcionando" data-gallery><img src=assets/images/posts/2017/219/display-thumb.jpg></a><figcaption>Cableado ejemplo y funcionando</figcaption></figure></div><p>En el kernel de Linux hay un módulo que proporciona también los valores del sensor, sin embargo, no he conseguido obtener la temperatura y humedad usándolo. Lo he probado con el kernel 4.4 de Arch Linux ARM y en la versión 4.9 veo que hay cambios en este módulo que quizá lo hagan funcionar. Para usar el módulo del kernel hay que añadir un poco de configuración para el inicio de la Raspberry Pi. En los archivos <em>/sys/devices/platform/dht11@0/iio:device0/in_temp_input</em> y <em>/sys/devices/platform/dht11@0/iio:device0/in_temp_input</em> estarán la temperatura y humedad respectivamente.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>dtoverlay=dht11,gpiopin=2
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/kernel-module-config.txt target=_blank>view raw</a></span>
+<a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/kernel-module-config.txt target=_blank>kernel-module-config.txt</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ cat /sys/bus/iio/devices/iio:device0/in_temp_input
+$ cat /sys/devices/platform/dht11@0/iio:device0/in_temp_input</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/cat.sh target=_blank>view raw</a></span>
+<a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/cat.sh target=_blank>cat.sh</a></div></div><p>Para ejecutar el ejemplo con ya todo instalado uso uno de los siguientes dos comandos.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ ./gradlew upload
+$ ssh -t <span class=m>192</span>.168.1.101 <span class=s1>&#39;cd /home/raspberrypi/scripts/javaraspberrypi &amp;&amp; sudo java -classpath &#34;*&#34; io.github.picodotdev.blogbitix.javaraspberrypi.TemperatureHumidity&#39;</span>
+
+$ ./gradlew executeTemperatureHumidity</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/execute.sh target=_blank>view raw</a></span>
+<a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/execute.sh target=_blank>execute.sh</a></div></div><p>El <a href=https://github.com/picodotdev/blog-ejemplos/tree/master/JavaRaspberryPi>código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href=https://github.com/>GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew executeTemperatureHumidity</code>.</p><div class=reference>Referencia:<br><ul><li><a href=https://www.ibm.com/developerworks/java/tutorials/j-jni/j-jni.html>Java programming with JNI</a></li><li><a href="http://hirt.se/blog/?p=493">Accessing 1-wire Protocol Devices from Java</a></li><li><a href=http://www.circuitbasics.com/how-to-set-up-the-dht11-humidity-sensor-on-the-raspberry-pi/>How to Set Up the DHT11 Humidity Sensor on the Raspberry Pi</a></li><li><a href=http://www.prometec.net/sensores-dht11/>Sensores de temperatura DHT11</a></li><li><a href=https://github.com/Hexalyse/RPi-weather-log/blob/master/dht11.c>dht11.c</a></li><li><a href=http://www.uugear.com/portfolio/read-dht1122-temperature-humidity-sensor-from-raspberry-pi/>Read DHT11/22 Temperature &amp; Humidity Sensor from Raspberry Pi</a></li><li><a href=https://arduino-info.wikispaces.com/DHT11-Humidity-TempSensor>Digital output temperature and humidity sensor DHT11 - DHT22</a></li><li><a href=http://playground.arduino.cc/Main/DHT11Lib>A DHT11 Class for Arduino</a></li><li><a href=https://github.com/torvalds/linux/blob/master/drivers/iio/humidity/dht11.c>torvalds/linux/blob/master/drivers/iio/humidity/dht11.c</a></li><li><a href=http://www.tortosaforum.com/raspberrypi/dht11driver.htm>RaspberryPi DHT11 temperature and humidity sensor driver</a></li></ul></div></div></article></div></div><div class="row serie"><div class=col-md-12><h3>Este artículo forma parte de la serie <strong>electronica</strong>:</h3><ol class=serie-articles><li><a href=https://picodotdev.github.io/blog-bitix/2017/02/desempaquetado-del-kit-de-iniciacion-a-la-electronica-para-la-raspberry-pi/>Desempaquetado del kit de iniciación a la electrónica para la Raspberry Pi</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-hello-world-con-java-en-la-raspberry-pi/>Ejemplo Hello World con Java en la Raspberry Pi</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-encender-y-apagar-diodo-led-con-la-raspberry-pi-en-java/>Ejemplo encender y apagar diodo LED con la Raspberry Pi en Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/03/controlar-un-display-lcd-1602-para-mostrar-texto-con-la-raspberry-pi-y-java/>Controlar un display LCD 1602 para mostrar texto con la Raspberry Pi y Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/03/ejemplo-de-jni-usar-codigo-en-c-desde-java/>Ejemplo de JNI, usar código en C desde Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/>Obtener la temperatura y humedad con el sensor DHT11, la Raspberry Pi, C y Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/04/como-usar-un-diodo-led-un-pulsador-y-un-zumbador-con-la-raspberry-pi-y-java/>Cómo usar un diodo LED, un pulsador y un zumbador con la Raspberry Pi y Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/04/ejemplo-sensor-de-golpes-y-detector-de-movimiento-en-la-raspberry-pi-con-java/>Ejemplo sensor de golpes y detector de movimiento en la Raspberry Pi con Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/05/controlar-un-servomotor-con-la-raspberry-pi-y-java/>Controlar un servomotor con la Raspberry Pi y Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/05/luces-navidenas-con-la-raspberry-pi-y-java/>Luces navideñas con la Raspberry Pi y Java</a></li></ol></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class=col-12><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><a id=comments></a><div class=row><div class=col-md-12><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='https:\/\/picodotdev.github.io\/blog-bitix\/2017\/03\/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java\/';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2017\/03\/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java\/';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script></div><div class="col-12 col-lg-4"><div class=row><div class="col-md-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:300px;height:600px data-ad-client=ca-pub-3533636310991304 data-ad-slot=9559414587 data-type=large-skycraper></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><div class=row><div class="col-md-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:336px;height:280px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2873752587 data-type=large-rectangle></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><div class="row text-center banner"><div class=col-12><a href=https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/><img src=//static.fsf.org/nosvn/images/badges/badges_es/i-support-fs_red-bg-es.png alt="Yo apoyo al software libre"></a></div></div><div class=row><div class=col-md-12><hr></div></div><div class=row><div class=col-md-12><ul class="list-unstyled recents"><li><span class="glyphicon glyphicon-hand-right"></span><a href=archive/>Más artículos recientes en el archivo</a></li></ul></div></div></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
 <a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
 <a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2019 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow rel=license><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style=border-width:0 src=https://licensebuttons.net/l/by-sa/4.0/80x15.png class=licencia></a><br><a href=https://twitter.com/blogstackinfo rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png alt="Blog Stack" title="Blog Stack"></a>
 <a href=https://www.planetacodigo.com/ rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png alt="Planeta código" title="Planeta código"></a><br><span xmlns:dct=http://purl.org/dc/terms/ property=dct:title><a href=https://picodotdev.github.io/blog-bitix/ rel=nofollow>Blog Bitix</a></span> by <a xmlns:cc=https://creativecommons.org/ns# href=https://picodotdev.github.io/blog-bitix/ property=cc:attributionName rel=cc:attributionurl>pico.dev</a> is licensed under a <a rel=license href=https://creativecommons.org/licenses/by-sa/4.0/>Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class=credit>Powered by <a href=https://gohugo.io/ rel=nofollow title="A fast and modern static website engine">Hugo</a> and <a href=https://pages.github.com/ title="Websites for you and your projects">GitHub Pages</a>.</span>

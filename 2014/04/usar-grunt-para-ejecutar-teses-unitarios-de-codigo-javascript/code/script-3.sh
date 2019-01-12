@@ -1,0 +1,1 @@
+$ npm install grunt-contrib-jasmine@0.5.3 --save-dev

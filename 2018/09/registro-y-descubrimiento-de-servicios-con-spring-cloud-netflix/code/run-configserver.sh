@@ -1,0 +1,1 @@
+$ ./gradlew configserver:run

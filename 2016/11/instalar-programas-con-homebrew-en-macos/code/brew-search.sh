@@ -1,0 +1,1 @@
+$ brew search firefox

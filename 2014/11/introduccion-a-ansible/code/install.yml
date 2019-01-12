@@ -1,0 +1,24 @@
+- hosts: devbox
+  tasks:
+    - name: install packages (Arch Linux)
+      pacman: name={{ item }} state=present
+      sudo: true
+      when: ansible_distribution == "Archlinux"
+      with_items:
+      - vim
+      - subversion
+      - mariadb
+      - redis
+      - docker
+      - ansible
+      - python2-pip
+      - python2-virtualenv
+
+    - name: checkout projects
+      environment:
+          LANG: es_ES.UTF-8
+          LC_CTYPE: es_ES.UTF-8
+      subversion: repo={{ item.url }} dest={{ projects }}/{{ item.path }} username={{ subversion_user }} password={{ subversion_password }}
+      with_items:
+      - { url: "http://server.com/svn/repos/project1/trunk", path: "project1" }
+      - { url: "http://server.com/svn/repos/project2/trunk", path: "project2" }

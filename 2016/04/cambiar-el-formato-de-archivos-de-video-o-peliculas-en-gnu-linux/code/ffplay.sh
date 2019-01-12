@@ -1,0 +1,1 @@
+$ ffplay -i video.mkv

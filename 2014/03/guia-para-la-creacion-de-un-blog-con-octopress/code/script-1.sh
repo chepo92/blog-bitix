@@ -1,0 +1,1 @@
+# pacman -S ruby git

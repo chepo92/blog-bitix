@@ -1,4 +1,4 @@
-<!doctype html><html lang=es><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content=picodotdev><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="La plataforma Java EE (Java Enterprise Edition) pone a disposición de los desarrolladores varias especificaciones, estas especificaciones describen las funcionalidades y la API que deben proporcionar las implementaciones y proporcionan al desarrollador herramientas para facilitar, hacer mejor las aplicaciones y de forma estándar según estas especificaciones. Haciendo uso de una de estas especificaciones es posible cambiar de una implementación a otra de forma transparente y sin modificar ninguna línea de código de la aplicación (en teoría). &hellip;"><base href=https://picodotdev.github.io/blog-bitix/><title>Introducción y ejemplo sencillo de Java Message Service (JMS)</title><link rel=author type=text/plain href=humans.txt><link rel="shortcut icon" href=assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=assets/apple-touch-icon-144-precomposed.png><link rel=canonical href=https://picodotdev.github.io/blog-bitix/2014/03/introduccion-y-ejemplo-sencillo-de-java-message-service-jms/><link href=index.xml rel=alternate type=application/rss+xml title="Blog Bitix"><link rel=stylesheet type=text/css href="//fonts.googleapis.com/css?family=PT+Serif:400,700italic,700,400italic"><link rel=stylesheet type=text/css href=assets/libs/bootstrap-4.0.0/css/bootstrap.min.css><link rel=stylesheet type=text/css href=assets/libs/Gallery-2.30.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=assets/css/main.css><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js async></script><script type=text/javascript>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript async>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script type=text/javascript src=assets/libs/require.js></script><script type=text/javascript src=assets/js/main.js></script><script type=text/javascript src=assets/js/theme.js async></script><script type=text/javascript src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" async></script><script type=text/javascript src=assets/js/app.js async></script></head><body><div class=container><div class=row><div class=col><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<!doctype html><html lang=es><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content=picodotdev><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="La plataforma Java EE (Java Enterprise Edition) pone a disposición de los desarrolladores varias especificaciones, estas especificaciones describen las funcionalidades y la API que deben proporcionar las implementaciones y proporcionan al desarrollador herramientas para facilitar, hacer mejor las aplicaciones y de forma estándar según estas especificaciones. Haciendo uso de una de estas especificaciones es posible cambiar de una implementación a otra de forma transparente y sin modificar ninguna línea de código de la aplicación (en teoría). &hellip;"><base href=https://picodotdev.github.io/blog-bitix/><title>Introducción y ejemplo sencillo de Java Message Service (JMS)</title><link rel=author type=text/plain href=humans.txt><link rel="shortcut icon" href=assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=assets/apple-touch-icon-144-precomposed.png><link rel=canonical href=https://picodotdev.github.io/blog-bitix/2014/03/introduccion-y-ejemplo-sencillo-de-java-message-service-jms/><link href=index.xml rel=alternate type=application/rss+xml title="Blog Bitix"><link rel=stylesheet type=text/css href="//fonts.googleapis.com/css?family=PT+Serif:400,700italic,700,400italic"><link rel=stylesheet type=text/css href=assets/libs/bootstrap-4.0.0/css/bootstrap.min.css><link rel=stylesheet type=text/css href=assets/libs/Gallery-2.30.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=assets/css/syntax.css><link rel=stylesheet type=text/css href=assets/css/main.css><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js async></script><script type=text/javascript>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript async>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script type=text/javascript src=assets/libs/require.js></script><script type=text/javascript src=assets/js/main.js></script><script type=text/javascript src=assets/js/theme.js async></script><script type=text/javascript src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" async></script><script type=text/javascript src=assets/js/app.js async></script></head><body><div class=container><div class=row><div class=col><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
 <a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
 <a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class="col-12 col-lg-4 text-center"><form name=query class="form-inline search" onsubmit="return false;"><div class=input-group><input type=text name=q class=form-control placeholder="Buscar en Blog Bitix">
 <span class=input-group-btn><button class="btn btn-secondary" type=submit>Buscar</button></span></div></form><form name=search action=https://duckduckgo.com/ method=get class=hidden data-site=https://picodotdev.github.io/blog-bitix/><input type=hidden name=q></form></div></div><div class=row><div class=col-12><nav class="nav nav-pills nav-fill"><a href=/blog-bitix/tags/java/ class="nav-item nav-link">Java</a>
@@ -8,7 +8,577 @@
 <a href=/blog-bitix/archive/ class="nav-item nav-link">Archivo y hemeroteca</a>
 <a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
 <a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 col-lg-8"><div class=row><div class=col-12><article itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content=es><meta itemprop=keywords content="java, programacion, software, planeta-codigo"><h1 itemprop=name>Introducción y ejemplo sencillo de Java Message Service (JMS)</h1><p class=information>Escrito por <span itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2014-03-07>07/03/2014</time>, actualizado el <time itemprop=dateModified datetime=2015-11-10>10/11/2015</time>.<br><a href=tags/java/>java</a> <a href=tags/programacion/>programacion</a> <a href=tags/software/>software</a> <a href=tags/planeta-codigo/>planeta-codigo</a><br><a href=/blog-bitix/2014/03/introduccion-y-ejemplo-sencillo-de-java-message-service-jms/ itemprop=url>Enlace permanente</a>
-<a href=/blog-bitix/2014/03/introduccion-y-ejemplo-sencillo-de-java-message-service-jms/#comments>Comentarios</a></p><p class=summary itemprop=about>JMS es una especificación de Java que define en esta plataforma una forma comunicación entre aplicaciones basada en el intercambio de mensajes. Los mensajes permiten a las aplicaciones no conocerse entre sí y comunicarse de forma asíncrona pudiendo hacer que los mensajes de una cola solo sean consumidos por un único receptor o por varios suscriptores interesados en un determinado tema. En el código de ejemplo muestro tanto la comunicación con colas (queues) como con temas (topics)</p><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><div class=content itemprop=articleBody><meta itemprop=wordCount content=901><div class=logotypes style=float:right><img src=assets/images/logotipos/java.svg class=right width=200 alt=Java title=Java></div><p><a href=https://en.wikipedia.org/wiki/Java_Platform,_Enterprise_Edition>La plataforma Java EE</a> (Java Enterprise Edition) pone a disposición de los desarrolladores varias especificaciones, estas especificaciones describen las funcionalidades y la API que deben proporcionar las implementaciones y proporcionan al desarrollador herramientas para facilitar, hacer mejor las aplicaciones y de forma estándar según estas especificaciones. Haciendo uso de una de estas especificaciones es posible cambiar de una implementación a otra de forma transparente y sin modificar ninguna línea de código de la aplicación (en teoría). Hay especificaciones para persistencia en base de datos (JPA), para transaccionalidad (JTA), para servicios web (JAX-WS ) y REST (JAX-RS) entre otras. En el siguiente enlace puede encontrarse el <a href=https://glassfish.java.net/downloads/ri/>listado completo de especificaciones y sus versiones de JEE 7</a>.</p><p>Una de ellas es el <a href=https://es.wikipedia.org/wiki/Java_Message_Service>servicio de mensajería JMS</a> (Java Message Service). JMS es un sistema de comunicación entre aplicaciones en base a mensajes. El usar mensajes como forma de comunicación entre aplicaciones tiene los siguientes beneficios o ventajas:</p><ul><li>Integración de sistemas: las aplicaciones que se comunican intercambiando mensajes puede ser desarrolladas con tecnologías diferentes el único requisito es que cada una de ellas tenga una forma de enviar y recibir los mensajes.</li><li>Escalabilidad: en caso de necesitar más capacidad para procesar los mensajes se pueden añadir más procesadores de mensajes sin que los emisores tengan ningún conocimiento de ello.</li><li>Asincronía: los mensajes puede ser procesados de forma asíncrona de forma que si un mensaje desencadena un proceso largo en tiempo el emisor del mensaje no tiene que esperar a que el proceso termine, el emisor puede enviar el mensaje y olvidarse. Además, el emisor no necesita que un receptor exista para enviar el mensaje tampoco el receptor necesita que que el emisor exista para recibir el mensaje. Cuando haya un receptor este se encargará de procesar los mensajes que se hayan enviado y estén aún sin procesar.</li><li>No acoplamiento: el emisor y el receptor no se conocen directamente de forma que cada uno de ellos puede reemplazarse por una nueva implementación de forma transparente para el otro.</li></ul><p>La comunicación puede realizarse de dos formas cada una con sus características:</p><ul><li>Punto a punto (P2P): mediante esta comunicación el mensaje se garantiza que es procesado únicamente una vez independientemente del numero de posibles procesadores que podrían recibir el mensaje. El procesado del mensaje puede ser síncrono o asíncrono. En caso de que no haya un receptor disponible el mensaje se guarda hasta poder entregarse a un receptor. Se realiza mediante colas (Queue). En este modelo al emisor se le denomina Sender y al receptor Receiver.</li><li>Pub/Sub: en este modelo un mensaje es recibido por todos los receptores suscritos a un tema (Topic) de forma similar a una emisión broadcast. Al emisor se le denomina Publisher y al receptor Subscriber. El emisor y receptor están más desacoplados ya que el emisor no conoce cual de los receptores procesará el mensaje.</li></ul><p>Esta comunicación de mensajes entre aplicaciones o entre diferentes partes de una aplicación tiene muchas posibilidades, podría ser utilizado para que un receptor enviase mensajes electrónicos en base a los mensajes enviados a una cola o para actualizar o precalcular datos de una base de datos que puede llevar un considerable tiempo y que de hacerlo en la misma petición de una aplicación web haría que el cliente estuviese esperando hasta que el proceso terminase, en ambos casos no es necesario que los procesos se hagan inmediatamente, son solo dos ejemplos de aplicación real. Esta es la misma funcionalidad que expliqué como hacerla con <a href=http://elblogdepicodev.blogspot.com.es/2012/04/ejemplo-del-patron-de-diseno-command-y.html>programación concurrente y el patrón de diseño Command</a> pero pudiéndola implementar con JMS.</p><p>Los mensajes puede tener cabeceras (asignada automáticamente por JMS o por el desarrollador), atributos y y los datos (payload) que pueden transportar texto, un stream de objetos primitivos, &hellip; en función del tipo de mensaje. Cualquiera de estas cabeceras, atributos y datos puede utilizarse como información para procesar el mensaje.</p><p>A continuación pondré el código de una sencilla aplicación que se conecta al servicio JMS de un <a href=https://picodotdev.github.io/blog-bitix/2014/02/servidor-de-aplicaciones-jboss-slash-wildfly/>servidor de aplicaciones WildFly</a> de forma remota y envía y recibe unos pocos mensajes de texto.</p><p>Primero el código de un modelo Pub/Sub. Como es propio de este modelo los mensajes se reciben por todos los receptores (los dos threads que escuchan en un topic que debemos crear), en este caso hay un publicador y dos suscriptores:</p><script type=application/javascript src="//gist.github.com/picodotdev/9416544.js?file=Topic.java"></script><div class=media style=text-align:center><figure><a href=assets/images/posts/2014/15/topic.png title="Resultado de Topic.java" data-gallery><img src=assets/images/posts/2014/15/topic-thumb.png></a></figure></div><p>A continuación el código de utilizando un modelo punto a punto en el que vuelve a haber un emisor y dos receptores. En el resultado de la ejecución puede observarse que a pesar de haber dos receptores solo uno de los dos recibe cada mensaje:</p><script type=application/javascript src="//gist.github.com/picodotdev/9416544.js?file=Queue.java"></script><div class=media style=text-align:center><figure><a href=assets/images/posts/2014/15/queue.png title="Resultado de Queue.java" data-gallery><img src=assets/images/posts/2014/15/queue-thumb.png></a></figure></div><p>Comentar que los mensajes se procesan en serie por cada MessageListener, esto es, hasta que no termina el consumo de uno no se consume el siguiente. Esto se aplica por MensajeListener y sesión.</p><p>Si queremos probar los ejemplos deberemos disponer del servidor de aplicaciones WildFly. Para que los ejemplos funcionen deberemos configurarlo añadiendo un usuario «guest», de contraseña «guest» y de rol «guest», el añadirlo lo podemos hacer con la utilidad add-user.sh. También deberemos modificar el archivo standalone-full.xml añadiendo el topic y el queue en la sección de JMS e iniciar WildFly usando esa configuración:</p><script type=application/javascript src="//gist.github.com/picodotdev/9416544.js?file=standalone.sh"></script><script type=application/javascript src="//gist.github.com/picodotdev/9416544.js?file=standalone-full.xml"></script><p>Para terminar y conocer más sobre JMS un buen libro es <a href="http://www.amazon.es/gp/product/0596522045/ref=as_li_tf_tl?ie=UTF8&camp=3626&creative=24790&creativeASIN=0596522045&linkCode=as2&tag=blobit-21">Java Message Service</a><img src="https://ir-es.amazon-adsystem.com/e/ir?t=blobit-21&l=as2&o=30&a=0596522045" width=1 height=1 border=0 alt style=border:none!important;margin:0!important>
+<a href=/blog-bitix/2014/03/introduccion-y-ejemplo-sencillo-de-java-message-service-jms/#comments>Comentarios</a></p><p class=summary itemprop=about>JMS es una especificación de Java que define en esta plataforma una forma comunicación entre aplicaciones basada en el intercambio de mensajes. Los mensajes permiten a las aplicaciones no conocerse entre sí y comunicarse de forma asíncrona pudiendo hacer que los mensajes de una cola solo sean consumidos por un único receptor o por varios suscriptores interesados en un determinado tema. En el código de ejemplo muestro tanto la comunicación con colas (queues) como con temas (topics)</p><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><div class=content itemprop=articleBody><meta itemprop=wordCount content=2093><div class=logotypes style=float:right><img src=assets/images/logotipos/java.svg class=right width=200 alt=Java title=Java></div><p><a href=https://en.wikipedia.org/wiki/Java_Platform,_Enterprise_Edition>La plataforma Java EE</a> (Java Enterprise Edition) pone a disposición de los desarrolladores varias especificaciones, estas especificaciones describen las funcionalidades y la API que deben proporcionar las implementaciones y proporcionan al desarrollador herramientas para facilitar, hacer mejor las aplicaciones y de forma estándar según estas especificaciones. Haciendo uso de una de estas especificaciones es posible cambiar de una implementación a otra de forma transparente y sin modificar ninguna línea de código de la aplicación (en teoría). Hay especificaciones para persistencia en base de datos (JPA), para transaccionalidad (JTA), para servicios web (JAX-WS ) y REST (JAX-RS) entre otras. En el siguiente enlace puede encontrarse el <a href=https://glassfish.java.net/downloads/ri/>listado completo de especificaciones y sus versiones de JEE 7</a>.</p><p>Una de ellas es el <a href=https://es.wikipedia.org/wiki/Java_Message_Service>servicio de mensajería JMS</a> (Java Message Service). JMS es un sistema de comunicación entre aplicaciones en base a mensajes. El usar mensajes como forma de comunicación entre aplicaciones tiene los siguientes beneficios o ventajas:</p><ul><li>Integración de sistemas: las aplicaciones que se comunican intercambiando mensajes puede ser desarrolladas con tecnologías diferentes el único requisito es que cada una de ellas tenga una forma de enviar y recibir los mensajes.</li><li>Escalabilidad: en caso de necesitar más capacidad para procesar los mensajes se pueden añadir más procesadores de mensajes sin que los emisores tengan ningún conocimiento de ello.</li><li>Asincronía: los mensajes puede ser procesados de forma asíncrona de forma que si un mensaje desencadena un proceso largo en tiempo el emisor del mensaje no tiene que esperar a que el proceso termine, el emisor puede enviar el mensaje y olvidarse. Además, el emisor no necesita que un receptor exista para enviar el mensaje tampoco el receptor necesita que que el emisor exista para recibir el mensaje. Cuando haya un receptor este se encargará de procesar los mensajes que se hayan enviado y estén aún sin procesar.</li><li>No acoplamiento: el emisor y el receptor no se conocen directamente de forma que cada uno de ellos puede reemplazarse por una nueva implementación de forma transparente para el otro.</li></ul><p>La comunicación puede realizarse de dos formas cada una con sus características:</p><ul><li>Punto a punto (P2P): mediante esta comunicación el mensaje se garantiza que es procesado únicamente una vez independientemente del numero de posibles procesadores que podrían recibir el mensaje. El procesado del mensaje puede ser síncrono o asíncrono. En caso de que no haya un receptor disponible el mensaje se guarda hasta poder entregarse a un receptor. Se realiza mediante colas (Queue). En este modelo al emisor se le denomina Sender y al receptor Receiver.</li><li>Pub/Sub: en este modelo un mensaje es recibido por todos los receptores suscritos a un tema (Topic) de forma similar a una emisión broadcast. Al emisor se le denomina Publisher y al receptor Subscriber. El emisor y receptor están más desacoplados ya que el emisor no conoce cual de los receptores procesará el mensaje.</li></ul><p>Esta comunicación de mensajes entre aplicaciones o entre diferentes partes de una aplicación tiene muchas posibilidades, podría ser utilizado para que un receptor enviase mensajes electrónicos en base a los mensajes enviados a una cola o para actualizar o precalcular datos de una base de datos que puede llevar un considerable tiempo y que de hacerlo en la misma petición de una aplicación web haría que el cliente estuviese esperando hasta que el proceso terminase, en ambos casos no es necesario que los procesos se hagan inmediatamente, son solo dos ejemplos de aplicación real. Esta es la misma funcionalidad que expliqué como hacerla con <a href=http://elblogdepicodev.blogspot.com.es/2012/04/ejemplo-del-patron-de-diseno-command-y.html>programación concurrente y el patrón de diseño Command</a> pero pudiéndola implementar con JMS.</p><p>Los mensajes puede tener cabeceras (asignada automáticamente por JMS o por el desarrollador), atributos y y los datos (payload) que pueden transportar texto, un stream de objetos primitivos, &hellip; en función del tipo de mensaje. Cualquiera de estas cabeceras, atributos y datos puede utilizarse como información para procesar el mensaje.</p><p>A continuación pondré el código de una sencilla aplicación que se conecta al servicio JMS de un <a href=https://picodotdev.github.io/blog-bitix/2014/02/servidor-de-aplicaciones-jboss-slash-wildfly/>servidor de aplicaciones WildFly</a> de forma remota y envía y recibe unos pocos mensajes de texto.</p><p>Primero el código de un modelo Pub/Sub. Como es propio de este modelo los mensajes se reciben por todos los receptores (los dos threads que escuchan en un topic que debemos crear), en este caso hay un publicador y dos suscriptores:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span><span class=lnt>132
+</span><span class=lnt>133
+</span><span class=lnt>134
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.bitix.jms</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>java.util.Properties</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>javax.jms.Message</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.jms.MessageListener</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.jms.Session</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.jms.TextMessage</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.jms.TopicConnection</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.jms.TopicConnectionFactory</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.jms.TopicPublisher</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.jms.TopicSession</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.jms.TopicSubscriber</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.naming.Context</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.naming.InitialContext</span><span class=o>;</span>
+
+<span class=cm>/**
+</span><span class=cm> * Ejemplo que muestra como como enviar y recibir mensajes JMS de un Topic de forma remota.
+</span><span class=cm> */</span>
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>Topic</span> <span class=o>{</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Antes de ejecutar este ejemplo, usando WildFly se ha de crear un usuario guest y clave guest con el 
+</span><span class=cm>     * script WILDFLY_HOME/bin/add-user.sh.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+        <span class=c1>// Usuario y password para conectarse al servidor JNDI y al Topic
+</span><span class=c1></span>     <span class=n>String</span> <span class=n>usuario</span> <span class=o>=</span> <span class=s>&#34;guest&#34;</span><span class=o>;</span>
+        <span class=n>String</span> <span class=n>contrasena</span> <span class=o>=</span> <span class=s>&#34;guest&#34;</span><span class=o>;</span>
+
+        <span class=c1>// Propiedades para crear el contexto: clase factoría, url del servidor JNDI y credenciales
+</span><span class=c1></span>     <span class=n>Properties</span> <span class=n>env</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Properties</span><span class=o>();</span>
+        <span class=n>env</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>Context</span><span class=o>.</span><span class=na>INITIAL_CONTEXT_FACTORY</span><span class=o>,</span> <span class=s>&#34;org.jboss.naming.remote.client.InitialContextFactory&#34;</span><span class=o>);</span>
+        <span class=n>env</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>Context</span><span class=o>.</span><span class=na>PROVIDER_URL</span><span class=o>,</span> <span class=s>&#34;http-remoting://localhost:8080&#34;</span><span class=o>);</span>
+        <span class=n>env</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>Context</span><span class=o>.</span><span class=na>SECURITY_PRINCIPAL</span><span class=o>,</span> <span class=n>usuario</span><span class=o>);</span>
+        <span class=n>env</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>Context</span><span class=o>.</span><span class=na>SECURITY_CREDENTIALS</span><span class=o>,</span> <span class=n>contrasena</span><span class=o>);</span>
+
+        <span class=c1>// El objeto InitialContext permite obtener la referencias de los objetos registrado en el ábol JNDI
+</span><span class=c1></span>     <span class=n>InitialContext</span> <span class=n>ic</span> <span class=o>=</span> <span class=k>new</span> <span class=n>InitialContext</span><span class=o>(</span><span class=n>env</span><span class=o>);</span>
+
+        <span class=c1>// Objetos a obtener para usar JMS: 
+</span><span class=c1></span>     <span class=c1>// - TopicConnectionFactory
+</span><span class=c1></span>     <span class=c1>// - TopicConection
+</span><span class=c1></span>     <span class=c1>// - Topic
+</span><span class=c1></span>     <span class=c1>// - TopicSession
+</span><span class=c1></span>     <span class=c1>// - TopicSubscriber
+</span><span class=c1></span>     <span class=c1>// - TopicPublisher
+</span><span class=c1></span>     <span class=n>TopicConnectionFactory</span> <span class=n>connectionFactory</span> <span class=o>=</span> <span class=o>(</span><span class=n>TopicConnectionFactory</span><span class=o>)</span> <span class=n>ic</span><span class=o>.</span><span class=na>lookup</span><span class=o>(</span><span class=s>&#34;jms/RemoteConnectionFactory&#34;</span><span class=o>);</span>
+        <span class=n>TopicConnection</span> <span class=n>connection</span> <span class=o>=</span> <span class=n>connectionFactory</span><span class=o>.</span><span class=na>createTopicConnection</span><span class=o>(</span><span class=n>usuario</span><span class=o>,</span> <span class=n>contrasena</span><span class=o>);</span>
+        
+        <span class=c1>// Obtener el Topic en el cual se publicarán y del cual se recibirán los mensajes
+</span><span class=c1></span>     <span class=n>javax</span><span class=o>.</span><span class=na>jms</span><span class=o>.</span><span class=na>Topic</span> <span class=n>topic</span> <span class=o>=</span> <span class=o>(</span><span class=n>javax</span><span class=o>.</span><span class=na>jms</span><span class=o>.</span><span class=na>Topic</span><span class=o>)</span> <span class=n>ic</span><span class=o>.</span><span class=na>lookup</span><span class=o>(</span><span class=s>&#34;jms/topic/test&#34;</span><span class=o>);</span>
+
+        <span class=c1>// Preparar el publicador y subscriptor al Topic
+</span><span class=c1></span>     <span class=n>Subscriber</span> <span class=n>subscriber1</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Subscriber</span><span class=o>(</span><span class=n>connection</span><span class=o>,</span> <span class=n>topic</span><span class=o>);</span>
+        <span class=n>Subscriber</span> <span class=n>subscriber2</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Subscriber</span><span class=o>(</span><span class=n>connection</span><span class=o>,</span> <span class=n>topic</span><span class=o>);</span>
+        <span class=n>Publisher</span> <span class=n>publisher</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Publisher</span><span class=o>(</span><span class=n>connection</span><span class=o>,</span> <span class=n>topic</span><span class=o>);</span>
+        
+        <span class=c1>// Inicializar la recepción y envío de los mensajes
+</span><span class=c1></span>     <span class=n>connection</span><span class=o>.</span><span class=na>start</span><span class=o>();</span>
+
+        <span class=c1>// Empezar a publicar mensajes en el Topic (y a recibirlos)
+</span><span class=c1></span>     <span class=n>Thread</span> <span class=n>thread</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Thread</span><span class=o>(</span><span class=n>publisher</span><span class=o>);</span>      
+        <span class=n>thread</span><span class=o>.</span><span class=na>start</span><span class=o>();</span>
+        <span class=c1>// Esperar a que el publicador termine de enviar mensajes
+</span><span class=c1></span>     <span class=n>thread</span><span class=o>.</span><span class=na>join</span><span class=o>();</span>
+
+        <span class=c1>// Parar el envío y recepción de mensajes
+</span><span class=c1></span>     <span class=n>connection</span><span class=o>.</span><span class=na>stop</span><span class=o>();</span>
+        
+        <span class=c1>// Terminar liberando los recursos
+</span><span class=c1></span>     <span class=n>subscriber1</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+        <span class=n>subscriber2</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+        <span class=n>publisher</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>     
+        <span class=n>connection</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+        <span class=n>ic</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+    <span class=o>}</span>
+    
+    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>class</span> <span class=nc>Subscriber</span> <span class=kd>implements</span> <span class=n>MessageListener</span> <span class=o>{</span>
+        
+        <span class=kd>private</span> <span class=n>TopicSession</span> <span class=n>session</span><span class=o>;</span>
+        <span class=kd>private</span> <span class=n>TopicSubscriber</span> <span class=n>subscriber</span><span class=o>;</span>
+        
+        <span class=kd>public</span> <span class=nf>Subscriber</span><span class=o>(</span><span class=n>TopicConnection</span> <span class=n>connection</span><span class=o>,</span> <span class=n>javax</span><span class=o>.</span><span class=na>jms</span><span class=o>.</span><span class=na>Topic</span> <span class=n>topic</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>session</span> <span class=o>=</span> <span class=n>connection</span><span class=o>.</span><span class=na>createTopicSession</span><span class=o>(</span><span class=kc>false</span><span class=o>,</span> <span class=n>Session</span><span class=o>.</span><span class=na>AUTO_ACKNOWLEDGE</span><span class=o>);</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>subscriber</span> <span class=o>=</span> <span class=k>this</span><span class=o>.</span><span class=na>session</span><span class=o>.</span><span class=na>createSubscriber</span><span class=o>(</span><span class=n>topic</span><span class=o>,</span> <span class=kc>null</span><span class=o>,</span> <span class=kc>false</span><span class=o>);</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>subscriber</span><span class=o>.</span><span class=na>setMessageListener</span><span class=o>(</span><span class=k>this</span><span class=o>);</span>
+        <span class=o>}</span>
+        
+        <span class=kd>public</span> <span class=kt>void</span> <span class=nf>close</span><span class=o>()</span> <span class=kd>throws</span> <span class=n>Exception</span>  <span class=o>{</span>
+            <span class=n>subscriber</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+            <span class=n>session</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+        <span class=o>}</span>
+        
+        <span class=nd>@Override</span>
+        <span class=kd>public</span> <span class=kt>void</span> <span class=nf>onMessage</span><span class=o>(</span><span class=n>Message</span> <span class=n>message</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>try</span> <span class=o>{</span>
+                <span class=n>TextMessage</span> <span class=n>text</span> <span class=o>=</span> <span class=o>(</span><span class=n>TextMessage</span><span class=o>)</span> <span class=n>message</span><span class=o>;</span>
+                <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;Suscriptor (%s): El publicador dice: «%s»\n&#34;</span><span class=o>,</span> <span class=k>this</span><span class=o>,</span> <span class=n>text</span><span class=o>.</span><span class=na>getText</span><span class=o>());</span>
+            <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>Exception</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
+                <span class=n>e</span><span class=o>.</span><span class=na>printStackTrace</span><span class=o>();</span>
+            <span class=o>}</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+    
+    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>class</span> <span class=nc>Publisher</span> <span class=kd>implements</span> <span class=n>Runnable</span> <span class=o>{</span>
+        
+        <span class=kd>private</span> <span class=n>TopicSession</span> <span class=n>session</span><span class=o>;</span>
+        <span class=kd>private</span> <span class=n>TopicPublisher</span> <span class=n>publisher</span><span class=o>;</span>
+        
+        <span class=kd>public</span> <span class=nf>Publisher</span><span class=o>(</span><span class=n>TopicConnection</span> <span class=n>connection</span><span class=o>,</span> <span class=n>javax</span><span class=o>.</span><span class=na>jms</span><span class=o>.</span><span class=na>Topic</span> <span class=n>topic</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>session</span> <span class=o>=</span> <span class=n>connection</span><span class=o>.</span><span class=na>createTopicSession</span><span class=o>(</span><span class=kc>false</span><span class=o>,</span> <span class=n>Session</span><span class=o>.</span><span class=na>AUTO_ACKNOWLEDGE</span><span class=o>);</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>publisher</span> <span class=o>=</span> <span class=k>this</span><span class=o>.</span><span class=na>session</span><span class=o>.</span><span class=na>createPublisher</span><span class=o>(</span><span class=n>topic</span><span class=o>);</span>
+        <span class=o>}</span>
+        
+        <span class=kd>public</span> <span class=kt>void</span> <span class=nf>close</span><span class=o>()</span> <span class=kd>throws</span> <span class=n>Exception</span>  <span class=o>{</span>
+            <span class=n>publisher</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+            <span class=n>session</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+        <span class=o>}</span>
+        
+        <span class=nd>@Override</span>
+        <span class=kd>public</span> <span class=kt>void</span> <span class=nf>run</span><span class=o>()</span> <span class=o>{</span>
+            <span class=k>try</span> <span class=o>{</span>
+                <span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>10</span><span class=o>;</span> <span class=o>++</span><span class=n>i</span><span class=o>)</span> <span class=o>{</span>
+                    <span class=n>Message</span> <span class=n>mensaje</span> <span class=o>=</span> <span class=n>session</span><span class=o>.</span><span class=na>createTextMessage</span><span class=o>(</span><span class=n>String</span><span class=o>.</span><span class=na>format</span><span class=o>(</span><span class=s>&#34;¡Hola mundo! (%d)&#34;</span><span class=o>,</span> <span class=n>i</span><span class=o>));</span>
+                    <span class=n>publisher</span><span class=o>.</span><span class=na>publish</span><span class=o>(</span><span class=n>mensaje</span><span class=o>);</span>
+                    <span class=n>Thread</span><span class=o>.</span><span class=na>sleep</span><span class=o>(</span><span class=n>1000</span><span class=o>);</span>
+                <span class=o>}</span>
+            <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>Exception</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
+                <span class=n>e</span><span class=o>.</span><span class=na>printStackTrace</span><span class=o>();</span>
+            <span class=o>}</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2014/03/introduccion-y-ejemplo-sencillo-de-java-message-service-jms/code/Topic.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2014/03/introduccion-y-ejemplo-sencillo-de-java-message-service-jms/code/Topic.java target=_blank>Topic.java</a></div></div><div class=media style=text-align:center><figure><a href=assets/images/posts/2014/15/topic.png title="Resultado de Topic.java" data-gallery><img src=assets/images/posts/2014/15/topic-thumb.png></a></figure></div><p>A continuación el código de utilizando un modelo punto a punto en el que vuelve a haber un emisor y dos receptores. En el resultado de la ejecución puede observarse que a pesar de haber dos receptores solo uno de los dos recibe cada mensaje:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span><span class=lnt>132
+</span><span class=lnt>133
+</span><span class=lnt>134
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.bitix.jms</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>java.util.Properties</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>javax.jms.Message</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.jms.MessageListener</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.jms.QueueConnection</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.jms.QueueConnectionFactory</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.jms.QueueReceiver</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.jms.QueueSender</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.jms.QueueSession</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.jms.Session</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.jms.TextMessage</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.naming.Context</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.naming.InitialContext</span><span class=o>;</span>
+
+<span class=cm>/**
+</span><span class=cm> * Ejemplo que muestra como como enviar y recibir mensajes JMS de un Queue de forma remota.
+</span><span class=cm> */</span>
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>Queue</span> <span class=o>{</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Antes de ejecutar este ejemplo, usando WildFly se ha de crear un usuario guest y clave guest con el 
+</span><span class=cm>     * script WILDFLY_HOME/bin/add-user.sh.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+        <span class=c1>// Usuario y password para conectarse al servidor JNDI y al Queue
+</span><span class=c1></span>     <span class=n>String</span> <span class=n>usuario</span> <span class=o>=</span> <span class=s>&#34;guest&#34;</span><span class=o>;</span>
+        <span class=n>String</span> <span class=n>contrasena</span> <span class=o>=</span> <span class=s>&#34;guest&#34;</span><span class=o>;</span>
+
+        <span class=c1>// Propiedades para crear el contexto: clase factoría, url del servidor JNDI y credenciales
+</span><span class=c1></span>     <span class=n>Properties</span> <span class=n>env</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Properties</span><span class=o>();</span>
+        <span class=n>env</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>Context</span><span class=o>.</span><span class=na>INITIAL_CONTEXT_FACTORY</span><span class=o>,</span> <span class=s>&#34;org.jboss.naming.remote.client.InitialContextFactory&#34;</span><span class=o>);</span>
+        <span class=n>env</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>Context</span><span class=o>.</span><span class=na>PROVIDER_URL</span><span class=o>,</span> <span class=s>&#34;http-remoting://localhost:8080&#34;</span><span class=o>);</span>
+        <span class=n>env</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>Context</span><span class=o>.</span><span class=na>SECURITY_PRINCIPAL</span><span class=o>,</span> <span class=n>usuario</span><span class=o>);</span>
+        <span class=n>env</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>Context</span><span class=o>.</span><span class=na>SECURITY_CREDENTIALS</span><span class=o>,</span> <span class=n>contrasena</span><span class=o>);</span>
+
+        <span class=c1>// El objeto InitialContext permite obtener la referencias de los objetos registrado en el ábol JNDI
+</span><span class=c1></span>     <span class=n>InitialContext</span> <span class=n>ic</span> <span class=o>=</span> <span class=k>new</span> <span class=n>InitialContext</span><span class=o>(</span><span class=n>env</span><span class=o>);</span>
+
+        <span class=c1>// Objetos a obtener para usar JMS: 
+</span><span class=c1></span>     <span class=c1>// - QueueConnectionFactory
+</span><span class=c1></span>     <span class=c1>// - QueueConection
+</span><span class=c1></span>     <span class=c1>// - Queue
+</span><span class=c1></span>     <span class=c1>// - QueueSession
+</span><span class=c1></span>     <span class=c1>// - QueueSubscriber
+</span><span class=c1></span>     <span class=c1>// - QueuePublisher
+</span><span class=c1></span>     <span class=n>QueueConnectionFactory</span> <span class=n>connectionFactory</span> <span class=o>=</span> <span class=o>(</span><span class=n>QueueConnectionFactory</span><span class=o>)</span> <span class=n>ic</span><span class=o>.</span><span class=na>lookup</span><span class=o>(</span><span class=s>&#34;jms/RemoteConnectionFactory&#34;</span><span class=o>);</span>
+        <span class=n>QueueConnection</span> <span class=n>connection</span> <span class=o>=</span> <span class=n>connectionFactory</span><span class=o>.</span><span class=na>createQueueConnection</span><span class=o>(</span><span class=n>usuario</span><span class=o>,</span> <span class=n>contrasena</span><span class=o>);</span>
+        
+        <span class=c1>// Obtener el Queue en el cual se publicarán y del cual se recibirán los mensajes
+</span><span class=c1></span>     <span class=n>javax</span><span class=o>.</span><span class=na>jms</span><span class=o>.</span><span class=na>Queue</span> <span class=n>queue</span> <span class=o>=</span> <span class=o>(</span><span class=n>javax</span><span class=o>.</span><span class=na>jms</span><span class=o>.</span><span class=na>Queue</span><span class=o>)</span> <span class=n>ic</span><span class=o>.</span><span class=na>lookup</span><span class=o>(</span><span class=s>&#34;jms/queue/test&#34;</span><span class=o>);</span>
+
+        <span class=c1>// Preparar el publicador y subscriptor al Queue
+</span><span class=c1></span>     <span class=n>Receiver</span> <span class=n>receiver1</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Receiver</span><span class=o>(</span><span class=n>connection</span><span class=o>,</span> <span class=n>queue</span><span class=o>);</span>
+        <span class=n>Receiver</span> <span class=n>receiver2</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Receiver</span><span class=o>(</span><span class=n>connection</span><span class=o>,</span> <span class=n>queue</span><span class=o>);</span>
+        <span class=n>Sender</span> <span class=n>sender</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Sender</span><span class=o>(</span><span class=n>connection</span><span class=o>,</span> <span class=n>queue</span><span class=o>);</span>
+        
+        <span class=c1>// Inicializar la recepción y envío de los mensajes
+</span><span class=c1></span>     <span class=n>connection</span><span class=o>.</span><span class=na>start</span><span class=o>();</span>
+
+        <span class=c1>// Empezar a enviar mensajes en el Queue (y a recibirlos)
+</span><span class=c1></span>     <span class=n>Thread</span> <span class=n>thread</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Thread</span><span class=o>(</span><span class=n>sender</span><span class=o>);</span>     
+        <span class=n>thread</span><span class=o>.</span><span class=na>start</span><span class=o>();</span>
+        <span class=c1>// Esperar a que el enviador termine de enviar mensajes
+</span><span class=c1></span>     <span class=n>thread</span><span class=o>.</span><span class=na>join</span><span class=o>();</span>
+
+        <span class=c1>// Parar el envío y recepción de mensajes
+</span><span class=c1></span>     <span class=n>connection</span><span class=o>.</span><span class=na>stop</span><span class=o>();</span>
+        
+        <span class=c1>// Terminar liberando los recursos
+</span><span class=c1></span>     <span class=n>receiver1</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+        <span class=n>receiver2</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+        <span class=n>sender</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>        
+        <span class=n>connection</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+        <span class=n>ic</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+    <span class=o>}</span>
+    
+    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>class</span> <span class=nc>Receiver</span> <span class=kd>implements</span> <span class=n>MessageListener</span> <span class=o>{</span>
+        
+        <span class=kd>private</span> <span class=n>QueueSession</span> <span class=n>session</span><span class=o>;</span>
+        <span class=kd>private</span> <span class=n>QueueReceiver</span> <span class=n>receiver</span><span class=o>;</span>
+        
+        <span class=kd>public</span> <span class=nf>Receiver</span><span class=o>(</span><span class=n>QueueConnection</span> <span class=n>connection</span><span class=o>,</span> <span class=n>javax</span><span class=o>.</span><span class=na>jms</span><span class=o>.</span><span class=na>Queue</span> <span class=n>queue</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>session</span> <span class=o>=</span> <span class=n>connection</span><span class=o>.</span><span class=na>createQueueSession</span><span class=o>(</span><span class=kc>false</span><span class=o>,</span> <span class=n>Session</span><span class=o>.</span><span class=na>AUTO_ACKNOWLEDGE</span><span class=o>);</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>receiver</span> <span class=o>=</span> <span class=k>this</span><span class=o>.</span><span class=na>session</span><span class=o>.</span><span class=na>createReceiver</span><span class=o>(</span><span class=n>queue</span><span class=o>);</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>receiver</span><span class=o>.</span><span class=na>setMessageListener</span><span class=o>(</span><span class=k>this</span><span class=o>);</span>
+        <span class=o>}</span>
+        
+        <span class=kd>public</span> <span class=kt>void</span> <span class=nf>close</span><span class=o>()</span> <span class=kd>throws</span> <span class=n>Exception</span>  <span class=o>{</span>
+            <span class=n>receiver</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+            <span class=n>session</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+        <span class=o>}</span>
+        
+        <span class=nd>@Override</span>
+        <span class=kd>public</span> <span class=kt>void</span> <span class=nf>onMessage</span><span class=o>(</span><span class=n>Message</span> <span class=n>message</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>try</span> <span class=o>{</span>
+                <span class=n>TextMessage</span> <span class=n>text</span> <span class=o>=</span> <span class=o>(</span><span class=n>TextMessage</span><span class=o>)</span> <span class=n>message</span><span class=o>;</span>
+                <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;Receptor (%s): Un publicador dice: «%s»\n&#34;</span><span class=o>,</span> <span class=k>this</span><span class=o>,</span> <span class=n>text</span><span class=o>.</span><span class=na>getText</span><span class=o>());</span>
+            <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>Exception</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
+                <span class=n>e</span><span class=o>.</span><span class=na>printStackTrace</span><span class=o>();</span>
+            <span class=o>}</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+    
+    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>class</span> <span class=nc>Sender</span> <span class=kd>implements</span> <span class=n>Runnable</span> <span class=o>{</span>
+        
+        <span class=kd>private</span> <span class=n>QueueSession</span> <span class=n>session</span><span class=o>;</span>
+        <span class=kd>private</span> <span class=n>QueueSender</span> <span class=n>sender</span><span class=o>;</span>
+        
+        <span class=kd>public</span> <span class=nf>Sender</span><span class=o>(</span><span class=n>QueueConnection</span> <span class=n>connection</span><span class=o>,</span> <span class=n>javax</span><span class=o>.</span><span class=na>jms</span><span class=o>.</span><span class=na>Queue</span> <span class=n>queue</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>session</span> <span class=o>=</span> <span class=n>connection</span><span class=o>.</span><span class=na>createQueueSession</span><span class=o>(</span><span class=kc>false</span><span class=o>,</span> <span class=n>Session</span><span class=o>.</span><span class=na>AUTO_ACKNOWLEDGE</span><span class=o>);</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>sender</span> <span class=o>=</span> <span class=k>this</span><span class=o>.</span><span class=na>session</span><span class=o>.</span><span class=na>createSender</span><span class=o>(</span><span class=n>queue</span><span class=o>);</span>
+        <span class=o>}</span>
+        
+        <span class=kd>public</span> <span class=kt>void</span> <span class=nf>close</span><span class=o>()</span> <span class=kd>throws</span> <span class=n>Exception</span>  <span class=o>{</span>
+            <span class=n>sender</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+            <span class=n>session</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+        <span class=o>}</span>
+        
+        <span class=nd>@Override</span>
+        <span class=kd>public</span> <span class=kt>void</span> <span class=nf>run</span><span class=o>()</span> <span class=o>{</span>
+            <span class=k>try</span> <span class=o>{</span>
+                <span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>10</span><span class=o>;</span> <span class=o>++</span><span class=n>i</span><span class=o>)</span> <span class=o>{</span>
+                    <span class=n>Message</span> <span class=n>mensaje</span> <span class=o>=</span> <span class=n>session</span><span class=o>.</span><span class=na>createTextMessage</span><span class=o>(</span><span class=n>String</span><span class=o>.</span><span class=na>format</span><span class=o>(</span><span class=s>&#34;¡Hola mundo! (%d)&#34;</span><span class=o>,</span> <span class=n>i</span><span class=o>));</span>
+                    <span class=n>sender</span><span class=o>.</span><span class=na>send</span><span class=o>(</span><span class=n>mensaje</span><span class=o>);</span>
+                    <span class=n>Thread</span><span class=o>.</span><span class=na>sleep</span><span class=o>(</span><span class=n>1000</span><span class=o>);</span>
+                <span class=o>}</span>
+            <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>Exception</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
+                <span class=n>e</span><span class=o>.</span><span class=na>printStackTrace</span><span class=o>();</span>
+            <span class=o>}</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2014/03/introduccion-y-ejemplo-sencillo-de-java-message-service-jms/code/Queue.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2014/03/introduccion-y-ejemplo-sencillo-de-java-message-service-jms/code/Queue.java target=_blank>Queue.java</a></div></div><div class=media style=text-align:center><figure><a href=assets/images/posts/2014/15/queue.png title="Resultado de Queue.java" data-gallery><img src=assets/images/posts/2014/15/queue-thumb.png></a></figure></div><p>Comentar que los mensajes se procesan en serie por cada MessageListener, esto es, hasta que no termina el consumo de uno no se consume el siguiente. Esto se aplica por MensajeListener y sesión.</p><p>Si queremos probar los ejemplos deberemos disponer del servidor de aplicaciones WildFly. Para que los ejemplos funcionen deberemos configurarlo añadiendo un usuario «guest», de contraseña «guest» y de rol «guest», el añadirlo lo podemos hacer con la utilidad add-user.sh. También deberemos modificar el archivo standalone-full.xml añadiendo el topic y el queue en la sección de JMS e iniciar WildFly usando esa configuración:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ ./standalone.sh --server-config<span class=o>=</span>standalone-full.xml
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2014/03/introduccion-y-ejemplo-sencillo-de-java-message-service-jms/code/standalone.sh target=_blank>view raw</a></span>
+<a href=/blog-bitix/2014/03/introduccion-y-ejemplo-sencillo-de-java-message-service-jms/code/standalone.sh target=_blank>standalone.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-XML data-lang=XML><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-XML data-lang=XML><span class=nt>&lt;subsystem</span> <span class=na>xmlns=</span><span class=s>&#34;urn:jboss:domain:messaging:2.0&#34;</span><span class=nt>&gt;</span>
+    <span class=nt>&lt;hornetq-server&gt;</span>
+        ...
+        <span class=nt>&lt;jms-destinations&gt;</span>
+            <span class=nt>&lt;jms-queue</span> <span class=na>name=</span><span class=s>&#34;testQueue&#34;</span><span class=nt>&gt;</span>
+                <span class=nt>&lt;entry</span> <span class=na>name=</span><span class=s>&#34;jms/queue/test&#34;</span><span class=nt>/&gt;</span>
+                <span class=nt>&lt;entry</span> <span class=na>name=</span><span class=s>&#34;java:jboss/exported/jms/queue/test&#34;</span><span class=nt>/&gt;</span>
+            <span class=nt>&lt;/jms-queue&gt;</span>
+            <span class=nt>&lt;jms-topic</span> <span class=na>name=</span><span class=s>&#34;testTopic&#34;</span><span class=nt>&gt;</span>
+                <span class=nt>&lt;entry</span> <span class=na>name=</span><span class=s>&#34;jms/topic/test&#34;</span><span class=nt>/&gt;</span>
+                <span class=nt>&lt;entry</span> <span class=na>name=</span><span class=s>&#34;java:jboss/exported/jms/topic/test&#34;</span><span class=nt>/&gt;</span>
+            <span class=nt>&lt;/jms-topic&gt;</span>
+        <span class=nt>&lt;/jms-destinations&gt;</span>
+    <span class=nt>&lt;/hornetq-server&gt;</span>
+<span class=nt>&lt;/subsystem&gt;</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2014/03/introduccion-y-ejemplo-sencillo-de-java-message-service-jms/code/standalone-full.xml target=_blank>view raw</a></span>
+<a href=/blog-bitix/2014/03/introduccion-y-ejemplo-sencillo-de-java-message-service-jms/code/standalone-full.xml target=_blank>standalone-full.xml</a></div></div><p>Para terminar y conocer más sobre JMS un buen libro es <a href="http://www.amazon.es/gp/product/0596522045/ref=as_li_tf_tl?ie=UTF8&camp=3626&creative=24790&creativeASIN=0596522045&linkCode=as2&tag=blobit-21">Java Message Service</a><img src="https://ir-es.amazon-adsystem.com/e/ir?t=blobit-21&l=as2&o=30&a=0596522045" width=1 height=1 border=0 alt style=border:none!important;margin:0!important>
 de O&rsquo;Reilly, que explica de forma mucho más extensa y completa este tema.</p><div class=media-amazon style=text-align:center><iframe src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=blobit-21&o=30&p=8&l=as1&m=amazon&f=ifr&ref=tf_til&asins=0596522045&internal=1" style=width:120px;height:240px scrolling=no marginwidth=0 marginheight=0 frameborder=0></iframe></div><p>El <a href=https://github.com/picodotdev/blog-ejemplos/tree/master/HolaMundoJMS>código fuente completo de estos ejemplos</a> los puedes descargar de <a href=https://github.com/picodotdev/blog-ejemplos>mi repositorio de GitHub</a>.</p><div class=reference>Referencia:<br><ul><li><a href=https://docs.jboss.org/author/display/WFLY8/Messaging+configuration>WildFly Messaging configuration</a></li><li><a href=https://docs.jboss.org/author/display/WFLY8/Getting+Started+Guide#GettingStartedGuide-WildFly8Configurations>WildFly8Configurations</a></li><li><a href=https://github.com/wildfly/quickstart/blob/master/helloworld-jms/src/main/java/org/jboss/as/quickstarts/jms/HelloWorldJMSClient.java>HelloWorldJMSClient.java</a></li></ul></div></div></article></div></div><div class="row related"><div class=col-md-12><h3>Artículos relacionados:</h3><ul><li><a href=/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/>Libro sobre desarrollo de aplicaciones con Apache Tapestry</a></li><li><a href=/blog-bitix/2014/02/presentacion-sobre-apache-tapestry/>Presentación sobre Apache Tapestry</a></li><li><a href=/blog-bitix/2014/02/servidor-de-aplicaciones-jboss-slash-wildfly/>Servidor de aplicaciones JBoss/WildFly</a></li><li><a href=/blog-bitix/2014/01/logging-usando-marcadores-con-slf4j-y-logback/>Logging usando marcadores con slf4j y logback</a></li><li><a href=/blog-bitix/2014/01/ejemplo-del-patron-de-diseno-no-operation/>Ejemplo del patrón de diseño No Operation</a></li></ul></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class=col-12><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><a id=comments></a><div class=row><div class=col-md-12><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='https:\/\/picodotdev.github.io\/blog-bitix\/2014\/03\/introduccion-y-ejemplo-sencillo-de-java-message-service-jms\/';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2014\/03\/introduccion-y-ejemplo-sencillo-de-java-message-service-jms\/';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script></div><div class="col-12 col-lg-4"><div class=row><div class="col-md-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:300px;height:600px data-ad-client=ca-pub-3533636310991304 data-ad-slot=9559414587 data-type=large-skycraper></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><div class=row><div class="col-md-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:336px;height:280px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2873752587 data-type=large-rectangle></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><div class="row text-center banner"><div class=col-12><a href=https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/><img src=//static.fsf.org/nosvn/images/badges/badges_es/i-support-fs_red-bg-es.png alt="Yo apoyo al software libre"></a></div></div><div class=row><div class=col-md-12><hr></div></div><div class=row><div class=col-md-12><ul class="list-unstyled recents"><li><span class="glyphicon glyphicon-hand-right"></span><a href=archive/>Más artículos recientes en el archivo</a></li></ul></div></div></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
 <a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
 <a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2019 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow rel=license><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style=border-width:0 src=https://licensebuttons.net/l/by-sa/4.0/80x15.png class=licencia></a><br><a href=https://twitter.com/blogstackinfo rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png alt="Blog Stack" title="Blog Stack"></a>

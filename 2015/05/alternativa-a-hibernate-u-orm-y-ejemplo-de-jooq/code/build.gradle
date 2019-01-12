@@ -1,0 +1,38 @@
+...
+
+task generateJooq {
+	Configuration configuration = new Configuration()
+    	.withJdbc(new Jdbc()
+        	.withDriver('org.h2.Driver')
+        	.withUrl('jdbc:h2:./misc/database/app')
+        	.withUser('sa')
+        	.withPassword('sa'))
+    	.withGenerator(new Generator()
+    		.withGenerate(new Generate()
+    			.withInterfaces(true)
+    			.withRelations(true))
+        	.withName('org.jooq.util.DefaultGenerator')
+        	.withDatabase(new Database()
+        		.withCustomTypes([
+        			new CustomType()
+        				.withName('org.joda.time.DateTime')
+        				.withConverter('info.blogstack.persistence.records.DateTimeConverter')
+        				
+        		])
+        		.withForcedTypes([
+        			new ForcedType()
+        				.withName('org.joda.time.DateTime')
+        				.withTypes('TIMESTAMP')        				
+        		])
+            	.withName('org.jooq.util.h2.H2Database')
+            	.withIncludes('.*')
+            	.withExcludes('')
+            	.withInputSchema('BLOGSTACK'))
+        	.withTarget(new Target()
+            	.withPackageName('info.blogstack.persistence.jooq')
+            	.withDirectory('src/main/java')));
+
+	GenerationTool.main(configuration)
+}
+
+...

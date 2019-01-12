@@ -1,0 +1,24 @@
+$ curl http://localhost:8090/client/default.yml
+{
+   "name":"client",
+   "profiles":[
+      "default.yml"
+   ],
+   "label":null,
+   "version":null,
+   "state":null,
+   "propertySources":[
+      {
+         "name":"file:misc/config/client.yml",
+         "source":{
+            "server.port":"${port:8085}",
+            "management.endpoints.web.exposure.include":"*",
+            "circuitBreaker.requestVolumeThreshold":4,
+            "circuitBreaker.errorThresholdPercentage":50,
+            "metrics.rollingStats.timeInMilliseconds":10000,
+            "config.key":"dev",
+            "config.password":"secret"
+         }
+      }
+   ]
+}

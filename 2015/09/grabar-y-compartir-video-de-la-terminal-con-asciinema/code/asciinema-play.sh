@@ -1,0 +1,1 @@
+$ asciinema play video.asciinema
