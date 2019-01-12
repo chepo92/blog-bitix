@@ -5,5 +5,5 @@ define(['react', 'tareas', 'i18next'], function(React, tareas, i18n) {
 		resGetPath: 'js/locales/__lng__/__ns__.json'
 	});
 	
-	...
+	// ...
 });
