@@ -1,4 +1,4 @@
-[picodotdev@archlinux Descargas]$ javap -c Main.class
+$ javap -c Main.class
 Compiled from "Main.java"
 public class Main {
   public Main();

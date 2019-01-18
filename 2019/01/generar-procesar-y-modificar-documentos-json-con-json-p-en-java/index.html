@@ -1,0 +1,201 @@
+<!doctype html><html lang=es><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content=picodotdev><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="Los servicios que ofrecen una API REST normalmente emplean JSON como formato para intercambiar datos tanto en las peticiones como en las respuestas. En Java hay varias formas de generar y procesar JSON para obtener los datos que contiene.
+Una de las formas estándar es usando la especificación JSON-P que convierte un JSON a una estructura de objetos Java que representan los datos del JSON como son los objetos Json, JsonObject, JsonArray, JsonString o JsonNumber. &hellip;"><base href=https://picodotdev.github.io/blog-bitix/><title>Generar, procesar y modificar documentos JSON con JSON-P en Java</title><link rel=author type=text/plain href=humans.txt><link rel="shortcut icon" href=assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=assets/apple-touch-icon-144-precomposed.png><link rel=canonical href=https://picodotdev.github.io/blog-bitix/2019/01/generar-procesar-y-modificar-documentos-json-con-json-p-en-java/><link href=index.xml rel=alternate type=application/rss+xml title="Blog Bitix"><link rel=stylesheet type=text/css href="//fonts.googleapis.com/css?family=PT+Serif:400,700italic,700,400italic"><link rel=stylesheet type=text/css href=assets/libs/bootstrap-4.0.0/css/bootstrap.min.css><link rel=stylesheet type=text/css href=assets/libs/Gallery-2.30.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=assets/css/syntax.css><link rel=stylesheet type=text/css href=assets/css/main.css><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js async></script><script type=text/javascript>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript async>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script type=text/javascript src=assets/libs/require.js></script><script type=text/javascript src=assets/js/main.js></script><script type=text/javascript src=assets/js/theme.js async></script><script type=text/javascript src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" async></script><script type=text/javascript src=assets/js/app.js async></script></head><body><div class=container><div class=row><div class=col><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
+<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class="col-12 col-lg-4 text-center"><form name=query class="form-inline search" onsubmit="return false;"><div class=input-group><input type=text name=q class=form-control placeholder="Buscar en Blog Bitix">
+<span class=input-group-btn><button class="btn btn-secondary" type=submit>Buscar</button></span></div></form><form name=search action=https://duckduckgo.com/ method=get class=hidden data-site=https://picodotdev.github.io/blog-bitix/><input type=hidden name=q></form></div></div><div class=row><div class=col-12><nav class="nav nav-pills nav-fill"><a href=/blog-bitix/tags/java/ class="nav-item nav-link">Java</a>
+<a href=/blog-bitix/tags/gnu-linux/ class="nav-item nav-link">GNU/Linux</a>
+<a href=/blog-bitix/tags/javascript/ class="nav-item nav-link">JavaScript</a>
+<a href=/blog-bitix/tags/tapestry/ class="nav-item nav-link">Tapestry</a>
+<a href=/blog-bitix/archive/ class="nav-item nav-link">Archivo y hemeroteca</a>
+<a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
+<a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 col-lg-8"><div class=row><div class=col-12><article itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content=es><meta itemprop=keywords content="java, planeta-codigo, programacion"><h1 itemprop=name>Generar, procesar y modificar documentos JSON con JSON-P en Java</h1><p class=information>Escrito por <span itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2019-01-18>18/01/2019</time>.<br><a href=tags/java/>java</a> <a href=tags/planeta-codigo/>planeta-codigo</a> <a href=tags/programacion/>programacion</a><br><a href=/blog-bitix/2019/01/generar-procesar-y-modificar-documentos-json-con-json-p-en-java/ itemprop=url>Enlace permanente</a>
+<a href=/blog-bitix/2019/01/generar-procesar-y-modificar-documentos-json-con-json-p-en-java/#comments>Comentarios</a></p><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><div class=content itemprop=articleBody><meta itemprop=wordCount content=635><div class=logotypes style=float:right><img src=assets/images/logotipos/java.svg class=right width=200 alt=Java title=Java></div><p>Los servicios que ofrecen una API REST normalmente emplean JSON como formato para intercambiar datos tanto en las peticiones como en las respuestas. En Java hay varias formas de generar y procesar JSON para obtener los datos que contiene.</p><p>Una de las formas estándar es usando la <a href=https://jsonp.java.net/>especificación JSON-P</a> que convierte un JSON a una estructura de objetos Java que representan los datos del JSON como son los objetos <a href=https://static.javadoc.io/javax.json/javax.json-api/1.1.4/javax/json/Json.html>Json</a>, <a href=https://static.javadoc.io/javax.json/javax.json-api/1.1.4/javax/json/JsonObject.html>JsonObject</a>, <a href=https://static.javadoc.io/javax.json/javax.json-api/1.1.4/javax/json/JsonArray.html>JsonArray</a>, <a href=https://static.javadoc.io/javax.json/javax.json-api/1.1.4/javax/json/JsonString.html>JsonString</a> o <a href=https://static.javadoc.io/javax.json/javax.json-api/1.1.4/javax/json/JsonNumber.html>JsonNumber</a>. Esta API permite convertir una cadena de texto en formato JSON a objetos de la API y una jerarquía de objetos de la API a una cadena.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.javajson</span><span class=o>;</span>
+
+<span class=o>...</span>
+
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>Main</span> <span class=o>{</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+        <span class=n>Comprador</span> <span class=n>comprador</span> <span class=o>=</span> <span class=n>buildComprador</span><span class=o>();</span>
+        <span class=n>String</span> <span class=n>json</span> <span class=o>=</span> <span class=s>&#34;&#34;</span><span class=o>;</span>
+
+        <span class=c1>// JSON-P
+</span><span class=c1></span>        <span class=n>JsonObject</span> <span class=n>jsonp</span> <span class=o>=</span> <span class=n>Json</span><span class=o>.</span><span class=na>createObjectBuilder</span><span class=o>()</span>
+            <span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=s>&#34;name&#34;</span><span class=o>,</span> <span class=n>comprador</span><span class=o>.</span><span class=na>getNombre</span><span class=o>())</span>
+            <span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=s>&#34;edad&#34;</span><span class=o>,</span> <span class=n>comprador</span><span class=o>.</span><span class=na>getEdad</span><span class=o>())</span>
+            <span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=s>&#34;direcciones&#34;</span><span class=o>,</span> <span class=n>Json</span><span class=o>.</span><span class=na>createArrayBuilder</span><span class=o>().</span><span class=na>add</span><span class=o>(</span>
+                <span class=n>Json</span><span class=o>.</span><span class=na>createObjectBuilder</span><span class=o>()</span>
+                    <span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=s>&#34;calle&#34;</span><span class=o>,</span> <span class=n>comprador</span><span class=o>.</span><span class=na>getDirecciones</span><span class=o>().</span><span class=na>get</span><span class=o>(</span><span class=n>0</span><span class=o>).</span><span class=na>getCalle</span><span class=o>())</span>
+                    <span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=s>&#34;ciudad&#34;</span><span class=o>,</span> <span class=n>comprador</span><span class=o>.</span><span class=na>getDirecciones</span><span class=o>().</span><span class=na>get</span><span class=o>(</span><span class=n>0</span><span class=o>).</span><span class=na>getCiudad</span><span class=o>())</span>
+                    <span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=s>&#34;codigoPostal&#34;</span><span class=o>,</span> <span class=n>comprador</span><span class=o>.</span><span class=na>getDirecciones</span><span class=o>().</span><span class=na>get</span><span class=o>(</span><span class=n>0</span><span class=o>).</span><span class=na>getCodigoPostal</span><span class=o>())</span>
+                    <span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=s>&#34;pais&#34;</span><span class=o>,</span> <span class=n>comprador</span><span class=o>.</span><span class=na>getDirecciones</span><span class=o>().</span><span class=na>get</span><span class=o>(</span><span class=n>0</span><span class=o>).</span><span class=na>getPais</span><span class=o>())</span>
+                    <span class=o>.</span><span class=na>build</span><span class=o>())</span>
+                <span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=n>Json</span><span class=o>.</span><span class=na>createObjectBuilder</span><span class=o>()</span>
+                    <span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=s>&#34;calle&#34;</span><span class=o>,</span> <span class=n>comprador</span><span class=o>.</span><span class=na>getDirecciones</span><span class=o>().</span><span class=na>get</span><span class=o>(</span><span class=n>1</span><span class=o>).</span><span class=na>getCalle</span><span class=o>())</span>
+                    <span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=s>&#34;ciudad&#34;</span><span class=o>,</span> <span class=n>comprador</span><span class=o>.</span><span class=na>getDirecciones</span><span class=o>().</span><span class=na>get</span><span class=o>(</span><span class=n>1</span><span class=o>).</span><span class=na>getCiudad</span><span class=o>())</span>
+                    <span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=s>&#34;codigoPostal&#34;</span><span class=o>,</span> <span class=n>comprador</span><span class=o>.</span><span class=na>getDirecciones</span><span class=o>().</span><span class=na>get</span><span class=o>(</span><span class=n>1</span><span class=o>).</span><span class=na>getCodigoPostal</span><span class=o>())</span>
+                    <span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=s>&#34;pais&#34;</span><span class=o>,</span> <span class=n>comprador</span><span class=o>.</span><span class=na>getDirecciones</span><span class=o>().</span><span class=na>get</span><span class=o>(</span><span class=n>1</span><span class=o>).</span><span class=na>getPais</span><span class=o>()))</span>
+                    <span class=o>.</span><span class=na>build</span><span class=o>()</span>
+            <span class=o>).</span><span class=na>build</span><span class=o>();</span>
+        <span class=n>json</span> <span class=o>=</span> <span class=n>jsonp</span><span class=o>.</span><span class=na>toString</span><span class=o>();</span>
+        <span class=n>jsonp</span> <span class=o>=</span> <span class=n>Json</span><span class=o>.</span><span class=na>createReader</span><span class=o>(</span><span class=k>new</span> <span class=n>StringReader</span><span class=o>(</span><span class=n>json</span><span class=o>)).</span><span class=na>readObject</span><span class=o>();</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;JSON-P: %s%n&#34;</span><span class=o>,</span> <span class=n>json</span><span class=o>);</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;JSON-P (JsonObject): %s%n&#34;</span><span class=o>,</span> <span class=n>jsonp</span><span class=o>.</span><span class=na>toString</span><span class=o>());</span>
+        
+        <span class=o>...</span>
+    <span class=o>}</span>
+
+    <span class=kd>private</span> <span class=kd>static</span> <span class=n>Comprador</span> <span class=nf>buildComprador</span><span class=o>()</span> <span class=o>{</span>
+        <span class=n>Comprador</span> <span class=n>comprador</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Comprador</span><span class=o>();</span>
+        <span class=n>comprador</span><span class=o>.</span><span class=na>setNombre</span><span class=o>(</span><span class=s>&#34;Juan&#34;</span><span class=o>);</span>
+        <span class=n>comprador</span><span class=o>.</span><span class=na>setEdad</span><span class=o>(</span><span class=n>30</span><span class=o>);</span>
+        <span class=n>comprador</span><span class=o>.</span><span class=na>getDirecciones</span><span class=o>().</span><span class=na>add</span><span class=o>(</span><span class=n>buildDireccion</span><span class=o>());</span>
+        <span class=n>comprador</span><span class=o>.</span><span class=na>getDirecciones</span><span class=o>().</span><span class=na>add</span><span class=o>(</span><span class=n>buildDireccion</span><span class=o>());</span>
+        <span class=k>return</span> <span class=n>comprador</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=kd>private</span> <span class=kd>static</span> <span class=n>Direccion</span> <span class=nf>buildDireccion</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=k>new</span> <span class=n>Direccion</span><span class=o>(</span><span class=s>&#34;calle&#34;</span><span class=o>,</span> <span class=s>&#34;ciudad&#34;</span><span class=o>,</span> <span class=s>&#34;codigoPostal&#34;</span><span class=o>,</span> <span class=s>&#34;pais&#34;</span><span class=o>);</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/01/generar-procesar-y-modificar-documentos-json-con-json-p-en-java/code/Main-1.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/01/generar-procesar-y-modificar-documentos-json-con-json-p-en-java/code/Main-1.java target=_blank>Main-1.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ ./gradlew run
+&gt; Task :compileJava
+&gt; Task :processResources NO-SOURCE
+&gt; Task :classes
+
+&gt; Task :run
+JSON-P: <span class=o>{</span><span class=s2>&#34;name&#34;</span>:<span class=s2>&#34;Juan&#34;</span>,<span class=s2>&#34;edad&#34;</span>:30,<span class=s2>&#34;direcciones&#34;</span>:<span class=o>[{</span><span class=s2>&#34;calle&#34;</span>:<span class=s2>&#34;calle&#34;</span>,<span class=s2>&#34;ciudad&#34;</span>:<span class=s2>&#34;ciudad&#34;</span>,<span class=s2>&#34;codigoPostal&#34;</span>:<span class=s2>&#34;codigoPostal&#34;</span>,<span class=s2>&#34;pais&#34;</span>:<span class=s2>&#34;pais&#34;</span><span class=o>}</span>,<span class=o>{</span><span class=s2>&#34;calle&#34;</span>:<span class=s2>&#34;calle&#34;</span>,<span class=s2>&#34;ciudad&#34;</span>:<span class=s2>&#34;ciudad&#34;</span>,<span class=s2>&#34;codigoPostal&#34;</span>:<span class=s2>&#34;codigoPostal&#34;</span>,<span class=s2>&#34;pais&#34;</span>:<span class=s2>&#34;pais&#34;</span><span class=o>}]}</span>
+JSON-P <span class=o>(</span>JsonObject<span class=o>)</span>: <span class=o>{</span><span class=s2>&#34;name&#34;</span>:<span class=s2>&#34;Juan&#34;</span>,<span class=s2>&#34;edad&#34;</span>:30,<span class=s2>&#34;direcciones&#34;</span>:<span class=o>[{</span><span class=s2>&#34;calle&#34;</span>:<span class=s2>&#34;calle&#34;</span>,<span class=s2>&#34;ciudad&#34;</span>:<span class=s2>&#34;ciudad&#34;</span>,<span class=s2>&#34;codigoPostal&#34;</span>:<span class=s2>&#34;codigoPostal&#34;</span>,<span class=s2>&#34;pais&#34;</span>:<span class=s2>&#34;pais&#34;</span><span class=o>}</span>,<span class=o>{</span><span class=s2>&#34;calle&#34;</span>:<span class=s2>&#34;calle&#34;</span>,<span class=s2>&#34;ciudad&#34;</span>:<span class=s2>&#34;ciudad&#34;</span>,<span class=s2>&#34;codigoPostal&#34;</span>:<span class=s2>&#34;codigoPostal&#34;</span>,<span class=s2>&#34;pais&#34;</span>:<span class=s2>&#34;pais&#34;</span><span class=o>}]}</span>
+...
+
+BUILD SUCCESSFUL in 1s
+<span class=m>2</span> actionable tasks: <span class=m>2</span> executed</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/01/generar-procesar-y-modificar-documentos-json-con-json-p-en-java/code/System.out-1 target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/01/generar-procesar-y-modificar-documentos-json-con-json-p-en-java/code/System.out-1 target=_blank>System.out-1</a></div></div><p>JSON-P permite analizar un JSON recibiendo un flujo de eventos en su lectura con la <em>Stream API</em> además de soportar las especificaciones <a href=https://tools.ietf.org/html/rfc6901>JSON Pointer</a> para construir una referencia a una valor del documento JSON que junto con <a href=https://tools.ietf.org/html/rfc6902>JSON Patch</a> y <a href=https://tools.ietf.org/html/rfc7396>JSON Merge Patch</a> permite realizar operaciones de modificación a un documento JSON o un recurso en una API REST con el verbo <em>HTTP PATCH</em>. Las clases en la API son <a href=https://static.javadoc.io/javax.json/javax.json-api/1.1.4/javax/json/JsonPointer.html>JsonPointer</a>, <a href=https://static.javadoc.io/javax.json/javax.json-api/1.1.4/javax/json/JsonPatch.html>JsonPatch</a> y <a href=https://static.javadoc.io/javax.json/javax.json-api/1.1.4/javax/json/JsonMergePatch.html>JsonMergePatch</a>.</p><p>En el ejemplo se agrega un nuevo campo y se elimina un elemento de un array a un documento JSON haciendo uso de JSON Pointer y JSON Patch. En los documentos de las especificaciones se incluyen algunos ejemplos.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.javajson</span><span class=o>;</span>
+
+<span class=o>...</span>
+
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>Main</span> <span class=o>{</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+        <span class=o>...</span>
+
+        <span class=n>jsonp</span> <span class=o>=</span> <span class=n>Json</span><span class=o>.</span><span class=na>createPatchBuilder</span><span class=o>().</span><span class=na>add</span><span class=o>(</span><span class=s>&#34;/telefono&#34;</span><span class=o>,</span> <span class=s>&#34;111111111&#34;</span><span class=o>).</span><span class=na>remove</span><span class=o>(</span><span class=s>&#34;/direcciones/0&#34;</span><span class=o>).</span><span class=na>build</span><span class=o>().</span><span class=na>apply</span><span class=o>(</span><span class=n>jsonp</span><span class=o>);</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;JSON-P (JsonPatch): %s%n&#34;</span><span class=o>,</span> <span class=n>jsonp</span><span class=o>.</span><span class=na>toString</span><span class=o>());</span>
+
+        <span class=o>...</span>
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/01/generar-procesar-y-modificar-documentos-json-con-json-p-en-java/code/Main-2.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/01/generar-procesar-y-modificar-documentos-json-con-json-p-en-java/code/Main-2.java target=_blank>Main-2.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ ./gradlew run
+&gt; Task :compileJava
+&gt; Task :processResources NO-SOURCE
+&gt; Task :classes
+
+&gt; Task :run
+...
+JSON-P <span class=o>(</span>JsonPatch<span class=o>)</span>: <span class=o>{</span><span class=s2>&#34;name&#34;</span>:<span class=s2>&#34;Juan&#34;</span>,<span class=s2>&#34;edad&#34;</span>:30,<span class=s2>&#34;direcciones&#34;</span>:<span class=o>[{</span><span class=s2>&#34;calle&#34;</span>:<span class=s2>&#34;calle&#34;</span>,<span class=s2>&#34;ciudad&#34;</span>:<span class=s2>&#34;ciudad&#34;</span>,<span class=s2>&#34;codigoPostal&#34;</span>:<span class=s2>&#34;codigoPostal&#34;</span>,<span class=s2>&#34;pais&#34;</span>:<span class=s2>&#34;pais&#34;</span><span class=o>}]</span>,<span class=s2>&#34;telefono&#34;</span>:<span class=s2>&#34;111111111&#34;</span><span class=o>}</span>
+...
+
+BUILD SUCCESSFUL in 1s
+<span class=m>2</span> actionable tasks: <span class=m>2</span> executed</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/01/generar-procesar-y-modificar-documentos-json-con-json-p-en-java/code/System.out-2 target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/01/generar-procesar-y-modificar-documentos-json-con-json-p-en-java/code/System.out-2 target=_blank>System.out-2</a></div></div><p>JSON-P es una API de bajo nivel para procesar JSON y un tanto engorrosa de utilizar, no es la única forma utilizable. También está la especificación <a href=http://json-b.net/>JSON-B</a> que va un poco más lejos que JSON-P y ofrece una forma de hacer una correspondencia entre el JSON y tipos propios en Java que siguen las convenciones de los <a href=https://es.wikipedia.org/wiki/JavaBean>Java Bean</a>, con esto se aprovecha la validación de tipos de Java. Las librerías <a href=https://github.com/google/gson>Gson</a> y <a href=https://github.com/FasterXML/jackson>Jackson</a> también ofrece soporte para tratar con JSON de forma parecida a JSON-B. Otra alternativa es utilizar <a href=https://github.com/json-path/JsonPath>JsonPath</a> que permite extraer datos de una cadena JSON con expresiones de selección.</p><p>El <a href=https://github.com/picodotdev/blog-ejemplos/tree/master/JavaJson>código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href=https://github.com/>GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew run</code>.</p></div></article></div></div><div class="row related"><div class=col-md-12><h3>Artículos relacionados:</h3><ul><li><a href=/blog-bitix/2019/01/compilar-el-codigo-fuente-y-ejecutar-con-los-comandos-javac-java-y-jar-en-java-8-o-anteriores/>Compilar el código fuente y ejecutar con los comandos javac, java y jar en Java 8 o anteriores</a></li><li><a href=/blog-bitix/2019/01/acceder-a-hojas-de-calculo-de-google-docs-mediante-api-desde-una-aplicacion-java/>Acceder a hojas de cálculo de Google Docs mediante API desde una aplicación Java</a></li><li><a href=/blog-bitix/2019/01/las-contrasenas-e-informacion-sensible-en-el-codigo-fuente-o-bytecode-de-java-no-son-seguras/>Las contraseñas e información sensible en el código fuente o bytecode de Java no son seguras</a></li><li><a href=/blog-bitix/2018/12/hemeroteca-14/>Hemeroteca #14</a></li><li><a href=/blog-bitix/2018/12/exponer-las-metricas-de-hystrix-en-grafana-con-prometheus-de-una-aplicaci%C3%B3n-spring-boot/>Exponer las métricas de Hystrix en Grafana con Prometheus de una aplicación Spring Boot</a></li></ul></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class=col-12><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><a id=comments></a><div class=row><div class=col-md-12><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='https:\/\/picodotdev.github.io\/blog-bitix\/2019\/01\/generar-procesar-y-modificar-documentos-json-con-json-p-en-java\/';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2019\/01\/generar-procesar-y-modificar-documentos-json-con-json-p-en-java\/';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script></div><div class="col-12 col-lg-4"><div class=row><div class="col-md-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:300px;height:600px data-ad-client=ca-pub-3533636310991304 data-ad-slot=9559414587 data-type=large-skycraper></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><div class=row><div class="col-md-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:336px;height:280px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2873752587 data-type=large-rectangle></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><div class="row text-center banner"><div class=col-12><a href=https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/><img src=//static.fsf.org/nosvn/images/badges/badges_es/i-support-fs_red-bg-es.png alt="Yo apoyo al software libre"></a></div></div><div class=row><div class=col-md-12><hr></div></div><div class=row><div class=col-md-12><ul class="list-unstyled recents"><li><span class="glyphicon glyphicon-hand-right"></span><a href=archive/>Más artículos recientes en el archivo</a></li></ul></div></div></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
+<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2019 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow rel=license><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style=border-width:0 src=https://licensebuttons.net/l/by-sa/4.0/80x15.png class=licencia></a><br><a href=https://twitter.com/blogstackinfo rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png alt="Blog Stack" title="Blog Stack"></a>
+<a href=https://www.planetacodigo.com/ rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png alt="Planeta código" title="Planeta código"></a><br><span xmlns:dct=http://purl.org/dc/terms/ property=dct:title><a href=https://picodotdev.github.io/blog-bitix/ rel=nofollow>Blog Bitix</a></span> by <a xmlns:cc=https://creativecommons.org/ns# href=https://picodotdev.github.io/blog-bitix/ property=cc:attributionName rel=cc:attributionurl>pico.dev</a> is licensed under a <a rel=license href=https://creativecommons.org/licenses/by-sa/4.0/>Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class=credit>Powered by <a href=https://gohugo.io/ rel=nofollow title="A fast and modern static website engine">Hugo</a> and <a href=https://pages.github.com/ title="Websites for you and your projects">GitHub Pages</a>.</span>
+<span class=credit>Background patterns from <a href=https://www.toptal.com/designers/subtlepatterns rel=nofollow>Subtle Patterns</a>.</span></div></div></footer></div><div class=blueimp-gallery-container><div id=blueimp-gallery class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal=false><div class=slides></div><h3 class=title></h3><a class=prev>‹</a>
+<a class=next>›</a>
+<a class=close>×</a>
+<a class=play-pause></a><ol class=indicator></ol><div class="modal fade"><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close aria-hidden=true>&times;</button><h4 class=modal-title></h4></div><div class="modal-body next"></div><div class=modal-footer><button type=button class="btn btn-default pull-left prev">
+<i class="glyphicon glyphicon-chevron-left"></i>Anterior</button>
+<button type=button class="btn btn-primary next">
+Siguiente
+<i class="glyphicon glyphicon-chevron-right"></i></button></div></div></div></div></div></div><script type=text/javascript>window.cookieconsent_options={"message":"Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.","dismiss":"Aceptar","learnMore":"Más información","link":null,"theme":"dark-bottom"};</script><script type=text/javascript src=//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js async></script></body></html>
