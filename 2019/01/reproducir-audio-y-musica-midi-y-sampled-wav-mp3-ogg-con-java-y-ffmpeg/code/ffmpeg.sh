@@ -1,0 +1,2 @@
+$ ffmpeg -codecs
+$ ffmpeg -formats
