@@ -10,8 +10,8 @@ public class Main {
 
         // JSON-B
         JsonbConfig config = new JsonbConfig().withAdapters(new JsonbLocalDateAdapter());
-
         Jsonb jsonb = JsonbBuilder.create(config);
+
         json = jsonb.toJson(comprador);
         comprador = jsonb.fromJson(json, Comprador.class);
         System.out.printf("JSON-B: %s%n", json);
