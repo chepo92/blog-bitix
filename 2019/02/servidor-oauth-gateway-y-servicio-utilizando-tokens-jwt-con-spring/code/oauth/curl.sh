@@ -1,0 +1,7 @@
+$ curl -X POST -u "client:1234567890" -d "grant_type=client_credentials" "http://localhost:8095/oauth/token"
+{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2VydmljZSJdLCJzY29wZSI6WyJyZWFkIl0sImV4cCI6MTU0OTY5MjQ0MSwiYXV0aG9yaXRpZXMiOlsiQ0xJRU5UIl0sImp0aSI6IjEwMzE0NTk4LTRjZDctNDRmNi1hMmM4LTNjYjA5MGE1MjUxZSIsImNsaWVudF9pZCI6ImNsaWVudCJ9.n8Dwcd8YTms2Hl0YgTho9QdBWD1hAnOEmkcS-Wefy6c","token_type":"bearer","expires_in":43199,"scope":"read","jti":"10314598-4cd7-44f6-a2c8-3cb090a5251e"}
+$ curl -X POST "http://localhost:8095/oauth/token?grant_type=client_credentials&client_id=client&client_secret=1234567890"
+{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2VydmljZSJdLCJzY29wZSI6WyJyZWFkIl0sImV4cCI6MTU0OTY5MjQ1OCwiYXV0aG9yaXRpZXMiOlsiQ0xJRU5UIl0sImp0aSI6IjEzYjM1M2Q2LTQwODUtNDdiMS1hYzkyLTRiZDJhNDg3MzFhOCIsImNsaWVudF9pZCI6ImNsaWVudCJ9.CueMcwrD7pTp3pj37_BzzcUODG7PcjCacSa14-l5_Hw","token_type":"bearer","expires_in":43199,"scope":"read","jti":"13b353d6-4085-47b1-ac92-4bd2a48731a8"}
+
+$ curl -X POST -u "client:1234567890" -d "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2VydmljZSJdLCJzY29wZSI6WyJyZWFkIl0sImV4cCI6MTU0OTY5MjQ1OCwiYXV0aG9yaXRpZXMiOlsiQ0xJRU5UIl0sImp0aSI6IjEzYjM1M2Q2LTQwODUtNDdiMS1hYzkyLTRiZDJhNDg3MzFhOCIsImNsaWVudF9pZCI6ImNsaWVudCJ9.CueMcwrD7pTp3pj37_BzzcUODG7PcjCacSa14-l5_Hw" http://localhost:8095/oauth/check_token
+{"aud":["service"],"scope":["read"],"active":true,"exp":1549692458,"authorities":["CLIENT"],"jti":"13b353d6-4085-47b1-ac92-4bd2a48731a8","client_id":"client"}
