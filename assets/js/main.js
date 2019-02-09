@@ -1,22 +1,64 @@
-requirejs.config({
-    baseUrl: 'assets',
-    paths: {
-        'jquery': 'libs/jquery.slim.min',
-        'bootstrap': 'libs/bootstrap-4.0.0/js/bootstrap.min',
-        'blueimp-helper': 'libs/Gallery-2.30.0/js/blueimp-helper',
-        'blueimp-gallery': 'libs/Gallery-2.30.0/js/blueimp-gallery',
-        'blueimp-gallery-indicator': 'libs/Gallery-2.30.0/js/blueimp-gallery-indicator',
-        'blueimp-gallery-video': 'libs/Gallery-2.30.0/js/blueimp-gallery-video',
-        'blueimp-gallery-vimeo': 'libs/Gallery-2.30.0/js/blueimp-gallery-vimeo',
-        'blueimp-gallery-youtube': 'libs/Gallery-2.30.0/js/blueimp-gallery-youtube',
-        'jquery-blueimp-gallery': 'libs/Gallery-2.30.0/js/jquery.blueimp-gallery'
-    },
-    shim: {
-        'jquery': {
-            exports: 'jquery'
-        },
-        'blueimp-gallery': {
-            exports: 'blueimp'
+require(['jquery', 'jquery-blueimp-gallery'], function ($, blueimp) {
+    function initBackground() {
+        // Background
+        function random(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
         }
+    
+        var spec = {
+            backgrounds: [
+                'asanoha.png',
+                'back.png',
+                'circles-and-roundabouts.png',
+                'confectionary.png',
+                'contemporary_china_2.png',
+                'corrugation.png',
+                'contemporary_china.png',
+                'diamond_upholstery.png',
+                'dimension.png',
+                'doodles.png',
+                'eight_horns.png',
+                'escheresque.png',
+                'geometry2.png',
+                'geometry.png',
+                'gplay.png',
+                'grey.png',
+                'lyonnette.png',
+                'memphis-colorful.png',
+                'paisley.png',
+                'photography.png',
+                'playstation.png',
+                'pow-star.png',
+                'psychedelic.png',
+                'pyramid.png',
+                'reticular_tissue.png',
+                'sayagata.png',
+                'skulls.png',
+                'swirl.png',
+                'symphony.png',
+                'tiny_grid.png',
+                'topography.png',
+                'tree_bark.png',
+                'upfeathers.png'
+            ]
+        };
+    
+        var i = random(0, spec.backgrounds.length - 1);
+        var b = spec.backgrounds[i];
+        $('body').css('background-image', 'url("assets/images/backgrounds/' + b + '")');
     }
+    
+    function initSearch() {
+        $("form[name='query']").on('submit', function() {
+            var query = $("input[name='q']", "form[name='query']").val();
+            var site = $("form[name='search']").data('site');
+            $("input[name='q']", "form[name='search']").val(query + ' site:' + site);
+            $("form[name='search']").submit();
+            return false;
+        });
+    }
+    
+    initBackground();
+    initSearch();
 });
+
