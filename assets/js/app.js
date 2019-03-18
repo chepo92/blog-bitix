@@ -52,6 +52,7 @@ require(['jquery'], function($) {
                 ].join('');
                 var dom = $(html);
                 var element = $(ad).after(dom);
+                ads.remove();
             }
         }, 3000);
     }

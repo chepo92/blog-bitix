@@ -1,1 +1,1 @@
-$ ./gradlew tomcatRun
+$ ./gradlew run
