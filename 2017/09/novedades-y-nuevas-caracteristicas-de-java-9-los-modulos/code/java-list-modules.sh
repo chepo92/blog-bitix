@@ -1,4 +1,4 @@
-[picodotdev@archlinux ~]$ java --list-modules
+$ java --list-modules
 java.activation@9
 java.base@9
 java.compiler@9

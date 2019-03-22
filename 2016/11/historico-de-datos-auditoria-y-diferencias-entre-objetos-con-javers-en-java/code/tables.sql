@@ -1,4 +1,4 @@
-[picodotdev@archlinux ~]$ docker exec -it 25135430da0d bash
+$ docker exec -it 25135430da0d bash
 root@25135430da0d:/# psql javers admin
 javers=# \dt
               List of relations
