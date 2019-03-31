@@ -8,8 +8,8 @@
 <a href=/blog-bitix/archive/ class="nav-item nav-link">Archivo y hemeroteca</a>
 <a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
 <a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 col-lg-8"><div class=row><div class=col-12><article itemprop=mainEntity itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content=es><meta itemprop=keywords content="java, planeta-codigo, spring"><h1 itemprop=name>Ejemplo de máquina de estados con Spring Statemachine</h1><p class=information>Escrito por
-<span itemprop=author itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2019-03-31>31/03/2019</time>.<br><a href=tags/java/>java</a> <a href=tags/planeta-codigo/>planeta-codigo</a> <a href=tags/spring/>spring</a><br><a href=/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/ itemprop=url>Enlace permanente</a>
-<a href=/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/#comments>Comentarios</a></p><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><div class=content itemprop=articleBody><meta itemprop=wordCount content=7497><div class=logotypes style=float:right><img src=assets/images/logotipos/spring.svg class=right width=200 alt=Spring title=Spring></div><div class=logotypes style=float:right;clear:right><img src=assets/images/logotipos/java.svg class=right width=200 alt=Java title=Java></div><p>Hace ya unos años escribí un <a href=https://picodotdev.github.io/blog-bitix/2015/08/implementacion-de-maquina-de-estados-finita-fsm-con-java-8/>ejemplo y un artículo con una implementación propia de una máquina de estado en Java</a>, para algún caso muy básico puede ser suficiente pero para algo serio no es la opción a elegir. Pasado un tiempo de ese ejemplo y artículo descubrí uno de los muchos proyectos de <a href=https://spring.io/>Spring</a> útiles para una aplicación, para las necesidades más habítuales tiene un proyecto que lo proporciona y para las menos habituales es también posible que la proporcione como en el caso del proyecto <a href=https://projects.spring.io/spring-statemachine/>Spring Statemachine</a> que precisamente tiene el mismo objetivo de implementar una máquina de estados poro lógicamente con mucha más funcionalidad que cubre muchos más casos de uso.</p><p>Una máquina de estados se compone de un conjunto de estados finito, de transiciones en esos estados, de eventos que disparan las transiciones y cambios de estado, de acciones asociadas a los estados, a las transiciones o a la entrada o salida de un estado, <em>guards</em> que permiten decidir que transición se escoge entre varias en los <em>choices</em>, <em>forks</em> en las que el flujo sigue por varios caminos en paralelo, temporizadores que pasado un tiempo disparan una transición, seguridad para proteger la ejecución de eventos, transiciones y acciones con <a href=https://spring.io/projects/spring-security>Spring Security</a>, persistencia tanto para la configuración como para el estado en bases de datos relacionales o NoSQL como <a href=https://redis.io/>Redis</a> y <a href=https://www.mongodb.com/>MongoDB</a>. Una lista bastante completa de características que cubrirá las necesidades de la mayoría de aplicaciones.</p><p>En el ejemplo he definido el siguente grafo de estados y transiciones que contiene estado inicial, <em>choice</em>, <em>fork</em>, <em>join</em>, jerarquía de estados con en el estado <em>Tasks</em> y un estado final. Una selección completa del conjunto de tipos de estados.</p><div class=media style=text-align:center><figure><a href=/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/images/graph_hue3316206d4ba6e494d0821f7656ed998_24142_2560x1440_fit_box_2.png title="Grafo de la máquina de estados" data-gallery><img src=/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/images/graph_hue3316206d4ba6e494d0821f7656ed998_24142_600x450_fit_box_2.png width=600></a><figcaption>Grafo de la máquina de estados</figcaption></figure></div><p>El uso de <em>Spring Statemachine</em> es relativamente sencillo. En el ejemplo se define en un enumerado la lista de estados, también la lista de eventos o transiciones. Una de las formas de definir el grafo dela máquina de estados es mediante código Java y utilizando Spring definiendo un <em>bean</em>. La clase <a href=https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/StateMachineBuilder.html>StateMachineBuilder</a> facilita la construcción de la definición de la máquina de estados, por una parte está la configuración general o de infraestructura con el método <a href=https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/StateMachineBuilder.Builder.html#configureConfiguration-->configureConfiguration()</a>. Con el método <a href=https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/StateMachineBuilder.Builder.html#configureStates-->configureStates()</a> se define los estados de la máquina y su tipo (inicial, final, normal, <em>choice</em>, <em>fork</em>, <em>join</em>,) así como las acciones que se deseen ejecutar al entrar, en el estado y al salir del estado con los métodos <em>stateEntry()</em>, <em>stateDo()</em> y <em>stateExit()</em>. Con el método <em>withStates()()</em> se pueden definir submáquinas o una jerarquía de estados como en el caso del estado <em>Tasks</em>. Finalmente hay que definir cuales son las posibles transiciones de los estados y que eventos las disparan. Normalmente las transiciones se definen con el método <a href=https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/builders/StateMachineTransitionConfigurer.html#withExternal-->withExternal()</a> pero en los casos de los estados de tipo <em>choice</em>, <em>fork</em> y <em>join</em> se define con los métodos <a href=https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/builders/StateMachineTransitionConfigurer.html#withChoice-->withChoice()</a>, <a href=https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/builders/StateMachineTransitionConfigurer.html#withFork-->withFork()</a> y <a href=https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/builders/StateMachineTransitionConfigurer.html#withJoin-->withJoin()</a>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt>  1
+<span itemprop=author itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2019-03-31>31/03/2019</time>, actualizado el <time itemprop=dateModified datetime=2019-03-31>31/03/2019</time>.<br><a href=tags/java/>java</a> <a href=tags/planeta-codigo/>planeta-codigo</a> <a href=tags/spring/>spring</a><br><a href=/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/ itemprop=url>Enlace permanente</a>
+<a href=/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/#comments>Comentarios</a></p><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><div class=content itemprop=articleBody><meta itemprop=wordCount content=5739><div class=logotypes style=float:right><img src=assets/images/logotipos/spring.svg class=right width=200 alt=Spring title=Spring></div><div class=logotypes style=float:right;clear:right><img src=assets/images/logotipos/java.svg class=right width=200 alt=Java title=Java></div><p>Hace ya unos años escribí un <a href=https://picodotdev.github.io/blog-bitix/2015/08/implementacion-de-maquina-de-estados-finita-fsm-con-java-8/>ejemplo y un artículo con una implementación propia de una máquina de estado en Java</a>, para algún caso muy básico puede ser suficiente pero para algo serio no es la opción a elegir. Pasado un tiempo de ese ejemplo y artículo descubrí uno de los muchos proyectos de <a href=https://spring.io/>Spring</a> útiles para una aplicación, para las necesidades más habítuales tiene un proyecto que lo proporciona y para las menos habituales es también posible que la proporcione como en el caso del proyecto <a href=https://projects.spring.io/spring-statemachine/>Spring Statemachine</a> que precisamente tiene el mismo objetivo de implementar una máquina de estados poro lógicamente con mucha más funcionalidad que cubre muchos más casos de uso.</p><p>Una máquina de estados se compone de un conjunto de estados finito, de transiciones en esos estados, de eventos que disparan las transiciones y cambios de estado, de acciones asociadas a los estados, a las transiciones o a la entrada o salida de un estado, <em>guards</em> que permiten decidir que transición se escoge entre varias en los <em>choices</em>, <em>forks</em> en las que el flujo sigue por varios caminos en paralelo, temporizadores que pasado un tiempo disparan una transición, seguridad para proteger la ejecución de eventos, transiciones y acciones con <a href=https://spring.io/projects/spring-security>Spring Security</a>, persistencia tanto para la configuración como para el estado en bases de datos relacionales o NoSQL como <a href=https://redis.io/>Redis</a> y <a href=https://www.mongodb.com/>MongoDB</a>. Una lista bastante completa de características que cubrirá las necesidades de la mayoría de aplicaciones.</p><p>Aparte de proporcionar una librería para crear máquinas de estados en Java otra ventaja es que el fujo de un proceso queda recogido y documentado en la implementación de la máquina de estados. De que estados, transiciones y eventos se compone en un punto más centralizado lo que en otro caso podría estar repartido por el código de la aplicación utilizando una solución propia codificada expresamente para el caso.</p><p>En el ejemplo he definido el siguente grafo de estados y transiciones que contiene estado inicial, <em>choice</em>, <em>fork</em>, <em>join</em>, jerarquía de estados con en el estado <em>Tasks</em> y un estado final. Una selección completa del conjunto de tipos de estados. En este caso las flechas van únicamente en una dirección pero perfectamente el flujo podría tener transiciones que volviesen a estados anteriores creando ciclos.</p><div class=media style=text-align:center><figure><a href=/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/images/graph_hue3316206d4ba6e494d0821f7656ed998_24142_2560x1440_fit_box_2.png title="Grafo de la máquina de estados" data-gallery><img src=/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/images/graph_hue3316206d4ba6e494d0821f7656ed998_24142_600x450_fit_box_2.png width=600></a><figcaption>Grafo de la máquina de estados</figcaption></figure></div><p>El uso de <em>Spring Statemachine</em> es relativamente sencillo. En el ejemplo se define en un enumerado la lista de estados, también la lista de eventos o transiciones. Una de las formas de definir el grafo dela máquina de estados es mediante código Java y utilizando Spring definiendo un <em>bean</em>. La clase <a href=https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/StateMachineBuilder.html>StateMachineBuilder</a> facilita la construcción de la definición de la máquina de estados, por una parte está la configuración general o de infraestructura con el método <a href=https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/StateMachineBuilder.Builder.html#configureConfiguration-->configureConfiguration()</a>. Con el método <a href=https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/StateMachineBuilder.Builder.html#configureStates-->configureStates()</a> se define los estados de la máquina y su tipo (inicial, final, normal, <em>choice</em>, <em>fork</em>, <em>join</em>,) así como las acciones que se deseen ejecutar al entrar, en el estado y al salir del estado con los métodos <em>stateEntry()</em>, <em>stateDo()</em> y <em>stateExit()</em>. Con el método <em>withStates()()</em> se pueden definir submáquinas o una jerarquía de estados como en el caso del estado <em>Tasks</em>. Finalmente hay que definir cuales son las posibles transiciones de los estados y que eventos las disparan. Normalmente las transiciones se definen con el método <a href=https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/builders/StateMachineTransitionConfigurer.html#withExternal-->withExternal()</a> pero en los casos de los estados de tipo <em>choice</em>, <em>fork</em> y <em>join</em> se define con los métodos <a href=https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/builders/StateMachineTransitionConfigurer.html#withChoice-->withChoice()</a>, <a href=https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/builders/StateMachineTransitionConfigurer.html#withFork-->withFork()</a> y <a href=https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/builders/StateMachineTransitionConfigurer.html#withJoin-->withJoin()</a>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt>  1
 </span><span class=lnt>  2
 </span><span class=lnt>  3
 </span><span class=lnt>  4
@@ -646,7 +646,25 @@
     <span class=o>}</span>
 <span class=o>}</span>
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/code/Main-3.java target=_blank>view raw</a></span>
-<a href=/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/code/Main-3.java target=_blank>Main-3.java</a></div></div><p>Por defecto el contenedor de dependencias de Spring utiliza el <a href=https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/beans/factory/config/Scope.html>@Scope</a> <em>singleton</em> para los <em>beans</em> de modo que solo existe una única instancia, como las máquinas tiene estado no pueden compartirse, hay que crear una nueva en caso de querer utilizar dos simultáneamente como sería el caso de una aplicación web o un proceso que escucha mensajes de una cola, utilizando el <em>scope prototype</em> se crea una instancia cada vez que se necesite. La creación de más máquina de estado se indica en la documentación que es algo costoso para no tener que crearlas, tener varias instancias y limitado a cierto número se puede utilizar un <a href=https://docs.spring.io/spring-statemachine/docs/2.1.1.RELEASE/reference/htmlsingle/#statemachine-examples-eventservice><em>pool</em> de máquinas de estado</a>.</p><p>Estas son las dependencias necesarias a añadir n la herramienta de construcción y la salida en la terminal de las trazas ejecutando la máquina de estados desde el estado inicial e inicializada desde un estado en concreto.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=lnt> 1
+<a href=/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/code/Main-3.java target=_blank>Main-3.java</a></div></div><p>Por defecto el contenedor de dependencias de Spring utiliza el <a href=https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/beans/factory/config/Scope.html>@Scope</a> <em>singleton</em> para los <em>beans</em> de modo que solo existe una única instancia, como las máquinas tiene estado no pueden compartirse, hay que crear una nueva en caso de querer utilizar dos simultáneamente como sería el caso de una aplicación web o un proceso que escucha mensajes de una cola, utilizando el <em>scope prototype</em> se crea una instancia cada vez que se necesite. La creación de más máquina de estado se indica en la documentación que es algo costoso para no tener que crearlas, tener varias instancias y limitado a cierto número se puede utilizar un <a href=https://docs.spring.io/spring-statemachine/docs/2.1.1.RELEASE/reference/htmlsingle/#statemachine-examples-eventservice><em>pool</em> de máquinas de estado</a>.</p><p>En un cambio de estado se produce la siguiente secuencia de eventos y acciones.</p><ul><li>Se notifica del inicio de la transición.</li><li>Se ejecuta la acción asociada a la transición.</li><li>Se notifica de la transición, de la salida del estado anterior y de la entrada en el nuevo.</li><li>Se ejecuta la acción de entrada al estado y del estado.</li><li>Se notifica del cambio de estado.</li><li>Se notifica de la finalización de la transición.</li></ul><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>... : Listener transitionStarted from START to STATE1
+... : Action Source: START, State: START, Target: STATE1, Event: START_STATE1
+... : Listener transition from START to STATE1
+... : Listener stateExited in START
+... : Listener stateEntered in STATE1
+... : Action Source: START, State: STATE1, Target: STATE1, Event: START_STATE1
+... : Action Source: START, State: STATE1, Target: STATE1, Event: START_STATE1
+... : Listener stateChanged from START to STATE1
+... : Listener transitionEnded from START to STATE1</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/code/System.out-3 target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/code/System.out-3 target=_blank>System.out-3</a></div></div><p>Estas son las dependencias necesarias a añadir n la herramienta de construcción y la salida en la terminal de las trazas ejecutando la máquina de estados desde el estado inicial e inicializada desde un estado en concreto.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -903,6 +921,7 @@
 </span><span class=lnt>202
 </span><span class=lnt>203
 </span><span class=lnt>204
+</span><span class=lnt>205
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>  .   ____          _            __ _ _
  /\\ / ___&#39;_ __ _ _(_)_ __  __ _ \ \ \ \
 ( ( )\___ | &#39;_ | &#39;_| | &#39;_ \/ _` | \ \ \ \
@@ -910,204 +929,204 @@
   &#39;  |____| .__|_| |_|_| |_\__, | / / / /
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::        (v2.1.3.RELEASE)
-
-2019-03-31 06:41:07.157  INFO 32679 --- [           main] i.g.p.blogbitix.springstatemachine.Main  : Starting Main on archlinux with PID 32679 (/home/picodotdev/Software/personal/blog-ejemplos/SpringStatemachine/build/classes/java/main started by picodotdev in /home/picodotdev/Software/personal/blog-ejemplos/SpringStatemachine)
-2019-03-31 06:41:07.159  INFO 32679 --- [           main] i.g.p.blogbitix.springstatemachine.Main  : No active profile set, falling back to default profiles: default
-2019-03-31 06:41:07.481  INFO 32679 --- [           main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService
-2019-03-31 06:41:07.636  INFO 32679 --- [           main] i.g.p.blogbitix.springstatemachine.Main  : Started Main in 0.719 seconds (JVM running for 0.948)
-2019-03-31 06:41:07.639  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionStarted from null to START
-2019-03-31 06:41:07.640  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=8b954f2b-aeef-48dd-a4ca-e799c188d476, timestamp=1554007267639}, Variables: {}
-2019-03-31 06:41:07.640  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transition from null to START
-2019-03-31 06:41:07.640  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=e1bf1cb1-c597-4975-6874-580b8d7c6a0a, timestamp=1554007267640}, Variables: {}
-2019-03-31 06:41:07.641  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateEntered in START
-2019-03-31 06:41:07.641  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=e938b91d-bada-c56b-d845-5f3958bba4f8, timestamp=1554007267641}, Variables: {}
-2019-03-31 06:41:07.642  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateChanged from null to START
-2019-03-31 06:41:07.642  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=b58324de-f43d-417b-cc38-86efdea7274f, timestamp=1554007267641}, Variables: {}
-2019-03-31 06:41:07.642  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateMachineStarted
-2019-03-31 06:41:07.642  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=747d233f-0d46-0bd0-78be-6cf026739dd8, timestamp=1554007267642}, Variables: {}
-2019-03-31 06:41:07.642  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionEnded from null to START
-2019-03-31 06:41:07.642  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=1fe8b3a2-e176-4791-dcab-d8759b2e4dc6, timestamp=1554007267642}, Variables: {}
-2019-03-31 06:41:07.642  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : started org.springframework.statemachine.support.DefaultStateMachineExecutor@51e37590
-2019-03-31 06:41:07.642  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : started STATE1 TASKS TASK13 TASK11 TASK12 TASK21 TASK23 TASK22 CHOICE1 CHOICE2 START STATE2 END JOIN FORK CHOICE  / START / uuid=a2882db4-b636-4fac-93d0-87c50434401e / id=null
-2019-03-31 06:41:07.643  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener extendedStateChanged variable to 42
-2019-03-31 06:41:07.643  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=afa8655f-09a8-a551-c11e-36a36cd2c92a, timestamp=1554007267643}, Variables: {variable=42}
-2019-03-31 06:41:07.644  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionStarted from START to STATE1
-2019-03-31 06:41:07.644  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: START_STATE1, Message Headers: {key=31, id=bf50ec37-b6f7-32d5-fd59-292d7f1ea265, timestamp=1554007267643}, Variables: {variable=42}
-2019-03-31 06:41:07.644  INFO 32679 --- [           main] i.g.p.b.s.DefaultAction                  : Action Source: START, State: START, Target: STATE1, Event: START_STATE1
-2019-03-31 06:41:07.644  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transition from START to STATE1
-2019-03-31 06:41:07.644  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: START_STATE1, Message Headers: {key=31, id=bf50ec37-b6f7-32d5-fd59-292d7f1ea265, timestamp=1554007267643}, Variables: {variable=42}
-2019-03-31 06:41:07.644  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateExited in START
-2019-03-31 06:41:07.644  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: START_STATE1, Message Headers: {key=31, id=bf50ec37-b6f7-32d5-fd59-292d7f1ea265, timestamp=1554007267643}, Variables: {variable=42}
-2019-03-31 06:41:07.644  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateEntered in STATE1
-2019-03-31 06:41:07.644  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: START_STATE1, Message Headers: {key=31, id=bf50ec37-b6f7-32d5-fd59-292d7f1ea265, timestamp=1554007267643}, Variables: {variable=42}
-2019-03-31 06:41:07.645  INFO 32679 --- [           main] i.g.p.b.s.DefaultAction                  : Action Source: START, State: STATE1, Target: STATE1, Event: START_STATE1
-2019-03-31 06:41:07.646  INFO 32679 --- [TaskScheduler-1] i.g.p.b.s.DefaultAction                  : Action Source: START, State: STATE1, Target: STATE1, Event: START_STATE1
-2019-03-31 06:41:07.647  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateChanged from START to STATE1
-2019-03-31 06:41:07.647  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: START_STATE1, Message Headers: {key=31, id=bf50ec37-b6f7-32d5-fd59-292d7f1ea265, timestamp=1554007267643}, Variables: {variable=42}
-2019-03-31 06:41:07.647  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionEnded from START to STATE1
-2019-03-31 06:41:07.647  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: START_STATE1, Message Headers: {key=31, id=bf50ec37-b6f7-32d5-fd59-292d7f1ea265, timestamp=1554007267643}, Variables: {variable=42}
-2019-03-31 06:41:07.650  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionStarted from STATE1 to CHOICE
-2019-03-31 06:41:07.650  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: STATE1_CHOICE, Message Headers: {id=8c969225-fec1-6603-63dd-7ae00f8ead10, timestamp=1554007267650}, Variables: {variable=42}
-2019-03-31 06:41:07.650  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transition from STATE1 to CHOICE
-2019-03-31 06:41:07.650  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: STATE1_CHOICE, Message Headers: {id=8c969225-fec1-6603-63dd-7ae00f8ead10, timestamp=1554007267650}, Variables: {variable=42}
-2019-03-31 06:41:07.650  INFO 32679 --- [           main] i.g.p.b.s.DefaultAction                  : Action Source: STATE1, State: STATE1, Target: CHOICE, Event: STATE1_CHOICE
-2019-03-31 06:41:07.650  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateExited in STATE1
-2019-03-31 06:41:07.650  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: STATE1_CHOICE, Message Headers: {id=8c969225-fec1-6603-63dd-7ae00f8ead10, timestamp=1554007267650}, Variables: {variable=42}
-2019-03-31 06:41:07.651  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateEntered in CHOICE1
-2019-03-31 06:41:07.651  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: STATE1_CHOICE, Message Headers: {id=8c969225-fec1-6603-63dd-7ae00f8ead10, timestamp=1554007267650}, Variables: {variable=42}
-2019-03-31 06:41:07.651  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateChanged from STATE1 to CHOICE1
-2019-03-31 06:41:07.651  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: STATE1_CHOICE, Message Headers: {id=8c969225-fec1-6603-63dd-7ae00f8ead10, timestamp=1554007267650}, Variables: {variable=42}
-2019-03-31 06:41:07.651  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionEnded from STATE1 to CHOICE
-2019-03-31 06:41:07.651  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: STATE1_CHOICE, Message Headers: {id=8c969225-fec1-6603-63dd-7ae00f8ead10, timestamp=1554007267650}, Variables: {variable=42}
-2019-03-31 06:41:07.651  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionStarted from CHOICE1 to FORK
-2019-03-31 06:41:07.651  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: CHOICE1_FORK, Message Headers: {id=1f2f3a68-19e1-29d4-8677-2c63c5e360a3, timestamp=1554007267651}, Variables: {variable=42}
-2019-03-31 06:41:07.651  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transition from CHOICE1 to FORK
-2019-03-31 06:41:07.651  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: CHOICE1_FORK, Message Headers: {id=1f2f3a68-19e1-29d4-8677-2c63c5e360a3, timestamp=1554007267651}, Variables: {variable=42}
-2019-03-31 06:41:07.651  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateExited in CHOICE1
-2019-03-31 06:41:07.651  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: CHOICE1_FORK, Message Headers: {id=1f2f3a68-19e1-29d4-8677-2c63c5e360a3, timestamp=1554007267651}, Variables: {variable=42}
-2019-03-31 06:41:07.652  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateEntered in TASKS
-2019-03-31 06:41:07.652  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: CHOICE1_FORK, Message Headers: {id=1f2f3a68-19e1-29d4-8677-2c63c5e360a3, timestamp=1554007267651}, Variables: {variable=42}
-2019-03-31 06:41:07.652  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionStarted from null to TASK11
-2019-03-31 06:41:07.652  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=37715a25-6933-14b8-2e25-756a447a3630, timestamp=1554007267652}, Variables: {variable=42}
-2019-03-31 06:41:07.652  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transition from null to TASK11
-2019-03-31 06:41:07.652  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=62093291-042b-cd75-1405-4a96be2b5682, timestamp=1554007267652}, Variables: {variable=42}
-2019-03-31 06:41:07.652  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateEntered in TASK11
-2019-03-31 06:41:07.653  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=a7c34605-3515-c56f-ff7a-8977d2331fd9, timestamp=1554007267652}, Variables: {variable=42}
-2019-03-31 06:41:07.653  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateChanged from null to TASK11
-2019-03-31 06:41:07.653  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=7b000dca-0fb2-f95a-a6db-aaf6600e1f5f, timestamp=1554007267653}, Variables: {variable=42}
-2019-03-31 06:41:07.653  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateMachineStarted
-2019-03-31 06:41:07.653  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=908bcc73-0466-dec2-14b6-2822ad56c7ba, timestamp=1554007267653}, Variables: {variable=42}
-2019-03-31 06:41:07.653  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionEnded from null to TASK11
-2019-03-31 06:41:07.653  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=e262f0fe-6047-9638-b592-c6e4bbc4e2ef, timestamp=1554007267653}, Variables: {variable=42}
-2019-03-31 06:41:07.653  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : started org.springframework.statemachine.support.DefaultStateMachineExecutor@5a865416
-2019-03-31 06:41:07.653  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : started TASK13 TASK11 TASK12  / TASK11 / uuid=b703837b-1a49-4dc4-83aa-5420f6cf0517 / id=null#8dd81b65-183c-43d0-8d27-c5ff71d2968a
-2019-03-31 06:41:07.653  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionStarted from null to TASK21
-2019-03-31 06:41:07.653  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=fe645a0b-2b28-8734-e09a-271a7df04d17, timestamp=1554007267653}, Variables: {variable=42}
-2019-03-31 06:41:07.653  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transition from null to TASK21
-2019-03-31 06:41:07.654  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=ab063429-8d97-27ce-c25b-3d8488bbc03f, timestamp=1554007267653}, Variables: {variable=42}
-2019-03-31 06:41:07.654  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateEntered in TASK21
-2019-03-31 06:41:07.654  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=309a6395-2545-89c6-833f-ba49a7893e2f, timestamp=1554007267654}, Variables: {variable=42}
-2019-03-31 06:41:07.654  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateChanged from null to TASK21
-2019-03-31 06:41:07.654  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=014531de-2bb4-efc8-1b8c-1bfcaf6f445c, timestamp=1554007267654}, Variables: {variable=42}
-2019-03-31 06:41:07.654  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateMachineStarted
-2019-03-31 06:41:07.654  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=1375e1a3-b78f-7efb-84ed-3536e7198715, timestamp=1554007267654}, Variables: {variable=42}
-2019-03-31 06:41:07.654  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionEnded from null to TASK21
-2019-03-31 06:41:07.654  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=4fe6a6a2-f279-33fb-58fa-14731e111b70, timestamp=1554007267654}, Variables: {variable=42}
-2019-03-31 06:41:07.654  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : started org.springframework.statemachine.support.DefaultStateMachineExecutor@6dc1484
-2019-03-31 06:41:07.654  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : started TASK21 TASK23 TASK22  / TASK21 / uuid=74691d25-219e-4dca-83ff-2e80ffc74f93 / id=null#5260c53d-1cbb-47a6-984a-8ef1ceb3ab31
-2019-03-31 06:41:07.654  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateChanged from CHOICE1 to TASKS
-2019-03-31 06:41:07.655  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: CHOICE1_FORK, Message Headers: {id=1f2f3a68-19e1-29d4-8677-2c63c5e360a3, timestamp=1554007267651}, Variables: {variable=42}
-2019-03-31 06:41:07.655  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionEnded from CHOICE1 to FORK
-2019-03-31 06:41:07.655  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: CHOICE1_FORK, Message Headers: {id=1f2f3a68-19e1-29d4-8677-2c63c5e360a3, timestamp=1554007267651}, Variables: {variable=42}
-2019-03-31 06:41:07.655  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionStarted from TASK11 to TASK12
-2019-03-31 06:41:07.655  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=a5f14519-e027-16b9-e718-7884633feb01, timestamp=1554007267655}, Variables: {variable=42}
-2019-03-31 06:41:07.655  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transition from TASK11 to TASK12
-2019-03-31 06:41:07.655  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=a5f14519-e027-16b9-e718-7884633feb01, timestamp=1554007267655}, Variables: {variable=42}
-2019-03-31 06:41:07.655  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateExited in TASK11
-2019-03-31 06:41:07.655  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=a5f14519-e027-16b9-e718-7884633feb01, timestamp=1554007267655}, Variables: {variable=42}
-2019-03-31 06:41:07.655  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateEntered in TASK12
-2019-03-31 06:41:07.655  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=a5f14519-e027-16b9-e718-7884633feb01, timestamp=1554007267655}, Variables: {variable=42}
-2019-03-31 06:41:07.655  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateChanged from TASK11 to TASK12
-2019-03-31 06:41:07.655  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=a5f14519-e027-16b9-e718-7884633feb01, timestamp=1554007267655}, Variables: {variable=42}
-2019-03-31 06:41:07.656  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionEnded from TASK11 to TASK12
-2019-03-31 06:41:07.656  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=a5f14519-e027-16b9-e718-7884633feb01, timestamp=1554007267655}, Variables: {variable=42}
-2019-03-31 06:41:07.656  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener eventNotAccepted GenericMessage [payload=TASK11_TASK12, headers={id=a5f14519-e027-16b9-e718-7884633feb01, timestamp=1554007267655}]
-2019-03-31 06:41:07.656  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=a5f14519-e027-16b9-e718-7884633feb01, timestamp=1554007267655}, Variables: {variable=42}
-2019-03-31 06:41:07.656  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener eventNotAccepted GenericMessage [payload=TASK21_TASK22, headers={id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}]
-2019-03-31 06:41:07.656  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK21_TASK22, Message Headers: {id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}, Variables: {variable=42}
-2019-03-31 06:41:07.656  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener eventNotAccepted GenericMessage [payload=TASK21_TASK22, headers={id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}]
-2019-03-31 06:41:07.656  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK21_TASK22, Message Headers: {id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}, Variables: {variable=42}
-2019-03-31 06:41:07.657  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionStarted from TASK21 to TASK22
-2019-03-31 06:41:07.657  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK21_TASK22, Message Headers: {id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}, Variables: {variable=42}
-2019-03-31 06:41:07.657  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transition from TASK21 to TASK22
-2019-03-31 06:41:07.657  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK21_TASK22, Message Headers: {id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}, Variables: {variable=42}
-2019-03-31 06:41:07.657  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateExited in TASK21
-2019-03-31 06:41:07.657  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK21_TASK22, Message Headers: {id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}, Variables: {variable=42}
-2019-03-31 06:41:07.657  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateEntered in TASK22
-2019-03-31 06:41:07.657  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK21_TASK22, Message Headers: {id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}, Variables: {variable=42}
-2019-03-31 06:41:07.657  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateChanged from TASK21 to TASK22
-2019-03-31 06:41:07.657  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK21_TASK22, Message Headers: {id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}, Variables: {variable=42}
-2019-03-31 06:41:07.657  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionEnded from TASK21 to TASK22
-2019-03-31 06:41:07.657  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK21_TASK22, Message Headers: {id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}, Variables: {variable=42}
-2019-03-31 06:41:07.657  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener eventNotAccepted GenericMessage [payload=TASK12_TASK13, headers={id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}]
-2019-03-31 06:41:07.658  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}, Variables: {variable=42}
-2019-03-31 06:41:07.658  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener eventNotAccepted GenericMessage [payload=TASK12_TASK13, headers={id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}]
-2019-03-31 06:41:07.658  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}, Variables: {variable=42}
-2019-03-31 06:41:07.658  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionStarted from TASK12 to TASK13
-2019-03-31 06:41:07.658  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}, Variables: {variable=42}
-2019-03-31 06:41:07.658  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transition from TASK12 to TASK13
-2019-03-31 06:41:07.658  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}, Variables: {variable=42}
-2019-03-31 06:41:07.658  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateExited in TASK12
-2019-03-31 06:41:07.658  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}, Variables: {variable=42}
-2019-03-31 06:41:07.658  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateEntered in TASK13
-2019-03-31 06:41:07.658  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}, Variables: {variable=42}
-2019-03-31 06:41:07.658  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateChanged from TASK12 to TASK13
-2019-03-31 06:41:07.659  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}, Variables: {variable=42}
-2019-03-31 06:41:07.659  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : stopped org.springframework.statemachine.support.DefaultStateMachineExecutor@5a865416
-2019-03-31 06:41:07.659  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateMachineStopped
-2019-03-31 06:41:07.659  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=887ca4d7-226b-9f99-3955-dce7151dcbae, timestamp=1554007267659}, Variables: {variable=42}
-2019-03-31 06:41:07.659  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : stopped TASK13 TASK11 TASK12  /  / uuid=b703837b-1a49-4dc4-83aa-5420f6cf0517 / id=null#8dd81b65-183c-43d0-8d27-c5ff71d2968a
-2019-03-31 06:41:07.659  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionEnded from TASK12 to TASK13
-2019-03-31 06:41:07.659  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}, Variables: {variable=42}
-2019-03-31 06:41:07.659  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener eventNotAccepted GenericMessage [payload=TASK22_TASK23, headers={id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}]
-2019-03-31 06:41:07.659  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
-2019-03-31 06:41:07.659  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener eventNotAccepted GenericMessage [payload=TASK22_TASK23, headers={id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}]
-2019-03-31 06:41:07.659  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
-2019-03-31 06:41:07.660  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionStarted from TASK22 to TASK23
-2019-03-31 06:41:07.660  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
-2019-03-31 06:41:07.660  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transition from TASK22 to TASK23
-2019-03-31 06:41:07.660  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
-2019-03-31 06:41:07.660  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateExited in TASK22
-2019-03-31 06:41:07.660  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
-2019-03-31 06:41:07.660  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateEntered in TASK23
-2019-03-31 06:41:07.660  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
-2019-03-31 06:41:07.660  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionStarted from TASK13 to JOIN
-2019-03-31 06:41:07.660  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
-2019-03-31 06:41:07.660  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transition from TASK13 to JOIN
-2019-03-31 06:41:07.660  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
-2019-03-31 06:41:07.660  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateExited in TASK13
-2019-03-31 06:41:07.660  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
-2019-03-31 06:41:07.661  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionEnded from TASK13 to JOIN
-2019-03-31 06:41:07.661  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
-2019-03-31 06:41:07.661  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionStarted from TASK23 to JOIN
-2019-03-31 06:41:07.661  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
-2019-03-31 06:41:07.661  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transition from TASK23 to JOIN
-2019-03-31 06:41:07.661  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
-2019-03-31 06:41:07.661  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateExited in TASK23
-2019-03-31 06:41:07.661  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
-2019-03-31 06:41:07.661  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionEnded from TASK23 to JOIN
-2019-03-31 06:41:07.661  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
-2019-03-31 06:41:07.662  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : stopped org.springframework.statemachine.support.DefaultStateMachineExecutor@6dc1484
-2019-03-31 06:41:07.662  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateMachineStopped
-2019-03-31 06:41:07.662  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=b65b9ec8-ef97-dba7-aa77-44b8b5588ff9, timestamp=1554007267662}, Variables: {variable=42}
-2019-03-31 06:41:07.662  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : stopped TASK21 TASK23 TASK22  /  / uuid=74691d25-219e-4dca-83ff-2e80ffc74f93 / id=null#5260c53d-1cbb-47a6-984a-8ef1ceb3ab31
-2019-03-31 06:41:07.662  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateExited in TASKS
-2019-03-31 06:41:07.662  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=2664aa9e-1ec2-593f-3016-81231e9551a2, timestamp=1554007267662}, Variables: {variable=42}
-2019-03-31 06:41:07.662  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateEntered in STATE2
-2019-03-31 06:41:07.662  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=8510c1b9-6b2f-46ae-9412-9542b0098fec, timestamp=1554007267662}, Variables: {variable=42}
-2019-03-31 06:41:07.662  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateChanged from TASKS to STATE2
-2019-03-31 06:41:07.662  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=8d650465-62b7-f71a-070e-9b1dadf29861, timestamp=1554007267662}, Variables: {variable=42}
-2019-03-31 06:41:07.662  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateChanged from TASK22 to TASK23
-2019-03-31 06:41:07.662  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
-2019-03-31 06:41:07.663  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionEnded from TASK22 to TASK23
-2019-03-31 06:41:07.663  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
-2019-03-31 06:41:07.663  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionStarted from STATE2 to END
-2019-03-31 06:41:07.663  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=f84d435c-bc74-e23d-f0b5-3191241118ef, timestamp=1554007267663}, Variables: {variable=42}
-2019-03-31 06:41:07.663  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transition from STATE2 to END
-2019-03-31 06:41:07.663  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=f84d435c-bc74-e23d-f0b5-3191241118ef, timestamp=1554007267663}, Variables: {variable=42}
-2019-03-31 06:41:07.663  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateExited in STATE2
-2019-03-31 06:41:07.663  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=f84d435c-bc74-e23d-f0b5-3191241118ef, timestamp=1554007267663}, Variables: {variable=42}
-2019-03-31 06:41:07.663  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateEntered in END
-2019-03-31 06:41:07.663  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=f84d435c-bc74-e23d-f0b5-3191241118ef, timestamp=1554007267663}, Variables: {variable=42}
-2019-03-31 06:41:07.664  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateChanged from STATE2 to END
-2019-03-31 06:41:07.664  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=f84d435c-bc74-e23d-f0b5-3191241118ef, timestamp=1554007267663}, Variables: {variable=42}
-2019-03-31 06:41:07.664  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : stopped org.springframework.statemachine.support.DefaultStateMachineExecutor@51e37590
-2019-03-31 06:41:07.664  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateMachineStopped
-2019-03-31 06:41:07.664  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=cf95710c-ecb5-3df6-61e3-11799f0925d7, timestamp=1554007267664}, Variables: {variable=42}
-2019-03-31 06:41:07.664  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : stopped STATE1 TASKS TASK13 TASK11 TASK12 TASK21 TASK23 TASK22 CHOICE1 CHOICE2 START STATE2 END JOIN FORK CHOICE  /  / uuid=a2882db4-b636-4fac-93d0-87c50434401e / id=null
-2019-03-31 06:41:07.664  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionEnded from STATE2 to END
-2019-03-31 06:41:07.664  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=f84d435c-bc74-e23d-f0b5-3191241118ef, timestamp=1554007267663}, Variables: {variable=42}
-</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/code/System.out-1 target=_blank>view raw</a></span>
+...
+... : Starting Main on archlinux with PID 32679 (/home/picodotdev/Software/personal/blog-ejemplos/SpringStatemachine/build/classes/java/main started by picodotdev in /home/picodotdev/Software/personal/blog-ejemplos/SpringStatemachine)
+... : No active profile set, falling back to default profiles: default
+... : Initializing ExecutorService
+... : Started Main in 0.719 seconds (JVM running for 0.948)
+... : Listener transitionStarted from null to START
+... : Listener stateContext (Message Payload: null, Message Headers: {id=8b954f2b-aeef-48dd-a4ca-e799c188d476, timestamp=1554007267639}, Variables: {}
+... : Listener transition from null to START
+... : Listener stateContext (Message Payload: null, Message Headers: {id=e1bf1cb1-c597-4975-6874-580b8d7c6a0a, timestamp=1554007267640}, Variables: {}
+... : Listener stateEntered in START
+... : Listener stateContext (Message Payload: null, Message Headers: {id=e938b91d-bada-c56b-d845-5f3958bba4f8, timestamp=1554007267641}, Variables: {}
+... : Listener stateChanged from null to START
+... : Listener stateContext (Message Payload: null, Message Headers: {id=b58324de-f43d-417b-cc38-86efdea7274f, timestamp=1554007267641}, Variables: {}
+... : Listener stateMachineStarted
+... : Listener stateContext (Message Payload: null, Message Headers: {id=747d233f-0d46-0bd0-78be-6cf026739dd8, timestamp=1554007267642}, Variables: {}
+... : Listener transitionEnded from null to START
+... : Listener stateContext (Message Payload: null, Message Headers: {id=1fe8b3a2-e176-4791-dcab-d8759b2e4dc6, timestamp=1554007267642}, Variables: {}
+... : started org.springframework.statemachine.support.DefaultStateMachineExecutor@51e37590
+... : started STATE1 TASKS TASK13 TASK11 TASK12 TASK21 TASK23 TASK22 CHOICE1 CHOICE2 START STATE2 END JOIN FORK CHOICE  / START / uuid=a2882db4-b636-4fac-93d0-87c50434401e / id=null
+... : Listener extendedStateChanged variable to 42
+... : Listener stateContext (Message Payload: null, Message Headers: {id=afa8655f-09a8-a551-c11e-36a36cd2c92a, timestamp=1554007267643}, Variables: {variable=42}
+... : Listener transitionStarted from START to STATE1
+... : Listener stateContext (Message Payload: START_STATE1, Message Headers: {key=31, id=bf50ec37-b6f7-32d5-fd59-292d7f1ea265, timestamp=1554007267643}, Variables: {variable=42}
+... : Action Source: START, State: START, Target: STATE1, Event: START_STATE1
+... : Listener transition from START to STATE1
+... : Listener stateContext (Message Payload: START_STATE1, Message Headers: {key=31, id=bf50ec37-b6f7-32d5-fd59-292d7f1ea265, timestamp=1554007267643}, Variables: {variable=42}
+... : Listener stateExited in START
+... : Listener stateContext (Message Payload: START_STATE1, Message Headers: {key=31, id=bf50ec37-b6f7-32d5-fd59-292d7f1ea265, timestamp=1554007267643}, Variables: {variable=42}
+... : Listener stateEntered in STATE1
+... : Listener stateContext (Message Payload: START_STATE1, Message Headers: {key=31, id=bf50ec37-b6f7-32d5-fd59-292d7f1ea265, timestamp=1554007267643}, Variables: {variable=42}
+... : Action Source: START, State: STATE1, Target: STATE1, Event: START_STATE1
+... : Action Source: START, State: STATE1, Target: STATE1, Event: START_STATE1
+... : Listener stateChanged from START to STATE1
+... : Listener stateContext (Message Payload: START_STATE1, Message Headers: {key=31, id=bf50ec37-b6f7-32d5-fd59-292d7f1ea265, timestamp=1554007267643}, Variables: {variable=42}
+... : Listener transitionEnded from START to STATE1
+... : Listener stateContext (Message Payload: START_STATE1, Message Headers: {key=31, id=bf50ec37-b6f7-32d5-fd59-292d7f1ea265, timestamp=1554007267643}, Variables: {variable=42}
+... : Listener transitionStarted from STATE1 to CHOICE
+... : Listener stateContext (Message Payload: STATE1_CHOICE, Message Headers: {id=8c969225-fec1-6603-63dd-7ae00f8ead10, timestamp=1554007267650}, Variables: {variable=42}
+... : Listener transition from STATE1 to CHOICE
+... : Listener stateContext (Message Payload: STATE1_CHOICE, Message Headers: {id=8c969225-fec1-6603-63dd-7ae00f8ead10, timestamp=1554007267650}, Variables: {variable=42}
+... : Action Source: STATE1, State: STATE1, Target: CHOICE, Event: STATE1_CHOICE
+... : Listener stateExited in STATE1
+... : Listener stateContext (Message Payload: STATE1_CHOICE, Message Headers: {id=8c969225-fec1-6603-63dd-7ae00f8ead10, timestamp=1554007267650}, Variables: {variable=42}
+... : Listener stateEntered in CHOICE1
+... : Listener stateContext (Message Payload: STATE1_CHOICE, Message Headers: {id=8c969225-fec1-6603-63dd-7ae00f8ead10, timestamp=1554007267650}, Variables: {variable=42}
+... : Listener stateChanged from STATE1 to CHOICE1
+... : Listener stateContext (Message Payload: STATE1_CHOICE, Message Headers: {id=8c969225-fec1-6603-63dd-7ae00f8ead10, timestamp=1554007267650}, Variables: {variable=42}
+... : Listener transitionEnded from STATE1 to CHOICE
+... : Listener stateContext (Message Payload: STATE1_CHOICE, Message Headers: {id=8c969225-fec1-6603-63dd-7ae00f8ead10, timestamp=1554007267650}, Variables: {variable=42}
+... : Listener transitionStarted from CHOICE1 to FORK
+... : Listener stateContext (Message Payload: CHOICE1_FORK, Message Headers: {id=1f2f3a68-19e1-29d4-8677-2c63c5e360a3, timestamp=1554007267651}, Variables: {variable=42}
+... : Listener transition from CHOICE1 to FORK
+... : Listener stateContext (Message Payload: CHOICE1_FORK, Message Headers: {id=1f2f3a68-19e1-29d4-8677-2c63c5e360a3, timestamp=1554007267651}, Variables: {variable=42}
+... : Listener stateExited in CHOICE1
+... : Listener stateContext (Message Payload: CHOICE1_FORK, Message Headers: {id=1f2f3a68-19e1-29d4-8677-2c63c5e360a3, timestamp=1554007267651}, Variables: {variable=42}
+... : Listener stateEntered in TASKS
+... : Listener stateContext (Message Payload: CHOICE1_FORK, Message Headers: {id=1f2f3a68-19e1-29d4-8677-2c63c5e360a3, timestamp=1554007267651}, Variables: {variable=42}
+... : Listener transitionStarted from null to TASK11
+... : Listener stateContext (Message Payload: null, Message Headers: {id=37715a25-6933-14b8-2e25-756a447a3630, timestamp=1554007267652}, Variables: {variable=42}
+... : Listener transition from null to TASK11
+... : Listener stateContext (Message Payload: null, Message Headers: {id=62093291-042b-cd75-1405-4a96be2b5682, timestamp=1554007267652}, Variables: {variable=42}
+... : Listener stateEntered in TASK11
+... : Listener stateContext (Message Payload: null, Message Headers: {id=a7c34605-3515-c56f-ff7a-8977d2331fd9, timestamp=1554007267652}, Variables: {variable=42}
+... : Listener stateChanged from null to TASK11
+... : Listener stateContext (Message Payload: null, Message Headers: {id=7b000dca-0fb2-f95a-a6db-aaf6600e1f5f, timestamp=1554007267653}, Variables: {variable=42}
+... : Listener stateMachineStarted
+... : Listener stateContext (Message Payload: null, Message Headers: {id=908bcc73-0466-dec2-14b6-2822ad56c7ba, timestamp=1554007267653}, Variables: {variable=42}
+... : Listener transitionEnded from null to TASK11
+... : Listener stateContext (Message Payload: null, Message Headers: {id=e262f0fe-6047-9638-b592-c6e4bbc4e2ef, timestamp=1554007267653}, Variables: {variable=42}
+... : started org.springframework.statemachine.support.DefaultStateMachineExecutor@5a865416
+... : started TASK13 TASK11 TASK12  / TASK11 / uuid=b703837b-1a49-4dc4-83aa-5420f6cf0517 / id=null#8dd81b65-183c-43d0-8d27-c5ff71d2968a
+... : Listener transitionStarted from null to TASK21
+... : Listener stateContext (Message Payload: null, Message Headers: {id=fe645a0b-2b28-8734-e09a-271a7df04d17, timestamp=1554007267653}, Variables: {variable=42}
+... : Listener transition from null to TASK21
+... : Listener stateContext (Message Payload: null, Message Headers: {id=ab063429-8d97-27ce-c25b-3d8488bbc03f, timestamp=1554007267653}, Variables: {variable=42}
+... : Listener stateEntered in TASK21
+... : Listener stateContext (Message Payload: null, Message Headers: {id=309a6395-2545-89c6-833f-ba49a7893e2f, timestamp=1554007267654}, Variables: {variable=42}
+... : Listener stateChanged from null to TASK21
+... : Listener stateContext (Message Payload: null, Message Headers: {id=014531de-2bb4-efc8-1b8c-1bfcaf6f445c, timestamp=1554007267654}, Variables: {variable=42}
+... : Listener stateMachineStarted
+... : Listener stateContext (Message Payload: null, Message Headers: {id=1375e1a3-b78f-7efb-84ed-3536e7198715, timestamp=1554007267654}, Variables: {variable=42}
+... : Listener transitionEnded from null to TASK21
+... : Listener stateContext (Message Payload: null, Message Headers: {id=4fe6a6a2-f279-33fb-58fa-14731e111b70, timestamp=1554007267654}, Variables: {variable=42}
+... : started org.springframework.statemachine.support.DefaultStateMachineExecutor@6dc1484
+... : started TASK21 TASK23 TASK22  / TASK21 / uuid=74691d25-219e-4dca-83ff-2e80ffc74f93 / id=null#5260c53d-1cbb-47a6-984a-8ef1ceb3ab31
+... : Listener stateChanged from CHOICE1 to TASKS
+... : Listener stateContext (Message Payload: CHOICE1_FORK, Message Headers: {id=1f2f3a68-19e1-29d4-8677-2c63c5e360a3, timestamp=1554007267651}, Variables: {variable=42}
+... : Listener transitionEnded from CHOICE1 to FORK
+... : Listener stateContext (Message Payload: CHOICE1_FORK, Message Headers: {id=1f2f3a68-19e1-29d4-8677-2c63c5e360a3, timestamp=1554007267651}, Variables: {variable=42}
+... : Listener transitionStarted from TASK11 to TASK12
+... : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=a5f14519-e027-16b9-e718-7884633feb01, timestamp=1554007267655}, Variables: {variable=42}
+... : Listener transition from TASK11 to TASK12
+... : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=a5f14519-e027-16b9-e718-7884633feb01, timestamp=1554007267655}, Variables: {variable=42}
+... : Listener stateExited in TASK11
+... : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=a5f14519-e027-16b9-e718-7884633feb01, timestamp=1554007267655}, Variables: {variable=42}
+... : Listener stateEntered in TASK12
+... : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=a5f14519-e027-16b9-e718-7884633feb01, timestamp=1554007267655}, Variables: {variable=42}
+... : Listener stateChanged from TASK11 to TASK12
+... : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=a5f14519-e027-16b9-e718-7884633feb01, timestamp=1554007267655}, Variables: {variable=42}
+... : Listener transitionEnded from TASK11 to TASK12
+... : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=a5f14519-e027-16b9-e718-7884633feb01, timestamp=1554007267655}, Variables: {variable=42}
+... : Listener eventNotAccepted GenericMessage [payload=TASK11_TASK12, headers={id=a5f14519-e027-16b9-e718-7884633feb01, timestamp=1554007267655}]
+... : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=a5f14519-e027-16b9-e718-7884633feb01, timestamp=1554007267655}, Variables: {variable=42}
+... : Listener eventNotAccepted GenericMessage [payload=TASK21_TASK22, headers={id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}]
+... : Listener stateContext (Message Payload: TASK21_TASK22, Message Headers: {id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}, Variables: {variable=42}
+... : Listener eventNotAccepted GenericMessage [payload=TASK21_TASK22, headers={id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}]
+... : Listener stateContext (Message Payload: TASK21_TASK22, Message Headers: {id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}, Variables: {variable=42}
+... : Listener transitionStarted from TASK21 to TASK22
+... : Listener stateContext (Message Payload: TASK21_TASK22, Message Headers: {id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}, Variables: {variable=42}
+... : Listener transition from TASK21 to TASK22
+... : Listener stateContext (Message Payload: TASK21_TASK22, Message Headers: {id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}, Variables: {variable=42}
+... : Listener stateExited in TASK21
+... : Listener stateContext (Message Payload: TASK21_TASK22, Message Headers: {id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}, Variables: {variable=42}
+... : Listener stateEntered in TASK22
+... : Listener stateContext (Message Payload: TASK21_TASK22, Message Headers: {id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}, Variables: {variable=42}
+... : Listener stateChanged from TASK21 to TASK22
+... : Listener stateContext (Message Payload: TASK21_TASK22, Message Headers: {id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}, Variables: {variable=42}
+... : Listener transitionEnded from TASK21 to TASK22
+... : Listener stateContext (Message Payload: TASK21_TASK22, Message Headers: {id=2f048198-ef29-0b11-53d9-c22202b3a023, timestamp=1554007267656}, Variables: {variable=42}
+... : Listener eventNotAccepted GenericMessage [payload=TASK12_TASK13, headers={id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}]
+... : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}, Variables: {variable=42}
+... : Listener eventNotAccepted GenericMessage [payload=TASK12_TASK13, headers={id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}]
+... : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}, Variables: {variable=42}
+... : Listener transitionStarted from TASK12 to TASK13
+... : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}, Variables: {variable=42}
+... : Listener transition from TASK12 to TASK13
+... : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}, Variables: {variable=42}
+... : Listener stateExited in TASK12
+... : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}, Variables: {variable=42}
+... : Listener stateEntered in TASK13
+... : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}, Variables: {variable=42}
+... : Listener stateChanged from TASK12 to TASK13
+... : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}, Variables: {variable=42}
+... : stopped org.springframework.statemachine.support.DefaultStateMachineExecutor@5a865416
+... : Listener stateMachineStopped
+... : Listener stateContext (Message Payload: null, Message Headers: {id=887ca4d7-226b-9f99-3955-dce7151dcbae, timestamp=1554007267659}, Variables: {variable=42}
+... : stopped TASK13 TASK11 TASK12  /  / uuid=b703837b-1a49-4dc4-83aa-5420f6cf0517 / id=null#8dd81b65-183c-43d0-8d27-c5ff71d2968a
+... : Listener transitionEnded from TASK12 to TASK13
+... : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=1fd4d183-88d0-f30e-34a8-530c23e66b23, timestamp=1554007267657}, Variables: {variable=42}
+... : Listener eventNotAccepted GenericMessage [payload=TASK22_TASK23, headers={id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}]
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
+... : Listener eventNotAccepted GenericMessage [payload=TASK22_TASK23, headers={id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}]
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
+... : Listener transitionStarted from TASK22 to TASK23
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
+... : Listener transition from TASK22 to TASK23
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
+... : Listener stateExited in TASK22
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
+... : Listener stateEntered in TASK23
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
+... : Listener transitionStarted from TASK13 to JOIN
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
+... : Listener transition from TASK13 to JOIN
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
+... : Listener stateExited in TASK13
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
+... : Listener transitionEnded from TASK13 to JOIN
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
+... : Listener transitionStarted from TASK23 to JOIN
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
+... : Listener transition from TASK23 to JOIN
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
+... : Listener stateExited in TASK23
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
+... : Listener transitionEnded from TASK23 to JOIN
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
+... : stopped org.springframework.statemachine.support.DefaultStateMachineExecutor@6dc1484
+... : Listener stateMachineStopped
+... : Listener stateContext (Message Payload: null, Message Headers: {id=b65b9ec8-ef97-dba7-aa77-44b8b5588ff9, timestamp=1554007267662}, Variables: {variable=42}
+... : stopped TASK21 TASK23 TASK22  /  / uuid=74691d25-219e-4dca-83ff-2e80ffc74f93 / id=null#5260c53d-1cbb-47a6-984a-8ef1ceb3ab31
+... : Listener stateExited in TASKS
+... : Listener stateContext (Message Payload: null, Message Headers: {id=2664aa9e-1ec2-593f-3016-81231e9551a2, timestamp=1554007267662}, Variables: {variable=42}
+... : Listener stateEntered in STATE2
+... : Listener stateContext (Message Payload: null, Message Headers: {id=8510c1b9-6b2f-46ae-9412-9542b0098fec, timestamp=1554007267662}, Variables: {variable=42}
+... : Listener stateChanged from TASKS to STATE2
+... : Listener stateContext (Message Payload: null, Message Headers: {id=8d650465-62b7-f71a-070e-9b1dadf29861, timestamp=1554007267662}, Variables: {variable=42}
+... : Listener stateChanged from TASK22 to TASK23
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
+... : Listener transitionEnded from TASK22 to TASK23
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=592d65e8-6ccc-b942-0d10-d5b9b645c558, timestamp=1554007267659}, Variables: {variable=42}
+... : Listener transitionStarted from STATE2 to END
+... : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=f84d435c-bc74-e23d-f0b5-3191241118ef, timestamp=1554007267663}, Variables: {variable=42}
+... : Listener transition from STATE2 to END
+... : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=f84d435c-bc74-e23d-f0b5-3191241118ef, timestamp=1554007267663}, Variables: {variable=42}
+... : Listener stateExited in STATE2
+... : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=f84d435c-bc74-e23d-f0b5-3191241118ef, timestamp=1554007267663}, Variables: {variable=42}
+... : Listener stateEntered in END
+... : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=f84d435c-bc74-e23d-f0b5-3191241118ef, timestamp=1554007267663}, Variables: {variable=42}
+... : Listener stateChanged from STATE2 to END
+... : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=f84d435c-bc74-e23d-f0b5-3191241118ef, timestamp=1554007267663}, Variables: {variable=42}
+... : stopped org.springframework.statemachine.support.DefaultStateMachineExecutor@51e37590
+... : Listener stateMachineStopped
+... : Listener stateContext (Message Payload: null, Message Headers: {id=cf95710c-ecb5-3df6-61e3-11799f0925d7, timestamp=1554007267664}, Variables: {variable=42}
+... : stopped STATE1 TASKS TASK13 TASK11 TASK12 TASK21 TASK23 TASK22 CHOICE1 CHOICE2 START STATE2 END JOIN FORK CHOICE  /  / uuid=a2882db4-b636-4fac-93d0-87c50434401e / id=null
+... : Listener transitionEnded from STATE2 to END
+... : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=f84d435c-bc74-e23d-f0b5-3191241118ef, timestamp=1554007267663}, Variables: {variable=42}
+...</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/code/System.out-1 target=_blank>view raw</a></span>
 <a href=/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/code/System.out-1 target=_blank>System.out-1</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
@@ -1200,98 +1219,98 @@
 </span><span class=lnt>90
 </span><span class=lnt>91
 </span><span class=lnt>92
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>2019-03-31 06:41:07.665  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : started ObjectState [getIds()=[TASK11], getClass()=class org.springframework.statemachine.state.ObjectState, hashCode()=1584833211, toString()=AbstractState [id=TASK11, pseudoState=org.springframework.statemachine.state.DefaultPseudoState@757194dc, deferred=[], entryActions=[], exitActions=[], stateActions=[], regions=[], submachine=null]]
-2019-03-31 06:41:07.665  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : started ObjectState [getIds()=[TASK22], getClass()=class org.springframework.statemachine.state.ObjectState, hashCode()=800456240, toString()=AbstractState [id=TASK22, pseudoState=null, deferred=[], entryActions=[], exitActions=[], stateActions=[], regions=[], submachine=null]]
-2019-03-31 06:41:07.665  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : started RegionState [getIds()=[TASKS, TASK11, TASK22], getClass()=class org.springframework.statemachine.state.RegionState, hashCode()=1311544814, toString()=AbstractState [id=TASKS, pseudoState=org.springframework.statemachine.state.DefaultPseudoState@d0ec63, deferred=[], entryActions=[], exitActions=[], stateActions=[], regions=[TASK13 TASK11 TASK12  / TASK11 / uuid=b703837b-1a49-4dc4-83aa-5420f6cf0517 / id=null, TASK21 TASK23 TASK22  / TASK22 / uuid=74691d25-219e-4dca-83ff-2e80ffc74f93 / id=null], submachine=null]]
-2019-03-31 06:41:07.665  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : started org.springframework.statemachine.support.DefaultStateMachineExecutor@51e37590
-2019-03-31 06:41:07.665  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateMachineStarted
-2019-03-31 06:41:07.665  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=a6be7fdd-8685-5b21-1f34-9dcf718ec374, timestamp=1554007267665}, Variables: {}
-2019-03-31 06:41:07.665  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : started org.springframework.statemachine.support.DefaultStateMachineExecutor@5a865416
-2019-03-31 06:41:07.665  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateMachineStarted
-2019-03-31 06:41:07.665  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=3eef6870-ee58-fa1d-8798-71987d336914, timestamp=1554007267665}, Variables: {}
-2019-03-31 06:41:07.665  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : started TASK13 TASK11 TASK12  / TASK11 / uuid=b703837b-1a49-4dc4-83aa-5420f6cf0517 / id=null
-2019-03-31 06:41:07.666  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : started org.springframework.statemachine.support.DefaultStateMachineExecutor@6dc1484
-2019-03-31 06:41:07.666  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateMachineStarted
-2019-03-31 06:41:07.666  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=aef5d00b-59ea-8eed-81ff-c840b1ce2b94, timestamp=1554007267666}, Variables: {}
-2019-03-31 06:41:07.666  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : started TASK21 TASK23 TASK22  / TASK22 / uuid=74691d25-219e-4dca-83ff-2e80ffc74f93 / id=null
-2019-03-31 06:41:07.666  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : started STATE1 TASKS TASK13 TASK11 TASK12 TASK21 TASK23 TASK22 CHOICE1 CHOICE2 START STATE2 END JOIN FORK CHOICE  / TASKS,TASK11,TASK22 / uuid=a2882db4-b636-4fac-93d0-87c50434401e / id=null
-2019-03-31 06:41:07.666  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionStarted from TASK11 to TASK12
-2019-03-31 06:41:07.666  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=dd47c963-48b4-a47b-093a-bd52cc4371f8, timestamp=1554007267666}, Variables: {}
-2019-03-31 06:41:07.666  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transition from TASK11 to TASK12
-2019-03-31 06:41:07.666  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=dd47c963-48b4-a47b-093a-bd52cc4371f8, timestamp=1554007267666}, Variables: {}
-2019-03-31 06:41:07.666  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateExited in TASK11
-2019-03-31 06:41:07.666  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=dd47c963-48b4-a47b-093a-bd52cc4371f8, timestamp=1554007267666}, Variables: {}
-2019-03-31 06:41:07.666  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateEntered in TASK12
-2019-03-31 06:41:07.666  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=dd47c963-48b4-a47b-093a-bd52cc4371f8, timestamp=1554007267666}, Variables: {}
-2019-03-31 06:41:07.666  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateChanged from TASK11 to TASK12
-2019-03-31 06:41:07.666  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=dd47c963-48b4-a47b-093a-bd52cc4371f8, timestamp=1554007267666}, Variables: {}
-2019-03-31 06:41:07.666  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionEnded from TASK11 to TASK12
-2019-03-31 06:41:07.666  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=dd47c963-48b4-a47b-093a-bd52cc4371f8, timestamp=1554007267666}, Variables: {}
-2019-03-31 06:41:07.667  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener eventNotAccepted GenericMessage [payload=TASK11_TASK12, headers={id=dd47c963-48b4-a47b-093a-bd52cc4371f8, timestamp=1554007267666}]
-2019-03-31 06:41:07.667  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=dd47c963-48b4-a47b-093a-bd52cc4371f8, timestamp=1554007267666}, Variables: {}
-2019-03-31 06:41:07.667  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener eventNotAccepted GenericMessage [payload=TASK22_TASK23, headers={id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}]
-2019-03-31 06:41:07.667  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}, Variables: {}
-2019-03-31 06:41:07.667  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener eventNotAccepted GenericMessage [payload=TASK22_TASK23, headers={id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}]
-2019-03-31 06:41:07.667  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}, Variables: {}
-2019-03-31 06:41:07.667  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionStarted from TASK22 to TASK23
-2019-03-31 06:41:07.667  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}, Variables: {}
-2019-03-31 06:41:07.667  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transition from TASK22 to TASK23
-2019-03-31 06:41:07.667  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}, Variables: {}
-2019-03-31 06:41:07.667  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateExited in TASK22
-2019-03-31 06:41:07.667  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}, Variables: {}
-2019-03-31 06:41:07.667  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateEntered in TASK23
-2019-03-31 06:41:07.668  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}, Variables: {}
-2019-03-31 06:41:07.668  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateChanged from TASK22 to TASK23
-2019-03-31 06:41:07.668  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}, Variables: {}
-2019-03-31 06:41:07.668  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : stopped org.springframework.statemachine.support.DefaultStateMachineExecutor@6dc1484
-2019-03-31 06:41:07.668  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateMachineStopped
-2019-03-31 06:41:07.668  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=ff2f4d56-fde7-2ab0-c412-e5307b52cfc1, timestamp=1554007267668}, Variables: {}
-2019-03-31 06:41:07.668  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : stopped TASK21 TASK23 TASK22  /  / uuid=74691d25-219e-4dca-83ff-2e80ffc74f93 / id=null
-2019-03-31 06:41:07.668  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionEnded from TASK22 to TASK23
-2019-03-31 06:41:07.668  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}, Variables: {}
-2019-03-31 06:41:07.668  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener eventNotAccepted GenericMessage [payload=TASK12_TASK13, headers={id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}]
-2019-03-31 06:41:07.668  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}, Variables: {}
-2019-03-31 06:41:07.668  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener eventNotAccepted GenericMessage [payload=TASK12_TASK13, headers={id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}]
-2019-03-31 06:41:07.668  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}, Variables: {}
-2019-03-31 06:41:07.669  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionStarted from TASK12 to TASK13
-2019-03-31 06:41:07.669  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}, Variables: {}
-2019-03-31 06:41:07.669  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transition from TASK12 to TASK13
-2019-03-31 06:41:07.669  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}, Variables: {}
-2019-03-31 06:41:07.669  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateExited in TASK12
-2019-03-31 06:41:07.669  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}, Variables: {}
-2019-03-31 06:41:07.669  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateEntered in TASK13
-2019-03-31 06:41:07.669  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}, Variables: {}
-2019-03-31 06:41:07.669  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : stopped org.springframework.statemachine.support.DefaultStateMachineExecutor@5a865416
-2019-03-31 06:41:07.669  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateMachineStopped
-2019-03-31 06:41:07.669  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=ee20242f-e669-8719-8cef-869d2c7bbb13, timestamp=1554007267669}, Variables: {}
-2019-03-31 06:41:07.670  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : stopped TASK13 TASK11 TASK12  /  / uuid=b703837b-1a49-4dc4-83aa-5420f6cf0517 / id=null
-2019-03-31 06:41:07.670  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateExited in TASKS
-2019-03-31 06:41:07.670  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=9835d889-b3e4-b056-2e8d-1dfc3850907e, timestamp=1554007267670}, Variables: {}
-2019-03-31 06:41:07.670  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateEntered in STATE2
-2019-03-31 06:41:07.670  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=e9f3c6bb-b384-455e-354c-7cc6d8b2f6a1, timestamp=1554007267670}, Variables: {}
-2019-03-31 06:41:07.670  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateChanged from TASKS to STATE2
-2019-03-31 06:41:07.670  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=6c0826b9-8ec5-84a8-f6d4-53b1c3311334, timestamp=1554007267670}, Variables: {}
-2019-03-31 06:41:07.670  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateChanged from TASK12 to TASK13
-2019-03-31 06:41:07.670  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}, Variables: {}
-2019-03-31 06:41:07.670  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionEnded from TASK12 to TASK13
-2019-03-31 06:41:07.670  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}, Variables: {}
-2019-03-31 06:41:07.670  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionStarted from STATE2 to END
-2019-03-31 06:41:07.670  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=6be8a081-daec-2aca-268b-3f0af8940247, timestamp=1554007267670}, Variables: {}
-2019-03-31 06:41:07.670  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transition from STATE2 to END
-2019-03-31 06:41:07.670  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=6be8a081-daec-2aca-268b-3f0af8940247, timestamp=1554007267670}, Variables: {}
-2019-03-31 06:41:07.671  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateExited in STATE2
-2019-03-31 06:41:07.671  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=6be8a081-daec-2aca-268b-3f0af8940247, timestamp=1554007267670}, Variables: {}
-2019-03-31 06:41:07.671  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateEntered in END
-2019-03-31 06:41:07.671  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=6be8a081-daec-2aca-268b-3f0af8940247, timestamp=1554007267670}, Variables: {}
-2019-03-31 06:41:07.671  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateChanged from STATE2 to END
-2019-03-31 06:41:07.671  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=6be8a081-daec-2aca-268b-3f0af8940247, timestamp=1554007267670}, Variables: {}
-2019-03-31 06:41:07.671  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : stopped org.springframework.statemachine.support.DefaultStateMachineExecutor@51e37590
-2019-03-31 06:41:07.671  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateMachineStopped
-2019-03-31 06:41:07.671  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: null, Message Headers: {id=3825827b-07cb-6df6-f6bb-ebb391030e1e, timestamp=1554007267671}, Variables: {}
-2019-03-31 06:41:07.671  INFO 32679 --- [           main] o.s.s.support.LifecycleObjectSupport     : stopped STATE1 TASKS TASK13 TASK11 TASK12 TASK21 TASK23 TASK22 CHOICE1 CHOICE2 START STATE2 END JOIN FORK CHOICE  /  / uuid=a2882db4-b636-4fac-93d0-87c50434401e / id=null
-2019-03-31 06:41:07.671  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener transitionEnded from STATE2 to END
-2019-03-31 06:41:07.671  INFO 32679 --- [           main] g.p.b.s.DefaultStateMachineEventListener : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=6be8a081-daec-2aca-268b-3f0af8940247, timestamp=1554007267670}, Variables: {}
-2019-03-31 06:41:07.675  INFO 32679 --- [       Thread-1] o.s.s.support.LifecycleObjectSupport     : destroy called</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/code/System.out-2 target=_blank>view raw</a></span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>... : started ObjectState [getIds()=[TASK11], getClass()=class org.springframework.statemachine.state.ObjectState, hashCode()=1584833211, toString()=AbstractState [id=TASK11, pseudoState=org.springframework.statemachine.state.DefaultPseudoState@757194dc, deferred=[], entryActions=[], exitActions=[], stateActions=[], regions=[], submachine=null]]
+... : started ObjectState [getIds()=[TASK22], getClass()=class org.springframework.statemachine.state.ObjectState, hashCode()=800456240, toString()=AbstractState [id=TASK22, pseudoState=null, deferred=[], entryActions=[], exitActions=[], stateActions=[], regions=[], submachine=null]]
+... : started RegionState [getIds()=[TASKS, TASK11, TASK22], getClass()=class org.springframework.statemachine.state.RegionState, hashCode()=1311544814, toString()=AbstractState [id=TASKS, pseudoState=org.springframework.statemachine.state.DefaultPseudoState@d0ec63, deferred=[], entryActions=[], exitActions=[], stateActions=[], regions=[TASK13 TASK11 TASK12  / TASK11 / uuid=b703837b-1a49-4dc4-83aa-5420f6cf0517 / id=null, TASK21 TASK23 TASK22  / TASK22 / uuid=74691d25-219e-4dca-83ff-2e80ffc74f93 / id=null], submachine=null]]
+... : started org.springframework.statemachine.support.DefaultStateMachineExecutor@51e37590
+... : Listener stateMachineStarted
+... : Listener stateContext (Message Payload: null, Message Headers: {id=a6be7fdd-8685-5b21-1f34-9dcf718ec374, timestamp=1554007267665}, Variables: {}
+... : started org.springframework.statemachine.support.DefaultStateMachineExecutor@5a865416
+... : Listener stateMachineStarted
+... : Listener stateContext (Message Payload: null, Message Headers: {id=3eef6870-ee58-fa1d-8798-71987d336914, timestamp=1554007267665}, Variables: {}
+... : started TASK13 TASK11 TASK12  / TASK11 / uuid=b703837b-1a49-4dc4-83aa-5420f6cf0517 / id=null
+... : started org.springframework.statemachine.support.DefaultStateMachineExecutor@6dc1484
+... : Listener stateMachineStarted
+... : Listener stateContext (Message Payload: null, Message Headers: {id=aef5d00b-59ea-8eed-81ff-c840b1ce2b94, timestamp=1554007267666}, Variables: {}
+... : started TASK21 TASK23 TASK22  / TASK22 / uuid=74691d25-219e-4dca-83ff-2e80ffc74f93 / id=null
+... : started STATE1 TASKS TASK13 TASK11 TASK12 TASK21 TASK23 TASK22 CHOICE1 CHOICE2 START STATE2 END JOIN FORK CHOICE  / TASKS,TASK11,TASK22 / uuid=a2882db4-b636-4fac-93d0-87c50434401e / id=null
+... : Listener transitionStarted from TASK11 to TASK12
+... : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=dd47c963-48b4-a47b-093a-bd52cc4371f8, timestamp=1554007267666}, Variables: {}
+... : Listener transition from TASK11 to TASK12
+... : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=dd47c963-48b4-a47b-093a-bd52cc4371f8, timestamp=1554007267666}, Variables: {}
+... : Listener stateExited in TASK11
+... : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=dd47c963-48b4-a47b-093a-bd52cc4371f8, timestamp=1554007267666}, Variables: {}
+... : Listener stateEntered in TASK12
+... : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=dd47c963-48b4-a47b-093a-bd52cc4371f8, timestamp=1554007267666}, Variables: {}
+... : Listener stateChanged from TASK11 to TASK12
+... : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=dd47c963-48b4-a47b-093a-bd52cc4371f8, timestamp=1554007267666}, Variables: {}
+... : Listener transitionEnded from TASK11 to TASK12
+... : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=dd47c963-48b4-a47b-093a-bd52cc4371f8, timestamp=1554007267666}, Variables: {}
+... : Listener eventNotAccepted GenericMessage [payload=TASK11_TASK12, headers={id=dd47c963-48b4-a47b-093a-bd52cc4371f8, timestamp=1554007267666}]
+... : Listener stateContext (Message Payload: TASK11_TASK12, Message Headers: {id=dd47c963-48b4-a47b-093a-bd52cc4371f8, timestamp=1554007267666}, Variables: {}
+... : Listener eventNotAccepted GenericMessage [payload=TASK22_TASK23, headers={id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}]
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}, Variables: {}
+... : Listener eventNotAccepted GenericMessage [payload=TASK22_TASK23, headers={id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}]
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}, Variables: {}
+... : Listener transitionStarted from TASK22 to TASK23
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}, Variables: {}
+... : Listener transition from TASK22 to TASK23
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}, Variables: {}
+... : Listener stateExited in TASK22
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}, Variables: {}
+... : Listener stateEntered in TASK23
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}, Variables: {}
+... : Listener stateChanged from TASK22 to TASK23
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}, Variables: {}
+... : stopped org.springframework.statemachine.support.DefaultStateMachineExecutor@6dc1484
+... : Listener stateMachineStopped
+... : Listener stateContext (Message Payload: null, Message Headers: {id=ff2f4d56-fde7-2ab0-c412-e5307b52cfc1, timestamp=1554007267668}, Variables: {}
+... : stopped TASK21 TASK23 TASK22  /  / uuid=74691d25-219e-4dca-83ff-2e80ffc74f93 / id=null
+... : Listener transitionEnded from TASK22 to TASK23
+... : Listener stateContext (Message Payload: TASK22_TASK23, Message Headers: {id=285c9e5d-930d-c150-0ef0-2de6cec651ab, timestamp=1554007267667}, Variables: {}
+... : Listener eventNotAccepted GenericMessage [payload=TASK12_TASK13, headers={id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}]
+... : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}, Variables: {}
+... : Listener eventNotAccepted GenericMessage [payload=TASK12_TASK13, headers={id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}]
+... : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}, Variables: {}
+... : Listener transitionStarted from TASK12 to TASK13
+... : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}, Variables: {}
+... : Listener transition from TASK12 to TASK13
+... : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}, Variables: {}
+... : Listener stateExited in TASK12
+... : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}, Variables: {}
+... : Listener stateEntered in TASK13
+... : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}, Variables: {}
+... : stopped org.springframework.statemachine.support.DefaultStateMachineExecutor@5a865416
+... : Listener stateMachineStopped
+... : Listener stateContext (Message Payload: null, Message Headers: {id=ee20242f-e669-8719-8cef-869d2c7bbb13, timestamp=1554007267669}, Variables: {}
+... : stopped TASK13 TASK11 TASK12  /  / uuid=b703837b-1a49-4dc4-83aa-5420f6cf0517 / id=null
+... : Listener stateExited in TASKS
+... : Listener stateContext (Message Payload: null, Message Headers: {id=9835d889-b3e4-b056-2e8d-1dfc3850907e, timestamp=1554007267670}, Variables: {}
+... : Listener stateEntered in STATE2
+... : Listener stateContext (Message Payload: null, Message Headers: {id=e9f3c6bb-b384-455e-354c-7cc6d8b2f6a1, timestamp=1554007267670}, Variables: {}
+... : Listener stateChanged from TASKS to STATE2
+... : Listener stateContext (Message Payload: null, Message Headers: {id=6c0826b9-8ec5-84a8-f6d4-53b1c3311334, timestamp=1554007267670}, Variables: {}
+... : Listener stateChanged from TASK12 to TASK13
+... : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}, Variables: {}
+... : Listener transitionEnded from TASK12 to TASK13
+... : Listener stateContext (Message Payload: TASK12_TASK13, Message Headers: {id=5ff52736-4f77-7bf1-e0ad-9e9cef73e1aa, timestamp=1554007267668}, Variables: {}
+... : Listener transitionStarted from STATE2 to END
+... : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=6be8a081-daec-2aca-268b-3f0af8940247, timestamp=1554007267670}, Variables: {}
+... : Listener transition from STATE2 to END
+... : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=6be8a081-daec-2aca-268b-3f0af8940247, timestamp=1554007267670}, Variables: {}
+... : Listener stateExited in STATE2
+... : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=6be8a081-daec-2aca-268b-3f0af8940247, timestamp=1554007267670}, Variables: {}
+... : Listener stateEntered in END
+... : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=6be8a081-daec-2aca-268b-3f0af8940247, timestamp=1554007267670}, Variables: {}
+... : Listener stateChanged from STATE2 to END
+... : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=6be8a081-daec-2aca-268b-3f0af8940247, timestamp=1554007267670}, Variables: {}
+... : stopped org.springframework.statemachine.support.DefaultStateMachineExecutor@51e37590
+... : Listener stateMachineStopped
+... : Listener stateContext (Message Payload: null, Message Headers: {id=3825827b-07cb-6df6-f6bb-ebb391030e1e, timestamp=1554007267671}, Variables: {}
+... : stopped STATE1 TASKS TASK13 TASK11 TASK12 TASK21 TASK23 TASK22 CHOICE1 CHOICE2 START STATE2 END JOIN FORK CHOICE  /  / uuid=a2882db4-b636-4fac-93d0-87c50434401e / id=null
+... : Listener transitionEnded from STATE2 to END
+... : Listener stateContext (Message Payload: STATE2_END, Message Headers: {id=6be8a081-daec-2aca-268b-3f0af8940247, timestamp=1554007267670}, Variables: {}
+... : destroy called</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/code/System.out-2 target=_blank>view raw</a></span>
 <a href=/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/code/System.out-2 target=_blank>System.out-2</a></div></div><p>El <a href=https://github.com/picodotdev/blog-ejemplos/tree/master/SpringStatemachine>código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href=https://github.com/>GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradle run</code>.</p><div class=reference>Referencia:<br><ul><li><a href=https://docs.spring.io/spring-statemachine/docs/current/api/>Spring Statemachine Javadoc</a></li><li><a href=https://www.baeldung.com/spring-state-machine>A Guide to the Spring State Machine Project</a></li><li><a href=https://codeburst.io/spring-state-machine-what-is-it-and-do-you-need-it-e894c78f5d84>Spring State Machine: what is it and do you need it?</a></li></ul></div></div></article></div></div><div class="row related"><div class=col-md-12>Artículos relacionados:<ul><li><a href=/blog-bitix/2019/02/servidor-oauth-gateway-y-servicio-rest-utilizando-tokens-jwt-con-spring/>Servidor OAuth, gateway y servicio REST utilizando tokens JWT con Spring</a></li><li><a href=/blog-bitix/2018/12/exponer-las-metricas-de-hystrix-en-grafana-con-prometheus-de-una-aplicacion-spring-boot/>Exponer las métricas de Hystrix en Grafana con Prometheus de una aplicación Spring Boot</a></li><li><a href=/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/>Monitorizar una aplicación Java de Spring Boot con Micrometer, Prometheus y Grafana</a></li><li><a href=/blog-bitix/2018/10/proxy-para-microservicios-con-spring-cloud-netflix-y-zuul/>Proxy para microservicios con Spring Cloud Netflix y Zuul</a></li><li><a href=/blog-bitix/2018/10/balanceo-de-carga-y-resilencia-en-un-microservicio-con-spring-cloud-netflix-y-ribbon/>Balanceo de carga y resilencia en un microservicio con Spring Cloud Netflix y Ribbon</a></li></ul></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class=col-12><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><a id=comments></a><div class=row><div class=col-md-12><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='https:\/\/picodotdev.github.io\/blog-bitix\/2019\/03\/ejemplo-de-maquina-de-estados-con-spring-statemachine\/';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2019\/03\/ejemplo-de-maquina-de-estados-con-spring-statemachine\/';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script></div><div class="col-12 col-lg-4"><div class=row><div class="col-md-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:300px;height:600px data-ad-client=ca-pub-3533636310991304 data-ad-slot=9559414587 data-type=large-skycraper></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><div class=row><div class="col-md-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:336px;height:280px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2873752587 data-type=large-rectangle></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><div class="row text-center banner"><div class=col-12><a href=https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/><img src=assets/images/i-support-fs_red-bg-es.png alt="Yo apoyo al software libre"></a></div></div><div class=row><div class=col-md-12><hr></div></div><div class=row><div class=col-md-12><ul class="list-unstyled recents"><li><span class="glyphicon glyphicon-hand-right"></span><a href=archive/>Más artículos recientes en el archivo</a></li></ul></div></div></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
 <a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
 <a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2019 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow rel=license><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style=border-width:0 src=https://licensebuttons.net/l/by-sa/4.0/80x15.png class=licencia></a><br><a href=https://twitter.com/blogstackinfo rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png alt="Blog Stack" title="Blog Stack"></a>
