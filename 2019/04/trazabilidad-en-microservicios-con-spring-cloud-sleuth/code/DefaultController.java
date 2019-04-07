@@ -31,7 +31,7 @@ public class DefaultController {
 
 		TraceContext.Extractor<HttpServletRequest> extractor = tracing.propagation().extractor((HttpServletRequest carrier, String key) -> { return carrier.getHeader(key); });
 		Span span = tracer.nextSpan(extractor.extract(request));
-		System.out.printf("Service Span (%s, %s)%n", span.context().traceIdString(), span.context().spanIdString());
+		System.out.printf("Client Span (traceId: %s, spanId: %s)%n", span.context().traceIdString(), span.context().spanIdString());
 
 		return String.format("Hello world (%s, %s)", request.getRequestURL(), configuration.getKey());
 	}
