@@ -1,4 +1,324 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/post/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2019-04-05T17:45:00+02:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2019/04/el-concepto-de-wildcard-capture-en-java/</id><title>El concepto de wildcard capture en Java</title><updated>2019-04-05T17:45:00+02:00</updated><published>2019-04-05T17:45:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/04/el-concepto-de-wildcard-capture-en-java/"/><author><name>picodotdev</name></author><content type="html">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/post/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2019-04-07T10:00:00+02:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/</id><title>Trazabilidad en microservicios con Spring Cloud Sleuth</title><updated>2019-04-07T10:00:00+02:00</updated><published>2019-04-07T10:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/"/><author><name>picodotdev</name></author><content type="html">
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/spring.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Spring&#34; title=&#34;Spring&#34;/&gt;
+&lt;/div&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+&lt;p&gt;En una aplicación distribuida con varios microservicios es imprescindible tener la configuración de forma centralizada que cada microservicio obtiene al iniciarse y disponer de registro y descubrimiento para que los servicios al iniciarse, terminarse, actualizarse o por un fallo se registren o desregistren y obtengan la ubicación de las dependencias que necesitan.&lt;/p&gt;
+&lt;p&gt;Otra de las funcionalidades esenciales en una aplicación distribuida es la trazabilidad de una petición, desde que entra por el &lt;em&gt;API gateway&lt;/em&gt; pasando por las diferentes peticiones que hacen los microservicios por la red o envío de mensajes. Es necesaria la funcionalidad que relacione las trazas de todos los servicios para depuración o consulta en un futuro para dar visibilidad a las acciones que se realizan en el sistema.&lt;/p&gt;
+&lt;p&gt;¿Como se consigue relacionar las trazas de los microservicios que son independientes? La técnica que se emplea es asignar a cada petición entrante un identificativo, más bien un identificativo para la transacción de forma global y un identificativo para la transacción en cada microservicio que varía en cada comunicación de red.&lt;/p&gt;
+&lt;p&gt;Cuando un microservicio se comunica con otro envía en su petición el identificativo de la transacción global y el de su transacción. Si un microservicio no recibe estos identificativos los genera. En el protocolo HTTP estos identificativos se envían y reciben a través de las cabeceras. Los identificativos permiten correlacionar todas las trazas que emiten los diferentes procesos de los microservicios de una misma petición en la aplicación, haciendo una búsqueda global por el identificativo global se obtiene el conjunto de trazas que han emitido los microservicios por las que ha transitado una petición.&lt;/p&gt;
+&lt;p&gt;Para obtener mejor visibilidad de los tiempos y latencias se puede utilizar &lt;a href=&#34;https://zipkin.io/&#34;&gt;Zipkin&lt;/a&gt;, &lt;a href=&#34;https://prometheus.io/&#34;&gt;Prometheus&lt;/a&gt; junto con &lt;a href=&#34;https://github.com/Netflix/Hystrix&#34;&gt;Hystrix&lt;/a&gt; o &lt;a href=&#34;https://github.com/resilience4j/resilience4j&#34;&gt;Resilience4j&lt;/a&gt; también dan visibilidad de los tiempos entre otras cosas.&lt;/p&gt;
+&lt;p&gt;En Java el proyecto &lt;a href=&#34;https://spring.io/projects/spring-cloud-sleuth&#34;&gt;Spring Cloud Sleuth&lt;/a&gt; proporciona la funcionalidad de trazabilidad. En el &lt;a href=&#34;https://cloud.spring.io/spring-cloud-static/spring-cloud-sleuth/2.1.0.RELEASE/single/spring-cloud-sleuth.html#_propagation&#34;&gt;esquema se observa como &lt;em&gt;Sleuth&lt;/em&gt; envía las cabeceras&lt;/a&gt; de un servicio cliente a un servicio servidor.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt; Client Span Server Span
+┌──────────────────┐ ┌──────────────────┐
+│ │ │ │
+│ TraceContext │ Http Request Headers │ TraceContext │
+│ ┌──────────────┐ │ ┌───────────────────┐ │ ┌──────────────┐ │
+│ │ TraceId │ │ │ X─B3─TraceId │ │ │ TraceId │ │
+│ │ │ │ │ │ │ │ │ │
+│ │ ParentSpanId │ │ Extract │ X─B3─ParentSpanId │ Inject │ │ ParentSpanId │ │
+│ │ ├─┼─────────&amp;gt;│ ├────────┼&amp;gt;│ │ │
+│ │ SpanId │ │ │ X─B3─SpanId │ │ │ SpanId │ │
+│ │ │ │ │ │ │ │ │ │
+│ │ Sampled │ │ │ X─B3─Sampled │ │ │ Sampled │ │
+│ └──────────────┘ │ └───────────────────┘ │ └──────────────┘ │
+│ │ │ │
+└──────────────────┘ └──────────────────┘&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/sleuth-headers.txt&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/sleuth-headers.txt&#34; target=&#34;_blank&#34;&gt;sleuth-headers.txt&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Sleuth&lt;/em&gt; se encarga de propagar las cabeceras del servicio cliente al servicio servidor automáticamente instrumentando los clientes HTTP de &lt;em&gt;RestTemplate&lt;/em&gt;, &lt;em&gt;AsyncRestTemplate&lt;/em&gt;, &lt;em&gt;WebClient&lt;/em&gt;, &lt;em&gt;Apache HttpClient&lt;/em&gt; y &lt;em&gt;Netty HttpClient&lt;/em&gt;. Para enviar, recibir, obtener y establecer los identificativos de correlación con &lt;em&gt;Sleuth&lt;/em&gt; junto con el cliente HTTP de Java hay que hacer la instrumentación manualmente si no está entre los soportados como en el caso del &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/09/novedades-y-nuevas-caracteristicas-de-java-11/&#34;&gt;cliente HTTP que se añadió en Java 11 en el propio JDK&lt;/a&gt; con el soporte para HTTP/2.&lt;/p&gt;
+&lt;p&gt;En la parte servidora &lt;em&gt;Sleuth&lt;/em&gt; proporciona un filtro que se encarga de obtener y crear el &lt;em&gt;span&lt;/em&gt; de la petición que contiene los identificativos de correlación que con &lt;a href=&#34;https://spring.io/&#34;&gt;Spring&lt;/a&gt; y las dependencias adecuadas se configura automáticamente. Para inyectar y extraer las cabeceras de &lt;em&gt;Sleuth&lt;/em&gt; con el cliente HTTP de Java o como en el ejemplo con el de &lt;a href=&#34;https://jersey.github.io/&#34;&gt;Jersey&lt;/a&gt; basta con proporcionar una &lt;em&gt;lambda&lt;/em&gt; que realice el añadido o extracción de las cabeceras con la API del cliente.&lt;/p&gt;
+&lt;p&gt;Este es el código para instrumentalizar el cliente HTTP de &lt;em&gt;Jersey&lt;/em&gt; que utiliza el servicio cliente que invoca al &lt;em&gt;gateway&lt;/em&gt; y el código para crear el &lt;em&gt;span&lt;/em&gt; en el cliente con los identificativos de correlación y recogerlos en el servicio servidor.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;io.github.picodotdev.blogbitix.springcloud.client&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Component&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;ProxyService&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;LoadBalancerClient&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;loadBalancer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Tracing&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tracing&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Tracer&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tracer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@HystrixCommand&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;fallbackMethod&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;getFallback&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;commandProperties&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@HystrixProperty&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;circuitBreaker.requestVolumeThreshold&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;value&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;4&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;),&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@HystrixProperty&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;circuitBreaker.errorThresholdPercentage&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;value&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;50&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;),&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@HystrixProperty&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;execution.isolation.thread.timeoutInMilliseconds&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;value&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;25000&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;})&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;ServiceInstance&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;loadBalancer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;choose&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;proxy&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;URI&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;uri&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getUri&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;resource&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;format&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;%s%s&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;uri&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;toString&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;/service&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;Invocation&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Builder&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;builder&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ClientBuilder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;newClient&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;target&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;resource&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;Span&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;span&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tracer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;newTrace&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;start&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;TraceContext&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Injector&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Invocation&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Builder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;injector&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tracing&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;propagation&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;injector&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Invocation&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Builder&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;carrier&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;carrier&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;header&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;});&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;injector&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;inject&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;span&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;builder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Proxy Span (traceId: %s, spanId: %s)%n&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;span&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;traceIdString&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;span&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;spanIdString&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;builder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;readEntity&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getFallback&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Fallback&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/ProxyService.java&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/ProxyService.java&#34; target=&#34;_blank&#34;&gt;ProxyService.java&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;io.github.picodotdev.blogbitix.springcloud.service&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@RestController&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;DefaultController&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DefaultConfiguration&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;configuration&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Tracing&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tracing&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Tracer&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tracer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Random&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;random&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Counter&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;counter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;DefaultController&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;MeterRegistry&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;registry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;random&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Random&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;counter&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Counter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;builder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;service.invocations&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;description&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Total service invocations&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;register&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;registry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;home&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HttpServletRequest&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;throws&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Exception&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;counter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;increment&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;// Timeout simulation
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;//Thread.sleep(random.nextInt(2000));
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;TraceContext&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Extractor&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HttpServletRequest&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;extractor&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tracing&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;propagation&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;extractor&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HttpServletRequest&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;carrier&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;carrier&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getHeader&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;});&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;Span&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;span&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tracer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;nextSpan&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;extractor&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;extract&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Service Span (%s, %s)%n&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;span&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;traceIdString&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;span&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;spanIdString&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;format&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Hello world (%s, %s)&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getRequestURL&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;configuration&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getKey&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/DefaultController.java&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/DefaultController.java&#34; target=&#34;_blank&#34;&gt;DefaultController.java&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;He utilizado el ejemplo de la &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/series/spring-cloud/&#34;&gt;serie de artículos sobre Spring Cloud&lt;/a&gt; añadiendo el soporte para &lt;em&gt;Spring Cloud Sleuth&lt;/em&gt;. La aplicación se compone de un microservicio de configuración (con &lt;a href=&#34;https://cloud.spring.io/spring-cloud-config/&#34;&gt;Spring Cloud Config&lt;/a&gt;), otro de registro y descubrimiento (con Eureka), un servicio de API &lt;em&gt;gateway&lt;/em&gt; (con Zuul), el servicio de aplicación y un cliente del servicio que envía las peticiones al &lt;em&gt;gateway&lt;/em&gt; y este las redirige al servicio de aplicación.&lt;/p&gt;
+&lt;p&gt;El cliente inicia un &lt;em&gt;span&lt;/em&gt; que es enviado al servidor y el servidor obtiene las cabeceras enviadas. El cliente y el servidor son dos procesos distintos del sistema pero se observa que el identificativo global de la transacción &lt;em&gt;traceId&lt;/em&gt; se mantiene en ambos y el identificativo de &lt;em&gt;spanId&lt;/em&gt; cambia entre el cliente y el servidor.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;Client Span (traceId: 94fcd131178298fd, spanId: 94fcd131178298fd)
+...
+Service Span (traceId: 94fcd131178298fd, spanId: 6e6380e239f30917)
+...
+Service response: Hello world (http://archlinux:8080/, value)&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/System.out&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/System.out&#34; target=&#34;_blank&#34;&gt;System.out&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Para iniciar los diferentes microservicios de la aplicación hay que utilizar los siguientes comandos.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ ./gradlew discoveryserver:run --args&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;--port=8761&amp;#34;&lt;/span&gt;
+$ ./gradlew configserver:run --args&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;--port=8090&amp;#34;&lt;/span&gt;
+$ ./gradlew service:run --args&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;--port=8080&amp;#34;&lt;/span&gt;
+$ ./gradlew proxy:run --args&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;--port=8085&amp;#34;&lt;/span&gt;
+$ ./gradlew client:run --args&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;--service=proxy&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/gradle-run.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/gradle-run.sh&#34; target=&#34;_blank&#34;&gt;gradle-run.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;En los proyectos hay que incluir la dependencia para &lt;em&gt;Sleuth&lt;/em&gt; en la herramienta de construcción.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Groovy&#34; data-lang=&#34;Groovy&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Groovy&#34; data-lang=&#34;Groovy&#34;&gt;&lt;span class=&#34;n&#34;&gt;plugins&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;application&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;mainClassName&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;io.github.picodotdev.blogbitix.springcloud.client.Main&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;dependencies&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;implementation&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;platform&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;org.springframework.boot:spring-boot-dependencies:2.1.4.RELEASE&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;implementation&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;platform&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;org.springframework.cloud:spring-cloud-dependencies:Greenwich.SR1&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;// Spring
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;excludeSpringBootStarterLogging&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;exclude&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nl&#34;&gt;group:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;org.springframework.boot&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;module:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;spring-boot-starter-logging&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;compile&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;org.springframework.boot:spring-boot-starter&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;excludeSpringBootStarterLogging&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;compile&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;org.springframework.cloud:spring-cloud-starter-sleuth&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;excludeSpringBootStarterLogging&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/build.gradle&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/build.gradle&#34; target=&#34;_blank&#34;&gt;build.gradle&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;
+El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/SpringCloud&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradle-run.sh&lt;/code&gt;.
+&lt;/p&gt;
+&lt;div class=&#34;reference&#34;&gt;
+Referencia:&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.paradigmadigital.com/dev/trazabilidad-distribuida-spring-cloud-sleuth-zipkin/&#34;&gt;Trazabilidad Distribuida con Spring Cloud: Sleuth y Zipkin&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://content.pivotal.io/springone-platform-2017/distributed-tracing-latency-analysis-for-your-microservices-grzejszczak-krishna&#34;&gt;Distributed Tracing : Latency Analysis for Your Microservices&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;</content><category term="java"/><category term="planeta-codigo"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/04/el-concepto-de-wildcard-capture-en-java/</id><title>El concepto de wildcard capture en Java</title><updated>2019-04-05T17:45:00+02:00</updated><published>2019-04-05T17:45:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/04/el-concepto-de-wildcard-capture-en-java/"/><author><name>picodotdev</name></author><content type="html">
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
 &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
 &lt;/div&gt;
@@ -4467,46 +4787,4 @@ Referencia:&lt;br&gt;
 &lt;li&gt;&lt;a href=&#34;https://stackoverflow.com/questions/52606720/issue-with-having-multiple-websecurityconfigureradapter-in-spring-boot&#34;&gt;Issue with having multiple WebSecurityConfigurerAdapter in spring-boot&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://stackoverflow.com/questions/49654143/spring-security-5-there-is-no-passwordencoder-mapped-for-the-id-null&#34;&gt;Spring Security 5: There is no PasswordEncoder mapped for the id &amp;ldquo;null&amp;rdquo;&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/div&gt;</content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/><category term="software"/><category term="spring"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/02/proyecto-de-mejora-de-smart-tv-usando-una-vpn-para-acceder-a-contenido-restringido-por-ip/</id><title>Proyecto de mejora de Smart TV usando una VPN para acceder a contenido restringido por IP</title><updated>2019-02-08T16:50:00+01:00</updated><published>2019-02-08T16:50:00+01:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/02/proyecto-de-mejora-de-smart-tv-usando-una-vpn-para-acceder-a-contenido-restringido-por-ip/"/><author><name>picodotdev</name></author><content type="html">
-&lt;p&gt;Las TV inteligentes o Smart TVs son cada vez más comunes, bien en la propia televisión, o con dispositivos externos o con miniPCs o, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/01/raspberry-pi-como-media-center-con-geexbox/&#34;&gt;como ya vimos en su momento&lt;/a&gt;, con una Raspberry Pi
-En este artículo veremos que hay cierto contenido o algunos servicios a los que no podréis acceder por estar limitados geográficamente, es decir, que solo podréis acceder a ellos si os conectáis desde una dirección IP localizada en la región en la que se presta el servicio. Empecemos con algunos conceptos básicos.&lt;/p&gt;
-&lt;h3 id=&#34;direcciones-ip&#34;&gt;Direcciones IP&lt;/h3&gt;
-&lt;p&gt;Para conectarse a internet es necesario disponer de un identificador público (una dirección IP) reconocido por otros elementos de internet, estos identificadores son entregados por los proveedores de acceso a internet a sus clientes como parte del servicio de conexión a internet.&lt;/p&gt;
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-&lt;figure&gt;
-&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/02/proyecto-de-mejora-de-smart-tv-usando-una-vpn-para-acceder-a-contenido-restringido-por-ip/images/direccion_hu5afe43c5a2b8cb9b2981f30e83db7c6d_106990_600x450_fit_q90_box.jpg&#34; width=&#34;600&#34; class=&#34;&#34; alt=&#34;&#34; title=&#34;Dirección&#34;/&gt;
-&lt;/figure&gt;
-&lt;/div&gt;
-&lt;p&gt;Para racionalizar y dirigir la asignación de direcciones se crearon organismos que gestionan las direcciones en cada uno de los continentes, esto genera una primera división de las direcciones IP en función del organismo que gestione la dirección IP que estamos utilizando.&lt;/p&gt;
-&lt;p&gt;Además de esto, cuando un proveedor solicita la asignación de un grupo de direcciones ha de identificar en qué país se utilizarán cada uno de los distintos grupos asignados, de tal manera que conociendo la dirección IP de una conexión es posible conocer de forma altamente fiable el país de origen de dicha conexión.&lt;/p&gt;
-&lt;h3 id=&#34;servicios-limitados-geográficamente&#34;&gt;Servicios limitados geográficamente&lt;/h3&gt;
-&lt;p&gt;Existen servicios populares como Hulu que no pueden verse fuera de los EEUU o servicios como Netflix que varían su catálogo en función del país en el que se tenga la suscripción, además de países que restringen algunos tipos de contenidos por motivos políticos o legales.&lt;/p&gt;
-&lt;p&gt;Además, algunos canales de televisión ofrecen a sus suscriptores un servicio de &lt;em&gt;streaming&lt;/em&gt; de contenidos que solo está disponible si la dirección IP desde la que se realiza la conexión pertenece al mismo país que el servicio.&lt;/p&gt;
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-&lt;figure&gt;
-&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/02/proyecto-de-mejora-de-smart-tv-usando-una-vpn-para-acceder-a-contenido-restringido-por-ip/images/pagina-bloqueada_hu6796a5c34a5e6ab03ea1ca2f15ac8eb3_135868_600x450_fit_q90_box.jpg&#34; width=&#34;562&#34; class=&#34;&#34; alt=&#34;&#34; title=&#34;Página bloqueada&#34;/&gt;
-&lt;/figure&gt;
-&lt;/div&gt;
-&lt;h3 id=&#34;evitando-las-limitaciones-geográficas&#34;&gt;Evitando las limitaciones geográficas&lt;/h3&gt;
-&lt;p&gt;Existen dos formas en las que puede evitar este tipo de limitaciones, en primer lugar, el uso de proxies, y en segundo lugar el uso de VPNs.&lt;/p&gt;
-&lt;p&gt;No es el objetivo de este artículo entrar en detalles sobre &lt;a href=&#34;https://www.expressvpn.com/es/what-is-vpn&#34;&gt;qué es una VPN&lt;/a&gt; o &lt;a href=&#34;https://es.wikipedia.org/wiki/Servidor_proxy&#34;&gt;qué es un proxy&lt;/a&gt;, si lo deseas puedes seguir los vínculos para leer con más detalle acerca de ambos elementos, la VPN introduce un nivel adicional de seguridad al encriptar todo el tráfico de extremo a extremo, lo que evita que pueda inyectarse código malicioso, cosa que es más difícil de garantizar en un servidor proxy. Adicionalmente, las VPNs, al crear un túnel privado, suelen ofrecer mayor estabilidad en la conexión, cosa que os será muy útil si vais conectar a un servicio de &lt;em&gt;streaming&lt;/em&gt;.&lt;/p&gt;
-&lt;h3 id=&#34;cosas-a-tener-en-cuenta-al-evaluar-un-servicio-de-vpn&#34;&gt;Cosas a tener en cuenta al evaluar un servicio de VPN&lt;/h3&gt;
-&lt;p&gt;Hay una serie de puntos que es necesario tener en cuenta a la hora de buscar un buen servicio de VPN para acceder a servicios de TV por internet:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Compatibilidad, es necesario que exista una versión del cliente de VPN para el dispositivo que se utilice, o en su defecto que pueda ser utilizado en un rúter doméstico.&lt;/li&gt;
-&lt;li&gt;Múltiples servidores, cuantos más servidores tenga disponibles el servicio de VPN más fácil será que encontremos uno dentro de la región a la que pretendemos conectarnos.&lt;/li&gt;
-&lt;li&gt;Velocidades altas, este punto es muy importante y hay que evaluarlo con cuidado, pues muchos servicios de VPN provocan una reducción importante de la velocidad de la conexión o incluso no lo proporcionan de forma estable.&lt;/li&gt;
-&lt;li&gt;Ausencia de límites de transmisión, los servicios de &lt;em&gt;streaming&lt;/em&gt; consumen un volumen importante de datos, por lo que es importante que el servicio no tenga límites de transmisión.&lt;/li&gt;
-&lt;li&gt;Seguridad, el uso de una VPN nos permite añadir un nivel adicional de seguridad a la conexión, normalmente ofrecen diversos grados de encriptación, servicios de garantía de anonimato o ausencia de registros, son capacidades que pueden resultar muy interesantes a la hora de elegir un buen servicio de VPN.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;cómo-puede-conectarse-a-una-vpn-con-nuestra-smart-tv&#34;&gt;¿Cómo puede conectarse a una VPN con nuestra Smart TV?&lt;/h3&gt;
-&lt;p&gt;Hay tres formas de conectar nuestra Smart TV a internet mediante una VPN, las detallamos a continuación:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Conectar la Smart TV a una VPN mediante un rúter.
-En este caso hay que usar un dispositivo enrutador que permita la instalación del cliente de VPN o que incluya el cliente de VPN directamente en su propio software, esta opción es la más ventajosa desde el punto de vista del rendimiento y además permite proporcionar seguridad no solo a nuestra Smart TV sino a todos los elementos de la red.&lt;/li&gt;
-&lt;li&gt;Configurar la VPN directamente en la Smart TV
-Un buen proveedor de servicios de VPN proporcionará software instalable para nuestros dispositivo e instrucciones detalladas para la instalación,&lt;/li&gt;
-&lt;li&gt;Uso de &lt;em&gt;add-ons&lt;/em&gt; de Kodi para Smart TVs que soporten Kodi.
-Si tienes instalado OpenELEC o Kodi, hay diversos &lt;em&gt;add-ons&lt;/em&gt; que pueden ayudarte a conectar a una VPN, como por ejemplo Zomboided.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;La elección del método de conexión dependerá de los requisitos personales, establecer la VPN en el enrutador hará que todo el tráfico de la red esté protegido y seguro, pero restará independencia a la hora de cambiar la configuración de conexión del servidor VPN pues puede penalizar a otros servicios que use en el resto de los dispositivos. La segunda opción es la más versátil pues permite instalar el software de cliente que recomiende el proveedor y cambiar la configuración de conexión de la Smart TV sin perturbar el normal funcionamiento del resto de dispositivos.&lt;/p&gt;</content><category term="patrocinado"/><category term="software"/></entry></feed>
+&lt;/div&gt;</content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/><category term="software"/><category term="spring"/></entry></feed>

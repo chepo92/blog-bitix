@@ -1,0 +1,265 @@
+<!doctype html><html lang=es><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content=picodotdev><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="En una aplicación distribuida con varios microservicios es imprescindible tener la configuración de forma centralizada que cada microservicio obtiene al iniciarse y disponer de registro y descubrimiento para que los servicios al iniciarse, terminarse, actualizarse o por un fallo se registren o desregistren y obtengan la ubicación de las dependencias que necesitan.
+Otra de las funcionalidades esenciales en una aplicación distribuida es la trazabilidad de una petición, desde que entra por el API gateway pasando por las diferentes peticiones que hacen los microservicios por la red o envío de mensajes. &hellip;"><base href=https://picodotdev.github.io/blog-bitix/><title>Trazabilidad en microservicios con Spring Cloud Sleuth</title><link rel=author type=text/plain href=humans.txt><link rel="shortcut icon" href=assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=assets/apple-touch-icon-144-precomposed.png><link rel=canonical href=https://picodotdev.github.io/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/><link href=index.xml rel=alternate type=application/rss+xml title="Blog Bitix"><link rel=stylesheet type=text/css href="//fonts.googleapis.com/css?family=PT+Serif:400,400i,700"><link rel=stylesheet type=text/css href=assets/libs/bootstrap-4.2.1/css/bootstrap.min.css><link rel=stylesheet type=text/css href=assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=assets/css/syntax.css><link rel=stylesheet type=text/css href=assets/css/main.css><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js defer></script><script type=text/javascript defer>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript defer>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script type=text/javascript defer>var require={baseUrl:'assets',paths:{'jquery':'libs/jquery.slim.min','bootstrap':'libs/bootstrap-4.2.1/js/bootstrap.min','blueimp-helper':'libs/Gallery-2.33.0/js/blueimp-helper','blueimp-gallery':'libs/Gallery-2.33.0/js/blueimp-gallery','blueimp-gallery-indicator':'libs/Gallery-2.33.0/js/blueimp-gallery-indicator','blueimp-gallery-video':'libs/Gallery-2.33.0/js/blueimp-gallery-video','blueimp-gallery-vimeo':'libs/Gallery-2.33.0/js/blueimp-gallery-vimeo','blueimp-gallery-youtube':'libs/Gallery-2.33.0/js/blueimp-gallery-youtube','jquery-blueimp-gallery':'libs/Gallery-2.33.0/js/jquery.blueimp-gallery'},shim:{'jquery':{exports:'jquery'},'blueimp-gallery':{exports:'blueimp'}}};</script><script type=text/javascript src=assets/libs/require.js data-main=js/main defer></script><script type=text/javascript src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" defer></script><script type=text/javascript src=assets/js/app.js defer></script></head><body><div class=container><div class=row><div class=col><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
+<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class="col-12 col-lg-4 text-center"><form name=query class="form-inline search" onsubmit="return false;"><div class=input-group><input type=text name=q class=form-control placeholder="Buscar en Blog Bitix">
+<span class=input-group-btn><button class="btn btn-secondary" type=submit>Buscar</button></span></div></form><form name=search action=https://duckduckgo.com/ method=get class=hidden data-site=https://picodotdev.github.io/blog-bitix/><input type=hidden name=q></form></div></div><div class=row><div class=col-12><nav class="nav nav-pills nav-fill"><a href=/blog-bitix/tags/java/ class="nav-item nav-link">Java</a>
+<a href=/blog-bitix/tags/gnu-linux/ class="nav-item nav-link">GNU/Linux</a>
+<a href=/blog-bitix/tags/javascript/ class="nav-item nav-link">JavaScript</a>
+<a href=/blog-bitix/tags/tapestry/ class="nav-item nav-link">Tapestry</a>
+<a href=/blog-bitix/archive/ class="nav-item nav-link">Archivo y hemeroteca</a>
+<a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
+<a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 col-lg-8"><div class=row><div class=col-12><article itemprop=mainEntity itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content=es><meta itemprop=keywords content="java, planeta-codigo"><h1 itemprop=name>Trazabilidad en microservicios con Spring Cloud Sleuth</h1><p class=information>Escrito por
+<span itemprop=author itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2019-04-07>07/04/2019</time>.<br><a href=tags/java/>java</a> <a href=tags/planeta-codigo/>planeta-codigo</a><br><a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/ itemprop=url>Enlace permanente</a>
+<a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/#comments>Comentarios</a></p><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script><div class=content itemprop=articleBody><meta itemprop=wordCount content=1238><div class=logotypes style=float:right><img src=assets/images/logotipos/spring.svg class=right width=200 alt=Spring title=Spring></div><div class=logotypes style=float:right;clear:right><img src=assets/images/logotipos/java.svg class=right width=200 alt=Java title=Java></div><p>En una aplicación distribuida con varios microservicios es imprescindible tener la configuración de forma centralizada que cada microservicio obtiene al iniciarse y disponer de registro y descubrimiento para que los servicios al iniciarse, terminarse, actualizarse o por un fallo se registren o desregistren y obtengan la ubicación de las dependencias que necesitan.</p><p>Otra de las funcionalidades esenciales en una aplicación distribuida es la trazabilidad de una petición, desde que entra por el <em>API gateway</em> pasando por las diferentes peticiones que hacen los microservicios por la red o envío de mensajes. Es necesaria la funcionalidad que relacione las trazas de todos los servicios para depuración o consulta en un futuro para dar visibilidad a las acciones que se realizan en el sistema.</p><p>¿Como se consigue relacionar las trazas de los microservicios que son independientes? La técnica que se emplea es asignar a cada petición entrante un identificativo, más bien un identificativo para la transacción de forma global y un identificativo para la transacción en cada microservicio que varía en cada comunicación de red.</p><p>Cuando un microservicio se comunica con otro envía en su petición el identificativo de la transacción global y el de su transacción. Si un microservicio no recibe estos identificativos los genera. En el protocolo HTTP estos identificativos se envían y reciben a través de las cabeceras. Los identificativos permiten correlacionar todas las trazas que emiten los diferentes procesos de los microservicios de una misma petición en la aplicación, haciendo una búsqueda global por el identificativo global se obtiene el conjunto de trazas que han emitido los microservicios por las que ha transitado una petición.</p><p>Para obtener mejor visibilidad de los tiempos y latencias se puede utilizar <a href=https://zipkin.io/>Zipkin</a>, <a href=https://prometheus.io/>Prometheus</a> junto con <a href=https://github.com/Netflix/Hystrix>Hystrix</a> o <a href=https://github.com/resilience4j/resilience4j>Resilience4j</a> también dan visibilidad de los tiempos entre otras cosas.</p><p>En Java el proyecto <a href=https://spring.io/projects/spring-cloud-sleuth>Spring Cloud Sleuth</a> proporciona la funcionalidad de trazabilidad. En el <a href=https://cloud.spring.io/spring-cloud-static/spring-cloud-sleuth/2.1.0.RELEASE/single/spring-cloud-sleuth.html#_propagation>esquema se observa como <em>Sleuth</em> envía las cabeceras</a> de un servicio cliente a un servicio servidor.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>   Client Span                                                Server Span
+┌──────────────────┐                                       ┌──────────────────┐
+│                  │                                       │                  │
+│   TraceContext   │           Http Request Headers        │   TraceContext   │
+│ ┌──────────────┐ │          ┌───────────────────┐        │ ┌──────────────┐ │
+│ │ TraceId      │ │          │ X─B3─TraceId      │        │ │ TraceId      │ │
+│ │              │ │          │                   │        │ │              │ │
+│ │ ParentSpanId │ │ Extract  │ X─B3─ParentSpanId │ Inject │ │ ParentSpanId │ │
+│ │              ├─┼─────────&gt;│                   ├────────┼&gt;│              │ │
+│ │ SpanId       │ │          │ X─B3─SpanId       │        │ │ SpanId       │ │
+│ │              │ │          │                   │        │ │              │ │
+│ │ Sampled      │ │          │ X─B3─Sampled      │        │ │ Sampled      │ │
+│ └──────────────┘ │          └───────────────────┘        │ └──────────────┘ │
+│                  │                                       │                  │
+└──────────────────┘                                       └──────────────────┘</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/sleuth-headers.txt target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/sleuth-headers.txt target=_blank>sleuth-headers.txt</a></div></div><p><em>Sleuth</em> se encarga de propagar las cabeceras del servicio cliente al servicio servidor automáticamente instrumentando los clientes HTTP de <em>RestTemplate</em>, <em>AsyncRestTemplate</em>, <em>WebClient</em>, <em>Apache HttpClient</em> y <em>Netty HttpClient</em>. Para enviar, recibir, obtener y establecer los identificativos de correlación con <em>Sleuth</em> junto con el cliente HTTP de Java hay que hacer la instrumentación manualmente si no está entre los soportados como en el caso del <a href=https://picodotdev.github.io/blog-bitix/2018/09/novedades-y-nuevas-caracteristicas-de-java-11/>cliente HTTP que se añadió en Java 11 en el propio JDK</a> con el soporte para HTTP/2.</p><p>En la parte servidora <em>Sleuth</em> proporciona un filtro que se encarga de obtener y crear el <em>span</em> de la petición que contiene los identificativos de correlación que con <a href=https://spring.io/>Spring</a> y las dependencias adecuadas se configura automáticamente. Para inyectar y extraer las cabeceras de <em>Sleuth</em> con el cliente HTTP de Java o como en el ejemplo con el de <a href=https://jersey.github.io/>Jersey</a> basta con proporcionar una <em>lambda</em> que realice el añadido o extracción de las cabeceras con la API del cliente.</p><p>Este es el código para instrumentalizar el cliente HTTP de <em>Jersey</em> que utiliza el servicio cliente que invoca al <em>gateway</em> y el código para crear el <em>span</em> en el cliente con los identificativos de correlación y recogerlos en el servicio servidor.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.springcloud.client</span><span class=o>;</span>
+
+<span class=o>...</span>
+
+<span class=nd>@Component</span>
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>ProxyService</span> <span class=o>{</span>
+
+    <span class=nd>@Autowired</span>
+    <span class=kd>private</span> <span class=n>LoadBalancerClient</span> <span class=n>loadBalancer</span><span class=o>;</span>
+
+    <span class=nd>@Autowired</span>
+    <span class=kd>private</span> <span class=n>Tracing</span> <span class=n>tracing</span><span class=o>;</span>
+
+    <span class=nd>@Autowired</span>
+    <span class=kd>private</span> <span class=n>Tracer</span> <span class=n>tracer</span><span class=o>;</span>
+
+    <span class=nd>@HystrixCommand</span><span class=o>(</span><span class=n>fallbackMethod</span> <span class=o>=</span> <span class=s>&#34;getFallback&#34;</span><span class=o>,</span> <span class=n>commandProperties</span> <span class=o>=</span> <span class=o>{</span>
+            <span class=nd>@HystrixProperty</span><span class=o>(</span><span class=n>name</span> <span class=o>=</span> <span class=s>&#34;circuitBreaker.requestVolumeThreshold&#34;</span><span class=o>,</span> <span class=n>value</span> <span class=o>=</span> <span class=s>&#34;4&#34;</span><span class=o>),</span>
+            <span class=nd>@HystrixProperty</span><span class=o>(</span><span class=n>name</span> <span class=o>=</span> <span class=s>&#34;circuitBreaker.errorThresholdPercentage&#34;</span><span class=o>,</span> <span class=n>value</span> <span class=o>=</span> <span class=s>&#34;50&#34;</span><span class=o>),</span>
+            <span class=nd>@HystrixProperty</span><span class=o>(</span><span class=n>name</span> <span class=o>=</span> <span class=s>&#34;execution.isolation.thread.timeoutInMilliseconds&#34;</span><span class=o>,</span> <span class=n>value</span> <span class=o>=</span> <span class=s>&#34;25000&#34;</span><span class=o>)</span>
+    <span class=o>})</span>
+    <span class=kd>public</span> <span class=n>String</span> <span class=nf>get</span><span class=o>()</span> <span class=o>{</span>
+        <span class=n>ServiceInstance</span> <span class=n>instance</span> <span class=o>=</span> <span class=n>loadBalancer</span><span class=o>.</span><span class=na>choose</span><span class=o>(</span><span class=s>&#34;proxy&#34;</span><span class=o>);</span>
+        <span class=n>URI</span> <span class=n>uri</span> <span class=o>=</span> <span class=n>instance</span><span class=o>.</span><span class=na>getUri</span><span class=o>();</span>
+        <span class=n>String</span> <span class=n>resource</span> <span class=o>=</span> <span class=n>String</span><span class=o>.</span><span class=na>format</span><span class=o>(</span><span class=s>&#34;%s%s&#34;</span><span class=o>,</span> <span class=n>uri</span><span class=o>.</span><span class=na>toString</span><span class=o>(),</span> <span class=s>&#34;/service&#34;</span><span class=o>);</span>
+        <span class=n>Invocation</span><span class=o>.</span><span class=na>Builder</span> <span class=n>builder</span> <span class=o>=</span> <span class=n>ClientBuilder</span><span class=o>.</span><span class=na>newClient</span><span class=o>().</span><span class=na>target</span><span class=o>(</span><span class=n>resource</span><span class=o>).</span><span class=na>request</span><span class=o>();</span>
+
+        <span class=n>Span</span> <span class=n>span</span> <span class=o>=</span> <span class=n>tracer</span><span class=o>.</span><span class=na>newTrace</span><span class=o>().</span><span class=na>start</span><span class=o>();</span>
+        <span class=n>TraceContext</span><span class=o>.</span><span class=na>Injector</span><span class=o>&lt;</span><span class=n>Invocation</span><span class=o>.</span><span class=na>Builder</span><span class=o>&gt;</span> <span class=n>injector</span> <span class=o>=</span> <span class=n>tracing</span><span class=o>.</span><span class=na>propagation</span><span class=o>().</span><span class=na>injector</span><span class=o>((</span><span class=n>Invocation</span><span class=o>.</span><span class=na>Builder</span> <span class=n>carrier</span><span class=o>,</span> <span class=n>String</span> <span class=n>key</span><span class=o>,</span> <span class=n>String</span> <span class=n>value</span><span class=o>)</span> <span class=o>-&gt;</span> <span class=o>{</span> <span class=n>carrier</span><span class=o>.</span><span class=na>header</span><span class=o>(</span><span class=n>key</span><span class=o>,</span> <span class=n>value</span><span class=o>);</span> <span class=o>});</span>
+        <span class=n>injector</span><span class=o>.</span><span class=na>inject</span><span class=o>(</span><span class=n>span</span><span class=o>.</span><span class=na>context</span><span class=o>(),</span> <span class=n>builder</span><span class=o>);</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;Proxy Span (traceId: %s, spanId: %s)%n&#34;</span><span class=o>,</span> <span class=n>span</span><span class=o>.</span><span class=na>context</span><span class=o>().</span><span class=na>traceIdString</span><span class=o>(),</span> <span class=n>span</span><span class=o>.</span><span class=na>context</span><span class=o>().</span><span class=na>spanIdString</span><span class=o>());</span>
+
+        <span class=k>return</span> <span class=n>builder</span><span class=o>.</span><span class=na>get</span><span class=o>().</span><span class=na>readEntity</span><span class=o>(</span><span class=n>String</span><span class=o>.</span><span class=na>class</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=kd>private</span> <span class=n>String</span> <span class=nf>getFallback</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=s>&#34;Fallback&#34;</span><span class=o>;</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/ProxyService.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/ProxyService.java target=_blank>ProxyService.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.springcloud.service</span><span class=o>;</span>
+
+<span class=o>...</span>
+
+<span class=nd>@RestController</span>
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>DefaultController</span> <span class=o>{</span>
+
+    <span class=nd>@Autowired</span>
+    <span class=kd>private</span> <span class=n>DefaultConfiguration</span> <span class=n>configuration</span><span class=o>;</span>
+
+    <span class=nd>@Autowired</span>
+    <span class=kd>private</span> <span class=n>Tracing</span> <span class=n>tracing</span><span class=o>;</span>
+
+    <span class=nd>@Autowired</span>
+    <span class=kd>private</span> <span class=n>Tracer</span> <span class=n>tracer</span><span class=o>;</span>
+
+    <span class=kd>private</span> <span class=n>Random</span> <span class=n>random</span><span class=o>;</span>
+    <span class=kd>private</span> <span class=n>Counter</span> <span class=n>counter</span><span class=o>;</span>
+
+    <span class=kd>public</span> <span class=nf>DefaultController</span><span class=o>(</span><span class=n>MeterRegistry</span> <span class=n>registry</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>random</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Random</span><span class=o>();</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>counter</span> <span class=o>=</span> <span class=n>Counter</span><span class=o>.</span><span class=na>builder</span><span class=o>(</span><span class=s>&#34;service.invocations&#34;</span><span class=o>).</span><span class=na>description</span><span class=o>(</span><span class=s>&#34;Total service invocations&#34;</span><span class=o>).</span><span class=na>register</span><span class=o>(</span><span class=n>registry</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=nd>@RequestMapping</span><span class=o>(</span><span class=s>&#34;/&#34;</span><span class=o>)</span>
+    <span class=kd>public</span> <span class=n>String</span> <span class=nf>home</span><span class=o>(</span><span class=n>HttpServletRequest</span> <span class=n>request</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+        <span class=n>counter</span><span class=o>.</span><span class=na>increment</span><span class=o>();</span>
+
+        <span class=c1>// Timeout simulation
+</span><span class=c1></span>     <span class=c1>//Thread.sleep(random.nextInt(2000));
+</span><span class=c1></span>
+        <span class=n>TraceContext</span><span class=o>.</span><span class=na>Extractor</span><span class=o>&lt;</span><span class=n>HttpServletRequest</span><span class=o>&gt;</span> <span class=n>extractor</span> <span class=o>=</span> <span class=n>tracing</span><span class=o>.</span><span class=na>propagation</span><span class=o>().</span><span class=na>extractor</span><span class=o>((</span><span class=n>HttpServletRequest</span> <span class=n>carrier</span><span class=o>,</span> <span class=n>String</span> <span class=n>key</span><span class=o>)</span> <span class=o>-&gt;</span> <span class=o>{</span> <span class=k>return</span> <span class=n>carrier</span><span class=o>.</span><span class=na>getHeader</span><span class=o>(</span><span class=n>key</span><span class=o>);</span> <span class=o>});</span>
+        <span class=n>Span</span> <span class=n>span</span> <span class=o>=</span> <span class=n>tracer</span><span class=o>.</span><span class=na>nextSpan</span><span class=o>(</span><span class=n>extractor</span><span class=o>.</span><span class=na>extract</span><span class=o>(</span><span class=n>request</span><span class=o>));</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;Service Span (%s, %s)%n&#34;</span><span class=o>,</span> <span class=n>span</span><span class=o>.</span><span class=na>context</span><span class=o>().</span><span class=na>traceIdString</span><span class=o>(),</span> <span class=n>span</span><span class=o>.</span><span class=na>context</span><span class=o>().</span><span class=na>spanIdString</span><span class=o>());</span>
+
+        <span class=k>return</span> <span class=n>String</span><span class=o>.</span><span class=na>format</span><span class=o>(</span><span class=s>&#34;Hello world (%s, %s)&#34;</span><span class=o>,</span> <span class=n>request</span><span class=o>.</span><span class=na>getRequestURL</span><span class=o>(),</span> <span class=n>configuration</span><span class=o>.</span><span class=na>getKey</span><span class=o>());</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/DefaultController.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/DefaultController.java target=_blank>DefaultController.java</a></div></div><p>He utilizado el ejemplo de la <a href=https://picodotdev.github.io/blog-bitix/series/spring-cloud/>serie de artículos sobre Spring Cloud</a> añadiendo el soporte para <em>Spring Cloud Sleuth</em>. La aplicación se compone de un microservicio de configuración (con <a href=https://cloud.spring.io/spring-cloud-config/>Spring Cloud Config</a>), otro de registro y descubrimiento (con Eureka), un servicio de API <em>gateway</em> (con Zuul), el servicio de aplicación y un cliente del servicio que envía las peticiones al <em>gateway</em> y este las redirige al servicio de aplicación.</p><p>El cliente inicia un <em>span</em> que es enviado al servidor y el servidor obtiene las cabeceras enviadas. El cliente y el servidor son dos procesos distintos del sistema pero se observa que el identificativo global de la transacción <em>traceId</em> se mantiene en ambos y el identificativo de <em>spanId</em> cambia entre el cliente y el servidor.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>Client Span (traceId: 94fcd131178298fd, spanId: 94fcd131178298fd)
+...
+Service Span (traceId: 94fcd131178298fd, spanId: 6e6380e239f30917)
+...
+Service response: Hello world (http://archlinux:8080/, value)</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/System.out target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/System.out target=_blank>System.out</a></div></div><p>Para iniciar los diferentes microservicios de la aplicación hay que utilizar los siguientes comandos.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ ./gradlew discoveryserver:run --args<span class=o>=</span><span class=s2>&#34;--port=8761&#34;</span>
+$ ./gradlew configserver:run --args<span class=o>=</span><span class=s2>&#34;--port=8090&#34;</span>
+$ ./gradlew service:run --args<span class=o>=</span><span class=s2>&#34;--port=8080&#34;</span>
+$ ./gradlew proxy:run --args<span class=o>=</span><span class=s2>&#34;--port=8085&#34;</span>
+$ ./gradlew client:run --args<span class=o>=</span><span class=s2>&#34;--service=proxy&#34;</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/gradle-run.sh target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/gradle-run.sh target=_blank>gradle-run.sh</a></div></div><p>En los proyectos hay que incluir la dependencia para <em>Sleuth</em> en la herramienta de construcción.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=n>plugins</span> <span class=o>{</span>
+    <span class=n>id</span> <span class=s1>&#39;application&#39;</span>
+<span class=o>}</span>
+
+<span class=n>mainClassName</span> <span class=o>=</span> <span class=s1>&#39;io.github.picodotdev.blogbitix.springcloud.client.Main&#39;</span>
+
+<span class=n>dependencies</span> <span class=o>{</span>
+    <span class=n>implementation</span> <span class=nf>platform</span><span class=o>(</span><span class=s2>&#34;org.springframework.boot:spring-boot-dependencies:2.1.4.RELEASE&#34;</span><span class=o>)</span>
+    <span class=n>implementation</span> <span class=nf>platform</span><span class=o>(</span><span class=s2>&#34;org.springframework.cloud:spring-cloud-dependencies:Greenwich.SR1&#34;</span><span class=o>)</span>
+
+    <span class=c1>// Spring
+</span><span class=c1></span>    <span class=kt>def</span> <span class=n>excludeSpringBootStarterLogging</span> <span class=o>=</span> <span class=o>{</span> <span class=n>exclude</span><span class=o>(</span><span class=nl>group:</span> <span class=s1>&#39;org.springframework.boot&#39;</span><span class=o>,</span> <span class=nl>module:</span> <span class=s1>&#39;spring-boot-starter-logging&#39;</span><span class=o>)</span> <span class=o>}</span>
+    <span class=n>compile</span><span class=o>(</span><span class=s1>&#39;org.springframework.boot:spring-boot-starter&#39;</span><span class=o>,</span> <span class=n>excludeSpringBootStarterLogging</span><span class=o>)</span>
+    <span class=o>...</span>
+    <span class=n>compile</span><span class=o>(</span><span class=s1>&#39;org.springframework.cloud:spring-cloud-starter-sleuth&#39;</span><span class=o>,</span> <span class=n>excludeSpringBootStarterLogging</span><span class=o>)</span>
+    <span class=o>...</span>
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/build.gradle target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/build.gradle target=_blank>build.gradle</a></div></div><p>El <a href=https://github.com/picodotdev/blog-ejemplos/tree/master/SpringCloud>código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href=https://github.com/>GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradle-run.sh</code>.</p><div class=reference>Referencia:<br><ul><li><a href=https://www.paradigmadigital.com/dev/trazabilidad-distribuida-spring-cloud-sleuth-zipkin/>Trazabilidad Distribuida con Spring Cloud: Sleuth y Zipkin</a></li><li><a href=https://content.pivotal.io/springone-platform-2017/distributed-tracing-latency-analysis-for-your-microservices-grzejszczak-krishna>Distributed Tracing : Latency Analysis for Your Microservices</a></li></ul></div></div></article></div></div><div class="row serie"><div class=col-md-12><h3>Este artículo forma parte de la serie <strong>spring-cloud</strong>:</h3><ol class=serie-articles><li><a href=https://picodotdev.github.io/blog-bitix/2015/03/datos-de-sesion-externalizados-con-spring-session/>Datos de sesión externalizados con Spring Session</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2015/10/aplicacion-java-autocontenida-con-spring-boot/>Aplicación Java autocontenida con Spring Boot</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2015/11/configuracion-de-una-aplicacion-en-diferentes-entornos-con-spring-cloud-config/>Configuración de una aplicación en diferentes entornos con Spring Cloud Config</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2015/12/informacion-y-metricas-de-la-aplicacion-con-spring-boot-actuator/>Información y métricas de la aplicación con Spring Boot Actuator</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/01/registro-y-descubrimiento-de-servicios-con-spring-cloud-y-consul/>Registro y descubrimiento de servicios con Spring Cloud y Consul</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2018/08/aplicaciones-basadas-en-microservicios/>Aplicaciones basadas en microservicios</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2018/09/registro-y-descubrimiento-de-servicios-con-spring-cloud-netflix/>Registro y descubrimiento de servicios con Spring Cloud Netflix</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2018/09/servicio-de-configuracion-para-microservicios-con-spring-cloud-config/>Servicio de configuración para microservicios con Spring Cloud Config</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2018/09/recargar-sin-reiniciar-la-configuracion-de-una-aplicacion-spring-boot-con-spring-cloud-config/>Recargar sin reiniciar la configuración de una aplicación Spring Boot con Spring Cloud Config</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2018/09/almacenar-cifrados-los-valores-de-configuracion-sensibles-en-spring-cloud-config/>Almacenar cifrados los valores de configuración sensibles en Spring Cloud Config</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/>Tolerancia a fallos en un cliente de microservicio con Spring Cloud Netflix y Hystrix</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2018/10/balanceo-de-carga-y-resilencia-en-un-microservicio-con-spring-cloud-netflix-y-ribbon/>Balanceo de carga y resilencia en un microservicio con Spring Cloud Netflix y Ribbon</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2018/10/proxy-para-microservicios-con-spring-cloud-netflix-y-zuul/>Proxy para microservicios con Spring Cloud Netflix y Zuul</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/>Monitorizar una aplicación Java de Spring Boot con Micrometer, Prometheus y Grafana</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2018/12/exponer-las-metricas-de-hystrix-en-grafana-con-prometheus-de-una-aplicacion-spring-boot/>Exponer las métricas de Hystrix en Grafana con Prometheus de una aplicación Spring Boot</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2019/02/servidor-oauth-gateway-y-servicio-rest-utilizando-tokens-jwt-con-spring/>Servidor OAuth, gateway y servicio REST utilizando tokens JWT con Spring</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/>Trazabilidad en microservicios con Spring Cloud Sleuth</a></li></ol></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class=col-12><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><a id=comments></a><div class=row><div class=col-md-12><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='https:\/\/picodotdev.github.io\/blog-bitix\/2019\/04\/trazabilidad-en-microservicios-con-spring-cloud-sleuth\/';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2019\/04\/trazabilidad-en-microservicios-con-spring-cloud-sleuth\/';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script></div><div class="col-12 col-lg-4"><div class=row><div class="col-md-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:300px;height:600px data-ad-client=ca-pub-3533636310991304 data-ad-slot=9559414587 data-type=large-skycraper></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><div class=row><div class="col-md-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:336px;height:280px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2873752587 data-type=large-rectangle></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div></div><div class="row text-center banner"><div class=col-12><a href=https://picodotdev.github.io/blog-bitix/2015/12/yo-apoyo-al-software-libre-tu-tambien/><img src=assets/images/i-support-fs_red-bg-es.png alt="Yo apoyo al software libre"></a></div></div><div class=row><div class=col-md-12><hr></div></div><div class=row><div class=col-md-12><ul class="list-unstyled recents"><li><span class="glyphicon glyphicon-hand-right"></span><a href=archive/>Más artículos recientes en el archivo</a></li></ul></div></div></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
+<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2019 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow rel=license><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style=border-width:0 src=https://licensebuttons.net/l/by-sa/4.0/80x15.png class=licencia></a><br><a href=https://twitter.com/blogstackinfo rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png alt="Blog Stack" title="Blog Stack"></a>
+<a href=https://www.planetacodigo.com/ rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png alt="Planeta código" title="Planeta código"></a><br><span xmlns:dct=http://purl.org/dc/terms/ property=dct:title><a href=https://picodotdev.github.io/blog-bitix/ rel=nofollow>Blog Bitix</a></span> by <a xmlns:cc=https://creativecommons.org/ns# href=https://picodotdev.github.io/blog-bitix/ property=cc:attributionName rel=cc:attributionurl>pico.dev</a> is licensed under a <a rel=license href=https://creativecommons.org/licenses/by-sa/4.0/>Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class=credit>Powered by <a href=https://gohugo.io/ rel=nofollow title="A fast and modern static website engine">Hugo</a> and <a href=https://pages.github.com/ title="Websites for you and your projects">GitHub Pages</a>.</span>
+<span class=credit>Background patterns from <a href=https://www.toptal.com/designers/subtlepatterns/ rel=nofollow>Subtle Patterns</a>.</span></div></div></footer></div><div class=blueimp-gallery-container><div id=blueimp-gallery class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal=false><div class=slides></div><h3 class=title></h3><a class=prev>‹</a>
+<a class=next>›</a>
+<a class=close>×</a>
+<a class=play-pause></a><ol class=indicator></ol><div class="modal fade"><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close aria-hidden=true>&times;</button><h4 class=modal-title></h4></div><div class="modal-body next"></div><div class=modal-footer><button type=button class="btn btn-default pull-left prev">
+<i class="glyphicon glyphicon-chevron-left"></i>Anterior</button>
+<button type=button class="btn btn-primary next">
+Siguiente
+<i class="glyphicon glyphicon-chevron-right"></i></button></div></div></div></div></div></div><script type=text/javascript>window.cookieconsent_options={"message":"Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.","dismiss":"Aceptar","learnMore":"Más información","link":null,"theme":"dark-bottom"};</script><script type=text/javascript src=//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js async></script></body></html>
