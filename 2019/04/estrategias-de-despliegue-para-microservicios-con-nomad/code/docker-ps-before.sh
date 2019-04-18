@@ -1,7 +1,7 @@
 $ docker ps
 CONTAINER ID        IMAGE                 COMMAND                  CREATED              STATUS              PORTS                                              NAMES
-8d09e91f7306        nginx:stable-alpine   "nginx -g 'daemon of…"   53 seconds ago       Up 52 seconds       127.0.0.1:20093->80/tcp, 127.0.0.1:20093->80/udp   nginx-e974a9c1-0d6b-4d4b-59e7-c86570260509
-fa53aa43eccc        nginx:stable-alpine   "nginx -g 'daemon of…"   About a minute ago   Up About a minute   127.0.0.1:31503->80/tcp, 127.0.0.1:31503->80/udp   nginx-3014056a-a8a5-e63c-c6e6-e9c2e9cafde1
-12f482b6fe67        nginx:stable-alpine   "nginx -g 'daemon of…"   About a minute ago   Up About a minute   127.0.0.1:22122->80/tcp, 127.0.0.1:22122->80/udp   nginx-a55d7647-a48e-eace-c40f-b2a9abd0ad17
-3d09a4329279        nginx:stable-alpine   "nginx -g 'daemon of…"   About a minute ago   Up About a minute   127.0.0.1:24899->80/tcp, 127.0.0.1:24899->80/udp   nginx-d682548a-d3d3-bddb-2cd8-cfe489a492b3
-24e70fe9443a        nginx:stable-alpine   "nginx -g 'daemon of…"   About a minute ago   Up About a minute   127.0.0.1:20772->80/tcp, 127.0.0.1:20772->80/udp   nginx-99dab397-69fd-97b0-6507-39195931031c
+476d2063b64b        nginx:stable-alpine   "nginx -g 'daemon of…"   About a minute ago   Up About a minute   127.0.0.1:29939->80/tcp, 127.0.0.1:29939->80/udp   nginx-3747eb07-f9da-a9f5-0720-1b2314baac12
+e0a533348f44        nginx:stable-alpine   "nginx -g 'daemon of…"   About a minute ago   Up About a minute   127.0.0.1:21085->80/tcp, 127.0.0.1:21085->80/udp   nginx-ea58300c-c4a1-cc3d-46a0-d5b30c276ede
+4da9babdd549        nginx:stable-alpine   "nginx -g 'daemon of…"   About a minute ago   Up About a minute   127.0.0.1:30061->80/tcp, 127.0.0.1:30061->80/udp   nginx-c8094cf3-5c3c-eaaa-1bcf-9368100bb0ef
+068c6db6a86c        nginx:stable-alpine   "nginx -g 'daemon of…"   About a minute ago   Up About a minute   127.0.0.1:26606->80/tcp, 127.0.0.1:26606->80/udp   nginx-ead6d23f-abdd-8b33-7b61-c2ad64dede5c
+19190e778a5a        nginx:stable-alpine   "nginx -g 'daemon of…"   About a minute ago   Up About a minute   127.0.0.1:29835->80/tcp, 127.0.0.1:29835->80/udp   nginx-500575e9-62ce-868a-f142-869475aacde5

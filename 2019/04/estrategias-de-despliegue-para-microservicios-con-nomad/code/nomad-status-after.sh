@@ -1,7 +1,7 @@
 $ nomad job status nginx
 ID            = nginx
 Name          = nginx
-Submit Date   = 2019-04-18T10:55:59+02:00
+Submit Date   = 2019-04-18T19:17:54+02:00
 Type          = service
 Priority      = 50
 Datacenters   = localhost
@@ -14,23 +14,23 @@ Task Group  Queued  Starting  Running  Failed  Complete  Lost
 services    0       0         5        0       5         0
 
 Latest Deployment
-ID          = 8b96049d
+ID          = ba20066a
 Status      = successful
 Description = Deployment completed successfully
 
 Deployed
 Task Group  Desired  Placed  Healthy  Unhealthy  Progress Deadline
-services    5        5       5        0          2019-04-18T11:06:59+02:00
+services    5        5       5        0          2019-04-18T19:29:19+02:00
 
 Allocations
 ID        Node ID   Task Group  Version  Desired  Status    Created    Modified
-a6a1423a  1806498b  services    1        run      running   33s ago    22s ago
-c529ec57  1806498b  services    1        run      running   45s ago    34s ago
-1cda0083  1806498b  services    1        run      running   57s ago    46s ago
-aff0eaf9  1806498b  services    1        run      running   1m9s ago   58s ago
-d9e3a0c9  1806498b  services    1        run      running   1m21s ago  1m11s ago
-6b2dcff1  1806498b  services    0        stop     complete  7m10s ago  1m9s ago
-94a1a79b  1806498b  services    0        stop     complete  7m10s ago  44s ago
-0bee3ae1  1806498b  services    0        stop     complete  7m10s ago  1m21s ago
-295f72ec  1806498b  services    0        stop     complete  7m10s ago  32s ago
-f163316f  1806498b  services    0        stop     complete  7m10s ago  57s ago
+fabcf384  d18851d5  services    1        run      running   2m36s ago  2m20s ago
+ccb57008  d18851d5  services    1        run      running   2m53s ago  2m37s ago
+b06c743d  d18851d5  services    1        run      running   3m10s ago  2m54s ago
+56733896  d18851d5  services    1        run      running   3m28s ago  3m12s ago
+71c8bb5b  d18851d5  services    1        run      running   3m45s ago  3m29s ago
+500575e9  d18851d5  services    0        stop     complete  8m31s ago  3m44s ago
+c8094cf3  d18851d5  services    0        stop     complete  8m31s ago  3m10s ago
+3747eb07  d18851d5  services    0        stop     complete  8m31s ago  2m53s ago
+ea58300c  d18851d5  services    0        stop     complete  8m31s ago  3m27s ago
+ead6d23f  d18851d5  services    0        stop     complete  8m31s ago  2m35s ago

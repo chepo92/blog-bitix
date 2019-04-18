@@ -4,7 +4,7 @@ job "nginx" {
   type = "service"
 
   update {
-    stagger      = "30s"
+    min_healthy_time = "15s"
     max_parallel = 1
   }
 
