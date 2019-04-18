@@ -1,4 +1,497 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/tags/software/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2019-04-14T13:00:00+02:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/</id><title>Introducción a Nomad para gestionar aplicaciones y microservicios</title><updated>2019-04-17T23:00:00+02:00</updated><published>2019-04-14T13:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/"/><author><name>picodotdev</name></author><content type="html">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/tags/software/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2019-04-18T10:00:00+02:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/</id><title>Estrategias de despliegue con Nomad para microservicios</title><updated>2019-04-18T10:00:00+02:00</updated><published>2019-04-18T10:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/"/><author><name>picodotdev</name></author><content type="html">
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/nomad.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Nomad&#34; title=&#34;Nomad&#34;/&gt;
+&lt;/div&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/consul.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Consul&#34; title=&#34;Consul&#34;/&gt;
+&lt;/div&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/hashicorp.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;HashiCorp&#34; title=&#34;HashiCorp&#34;/&gt;
+&lt;/div&gt;
+&lt;p&gt;El ciclo de vida de una aplicación no consiste solo en desarrollarla, incluye también su puesta en producción o despliegue en un entorno de pruebas, pero también una vez la aplicación está desplegada en algún momento será necesario actualizarla con una nueva versión.&lt;/p&gt;
+&lt;p&gt;Las aplicaciones monolíticas tienen otros problemas pero en el aspecto de despliegue es sencillo ya que solo hay una aplicación, basta con desplegar la nueva versión. En una aplicación con arquitectura de microservicios es un reto mayor debido a que hay múltiples aplicaciones.&lt;/p&gt;
+&lt;p&gt;En cualquiera de ellas puede darse el caso de que para ganar en escalabilidad o para aumentar la disponibilidad o tolerancia a fallos es posible que haya varias instancias, las cuales han de ser actualizadas con el requisito si es necesario de que el servicio no deje de prestar su servicio, es decir que el despliegue no suponga una caída del servicio.&lt;/p&gt;
+&lt;p&gt;Hay varias estrategias para desplegar una nueva versión de una aplicación:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Rolling update&lt;/em&gt;: actualizar todas las instancias de forma progresiva. Una vez se termina de actualizar una se espera un tiempo y se actualiza la siguiente hasta que todas estén actualizadas.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Blue/Green&lt;/em&gt;: manteniendo en funcionamiento las instancias con la versión antigua se crea el mismo número de instancias con la nueva versión y se redirige tráfico hacia ellas. Una vez se ha comprobado que la nueva versión funciona correctamente se promociona la nueva versión y se eliminan las instancias de con la versión antigua. Esta estrategia permite volver a la versión anterior rápidamente si se detecta algún problema.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Canary&lt;/em&gt;: se siguen manteniendo las instancias con la versión antigua, a diferencia de la estrategia &lt;em&gt;blue/green&lt;/em&gt; se crea un número menor de instancias con la versión nueva que el número de instancias con la versión antigua. Una vez comprobado que la nueva versión es correcta se promociona la nueva versión y se actualizan todas las instancias restantes mediante &lt;em&gt;rolling update&lt;/em&gt; a la nueva versión. También permite volver a la versión antigua si se detecta algún problema.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.docker.com/swarm/&#34;&gt;Docker Swarm&lt;/a&gt; permite la estrategia de despliegue &lt;em&gt;rolling update&lt;/em&gt; sin embargo las estrategias &lt;em&gt;blue/green&lt;/em&gt; y &lt;em&gt;canary&lt;/em&gt; son interesante para tratar de que un error en una versión nueva no afecte al funcionamiento de la aplicación y obligue hacer un &lt;em&gt;rollback&lt;/em&gt; que posiblemente tarde más tiempo durante el cual el servicio funcionará con el defecto descubierto. &lt;a href=&#34;https://www.nomadproject.io/&#34;&gt;Nomad&lt;/a&gt; permite despliegues con las estrategias &lt;em&gt;blue/gree&lt;/em&gt; y &lt;em&gt;canary&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Para actualizar un servicio en Nomad basta con modificar la definición del &lt;em&gt;job&lt;/em&gt; y enviarlo a &lt;em&gt;Nomad&lt;/em&gt;, y este se encarga de orquestar la actualización en las instancias según la estrategia de despliegue
+configurada. En este caso se actualiza la versión de &lt;em&gt;nginx&lt;/em&gt; de la versión &lt;em&gt;nginx:stable-alpine&lt;/em&gt; a &lt;em&gt;nginx:alpine&lt;/em&gt; usando una estrategia &lt;em&gt;rolling update&lt;/em&gt; para las cinco instancias del servicio.&lt;/p&gt;
+&lt;p&gt;La estrategia de despliegue en &lt;em&gt;Nomad&lt;/em&gt; se define en la &lt;a href=&#34;https://www.nomadproject.io/docs/job-specification/update.html&#34;&gt;sección de configuración &lt;em&gt;update&lt;/em&gt;&lt;/a&gt;. El parámetro &lt;em&gt;min_healthy_time&lt;/em&gt; es el tiempo que se espera cuando se hace un &lt;em&gt;rolling update&lt;/em&gt; para considerar una instancia como sana y continuar la actualización con la siguiente, &lt;em&gt;max_parallel&lt;/em&gt; indica el número de instancias que se migran al mismo tiempo. El parámetro &lt;em&gt;canary&lt;/em&gt; indica el número de instancias que se crean en las estrategias &lt;em&gt;blue/green&lt;/em&gt; y &lt;em&gt;canary&lt;/em&gt;, en la primera el número de instancias coincidirá con el parámetro &lt;em&gt;canary&lt;/em&gt; que indica el número de instancias de un servicio. Nomad con los parámetros &lt;em&gt;health_check&lt;/em&gt;, &lt;em&gt;min_healthy_time&lt;/em&gt;, &lt;em&gt;healthy_deadline&lt;/em&gt;, &lt;em&gt;progress_deadline&lt;/em&gt;, &lt;em&gt;stagger&lt;/em&gt; y &lt;em&gt;auto_revert&lt;/em&gt; se puede poner unos límites para considerar válido un despliegue y en caso de no serlo realizar un &lt;em&gt;rollback&lt;/em&gt; de forma autmática.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;job &amp;#34;nginx&amp;#34; {
+datacenters = [&amp;#34;localhost&amp;#34;]
+type = &amp;#34;service&amp;#34;
+update {
+stagger = &amp;#34;30s&amp;#34;
+max_parallel = 1
+}
+group &amp;#34;services&amp;#34; {
+count = 5
+task &amp;#34;nginx&amp;#34; {
+driver = &amp;#34;docker&amp;#34;
+config {
+image = &amp;#34;nginx:stable-alpine&amp;#34;
+port_map {
+http = 80
+}
+}
+resources {
+memory = 1024 # MB
+network {
+port &amp;#34;http&amp;#34; {}
+}
+}
+}
+}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/code/nginx.nomad&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/code/nginx.nomad&#34; target=&#34;_blank&#34;&gt;nginx.nomad&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ nomad job run nginx.nomad
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/code/nomad-run.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/code/nomad-run.sh&#34; target=&#34;_blank&#34;&gt;nomad-run.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;En el caso de los despliegues &lt;em&gt;blue/green&lt;/em&gt; y &lt;em&gt;canary&lt;/em&gt; una vez comprobado que la versión de los nuevos servicios funcionan correctamente se promocionan y actualizan el resto de instancias en el caso de &lt;em&gt;canary&lt;/em&gt; o se detienen las instancias antiguas en el caso de &lt;em&gt;blue/green&lt;/em&gt;.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ nomad job promote nginx
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/code/nomad-promote.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/code/nomad-promote.sh&#34; target=&#34;_blank&#34;&gt;nomad-promote.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Desde la línea de comandos se puede observar el estado del servicio y el proceso de actualización, el primero es el estado previo a realizar el despliegue, el segundo durante el proceso de actualización con &lt;em&gt;rolling update&lt;/em&gt; y el tercero una vez finalizado el proceso de despliegue y marcado como exitoso en el que todas las instancias han pasado de la versión 0 a la 1.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;44
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;45
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;46
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;47
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;48
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;49
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;50
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;51
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;52
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;53
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;54
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;55
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;56
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;57
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;58
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;59
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;60
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;61
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;62
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;63
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;64
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ nomad job status nginx
+&lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; nginx
+&lt;span class=&#34;nv&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; nginx
+Submit &lt;span class=&#34;nv&#34;&gt;Date&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-18T10:50:11+02:00
+&lt;span class=&#34;nv&#34;&gt;Type&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; service
+&lt;span class=&#34;nv&#34;&gt;Priority&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;50&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;Datacenters&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; localhost
+&lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; running
+&lt;span class=&#34;nv&#34;&gt;Periodic&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;Parameterized&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+Summary
+Task Group Queued Starting Running Failed Complete Lost
+services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;
+Latest Deployment
+&lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 67d4497a
+&lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; successful
+&lt;span class=&#34;nv&#34;&gt;Description&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; Deployment completed successfully
+Deployed
+Task Group Desired Placed Healthy Unhealthy Progress Deadline
+services &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-18T11:00:22+02:00
+Allocations
+ID Node ID Task Group Version Desired Status Created Modified
+0bee3ae1 1806498b services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; run running 25s ago 14s ago
+295f72ec 1806498b services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; run running 25s ago 14s ago
+6b2dcff1 1806498b services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; run running 25s ago 14s ago
+94a1a79b 1806498b services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; run running 25s ago 14s ago
+f163316f 1806498b services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; run running 25s ago 14s ago
+$ nomad alloc status 0bee3ae1
+&lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 0bee3ae1
+Eval &lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 2c63f7a1
+&lt;span class=&#34;nv&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; nginx.services&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+Node &lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 1806498b
+Job &lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; nginx
+Job &lt;span class=&#34;nv&#34;&gt;Version&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;
+Client &lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; running
+Client &lt;span class=&#34;nv&#34;&gt;Description&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; Tasks are running
+Desired &lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; run
+Desired &lt;span class=&#34;nv&#34;&gt;Description&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &amp;lt;none&amp;gt;
+&lt;span class=&#34;nv&#34;&gt;Created&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 39s ago
+&lt;span class=&#34;nv&#34;&gt;Modified&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 28s ago
+Deployment &lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 67d4497a
+Deployment &lt;span class=&#34;nv&#34;&gt;Health&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; healthy
+Task &lt;span class=&#34;s2&#34;&gt;&amp;#34;nginx&amp;#34;&lt;/span&gt; is &lt;span class=&#34;s2&#34;&gt;&amp;#34;running&amp;#34;&lt;/span&gt;
+Task Resources
+CPU Memory Disk Addresses
+&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;/100 MHz &lt;span class=&#34;m&#34;&gt;1004&lt;/span&gt; KiB/1.0 GiB &lt;span class=&#34;m&#34;&gt;300&lt;/span&gt; MiB http: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:27902
+Task Events:
+Started &lt;span class=&#34;nv&#34;&gt;At&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-18T08:50:12Z
+Finished &lt;span class=&#34;nv&#34;&gt;At&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; N/A
+Total &lt;span class=&#34;nv&#34;&gt;Restarts&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;
+Last &lt;span class=&#34;nv&#34;&gt;Restart&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; N/A
+Recent Events:
+Time Type Description
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-18T10:50:12+02:00 Started Task started by client
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-18T10:50:11+02:00 Task Setup Building Task Directory
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-18T10:50:11+02:00 Received Task received by client&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/code/nomad-status-before.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/code/nomad-status-before.sh&#34; target=&#34;_blank&#34;&gt;nomad-status-before.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ nomad job status nginx
+&lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; nginx
+&lt;span class=&#34;nv&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; nginx
+Submit &lt;span class=&#34;nv&#34;&gt;Date&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-18T10:55:59+02:00
+&lt;span class=&#34;nv&#34;&gt;Type&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; service
+&lt;span class=&#34;nv&#34;&gt;Priority&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;50&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;Datacenters&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; localhost
+&lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; running
+&lt;span class=&#34;nv&#34;&gt;Periodic&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;Parameterized&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+Summary
+Task Group Queued Starting Running Failed Complete Lost
+services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;
+Latest Deployment
+&lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 8b96049d
+&lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; running
+&lt;span class=&#34;nv&#34;&gt;Description&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; Deployment is running
+Deployed
+Task Group Desired Placed Healthy Unhealthy Progress Deadline
+services &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-18T11:05:59+02:00
+Allocations
+ID Node ID Task Group Version Desired Status Created Modified
+d9e3a0c9 1806498b services &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; run running 4s ago 4s ago
+0bee3ae1 1806498b services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; stop &lt;span class=&#34;nb&#34;&gt;complete&lt;/span&gt; 5m53s ago 4s ago
+295f72ec 1806498b services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; run running 5m53s ago 5m42s ago
+6b2dcff1 1806498b services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; run running 5m53s ago 5m42s ago
+94a1a79b 1806498b services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; run running 5m53s ago 5m42s ago
+f163316f 1806498b services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; run running 5m53s ago 5m42s ago
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/code/nomad-status-while.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/code/nomad-status-while.sh&#34; target=&#34;_blank&#34;&gt;nomad-status-while.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ nomad job status nginx
+&lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; nginx
+&lt;span class=&#34;nv&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; nginx
+Submit &lt;span class=&#34;nv&#34;&gt;Date&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-18T10:55:59+02:00
+&lt;span class=&#34;nv&#34;&gt;Type&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; service
+&lt;span class=&#34;nv&#34;&gt;Priority&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;50&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;Datacenters&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; localhost
+&lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; running
+&lt;span class=&#34;nv&#34;&gt;Periodic&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;Parameterized&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+Summary
+Task Group Queued Starting Running Failed Complete Lost
+services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;
+Latest Deployment
+&lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 8b96049d
+&lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; successful
+&lt;span class=&#34;nv&#34;&gt;Description&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; Deployment completed successfully
+Deployed
+Task Group Desired Placed Healthy Unhealthy Progress Deadline
+services &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-18T11:06:59+02:00
+Allocations
+ID Node ID Task Group Version Desired Status Created Modified
+a6a1423a 1806498b services &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; run running 33s ago 22s ago
+c529ec57 1806498b services &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; run running 45s ago 34s ago
+1cda0083 1806498b services &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; run running 57s ago 46s ago
+aff0eaf9 1806498b services &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; run running 1m9s ago 58s ago
+d9e3a0c9 1806498b services &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; run running 1m21s ago 1m11s ago
+6b2dcff1 1806498b services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; stop &lt;span class=&#34;nb&#34;&gt;complete&lt;/span&gt; 7m10s ago 1m9s ago
+94a1a79b 1806498b services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; stop &lt;span class=&#34;nb&#34;&gt;complete&lt;/span&gt; 7m10s ago 44s ago
+0bee3ae1 1806498b services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; stop &lt;span class=&#34;nb&#34;&gt;complete&lt;/span&gt; 7m10s ago 1m21s ago
+295f72ec 1806498b services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; stop &lt;span class=&#34;nb&#34;&gt;complete&lt;/span&gt; 7m10s ago 32s ago
+f163316f 1806498b services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; stop &lt;span class=&#34;nb&#34;&gt;complete&lt;/span&gt; 7m10s ago 57s ago
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/code/nomad-status-after.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/code/nomad-status-after.sh&#34; target=&#34;_blank&#34;&gt;nomad-status-after.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;El proceso de despliegue también se puede monitorizar desde la interfaz web que ofrece Nomad.&lt;/p&gt;
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+&lt;figure&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/images/nomad-rolling-update-before_hu67a332684efae6ed992319050f36f296_119290_2560x1440_fit_box_2.png&#34; title=&#34;Antes del proceso de despliegue rolling update en Nomad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/images/nomad-rolling-update-before_hu67a332684efae6ed992319050f36f296_119290_300x200_fit_box_2.png&#34; width=&#34;196&#34;/&gt;&lt;/a&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/images/nomad-rolling-update-while_hu1bb43ff17075cacd6588f52ea91a2b44_119731_2560x1440_fit_box_2.png&#34; title=&#34;Durante el proceso de despliegue rolling update en Nomad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/images/nomad-rolling-update-while_hu1bb43ff17075cacd6588f52ea91a2b44_119731_300x200_fit_box_2.png&#34; width=&#34;196&#34;/&gt;&lt;/a&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/images/nomad-rolling-update-after_hu07bde1516a5a8318da3a99b05cb30d02_122603_2560x1440_fit_box_2.png&#34; title=&#34;Después del proceso de despliegue rolling update en Nomad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/images/nomad-rolling-update-after_hu07bde1516a5a8318da3a99b05cb30d02_122603_300x200_fit_box_2.png&#34; width=&#34;196&#34;/&gt;&lt;/a&gt;
+&lt;figcaption&gt;Proceso de despliegue rolling update en Nomad&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+&lt;p&gt;En este ejemplo los servicios están en contenedores docker, también se observa que la versión de los contenedores en ejecución pasan de la versión &lt;em&gt;stable-alpine&lt;/em&gt; a &lt;em&gt;alpine&lt;/em&gt;.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ docker ps
+CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES
+8d09e91f7306 nginx:stable-alpine &lt;span class=&#34;s2&#34;&gt;&amp;#34;nginx -g &amp;#39;daemon of…&amp;#34;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;53&lt;/span&gt; seconds ago Up &lt;span class=&#34;m&#34;&gt;52&lt;/span&gt; seconds &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:20093-&amp;gt;80/tcp, &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:20093-&amp;gt;80/udp nginx-e974a9c1-0d6b-4d4b-59e7-c86570260509
+fa53aa43eccc nginx:stable-alpine &lt;span class=&#34;s2&#34;&gt;&amp;#34;nginx -g &amp;#39;daemon of…&amp;#34;&lt;/span&gt; About a minute ago Up About a minute &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:31503-&amp;gt;80/tcp, &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:31503-&amp;gt;80/udp nginx-3014056a-a8a5-e63c-c6e6-e9c2e9cafde1
+12f482b6fe67 nginx:stable-alpine &lt;span class=&#34;s2&#34;&gt;&amp;#34;nginx -g &amp;#39;daemon of…&amp;#34;&lt;/span&gt; About a minute ago Up About a minute &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:22122-&amp;gt;80/tcp, &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:22122-&amp;gt;80/udp nginx-a55d7647-a48e-eace-c40f-b2a9abd0ad17
+3d09a4329279 nginx:stable-alpine &lt;span class=&#34;s2&#34;&gt;&amp;#34;nginx -g &amp;#39;daemon of…&amp;#34;&lt;/span&gt; About a minute ago Up About a minute &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:24899-&amp;gt;80/tcp, &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:24899-&amp;gt;80/udp nginx-d682548a-d3d3-bddb-2cd8-cfe489a492b3
+24e70fe9443a nginx:stable-alpine &lt;span class=&#34;s2&#34;&gt;&amp;#34;nginx -g &amp;#39;daemon of…&amp;#34;&lt;/span&gt; About a minute ago Up About a minute &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:20772-&amp;gt;80/tcp, &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:20772-&amp;gt;80/udp nginx-99dab397-69fd-97b0-6507-39195931031c&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/code/docker-ps-before.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/code/docker-ps-before.sh&#34; target=&#34;_blank&#34;&gt;docker-ps-before.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ docker ps
+CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES
+0495fd1b6261 nginx:alpine &lt;span class=&#34;s2&#34;&gt;&amp;#34;nginx -g &amp;#39;daemon of…&amp;#34;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;6&lt;/span&gt; minutes ago Up &lt;span class=&#34;m&#34;&gt;6&lt;/span&gt; minutes &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:27703-&amp;gt;80/tcp, &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:27703-&amp;gt;80/udp nginx-a6a1423a-896d-5716-34bc-533630f45c93
+ecb361f99b57 nginx:alpine &lt;span class=&#34;s2&#34;&gt;&amp;#34;nginx -g &amp;#39;daemon of…&amp;#34;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;6&lt;/span&gt; minutes ago Up &lt;span class=&#34;m&#34;&gt;6&lt;/span&gt; minutes &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:23859-&amp;gt;80/tcp, &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:23859-&amp;gt;80/udp nginx-c529ec57-ff92-73ae-6e68-46a2d5c55bed
+82429bac4974 nginx:alpine &lt;span class=&#34;s2&#34;&gt;&amp;#34;nginx -g &amp;#39;daemon of…&amp;#34;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;6&lt;/span&gt; minutes ago Up &lt;span class=&#34;m&#34;&gt;6&lt;/span&gt; minutes &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:27878-&amp;gt;80/tcp, &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:27878-&amp;gt;80/udp nginx-1cda0083-9fa0-6e6d-5276-ab0bd1de8762
+69cbf7fd37d8 nginx:alpine &lt;span class=&#34;s2&#34;&gt;&amp;#34;nginx -g &amp;#39;daemon of…&amp;#34;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;7&lt;/span&gt; minutes ago Up &lt;span class=&#34;m&#34;&gt;7&lt;/span&gt; minutes &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:24634-&amp;gt;80/tcp, &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:24634-&amp;gt;80/udp nginx-aff0eaf9-a099-42fd-58ea-4603f96ccd3f
+4935502d58ce nginx:alpine &lt;span class=&#34;s2&#34;&gt;&amp;#34;nginx -g &amp;#39;daemon of…&amp;#34;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;7&lt;/span&gt; minutes ago Up &lt;span class=&#34;m&#34;&gt;7&lt;/span&gt; minutes &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:22657-&amp;gt;80/tcp, &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:22657-&amp;gt;80/udp nginx-d9e3a0c9-82bd-8b19-14a7-0a663f539c00&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/code/docker-ps-after.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/code/docker-ps-after.sh&#34; target=&#34;_blank&#34;&gt;docker-ps-after.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Nomad y &lt;a href=&#34;https://www.consul.io/&#34;&gt;Consul&lt;/a&gt; se inician con los siguientes comandos en modo desarrollo comentados en el artículo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/&#34;&gt;Introducción a Nomad para gestionar aplicaciones y microservicios&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ consul agent -dev -datacenter localhost
+$ sudo nomad agent -dev -dc localhost&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/code/nomad-consul.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/code/nomad-consul.sh&#34; target=&#34;_blank&#34;&gt;nomad-consul.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content><category term="planeta-codigo"/><category term="programacion"/><category term="software"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/</id><title>Introducción a Nomad para gestionar aplicaciones y microservicios</title><updated>2019-04-17T23:00:00+02:00</updated><published>2019-04-14T13:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/"/><author><name>picodotdev</name></author><content type="html">
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
 &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/nomad.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Nomad&#34; title=&#34;Nomad&#34;/&gt;
 &lt;/div&gt;
@@ -317,7 +810,7 @@ $ nomad alloc logs 60f3d102
 &lt;figcaption&gt;Interfaces web de Consul y Nomad&lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;/div&gt;
-&lt;p&gt;Nomad permite varias estrategias para actualizar los &lt;em&gt;jobs&lt;/em&gt; a una nueva versión de un servicio, basta modificar la configuración del &lt;em&gt;job&lt;/em&gt;, volverlo a enviar a Nomad y este se encarga de actualizar las instancias siguiendo la estrategia &lt;em&gt;rolling&lt;/em&gt;, &lt;em&gt;blue/green&lt;/em&gt; o &lt;em&gt;canary&lt;/em&gt; definida en el &lt;em&gt;job&lt;/em&gt;, pero eso lo muestro mas detalladamente en otro artículo.&lt;/p&gt;
+&lt;p&gt;Nomad permite varias estrategias para actualizar los &lt;em&gt;jobs&lt;/em&gt; a una nueva versión de un servicio, basta modificar la configuración del &lt;em&gt;job&lt;/em&gt;, volverlo a enviar a Nomad y este se encarga de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-con-nomad-para-microservicios/&#34;&gt;actualizar las instancias siguiendo la estrategia &lt;em&gt;rolling&lt;/em&gt;, &lt;em&gt;blue/green&lt;/em&gt; o &lt;em&gt;canary&lt;/em&gt;&lt;/a&gt; definida en el &lt;em&gt;job&lt;/em&gt;, pero eso lo muestro mas detalladamente en otro artículo.&lt;/p&gt;
 &lt;p&gt;La &lt;a href=&#34;https://www.nomadproject.io/docs/index.html&#34;&gt;documentación de Nomad&lt;/a&gt;, Nomad y otros productos de HashiCorp dedicados a la infraestructura en la nube esta muy bien explicada y detallada, este artículo solo es un resumen de las partes básicas para conocer como empezar a usarlo. En el siguiente vídeo se hace una pequeña explicación y demostración.&lt;/p&gt;
 &lt;div class=&#34;media media-video&#34; style=&#34;text-align: center;&#34;&gt;
 &lt;iframe width=&#34;640&#34; height=&#34;360&#34; src=&#34;https://www.youtube.com/embed/A6CuZUoINX0?rel=0&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
@@ -3851,90 +4344,4 @@ Referencia:&lt;br&gt;
 &lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/List_of_ARM_microarchitectures&#34;&gt;List of ARM microarchitectures&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://geeks.ms/etomas/2018/01/05/meltdown-y-spectre-algunos-comentarios/&#34;&gt;Meltdown y Spectre algunos comentarios&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/div&gt;</content><category term="hardware"/><category term="planeta-codigo"/><category term="seguridad"/><category term="software"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2017/12/hemeroteca-12/</id><title>Hemeroteca #12</title><updated>2018-01-13T11:35:00+01:00</updated><published>2017-12-30T09:30:00+01:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/12/hemeroteca-12/"/><author><name>picodotdev</name></author><content type="html">
-&lt;p&gt;Cuarto año de Blog Bitix y en febrero serán ocho desde que empecé con &lt;a href=&#34;https://elblogdepicodev.blogspot.com.es&#34;&gt;El blog del pico.dev&lt;/a&gt;. En los últimos seis meses he seguido publicando casi a dos artículos por semana y durante el 2017 ha sido casi siempre así, en este semestre han sido 48 artículos, que juntos con los 39 del primero son 87 durante el año 2017, mi mayor tasa de publicación en un año.&lt;/p&gt;
-&lt;p&gt;En estas hemerotecas siempre repaso cual es la evolución de visitas e ingresos de AdSense que quizá a alguien más le resulte de interés. En Junio y Julio alcance unas 50K páginas vistas el mayor pico de visitas, aunque en meses posteriores han descendido, al principio lo achacaba a los meses vacacionales de verano pero luego se han mantenido no se si por alguna penalización de Google o algún artículo que recibía muchas visitas y haya descendido en su posicionamiento. En cualquier caso en los últimos meses del año las visitas han tenido una tendencia ascendente, de unas 40K páginas vistas y superior respecto a las de hace una año que comparándolas han sido de 25K en 2016 y de 38K en 2017 un crecimiento de un 85%. No está mal, si el año siguiente fuese igual me daría por muy satisfecho.&lt;/p&gt;
-&lt;p&gt;En el apartado de ingresos por la publicidad AdSense, algunos artículos patrocinados y enlaces de afiliación también ha estado bien. En estos momentos por AdSense es raro el día que no recibo al menos un euro y algún día excepcional he recibido 8, otros algo menos de 2 y 3, mensualmente ya es habitual que esté en un rango de 30 y 45€, los ingresos de AdSense se relacionan en gran medida con el número de visitas. Al final el artículo que publiqué sobre los &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/cursos-de-formacion-de-keepcoding/&#34;&gt;cursos de formación de KeepCoding&lt;/a&gt; han merecido la pena como artículo patrocinado con la compra de dos usuario de tres cursos (aunque la mayoría de gente se registran a los cursos gratuitos), pero esto junto con los artículos patrocinados es más esporádico y por el momento poco habitual para mi.&lt;/p&gt;
-&lt;p&gt;En alguna ocasión me han comentado que me donarían algo por los artículos que escribo, una posibilidad sería usar &lt;a href=&#34;https://www.patreon.com/&#34;&gt;Patreon&lt;/a&gt; o &lt;a href=&#34;https://www.paypal.com/&#34;&gt;PayPal&lt;/a&gt;, sin embargo, no me convence mucho la donación directa por ser demasiado generosa y he preferido añadir una &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/series/donacion/&#34;&gt;página con ciertos productos tecnológicos y &lt;em&gt;gamers&lt;/em&gt; seleccionados&lt;/a&gt; para que si alguien le gusta mis artículos, se acuerda y quiere donarme algo lo haga a través de estos enlaces de afiliación. Al que compra le cuesta lo mismo pero yo recibo una comisión. Esto me recuerda que debería hacer alguna nueva donación a proyectos de software libre y estoy pensando en &lt;a href=&#34;https://lineageos.org/&#34;&gt;Lineage OS&lt;/a&gt; y &lt;a href=&#34;https://www.replicant.us/&#34;&gt;Replicant&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Quien crea que es mucho que pruebe a crearse una bitácora, un canal en &lt;a href=&#34;https://www.youtube.com/&#34;&gt;YouTube&lt;/a&gt; o un &lt;em&gt;podcast&lt;/em&gt; y verá rápidamente que o se acierta en la temática y se es muy bueno creando contenido que genera interés o primero verá que han de pasar dos años y dedicar una ingente cantidad de horas a crear ese contenido para llegar a estas cifras que tampoco son altas, no en vano muchos de estos proyectos son abandonados al cabo de unos meses, por algo será.&lt;/p&gt;
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-&lt;figure&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/291/analytics-2017.png&#34; title=&#34;Analytics 2017 de Blog Bitix&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/291/analytics-2017-thumb.png&#34;&gt;&lt;/a&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/291/gadsense-2017.png&#34; title=&#34;AdSense 2017 de Blog Bitix&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/291/gadsense-2017-thumb.png&#34;&gt;&lt;/a&gt;
-&lt;figcaption&gt;Evolución visitas e ingresos en 2017&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;/div&gt;
-&lt;p&gt;Pero por otra parte he recibido buenos comentarios sobre lo que escribo en Blog Bitix, por algunas personas vía &lt;a href=&#34;https://twitter.com/&#34;&gt;Twitter&lt;/a&gt; y otras en algún comentario que me anima a seguir escribiendo y compartiendo como hasta ahora lo que voy aprendiendo e investigando que algún día espero utilizar en algún trabajo antes de que me jubile o pruebe ser un jardinero o barrendero.&lt;/p&gt;
-&lt;p&gt;Este semestre me propuse publicar una mayor cantidad de artículos relacionados con el lenguaje de programación Java con motivo de la pasada publicación de Java 9. Pero primero empecé con un par de artículos sobre &lt;em&gt;portlets&lt;/em&gt; y &lt;a href=&#34;https://tapestry.apache.org/&#34;&gt;Apache Tapestry&lt;/a&gt; que en algún momento espero añadirlos en alguna sección del libro &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/08/actualizacion-del-libro-plugin-tapestry/&#34;&gt;PlugIn Tapestry&lt;/a&gt;. Por supuesto, varios artículos comentando las novedades más relevantes de Java 9 publicado en septiembre entre ellas la modularidad y otras no menos notables.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/introduccion-a-los-portales-y-ejemplo-de-portlet-con-liferay/&#34;&gt;Introducción a los portales y ejemplo de portlet con Liferay&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/portlets-con-el-framework-apache-tapestry-y-apache-pluto/&#34;&gt;Portlets con el framework Apache Tapestry y Apache Pluto&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/iniciar-rapido-un-proyecto-de-java-con-gradle-o-de-spring-con-spring-initializr/&#34;&gt;Iniciar rápido un proyecto de Java con Gradle o de Spring con Spring Initializr&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/iniciacion-a-la-programacion-concurrente-en-java/&#34;&gt;Iniciación a la programación concurrente en Java&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/4-formas-de-hacer-un-bucle-for-en-java/&#34;&gt;4 formas de hacer un bucle for en Java&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/ejecutar-varias-tareas-de-forma-concurrente-en-java/&#34;&gt;Ejecutar varias tareas de forma concurrente en Java&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/08/el-antipatron-de-inicializacion-de-variables-con-dobles-llaves-en-java/&#34;&gt;El antipatrón de inicialización de variables con dobles llaves en Java&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/08/cache-simple-de-datos-y-con-ehcache-en-java/&#34;&gt;Cache simple de datos y con Ehcache en Java&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/los-cuantificadores-greedy-reluctant-y-possessive-en-expresiones-regulares/&#34;&gt;Los cuantificadores greedy, reluctant y possessive en expresiones regulares&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/los-tipos-de-referencias-debiles-soft-weak-y-phantom-en-java/&#34;&gt;Los tipos de referencias débiles soft, weak y phantom en Java&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/la-herramienta-de-documentacion-javadoc-de-java/&#34;&gt;La herramienta de documentación Javadoc de Java&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/como-generar-la-documentacion-javadoc-con-gradle/&#34;&gt;Cómo generar la documentación Javadoc con Gradle&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/crear-anotaciones-de-javadoc-personalizadas-con-taglets/&#34;&gt;Crear anotaciones de Javadoc personalizadas con taglets&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/cambiar-y-personalizar-los-estilos-de-la-documentacion-javadoc/&#34;&gt;Cambiar y personalizar los estilos de la documentación Javadoc&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/novedades-y-nuevas-caracteristicas-de-java-9-los-modulos/&#34;&gt;Novedades y nuevas características de Java 9, los módulos&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/novedades-de-java-9-mas-alla-de-la-modularidad/&#34;&gt;Novedades de Java 9, más allá de la modularidad&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/jshell-la-herramienta-repl-incorporada-en-java-9/&#34;&gt;JShell la herramienta REPL incorporada en Java 9&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/evitar-niveles-de-anidacion-de-sentencias-condicionales-con-guard-clauses/&#34;&gt;Evitar niveles de anidación de sentencias condicionales con guard clauses&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/ejemplo-con-el-cliente-http-2-de-java/&#34;&gt;Ejemplo con el cliente HTTP/2 de Java&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/obtener-el-minimo-o-maximo-de-dos-una-lista-o-stream-de-valores-en-java/&#34;&gt;Obtener el mínimo o máximo de dos, una lista o stream de valores en Java&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/las-excepciones-del-lenguaje-java/&#34;&gt;Las excepciones del lenguaje Java&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/obtener-informacion-de-la-pila-de-las-excepciones/&#34;&gt;Obtener información de la pila de las excepciones&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/implementar-funcionalidades-comunes-en-java-con-la-libreria-lombok/&#34;&gt;Implementar funcionalidades comunes en Java con la librería Lombok&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/visualizar-datos-y-generar-graficas-en-java-con-jfreechart/&#34;&gt;Visualizar datos y generar gráficas en Java con JFreeChart&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/ordenar-alfabeticamente-cadenas-con-la-clase-collator-en-java/&#34;&gt;Ordenar alfabéticamente cadenas con la clase Collator en Java&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/introduccion-a-la-programacion-funcional-con-java-y-la-libreria-vavr/&#34;&gt;Introducción a la programación funcional con Java y la librería Vavr&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Una serie de artículos sobre &lt;a href=&#34;https://graphql.org/&#34;&gt;GraphQL&lt;/a&gt; como alternativa a una API REST que tiene algunas ventajas. Aún me queda publicar uno de esta serie, en cuanto se acepte un &lt;em&gt;pull request&lt;/em&gt; a raíz de una petición que cree con &lt;a href=&#34;https://github.com/graphql-java/graphql-java-tools/issues/93&#34;&gt;un problema que me encontré&lt;/a&gt;.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java/&#34;&gt;Ejemplo de GraphQL para una interfaz de un servicio con Spring Boot y Java&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/usar-un-resolver-para-recuperar-propiedades-en-graphql/&#34;&gt;Usar un resolver para recuperar propiedades en GraphQL&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/consultas-con-parametros-para-filtrar-datos-en-graphql/&#34;&gt;Consultas con parámetros para filtrar datos en GraphQL&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/paginacion-usando-cursores-en-graphql-y-java/&#34;&gt;Paginación usando cursores en GraphQL y Java&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/definir-nuevos-tipos-de-datos-escalares-en-graphql/&#34;&gt;Definir nuevos tipos de datos escalares en GraphQL&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/&#34;&gt;Devolver mensajes de error descriptivos en GraphQL&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;De los menos en este semestre están relacionados con el software libre. De &lt;a href=&#34;https://about.gitlab.com/&#34;&gt;GitLab&lt;/a&gt; tengo otro par de artículos por publicar para realizar integración continua y mostrando más en detalles su gestión de peticiones, wiki y páginas. Si estas navidades tienes algún momento para ver la televisión en uno de los siguientes artículos encontrarás varias ideas relacionadas con la tecnología.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/08/instalar-y-renovar-un-certificado-de-lets-encrypt-en-nginx/&#34;&gt;Instalar y renovar un certificado de Let&amp;rsquo;s Encrypt en Nginx&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/el-buscador-que-respeta-tu-privacidad-duckduckgo/&#34;&gt;El buscador que respeta tu privacidad, DuckDuckGo&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/peliculas-sobre-tecnologia-o-informatica-series-documentales-videos-libros-gnu-linux-y-software-libre/&#34;&gt;Películas sobre tecnología o informática, series, documentales, vídeos, libros, GNU/Linux y software libre&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/como-eliminar-metainformacion-de-las-fotos-en-gnu-linux/&#34;&gt;Como eliminar metainformación de las fotos en GNU/Linux&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/gitlab-la-completa-herramienta-integrada-para-desarrollo-de-software/&#34;&gt;GitLab, la completa herramienta integrada para desarrollo de software&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;O de opinión.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/la-triste-realidad-de-java-versiones-antiguas/&#34;&gt;La triste realidad de Java, versiones antiguas&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/10/consejos-para-empresas-y-gente-de-recursos-humanos-que-busquen-talento/&#34;&gt;Consejos para empresas y gente de recursos humanos que busquen talento&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/microsoft-does-not-care-if-you-use-windows-or-office-without-a-license/&#34;&gt;Microsoft does not care if you use Windows or Office without a license&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Algunos artículos de tema alternativos en la temática principal de este blog pero que también me gusta compartir, comentando el cambio que hice de compañía eléctrica a &lt;a href=&#34;https://www.holaluz.com/&#34;&gt;Holaluz&lt;/a&gt;, de caldera a termo eléctrico y la diferencia en la factura entre tener caldera y tener termo eléctrico. Un par de artículos de los robles que he plantado que espero prosperen, publicaré alguno más. También algún artículo de desempaquetado.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/desempaquetado-maletin-herramientas-mannesmann-y-bandejas-melamina-balvi/&#34;&gt;Desempaquetado maletín herramientas Mannesmann y bandejas melamina Balvi&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/07/la-busqueda-de-ejemplares-de-roble-comun/&#34;&gt;La búsqueda de ejemplares de roble común&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/seleccion-de-semillas-de-roble-comun-y-metodos-de-germinacion/&#34;&gt;Selección de semillas de roble común y métodos de germinación&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/08/sustituir-caldera-de-gas-por-un-termo-electrico-fleck-duo-7-50/&#34;&gt;Sustituir caldera de gas por un termo eléctrico Fleck Duo 7 50&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/comparando-la-factura-entre-caldera-de-gas-y-termo-electrico/&#34;&gt;Comparando la factura entre caldera de gas y termo eléctrico&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/me-cambio-a-la-electrica-holaluz/&#34;&gt;Me cambio a la eléctrica Holaluz&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Una buena colección de libros técnicos que he leído durante el último trío de años y me han gustado junto con una selección de productos tecnológicos.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/08/37-buenos-libros-sobre-sobre-java-linux-devops-y-desarrollo-que-he-leido/&#34;&gt;37 buenos libros sobre sobre Java, Linux, DevOps y desarrollo que he leído&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/11/productos-tecnologicos-para-comprar-o-regalar/&#34;&gt;Productos tecnológicos para comprar o regalar&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Espero seguir escribiendo como hasta ahora en el 2018 si el tiempo del que dispongo me lo permite y continuo con motivación. Por lo pronto son unos cuantos artículos que ya tengo escritos a falta de retocar en el momento que los publique. Puedes aprovechar para repasar esta lista y leer alguno si te lo perdiste, por supuesto si aún no lo has hecho, suscríbete con tu lector preferido al &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/index.xml&#34;&gt;&lt;em&gt;feed&lt;/em&gt; a Blog Bitix&lt;/a&gt;. Finalmente, ya solo me queda desearos con la siguiente imagen linuxera de &lt;a href=&#34;http://www.klowner.com/&#34;&gt;Klouner&lt;/a&gt;&amp;hellip; ¡Buen &lt;strike&gt;2016&lt;/strike&gt; 2018!&lt;/p&gt;
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-&lt;figure&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/291/christmas-tux-2017.jpg&#34; title=&#34;¡Buen 2018!&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/posts/2017/291/christmas-tux-2017-thumb.jpg&#34;&gt;&lt;/a&gt;
-&lt;figcaption&gt;¡Buen 2018!&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;/div&gt;</content><category term="blog"/><category term="blog-stack"/><category term="hemeroteca"/><category term="java"/><category term="planeta-codigo"/><category term="planeta-linux"/><category term="programacion"/><category term="software"/><category term="software-libre"/><category term="tapestry"/><category term="gnu-linux"/></entry></feed>
+&lt;/div&gt;</content><category term="hardware"/><category term="planeta-codigo"/><category term="seguridad"/><category term="software"/></entry></feed>
