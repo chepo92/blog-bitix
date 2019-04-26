@@ -1,4 +1,533 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2019-04-18T10:00:00+02:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/</id><title>Estrategias de despliegue para microservicios con Nomad</title><updated>2019-04-18T11:30:00+02:00</updated><published>2019-04-18T10:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/"/><author><name>picodotdev</name></author><content type="html">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2019-04-26T19:00:00+02:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/</id><title>Servicios con persistencia en el orquestador Nomad</title><updated>2019-04-26T19:00:00+02:00</updated><published>2019-04-26T19:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/"/><author><name>picodotdev</name></author><content type="html">
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/nomad.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Nomad&#34; title=&#34;Nomad&#34;/&gt;
+&lt;/div&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/hashicorp.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;HashiCorp&#34; title=&#34;HashiCorp&#34;/&gt;
+&lt;/div&gt;
+&lt;p&gt;Algunos servicios no necesitan almacenar ningún estado porque no lo necesitan o porque el estado se mantiene en otro servicio. Que un servicio no necesite mantener estado es bueno porque de esta manera el servicio se puede escalar al número de instancias adecuadas para prestar el servicio, también porque si falla una instancia la petición puede ser reenviada a otra instancia, una instancia que falla puede ser reemplazada sin problema en otro &lt;em&gt;host&lt;/em&gt;. Sin embargo, hay otro tipo de instancias que si almacenan estado como las bases de datos ya sea &lt;a href=&#34;https://www.postgresql.org/&#34;&gt;PostgreSQL&lt;/a&gt;, &lt;a href=&#34;https://www.mysql.com/&#34;&gt;MySQL&lt;/a&gt;, &lt;a href=&#34;https://redis.io/&#34;&gt;Redis&lt;/a&gt;, &lt;a href=&#34;https://www.mongodb.com/&#34;&gt;MongoDB&lt;/a&gt;, otra o simplemente archivos en el sistema de archivos.&lt;/p&gt;
+&lt;p&gt;Las instancias que tienen estado no son tan fáciles de reemplazar dado que los datos son necesarios para su funcionamiento, una instancia de un servicio con estado como no puede iniciarse en otro nodo libremente solo se puede iniciar en el nodo que contenga los datos. Eso o cuando el servicio se inicia en otro nodo los datos son trasladados o por algún mechanismo transparente a los servicios están disponibles en el nuevo nodo.&lt;/p&gt;
+&lt;p&gt;En &lt;a href=&#34;https://docs.docker.com/swarm/&#34;&gt;Docker Swarm&lt;/a&gt; ciertos &lt;em&gt;drivers&lt;/em&gt; de volúmenes pueden proporcionar volúmenes accesibles desde cualquier &lt;em&gt;host&lt;/em&gt; del &lt;em&gt;cluster&lt;/em&gt; pero por defecto &lt;em&gt;Swarm&lt;/em&gt; no lo ofrece. En &lt;a href=&#34;https://kubernetes.io/&#34;&gt;Kubernetes&lt;/a&gt; los volúmenes pueden ser dispositivos de almacenamiento provenientes de &lt;a href=&#34;https://aws.amazon.com/es/ebs/&#34;&gt;EBS&lt;/a&gt; de modo que si un &lt;em&gt;pod&lt;/em&gt; es movido a otro &lt;em&gt;host&lt;/em&gt; basta con que el &lt;em&gt;pod&lt;/em&gt; sea conectado de nuevo al EBS anterior y los datos están accesibles en el nuevo nodo.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.nomadproject.io/&#34;&gt;Nomad&lt;/a&gt; no proporciona soporte para que el almacenamiento persistente sea migrado a un nuevo nodo de Nomad si el servicio cambiado de ubicación. Para solventar esta limitación en el caso de los servicios con estado estos pueden ser tratados en cierta forma como animales de compañía o &lt;em&gt;pets&lt;/em&gt; haciendo que siempre se ubiquen en el mismo nodo, una vez tiene siempre la misma ubicación basta con proporcionar el almacenamiento en el &lt;em&gt;host&lt;/em&gt; ya sea en su sistema de archivos o para externalizarlo montando un almacenamiento &lt;em&gt;EBS&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Para conseguir que un &lt;em&gt;job&lt;/em&gt; de Nomad se ubique siempre en un mismo nodo hay que usar &lt;a href=&#34;https://www.nomadproject.io/docs/job-specification/constraint.html&#34;&gt;restricciones o &lt;em&gt;costraints&lt;/em&gt; en la especificación del &lt;em&gt;job&lt;/em&gt;&lt;/a&gt;. Las restricciones son las reglas que utiliza Nomad para elegir como candidatos los posibles nodos en los que ubicar el &lt;em&gt;job&lt;/em&gt;, &lt;em&gt;task group&lt;/em&gt; o &lt;em&gt;task&lt;/em&gt;. Se pueden utilizar varios operadores entre los que está el de igualdad utilizado en el ejemplo. Una de las variables utilizables es el identificativo del nodo de Nomad, con él es posible conseguir que el &lt;em&gt;job&lt;/em&gt; se ubique siempre en el mismo nodo. Los identificativos de los nodos son asignados por Nomad cuando se unen al &lt;em&gt;cluster&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Con los siguientes comandos se inspecciona los nodos que forman parte del cluster de Nomad, entre sus datos está el identificativo de cada nodo formado por una cadena de 36 caracteres. En el modo verboso se emite el identificativo completo y una lista de propiedades del nodo entre los que están detalles de Consul, la CPU, &lt;em&gt;driver&lt;/em&gt; que soporta, kernel, sistema operativo, &amp;hellip; En documentación sobre &lt;a href=&#34;https://www.nomadproject.io/docs/runtime/interpolation.html&#34;&gt;interpolación de variables&lt;/a&gt; hay una lista de variables disponibles.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 44
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 45
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 46
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 47
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 48
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 49
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 50
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 51
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 52
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 53
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 54
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 55
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 56
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 57
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 58
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 59
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 60
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 61
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 62
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 63
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 64
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 65
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 66
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 67
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 68
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 69
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 70
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 71
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 72
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 73
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 74
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 75
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 76
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 77
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 78
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 79
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 80
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 81
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 82
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 83
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 84
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 85
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 86
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 87
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 88
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 89
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 90
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 91
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 92
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 93
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 94
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 95
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 96
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 97
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 98
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 99
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;100
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;101
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;102
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;103
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;104
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;105
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;106
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;107
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;108
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;109
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;110
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;111
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;112
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;113
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;114
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ nomad node status
+ID DC Name Class Drain Eligibility Status
+44511e01 localhost archlinux &amp;lt;none&amp;gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt; eligible ready
+$ nomad node status 44511e01
+&lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 44511e01
+&lt;span class=&#34;nv&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; archlinux
+&lt;span class=&#34;nv&#34;&gt;Class&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &amp;lt;none&amp;gt;
+&lt;span class=&#34;nv&#34;&gt;DC&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; localhost
+&lt;span class=&#34;nv&#34;&gt;Drain&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;Eligibility&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; eligible
+&lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; ready
+&lt;span class=&#34;nv&#34;&gt;Uptime&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 1h40m31s
+Driver &lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; docker,exec,java,qemu,raw_exec
+Node Events
+Time Subsystem Message
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00 Cluster Node registered
+Allocated Resources
+CPU Memory Disk
+&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;/30400 MHz &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; B/31 GiB &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; B/16 GiB
+Allocation Resource Utilization
+CPU Memory
+&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;/30400 MHz &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; B/31 GiB
+Host Resource Utilization
+CPU Memory Disk
+&lt;span class=&#34;m&#34;&gt;3288&lt;/span&gt;/30400 MHz &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;.2 GiB/31 GiB &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;tmpfs&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Allocations
+No allocations placed
+$ nomad node status -verbose 44511e01
+&lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 44511e01-34b8-c1e6-7fe5-60be0ff35d0e
+&lt;span class=&#34;nv&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; archlinux
+&lt;span class=&#34;nv&#34;&gt;Class&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &amp;lt;none&amp;gt;
+&lt;span class=&#34;nv&#34;&gt;DC&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; localhost
+&lt;span class=&#34;nv&#34;&gt;Drain&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;Eligibility&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; eligible
+&lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; ready
+&lt;span class=&#34;nv&#34;&gt;Uptime&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 1h44m39s
+Drivers
+Driver Detected Healthy Message Time
+docker &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; Healthy &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00
+&lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; Healthy &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00
+java &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; Healthy &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00
+qemu &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; Healthy &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00
+raw_exec &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; Healthy &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00
+rkt &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt; Failed to execute rkt version: exec: &lt;span class=&#34;s2&#34;&gt;&amp;#34;rkt&amp;#34;&lt;/span&gt;: executable file not found in &lt;span class=&#34;nv&#34;&gt;$PATH&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00
+Node Events
+Time Subsystem Message Details
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00 Cluster Node registered &amp;lt;none&amp;gt;
+Allocated Resources
+CPU Memory Disk
+&lt;span class=&#34;m&#34;&gt;100&lt;/span&gt;/30400 MHz &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;.0 GiB/31 GiB &lt;span class=&#34;m&#34;&gt;300&lt;/span&gt; MiB/16 GiB
+Allocation Resource Utilization
+CPU Memory
+&lt;span class=&#34;m&#34;&gt;19&lt;/span&gt;/30400 MHz &lt;span class=&#34;m&#34;&gt;38&lt;/span&gt; MiB/31 GiB
+Host Resource Utilization
+CPU Memory Disk
+&lt;span class=&#34;m&#34;&gt;4564&lt;/span&gt;/30400 MHz &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;.5 GiB/31 GiB &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;tmpfs&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Allocations
+ID Eval ID Node ID Task Group Version Desired Status Created Modified
+cd45371d-501a-1373-dfde-bb16c4ff20d3 ab9f5675-b5cb-9e5f-8e20-cb308dbfba32 44511e01-34b8-c1e6-7fe5-60be0ff35d0e services &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt; run running &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T18:14:28+02:00 &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T18:16:32+02:00
+Attributes
+consul.datacenter &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; localhost
+consul.revision &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; ea5210a30
+consul.server &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+consul.version &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;.4.4
+cpu.arch &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; amd64
+cpu.frequency &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;3800&lt;/span&gt;
+cpu.modelname &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; Intel&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;R&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; Core&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;TM&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; i5-8259U CPU @ &lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;.30GHz
+cpu.numcores &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;8&lt;/span&gt;
+cpu.totalcompute &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;30400&lt;/span&gt;
+driver.docker &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+driver.docker.bridge_ip &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;172&lt;/span&gt;.17.0.1
+driver.docker.os_type &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; linux
+driver.docker.runtimes &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; runc
+driver.docker.version &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;18&lt;/span&gt;.09.4-ce
+driver.docker.volumes.enabled &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+driver.exec &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+driver.java &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+driver.java.runtime &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; OpenJDK Runtime Environment &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;build &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;.8.0_212-b01&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+driver.java.version &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;.8.0_212
+driver.java.vm &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; OpenJDK &lt;span class=&#34;m&#34;&gt;64&lt;/span&gt;-Bit Server VM &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;build &lt;span class=&#34;m&#34;&gt;25&lt;/span&gt;.212-b01, mixed mode&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+driver.qemu &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+driver.qemu.version &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;.1.0
+driver.raw_exec &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+kernel.name &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; linux
+kernel.version &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;.0.7-arch1-1-ARCH
+memory.totalbytes &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;33592107008&lt;/span&gt;
+nomad.advertise.address &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4646
+nomad.revision &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 18dd59056ee1d7b2df51256fe900a98460d3d6b9
+nomad.version &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;.9.0
+os.name &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; arch
+os.signals &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; SIGQUIT,SIGTTOU,SIGFPE,SIGTRAP,SIGTSTP,SIGINT,SIGURG,SIGTTIN,SIGUSR1,SIGIO,SIGIOT,SIGKILL,SIGSTOP,SIGCONT,SIGILL,SIGPROF,SIGSEGV,SIGSYS,SIGTERM,SIGXFSZ,SIGHUP,SIGWINCH,SIGABRT,SIGBUS,SIGCHLD,SIGPIPE,SIGUSR2,SIGXCPU,SIGALRM
+unique.cgroup.mountpoint &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; /sys/fs/cgroup
+unique.consul.name &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; archlinux
+unique.hostname &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; archlinux
+unique.network.ip-address &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1
+unique.storage.bytesfree &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;16795955200&lt;/span&gt;
+unique.storage.bytestotal &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;16796053504&lt;/span&gt;
+unique.storage.volume &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; tmpfs
+Meta&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/nomad-status.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/nomad-status.sh&#34; target=&#34;_blank&#34;&gt;nomad-status.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;En este caso solo hay un nodo registrado en Nomad, la siguiente definición de &lt;em&gt;job&lt;/em&gt; en el fragmento &lt;em&gt;constraint&lt;/em&gt; hace que Nomad lo ubique siempre en él.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;job &amp;#34;mongodb&amp;#34; {
+datacenters = [&amp;#34;localhost&amp;#34;]
+type = &amp;#34;service&amp;#34;
+constraint {
+attribute = &amp;#34;${node.unique.id}&amp;#34;
+value = &amp;#34;44511e01-34b8-c1e6-7fe5-60be0ff35d0e&amp;#34;
+}
+group &amp;#34;services&amp;#34; {
+count = 1
+task &amp;#34;mongodb&amp;#34; {
+driver = &amp;#34;docker&amp;#34;
+config {
+image = &amp;#34;mongo:latest&amp;#34;
+port_map {
+port = 27017
+}
+volumes = [
+&amp;#34;/home/picodotdev/Software/nomad/mongodb:/data/db/&amp;#34;
+]
+}
+resources {
+memory = 1024 # MB
+network {
+port &amp;#34;port&amp;#34; {}
+}
+}
+}
+}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/mongodb.nomad&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/mongodb.nomad&#34; target=&#34;_blank&#34;&gt;mongodb.nomad&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Como el &lt;em&gt;job&lt;/em&gt; se ubica en el mismo nodo siempre montando un directorio del nodo como un volumen de datos en el &lt;em&gt;job&lt;/em&gt; y contenedor de &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt;, los datos se persisten en el sistema de archivos y transcienden al tiempo de vida del &lt;em&gt;job&lt;/em&gt;, se puede iniciar el &lt;em&gt;job&lt;/em&gt;, insertar datos en la base de datos en este caso de MongoDB, eliminar el &lt;em&gt;job&lt;/em&gt;, volverlo a iniciar y los mismos datos están presentes en MongoDB.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ nomad job run mongodb.nomad
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/nomad-job-run.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/nomad-job-run.sh&#34; target=&#34;_blank&#34;&gt;nomad-job-run.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;44
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;45
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;46
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;47
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ docker ps
+CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES
+b0d3f42c92fc mongo:latest &lt;span class=&#34;s2&#34;&gt;&amp;#34;docker-entrypoint.s…&amp;#34;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt; minutes ago Up &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt; minutes &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:20180-&amp;gt;27017/tcp, &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:20180-&amp;gt;27017/udp mongodb-ea10d440-1176-3bfb-5301-7ccd17af0281
+$ docker &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; -it b0d3f42c92fc bash
+root@b0d3f42c92fc:/# mongo
+MongoDB shell version v4.0.9
+connecting to: mongodb://127.0.0.1:27017/?gssapiServiceName&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;mongodb
+Implicit session: session &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt; : UUID&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;ba120679-b965-49d0-a774-dff39d6b630a&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+MongoDB server version: &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt;.0.9
+Server has startup warnings:
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:49.308+0000 I STORAGE &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:49.308+0000 I STORAGE &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:49.308+0000 I STORAGE &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; ** See http://dochub.mongodb.org/core/prodnotes-filesystem
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:50.133+0000 I CONTROL &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:50.133+0000 I CONTROL &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; ** WARNING: Access control is not enabled &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; the database.
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:50.133+0000 I CONTROL &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; ** Read and write access to data and configuration is unrestricted.
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:50.133+0000 I CONTROL &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+---
+Enable MongoDB&lt;span class=&#34;s1&#34;&gt;&amp;#39;s free cloud-based monitoring service, which will then receive and display
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;and anyone you share the URL with. MongoDB may use this information to make product
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;improvements and to suggest MongoDB products and deployment options to you.
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;To enable free monitoring, run the following command: db.enableFreeMonitoring()
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;---
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;gt; db.articles.insert({title: &amp;#34;Introducción a la base de datos NoSQL MongoDB&amp;#34;, author: &amp;#34;picodotdev&amp;#34;, date: new Date(2017,05,18,12,30), tags: [&amp;#39;&lt;/span&gt;mongodb&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;database&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;NoSQL&lt;span class=&#34;s1&#34;&gt;&amp;#39;], comments: [{user: &amp;#34;jones&amp;#34;, message: &amp;#34;MongoDB is great!&amp;#34;}, {user: &amp;#34;lina&amp;#34;, message: &amp;#34;MongoDB is great!&amp;#34;}]})
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;WriteResult({ &amp;#34;nInserted&amp;#34; : 1 })
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;gt; db.articles.insert({title: &amp;#34;Introducción a la base de datos relacional PostgreSQL&amp;#34;, author: &amp;#34;picodotdev&amp;#34;, date: new Date(2017,05,17,12,00), likes: 100, tags: [&amp;#39;&lt;/span&gt;postgresql&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;database&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;SQL&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;, comments: &lt;span class=&#34;o&#34;&gt;[{&lt;/span&gt;user: &lt;span class=&#34;s2&#34;&gt;&amp;#34;katy&amp;#34;&lt;/span&gt;, message: &lt;span class=&#34;s2&#34;&gt;&amp;#34;PostgreSQL rocks!&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;, &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;user: &lt;span class=&#34;s2&#34;&gt;&amp;#34;smith&amp;#34;&lt;/span&gt;, message: &lt;span class=&#34;s2&#34;&gt;&amp;#34;SQL language is powerful!&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}]})&lt;/span&gt;
+WriteResult&lt;span class=&#34;o&#34;&gt;({&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;nInserted&amp;#34;&lt;/span&gt; : &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;})&lt;/span&gt;
+&amp;gt; db.articles.find&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;_id&amp;#34;&lt;/span&gt; : ObjectId&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;5cc335873b17081f2ca1d4d5&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;title&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;Introducción a la base de datos NoSQL MongoDB&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;author&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;picodotdev&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;date&amp;#34;&lt;/span&gt; : ISODate&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;2017-06-18T12:30:00Z&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;tags&amp;#34;&lt;/span&gt; : &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;mongodb&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;database&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;NoSQL&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;comments&amp;#34;&lt;/span&gt; : &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;user&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;jones&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;MongoDB is great!&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;, &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;user&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;lina&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;MongoDB is great!&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;_id&amp;#34;&lt;/span&gt; : ObjectId&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;5cc335993b17081f2ca1d4d6&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;title&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;Introducción a la base de datos relacional PostgreSQL&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;author&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;picodotdev&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;date&amp;#34;&lt;/span&gt; : ISODate&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;2017-06-17T12:00:00Z&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;likes&amp;#34;&lt;/span&gt; : &lt;span class=&#34;m&#34;&gt;100&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;tags&amp;#34;&lt;/span&gt; : &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;postgresql&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;database&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;SQL&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;comments&amp;#34;&lt;/span&gt; : &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;user&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;katy&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;PostgreSQL rocks!&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;, &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;user&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;smith&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;SQL language is powerful!&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&amp;gt; db.articles.count&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;
+&amp;gt; &lt;span class=&#34;nb&#34;&gt;exit&lt;/span&gt;
+bye
+root@b0d3f42c92fc:/# &lt;span class=&#34;nb&#34;&gt;exit&lt;/span&gt;
+&lt;span class=&#34;nb&#34;&gt;exit&lt;/span&gt;
+$ nomad job stop --purge &lt;span class=&#34;nv&#34;&gt;mongodb&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Monitoring evaluation &lt;span class=&#34;s2&#34;&gt;&amp;#34;f10589c6&amp;#34;&lt;/span&gt;
+Evaluation triggered by job &lt;span class=&#34;s2&#34;&gt;&amp;#34;mongodb&amp;#34;&lt;/span&gt;
+Evaluation status changed: &lt;span class=&#34;s2&#34;&gt;&amp;#34;pending&amp;#34;&lt;/span&gt; -&amp;gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;complete&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Evaluation &lt;span class=&#34;s2&#34;&gt;&amp;#34;f10589c6&amp;#34;&lt;/span&gt; finished with status &lt;span class=&#34;s2&#34;&gt;&amp;#34;complete&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/mongodb.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/mongodb.sh&#34; target=&#34;_blank&#34;&gt;mongodb.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ nomad job stop --prune mongodb
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/nomad-job-stop.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/nomad-job-stop.sh&#34; target=&#34;_blank&#34;&gt;nomad-job-stop.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Para iniciar &lt;a href=&#34;https://www.consul.io/&#34;&gt;Consul&lt;/a&gt; y Nomad hay que utilizar los siguientes comandos y para el ejecutar &lt;em&gt;job&lt;/em&gt; es requisito haber instalado Docker dado que en este ejemplo lo utiliza.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ consul agent -dev -datacenter &lt;span class=&#34;nv&#34;&gt;localhost&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Starting Consul agent...
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Consul agent running!
+Version: &lt;span class=&#34;s1&#34;&gt;&amp;#39;v1.4.4&amp;#39;&lt;/span&gt;
+Node ID: &lt;span class=&#34;s1&#34;&gt;&amp;#39;34294bf0-5802-0d94-4acd-cf8c9d090205&amp;#39;&lt;/span&gt;
+Node name: &lt;span class=&#34;s1&#34;&gt;&amp;#39;archlinux&amp;#39;&lt;/span&gt;
+Datacenter: &lt;span class=&#34;s1&#34;&gt;&amp;#39;localhost&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;Segment: &lt;span class=&#34;s1&#34;&gt;&amp;#39;&amp;lt;all&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Server: &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;Bootstrap: &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Client Addr: &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;HTTP: &lt;span class=&#34;m&#34;&gt;8500&lt;/span&gt;, HTTPS: -1, gRPC: &lt;span class=&#34;m&#34;&gt;8502&lt;/span&gt;, DNS: &lt;span class=&#34;m&#34;&gt;8600&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Cluster Addr: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1 &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;LAN: &lt;span class=&#34;m&#34;&gt;8301&lt;/span&gt;, WAN: &lt;span class=&#34;m&#34;&gt;8302&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Encrypt: Gossip: false, TLS-Outgoing: false, TLS-Incoming: &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+$ sudo nomad agent -dev -dc localhost
+&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;sudo&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; password &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; picodotdev:
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; No configuration files &lt;span class=&#34;nv&#34;&gt;loaded&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Starting Nomad agent...
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Nomad agent configuration:
+Advertise Addrs: HTTP: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4646&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; RPC: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4647&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; Serf: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4648
+Bind Addrs: HTTP: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4646&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; RPC: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4647&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; Serf: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4648
+Client: &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+Log Level: DEBUG
+Region: global &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;DC: localhost&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Server: &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+Version: &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;.9.0&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/consul-nomad.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/consul-nomad.sh&#34; target=&#34;_blank&#34;&gt;consul-nomad.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Las restricciones se han de cumplir para elegir un nodo, por otro lado está también la afinidad. La &lt;a href=&#34;https://www.nomadproject.io/docs/job-specification/affinity.html&#34;&gt;afinidad&lt;/a&gt; es una preferencia utilizada por Nomad al seleccionar los nodos que tratará de cumplir si hay algún nodo disponible con las propiedades de afinidad deseadas pero si no hay un nodo disponible se elige algún otro.&lt;/p&gt;
+&lt;div class=&#34;reference&#34;&gt;
+Referencia:&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/&#34;&gt;Introducción a Nomad para gestionar aplicaciones y microservicios&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/&#34;&gt;Estrategias de despliegue para microservicios con Nomad&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.nomadproject.io/guides/stateful-workloads/portworx.html&#34;&gt;Portworx&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.nomadproject.io/docs/job-specification/ephemeral_disk.html&#34;&gt;Ephemeral Disk&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tech.trivago.com/2019/01/25/nomad-our-experiences-and-best-practices/&#34;&gt;Nomad - our experiences and best practices&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/series/docker/&#34;&gt;Serie de artículos sobre Docker&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;</content><category term="planeta-codigo"/><category term="programacion"/><category term="software"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/</id><title>Estrategias de despliegue para microservicios con Nomad</title><updated>2019-04-18T11:30:00+02:00</updated><published>2019-04-18T10:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/"/><author><name>picodotdev</name></author><content type="html">
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
 &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/nomad.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Nomad&#34; title=&#34;Nomad&#34;/&gt;
 &lt;/div&gt;
@@ -102,8 +631,8 @@ port &amp;#34;http&amp;#34; {}
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/code/nomad-run.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/code/nomad-run.sh&#34; target=&#34;_blank&#34;&gt;nomad-run.sh&lt;/a&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/code/nomad-job-run.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/code/nomad-job-run.sh&#34; target=&#34;_blank&#34;&gt;nomad-job-run.sh&lt;/a&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;En el caso de los despliegues &lt;em&gt;blue/green&lt;/em&gt; y &lt;em&gt;canary&lt;/em&gt; una vez comprobado que la versión de los nuevos servicios funcionan correctamente se promocionan y actualizan el resto de instancias en el caso de &lt;em&gt;canary&lt;/em&gt; o se detienen las instancias antiguas en el caso de &lt;em&gt;blue/green&lt;/em&gt;.&lt;/p&gt;
@@ -418,9 +947,16 @@ $ sudo nomad agent -dev -dc localhost&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/code/nomad-consul.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/code/nomad-consul.sh&#34; target=&#34;_blank&#34;&gt;nomad-consul.sh&lt;/a&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/code/consul-nomad.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/code/consul-nomad.sh&#34; target=&#34;_blank&#34;&gt;consul-nomad.sh&lt;/a&gt;
 &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;reference&#34;&gt;
+Referencia:&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/&#34;&gt;Introducción a Nomad para gestionar aplicaciones y microservicios&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/&#34;&gt;Servicios con persistencia en el orquestador Nomad&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 &lt;/div&gt;</content><category term="planeta-codigo"/><category term="programacion"/><category term="software"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/</id><title>Introducción a Nomad para gestionar aplicaciones y microservicios</title><updated>2019-04-17T23:00:00+02:00</updated><published>2019-04-14T13:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/"/><author><name>picodotdev</name></author><content type="html">
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
 &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/nomad.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Nomad&#34; title=&#34;Nomad&#34;/&gt;
@@ -748,6 +1284,8 @@ $ nomad alloc logs 60f3d102
 &lt;div class=&#34;reference&#34;&gt;
 Referencia:&lt;br&gt;
 &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/&#34;&gt;Estrategias de despliegue para microservicios con Nomad&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/&#34;&gt;Servicios con persistencia en el orquestador Nomad&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://targetveb.com/nomad-simple-deployment-monitoring-applications.html&#34;&gt;Nomad – Simple deployment and monitoring of applications&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;</content><category term="planeta-codigo"/><category term="programacion"/><category term="software"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/04/aumentar-el-tamano-del-identificativo-de-la-cookie-de-sesion-de-tomcat-o-spring-session/</id><title>Aumentar el tamaño del identificativo de la cookie de sesión de Tomcat o Spring Session</title><updated>2019-04-12T19:00:00+02:00</updated><published>2019-04-12T17:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/04/aumentar-el-tamano-del-identificativo-de-la-cookie-de-sesion-de-tomcat-o-spring-session/"/><author><name>picodotdev</name></author><content type="html">
@@ -4277,257 +4815,4 @@ Referencia:&lt;br&gt;
 &lt;p&gt;Las colecciones &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TreeSet.html&#34;&gt;TreeSet&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TreeMap.html&#34;&gt;TreeMap&lt;/a&gt; mantienen los elementos ordenados según el orden natural definido por el método &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Comparable.html#compareTo(T)&#34;&gt;compareTo&lt;/a&gt; de la interfaz &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Comparable.html&#34;&gt;Comparable&lt;/a&gt; guarda la información en una estructura de árbol de forma que las búsquedas son más rápidas que un una lista.&lt;/p&gt;
 &lt;p&gt;Las implementaciones más utilizadas de estas estas interfaces son &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ArrayList.html&#34;&gt;ArrayList&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/HashSet.html&#34;&gt;HashSet&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/HashMap.html&#34;&gt;HashMap&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TreeSet.html&#34;&gt;TreeSet&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ArrayDeque.html&#34;&gt;ArrayDeque&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Stack.html&#34;&gt;Stack&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Desde que &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/&#34;&gt;en Java 8 se permiten implementaciones de métodos en las interfaces&lt;/a&gt; se proporcionan en algunas de estas varios métodos factoría para crear fácilmente colecciones generalmente con un método de nombre &lt;em&gt;of&lt;/em&gt; como en la interfaz &lt;em&gt;List&lt;/em&gt;. La clase &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collections.html&#34;&gt;Collections&lt;/a&gt; tiene métodos para hacer las &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/03/colecciones-sincronizadas-e-inmutables-en-java/&#34;&gt;colecciones inmutables y sincronizadas&lt;/a&gt; impidiendo que se les realicen modificaciones o sincronizadas si varios &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Thread.html&#34;&gt;Thread&lt;/a&gt; de forma simultánea.&lt;/p&gt;
-&lt;p&gt;La &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/introduccion-a-la-programacion-funcional-con-java-y-la-libreria-vavr/&#34;&gt;librería Vavr&lt;/a&gt; proporciona otra API y conjunto de colecciones sin algunos errores de diseño pero que se han de mantener por compatibilidad o con algunas funcionalidades adicionales que la API de colecciones de Java no tiene.&lt;/p&gt;</content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/</id><title>Lookahead y lookbehind en expresiones regulares con Java</title><updated>2019-02-17T10:00:00+01:00</updated><published>2019-02-17T10:00:00+01:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/"/><author><name>picodotdev</name></author><content type="html">
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
-&lt;/div&gt;
-&lt;p&gt;Las expresiones regulares son un gran invento y muy útil para comprobar que una cadena cumple el patrón definido en la expresión regular, hay coincidencias en partes de la cadena y para reemplazar coincidencias. Son muy potentes para realizar estas tareas pero al mismo tiempo pueden volverse en cierta medida complicadas.&lt;/p&gt;
-&lt;p&gt;Una de las funcionalidades que soportan las cadenas es búsqueda hacia delante o &lt;em&gt;lookahead&lt;/em&gt; y búsqueda hacia atrás o &lt;em&gt;lookbehind&lt;/em&gt;. La primera permite examinar los siguientes caracteres de la cadena analizada y la segunda los caracteres pasados.&lt;/p&gt;
-&lt;p&gt;Hay diferentes formas de &lt;em&gt;lookahead&lt;/em&gt;, en Java la construcción que permite hacer &lt;em&gt;lookahead&lt;/em&gt; es &lt;em&gt;(?=X)&lt;/em&gt; donde &lt;em&gt;X&lt;/em&gt; es la expresión siguiente, se puede negar la expresión en el caso de querer que no se cumpla &lt;em&gt;X&lt;/em&gt; con &lt;em&gt;(?!X)&lt;/em&gt;. También existe &lt;em&gt;lookbehind&lt;/em&gt; con la construcción &lt;em&gt;(?&amp;lt;=X)&lt;/em&gt; para negar que no se cumpla &lt;em&gt;X&lt;/em&gt; se ha de emplear &lt;em&gt;(?&amp;lt;!X)&lt;/em&gt;, como su nombre sugiere en vez de mirar hacia adelante mira hacia atrás en los caracteres ya analizados.&lt;/p&gt;
-&lt;p&gt;Una aplicación práctica en la que usar &lt;em&gt;lookahead&lt;/em&gt; es para ocultar los números de una tarjeta de crédito, una cuenta bancaria o un &lt;em&gt;bearer token&lt;/em&gt; de un API REST excepto los cuatro últimos caracteres, este podría ser el caso de que esta información sea incluida en los archivos de &lt;em&gt;log&lt;/em&gt; de una aplicación que por seguridad es recomendable ocultar. En el artículo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/02/ofuscar-datos-sensibles-en-las-trazas-con-log4j/&#34;&gt;Ofuscar datos sensibles en las trazas con Log4j&lt;/a&gt; comento varias formas de hacerlo.&lt;/p&gt;
-&lt;p&gt;Una tarjeta de crédito está formada por 4 grupos de 4 dígitos separados por espacios cumpliendo la expresión regular &lt;em&gt;\d{4} \d{4} \d{4} \d{4}&lt;/em&gt; y un &lt;em&gt;bearer token&lt;/em&gt; puede seguir la expresión regular &lt;em&gt;Bearer \w+&lt;/em&gt;. Para ocultar la información de estas cadenas excepto los cuatro últimos caracteres hay que comprobar que los primeros complen el patrón añadiéndolos en un grupo de captura para su reemplazo posterior y mirar los cuatro siguientes si también lo cumplen fuera del grupo de captura. En el caso de la tarjeta de crédito se mira que la expresión cumple los primeros números de una tarjeta de crédito y le siguen los restantes, la primera parte se incluye en un grupo de captura con los paréntesis.&lt;/p&gt;
-&lt;div class=&#34;code&#34;&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;io.github.picodotdev.blogbitix.log4j&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Main&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Logger&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;LogManager&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getLogger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Main&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;SecuredMessage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Tarjeta de crédito: 1111 1111 1111 1111, DNI: 11111111A&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Arrays&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;asList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;(\\d{4} \\d{4} \\d{4} \\d{1})(?=\\d{3})&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;(\\d{6})(?=\\d{2}[A-Z])&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)));&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Tarjeta de crédito: 1111 1111 1111 1111, DNI: 11111111A&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/code/Main.java&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/code/Main.java&#34; target=&#34;_blank&#34;&gt;Main.java&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;code&#34;&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;43
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;44
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;45
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;46
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;47
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;48
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;49
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;50
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;51
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;52
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;53
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;54
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;55
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;56
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;57
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;58
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;59
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;60
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;61
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;62
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;63
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;64
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;65
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;66
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;io.github.picodotdev.blogbitix.log4j&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.logging.log4j.message.Message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;java.util.Collection&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;java.util.regex.Matcher&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;java.util.regex.Pattern&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;java.util.stream.Collectors&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;SecuredMessage&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;implements&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Message&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;UNMASKED_CHARACTERS&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Message&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Pattern&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;pattern&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;SecuredMessage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Message&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Collection&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;patterns&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;message&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;pattern&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;compilePatterns&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;patterns&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;SecuredMessage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Collection&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;patterns&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;pattern&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;compilePatterns&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;patterns&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
-&lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getFormattedMessage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;securedMessage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;securedMessage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;message&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;!=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;securedMessage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;!=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;securedString&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Pattern&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;compilePatterns&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Collection&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;patterns&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Pattern&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;compile&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;patterns&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;stream&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;map&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;it&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;(&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;it&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;)&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;collect&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Collectors&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;joining&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;|&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)));&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;securedMessage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Message&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;securedString&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getFormattedMessage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;securedString&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;result&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;Matcher&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;matcher&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;pattern&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;matcher&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;matcher&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;find&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;())&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;match&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;matcher&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;mask&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;mask&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;match&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;result&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;result&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;replaceFirst&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;match&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;mask&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;result&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;mask&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;replaceAll&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;.&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;*&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/code/SecuredMessage.java&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/code/SecuredMessage.java&#34; target=&#34;_blank&#34;&gt;SecuredMessage.java&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;code&#34;&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Yaml&#34; data-lang=&#34;Yaml&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Yaml&#34; data-lang=&#34;Yaml&#34;&gt;configuration&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;status&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;warn&lt;span class=&#34;w&#34;&gt;
-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;appenders&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;console&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;name&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;STDOUT&lt;span class=&#34;w&#34;&gt;
-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;patternLayout&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;pattern&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;%d{DEFAULT} %X{uuid} %-5level %60.60logger %msg%n&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;replace&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;regex&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;(\\d{4} \\d{4} \\d{4} \\d{1})(?=\\d{3})|(\\d{6})(?=\\d{2}[A-Z])&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;replacement&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;**********&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;loggers&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;root&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;level&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;info&lt;span class=&#34;w&#34;&gt;
-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;appenderRef&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;ref&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;STDOUT&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/code/log4j2.yaml&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/code/log4j2.yaml&#34; target=&#34;_blank&#34;&gt;log4j2.yaml&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;El resultado es el siguiente:&lt;/p&gt;
-&lt;div class=&#34;code&#34;&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;...
-2019-02-10 11:22:47,652 INFO io.github.picodotdev.blogbitix.log4j.Main Tarjeta de crédito: ****************111, DNI: ******11A
-2019-02-10 11:22:47,653 INFO io.github.picodotdev.blogbitix.log4j.Main Tarjeta de crédito: **********111, DNI: **********11A&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/code/System.out&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/code/System.out&#34; target=&#34;_blank&#34;&gt;System.out&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;
-El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/JavaLog4j&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
-&lt;/p&gt;
-&lt;div class=&#34;reference&#34;&gt;
-Referencia:&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/02/referencias-a-grupos-de-captura-en-expresiones-regulares-y-reemplazos/&#34;&gt;Referencias a grupos de captura en expresiones regulares y reemplazos&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/09/los-cuantificadores-greedy-reluctant-y-possessive-en-expresiones-regulares/&#34;&gt;Los cuantificadores greedy, reluctant y possessive en expresiones regulares&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/regex/Pattern.html&#34;&gt;Pattern&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;</content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/></entry></feed>
+&lt;p&gt;La &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/introduccion-a-la-programacion-funcional-con-java-y-la-libreria-vavr/&#34;&gt;librería Vavr&lt;/a&gt; proporciona otra API y conjunto de colecciones sin algunos errores de diseño pero que se han de mantener por compatibilidad o con algunas funcionalidades adicionales que la API de colecciones de Java no tiene.&lt;/p&gt;</content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/></entry></feed>

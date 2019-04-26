@@ -1,4 +1,533 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/tags/software/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2019-04-18T10:00:00+02:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/</id><title>Estrategias de despliegue para microservicios con Nomad</title><updated>2019-04-18T11:30:00+02:00</updated><published>2019-04-18T10:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/"/><author><name>picodotdev</name></author><content type="html">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/tags/software/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2019-04-26T19:00:00+02:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/</id><title>Servicios con persistencia en el orquestador Nomad</title><updated>2019-04-26T19:00:00+02:00</updated><published>2019-04-26T19:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/"/><author><name>picodotdev</name></author><content type="html">
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/nomad.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Nomad&#34; title=&#34;Nomad&#34;/&gt;
+&lt;/div&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/hashicorp.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;HashiCorp&#34; title=&#34;HashiCorp&#34;/&gt;
+&lt;/div&gt;
+&lt;p&gt;Algunos servicios no necesitan almacenar ningún estado porque no lo necesitan o porque el estado se mantiene en otro servicio. Que un servicio no necesite mantener estado es bueno porque de esta manera el servicio se puede escalar al número de instancias adecuadas para prestar el servicio, también porque si falla una instancia la petición puede ser reenviada a otra instancia, una instancia que falla puede ser reemplazada sin problema en otro &lt;em&gt;host&lt;/em&gt;. Sin embargo, hay otro tipo de instancias que si almacenan estado como las bases de datos ya sea &lt;a href=&#34;https://www.postgresql.org/&#34;&gt;PostgreSQL&lt;/a&gt;, &lt;a href=&#34;https://www.mysql.com/&#34;&gt;MySQL&lt;/a&gt;, &lt;a href=&#34;https://redis.io/&#34;&gt;Redis&lt;/a&gt;, &lt;a href=&#34;https://www.mongodb.com/&#34;&gt;MongoDB&lt;/a&gt;, otra o simplemente archivos en el sistema de archivos.&lt;/p&gt;
+&lt;p&gt;Las instancias que tienen estado no son tan fáciles de reemplazar dado que los datos son necesarios para su funcionamiento, una instancia de un servicio con estado como no puede iniciarse en otro nodo libremente solo se puede iniciar en el nodo que contenga los datos. Eso o cuando el servicio se inicia en otro nodo los datos son trasladados o por algún mechanismo transparente a los servicios están disponibles en el nuevo nodo.&lt;/p&gt;
+&lt;p&gt;En &lt;a href=&#34;https://docs.docker.com/swarm/&#34;&gt;Docker Swarm&lt;/a&gt; ciertos &lt;em&gt;drivers&lt;/em&gt; de volúmenes pueden proporcionar volúmenes accesibles desde cualquier &lt;em&gt;host&lt;/em&gt; del &lt;em&gt;cluster&lt;/em&gt; pero por defecto &lt;em&gt;Swarm&lt;/em&gt; no lo ofrece. En &lt;a href=&#34;https://kubernetes.io/&#34;&gt;Kubernetes&lt;/a&gt; los volúmenes pueden ser dispositivos de almacenamiento provenientes de &lt;a href=&#34;https://aws.amazon.com/es/ebs/&#34;&gt;EBS&lt;/a&gt; de modo que si un &lt;em&gt;pod&lt;/em&gt; es movido a otro &lt;em&gt;host&lt;/em&gt; basta con que el &lt;em&gt;pod&lt;/em&gt; sea conectado de nuevo al EBS anterior y los datos están accesibles en el nuevo nodo.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.nomadproject.io/&#34;&gt;Nomad&lt;/a&gt; no proporciona soporte para que el almacenamiento persistente sea migrado a un nuevo nodo de Nomad si el servicio cambiado de ubicación. Para solventar esta limitación en el caso de los servicios con estado estos pueden ser tratados en cierta forma como animales de compañía o &lt;em&gt;pets&lt;/em&gt; haciendo que siempre se ubiquen en el mismo nodo, una vez tiene siempre la misma ubicación basta con proporcionar el almacenamiento en el &lt;em&gt;host&lt;/em&gt; ya sea en su sistema de archivos o para externalizarlo montando un almacenamiento &lt;em&gt;EBS&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Para conseguir que un &lt;em&gt;job&lt;/em&gt; de Nomad se ubique siempre en un mismo nodo hay que usar &lt;a href=&#34;https://www.nomadproject.io/docs/job-specification/constraint.html&#34;&gt;restricciones o &lt;em&gt;costraints&lt;/em&gt; en la especificación del &lt;em&gt;job&lt;/em&gt;&lt;/a&gt;. Las restricciones son las reglas que utiliza Nomad para elegir como candidatos los posibles nodos en los que ubicar el &lt;em&gt;job&lt;/em&gt;, &lt;em&gt;task group&lt;/em&gt; o &lt;em&gt;task&lt;/em&gt;. Se pueden utilizar varios operadores entre los que está el de igualdad utilizado en el ejemplo. Una de las variables utilizables es el identificativo del nodo de Nomad, con él es posible conseguir que el &lt;em&gt;job&lt;/em&gt; se ubique siempre en el mismo nodo. Los identificativos de los nodos son asignados por Nomad cuando se unen al &lt;em&gt;cluster&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Con los siguientes comandos se inspecciona los nodos que forman parte del cluster de Nomad, entre sus datos está el identificativo de cada nodo formado por una cadena de 36 caracteres. En el modo verboso se emite el identificativo completo y una lista de propiedades del nodo entre los que están detalles de Consul, la CPU, &lt;em&gt;driver&lt;/em&gt; que soporta, kernel, sistema operativo, &amp;hellip; En documentación sobre &lt;a href=&#34;https://www.nomadproject.io/docs/runtime/interpolation.html&#34;&gt;interpolación de variables&lt;/a&gt; hay una lista de variables disponibles.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 44
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 45
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 46
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 47
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 48
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 49
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 50
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 51
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 52
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 53
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 54
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 55
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 56
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 57
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 58
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 59
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 60
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 61
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 62
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 63
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 64
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 65
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 66
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 67
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 68
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 69
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 70
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 71
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 72
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 73
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 74
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 75
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 76
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 77
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 78
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 79
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 80
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 81
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 82
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 83
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 84
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 85
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 86
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 87
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 88
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 89
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 90
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 91
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 92
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 93
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 94
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 95
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 96
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 97
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 98
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 99
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;100
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;101
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;102
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;103
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;104
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;105
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;106
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;107
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;108
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;109
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;110
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;111
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;112
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;113
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;114
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ nomad node status
+ID DC Name Class Drain Eligibility Status
+44511e01 localhost archlinux &amp;lt;none&amp;gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt; eligible ready
+$ nomad node status 44511e01
+&lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 44511e01
+&lt;span class=&#34;nv&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; archlinux
+&lt;span class=&#34;nv&#34;&gt;Class&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &amp;lt;none&amp;gt;
+&lt;span class=&#34;nv&#34;&gt;DC&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; localhost
+&lt;span class=&#34;nv&#34;&gt;Drain&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;Eligibility&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; eligible
+&lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; ready
+&lt;span class=&#34;nv&#34;&gt;Uptime&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 1h40m31s
+Driver &lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; docker,exec,java,qemu,raw_exec
+Node Events
+Time Subsystem Message
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00 Cluster Node registered
+Allocated Resources
+CPU Memory Disk
+&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;/30400 MHz &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; B/31 GiB &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; B/16 GiB
+Allocation Resource Utilization
+CPU Memory
+&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;/30400 MHz &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; B/31 GiB
+Host Resource Utilization
+CPU Memory Disk
+&lt;span class=&#34;m&#34;&gt;3288&lt;/span&gt;/30400 MHz &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;.2 GiB/31 GiB &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;tmpfs&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Allocations
+No allocations placed
+$ nomad node status -verbose 44511e01
+&lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 44511e01-34b8-c1e6-7fe5-60be0ff35d0e
+&lt;span class=&#34;nv&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; archlinux
+&lt;span class=&#34;nv&#34;&gt;Class&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &amp;lt;none&amp;gt;
+&lt;span class=&#34;nv&#34;&gt;DC&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; localhost
+&lt;span class=&#34;nv&#34;&gt;Drain&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;Eligibility&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; eligible
+&lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; ready
+&lt;span class=&#34;nv&#34;&gt;Uptime&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 1h44m39s
+Drivers
+Driver Detected Healthy Message Time
+docker &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; Healthy &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00
+&lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; Healthy &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00
+java &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; Healthy &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00
+qemu &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; Healthy &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00
+raw_exec &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; Healthy &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00
+rkt &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt; Failed to execute rkt version: exec: &lt;span class=&#34;s2&#34;&gt;&amp;#34;rkt&amp;#34;&lt;/span&gt;: executable file not found in &lt;span class=&#34;nv&#34;&gt;$PATH&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00
+Node Events
+Time Subsystem Message Details
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00 Cluster Node registered &amp;lt;none&amp;gt;
+Allocated Resources
+CPU Memory Disk
+&lt;span class=&#34;m&#34;&gt;100&lt;/span&gt;/30400 MHz &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;.0 GiB/31 GiB &lt;span class=&#34;m&#34;&gt;300&lt;/span&gt; MiB/16 GiB
+Allocation Resource Utilization
+CPU Memory
+&lt;span class=&#34;m&#34;&gt;19&lt;/span&gt;/30400 MHz &lt;span class=&#34;m&#34;&gt;38&lt;/span&gt; MiB/31 GiB
+Host Resource Utilization
+CPU Memory Disk
+&lt;span class=&#34;m&#34;&gt;4564&lt;/span&gt;/30400 MHz &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;.5 GiB/31 GiB &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;tmpfs&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Allocations
+ID Eval ID Node ID Task Group Version Desired Status Created Modified
+cd45371d-501a-1373-dfde-bb16c4ff20d3 ab9f5675-b5cb-9e5f-8e20-cb308dbfba32 44511e01-34b8-c1e6-7fe5-60be0ff35d0e services &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt; run running &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T18:14:28+02:00 &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T18:16:32+02:00
+Attributes
+consul.datacenter &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; localhost
+consul.revision &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; ea5210a30
+consul.server &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+consul.version &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;.4.4
+cpu.arch &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; amd64
+cpu.frequency &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;3800&lt;/span&gt;
+cpu.modelname &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; Intel&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;R&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; Core&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;TM&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; i5-8259U CPU @ &lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;.30GHz
+cpu.numcores &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;8&lt;/span&gt;
+cpu.totalcompute &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;30400&lt;/span&gt;
+driver.docker &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+driver.docker.bridge_ip &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;172&lt;/span&gt;.17.0.1
+driver.docker.os_type &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; linux
+driver.docker.runtimes &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; runc
+driver.docker.version &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;18&lt;/span&gt;.09.4-ce
+driver.docker.volumes.enabled &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+driver.exec &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+driver.java &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+driver.java.runtime &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; OpenJDK Runtime Environment &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;build &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;.8.0_212-b01&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+driver.java.version &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;.8.0_212
+driver.java.vm &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; OpenJDK &lt;span class=&#34;m&#34;&gt;64&lt;/span&gt;-Bit Server VM &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;build &lt;span class=&#34;m&#34;&gt;25&lt;/span&gt;.212-b01, mixed mode&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+driver.qemu &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+driver.qemu.version &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;.1.0
+driver.raw_exec &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+kernel.name &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; linux
+kernel.version &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;.0.7-arch1-1-ARCH
+memory.totalbytes &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;33592107008&lt;/span&gt;
+nomad.advertise.address &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4646
+nomad.revision &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 18dd59056ee1d7b2df51256fe900a98460d3d6b9
+nomad.version &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;.9.0
+os.name &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; arch
+os.signals &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; SIGQUIT,SIGTTOU,SIGFPE,SIGTRAP,SIGTSTP,SIGINT,SIGURG,SIGTTIN,SIGUSR1,SIGIO,SIGIOT,SIGKILL,SIGSTOP,SIGCONT,SIGILL,SIGPROF,SIGSEGV,SIGSYS,SIGTERM,SIGXFSZ,SIGHUP,SIGWINCH,SIGABRT,SIGBUS,SIGCHLD,SIGPIPE,SIGUSR2,SIGXCPU,SIGALRM
+unique.cgroup.mountpoint &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; /sys/fs/cgroup
+unique.consul.name &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; archlinux
+unique.hostname &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; archlinux
+unique.network.ip-address &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1
+unique.storage.bytesfree &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;16795955200&lt;/span&gt;
+unique.storage.bytestotal &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;16796053504&lt;/span&gt;
+unique.storage.volume &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; tmpfs
+Meta&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/nomad-status.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/nomad-status.sh&#34; target=&#34;_blank&#34;&gt;nomad-status.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;En este caso solo hay un nodo registrado en Nomad, la siguiente definición de &lt;em&gt;job&lt;/em&gt; en el fragmento &lt;em&gt;constraint&lt;/em&gt; hace que Nomad lo ubique siempre en él.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;job &amp;#34;mongodb&amp;#34; {
+datacenters = [&amp;#34;localhost&amp;#34;]
+type = &amp;#34;service&amp;#34;
+constraint {
+attribute = &amp;#34;${node.unique.id}&amp;#34;
+value = &amp;#34;44511e01-34b8-c1e6-7fe5-60be0ff35d0e&amp;#34;
+}
+group &amp;#34;services&amp;#34; {
+count = 1
+task &amp;#34;mongodb&amp;#34; {
+driver = &amp;#34;docker&amp;#34;
+config {
+image = &amp;#34;mongo:latest&amp;#34;
+port_map {
+port = 27017
+}
+volumes = [
+&amp;#34;/home/picodotdev/Software/nomad/mongodb:/data/db/&amp;#34;
+]
+}
+resources {
+memory = 1024 # MB
+network {
+port &amp;#34;port&amp;#34; {}
+}
+}
+}
+}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/mongodb.nomad&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/mongodb.nomad&#34; target=&#34;_blank&#34;&gt;mongodb.nomad&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Como el &lt;em&gt;job&lt;/em&gt; se ubica en el mismo nodo siempre montando un directorio del nodo como un volumen de datos en el &lt;em&gt;job&lt;/em&gt; y contenedor de &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt;, los datos se persisten en el sistema de archivos y transcienden al tiempo de vida del &lt;em&gt;job&lt;/em&gt;, se puede iniciar el &lt;em&gt;job&lt;/em&gt;, insertar datos en la base de datos en este caso de MongoDB, eliminar el &lt;em&gt;job&lt;/em&gt;, volverlo a iniciar y los mismos datos están presentes en MongoDB.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ nomad job run mongodb.nomad
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/nomad-job-run.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/nomad-job-run.sh&#34; target=&#34;_blank&#34;&gt;nomad-job-run.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;44
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;45
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;46
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;47
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ docker ps
+CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES
+b0d3f42c92fc mongo:latest &lt;span class=&#34;s2&#34;&gt;&amp;#34;docker-entrypoint.s…&amp;#34;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt; minutes ago Up &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt; minutes &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:20180-&amp;gt;27017/tcp, &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:20180-&amp;gt;27017/udp mongodb-ea10d440-1176-3bfb-5301-7ccd17af0281
+$ docker &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; -it b0d3f42c92fc bash
+root@b0d3f42c92fc:/# mongo
+MongoDB shell version v4.0.9
+connecting to: mongodb://127.0.0.1:27017/?gssapiServiceName&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;mongodb
+Implicit session: session &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt; : UUID&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;ba120679-b965-49d0-a774-dff39d6b630a&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+MongoDB server version: &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt;.0.9
+Server has startup warnings:
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:49.308+0000 I STORAGE &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:49.308+0000 I STORAGE &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:49.308+0000 I STORAGE &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; ** See http://dochub.mongodb.org/core/prodnotes-filesystem
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:50.133+0000 I CONTROL &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:50.133+0000 I CONTROL &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; ** WARNING: Access control is not enabled &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; the database.
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:50.133+0000 I CONTROL &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; ** Read and write access to data and configuration is unrestricted.
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:50.133+0000 I CONTROL &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+---
+Enable MongoDB&lt;span class=&#34;s1&#34;&gt;&amp;#39;s free cloud-based monitoring service, which will then receive and display
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;and anyone you share the URL with. MongoDB may use this information to make product
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;improvements and to suggest MongoDB products and deployment options to you.
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;To enable free monitoring, run the following command: db.enableFreeMonitoring()
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;---
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;gt; db.articles.insert({title: &amp;#34;Introducción a la base de datos NoSQL MongoDB&amp;#34;, author: &amp;#34;picodotdev&amp;#34;, date: new Date(2017,05,18,12,30), tags: [&amp;#39;&lt;/span&gt;mongodb&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;database&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;NoSQL&lt;span class=&#34;s1&#34;&gt;&amp;#39;], comments: [{user: &amp;#34;jones&amp;#34;, message: &amp;#34;MongoDB is great!&amp;#34;}, {user: &amp;#34;lina&amp;#34;, message: &amp;#34;MongoDB is great!&amp;#34;}]})
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;WriteResult({ &amp;#34;nInserted&amp;#34; : 1 })
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;gt; db.articles.insert({title: &amp;#34;Introducción a la base de datos relacional PostgreSQL&amp;#34;, author: &amp;#34;picodotdev&amp;#34;, date: new Date(2017,05,17,12,00), likes: 100, tags: [&amp;#39;&lt;/span&gt;postgresql&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;database&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;SQL&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;, comments: &lt;span class=&#34;o&#34;&gt;[{&lt;/span&gt;user: &lt;span class=&#34;s2&#34;&gt;&amp;#34;katy&amp;#34;&lt;/span&gt;, message: &lt;span class=&#34;s2&#34;&gt;&amp;#34;PostgreSQL rocks!&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;, &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;user: &lt;span class=&#34;s2&#34;&gt;&amp;#34;smith&amp;#34;&lt;/span&gt;, message: &lt;span class=&#34;s2&#34;&gt;&amp;#34;SQL language is powerful!&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}]})&lt;/span&gt;
+WriteResult&lt;span class=&#34;o&#34;&gt;({&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;nInserted&amp;#34;&lt;/span&gt; : &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;})&lt;/span&gt;
+&amp;gt; db.articles.find&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;_id&amp;#34;&lt;/span&gt; : ObjectId&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;5cc335873b17081f2ca1d4d5&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;title&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;Introducción a la base de datos NoSQL MongoDB&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;author&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;picodotdev&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;date&amp;#34;&lt;/span&gt; : ISODate&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;2017-06-18T12:30:00Z&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;tags&amp;#34;&lt;/span&gt; : &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;mongodb&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;database&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;NoSQL&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;comments&amp;#34;&lt;/span&gt; : &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;user&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;jones&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;MongoDB is great!&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;, &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;user&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;lina&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;MongoDB is great!&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;_id&amp;#34;&lt;/span&gt; : ObjectId&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;5cc335993b17081f2ca1d4d6&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;title&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;Introducción a la base de datos relacional PostgreSQL&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;author&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;picodotdev&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;date&amp;#34;&lt;/span&gt; : ISODate&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;2017-06-17T12:00:00Z&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;likes&amp;#34;&lt;/span&gt; : &lt;span class=&#34;m&#34;&gt;100&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;tags&amp;#34;&lt;/span&gt; : &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;postgresql&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;database&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;SQL&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;comments&amp;#34;&lt;/span&gt; : &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;user&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;katy&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;PostgreSQL rocks!&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;, &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;user&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;smith&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;SQL language is powerful!&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&amp;gt; db.articles.count&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;
+&amp;gt; &lt;span class=&#34;nb&#34;&gt;exit&lt;/span&gt;
+bye
+root@b0d3f42c92fc:/# &lt;span class=&#34;nb&#34;&gt;exit&lt;/span&gt;
+&lt;span class=&#34;nb&#34;&gt;exit&lt;/span&gt;
+$ nomad job stop --purge &lt;span class=&#34;nv&#34;&gt;mongodb&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Monitoring evaluation &lt;span class=&#34;s2&#34;&gt;&amp;#34;f10589c6&amp;#34;&lt;/span&gt;
+Evaluation triggered by job &lt;span class=&#34;s2&#34;&gt;&amp;#34;mongodb&amp;#34;&lt;/span&gt;
+Evaluation status changed: &lt;span class=&#34;s2&#34;&gt;&amp;#34;pending&amp;#34;&lt;/span&gt; -&amp;gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;complete&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Evaluation &lt;span class=&#34;s2&#34;&gt;&amp;#34;f10589c6&amp;#34;&lt;/span&gt; finished with status &lt;span class=&#34;s2&#34;&gt;&amp;#34;complete&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/mongodb.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/mongodb.sh&#34; target=&#34;_blank&#34;&gt;mongodb.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ nomad job stop --prune mongodb
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/nomad-job-stop.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/nomad-job-stop.sh&#34; target=&#34;_blank&#34;&gt;nomad-job-stop.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Para iniciar &lt;a href=&#34;https://www.consul.io/&#34;&gt;Consul&lt;/a&gt; y Nomad hay que utilizar los siguientes comandos y para el ejecutar &lt;em&gt;job&lt;/em&gt; es requisito haber instalado Docker dado que en este ejemplo lo utiliza.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ consul agent -dev -datacenter &lt;span class=&#34;nv&#34;&gt;localhost&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Starting Consul agent...
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Consul agent running!
+Version: &lt;span class=&#34;s1&#34;&gt;&amp;#39;v1.4.4&amp;#39;&lt;/span&gt;
+Node ID: &lt;span class=&#34;s1&#34;&gt;&amp;#39;34294bf0-5802-0d94-4acd-cf8c9d090205&amp;#39;&lt;/span&gt;
+Node name: &lt;span class=&#34;s1&#34;&gt;&amp;#39;archlinux&amp;#39;&lt;/span&gt;
+Datacenter: &lt;span class=&#34;s1&#34;&gt;&amp;#39;localhost&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;Segment: &lt;span class=&#34;s1&#34;&gt;&amp;#39;&amp;lt;all&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Server: &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;Bootstrap: &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Client Addr: &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;HTTP: &lt;span class=&#34;m&#34;&gt;8500&lt;/span&gt;, HTTPS: -1, gRPC: &lt;span class=&#34;m&#34;&gt;8502&lt;/span&gt;, DNS: &lt;span class=&#34;m&#34;&gt;8600&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Cluster Addr: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1 &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;LAN: &lt;span class=&#34;m&#34;&gt;8301&lt;/span&gt;, WAN: &lt;span class=&#34;m&#34;&gt;8302&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Encrypt: Gossip: false, TLS-Outgoing: false, TLS-Incoming: &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+$ sudo nomad agent -dev -dc localhost
+&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;sudo&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; password &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; picodotdev:
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; No configuration files &lt;span class=&#34;nv&#34;&gt;loaded&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Starting Nomad agent...
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Nomad agent configuration:
+Advertise Addrs: HTTP: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4646&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; RPC: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4647&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; Serf: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4648
+Bind Addrs: HTTP: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4646&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; RPC: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4647&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; Serf: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4648
+Client: &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+Log Level: DEBUG
+Region: global &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;DC: localhost&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Server: &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+Version: &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;.9.0&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/consul-nomad.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/code/consul-nomad.sh&#34; target=&#34;_blank&#34;&gt;consul-nomad.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Las restricciones se han de cumplir para elegir un nodo, por otro lado está también la afinidad. La &lt;a href=&#34;https://www.nomadproject.io/docs/job-specification/affinity.html&#34;&gt;afinidad&lt;/a&gt; es una preferencia utilizada por Nomad al seleccionar los nodos que tratará de cumplir si hay algún nodo disponible con las propiedades de afinidad deseadas pero si no hay un nodo disponible se elige algún otro.&lt;/p&gt;
+&lt;div class=&#34;reference&#34;&gt;
+Referencia:&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/&#34;&gt;Introducción a Nomad para gestionar aplicaciones y microservicios&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/&#34;&gt;Estrategias de despliegue para microservicios con Nomad&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.nomadproject.io/guides/stateful-workloads/portworx.html&#34;&gt;Portworx&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.nomadproject.io/docs/job-specification/ephemeral_disk.html&#34;&gt;Ephemeral Disk&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tech.trivago.com/2019/01/25/nomad-our-experiences-and-best-practices/&#34;&gt;Nomad - our experiences and best practices&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/series/docker/&#34;&gt;Serie de artículos sobre Docker&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;</content><category term="planeta-codigo"/><category term="programacion"/><category term="software"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/</id><title>Estrategias de despliegue para microservicios con Nomad</title><updated>2019-04-18T11:30:00+02:00</updated><published>2019-04-18T10:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/"/><author><name>picodotdev</name></author><content type="html">
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
 &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/nomad.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Nomad&#34; title=&#34;Nomad&#34;/&gt;
 &lt;/div&gt;
@@ -102,8 +631,8 @@ port &amp;#34;http&amp;#34; {}
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/code/nomad-run.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/code/nomad-run.sh&#34; target=&#34;_blank&#34;&gt;nomad-run.sh&lt;/a&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/code/nomad-job-run.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/code/nomad-job-run.sh&#34; target=&#34;_blank&#34;&gt;nomad-job-run.sh&lt;/a&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;p&gt;En el caso de los despliegues &lt;em&gt;blue/green&lt;/em&gt; y &lt;em&gt;canary&lt;/em&gt; una vez comprobado que la versión de los nuevos servicios funcionan correctamente se promocionan y actualizan el resto de instancias en el caso de &lt;em&gt;canary&lt;/em&gt; o se detienen las instancias antiguas en el caso de &lt;em&gt;blue/green&lt;/em&gt;.&lt;/p&gt;
@@ -418,9 +947,16 @@ $ sudo nomad agent -dev -dc localhost&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/code/nomad-consul.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/code/nomad-consul.sh&#34; target=&#34;_blank&#34;&gt;nomad-consul.sh&lt;/a&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/code/consul-nomad.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/code/consul-nomad.sh&#34; target=&#34;_blank&#34;&gt;consul-nomad.sh&lt;/a&gt;
 &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;reference&#34;&gt;
+Referencia:&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/&#34;&gt;Introducción a Nomad para gestionar aplicaciones y microservicios&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/&#34;&gt;Servicios con persistencia en el orquestador Nomad&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 &lt;/div&gt;</content><category term="planeta-codigo"/><category term="programacion"/><category term="software"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/</id><title>Introducción a Nomad para gestionar aplicaciones y microservicios</title><updated>2019-04-17T23:00:00+02:00</updated><published>2019-04-14T13:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/"/><author><name>picodotdev</name></author><content type="html">
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
 &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/nomad.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Nomad&#34; title=&#34;Nomad&#34;/&gt;
@@ -748,6 +1284,8 @@ $ nomad alloc logs 60f3d102
 &lt;div class=&#34;reference&#34;&gt;
 Referencia:&lt;br&gt;
 &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/&#34;&gt;Estrategias de despliegue para microservicios con Nomad&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-nomad/&#34;&gt;Servicios con persistencia en el orquestador Nomad&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://targetveb.com/nomad-simple-deployment-monitoring-applications.html&#34;&gt;Nomad – Simple deployment and monitoring of applications&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;</content><category term="planeta-codigo"/><category term="programacion"/><category term="software"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/02/servidor-oauth-gateway-y-servicio-rest-utilizando-tokens-jwt-con-spring/</id><title>Servidor OAuth, gateway y servicio REST utilizando tokens JWT con Spring</title><updated>2019-02-08T20:00:00+01:00</updated><published>2019-02-08T20:00:00+01:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/02/servidor-oauth-gateway-y-servicio-rest-utilizando-tokens-jwt-con-spring/"/><author><name>picodotdev</name></author><content type="html">
@@ -4010,268 +4548,4 @@ Referencia:&lt;br&gt;
 &lt;li&gt;&lt;a href=&#34;https://docs.gitlab.com/ce/ci/yaml/README.html&#34;&gt;Configuration of your jobs with .gitlab-ci.yml&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://gist.github.com/daicham/5ac8461b8b49385244aa0977638c3420&#34;&gt;A sample of .gitlab-ci.yml for a gradle project&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/div&gt;</content><category term="blog-stack"/><category term="planeta-codigo"/><category term="software"/><category term="software-libre"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/</id><title>Explicación del fallo de seguridad Meltdown y Spectre en los microprocesadores Intel</title><updated>2018-01-07T01:30:00+01:00</updated><published>2018-01-06T10:30:00+01:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/"/><author><name>picodotdev</name></author><content type="html">
-&lt;p&gt;&lt;strong&gt;Los procesadores Intel se han visto afectados por un grave error de seguridad debido a que fueron diseñados con ejecución especulativa sin tener algunas consideraciones de seguridad, técnica empleada para aumentar el rendimiento pero que tiene efectos colaterales en la cache que pueden se aprovechados para realizar ataques &lt;em&gt;side-channel&lt;/em&gt; con los que leer el contenido de la memoria del &lt;em&gt;kernel&lt;/em&gt;, independientemente del sistema operativo utilizado.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;El año 2018 ha empezando haciéndose público uno de los peores &lt;em&gt;bugs&lt;/em&gt; de seguridad que afecta a absolutamente todos los procesadores &lt;a href=&#34;https://www.intel.es&#34;&gt;Intel&lt;/a&gt; que esta compañía ha fabricado en la última década, denominado &lt;a href=&#34;https://meltdownattack.com/&#34;&gt;&lt;em&gt;Meltdown&lt;/em&gt; y su variante &lt;em&gt;Spectre&lt;/em&gt;&lt;/a&gt;, el error tiene su propio nombre, logotipo y página web. Un error de diseño en los procesadores que solo se puede corregir reemplazando el microprocesador o modificando los sistemas operativos aunque se especula con una pérdida de rendimiento en ciertas cargas de trabajo, entre un 5% y un 30%. El error es tan grave que permite leer a un programa la memoria del núcleo del sistema operativo que debería estar protegida. En la memoria del &lt;em&gt;kernel&lt;/em&gt; residen las claves de acceso a sistemas o datos sensibles que obtenidos y utilizados pueden ocasionar graves problemas de seguridad con consecuencias económicas o de acceso no autorizado a información. Este error es tan grave que deja al viejo conocido &lt;a href=&#34;https://en.wikipedia.org/wiki/Pentium_FDIV_bug&#34;&gt;fallo de la división de los Pentium&lt;/a&gt; a la altura de chiste. Hace unos meses por si fuera poco se conocía otro error de seguridad en el &lt;a href=&#34;https://en.wikipedia.org/wiki/Intel_Management_Engine&#34;&gt;Management Engine (ME)&lt;/a&gt; de Intel.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://security-center.intel.com/advisory.aspx?intelid=INTEL-SA-00088&amp;amp;languageid=en-fr&#34;&gt;Listado de procesadores Intel afectados por Meltdown y Spectre&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-&lt;figure&gt;
-&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/meltdown.svg&#34; alt=&#34;Meltdown&#34; title=&#34;Meltdown&#34; width=&#34;200&#34; height=&#34;200&#34;/&gt;
-&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/spectre.svg&#34; alt=&#34;Spectre&#34; title=&#34;Spectre&#34; width=&#34;200&#34; height=&#34;200&#34;/&gt;
-&lt;figcaption&gt;Logotipos de Meltdown y Spectre&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;/div&gt;
-&lt;p&gt;Reemplazar todos los microprocesadores es tremendamente caro además de que primero hay que diseñar y fabricar unos que estén exentos del &lt;em&gt;bug&lt;/em&gt; que lleva tiempo, meses o años hasta que estén preparados, por lo que la solución hasta el momento pasa por hacer modificaciones en el software y en los sistemas operativos, compiladores y programas para resolver o mitigar el problema. En el sistema operativo la solución consiste en separar el espacio de direcciones del &lt;em&gt;kernel&lt;/em&gt; de la de los programas, sin embargo, cada vez que el microprocesador cambia entre un espacio de direcciones a otro hay una penalización en tiempo por lo que en ciertas cargas de trabajo muy intensivas en las que se cambia frecuentemente de contextos como operaciones de red, de almacenamiento rápido o E/S el rendimiento se ve afectado. Para un usuario doméstico, ofimático o juegos la perdida de rendimiento será insignificante y no será apreciable ya que en estos casos el microprocesador no trabaja a la máxima carga o no está cambiando frecuentemente del espacio de direcciones del &lt;em&gt;kernel&lt;/em&gt; al de usuario. En grandes centros de datos como la computación en la nube de &lt;a href=&#34;https://aws.amazon.com/es/&#34;&gt;Amazon Web Services&lt;/a&gt;, &lt;a href=&#34;https://cloud.google.com/&#34;&gt;Google Cloud Platform&lt;/a&gt; o &lt;a href=&#34;http://azure.microsoft.com/es-es/&#34;&gt;Microsoft Azure&lt;/a&gt; el rendimiento será más apreciable.&lt;/p&gt;
-&lt;p&gt;Como usuarios domésticos para estar protegidos conviene descargar únicamente software de fuentes confiables pero para los usuarios empresariales con sus servicios en la nube en donde los sistemas están aislados pero usando infraestructura compartida y con el descubrimiento de este &lt;em&gt;bug&lt;/em&gt; es más grave si no se parchea, los proveedores de infraestructura en la nube ya han planificando tareas de mantenimiento y reinicios obligatorios.&lt;/p&gt;
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-&lt;figure&gt;
-&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/intel.svg&#34; alt=&#34;Intel&#34; title=&#34;Intel&#34; width=&#34;200&#34;/&gt;
-&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/amd.svg&#34; alt=&#34;AMD&#34; title=&#34;AMD&#34; width=&#34;200&#34;/&gt;
-&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/arm.svg&#34; alt=&#34;ARM&#34; title=&#34;ARM&#34; width=&#34;200&#34;/&gt;
-&lt;/figure&gt;
-&lt;/div&gt;
-&lt;h3 id=&#34;técnicas-para-aumentar-el-rendimiento&#34;&gt;Técnicas para aumentar el rendimiento&lt;/h3&gt;
-&lt;p&gt;Los microprocesadores modernos implementan varias técnicas para aumentar el rendimiento. Una de las mas simples es aumentar la frecuencia de trabajo del microprocesador, uno de los primeros Pentium trabajaba únicamente a 100 Mhz y los actuales llegan hasta los 3 Ghz, casi 30 veces más. Pero aumentar la frecuencia solo es posible hasta cierto límite a partir del cual el microprocesador se calienta mucho y consume mucha energía. Por lo que hay que emplear otras técnicas al mismo tiempo.&lt;/p&gt;
-&lt;p&gt;Otra de las mas simples es reducir el tamaño de los transistores, unos transistores más pequeños hace que sea posible incluir más transistores en el mismo espacio físico para incluir caches de mayor tamaño o nuevas funcionalidades, con más velocidad y con menor consumo de energía. El tamaño de los transistores de los Pentium originales era de 800 nanómetros e incluía 3.1 millones, los Intel Core de octava generación se fabrican a 14 nanómetros incluyendo unos 5000 millones, unas 60 veces más pequeños. Aún así cada vez es más difícil cumplir con la &lt;a href=&#34;https://es.wikipedia.org/wiki/Ley_de_Moore&#34;&gt;ley de Moore&lt;/a&gt; ya que se está llegando a límite físico de los átomos de los materiales, consistía en que cada dos años se duplica el número de transistores de un microprocesador.&lt;/p&gt;
-&lt;p&gt;Con la ayuda de unos transistores más pequeños y más espacio se aprovecha para aumentar el rendimiento incluyendo más núcleos de cómputo. Pero para aumentar el rendimiento de un núcleo de cómputo individual o el &lt;abbr title=&#34;Instructions Per Cicle&#34;&gt;IPC&lt;/abbr&gt; se emplean otras técnicas como utilizar múltiples &lt;em&gt;pipelines&lt;/em&gt; para ejecutar varias instrucciones simultáneamente, ejecución fuera de orden para reorganizar las instrucciones y la ejecución especulativa para mantener llenos esos &lt;em&gt;pipelines&lt;/em&gt;.&lt;/p&gt;
-&lt;h3 id=&#34;escalar&#34;&gt;Escalar&lt;/h3&gt;
-&lt;p&gt;En un microprocesador escalar se ejecuta una instrucción por ciclo, por ejemplo, en esta secuencia de instrucciones que realizan unas sumas se tardarían 6 ciclos de reloj. A estos microprocesadores que ejecutan una instrucción por ciclo de reloj se les denomina escalares, siendo ejemplos el Intel 486 y el ARM1176 usado en la Raspberry Pi 1.&lt;/p&gt;
-&lt;div class=&#34;code&#34;&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span class=&#34;n&#34;&gt;m&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;n&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;d&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;o&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;d&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;f&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;o&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;h&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;i&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;z&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;j&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;k&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/code/escalar.py&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/code/escalar.py&#34; target=&#34;_blank&#34;&gt;escalar.py&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;h3 id=&#34;superescalar&#34;&gt;Superescalar&lt;/h3&gt;
-&lt;p&gt;En un microprocesador con dos &lt;em&gt;pipelines&lt;/em&gt; o &lt;a href=&#34;https://en.wikipedia.org/wiki/Superscalar_processor&#34;&gt;superescalar&lt;/a&gt; se pueden realizar varias operaciones simultáneamente, es decir, mientras se realiza la primera operación en la variable &lt;em&gt;m&lt;/em&gt; se realiza al mismo tiempo la segunda operación de &lt;em&gt;n&lt;/em&gt;, con lo que estas operaciones podrían completarse en únicamente tres ciclos de reloj con la siguiente equivalencia de programa. Ejemplos de microprocesadores superescalares son el Intel Pentium y los &lt;a href=&#34;https://www.arm.com/&#34;&gt;ARM&lt;/a&gt; Cortex-A7 y Cortex-A53 estos últimos usados en la Raspberry Pi 2 y 3 respectivamente.&lt;/p&gt;
-&lt;div class=&#34;code&#34;&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span class=&#34;n&#34;&gt;m&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;n&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;d&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;o&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;d&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;f&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;o&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;y&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;z&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;h&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;j&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;k&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/code/superescalar-1.py&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/code/superescalar-1.py&#34; target=&#34;_blank&#34;&gt;superescalar-1.py&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;Sin embargo, hacer la suma de &lt;em&gt;o&lt;/em&gt; y &lt;em&gt;x&lt;/em&gt; al mismo tiempo no es posible ya que antes de calcular &lt;em&gt;x&lt;/em&gt; hay que calcular &lt;em&gt;o&lt;/em&gt; debido a que uno de los operandos en la suma de &lt;em&gt;x&lt;/em&gt; es &lt;em&gt;o&lt;/em&gt;, es decir, hay una dependencia en estas instrucciones y se han de ejecutar una después de otra. Con lo que en vez de tres ciclos habría que conformase en ejecutar estas instrucciones en cuatro ciclos.&lt;/p&gt;
-&lt;div class=&#34;code&#34;&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span class=&#34;n&#34;&gt;m&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;n&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;d&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;o&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;d&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;# el segundo pipeline está ocioso&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;f&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;o&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;h&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;i&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;z&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;j&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;k&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;# el segundo pipeline está ocioso&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/code/suprescalar-2.py&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/code/suprescalar-2.py&#34; target=&#34;_blank&#34;&gt;suprescalar-2.py&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;h3 id=&#34;fuera-de-orden&#34;&gt;Fuera de orden&lt;/h3&gt;
-&lt;p&gt;Los microprocesadores &lt;a href=&#34;https://en.wikipedia.org/wiki/Out-of-order_execution&#34;&gt;fuera de orden&lt;/a&gt; reordenan las instrucciones de la forma adecuada para que el programa sea equivalente pero manteniendo los &lt;em&gt;pipelines&lt;/em&gt; llenos. Cambiando el orden entre las instrucciones &lt;em&gt;x&lt;/em&gt; e &lt;em&gt;y&lt;/em&gt; se consigue ejecutar las instrucciones en tres ciclos de reloj. Ejemplos de microprocesadores fuera de orden son el Pentium 2 y siguientes microprocesadores Intel y &lt;a href=&#34;https://www.amd.com/es&#34;&gt;AMD&lt;/a&gt; incluyendo varios ARM Cortex-A9, A15, A17 y A57.&lt;/p&gt;
-&lt;div class=&#34;code&#34;&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span class=&#34;n&#34;&gt;m&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;n&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;d&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;o&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;d&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;h&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;i&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;z&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;f&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;o&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;j&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;k&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/code/fuera-de-orden.py&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/code/fuera-de-orden.py&#34; target=&#34;_blank&#34;&gt;fuera-de-orden.py&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;h3 id=&#34;predicción-de-salto-y-ejecución-especulativa&#34;&gt;Predicción de salto y ejecución especulativa&lt;/h3&gt;
-&lt;p&gt;Los programas incluyen saltos con sentencias condicionales &lt;em&gt;if&lt;/em&gt; o de bucle. Los microprocesadores tratan de adivinar si una sentencia de salto se producirá o no (con heurísticas y son bastante buenos acertando) para recuperar y tener preparadas las siguientes instrucciones. Mantener los &lt;em&gt;pipelines&lt;/em&gt; llenos es difícil al aumentar su número a tres o cuatro. Para tratar de mantenerlos llenos los microprocesadores usan la predicción de salto y van ejecutando las instrucciones desechando las operaciones si finalmente no se acierta en el salto pero habiendo aumentado el rendimiento si se ha acertado, realizan &lt;a href=&#34;https://en.wikipedia.org/wiki/Speculative_execution&#34;&gt;ejecución especulativa&lt;/a&gt; de las instrucciones.&lt;/p&gt;
-&lt;p&gt;En este otro caso, &lt;em&gt;v&lt;/em&gt; depende de &lt;em&gt;u&lt;/em&gt; y &lt;em&gt;u&lt;/em&gt; depende de &lt;em&gt;t&lt;/em&gt; de modo que un microprocesador superescalar sin ejecución especulativa tardará tres ciclos computando &lt;em&gt;t&lt;/em&gt;, &lt;em&gt;u&lt;/em&gt; y &lt;em&gt;v&lt;/em&gt; para determinar el valor de &lt;em&gt;v&lt;/em&gt; en la sentencia condicional &lt;em&gt;if&lt;/em&gt; (en otro ciclo) momento en que pasa otros tres ciclos calculando &lt;em&gt;w&lt;/em&gt;, &lt;em&gt;x&lt;/em&gt; e &lt;em&gt;y&lt;/em&gt;, en total 4 o 7 ciclos dependiendo de si hay salto en la sentencia condicional.&lt;/p&gt;
-&lt;div class=&#34;code&#34;&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span class=&#34;n&#34;&gt;t&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;u&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;v&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;u&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;d&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;v&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;w&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;f&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;w&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;g&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;h&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/code/ejecucion-especulativa-1.py&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/code/ejecucion-especulativa-1.py&#34; target=&#34;_blank&#34;&gt;ejecucion-especulativa-1.py&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;Si el predictor de salto determina que es probable que la condición sea cierta la ejecución especulativa reordena el programa de la siguiente manera:&lt;/p&gt;
-&lt;div class=&#34;code&#34;&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span class=&#34;n&#34;&gt;t&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;u&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;v&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;u&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;d&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;w_&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;f&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;x_&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;w_&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;g&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;y_&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x_&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;h&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;v&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;w&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;w_&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x_&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;y_&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/code/ejecucion-especulativa-2.py&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/code/ejecucion-especulativa-2.py&#34; target=&#34;_blank&#34;&gt;ejecucion-especulativa-2.py&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;Y con la ejecución superescalar se mantiene los &lt;em&gt;pipelines&lt;/em&gt; ocupados de modo que el ejemplo tiene la siguiente equivalencia y tardando aproximadamente 3 ciclos cuando antes se necesitaban 7.&lt;/p&gt;
-&lt;div class=&#34;code&#34;&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span class=&#34;n&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;w_&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;f&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;u&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x_&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;w_&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;g&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;v&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;y_&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;u&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;d&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x_&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;h&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;v&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;w&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;w_&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x_&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;y_&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/code/ejecucion-especulativa-3.py&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/code/ejecucion-especulativa-3.py&#34; target=&#34;_blank&#34;&gt;ejecucion-especulativa-3.py&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;h3 id=&#34;cache&#34;&gt;Cache&lt;/h3&gt;
-&lt;p&gt;Los microprocesadores son muy rápidos comparados con la memoria o el acceso al almacenamiento secundario. Un Cortex-A53 de una Raspberry Pi puede ejecutar una instrucción en 0.5 nanosegundos pero el acceso a memoria costar 100 nanosegundos. Esto no es bueno pero por fortuna los accesos a memoria siguen patrones, accediendo repetidamente a variables recientemente accedidas y accediendo a variables en posiciones cercanas, de forma que colocando estas variables en una cache más rápida y cercana al procesador que la memoria principal se mitiga en gran medida el problema.&lt;/p&gt;
-&lt;h3 id=&#34;relación-entre-ejecución-especulativa-cache-y-meltdown-y-spectre&#34;&gt;Relación entre ejecución especulativa, cache y &lt;em&gt;Meltdown&lt;/em&gt; y &lt;em&gt;Spectre&lt;/em&gt;&lt;/h3&gt;
-&lt;p&gt;La ejecución especulativa tiene el efecto colateral de colocar datos en la memoria cache del microprocesador y esto es utilizado para realizar una forma de &lt;a href=&#34;https://en.wikipedia.org/wiki/Side-channel_attack&#34;&gt;ataque side-channel&lt;/a&gt;. Desde el punto de vista de &lt;em&gt;Meltdown&lt;/em&gt; y &lt;em&gt;Spectre&lt;/em&gt; y la ejecución especulativa lo importante es que midiendo el tiempo que tarda el acceso a memoria se puede conocer si el dato está en la cache (tarda poco) o no (tarda mucho).&lt;/p&gt;
-&lt;div class=&#34;code&#34;&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span class=&#34;n&#34;&gt;t&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;u&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;v&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;u&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;d&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;v&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;w&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;kern_mem&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;address&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;# si se llega aquí se produce un fallo&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;w&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&#34;mh&#34;&gt;0x100&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;# operación de bit and&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;user_mem&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/code/meltdown-1.py&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/code/meltdown-1.py&#34; target=&#34;_blank&#34;&gt;meltdown-1.py&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;&lt;em&gt;u&lt;/em&gt; tiene una dependencia sobre &lt;em&gt;t&lt;/em&gt; y &lt;em&gt;v&lt;/em&gt; sobre &lt;em&gt;u&lt;/em&gt; con lo que el microprocesador usando la superescalabilidad, la ejecución fuera de orden y ejecución especulativa acabaría transformando el programa en la siguiente secuencia de operaciones:&lt;/p&gt;
-&lt;div class=&#34;code&#34;&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span class=&#34;n&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;w_&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;kern_mem&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;address&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;u&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x_&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;w_&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&#34;mh&#34;&gt;0x100&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;v&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;y_&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;u&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;d&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;user_mem&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x_&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;v&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;w&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;w_&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x_&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;y_&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;# nunca se llega aquí, si no fallo&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/code/meltdown-2.py&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/explicacion-del-fallo-de-seguridad-meltdown-y-spectre-en-los-microprocesadores-intel/code/meltdown-2.py&#34; target=&#34;_blank&#34;&gt;meltdown-2.py&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;El microprocesador lee de el valor de una dirección del &lt;em&gt;kernel&lt;/em&gt; de forma especulativa pero el fallo en la operación de acceso no se produce hasta se conoce el valor de &lt;em&gt;v&lt;/em&gt; utilizando en la sentencia condicional no es cero. Limpiando la cache previamente y haciendo que &lt;em&gt;v&lt;/em&gt; de cero para que no se produzca la excepción con los valores adecuados de las variables (&lt;em&gt;a&lt;/em&gt;, &lt;em&gt;b&lt;/em&gt;, &lt;em&gt;c&lt;/em&gt;, &lt;em&gt;d&lt;/em&gt;) la ejecución especulativa de &lt;code&gt;v, y_ = u+d, user_mem[x_]&lt;/code&gt; producirá un acceso a la dirección de memoria &lt;em&gt;0x000&lt;/em&gt; o &lt;em&gt;0x100&lt;/em&gt; dependiendo del valor del octavo bit recuperado en el acceso ilegal a la dirección de memoria &lt;code&gt;kern_mem[address]&lt;/code&gt;. El ataque &lt;em&gt;side-channel&lt;/em&gt; se produce midiendo el tiempo que tarda una instrucción posterior que utilice estas direcciones, si está o no está en la cache (por el tiempo que tarda) determina a que dirección de memoria se ha accedido y cual es el valor del octavo bit de una dirección del &lt;em&gt;kernel&lt;/em&gt;. ¡Felicidades has leído un bit de la memoria del kernel!. Bit a bit y con tiempo se puede leer todo el contenido de la memoria del &lt;em&gt;kernel&lt;/em&gt; aplicando esta operación millones de veces.&lt;/p&gt;
-&lt;h3 id=&#34;notas-finales&#34;&gt;Notas finales&lt;/h3&gt;
-&lt;p&gt;Los microprocesadores ARM1176, Cortex-A7, and Cortex-A53 usados en la Raspberry Pi no se ven afectados por el &lt;em&gt;Meltdown&lt;/em&gt; ya que no poseen ejecución especulativa, los AMD Ryzen tampoco se ven afectados por el &lt;em&gt;Meltdown&lt;/em&gt; ya que aunque si soportan ejecución especulativa al contrario de Intel la ejecución especulativa no se permite entre diferentes anillos de seguridad, el &lt;em&gt;kernel&lt;/em&gt; se ejecuta en el anillo 0 y las aplicaciones en el anillo 3. Sin embargo, una variante de &lt;em&gt;Meltdown&lt;/em&gt; es &lt;em&gt;Spectre&lt;/em&gt; que es el mismo caso pero en vez de con la memoria del &lt;em&gt;kernel&lt;/em&gt; con la memoria de otra aplicación. Como las aplicaciones se ejecutan en el mismo anillo en este caso los AMD Ryzen y algunos modelos de ARM si se ven afectados por &lt;em&gt;Spectre&lt;/em&gt; al igual que también los Intel.&lt;/p&gt;
-&lt;p&gt;La ejecución especulativa hace más rápidos los microprocesadores pero habiéndose descubierto este fallo muy inseguros en el caso de los Intel ya que se ve afectados por &lt;em&gt;Meltdown&lt;/em&gt; y &lt;em&gt;Spectre&lt;/em&gt; a menos que se implementen parches por software ya que por microcódigo no es posible darle solución. &lt;em&gt;Meltdown&lt;/em&gt; es más grave pero se puede corregir modificando el &lt;em&gt;kernel&lt;/em&gt; aún con una pérdida de rendimiento, &lt;em&gt;Spectre&lt;/em&gt; es más difícil de explotar pero más difícil de corregir y lo que se hará en este último caso es mitigar el problema modificando el sistema operativo, compilador y aplicaciones.&lt;/p&gt;
-&lt;p&gt;Intel tiene un problema importante, con AMD y sus Ryzen a buen precio, con buen rendimiento y&amp;hellip; sin el problema del &lt;em&gt;Meltdown&lt;/em&gt;. Para corregir el fallo en el diseño de la arquitectura del hardware Intel va a tener que rediseñar en parte su arquitectura y esto le va a llevar meses hasta tener preparados nuevos modelos de microprocesadores sin el error.&lt;/p&gt;
-&lt;p&gt;En el &lt;em&gt;kernel&lt;/em&gt; de Linux 4.14.11 ya se han aplicado varios parches al igual que posteriormente se implementarán en Windows y macOS. Yo como usuario de Linux con un Intel Core i5-3210M que posee la característica &lt;em&gt;pcid&lt;/em&gt; y esa versión del &lt;em&gt;kernel&lt;/em&gt; no he notado ninguna perdida de rendimiento apreciable.&lt;/p&gt;
-&lt;div class=&#34;reference&#34;&gt;
-Referencia:&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.raspberrypi.org/blog/why-raspberry-pi-isnt-vulnerable-to-spectre-or-meltdown/&#34;&gt;Why Raspberry Pi isn’t vulnerable to Spectre or Meltdown&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://pdfs.semanticscholar.org/2209/42809262c17b6631c0f6536c91aaf7756857.pdf&#34;&gt;The Intel 80x86 Processor Architecture: Pitfalls for Secure Systems&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.amd.com/en/corporate/speculative-execution&#34;&gt;An Update on AMD Processor Security&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://lkml.org/lkml/2017/12/27/2&#34;&gt;x86/cpu, x86/pti: Do not enable PTI on AMD processors&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/List_of_ARM_microarchitectures&#34;&gt;List of ARM microarchitectures&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://geeks.ms/etomas/2018/01/05/meltdown-y-spectre-algunos-comentarios/&#34;&gt;Meltdown y Spectre algunos comentarios&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;</content><category term="hardware"/><category term="planeta-codigo"/><category term="seguridad"/><category term="software"/></entry></feed>
+&lt;/div&gt;</content><category term="blog-stack"/><category term="planeta-codigo"/><category term="software"/><category term="software-libre"/></entry></feed>
