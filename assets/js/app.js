@@ -36,13 +36,19 @@ require(['jquery'], function($) {
     }
     
     function initAdsense() {
+        var screenSizeNormal = window.screen.width >= 1920 || false;
+        var ads = $('ins.adsbygoogle');
+
+        if (!screenSizeNormal) {
+            ads.filter('[data-type="large-skycraper"]').remove();
+        }
+
         setTimeout(function() {
-            var ads = $('ins.adsbygoogle');
             var adblock = (ads.length > 0 && ads.html().replace(/\s/g, '').length == 0);
             ga('send', 'event', 'client', 'adblock', (adblock) ? 'true' : 'false', {'nonInteraction': 1});
-    
+
             if (adblock) {
-                var ad = ads.filter('[data-type="large-skycraper"]').first() || ads.filter('[data-type="leaderboard"]').first();
+                var ad = (screenSizeNormal) ? ads.filter('[data-type="large-skycraper"]').eq(1) || ads.filter('[data-type="billboard"]').first() : ads.filter('[data-type="billboard"]').first();
                 var html = [
                     '<div style="' + $(ad).attr('style') + '; height: 100%; text-align: left;" class="adblock">',
                     ' <p class="text-center"><strong><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Parece que tienes activado un bloqueador de anuncios</strong></p>',
