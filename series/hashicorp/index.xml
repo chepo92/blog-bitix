@@ -1,0 +1,1053 @@
+<feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/series/hashicorp/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2019-05-10T17:00:00+02:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/</id><title>Crear de forma sencilla y rápida máquinas virtuales de VirtualBox con Vagrant</title><updated>2019-05-10T17:00:00+02:00</updated><published>2019-05-10T17:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/"/><author><name>picodotdev</name></author><content type="html">
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/vagrant.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Vagrant&#34; title=&#34;Vagrant&#34;/&gt;
+&lt;/div&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/hashicorp.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;HashiCorp&#34; title=&#34;HashiCorp&#34;/&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.virtualbox.org/&#34;&gt;VirtualBox&lt;/a&gt; es una de las herramientas que permiten virtualizar un sistema operativo completo y sus aplicaciones dentro de otra máquina. Como es un sistema operativo completo requiere que el sistema que la alberga tenga RAM suficiente para sí mismo y RAM suficiente para el sistema virtualizado, se puede configurar la cantidad de RAM y almacenamiento persistente de la máquina virtual. En el proceso de virtualización se pierde algo de rendimiento por la sobrecarga que añade virtualizar un sistema operativo completo, los procesadores modernos ofrecen soporte para que el rendimiento sea lo mayor posible pero no es igual a ejecutar el sistema de forma nativa en el sistema, sobre todo en el aspecto de interfaces gráficas y aceleración 2D y 3D. La virtualización es una buena forma de probar una distribución &lt;a href=&#34;https://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;https://www.linux.com/&#34;&gt;Linux&lt;/a&gt; para evaluarla o ejecutar &lt;a href=&#34;https://www.microsoft.com/es-es/windows/&#34;&gt;Windows&lt;/a&gt; en un Linux. Hay otras herramientas de virtualización como &lt;a href=&#34;https://www.qemu.org/&#34;&gt;QEMU&lt;/a&gt; y &lt;a href=&#34;https://www.linux-kvm.org/page/Main_Page&#34;&gt;KVM&lt;/a&gt; pero la virtud de VirtualBox es que es muy sencilla y está disponible para Windows, GNU/Linux y &lt;a href=&#34;https://www.apple.com/macos/&#34;&gt;macOS&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+&lt;figure&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/virtualbox_hu714198bdeca98f2fa85206e0a2e30ff9_109657_2560x1440_fit_box_2.png&#34; title=&#34;VirtualBox&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/virtualbox_hu714198bdeca98f2fa85206e0a2e30ff9_109657_300x200_fit_box_2.png&#34; width=&#34;300&#34;/&gt;&lt;/a&gt;
+&lt;figcaption&gt;VirtualBox&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+&lt;p&gt;Para tener una máquina virtual el proceso se puede hacer desde el principio desde el medio de instalación ofrecido siguiendo los de su instalador. Pero para hacer alguna prueba de desarrollo y si se necesitan virtualizar varias máquinas el proceso manual es incómodo además de repetitivo. &lt;a href=&#34;https://www.vagrantup.com/&#34;&gt;Vagrant&lt;/a&gt; es una de las herramientas ofrecidas por &lt;a href=&#34;https://www.hashicorp.com/&#34;&gt;HashiCorp&lt;/a&gt; que permite automatizar la creación y aprovisionamiento de máquinas virtuales en VirtualBox mediante la especificación de un archivo de configuración. Permite replicar entornos y crear un cluster de máquinas que resulta muy útil al desarrollar o probar cierto software.&lt;/p&gt;
+&lt;p&gt;En este ejemplo se configura una máquina virtual usando como sistema operativo base Ubuntu 18.04, y se aprovisiona configurando ella &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt;. El aprovisionamiento se realiza mediante una serie de comandos y archivos que se añaden del &lt;em&gt;host&lt;/em&gt; al sistema virtualizado tal como se hace en un sistema Ubuntu desde su estado de instalación inicial. Entre las opciones de configuración permitidas están el nombre de la máquina virtual, su sistema operativo, la cantidad de memoria que se le asigna, propiedades de red, asignar direcciones IP estáticas, &amp;hellip;&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;44
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;45
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;46
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-*-&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;mode:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ruby&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-*-&lt;/span&gt;
+&lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;vi:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;set&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ft&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ruby&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;Vagrant&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;configure&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;2&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;do&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;config&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;config&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;vm&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;define&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;ubuntu-docker&amp;#34;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;do&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;vm&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;box&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;ubuntu/bionic64&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;vm&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;provider&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;virtualbox&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;do&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;vb&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;vb&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Ubuntu Docker (Vagrant)&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;end&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;vm&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;network&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;private_network&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;ip:&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;192.168.33.10&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;vm&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;provider&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;virtualbox&amp;#34;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;do&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;vb&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;vb&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;memory&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;1024&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;vm&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;provision&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;file&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;source:&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;docker-compose.yml&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;destination:&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;/home/vagrant/docker-compose.yml&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;vm&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;provision&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;shell&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;inline:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;$docker_role_script&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;end&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;end&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;$docker_role_script&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;lt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SCRIPT&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Updating...&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;sudo&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;apt&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;get&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;update&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;sudo&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;apt&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;get&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;upgrade&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Installing docker...&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;sudo&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;apt&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;get&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;install&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;apt&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;transport&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;https&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ca&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;certificates&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;curl&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;gnupg&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;agent&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;software&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;properties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;common&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;curl&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;fsSL&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;https:&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;sudo&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;apt&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;key&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fingerprint&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;0EBFCD88&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;sudo&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;add&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;apt&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;repository&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;sudo&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;apt&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;get&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;update&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;sudo&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;apt&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;get&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;install&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;docker&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ce&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;docker&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ce&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cli&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;containerd&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;io&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;sudo&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;usermod&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;aG&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;docker&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;vagrant&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;sudo&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;curl&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;L&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;o&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;usr&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;local&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;bin&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;docker&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;compose&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;sudo&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;chmod&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;usr&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;local&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;bin&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;docker&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;compose&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Starting Docker service...&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;sudo&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;systemctl&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;daemon&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;reload&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;sudo&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;systemctl&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;enable&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;docker&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;service&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;sudo&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;systemctl&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;start&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;docker&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;service&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;SCRIPT&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/code/Vagrantfile&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/code/Vagrantfile&#34; target=&#34;_blank&#34;&gt;Vagrantfile&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Se puede crear un archivo inicia con comentarios para empezar a configurar la máquina virtual.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ vagrant init ubuntu/bionic64
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/code/vagrant-init.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/code/vagrant-init.sh&#34; target=&#34;_blank&#34;&gt;vagrant-init.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Definido el archivo de configuración para Vagrant se inician las máquina virtual con un comando. Y se detienen con otro. Si hay necesidad en el mismo archivo se pueden definir varias máquinas virtuales.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ vagrant up
+$ vagrant halt&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/code/vagrant-up.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/code/vagrant-up.sh&#34; target=&#34;_blank&#34;&gt;vagrant-up.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+&lt;figure&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/virtualbox-vagrant-vm_hu714198bdeca98f2fa85206e0a2e30ff9_116254_2560x1440_fit_box_2.png&#34; title=&#34;VirtualBox Vagrant VM&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/virtualbox-vagrant-vm_hu714198bdeca98f2fa85206e0a2e30ff9_116254_300x200_fit_box_2.png&#34; width=&#34;300&#34;/&gt;&lt;/a&gt;
+&lt;figcaption&gt;VirtualBox Vagrant VM&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+&lt;p&gt;Una vez iniciada la máquina virtual Vagrant configura SSH para tener acceso a su terminal, hay que especificar el nombre de la máquina virtual.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ vagrant ssh ubuntu-docker
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/code/vagrant-ssh.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/code/vagrant-ssh.sh&#34; target=&#34;_blank&#34;&gt;vagrant-ssh.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+&lt;figure&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/vagrant-ssh_huf84e0a9edfdc6e443883ef5a755439df_64066_2560x1440_fit_box_2.png&#34; title=&#34;Vagrant SSH&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/vagrant-ssh_huf84e0a9edfdc6e443883ef5a755439df_64066_300x200_fit_box_2.png&#34; width=&#34;244&#34;/&gt;&lt;/a&gt;
+&lt;figcaption&gt;Vagrant SSH&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+&lt;p&gt;La máquina en el ejemplo ha sido aprovisionada con Docker mediante un &lt;em&gt;script&lt;/em&gt; con los comandos para instalarlo y un archivo de &lt;a href=&#34;https://docs.docker.com/compose/&#34;&gt;Docker Compose&lt;/a&gt; con un servicio del servidor web &lt;a href=&#34;https://nginx.org/&#34;&gt;nginx&lt;/a&gt;. Desde la terminal de la máquina virtual se inicia el servicio con Docker que queda accesible tanto desde la pripia máquina virtual como desde el &lt;em&gt;host&lt;/em&gt; indicando la dirección IP que se le ha asignado.&lt;/p&gt;
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+&lt;figure&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/docker-compose-up_huee84648a7050cd57115fd67bb683562f_66997_2560x1440_fit_box_2.png&#34; title=&#34;docker-compose up y curl (desde la MV)&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/docker-compose-up_huee84648a7050cd57115fd67bb683562f_66997_300x200_fit_box_2.png&#34; width=&#34;281&#34;/&gt;&lt;/a&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/curl_hu26f710045e8e9b42060c9d2ccd60a851_58845_2560x1440_fit_box_2.png&#34; title=&#34;curl (desde el host)&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/curl_hu26f710045e8e9b42060c9d2ccd60a851_58845_300x200_fit_box_2.png&#34; width=&#34;244&#34;/&gt;&lt;/a&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/firefox_hue938310a76fc8e72c31d7b54d72579d5_35132_2560x1440_fit_box_2.png&#34; title=&#34;Página devuelta por nginx&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/firefox_hue938310a76fc8e72c31d7b54d72579d5_35132_300x200_fit_box_2.png&#34; width=&#34;300&#34;/&gt;&lt;/a&gt;
+&lt;figcaption&gt;docker-compose up y curl desde la MV y desde el host&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+&lt;p&gt;Vagrant tiene un &lt;a href=&#34;https://app.vagrantup.com/boxes/search&#34;&gt;repositorio de imágenes&lt;/a&gt; entre las que elegir para el sistema, están las más populares como &lt;a href=&#34;https://www.ubuntu.com/&#34;&gt;Ubuntu&lt;/a&gt;, &lt;a href=&#34;https://fedoraproject.org/&#34;&gt;Fedora&lt;/a&gt;, &lt;a href=&#34;https://www.debian.org/&#34;&gt;Debian&lt;/a&gt; y &lt;a href=&#34;https://www.centos.org/&#34;&gt;CentOS&lt;/a&gt;. Es un repositorio en donde los usuarios pueden subir sus propias imágenes aunque por defecto es mejor usar las oficiales de cada sistema.&lt;/p&gt;
+&lt;p&gt;Posee varias &lt;a href=&#34;https://www.vagrantup.com/docs/index.html&#34;&gt;páginas de documentación&lt;/a&gt; bastante completas donde conocer los todos los detalles de uso de Vagrant.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.vagrantup.com/docs/vagrantfile/&#34;&gt;Vagrantfile&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.vagrantup.com/docs/cli/&#34;&gt;Commands&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.vagrantup.com/docs/networking/&#34;&gt;Networking&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.vagrantup.com/docs/provisioning/&#34;&gt;Provisioning&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.vagrantup.com/docs/multi-machine/&#34;&gt;Multi-machine&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.vagrantup.com/docs/providers/&#34;&gt;Providers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.vagrantup.com/docs/synced-folders/&#34;&gt;Synced folders&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="planeta-codigo"/><category term="programacion"/><category term="software"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-de-microservicos-nomad/</id><title>Servicios con persistencia en el orquestador de microservicos Nomad</title><updated>2019-04-26T20:00:00+02:00</updated><published>2019-04-26T19:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-de-microservicos-nomad/"/><author><name>picodotdev</name></author><content type="html">
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/nomad.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Nomad&#34; title=&#34;Nomad&#34;/&gt;
+&lt;/div&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/hashicorp.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;HashiCorp&#34; title=&#34;HashiCorp&#34;/&gt;
+&lt;/div&gt;
+&lt;p&gt;Algunos servicios no necesitan almacenar ningún estado porque no lo necesitan o porque el estado se mantiene en otro servicio. Que un servicio no necesite mantener estado es bueno porque de esta manera el servicio se puede escalar al número de instancias adecuadas para prestar el servicio, también porque si falla una instancia la petición puede ser reenviada a otra instancia, una instancia que falla puede ser reemplazada sin problema en otro &lt;em&gt;host&lt;/em&gt;. Sin embargo, hay otro tipo de instancias que si almacenan estado como las bases de datos ya sea &lt;a href=&#34;https://www.postgresql.org/&#34;&gt;PostgreSQL&lt;/a&gt;, &lt;a href=&#34;https://www.mysql.com/&#34;&gt;MySQL&lt;/a&gt;, &lt;a href=&#34;https://redis.io/&#34;&gt;Redis&lt;/a&gt;, &lt;a href=&#34;https://www.mongodb.com/&#34;&gt;MongoDB&lt;/a&gt;, otra o simplemente archivos en el sistema de archivos.&lt;/p&gt;
+&lt;p&gt;Las instancias que tienen estado no son tan fáciles de reemplazar dado que los datos son necesarios para su funcionamiento, una instancia de un servicio con estado como no puede iniciarse en otro nodo libremente solo se puede iniciar en el nodo que contenga los datos. Eso o cuando el servicio se inicia en otro nodo los datos son trasladados o por algún mechanismo transparente a los servicios están disponibles en el nuevo nodo.&lt;/p&gt;
+&lt;p&gt;En &lt;a href=&#34;https://docs.docker.com/swarm/&#34;&gt;Docker Swarm&lt;/a&gt; ciertos &lt;em&gt;drivers&lt;/em&gt; de volúmenes pueden proporcionar volúmenes accesibles desde cualquier &lt;em&gt;host&lt;/em&gt; del &lt;em&gt;cluster&lt;/em&gt; pero por defecto &lt;em&gt;Swarm&lt;/em&gt; no lo ofrece. En &lt;a href=&#34;https://kubernetes.io/&#34;&gt;Kubernetes&lt;/a&gt; los volúmenes pueden ser dispositivos de almacenamiento provenientes de &lt;a href=&#34;https://aws.amazon.com/es/ebs/&#34;&gt;EBS&lt;/a&gt; de modo que si un &lt;em&gt;pod&lt;/em&gt; es movido a otro &lt;em&gt;host&lt;/em&gt; basta con que el &lt;em&gt;pod&lt;/em&gt; sea conectado de nuevo al EBS anterior y los datos están accesibles en el nuevo nodo.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.nomadproject.io/&#34;&gt;Nomad&lt;/a&gt; no proporciona soporte para que el almacenamiento persistente sea migrado a un nuevo nodo de Nomad si el servicio cambiado de ubicación. Para solventar esta limitación en el caso de los servicios con estado estos pueden ser tratados en cierta forma como animales de compañía o &lt;em&gt;pets&lt;/em&gt; haciendo que siempre se ubiquen en el mismo nodo, una vez tiene siempre la misma ubicación basta con proporcionar el almacenamiento en el &lt;em&gt;host&lt;/em&gt; ya sea en su sistema de archivos o para externalizarlo montando un almacenamiento &lt;em&gt;EBS&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Para conseguir que un &lt;em&gt;job&lt;/em&gt; de Nomad se ubique siempre en un mismo nodo hay que usar &lt;a href=&#34;https://www.nomadproject.io/docs/job-specification/constraint.html&#34;&gt;restricciones o &lt;em&gt;costraints&lt;/em&gt; en la especificación del &lt;em&gt;job&lt;/em&gt;&lt;/a&gt;. Las restricciones son las reglas que utiliza Nomad para elegir como candidatos los posibles nodos en los que ubicar el &lt;em&gt;job&lt;/em&gt;, &lt;em&gt;task group&lt;/em&gt; o &lt;em&gt;task&lt;/em&gt;. Se pueden utilizar varios operadores entre los que está el de igualdad utilizado en el ejemplo. Una de las variables utilizables es el identificativo del nodo de Nomad, con él es posible conseguir que el &lt;em&gt;job&lt;/em&gt; se ubique siempre en el mismo nodo. Los identificativos de los nodos son asignados por Nomad cuando se unen al &lt;em&gt;cluster&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Con los siguientes comandos se inspecciona los nodos que forman parte del cluster de Nomad, entre sus datos está el identificativo de cada nodo formado por una cadena de 36 caracteres. En el modo verboso se emite el identificativo completo y una lista de propiedades del nodo entre los que están detalles de Consul, la CPU, &lt;em&gt;driver&lt;/em&gt; que soporta, kernel, sistema operativo, &amp;hellip; En documentación sobre &lt;a href=&#34;https://www.nomadproject.io/docs/runtime/interpolation.html&#34;&gt;interpolación de variables&lt;/a&gt; hay una lista de variables disponibles.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 44
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 45
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 46
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 47
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 48
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 49
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 50
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 51
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 52
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 53
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 54
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 55
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 56
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 57
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 58
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 59
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 60
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 61
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 62
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 63
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 64
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 65
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 66
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 67
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 68
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 69
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 70
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 71
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 72
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 73
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 74
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 75
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 76
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 77
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 78
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 79
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 80
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 81
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 82
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 83
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 84
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 85
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 86
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 87
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 88
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 89
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 90
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 91
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 92
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 93
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 94
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 95
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 96
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 97
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 98
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 99
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;100
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;101
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;102
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;103
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;104
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;105
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;106
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;107
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;108
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;109
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;110
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;111
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;112
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;113
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;114
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ nomad node status
+ID DC Name Class Drain Eligibility Status
+44511e01 localhost archlinux &amp;lt;none&amp;gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt; eligible ready
+$ nomad node status 44511e01
+&lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 44511e01
+&lt;span class=&#34;nv&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; archlinux
+&lt;span class=&#34;nv&#34;&gt;Class&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &amp;lt;none&amp;gt;
+&lt;span class=&#34;nv&#34;&gt;DC&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; localhost
+&lt;span class=&#34;nv&#34;&gt;Drain&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;Eligibility&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; eligible
+&lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; ready
+&lt;span class=&#34;nv&#34;&gt;Uptime&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 1h40m31s
+Driver &lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; docker,exec,java,qemu,raw_exec
+Node Events
+Time Subsystem Message
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00 Cluster Node registered
+Allocated Resources
+CPU Memory Disk
+&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;/30400 MHz &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; B/31 GiB &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; B/16 GiB
+Allocation Resource Utilization
+CPU Memory
+&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;/30400 MHz &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; B/31 GiB
+Host Resource Utilization
+CPU Memory Disk
+&lt;span class=&#34;m&#34;&gt;3288&lt;/span&gt;/30400 MHz &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;.2 GiB/31 GiB &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;tmpfs&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Allocations
+No allocations placed
+$ nomad node status -verbose 44511e01
+&lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 44511e01-34b8-c1e6-7fe5-60be0ff35d0e
+&lt;span class=&#34;nv&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; archlinux
+&lt;span class=&#34;nv&#34;&gt;Class&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &amp;lt;none&amp;gt;
+&lt;span class=&#34;nv&#34;&gt;DC&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; localhost
+&lt;span class=&#34;nv&#34;&gt;Drain&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;Eligibility&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; eligible
+&lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; ready
+&lt;span class=&#34;nv&#34;&gt;Uptime&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 1h44m39s
+Drivers
+Driver Detected Healthy Message Time
+docker &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; Healthy &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00
+&lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; Healthy &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00
+java &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; Healthy &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00
+qemu &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; Healthy &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00
+raw_exec &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; Healthy &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00
+rkt &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt; Failed to execute rkt version: exec: &lt;span class=&#34;s2&#34;&gt;&amp;#34;rkt&amp;#34;&lt;/span&gt;: executable file not found in &lt;span class=&#34;nv&#34;&gt;$PATH&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00
+Node Events
+Time Subsystem Message Details
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T17:57:41+02:00 Cluster Node registered &amp;lt;none&amp;gt;
+Allocated Resources
+CPU Memory Disk
+&lt;span class=&#34;m&#34;&gt;100&lt;/span&gt;/30400 MHz &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;.0 GiB/31 GiB &lt;span class=&#34;m&#34;&gt;300&lt;/span&gt; MiB/16 GiB
+Allocation Resource Utilization
+CPU Memory
+&lt;span class=&#34;m&#34;&gt;19&lt;/span&gt;/30400 MHz &lt;span class=&#34;m&#34;&gt;38&lt;/span&gt; MiB/31 GiB
+Host Resource Utilization
+CPU Memory Disk
+&lt;span class=&#34;m&#34;&gt;4564&lt;/span&gt;/30400 MHz &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;.5 GiB/31 GiB &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;tmpfs&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Allocations
+ID Eval ID Node ID Task Group Version Desired Status Created Modified
+cd45371d-501a-1373-dfde-bb16c4ff20d3 ab9f5675-b5cb-9e5f-8e20-cb308dbfba32 44511e01-34b8-c1e6-7fe5-60be0ff35d0e services &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt; run running &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T18:14:28+02:00 &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T18:16:32+02:00
+Attributes
+consul.datacenter &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; localhost
+consul.revision &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; ea5210a30
+consul.server &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+consul.version &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;.4.4
+cpu.arch &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; amd64
+cpu.frequency &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;3800&lt;/span&gt;
+cpu.modelname &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; Intel&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;R&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; Core&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;TM&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; i5-8259U CPU @ &lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;.30GHz
+cpu.numcores &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;8&lt;/span&gt;
+cpu.totalcompute &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;30400&lt;/span&gt;
+driver.docker &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+driver.docker.bridge_ip &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;172&lt;/span&gt;.17.0.1
+driver.docker.os_type &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; linux
+driver.docker.runtimes &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; runc
+driver.docker.version &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;18&lt;/span&gt;.09.4-ce
+driver.docker.volumes.enabled &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+driver.exec &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+driver.java &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+driver.java.runtime &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; OpenJDK Runtime Environment &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;build &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;.8.0_212-b01&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+driver.java.version &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;.8.0_212
+driver.java.vm &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; OpenJDK &lt;span class=&#34;m&#34;&gt;64&lt;/span&gt;-Bit Server VM &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;build &lt;span class=&#34;m&#34;&gt;25&lt;/span&gt;.212-b01, mixed mode&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+driver.qemu &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+driver.qemu.version &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;.1.0
+driver.raw_exec &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+kernel.name &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; linux
+kernel.version &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;.0.7-arch1-1-ARCH
+memory.totalbytes &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;33592107008&lt;/span&gt;
+nomad.advertise.address &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4646
+nomad.revision &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 18dd59056ee1d7b2df51256fe900a98460d3d6b9
+nomad.version &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;.9.0
+os.name &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; arch
+os.signals &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; SIGQUIT,SIGTTOU,SIGFPE,SIGTRAP,SIGTSTP,SIGINT,SIGURG,SIGTTIN,SIGUSR1,SIGIO,SIGIOT,SIGKILL,SIGSTOP,SIGCONT,SIGILL,SIGPROF,SIGSEGV,SIGSYS,SIGTERM,SIGXFSZ,SIGHUP,SIGWINCH,SIGABRT,SIGBUS,SIGCHLD,SIGPIPE,SIGUSR2,SIGXCPU,SIGALRM
+unique.cgroup.mountpoint &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; /sys/fs/cgroup
+unique.consul.name &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; archlinux
+unique.hostname &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; archlinux
+unique.network.ip-address &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1
+unique.storage.bytesfree &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;16795955200&lt;/span&gt;
+unique.storage.bytestotal &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;16796053504&lt;/span&gt;
+unique.storage.volume &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; tmpfs
+Meta&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-de-microservicos-nomad/code/nomad-status.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-de-microservicos-nomad/code/nomad-status.sh&#34; target=&#34;_blank&#34;&gt;nomad-status.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;En este caso solo hay un nodo registrado en Nomad, la siguiente definición de &lt;em&gt;job&lt;/em&gt; en el fragmento &lt;em&gt;constraint&lt;/em&gt; hace que Nomad lo ubique siempre en él.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;job &amp;#34;mongodb&amp;#34; {
+datacenters = [&amp;#34;localhost&amp;#34;]
+type = &amp;#34;service&amp;#34;
+constraint {
+attribute = &amp;#34;${node.unique.id}&amp;#34;
+value = &amp;#34;44511e01-34b8-c1e6-7fe5-60be0ff35d0e&amp;#34;
+}
+group &amp;#34;services&amp;#34; {
+count = 1
+task &amp;#34;mongodb&amp;#34; {
+driver = &amp;#34;docker&amp;#34;
+config {
+image = &amp;#34;mongo:latest&amp;#34;
+port_map {
+port = 27017
+}
+volumes = [
+&amp;#34;/home/picodotdev/Software/nomad/mongodb:/data/db/&amp;#34;
+]
+}
+resources {
+memory = 1024 # MB
+network {
+port &amp;#34;port&amp;#34; {}
+}
+}
+}
+}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-de-microservicos-nomad/code/mongodb.nomad&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-de-microservicos-nomad/code/mongodb.nomad&#34; target=&#34;_blank&#34;&gt;mongodb.nomad&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Como el &lt;em&gt;job&lt;/em&gt; se ubica en el mismo nodo siempre montando un directorio del nodo como un volumen de datos en el &lt;em&gt;job&lt;/em&gt; y contenedor de &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt;, los datos se persisten en el sistema de archivos y transcienden al tiempo de vida del &lt;em&gt;job&lt;/em&gt;, se puede iniciar el &lt;em&gt;job&lt;/em&gt;, insertar datos en la base de datos en este caso de MongoDB, eliminar el &lt;em&gt;job&lt;/em&gt;, volverlo a iniciar y los mismos datos están presentes en MongoDB.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ nomad job run mongodb.nomad
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-de-microservicos-nomad/code/nomad-job-run.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-de-microservicos-nomad/code/nomad-job-run.sh&#34; target=&#34;_blank&#34;&gt;nomad-job-run.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;44
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;45
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;46
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;47
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ docker ps
+CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES
+b0d3f42c92fc mongo:latest &lt;span class=&#34;s2&#34;&gt;&amp;#34;docker-entrypoint.s…&amp;#34;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt; minutes ago Up &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt; minutes &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:20180-&amp;gt;27017/tcp, &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:20180-&amp;gt;27017/udp mongodb-ea10d440-1176-3bfb-5301-7ccd17af0281
+$ docker &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; -it b0d3f42c92fc bash
+root@b0d3f42c92fc:/# mongo
+MongoDB shell version v4.0.9
+connecting to: mongodb://127.0.0.1:27017/?gssapiServiceName&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;mongodb
+Implicit session: session &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt; : UUID&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;ba120679-b965-49d0-a774-dff39d6b630a&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+MongoDB server version: &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt;.0.9
+Server has startup warnings:
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:49.308+0000 I STORAGE &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:49.308+0000 I STORAGE &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:49.308+0000 I STORAGE &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; ** See http://dochub.mongodb.org/core/prodnotes-filesystem
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:50.133+0000 I CONTROL &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:50.133+0000 I CONTROL &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; ** WARNING: Access control is not enabled &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; the database.
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:50.133+0000 I CONTROL &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; ** Read and write access to data and configuration is unrestricted.
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-26T16:47:50.133+0000 I CONTROL &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;initandlisten&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+---
+Enable MongoDB&lt;span class=&#34;s1&#34;&gt;&amp;#39;s free cloud-based monitoring service, which will then receive and display
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;and anyone you share the URL with. MongoDB may use this information to make product
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;improvements and to suggest MongoDB products and deployment options to you.
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;To enable free monitoring, run the following command: db.enableFreeMonitoring()
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;---
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;gt; db.articles.insert({title: &amp;#34;Introducción a la base de datos NoSQL MongoDB&amp;#34;, author: &amp;#34;picodotdev&amp;#34;, date: new Date(2017,05,18,12,30), tags: [&amp;#39;&lt;/span&gt;mongodb&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;database&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;NoSQL&lt;span class=&#34;s1&#34;&gt;&amp;#39;], comments: [{user: &amp;#34;jones&amp;#34;, message: &amp;#34;MongoDB is great!&amp;#34;}, {user: &amp;#34;lina&amp;#34;, message: &amp;#34;MongoDB is great!&amp;#34;}]})
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;WriteResult({ &amp;#34;nInserted&amp;#34; : 1 })
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;gt; db.articles.insert({title: &amp;#34;Introducción a la base de datos relacional PostgreSQL&amp;#34;, author: &amp;#34;picodotdev&amp;#34;, date: new Date(2017,05,17,12,00), likes: 100, tags: [&amp;#39;&lt;/span&gt;postgresql&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;database&lt;span class=&#34;s1&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;SQL&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;, comments: &lt;span class=&#34;o&#34;&gt;[{&lt;/span&gt;user: &lt;span class=&#34;s2&#34;&gt;&amp;#34;katy&amp;#34;&lt;/span&gt;, message: &lt;span class=&#34;s2&#34;&gt;&amp;#34;PostgreSQL rocks!&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;, &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;user: &lt;span class=&#34;s2&#34;&gt;&amp;#34;smith&amp;#34;&lt;/span&gt;, message: &lt;span class=&#34;s2&#34;&gt;&amp;#34;SQL language is powerful!&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}]})&lt;/span&gt;
+WriteResult&lt;span class=&#34;o&#34;&gt;({&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;nInserted&amp;#34;&lt;/span&gt; : &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;})&lt;/span&gt;
+&amp;gt; db.articles.find&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;_id&amp;#34;&lt;/span&gt; : ObjectId&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;5cc335873b17081f2ca1d4d5&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;title&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;Introducción a la base de datos NoSQL MongoDB&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;author&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;picodotdev&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;date&amp;#34;&lt;/span&gt; : ISODate&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;2017-06-18T12:30:00Z&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;tags&amp;#34;&lt;/span&gt; : &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;mongodb&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;database&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;NoSQL&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;comments&amp;#34;&lt;/span&gt; : &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;user&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;jones&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;MongoDB is great!&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;, &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;user&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;lina&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;MongoDB is great!&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;_id&amp;#34;&lt;/span&gt; : ObjectId&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;5cc335993b17081f2ca1d4d6&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;title&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;Introducción a la base de datos relacional PostgreSQL&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;author&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;picodotdev&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;date&amp;#34;&lt;/span&gt; : ISODate&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;2017-06-17T12:00:00Z&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;likes&amp;#34;&lt;/span&gt; : &lt;span class=&#34;m&#34;&gt;100&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;tags&amp;#34;&lt;/span&gt; : &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;postgresql&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;database&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;SQL&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;comments&amp;#34;&lt;/span&gt; : &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;user&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;katy&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;PostgreSQL rocks!&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;, &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;user&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;smith&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt; : &lt;span class=&#34;s2&#34;&gt;&amp;#34;SQL language is powerful!&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&amp;gt; db.articles.count&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;
+&amp;gt; &lt;span class=&#34;nb&#34;&gt;exit&lt;/span&gt;
+bye
+root@b0d3f42c92fc:/# &lt;span class=&#34;nb&#34;&gt;exit&lt;/span&gt;
+&lt;span class=&#34;nb&#34;&gt;exit&lt;/span&gt;
+$ nomad job stop --purge &lt;span class=&#34;nv&#34;&gt;mongodb&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Monitoring evaluation &lt;span class=&#34;s2&#34;&gt;&amp;#34;f10589c6&amp;#34;&lt;/span&gt;
+Evaluation triggered by job &lt;span class=&#34;s2&#34;&gt;&amp;#34;mongodb&amp;#34;&lt;/span&gt;
+Evaluation status changed: &lt;span class=&#34;s2&#34;&gt;&amp;#34;pending&amp;#34;&lt;/span&gt; -&amp;gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;complete&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Evaluation &lt;span class=&#34;s2&#34;&gt;&amp;#34;f10589c6&amp;#34;&lt;/span&gt; finished with status &lt;span class=&#34;s2&#34;&gt;&amp;#34;complete&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-de-microservicos-nomad/code/mongodb.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-de-microservicos-nomad/code/mongodb.sh&#34; target=&#34;_blank&#34;&gt;mongodb.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ nomad job stop --prune mongodb
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-de-microservicos-nomad/code/nomad-job-stop.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-de-microservicos-nomad/code/nomad-job-stop.sh&#34; target=&#34;_blank&#34;&gt;nomad-job-stop.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Para iniciar &lt;a href=&#34;https://www.consul.io/&#34;&gt;Consul&lt;/a&gt; y Nomad hay que utilizar los siguientes comandos y para el ejecutar &lt;em&gt;job&lt;/em&gt; es requisito haber instalado Docker dado que en este ejemplo lo utiliza.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ consul agent -dev -datacenter &lt;span class=&#34;nv&#34;&gt;localhost&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Starting Consul agent...
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Consul agent running!
+Version: &lt;span class=&#34;s1&#34;&gt;&amp;#39;v1.4.4&amp;#39;&lt;/span&gt;
+Node ID: &lt;span class=&#34;s1&#34;&gt;&amp;#39;34294bf0-5802-0d94-4acd-cf8c9d090205&amp;#39;&lt;/span&gt;
+Node name: &lt;span class=&#34;s1&#34;&gt;&amp;#39;archlinux&amp;#39;&lt;/span&gt;
+Datacenter: &lt;span class=&#34;s1&#34;&gt;&amp;#39;localhost&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;Segment: &lt;span class=&#34;s1&#34;&gt;&amp;#39;&amp;lt;all&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Server: &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;Bootstrap: &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Client Addr: &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;HTTP: &lt;span class=&#34;m&#34;&gt;8500&lt;/span&gt;, HTTPS: -1, gRPC: &lt;span class=&#34;m&#34;&gt;8502&lt;/span&gt;, DNS: &lt;span class=&#34;m&#34;&gt;8600&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Cluster Addr: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1 &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;LAN: &lt;span class=&#34;m&#34;&gt;8301&lt;/span&gt;, WAN: &lt;span class=&#34;m&#34;&gt;8302&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Encrypt: Gossip: false, TLS-Outgoing: false, TLS-Incoming: &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+$ sudo nomad agent -dev -dc localhost
+&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;sudo&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; password &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; picodotdev:
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; No configuration files &lt;span class=&#34;nv&#34;&gt;loaded&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Starting Nomad agent...
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Nomad agent configuration:
+Advertise Addrs: HTTP: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4646&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; RPC: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4647&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; Serf: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4648
+Bind Addrs: HTTP: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4646&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; RPC: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4647&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; Serf: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4648
+Client: &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+Log Level: DEBUG
+Region: global &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;DC: localhost&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Server: &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+Version: &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;.9.0&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-de-microservicos-nomad/code/consul-nomad.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-de-microservicos-nomad/code/consul-nomad.sh&#34; target=&#34;_blank&#34;&gt;consul-nomad.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Las restricciones se han de cumplir para elegir un nodo, por otro lado está también la afinidad. La &lt;a href=&#34;https://www.nomadproject.io/docs/job-specification/affinity.html&#34;&gt;afinidad&lt;/a&gt; es una preferencia utilizada por Nomad al seleccionar los nodos que tratará de cumplir si hay algún nodo disponible con las propiedades de afinidad deseadas pero si no hay un nodo disponible se elige algún otro.&lt;/p&gt;
+&lt;div class=&#34;reference&#34;&gt;
+Referencia:&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/&#34;&gt;Introducción a Nomad para gestionar aplicaciones y microservicios&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/&#34;&gt;Estrategias de despliegue para microservicios con Nomad&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.nomadproject.io/guides/stateful-workloads/portworx.html&#34;&gt;Portworx&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.nomadproject.io/docs/job-specification/ephemeral_disk.html&#34;&gt;Ephemeral Disk&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tech.trivago.com/2019/01/25/nomad-our-experiences-and-best-practices/&#34;&gt;Nomad - our experiences and best practices&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/series/docker/&#34;&gt;Serie de artículos sobre Docker&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;</content><category term="planeta-codigo"/><category term="programacion"/><category term="software"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/</id><title>Introducción a Nomad para gestionar aplicaciones y microservicios</title><updated>2019-04-17T23:00:00+02:00</updated><published>2019-04-14T13:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/"/><author><name>picodotdev</name></author><content type="html">
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/nomad.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Nomad&#34; title=&#34;Nomad&#34;/&gt;
+&lt;/div&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/consul.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Consul&#34; title=&#34;Consul&#34;/&gt;
+&lt;/div&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/hashicorp.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;HashiCorp&#34; title=&#34;HashiCorp&#34;/&gt;
+&lt;/div&gt;
+&lt;p&gt;En las arquitecturas de aplicaciones basadas en microservicios cada microservicio o simplemente servicio es una aplicación distinta e independiente, son varias aplicaciones que hay que gestionar y desplegar de forma individual o de forma coordinada.&lt;/p&gt;
+&lt;p&gt;Dado su número hay que automatizar todas las tareas para tratar de conseguir la menor intervención manual, ningún proceso manual si es posible. Para que no sean inmanejables han de tratarse como ganado de forma masiva en vez de como animales de compañía que requieran atención individual para continuar generando valor en un proyecto con el tiempo disponible en vez de dedicarlo a tareas que no lo aportan.&lt;/p&gt;
+&lt;p&gt;Dado que cada microservicio puede emplear una tecnología diferente es necesario algo que permita tratarlos a todos por igual, esta tecnología son los contenedores que hacen un papel similar al que hacen en el transporte de mercancías en barcos.&lt;/p&gt;
+&lt;p&gt;Hay varias tecnologías para orquestar o gestionar los microservicios y crear &lt;em&gt;clusters&lt;/em&gt; de máquinas en las que desplegarlos, una de ellas es &lt;a href=&#34;https://docs.docker.com/swarm/&#34;&gt;Docker Swarm&lt;/a&gt; sencilla e integrada con &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt; pero no con tantas funcionalidades como otra de las populares que es &lt;a href=&#34;https://kubernetes.io/&#34;&gt;Kubernetes&lt;/a&gt; y para usarlo en una máquina local &lt;a href=&#34;https://kubernetes.io/docs/setup/minikube/&#34;&gt;minikube&lt;/a&gt;, ofrece mas funcionalidad pero añade una complejidad significativa que para algunos casos de uso no compensa además requiere mas tiempo para dominarla. Una solución intermedia conservando la sencillez pero con mas funcionalidad es &lt;a href=&#34;https://www.nomadproject.io/&#34;&gt;Nomad&lt;/a&gt; de &lt;a href=&#34;https://www.hashicorp.com/&#34;&gt;HashiCorp&lt;/a&gt;. Otra de sus características destacadas es que el &lt;em&gt;cluster&lt;/em&gt; de Nomad puede estar formado en diferentes centros de datos y proveedores de la nube al mismo tiempo, por ejemplo en &lt;a href=&#34;https://aws.amazon.com/es/&#34;&gt;AWS&lt;/a&gt;, &lt;a href=&#34;https://cloud.google.com/&#34;&gt;GCP&lt;/a&gt; entre otros o centros de datos híbridos en la nube y propios. En la sección &lt;a href=&#34;https://www.nomadproject.io/intro/vs/index.html&#34;&gt;Nomad vs. Other Software&lt;/a&gt; de su documentación se compara con otras opciones.&lt;/p&gt;
+&lt;p&gt;Nomad es distribuido, con alta disponibilidad y escalable a cientos de nodos en múltiples centros de datos y regiones. No es una solución completa por si sola pero se integra con otras. No ofrece descubrimiento de servicios pero se integra muy bien con &lt;a href=&#34;https://www.consul.io/&#34;&gt;Consul&lt;/a&gt;. No es un balanceador de carga pero se integra con &lt;a href=&#34;https://nginx.org/&#34;&gt;Nginx&lt;/a&gt;, &lt;a href=&#34;https://fabiolb.net/&#34;&gt;Fabio&lt;/a&gt;, &lt;a href=&#34;https://traefik.io/&#34;&gt;Traefik&lt;/a&gt; y &lt;a href=&#34;https://www.haproxy.org/&#34;&gt;HAproxy&lt;/a&gt; automatizando su configuración desde Consul. No integra un gestor de secretos pero se integra con &lt;a href=&#34;https://www.vaultproject.io/&#34;&gt;Vault&lt;/a&gt;. No soporta escalado y no integra de por sí varias de estas funcionalidades como Kubernetes pero es más simple.&lt;/p&gt;
+&lt;p&gt;Nomad a diferencia Docker no solo puede gestionar contenedores docker sino también tareas del sistema y otras como máquinas virtuales &lt;a href=&#34;https://www.qemu.org/&#34;&gt;qemu&lt;/a&gt; o contenedores con &lt;a href=&#34;https://coreos.com/rkt/&#34;&gt;rkt&lt;/a&gt;, a diferencia de Kubernetes es mucho mas sencilla pero conservando funcionalidad suficiente para muchos casos de uso. Nomad requiere de otra de las herramientas de HashiCorp que es Consul para el registro y descubrimiento y para la configuración del &lt;em&gt;cluster&lt;/em&gt;, también se integra con otras de sus herramientas como Vault para guardar cifrados datos sensibles como contraseñas y certificados. Con &lt;a href=&#34;https://www.consul.io/docs/connect/platform/nomad.html&#34;&gt;Connect&lt;/a&gt; es capaz de proporcionar conexión TLS con autenticación mutua de forma transparente para los servicios.&lt;/p&gt;
+&lt;p&gt;Los &lt;em&gt;jobs&lt;/em&gt; son la unidad de trabajo que contienen la definición de los servicios, se definen en un &lt;a href=&#34;https://www.nomadproject.io/docs/job-specification/index.html&#34;&gt;archivo de configuración&lt;/a&gt; donde los elementos son el nombre, los grupos de tareas, las tareas y en cada tarea el &lt;em&gt;driver&lt;/em&gt; que usa dependiendo del cual se proporciona la configuración apropiada. El &lt;em&gt;driver&lt;/em&gt; determina como es gestionada el tipo de tarea puede ser un conteendor de docker, un proceso del sistema, una máquina virtual de &lt;em&gt;qemu&lt;/em&gt; o un contenedor &lt;em&gt;rkt&lt;/em&gt;, a diferencia de Docker Swarm que solo puede gestionar contenedores docker. Se pueden configurar variables de entorno, memoria asignada a cada tarea, propiedades de red y CPU.&lt;/p&gt;
+&lt;p&gt;Nomad y Nomad cada uno son un binario ejecutable sin ninguna otra dependencia. Basta con descargarlos e incluirlos en el &lt;em&gt;path&lt;/em&gt; del sistema. En este ejemplo hay definido un &lt;em&gt;job&lt;/em&gt; compuesto por una tarea de un contenedor docker de &lt;a href=&#34;https://nginx.org/&#34;&gt;nginx&lt;/a&gt; configurado en un puerto aleatorio y con 1 GB de memoria para cada una de las dos instancias del servicio. Dado que lo usa es necesario &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/11/inicio-basico-de-docker/&#34;&gt;instalar Docker&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;job &amp;#34;nginx&amp;#34; {
+datacenters = [&amp;#34;localhost&amp;#34;]
+type = &amp;#34;service&amp;#34;
+update {
+stagger = &amp;#34;30s&amp;#34;
+canary = 2
+max_parallel = 2
+}
+group &amp;#34;services&amp;#34; {
+count = 2
+task &amp;#34;nginx&amp;#34; {
+driver = &amp;#34;docker&amp;#34;
+config {
+image = &amp;#34;nginx:alpine&amp;#34;
+port_map {
+http = 80
+}
+}
+resources {
+memory = 1024 # MB
+network {
+port &amp;#34;http&amp;#34; {}
+}
+}
+}
+}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/code/nginx.nomad&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/code/nginx.nomad&#34; target=&#34;_blank&#34;&gt;nginx.nomad&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Nomad y Nomad se ejecutan con los siguientes comandos en modo desarrollo.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ consul agent -dev -datacenter &lt;span class=&#34;nv&#34;&gt;localhost&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Starting Consul agent...
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Consul agent running!
+Version: &lt;span class=&#34;s1&#34;&gt;&amp;#39;v1.4.4&amp;#39;&lt;/span&gt;
+Node ID: &lt;span class=&#34;s1&#34;&gt;&amp;#39;1934d5b2-0f3f-ffdd-8378-7ab8a6207bb1&amp;#39;&lt;/span&gt;
+Node name: &lt;span class=&#34;s1&#34;&gt;&amp;#39;archlinux&amp;#39;&lt;/span&gt;
+Datacenter: &lt;span class=&#34;s1&#34;&gt;&amp;#39;localhost&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;Segment: &lt;span class=&#34;s1&#34;&gt;&amp;#39;&amp;lt;all&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Server: &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;Bootstrap: &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Client Addr: &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;HTTP: &lt;span class=&#34;m&#34;&gt;8500&lt;/span&gt;, HTTPS: -1, gRPC: &lt;span class=&#34;m&#34;&gt;8502&lt;/span&gt;, DNS: &lt;span class=&#34;m&#34;&gt;8600&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Cluster Addr: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1 &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;LAN: &lt;span class=&#34;m&#34;&gt;8301&lt;/span&gt;, WAN: &lt;span class=&#34;m&#34;&gt;8302&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Encrypt: Gossip: false, TLS-Outgoing: false, TLS-Incoming: &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+$ sudo nomad agent -dev -dc localhost
+&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;sudo&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; password &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; picodotdev:
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; No configuration files &lt;span class=&#34;nv&#34;&gt;loaded&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Starting Nomad agent...
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Nomad agent configuration:
+Advertise Addrs: HTTP: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4646&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; RPC: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4647&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; Serf: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4648
+Bind Addrs: HTTP: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4646&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; RPC: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4647&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; Serf: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:4648
+Client: &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+Log Level: DEBUG
+Region: global &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;DC: localhost&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Server: &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+Version: &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;.9.0&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/code/nomad-consul.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/code/nomad-consul.sh&#34; target=&#34;_blank&#34;&gt;nomad-consul.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Iniciados se pueden enviar &lt;em&gt;jobs&lt;/em&gt; y ver su estado, dirección y puerto asignado así como los &lt;em&gt;logs&lt;/em&gt; generados.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;44
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;45
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;46
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;47
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;48
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;49
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;50
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;51
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;52
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;53
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;54
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;55
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;56
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;57
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;58
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;59
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;60
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;61
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;62
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;63
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;64
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;65
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;66
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;67
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;68
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;69
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;70
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;71
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;72
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;73
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;74
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;75
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;76
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;77
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ nomad job plan nginx.nomad
+$ nomad job run nginx.nomad
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Monitoring evaluation &lt;span class=&#34;s2&#34;&gt;&amp;#34;b2b07746&amp;#34;&lt;/span&gt;
+Evaluation triggered by job &lt;span class=&#34;s2&#34;&gt;&amp;#34;nginx&amp;#34;&lt;/span&gt;
+Allocation &lt;span class=&#34;s2&#34;&gt;&amp;#34;60f3d102&amp;#34;&lt;/span&gt; created: node &lt;span class=&#34;s2&#34;&gt;&amp;#34;58823be1&amp;#34;&lt;/span&gt;, group &lt;span class=&#34;s2&#34;&gt;&amp;#34;services&amp;#34;&lt;/span&gt;
+Allocation &lt;span class=&#34;s2&#34;&gt;&amp;#34;6e12ae8f&amp;#34;&lt;/span&gt; created: node &lt;span class=&#34;s2&#34;&gt;&amp;#34;58823be1&amp;#34;&lt;/span&gt;, group &lt;span class=&#34;s2&#34;&gt;&amp;#34;services&amp;#34;&lt;/span&gt;
+Evaluation within deployment: &lt;span class=&#34;s2&#34;&gt;&amp;#34;0dddab79&amp;#34;&lt;/span&gt;
+Allocation &lt;span class=&#34;s2&#34;&gt;&amp;#34;6e12ae8f&amp;#34;&lt;/span&gt; status changed: &lt;span class=&#34;s2&#34;&gt;&amp;#34;pending&amp;#34;&lt;/span&gt; -&amp;gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;running&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;Tasks are running&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Allocation &lt;span class=&#34;s2&#34;&gt;&amp;#34;60f3d102&amp;#34;&lt;/span&gt; status changed: &lt;span class=&#34;s2&#34;&gt;&amp;#34;pending&amp;#34;&lt;/span&gt; -&amp;gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;running&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;Tasks are running&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Evaluation status changed: &lt;span class=&#34;s2&#34;&gt;&amp;#34;pending&amp;#34;&lt;/span&gt; -&amp;gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;complete&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Evaluation &lt;span class=&#34;s2&#34;&gt;&amp;#34;b2b07746&amp;#34;&lt;/span&gt; finished with status &lt;span class=&#34;s2&#34;&gt;&amp;#34;complete&amp;#34;&lt;/span&gt;
+$ nomad job status nginx
+&lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; nginx
+&lt;span class=&#34;nv&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; nginx
+Submit &lt;span class=&#34;nv&#34;&gt;Date&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-14T13:31:53+02:00
+&lt;span class=&#34;nv&#34;&gt;Type&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; service
+&lt;span class=&#34;nv&#34;&gt;Priority&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;50&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;Datacenters&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; localhost
+&lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; running
+&lt;span class=&#34;nv&#34;&gt;Periodic&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;Parameterized&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+Summary
+Task Group Queued Starting Running Failed Complete Lost
+services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;
+Latest Deployment
+&lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 0dddab79
+&lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; running
+&lt;span class=&#34;nv&#34;&gt;Description&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; Deployment is running
+Deployed
+Task Group Desired Placed Healthy Unhealthy Progress Deadline
+services &lt;span class=&#34;m&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-14T13:42:04+02:00
+Allocations
+ID Node ID Task Group Version Desired Status Created Modified
+60f3d102 58823be1 services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; run running 12s ago 1s ago
+6e12ae8f 58823be1 services &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; run running 12s ago 1s ago
+$ nomad alloc status 60f3d102
+&lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 60f3d102
+Eval &lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; b2b07746
+&lt;span class=&#34;nv&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; nginx.services&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+Node &lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 58823be1
+Job &lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; nginx
+Job &lt;span class=&#34;nv&#34;&gt;Version&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;
+Client &lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; running
+Client &lt;span class=&#34;nv&#34;&gt;Description&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; Tasks are running
+Desired &lt;span class=&#34;nv&#34;&gt;Status&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; run
+Desired &lt;span class=&#34;nv&#34;&gt;Description&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &amp;lt;none&amp;gt;
+&lt;span class=&#34;nv&#34;&gt;Created&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 56s ago
+&lt;span class=&#34;nv&#34;&gt;Modified&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 45s ago
+Deployment &lt;span class=&#34;nv&#34;&gt;ID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 0dddab79
+Deployment &lt;span class=&#34;nv&#34;&gt;Health&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; healthy
+Task &lt;span class=&#34;s2&#34;&gt;&amp;#34;nginx&amp;#34;&lt;/span&gt; is &lt;span class=&#34;s2&#34;&gt;&amp;#34;running&amp;#34;&lt;/span&gt;
+Task Resources
+CPU Memory Disk Addresses
+&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;/100 MHz &lt;span class=&#34;m&#34;&gt;820&lt;/span&gt; KiB/1.0 GiB &lt;span class=&#34;m&#34;&gt;300&lt;/span&gt; MiB http: &lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;.0.0.1:28421
+Task Events:
+Started &lt;span class=&#34;nv&#34;&gt;At&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-14T11:31:54Z
+Finished &lt;span class=&#34;nv&#34;&gt;At&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; N/A
+Total &lt;span class=&#34;nv&#34;&gt;Restarts&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;
+Last &lt;span class=&#34;nv&#34;&gt;Restart&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; N/A
+Recent Events:
+Time Type Description
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-14T13:31:54+02:00 Started Task started by client
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-14T13:31:53+02:00 Task Setup Building Task Directory
+&lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-04-14T13:31:53+02:00 Received Task received by client
+$ nomad alloc logs 60f3d102
+&lt;span class=&#34;m&#34;&gt;172&lt;/span&gt;.17.0.1 - - &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;14&lt;/span&gt;/Apr/2019:11:33:17 +0000&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;GET / HTTP/1.1&amp;#34;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;200&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;612&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;-&amp;#34;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;Mozilla/5.0 (X11; Linux x86_64; rv:66.0) Gecko/20100101 Firefox/66.0&amp;#34;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;-&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;m&#34;&gt;172&lt;/span&gt;.17.0.1 - - &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;14&lt;/span&gt;/Apr/2019:11:33:17 +0000&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;GET /favicon.ico HTTP/1.1&amp;#34;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;404&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;154&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;-&amp;#34;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;Mozilla/5.0 (X11; Linux x86_64; rv:66.0) Gecko/20100101 Firefox/66.0&amp;#34;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;-&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/code/nomad.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/code/nomad.sh&#34; target=&#34;_blank&#34;&gt;nomad.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;También poseen una interfaz web integrada en la que consultar la misma información, la de Nomad está en el puerto &lt;em&gt;8500&lt;/em&gt; y la de Nomad en el &lt;em&gt;4646&lt;/em&gt; donde ver el estado de los &lt;em&gt;jobs&lt;/em&gt; y el progreso de los despliegues.&lt;/p&gt;
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+&lt;figure&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/images/consul_hu04dfd0a784258ffab8de29ae08a6fa53_49981_2560x1440_fit_box_2.png&#34; title=&#34;Consul&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/images/consul_hu04dfd0a784258ffab8de29ae08a6fa53_49981_200x150_fit_box_2.png&#34; width=&#34;200&#34;/&gt;&lt;/a&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/images/nomad-1_hu543e80f6165a80d0eda612b240feaa6b_34563_2560x1440_fit_box_2.png&#34; title=&#34;Nomad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/images/nomad-1_hu543e80f6165a80d0eda612b240feaa6b_34563_200x150_fit_box_2.png&#34; width=&#34;200&#34;/&gt;&lt;/a&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/images/nomad-2_hu78cafc3dc4ae78de08bf9c5133a990a6_67847_2560x1440_fit_box_2.png&#34; title=&#34;Nomad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/images/nomad-2_hu78cafc3dc4ae78de08bf9c5133a990a6_67847_200x150_fit_box_2.png&#34; width=&#34;200&#34;/&gt;&lt;/a&gt;
+&lt;figcaption&gt;Interfaces web de Consul y Nomad&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+&lt;p&gt;Nomad permite varias estrategias para actualizar los &lt;em&gt;jobs&lt;/em&gt; a una nueva versión de un servicio, basta modificar la configuración del &lt;em&gt;job&lt;/em&gt;, volverlo a enviar a Nomad y este se encarga de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/&#34;&gt;actualizar las instancias siguiendo la estrategia &lt;em&gt;rolling&lt;/em&gt;, &lt;em&gt;blue/green&lt;/em&gt; o &lt;em&gt;canary&lt;/em&gt;&lt;/a&gt; definida en el &lt;em&gt;job&lt;/em&gt;, pero eso lo muestro mas detalladamente en otro artículo.&lt;/p&gt;
+&lt;p&gt;La &lt;a href=&#34;https://www.nomadproject.io/docs/index.html&#34;&gt;documentación de Nomad&lt;/a&gt;, Nomad y otros productos de HashiCorp dedicados a la infraestructura en la nube esta muy bien explicada y detallada, este artículo solo es un resumen de las partes básicas para conocer como empezar a usarlo. En el siguiente vídeo se hace una pequeña explicación y demostración.&lt;/p&gt;
+&lt;div class=&#34;media media-video&#34; style=&#34;text-align: center;&#34;&gt;
+&lt;iframe width=&#34;640&#34; height=&#34;360&#34; src=&#34;https://www.youtube.com/embed/A6CuZUoINX0?rel=0&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;div class=&#34;reference&#34;&gt;
+Referencia:&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/&#34;&gt;Estrategias de despliegue para microservicios con Nomad&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/servicios-con-persistencia-en-el-orquestador-de-microservicos-nomad/&#34;&gt;Servicios con persistencia en el orquestador Nomad&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://targetveb.com/nomad-simple-deployment-monitoring-applications.html&#34;&gt;Nomad – Simple deployment and monitoring of applications&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;</content><category term="planeta-codigo"/><category term="programacion"/><category term="software"/></entry></feed>
