@@ -48,7 +48,7 @@ require(['jquery'], function($) {
             ga('send', 'event', 'client', 'adblock', (adblock) ? 'true' : 'false', {'nonInteraction': 1});
 
             if (adblock) {
-                var ad = (screenSizeNormal) ? ads.filter('[data-type="large-skycraper"]').eq(1) || ads.filter('[data-type="billboard"]').first() : ads.filter('[data-type="billboard"]').first();
+                var ad = (screenSizeNormal) ? ads.filter('[data-type="large-skycraper"]').last() || ads.filter('[data-type="billboard"]').first() : ads.filter('[data-type="billboard"]').first();
                 var html = [
                     '<div style="' + $(ad).attr('style') + '; height: 100%; text-align: left;" class="adblock">',
                     ' <p class="text-center"><strong><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Parece que tienes activado un bloqueador de anuncios</strong></p>',
