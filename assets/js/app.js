@@ -38,7 +38,10 @@ require(['jquery'], function($) {
     function initAdsense() {
         initAdSenseSidebar();
 
-        (adsbygoogle = window.adsbygoogle || []).push({});
+        var n = $('ins.adsbygoogle').length;
+        for (var i = 0; i < n; ++i) {
+            (adsbygoogle = window.adsbygoogle || []).push({});   
+        }
 
         checkAdblock();
     }
@@ -57,10 +60,6 @@ require(['jquery'], function($) {
             sidebarAdsSize = (Number.isNaN(hash)) ? 120 : hash;
         }
         var translate = sidebarAdsSize + 30;
-
-        var ads = $('ins.adsbygoogle', 'div.adblock-sidebar');
-        ads.eq(0).attr('style', 'display:inline-block;width:' + sidebarAdsSize + 'px;height:600px');
-        ads.eq(1).attr('style', 'display:inline-block;width:' + sidebarAdsSize + 'px;height:280px');
 
         $("div.adblock-sidebar").css('width', sidebarAdsSize);
         $("div.adblock-sidebar-left").css('transform', 'translateX(' + (-translate) + 'px)');
