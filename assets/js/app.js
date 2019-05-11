@@ -49,7 +49,7 @@ require(['jquery'], function($) {
         }
 
         var sidebarAdsSize = (window.screen.width >= 1920) ? 336 : (window.screen.width >= 1440) ? 160 : 120;
-        if (window.location.hash != null) {
+        if (window.location.hash.length() > 0) {
             var hash = parseInt(window.location.hash.substring(1));
             sidebarAdsSize = (Number.isNaN(hash)) ? 120 : hash;
         }
