@@ -37,6 +37,9 @@ require(['jquery'], function($) {
     
     function initAdsense() {
         initAdSenseSidebar();
+
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
         checkAdblock();
     }
 
@@ -44,7 +47,7 @@ require(['jquery'], function($) {
         var sidebarAds = window.screen.width >= 1366;
 
         if (!sidebarAds) {
-            $(".adblock-sidebar").remove();
+            $("div.adblock-sidebar").remove();
             return;
         }
 
@@ -54,6 +57,10 @@ require(['jquery'], function($) {
             sidebarAdsSize = (Number.isNaN(hash)) ? 120 : hash;
         }
         var translate = sidebarAdsSize + 30;
+
+        var ads = $('ins.adsbygoogle', 'div.adblock-sidebar');
+        ads.eq(0).attr('style', 'display:inline-block;width:' + sidebarAdsSize + 'px;height:600px');
+        ads.eq(1).attr('style', 'display:inline-block;width:' + sidebarAdsSize + 'px;height:280px');
 
         $("div.adblock-sidebar").css('width', sidebarAdsSize);
         $("div.adblock-sidebar-left").css('transform', 'translateX(' + (-translate) + 'px)');
