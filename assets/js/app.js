@@ -37,15 +37,16 @@ require(['jquery', 'bowser'], function($, bowser) {
     
     function initAdsense() {
         var browser = bowser.parse(window.navigator.userAgent);
-        var screenSizeNormal = window.screen.width >= 1920 || false;
-        var sidebarAds = screenSizeNormal && browser.platform.type === 'desktop';
+        var screenSizeNormal = window.screen.width >= 1920;
+        var desktop = browser.platform.type === 'desktop';
+        var sidebarAds = screenSizeNormal;
 
-        var ads = $('ins.adsbygoogle');
         if (!sidebarAds) {
             $(".adblock-sidebar").remove();
         }
 
         setTimeout(function() {
+            var ads = $('ins.adsbygoogle');
             var adblock = (ads.length > 0 && ads.html().replace(/\s/g, '').length == 0);
             ga('send', 'event', 'client', 'adblock', (adblock) ? 'true' : 'false', {'nonInteraction': 1});
 
