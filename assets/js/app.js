@@ -66,8 +66,8 @@ require(['jquery'], function($) {
         $('div.adblock-sidebar-right').css('transform', 'translateX(' + translate + 'px)');
 
         var ads = $('ins.adsbygoogle', 'div.adblock-sidebar');
-        ads.eq(0).parent('div').css('height', '600px').css('margin-bottom', '10px');
-        ads.eq(1).parent('div').css('height', '300px');
+        ads.eq(0).css('max-height', '600px').css('margin-bottom', '10px');
+        ads.eq(1).css('max-height', '300px');
     }
 
     function checkAdblock() {
