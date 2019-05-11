@@ -50,7 +50,7 @@ require(['jquery'], function($) {
         var sidebarAds = window.screen.width >= 1366;
 
         if (!sidebarAds) {
-            $("div.adblock-sidebar").remove();
+            $('div.adblock-sidebar').remove();
             return;
         }
 
@@ -61,9 +61,13 @@ require(['jquery'], function($) {
         }
         var translate = sidebarAdsSize + 30;
 
-        $("div.adblock-sidebar").css('width', sidebarAdsSize);
-        $("div.adblock-sidebar-left").css('transform', 'translateX(' + (-translate) + 'px)');
-        $("div.adblock-sidebar-right").css('transform', 'translateX(' + translate + 'px)');
+        $('div.adblock-sidebar').css('width', sidebarAdsSize);
+        $('div.adblock-sidebar-left').css('transform', 'translateX(' + (-translate) + 'px)');
+        $('div.adblock-sidebar-right').css('transform', 'translateX(' + translate + 'px)');
+
+        var ads = $('ins.adsbygoogle', 'div.adblock-sidebar');
+        ads.eq(0).parent('div').css('height', '600px');
+        ads.eq(1).parent('div').css('height', '300px');
     }
 
     function checkAdblock() {
