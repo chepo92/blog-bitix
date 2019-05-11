@@ -36,7 +36,7 @@ require(['jquery'], function($) {
     }
     
     function initAdsense() {
-        var n = $('ins.adsbygoogle').length;
+        var n = $('body .container ins.adsbygoogle').length;
         for (var i = 0; i < n; ++i) {
             (adsbygoogle = window.adsbygoogle || []).push({});   
         }
@@ -46,7 +46,7 @@ require(['jquery'], function($) {
 
     function checkAdblock() {
         setTimeout(function() {
-            var ads = $('ins.adsbygoogle');
+            var ads = $('body .container ins.adsbygoogle');
             var adblock = (ads.length > 0 && ads.html().replace(/\s/g, '').length == 0);
             ga('send', 'event', 'client', 'adblock', (adblock) ? 'true' : 'false', {'nonInteraction': 1});
 
