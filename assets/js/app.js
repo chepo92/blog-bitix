@@ -36,38 +36,12 @@ require(['jquery'], function($) {
     }
     
     function initAdsense() {
-        initAdSenseSidebar();
-
         var n = $('ins.adsbygoogle').length;
         for (var i = 0; i < n; ++i) {
             (adsbygoogle = window.adsbygoogle || []).push({});   
         }
 
         checkAdblock();
-    }
-
-    function initAdSenseSidebar() {
-        var sidebarAds = window.screen.width >= 1366;
-
-        if (!sidebarAds) {
-            $('div.adblock-sidebar').remove();
-            return;
-        }
-
-        var sidebarAdsSize = (window.screen.width >= 1920) ? 336 : (window.screen.width >= 1440) ? 160 : 120;
-        if (window.location.hash.length > 0) {
-            var hash = parseInt(window.location.hash.substring(1));
-            sidebarAdsSize = (Number.isNaN(hash)) ? 120 : hash;
-        }
-        var translate = sidebarAdsSize + 30;
-
-        $('div.adblock-sidebar').css('width', sidebarAdsSize);
-        $('div.adblock-sidebar-left').css('transform', 'translateX(' + (-translate) + 'px)');
-        $('div.adblock-sidebar-right').css('transform', 'translateX(' + translate + 'px)');
-
-        var ads = $('ins.adsbygoogle', 'div.adblock-sidebar');
-        ads.eq(0).css('max-height', '600px').css('margin-bottom', '10px');
-        ads.eq(1).css('max-height', '300px');
     }
 
     function checkAdblock() {
