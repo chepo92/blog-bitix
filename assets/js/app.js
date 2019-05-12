@@ -38,7 +38,9 @@ require(['jquery'], function($) {
     function initAdsense() {
         var n = $('body .container ins.adsbygoogle').length;
         for (var i = 0; i < n; ++i) {
-            (adsbygoogle = window.adsbygoogle || []).push({});   
+            try {
+                (adsbygoogle = window.adsbygoogle || []).push({});   
+            } catch (e) {}
         }
 
         checkAdblock();
