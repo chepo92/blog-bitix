@@ -13,7 +13,7 @@ public class Main4 {
     public static void main(String[] args) {
         List<String> list = List.of("a", "b", "c");
         list.stream().forEach(i -> {
-            Try.of(() -> action(i));
+            Try.of(() -> { action(i); });
         });
     }
 }
