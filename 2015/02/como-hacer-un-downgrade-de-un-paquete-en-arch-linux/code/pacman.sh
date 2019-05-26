@@ -1,0 +1,1 @@
+# pacman -U /var/cache/pacman/pkg/networkmanager-0.9.10.0-4-x86_64.pkg.tar.xz /var/cache/pacman/pkg/libnm-gtk-0.9.10.0-2-x86_64.pkg.tar.xz /var/cache/pacman/pkg/libnm-glib-0.9.10.0-4-x86_64.pkg.tar.xz

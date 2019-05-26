@@ -1,0 +1,1 @@
+public static void process(List<? extends Number> list) { /* ... */ }

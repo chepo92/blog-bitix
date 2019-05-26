@@ -1,0 +1,1 @@
+PATH=$PATH:~/Software/scripts/docker-compose

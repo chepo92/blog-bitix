@@ -1,0 +1,35 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile files('misc/libs/diozero-core-0.9-SNAPSHOT.jar', 'misc/libs/diozero-provider-pigpio-0.9-SNAPSHOT.jar', 'misc/libs/pigpioj-java-1.0.1.jar', 'misc/libs/commons-math3-3.6.1.jar', 'misc/libs/tinylog-1.1.jar')
+}
+
+...
+
+task copyDependencies(type: Copy) {
+    into "$buildDir/libs"
+    from configurations.runtime
+}
+
+jar { dependsOn copyDependencies }
+
+task upload(type: Exec, dependsOn: ['jar']) {
+    commandLine 'rsync', '-arPL', '--delete', '-e', 'ssh', 'build/libs/', 'raspberrypi@192.168.1.101:/home/raspberrypi/scripts/javaraspberrypi/'
+}
+
+...
+
+task executeLcd(type: Exec, dependsOn: 'upload') {
+    commandLine 'ansible', '-i', 'hosts', 'raspberrypi', '--sudo', '--ask-sudo-pass', '-m', 'command', '-a', 'chdir=/home/raspberrypi/scripts/javaraspberrypi java -classpath "*" io.github.picodotdev.blogbitix.javaraspberrypi.Lcd'
+    standardInput System.in
+}
+
+...

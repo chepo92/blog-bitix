@@ -1,0 +1,1 @@
+registry.getService(MainService.class);

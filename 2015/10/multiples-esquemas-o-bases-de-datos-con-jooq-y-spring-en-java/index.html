@@ -1,0 +1,1171 @@
+<!doctype html><html lang=es><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content=picodotdev><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="Aún en las aplicaciones monolíticas que comparten una única base de datos tratamos de dividirla en varios servicios que manejen cierto nicho de información con la intención de que un cambio en una parte sea transparente para las otras partes. Cada servicio de la aplicación monolítica podría potencialmente convertirse en un microservicio y en este caso para que cada micoservicio tenga un ciclo de vida independiente compartir la base de datos es algo a evitar. Incluso en las aplicaciones monolíticas podemos querer guardar cada nicho de información en su propio esquema para evitar acoplamiento entre las diferentes partes o también como forma de tener varios servidores de bases de datos y escalar la aplicación en cierta forma. En estos casos necesitaremos que la aplicación acceda a varios esquemas o bases de datos simultáneamente, con jOOQ y Spring es bastante sencillo. &hellip;"><base href=https://picodotdev.github.io/blog-bitix/><title>Múltiples esquemas o bases de datos con jOOQ y Spring en Java</title><link rel=author type=text/plain href=humans.txt><link rel="shortcut icon" href=assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=assets/apple-touch-icon-144-precomposed.png><link rel=canonical href=https://picodotdev.github.io/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/><link href=index.xml rel=alternate type=application/rss+xml title="Blog Bitix"><link rel=stylesheet type=text/css href="//fonts.googleapis.com/css?family=PT+Serif:400,400i,700"><link rel=stylesheet type=text/css href=assets/libs/bootstrap-4.3.1/css/bootstrap.min.css><link rel=stylesheet type=text/css href=assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=assets/css/syntax.css><link rel=stylesheet type=text/css href=assets/css/main.css><script type=text/javascript src=assets/js/require-config.js data-main=js/main defer></script><script type=text/javascript src=assets/libs/require.js data-main=js/main defer></script><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js defer></script><script type=text/javascript defer>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript defer>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script type=text/javascript src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" defer></script><script type=text/javascript src=assets/js/app.js defer></script></head><body><div class=container><div class=row><div class=col-12><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
+<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class="col-12 col-lg-4 text-center"><form name=query class="form-inline search" onsubmit="return false;"><div class=input-group><input type=text name=q class=form-control placeholder="Buscar en Blog Bitix">
+<span class=input-group-btn><button class="btn btn-secondary" type=submit>Buscar</button></span></div></form><form name=search action=https://duckduckgo.com/ method=get class=hidden data-site=https://picodotdev.github.io/blog-bitix/><input type=hidden name=q></form></div></div><div class=row><div class=col-12><nav class="nav nav-pills nav-fill"><a href=/blog-bitix/tags/java/ class="nav-item nav-link">Java</a>
+<a href=/blog-bitix/tags/gnu-linux/ class="nav-item nav-link">GNU/Linux</a>
+<a href=/blog-bitix/tags/javascript/ class="nav-item nav-link">JavaScript</a>
+<a href=/blog-bitix/tags/tapestry/ class="nav-item nav-link">Tapestry</a>
+<a href=/blog-bitix/archive/ class="nav-item nav-link">Archivo y hemeroteca</a>
+<a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
+<a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class="adblock-sidebar adblock-sidebar-right"><div class=adblock-sidebar-container><ins class="adsbygoogle adblock-sidebar-vertical" style=display:block data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format="vertical, rectangle" data-type=auto></ins></div></div><article itemprop=mainEntity itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content=es><meta itemprop=keywords content="blog-stack, java, planeta-codigo, programacion"><h1 itemprop=name>Múltiples esquemas o bases de datos con jOOQ y Spring en Java</h1><p class=information>Escrito por
+<span itemprop=author itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2015-10-27>27/10/2015</time>, actualizado el <time itemprop=dateModified datetime=2015-11-10>10/11/2015</time>.<br><a href=tags/blog-stack/>blog-stack</a> <a href=tags/java/>java</a> <a href=tags/planeta-codigo/>planeta-codigo</a> <a href=tags/programacion/>programacion</a><br><a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/ itemprop=url>Enlace permanente</a>
+<a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/#comments>Comentarios</a></p><p class=summary itemprop=about>Aún en las aplicaciones monolíticas que comparten una única base de datos tratamos de dividirla en varios servicios que manejen cierto nicho de información con la intención de que un cambio en una parte sea transparente para las otras partes. Cada servicio de la aplicación monolítica podría potencialmente convertirse en un microservicio y en este caso para que cada micoservicio tenga un ciclo de vida independiente compartir la base de datos es algo a evitar. Incluso en las aplicaciones monolíticas podemos querer guardar cada nicho de información en su propio esquema para evitar acoplamiento entre las diferentes partes o también como forma de tener varios servidores de bases de datos y escalar la aplicación en cierta forma. En estos casos necesitaremos que la aplicación acceda a varios esquemas o bases de datos simultáneamente, con jOOQ y Spring es bastante sencillo.</p><div><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins></div><div class=content itemprop=articleBody><meta itemprop=wordCount content=2660><div class=logotypes style=float:right><img src=assets/images/logotipos/java.svg class=right width=200 alt=Java title=Java></div><p>En el libro <a href="https://www.amazon.es/gp/product/1491950358/ref=as_li_ss_tl?ie=UTF8&camp=3626&creative=24822&creativeASIN=1491950358&linkCode=as2&tag=blobit-21">Building Microservices</a><img src="https://ir-es.amazon-adsystem.com/e/ir?t=blobit-21&l=as2&o=30&a=1491950358" width=1 height=1 border=0 alt style=border:none!important;margin:0!important> se pone de manifiesto que cada microservicio gira alrededor de un concepto que denomina <em>seam</em>, nicho o área de negocio. Este <em>seam</em> es el nicho de información que va a manejar el microservicio. Para hacer que los múltiples microservicios sean independientes y tengan su propio ciclo de vida este nicho de información se guarda en una base de datos o esquema propio de cada uno de modo que un cambio en el sistema en que guarda la información no afecte a otros microservicios como ocurriría si compartiesen la base de datos. Si un microservicio necesita información de otro la solicita mediante una API ya sea <a href=https://es.wikipedia.org/wiki/Representational_State_Transfer>REST</a>, <a href=https://picodotdev.github.io/blog-bitix/2015/03/introduccion-y-ejemplo-de-api-rpc-con-apache-thrift/>usando Apache Thift</a>, <a href=https://grpc.io/>gRPC</a> o de otro tipo evitando el acoplamiento a través de la base de datos y evitando que un microservicio conozca detalles internos de otro.</p><p>Imaginemos el caso de una empresa dedicada al comercio electrónico que ofrece productos a través de internet, un nicho de información podría ser el inventario formado por los productos ofrecidos y sus existencias, otro podría ser las compras. Los nichos podrían ser otros distintos, más numerosos o incluso los comentados más subdivididos, si una aplicación o proceso necesita acceder a todos estos nichos de información simultáneamente o tenemos una aplicación monolítica pero queremos tener cada nicho de información en varios esquemas o bases de datos, con <a href=https://www.jooq.org/>jOOQ</a> y <a href=https://spring.io/>Spring</a> podemos acceder simultáneamente a múltiples esquemas o bases de datos de una forma bastante sencilla. Es importante tener en cuenta que con varios esquemas podremos mantener la integridad referencial de los datos a través de las claves externas, con varias bases de datos no.</p><p>Siguiendo el ejemplo de la empresa expuesta tendríamos dos bases de datos: <em>inventory</em> y <em>purchases</em>. Podemos tener un servicio que sea <em>InventoryService</em> y otro servicio que sea <em>PurchasesService</em> que contengan la lógica de negocio de cada área de negocio.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.service</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>org.springframework.transaction.annotation.Transactional</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.jooq.inventory.tables.interfaces.IItem</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.jooq.inventory.tables.records.ItemRecord</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.spring.AppConfiguration</span><span class=o>;</span>
+
+<span class=nd>@Transactional</span><span class=o>(</span><span class=n>transactionManager</span> <span class=o>=</span> <span class=n>AppConfiguration</span><span class=o>.</span><span class=na>INVENTORY_TXM</span><span class=o>)</span>
+<span class=kd>public</span> <span class=kd>interface</span> <span class=nc>InventoryService</span> <span class=o>{</span>
+
+    <span class=nd>@Transactional</span><span class=o>(</span><span class=n>transactionManager</span> <span class=o>=</span> <span class=n>AppConfiguration</span><span class=o>.</span><span class=na>INVENTORY_TXM</span><span class=o>,</span> <span class=n>readOnly</span> <span class=o>=</span> <span class=kc>true</span><span class=o>)</span>
+    <span class=n>Long</span> <span class=nf>count</span><span class=o>();</span>    
+    <span class=n>ItemRecord</span> <span class=nf>create</span><span class=o>(</span><span class=n>IItem</span> <span class=n>item</span><span class=o>);</span>    
+    <span class=kt>void</span> <span class=nf>changeStock</span><span class=o>(</span><span class=n>ItemRecord</span> <span class=n>item</span><span class=o>,</span> <span class=n>Long</span> <span class=n>quantity</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>NoStockException</span><span class=o>;</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/InventoryService.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/InventoryService.java target=_blank>InventoryService.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.service</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>org.jooq.DSLContext</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.jooq.inventory.Tables</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.jooq.inventory.tables.interfaces.IItem</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.jooq.inventory.tables.records.ItemRecord</span><span class=o>;</span>
+
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>DefaultInventoryService</span> <span class=kd>implements</span> <span class=n>InventoryService</span> <span class=o>{</span>
+
+    <span class=kd>private</span> <span class=n>DSLContext</span> <span class=n>context</span><span class=o>;</span>
+
+    <span class=kd>public</span> <span class=nf>InventoryServiceImpl</span><span class=o>(</span><span class=n>DSLContext</span> <span class=n>context</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>context</span> <span class=o>=</span> <span class=n>context</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=n>Long</span> <span class=nf>count</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>context</span><span class=o>.</span><span class=na>selectCount</span><span class=o>().</span><span class=na>from</span><span class=o>(</span><span class=n>Tables</span><span class=o>.</span><span class=na>ITEM</span><span class=o>).</span><span class=na>fetchOne</span><span class=o>(</span><span class=n>0</span><span class=o>,</span> <span class=n>Long</span><span class=o>.</span><span class=na>class</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=n>ItemRecord</span> <span class=nf>create</span><span class=o>(</span><span class=n>IItem</span> <span class=n>item</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>ItemRecord</span> <span class=n>record</span> <span class=o>=</span> <span class=n>context</span><span class=o>.</span><span class=na>newRecord</span><span class=o>(</span><span class=n>Tables</span><span class=o>.</span><span class=na>ITEM</span><span class=o>);</span>
+        <span class=n>record</span><span class=o>.</span><span class=na>from</span><span class=o>(</span><span class=n>item</span><span class=o>);</span>        
+        <span class=n>record</span><span class=o>.</span><span class=na>insert</span><span class=o>();</span>        
+        <span class=k>return</span> <span class=n>record</span><span class=o>;</span>
+    <span class=o>}</span>
+    
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>changeStock</span><span class=o>(</span><span class=n>ItemRecord</span> <span class=n>item</span><span class=o>,</span> <span class=n>Long</span> <span class=n>quantity</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>NoStockException</span> <span class=o>{</span>
+        <span class=n>Long</span> <span class=n>stock</span> <span class=o>=</span> <span class=n>item</span><span class=o>.</span><span class=na>getStock</span><span class=o>()</span> <span class=o>-</span> <span class=n>quantity</span><span class=o>;</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>stock</span> <span class=o>&lt;</span> <span class=n>0</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>throw</span> <span class=k>new</span> <span class=n>NoStockException</span><span class=o>();</span>
+        <span class=o>}</span>
+        <span class=n>item</span><span class=o>.</span><span class=na>setStock</span><span class=o>(</span><span class=n>stock</span><span class=o>);</span>
+        <span class=n>item</span><span class=o>.</span><span class=na>update</span><span class=o>();</span>
+    <span class=o>}</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/DefaultInventoryService.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/DefaultInventoryService.java target=_blank>DefaultInventoryService.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.service</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>org.springframework.transaction.annotation.Transactional</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.jooq.inventory.tables.records.ItemRecord</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.jooq.purchases.tables.records.PurchaseRecord</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.spring.AppConfiguration</span><span class=o>;</span>
+
+<span class=nd>@Transactional</span><span class=o>(</span><span class=n>transactionManager</span> <span class=o>=</span> <span class=n>AppConfiguration</span><span class=o>.</span><span class=na>PURCHASES_TXM</span><span class=o>)</span>
+<span class=kd>public</span> <span class=kd>interface</span> <span class=nc>PurchasesService</span> <span class=o>{</span>
+
+    <span class=nd>@Transactional</span><span class=o>(</span><span class=n>transactionManager</span> <span class=o>=</span> <span class=n>AppConfiguration</span><span class=o>.</span><span class=na>PURCHASES_TXM</span><span class=o>,</span> <span class=n>readOnly</span> <span class=o>=</span> <span class=kc>true</span><span class=o>)</span>
+    <span class=n>Long</span> <span class=nf>count</span><span class=o>();</span>
+    <span class=n>PurchaseRecord</span> <span class=nf>create</span><span class=o>(</span><span class=n>ItemRecord</span> <span class=n>item</span><span class=o>,</span> <span class=kt>long</span> <span class=n>quantity</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>NoStockException</span><span class=o>;</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/PurchasesService.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/PurchasesService.java target=_blank>PurchasesService.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.service</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>java.time.LocalDateTime</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>org.jooq.DSLContext</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.jooq.inventory.tables.records.ItemRecord</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.jooq.purchases.Tables</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.jooq.purchases.tables.records.PurchaseRecord</span><span class=o>;</span>
+
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>DefaultPurchasesService</span> <span class=kd>implements</span> <span class=n>PurchasesService</span> <span class=o>{</span>
+
+    <span class=kd>private</span> <span class=n>DSLContext</span> <span class=n>context</span><span class=o>;</span>
+    <span class=kd>private</span> <span class=n>InventoryService</span> <span class=n>inventory</span><span class=o>;</span>
+
+    <span class=kd>public</span> <span class=nf>DefaultPurchasesService</span><span class=o>(</span><span class=n>DSLContext</span> <span class=n>context</span><span class=o>,</span> <span class=n>InventoryService</span> <span class=n>inventory</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>context</span> <span class=o>=</span> <span class=n>context</span><span class=o>;</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>inventory</span> <span class=o>=</span> <span class=n>inventory</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=n>Long</span> <span class=nf>count</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>context</span><span class=o>.</span><span class=na>selectCount</span><span class=o>().</span><span class=na>from</span><span class=o>(</span><span class=n>Tables</span><span class=o>.</span><span class=na>PURCHASE</span><span class=o>).</span><span class=na>fetchOne</span><span class=o>(</span><span class=n>0</span><span class=o>,</span> <span class=n>Long</span><span class=o>.</span><span class=na>class</span><span class=o>);</span>
+    <span class=o>}</span>
+    
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=n>PurchaseRecord</span> <span class=nf>create</span><span class=o>(</span><span class=n>ItemRecord</span> <span class=n>item</span><span class=o>,</span> <span class=kt>long</span> <span class=n>quantity</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>NoStockException</span> <span class=o>{</span>
+        <span class=n>inventory</span><span class=o>.</span><span class=na>changeStock</span><span class=o>(</span><span class=n>item</span><span class=o>,</span> <span class=o>-</span><span class=n>quantity</span><span class=o>);</span>
+
+        <span class=n>PurchaseRecord</span> <span class=n>record</span> <span class=o>=</span> <span class=n>context</span><span class=o>.</span><span class=na>newRecord</span><span class=o>(</span><span class=n>Tables</span><span class=o>.</span><span class=na>PURCHASE</span><span class=o>);</span>
+        <span class=n>record</span><span class=o>.</span><span class=na>setCreationdate</span><span class=o>(</span><span class=n>LocalDateTime</span><span class=o>.</span><span class=na>now</span><span class=o>());</span>
+        <span class=n>record</span><span class=o>.</span><span class=na>setQuantity</span><span class=o>(</span><span class=n>quantity</span><span class=o>);</span>
+        <span class=n>record</span><span class=o>.</span><span class=na>setPrice</span><span class=o>(</span><span class=n>item</span><span class=o>.</span><span class=na>getPrice</span><span class=o>());</span>
+        <span class=n>record</span><span class=o>.</span><span class=na>setItemId</span><span class=o>(</span><span class=n>item</span><span class=o>.</span><span class=na>getId</span><span class=o>());</span>
+        <span class=n>record</span><span class=o>.</span><span class=na>insert</span><span class=o>();</span>        
+        <span class=k>return</span> <span class=n>record</span><span class=o>;</span>
+    <span class=o>}</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/DefaultPurchasesService.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/DefaultPurchasesService.java target=_blank>DefaultPurchasesService.java</a></div></div><p>Al realizarse una compra a través del servicio <em>PurchasesService</em> se ha de modificar el inventario del producto cosa que no se hace en el propio servicio de compras sino que se llama al servicio <em>InventoryService</em> para que haga lo que deba, en el ejemplo modificar el inventario pero en un futuro podría ser enviar además una notificación o correo electrónico indicando que el <em>stock</em> es bajo si cae por debajo de determinado número, el servicio de compras no debe conocer nada de esto ya que el inventario no forma parte de su nicho de información. En el ejemplo es una llamada usando un método de una clase pero podría ser una llamada a una <abbr title="Application Programming Interface">API</abbr> <abbr title="Representational State Transfer">REST</abbr> o <abbr title="Remote Procedure Call">RPC</abbr> si realmente fueran microservicios.</p><p>Las sencillas clases <em>Item</em> y <em>Purchase</em> generadas con jOOQ implementan las siguientes interfaces:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=cm>/**
+</span><span class=cm> * This class is generated by jOOQ
+</span><span class=cm> */</span>
+<span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.jooq.inventory.tables.interfaces</span><span class=o>;</span>
+
+
+<span class=kn>import</span> <span class=nn>java.io.Serializable</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.math.BigDecimal</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.time.LocalDateTime</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>javax.annotation.Generated</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.validation.constraints.NotNull</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.validation.constraints.Size</span><span class=o>;</span>
+
+
+<span class=cm>/**
+</span><span class=cm> * This class is generated by jOOQ.
+</span><span class=cm> */</span>
+<span class=nd>@Generated</span><span class=o>(</span>
+    <span class=n>value</span> <span class=o>=</span> <span class=o>{</span>
+        <span class=s>&#34;http://www.jooq.org&#34;</span><span class=o>,</span>
+        <span class=s>&#34;jOOQ version:3.7.0&#34;</span>
+    <span class=o>},</span>
+    <span class=n>comments</span> <span class=o>=</span> <span class=s>&#34;This class is generated by jOOQ&#34;</span>
+<span class=o>)</span>
+<span class=nd>@SuppressWarnings</span><span class=o>({</span> <span class=s>&#34;all&#34;</span><span class=o>,</span> <span class=s>&#34;unchecked&#34;</span><span class=o>,</span> <span class=s>&#34;rawtypes&#34;</span> <span class=o>})</span>
+<span class=kd>public</span> <span class=kd>interface</span> <span class=nc>IItem</span> <span class=kd>extends</span> <span class=n>Serializable</span> <span class=o>{</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Setter for &lt;code&gt;INVENTORY.ITEM.ID&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>setId</span><span class=o>(</span><span class=n>Long</span> <span class=n>value</span><span class=o>);</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Getter for &lt;code&gt;INVENTORY.ITEM.ID&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=nd>@NotNull</span>
+    <span class=kd>public</span> <span class=n>Long</span> <span class=nf>getId</span><span class=o>();</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Setter for &lt;code&gt;INVENTORY.ITEM.CREATIONDATE&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>setCreationdate</span><span class=o>(</span><span class=n>LocalDateTime</span> <span class=n>value</span><span class=o>);</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Getter for &lt;code&gt;INVENTORY.ITEM.CREATIONDATE&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=n>LocalDateTime</span> <span class=nf>getCreationdate</span><span class=o>();</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Setter for &lt;code&gt;INVENTORY.ITEM.NAME&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>setName</span><span class=o>(</span><span class=n>String</span> <span class=n>value</span><span class=o>);</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Getter for &lt;code&gt;INVENTORY.ITEM.NAME&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=nd>@Size</span><span class=o>(</span><span class=n>max</span> <span class=o>=</span> <span class=n>256</span><span class=o>)</span>
+    <span class=kd>public</span> <span class=n>String</span> <span class=nf>getName</span><span class=o>();</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Setter for &lt;code&gt;INVENTORY.ITEM.DESCRIPTION&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>setDescription</span><span class=o>(</span><span class=n>String</span> <span class=n>value</span><span class=o>);</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Getter for &lt;code&gt;INVENTORY.ITEM.DESCRIPTION&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=nd>@Size</span><span class=o>(</span><span class=n>max</span> <span class=o>=</span> <span class=n>2147483647</span><span class=o>)</span>
+    <span class=kd>public</span> <span class=n>String</span> <span class=nf>getDescription</span><span class=o>();</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Setter for &lt;code&gt;INVENTORY.ITEM.STOCK&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>setStock</span><span class=o>(</span><span class=n>Long</span> <span class=n>value</span><span class=o>);</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Getter for &lt;code&gt;INVENTORY.ITEM.STOCK&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=n>Long</span> <span class=nf>getStock</span><span class=o>();</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Setter for &lt;code&gt;INVENTORY.ITEM.PRICE&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>setPrice</span><span class=o>(</span><span class=n>BigDecimal</span> <span class=n>value</span><span class=o>);</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Getter for &lt;code&gt;INVENTORY.ITEM.PRICE&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=n>BigDecimal</span> <span class=nf>getPrice</span><span class=o>();</span>
+
+    <span class=c1>// -------------------------------------------------------------------------
+</span><span class=c1></span> <span class=c1>// FROM and INTO
+</span><span class=c1></span> <span class=c1>// -------------------------------------------------------------------------
+</span><span class=c1></span>
+    <span class=cm>/**
+</span><span class=cm>     * Load data from another generated Record/POJO implementing the common interface IItem
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>from</span><span class=o>(</span><span class=n>io</span><span class=o>.</span><span class=na>github</span><span class=o>.</span><span class=na>picodotdev</span><span class=o>.</span><span class=na>blogbitix</span><span class=o>.</span><span class=na>multidatabase</span><span class=o>.</span><span class=na>jooq</span><span class=o>.</span><span class=na>inventory</span><span class=o>.</span><span class=na>tables</span><span class=o>.</span><span class=na>interfaces</span><span class=o>.</span><span class=na>IItem</span> <span class=n>from</span><span class=o>);</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Copy data into another generated Record/POJO implementing the common interface IItem
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=o>&lt;</span><span class=n>E</span> <span class=kd>extends</span> <span class=n>io</span><span class=o>.</span><span class=na>github</span><span class=o>.</span><span class=na>picodotdev</span><span class=o>.</span><span class=na>blogbitix</span><span class=o>.</span><span class=na>multidatabase</span><span class=o>.</span><span class=na>jooq</span><span class=o>.</span><span class=na>inventory</span><span class=o>.</span><span class=na>tables</span><span class=o>.</span><span class=na>interfaces</span><span class=o>.</span><span class=na>IItem</span><span class=o>&gt;</span> <span class=n>E</span> <span class=nf>into</span><span class=o>(</span><span class=n>E</span> <span class=n>into</span><span class=o>);</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/IItem.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/IItem.java target=_blank>IItem.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span><span class=lnt>82
+</span><span class=lnt>83
+</span><span class=lnt>84
+</span><span class=lnt>85
+</span><span class=lnt>86
+</span><span class=lnt>87
+</span><span class=lnt>88
+</span><span class=lnt>89
+</span><span class=lnt>90
+</span><span class=lnt>91
+</span><span class=lnt>92
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=cm>/**
+</span><span class=cm> * This class is generated by jOOQ
+</span><span class=cm> */</span>
+<span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.jooq.purchases.tables.interfaces</span><span class=o>;</span>
+
+
+<span class=kn>import</span> <span class=nn>java.io.Serializable</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.math.BigDecimal</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.time.LocalDateTime</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>javax.annotation.Generated</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>javax.validation.constraints.NotNull</span><span class=o>;</span>
+
+
+<span class=cm>/**
+</span><span class=cm> * This class is generated by jOOQ.
+</span><span class=cm> */</span>
+<span class=nd>@Generated</span><span class=o>(</span>
+    <span class=n>value</span> <span class=o>=</span> <span class=o>{</span>
+        <span class=s>&#34;http://www.jooq.org&#34;</span><span class=o>,</span>
+        <span class=s>&#34;jOOQ version:3.7.0&#34;</span>
+    <span class=o>},</span>
+    <span class=n>comments</span> <span class=o>=</span> <span class=s>&#34;This class is generated by jOOQ&#34;</span>
+<span class=o>)</span>
+<span class=nd>@SuppressWarnings</span><span class=o>({</span> <span class=s>&#34;all&#34;</span><span class=o>,</span> <span class=s>&#34;unchecked&#34;</span><span class=o>,</span> <span class=s>&#34;rawtypes&#34;</span> <span class=o>})</span>
+<span class=kd>public</span> <span class=kd>interface</span> <span class=nc>IPurchase</span> <span class=kd>extends</span> <span class=n>Serializable</span> <span class=o>{</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Setter for &lt;code&gt;PURCHASES.PURCHASE.ID&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>setId</span><span class=o>(</span><span class=n>Long</span> <span class=n>value</span><span class=o>);</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Getter for &lt;code&gt;PURCHASES.PURCHASE.ID&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=nd>@NotNull</span>
+    <span class=kd>public</span> <span class=n>Long</span> <span class=nf>getId</span><span class=o>();</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Setter for &lt;code&gt;PURCHASES.PURCHASE.CREATIONDATE&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>setCreationdate</span><span class=o>(</span><span class=n>LocalDateTime</span> <span class=n>value</span><span class=o>);</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Getter for &lt;code&gt;PURCHASES.PURCHASE.CREATIONDATE&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=n>LocalDateTime</span> <span class=nf>getCreationdate</span><span class=o>();</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Setter for &lt;code&gt;PURCHASES.PURCHASE.QUANTITY&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>setQuantity</span><span class=o>(</span><span class=n>Long</span> <span class=n>value</span><span class=o>);</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Getter for &lt;code&gt;PURCHASES.PURCHASE.QUANTITY&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=n>Long</span> <span class=nf>getQuantity</span><span class=o>();</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Setter for &lt;code&gt;PURCHASES.PURCHASE.PRICE&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>setPrice</span><span class=o>(</span><span class=n>BigDecimal</span> <span class=n>value</span><span class=o>);</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Getter for &lt;code&gt;PURCHASES.PURCHASE.PRICE&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=n>BigDecimal</span> <span class=nf>getPrice</span><span class=o>();</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Setter for &lt;code&gt;PURCHASES.PURCHASE.ITEM_ID&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>setItemId</span><span class=o>(</span><span class=n>Long</span> <span class=n>value</span><span class=o>);</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Getter for &lt;code&gt;PURCHASES.PURCHASE.ITEM_ID&lt;/code&gt;.
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=n>Long</span> <span class=nf>getItemId</span><span class=o>();</span>
+
+    <span class=c1>// -------------------------------------------------------------------------
+</span><span class=c1></span> <span class=c1>// FROM and INTO
+</span><span class=c1></span> <span class=c1>// -------------------------------------------------------------------------
+</span><span class=c1></span>
+    <span class=cm>/**
+</span><span class=cm>     * Load data from another generated Record/POJO implementing the common interface IPurchase
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>from</span><span class=o>(</span><span class=n>io</span><span class=o>.</span><span class=na>github</span><span class=o>.</span><span class=na>picodotdev</span><span class=o>.</span><span class=na>blogbitix</span><span class=o>.</span><span class=na>multidatabase</span><span class=o>.</span><span class=na>jooq</span><span class=o>.</span><span class=na>purchases</span><span class=o>.</span><span class=na>tables</span><span class=o>.</span><span class=na>interfaces</span><span class=o>.</span><span class=na>IPurchase</span> <span class=n>from</span><span class=o>);</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Copy data into another generated Record/POJO implementing the common interface IPurchase
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=o>&lt;</span><span class=n>E</span> <span class=kd>extends</span> <span class=n>io</span><span class=o>.</span><span class=na>github</span><span class=o>.</span><span class=na>picodotdev</span><span class=o>.</span><span class=na>blogbitix</span><span class=o>.</span><span class=na>multidatabase</span><span class=o>.</span><span class=na>jooq</span><span class=o>.</span><span class=na>purchases</span><span class=o>.</span><span class=na>tables</span><span class=o>.</span><span class=na>interfaces</span><span class=o>.</span><span class=na>IPurchase</span><span class=o>&gt;</span> <span class=n>E</span> <span class=nf>into</span><span class=o>(</span><span class=n>E</span> <span class=n>into</span><span class=o>);</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/IPurchase.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/IPurchase.java target=_blank>IPurchase.java</a></div></div><p>El acceso a una base de datos usando jOOQ se consigue a través de la clase <a href=http://www.jooq.org/javadoc/latest/org/jooq/DSLContext.html>DSLContext</a>, cada servicio recibe uno diferente que debemos definir en el contenedor de dependencias de Spring. Si fuesen dos bases de datos diferentes realmente debería haber definidos dos <em>bean</em> <em>DataSource</em> uno para cada servicio pero solo hay uno porque en el ejemplo se usa la base de datos <a href=https://www.h2database.com/html/main.html>H2</a> y se accede no con un servidor sino al fichero directamente. También en el ejemplo realmente no son necesarios dos (uno para cada servicio) <em>TransactionManager</em>, <em>TransactionAwareDataSourceProxy</em>, <em>ConnectionProvider</em>, <em>Config</em> y <em>DSLContext</em> pues solo hay una base de datos pero por mostrar más fielmente como sería el caso siendo dos bases de datos completamente diferentes lo he puesto así.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.spring</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>javax.sql.DataSource</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>org.apache.commons.dbcp.BasicDataSource</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.jooq.ConnectionProvider</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.jooq.DSLContext</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.jooq.SQLDialect</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.jooq.impl.DSL</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.jooq.impl.DataSourceConnectionProvider</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.jooq.impl.DefaultConfiguration</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.springframework.beans.factory.annotation.Qualifier</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.springframework.boot.context.properties.ConfigurationProperties</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.springframework.context.annotation.Bean</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.springframework.context.annotation.ComponentScan</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.springframework.context.annotation.Configuration</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.springframework.context.annotation.Primary</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.springframework.jdbc.datasource.DataSourceTransactionManager</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.springframework.transaction.annotation.EnableTransactionManagement</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.springframework.transaction.support.ResourceTransactionManager</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.service.InventoryService</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.service.DefaultInventoryService</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.service.PurchasesService</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.service.DefaultPurchasesService</span><span class=o>;</span>
+
+<span class=nd>@Configuration</span>
+<span class=nd>@ComponentScan</span><span class=o>({</span> <span class=s>&#34;io.github.picodotdev.blogbitix.jooq&#34;</span> <span class=o>})</span>
+<span class=nd>@EnableTransactionManagement</span>
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>AppConfiguration</span> <span class=o>{</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>String</span> <span class=n>INVENTORY_TXM</span> <span class=o>=</span> <span class=s>&#34;inventoryTransactionManager&#34;</span><span class=o>;</span>
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>String</span> <span class=n>PURCHASES_TXM</span> <span class=o>=</span> <span class=s>&#34;purchasesTransactionManager&#34;</span><span class=o>;</span>
+
+    <span class=nd>@Bean</span><span class=o>(</span><span class=n>name</span> <span class=o>=</span> <span class=s>&#34;dataSource&#34;</span><span class=o>,</span> <span class=n>destroyMethod</span> <span class=o>=</span> <span class=s>&#34;close&#34;</span><span class=o>)</span>
+    <span class=nd>@Primary</span>
+    <span class=nd>@ConfigurationProperties</span><span class=o>(</span><span class=n>prefix</span> <span class=o>=</span> <span class=s>&#34;datasource.primary&#34;</span><span class=o>)</span>
+    <span class=kd>public</span> <span class=n>DataSource</span> <span class=nf>dataSource</span><span class=o>()</span> <span class=o>{</span>
+        <span class=n>BasicDataSource</span> <span class=n>ds</span> <span class=o>=</span> <span class=k>new</span> <span class=n>BasicDataSource</span><span class=o>();</span>
+        <span class=c1>// ds.setDriverClassName(&#34;org.postgresql.Driver&#34;);
+</span><span class=c1></span>        <span class=c1>// ds.setUrl(&#34;jdbc:postgresql://localhost:5432/app&#34;);
+</span><span class=c1></span>        <span class=c1>// ds.setUsername(&#34;sa&#34;);
+</span><span class=c1></span>        <span class=c1>// ds.setPassword(&#34;sa&#34;);
+</span><span class=c1></span>        <span class=c1>// ds.setDriverClassName(&#34;com.mysql.jdbc.Driver&#34;);
+</span><span class=c1></span>        <span class=c1>// ds.setUrl(&#34;jdbc:mysql://localhost:3306/app&#34;);
+</span><span class=c1></span>        <span class=c1>// ds.setUsername(&#34;root&#34;);
+</span><span class=c1></span>        <span class=c1>// ds.setPassword(&#34;&#34;);
+</span><span class=c1></span>        <span class=n>ds</span><span class=o>.</span><span class=na>setDriverClassName</span><span class=o>(</span><span class=s>&#34;org.h2.Driver&#34;</span><span class=o>);</span>
+        <span class=n>ds</span><span class=o>.</span><span class=na>setUrl</span><span class=o>(</span><span class=s>&#34;jdbc:h2:./misc/database/app&#34;</span><span class=o>);</span>
+        <span class=n>ds</span><span class=o>.</span><span class=na>setUsername</span><span class=o>(</span><span class=s>&#34;sa&#34;</span><span class=o>);</span>
+        <span class=n>ds</span><span class=o>.</span><span class=na>setPassword</span><span class=o>(</span><span class=s>&#34;sa&#34;</span><span class=o>);</span>
+        <span class=k>return</span> <span class=n>ds</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Bean</span><span class=o>(</span><span class=n>name</span> <span class=o>=</span> <span class=n>INVENTORY_TXM</span><span class=o>)</span>
+    <span class=kd>public</span> <span class=n>ResourceTransactionManager</span> <span class=nf>inventoryTransactionManager</span><span class=o>(</span><span class=nd>@Qualifier</span><span class=o>(</span><span class=s>&#34;dataSource&#34;</span><span class=o>)</span> <span class=n>DataSource</span> <span class=n>dataSource</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=k>new</span> <span class=n>DataSourceTransactionManager</span><span class=o>(</span><span class=n>dataSource</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Bean</span><span class=o>(</span><span class=n>name</span> <span class=o>=</span> <span class=n>PURCHASES_TXM</span><span class=o>)</span>
+    <span class=kd>public</span> <span class=n>ResourceTransactionManager</span> <span class=nf>purchasesTransactionManager</span><span class=o>(</span><span class=nd>@Qualifier</span><span class=o>(</span><span class=s>&#34;dataSource&#34;</span><span class=o>)</span> <span class=n>DataSource</span> <span class=n>dataSource</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=k>new</span> <span class=n>DataSourceTransactionManager</span><span class=o>(</span><span class=n>dataSource</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Bean</span><span class=o>(</span><span class=n>name</span> <span class=o>=</span> <span class=s>&#34;inventoryTransactionAwareDataSourceProxy&#34;</span><span class=o>)</span>
+    <span class=kd>public</span> <span class=n>TransactionAwareDataSourceProxy</span> <span class=nf>inventoryTransactionAwareDataSourceProxy</span><span class=o>(</span><span class=nd>@Qualifier</span><span class=o>(</span><span class=s>&#34;dataSource&#34;</span><span class=o>)</span> <span class=n>DataSource</span> <span class=n>dataSource</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=k>new</span> <span class=n>TransactionAwareDataSourceProxy</span><span class=o>(</span><span class=n>dataSource</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Bean</span><span class=o>(</span><span class=n>name</span> <span class=o>=</span> <span class=s>&#34;purchasesTransactionAwareDataSourceProxy&#34;</span><span class=o>)</span>
+    <span class=kd>public</span> <span class=n>TransactionAwareDataSourceProxy</span> <span class=nf>purchasesTransactionAwareDataSourceProxy</span><span class=o>(</span><span class=nd>@Qualifier</span><span class=o>(</span><span class=s>&#34;dataSource&#34;</span><span class=o>)</span> <span class=n>DataSource</span> <span class=n>dataSource</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=k>new</span> <span class=n>TransactionAwareDataSourceProxy</span><span class=o>(</span><span class=n>dataSource</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Bean</span><span class=o>(</span><span class=n>name</span> <span class=o>=</span> <span class=s>&#34;inventoryConnectionProvider&#34;</span><span class=o>)</span>
+    <span class=kd>public</span> <span class=n>ConnectionProvider</span> <span class=nf>inventoryConnectionProvider</span><span class=o>(</span>
+            <span class=nd>@Qualifier</span><span class=o>(</span><span class=s>&#34;inventoryTransactionAwareDataSourceProxy&#34;</span><span class=o>)</span> <span class=n>TransactionAwareDataSourceProxy</span> <span class=n>transactionAwareDataSourceProxy</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=k>new</span> <span class=n>DataSourceConnectionProvider</span><span class=o>(</span><span class=n>transactionAwareDataSourceProxy</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Bean</span><span class=o>(</span><span class=n>name</span> <span class=o>=</span> <span class=s>&#34;purchasesConnectionProvider&#34;</span><span class=o>)</span>
+    <span class=kd>public</span> <span class=n>ConnectionProvider</span> <span class=nf>purchasesConnectionProvider</span><span class=o>(</span>
+            <span class=nd>@Qualifier</span><span class=o>(</span><span class=s>&#34;purchasesTransactionAwareDataSourceProxy&#34;</span><span class=o>)</span> <span class=n>TransactionAwareDataSourceProxy</span> <span class=n>transactionAwareDataSourceProxy</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=k>new</span> <span class=n>DataSourceConnectionProvider</span><span class=o>(</span><span class=n>transactionAwareDataSourceProxy</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Bean</span><span class=o>(</span><span class=n>name</span> <span class=o>=</span> <span class=s>&#34;inventoryConfig&#34;</span><span class=o>)</span>
+    <span class=kd>public</span> <span class=n>org</span><span class=o>.</span><span class=na>jooq</span><span class=o>.</span><span class=na>Configuration</span> <span class=nf>inventoryConfig</span><span class=o>(</span><span class=nd>@Qualifier</span><span class=o>(</span><span class=s>&#34;inventoryConnectionProvider&#34;</span><span class=o>)</span> <span class=n>ConnectionProvider</span> <span class=n>connectionProvider</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>DefaultConfiguration</span> <span class=n>config</span> <span class=o>=</span> <span class=k>new</span> <span class=n>DefaultConfiguration</span><span class=o>();</span>
+        <span class=n>config</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=n>connectionProvider</span><span class=o>);</span>
+        <span class=c1>// config.set(SQLDialect.POSTGRES_9_4);
+</span><span class=c1></span>        <span class=c1>// config.set(SQLDialect.MYSQL);
+</span><span class=c1></span>        <span class=n>config</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=n>SQLDialect</span><span class=o>.</span><span class=na>H2</span><span class=o>);</span>
+        <span class=k>return</span> <span class=n>config</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Bean</span><span class=o>(</span><span class=n>name</span> <span class=o>=</span> <span class=s>&#34;purchasesConfig&#34;</span><span class=o>)</span>
+    <span class=kd>public</span> <span class=n>org</span><span class=o>.</span><span class=na>jooq</span><span class=o>.</span><span class=na>Configuration</span> <span class=nf>purchasesConfig</span><span class=o>(</span><span class=nd>@Qualifier</span><span class=o>(</span><span class=s>&#34;purchasesConnectionProvider&#34;</span><span class=o>)</span> <span class=n>ConnectionProvider</span> <span class=n>connectionProvider</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>DefaultConfiguration</span> <span class=n>config</span> <span class=o>=</span> <span class=k>new</span> <span class=n>DefaultConfiguration</span><span class=o>();</span>
+        <span class=n>config</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=n>connectionProvider</span><span class=o>);</span>
+        <span class=c1>// config.set(SQLDialect.POSTGRES_9_4);
+</span><span class=c1></span>        <span class=c1>// config.set(SQLDialect.MYSQL);
+</span><span class=c1></span>        <span class=n>config</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=n>SQLDialect</span><span class=o>.</span><span class=na>H2</span><span class=o>);</span>
+        <span class=k>return</span> <span class=n>config</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Bean</span><span class=o>(</span><span class=n>name</span> <span class=o>=</span> <span class=s>&#34;inventoryDSLContext&#34;</span><span class=o>)</span>
+    <span class=kd>public</span> <span class=n>DSLContext</span> <span class=nf>inventoryDSLContext</span><span class=o>(</span><span class=nd>@Qualifier</span><span class=o>(</span><span class=s>&#34;inventoryConfig&#34;</span><span class=o>)</span> <span class=n>org</span><span class=o>.</span><span class=na>jooq</span><span class=o>.</span><span class=na>Configuration</span> <span class=n>config</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>DSL</span><span class=o>.</span><span class=na>using</span><span class=o>(</span><span class=n>config</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Bean</span><span class=o>(</span><span class=n>name</span> <span class=o>=</span> <span class=s>&#34;purchasesDSLContext&#34;</span><span class=o>)</span>
+    <span class=kd>public</span> <span class=n>DSLContext</span> <span class=nf>purchasesDSLContext</span><span class=o>(</span><span class=nd>@Qualifier</span><span class=o>(</span><span class=s>&#34;purchasesConfig&#34;</span><span class=o>)</span> <span class=n>org</span><span class=o>.</span><span class=na>jooq</span><span class=o>.</span><span class=na>Configuration</span> <span class=n>config</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>DSL</span><span class=o>.</span><span class=na>using</span><span class=o>(</span><span class=n>config</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Bean</span>
+    <span class=kd>public</span> <span class=n>InventoryService</span> <span class=nf>inventoryService</span><span class=o>(</span><span class=nd>@Qualifier</span><span class=o>(</span><span class=s>&#34;inventoryDSLContext&#34;</span><span class=o>)</span> <span class=n>DSLContext</span> <span class=n>context</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=k>new</span> <span class=n>DefaultInventoryService</span><span class=o>(</span><span class=n>context</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Bean</span>
+    <span class=kd>public</span> <span class=n>PurchasesService</span> <span class=nf>purchasesService</span><span class=o>(</span><span class=nd>@Qualifier</span><span class=o>(</span><span class=s>&#34;purchasesDSLContext&#34;</span><span class=o>)</span> <span class=n>DSLContext</span> <span class=n>context</span><span class=o>,</span> <span class=n>InventoryService</span> <span class=n>inventory</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=k>new</span> <span class=n>DefaultPurchasesService</span><span class=o>(</span><span class=n>context</span><span class=o>,</span> <span class=n>inventory</span><span class=o>);</span>
+    <span class=o>}</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/AppConfiguration.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/AppConfiguration.java target=_blank>AppConfiguration.java</a></div></div><p>Podemos crear la base de datos y los dos esquemas con una tarea de <a href=https://gradle.org/>Gradle</a> y con <a href=https://www.liquibase.org/>Liquibase</a>, con el comando <code>./gradlew updateDatabase</code>, a continuación solo una parte del <a href=https://github.com/picodotdev/blog-ejemplos/blob/master/Multidatabase/build.gradle>archivo <em>build.gradle</em> completo</a> y los archivos XML de actualización de los esquemas.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=n>task</span> <span class=nf>updateDatabase</span><span class=o>()</span> <span class=o>&lt;&lt;</span> <span class=o>{</span>
+    <span class=n>tasks</span><span class=o>.</span><span class=na>updateDatabaseInventory</span><span class=o>.</span><span class=na>execute</span><span class=o>()</span>
+    <span class=n>tasks</span><span class=o>.</span><span class=na>updateDatabasePurchases</span><span class=o>.</span><span class=na>execute</span><span class=o>()</span>
+<span class=o>}</span>
+
+<span class=n>task</span> <span class=nf>updateDatabaseInventory</span><span class=o>(</span><span class=nl>type:</span><span class=n>Exec</span><span class=o>)</span> <span class=o>{</span>
+    <span class=n>commandLine</span> <span class=s2>&#34;misc/liquibase-3.4.1/liquibase&#34;</span><span class=o>,</span> <span class=s1>&#39;--classpath=misc/libs/h2-1.4.189.jar&#39;</span><span class=o>,</span> <span class=s1>&#39;--driver=org.h2.Driver&#39;</span><span class=o>,</span>
+        <span class=s1>&#39;--changeLogFile=misc/database/inventory-changelog.xml&#39;</span><span class=o>,</span> <span class=s1>&#39;--url=jdbc:h2:./misc/database/app&#39;</span><span class=o>,</span> <span class=s1>&#39;--username=sa&#39;</span><span class=o>,</span> <span class=s1>&#39;--password=sa&#39;</span><span class=o>,</span> <span class=s1>&#39;update&#39;</span>
+<span class=o>}</span>
+
+<span class=n>task</span> <span class=nf>updateDatabasePurchases</span><span class=o>(</span><span class=nl>type:</span><span class=n>Exec</span><span class=o>)</span> <span class=o>{</span>
+    <span class=n>commandLine</span> <span class=s2>&#34;misc/liquibase-3.4.1/liquibase&#34;</span><span class=o>,</span> <span class=s1>&#39;--classpath=misc/libs/h2-1.4.189.jar&#39;</span><span class=o>,</span> <span class=s1>&#39;--driver=org.h2.Driver&#39;</span><span class=o>,</span>
+        <span class=s1>&#39;--changeLogFile=misc/database/purchases-changelog.xml&#39;</span><span class=o>,</span> <span class=s1>&#39;--url=jdbc:h2:./misc/database/app&#39;</span><span class=o>,</span> <span class=s1>&#39;--username=sa&#39;</span><span class=o>,</span> <span class=s1>&#39;--password=sa&#39;</span><span class=o>,</span> <span class=s1>&#39;update&#39;</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/build-liquibase.gradle target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/build-liquibase.gradle target=_blank>build-liquibase.gradle</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-XML data-lang=XML><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-XML data-lang=XML><span class=cp>&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34; standalone=&#34;no&#34;?&gt;</span>
+<span class=nt>&lt;databaseChangeLog</span> <span class=na>xmlns=</span><span class=s>&#34;http://www.liquibase.org/xml/ns/dbchangelog&#34;</span> <span class=na>xmlns:xsi=</span><span class=s>&#34;http://www.w3.org/2001/XMLSchema-instance&#34;</span>
+    <span class=na>xsi:schemaLocation=</span><span class=s>&#34;http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd&#34;</span><span class=nt>&gt;</span>
+    
+    <span class=nt>&lt;property</span> <span class=na>name=</span><span class=s>&#34;schema&#34;</span> <span class=na>value=</span><span class=s>&#34;inventory&#34;</span><span class=nt>/&gt;</span>
+    
+    <span class=nt>&lt;changeSet</span> <span class=na>id=</span><span class=s>&#34;1&#34;</span> <span class=na>author=</span><span class=s>&#34;picodotdev&#34;</span><span class=nt>&gt;</span>
+        <span class=nt>&lt;comment&gt;</span>Creación de la base de datos<span class=nt>&lt;/comment&gt;</span>
+        <span class=nt>&lt;sql&gt;</span>create schema ${schema}<span class=nt>&lt;/sql&gt;</span>
+        <span class=nt>&lt;createTable</span> <span class=na>tableName=</span><span class=s>&#34;item&#34;</span> <span class=na>schemaName=</span><span class=s>&#34;${schema}&#34;</span><span class=nt>&gt;</span>
+            <span class=nt>&lt;column</span> <span class=na>autoIncrement=</span><span class=s>&#34;true&#34;</span> <span class=na>name=</span><span class=s>&#34;id&#34;</span> <span class=na>type=</span><span class=s>&#34;BIGINT&#34;</span><span class=nt>&gt;</span>
+                <span class=nt>&lt;constraints</span> <span class=na>nullable=</span><span class=s>&#34;false&#34;</span> <span class=na>primaryKey=</span><span class=s>&#34;true&#34;</span> <span class=nt>/&gt;</span>
+            <span class=nt>&lt;/column&gt;</span>
+            <span class=nt>&lt;column</span> <span class=na>name=</span><span class=s>&#34;creationDate&#34;</span> <span class=na>type=</span><span class=s>&#34;TIMESTAMP&#34;</span> <span class=nt>/&gt;</span>
+            <span class=nt>&lt;column</span> <span class=na>name=</span><span class=s>&#34;name&#34;</span> <span class=na>type=</span><span class=s>&#34;VARCHAR(256)&#34;</span> <span class=nt>/&gt;</span>
+            <span class=nt>&lt;column</span> <span class=na>name=</span><span class=s>&#34;description&#34;</span> <span class=na>type=</span><span class=s>&#34;TEXT&#34;</span> <span class=nt>/&gt;</span>
+            <span class=nt>&lt;column</span> <span class=na>name=</span><span class=s>&#34;stock&#34;</span> <span class=na>type=</span><span class=s>&#34;BIGINT&#34;</span> <span class=nt>/&gt;</span>
+            <span class=nt>&lt;column</span> <span class=na>name=</span><span class=s>&#34;price&#34;</span> <span class=na>type=</span><span class=s>&#34;DECIMAL(7,2)&#34;</span> <span class=nt>/&gt;</span>
+        <span class=nt>&lt;/createTable&gt;</span>
+    <span class=nt>&lt;/changeSet&gt;</span>
+<span class=nt>&lt;/databaseChangeLog&gt;</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/inventory-changelog.xml target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/inventory-changelog.xml target=_blank>inventory-changelog.xml</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-XML data-lang=XML><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-XML data-lang=XML><span class=cp>&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34; standalone=&#34;no&#34;?&gt;</span>
+<span class=nt>&lt;databaseChangeLog</span> <span class=na>xmlns=</span><span class=s>&#34;http://www.liquibase.org/xml/ns/dbchangelog&#34;</span> <span class=na>xmlns:xsi=</span><span class=s>&#34;http://www.w3.org/2001/XMLSchema-instance&#34;</span>
+    <span class=na>xsi:schemaLocation=</span><span class=s>&#34;http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd&#34;</span><span class=nt>&gt;</span>
+    
+    <span class=nt>&lt;property</span> <span class=na>name=</span><span class=s>&#34;schema&#34;</span> <span class=na>value=</span><span class=s>&#34;purchases&#34;</span><span class=nt>/&gt;</span>
+    <span class=nt>&lt;property</span> <span class=na>name=</span><span class=s>&#34;inventorySchema&#34;</span> <span class=na>value=</span><span class=s>&#34;inventory&#34;</span><span class=nt>/&gt;</span>
+    
+    <span class=nt>&lt;changeSet</span> <span class=na>id=</span><span class=s>&#34;1&#34;</span> <span class=na>author=</span><span class=s>&#34;picodotdev&#34;</span><span class=nt>&gt;</span>
+        <span class=nt>&lt;comment&gt;</span>Creación de la base de datos<span class=nt>&lt;/comment&gt;</span>
+        <span class=nt>&lt;sql&gt;</span>create schema ${schema}<span class=nt>&lt;/sql&gt;</span>
+        <span class=nt>&lt;createTable</span> <span class=na>tableName=</span><span class=s>&#34;purchase&#34;</span> <span class=na>schemaName=</span><span class=s>&#34;${schema}&#34;</span><span class=nt>&gt;</span>
+            <span class=nt>&lt;column</span> <span class=na>autoIncrement=</span><span class=s>&#34;true&#34;</span> <span class=na>name=</span><span class=s>&#34;id&#34;</span> <span class=na>type=</span><span class=s>&#34;BIGINT&#34;</span><span class=nt>&gt;</span>
+                <span class=nt>&lt;constraints</span> <span class=na>nullable=</span><span class=s>&#34;false&#34;</span> <span class=na>primaryKey=</span><span class=s>&#34;true&#34;</span> <span class=nt>/&gt;</span>
+            <span class=nt>&lt;/column&gt;</span>
+            <span class=nt>&lt;column</span> <span class=na>name=</span><span class=s>&#34;creationDate&#34;</span> <span class=na>type=</span><span class=s>&#34;TIMESTAMP&#34;</span> <span class=nt>/&gt;</span>
+            <span class=nt>&lt;column</span> <span class=na>name=</span><span class=s>&#34;quantity&#34;</span> <span class=na>type=</span><span class=s>&#34;BIGINT&#34;</span> <span class=nt>/&gt;</span>
+            <span class=nt>&lt;column</span> <span class=na>name=</span><span class=s>&#34;price&#34;</span> <span class=na>type=</span><span class=s>&#34;DECIMAL(7,2)&#34;</span> <span class=nt>/&gt;</span>
+            <span class=nt>&lt;column</span> <span class=na>name=</span><span class=s>&#34;item_id&#34;</span> <span class=na>type=</span><span class=s>&#34;BIGINT&#34;</span><span class=nt>&gt;</span>
+                <span class=nt>&lt;constraints</span> <span class=na>references=</span><span class=s>&#34;${inventorySchema}.item(id)&#34;</span> <span class=na>foreignKeyName=</span><span class=s>&#34;item_id&#34;</span><span class=nt>/&gt;</span>
+            <span class=nt>&lt;/column&gt;</span>
+        <span class=nt>&lt;/createTable&gt;</span>
+    <span class=nt>&lt;/changeSet&gt;</span>
+<span class=nt>&lt;/databaseChangeLog&gt;</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/purchases-changelog.xml target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/purchases-changelog.xml target=_blank>purchases-changelog.xml</a></div></div><div class=media style=text-align:center><figure><a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/images/basededatos.png title="Base de datos con varios esquemas" data-gallery><img src=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/images/basededatos.png width=320></a><figcaption>Base de datos con varios esquemas, inventory y purchases</figcaption></figure></div><p>Como en jOOQ la fuente de la verdad es la base de datos los modelos se generan a partir de ella usando otra tarea de Gradle, generará las clases con las que trabajaremos en la aplicación con el comando <code>./gradlew generateModels</code>. Las clases son las del paquete <a href=https://github.com/picodotdev/blog-ejemplos/tree/master/Multidatabase/src/main/java/io/github/picodotdev/blogbitix/multidatabase/jooq>io.github.picodotdev.blogbitix.multidatabase.jooq</a>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=n>task</span> <span class=n>generateModels</span> <span class=o>&lt;&lt;</span> <span class=o>{</span>
+    <span class=n>Configuration</span> <span class=n>configuration</span> <span class=o>=</span> <span class=k>new</span> <span class=nf>Configuration</span><span class=o>()</span>
+        <span class=o>.</span><span class=na>withJdbc</span><span class=o>(</span><span class=k>new</span> <span class=nf>Jdbc</span><span class=o>()</span>
+            <span class=o>.</span><span class=na>withDriver</span><span class=o>(</span><span class=s1>&#39;org.h2.Driver&#39;</span><span class=o>)</span>
+            <span class=o>.</span><span class=na>withUrl</span><span class=o>(</span><span class=s1>&#39;jdbc:h2:./misc/database/app&#39;</span><span class=o>)</span>
+            <span class=o>.</span><span class=na>withUser</span><span class=o>(</span><span class=s1>&#39;sa&#39;</span><span class=o>)</span>
+            <span class=o>.</span><span class=na>withPassword</span><span class=o>(</span><span class=s1>&#39;sa&#39;</span><span class=o>))</span>
+        <span class=o>.</span><span class=na>withGenerator</span><span class=o>(</span><span class=k>new</span> <span class=nf>Generator</span><span class=o>()</span>
+            <span class=o>.</span><span class=na>withGenerate</span><span class=o>(</span><span class=k>new</span> <span class=nf>Generate</span><span class=o>()</span>
+                <span class=o>.</span><span class=na>withInterfaces</span><span class=o>(</span><span class=kc>true</span><span class=o>)</span>
+                <span class=o>.</span><span class=na>withPojos</span><span class=o>(</span><span class=kc>true</span><span class=o>)</span>
+                <span class=o>.</span><span class=na>withRelations</span><span class=o>(</span><span class=kc>true</span><span class=o>)</span>
+                <span class=o>.</span><span class=na>withValidationAnnotations</span><span class=o>(</span><span class=kc>true</span><span class=o>))</span>
+            <span class=o>.</span><span class=na>withName</span><span class=o>(</span><span class=s1>&#39;org.jooq.util.DefaultGenerator&#39;</span><span class=o>)</span>
+            <span class=o>.</span><span class=na>withDatabase</span><span class=o>(</span><span class=k>new</span> <span class=nf>Database</span><span class=o>()</span>
+                <span class=o>.</span><span class=na>withCustomTypes</span><span class=o>([</span>
+                    <span class=k>new</span> <span class=nf>CustomType</span><span class=o>()</span>
+                        <span class=o>.</span><span class=na>withName</span><span class=o>(</span><span class=s1>&#39;java.time.LocalDateTime&#39;</span><span class=o>)</span>
+                        <span class=o>.</span><span class=na>withConverter</span><span class=o>(</span><span class=s1>&#39;io.github.picodotdev.blogbitix.multidatabase.misc.TimestampConverter&#39;</span><span class=o>)</span>
+                <span class=o>])</span>
+                <span class=o>.</span><span class=na>withForcedTypes</span><span class=o>([</span>
+                    <span class=k>new</span> <span class=nf>ForcedType</span><span class=o>()</span>
+                        <span class=o>.</span><span class=na>withName</span><span class=o>(</span><span class=s1>&#39;java.time.LocalDateTime&#39;</span><span class=o>)</span>
+                        <span class=o>.</span><span class=na>withTypes</span><span class=o>(</span><span class=s1>&#39;TIMESTAMP&#39;</span><span class=o>)</span>                     
+                <span class=o>])</span>
+                <span class=o>.</span><span class=na>withName</span><span class=o>(</span><span class=s1>&#39;org.jooq.util.h2.H2Database&#39;</span><span class=o>)</span>
+                <span class=o>.</span><span class=na>withIncludes</span><span class=o>(</span><span class=s1>&#39;.*&#39;</span><span class=o>)</span>
+                <span class=o>.</span><span class=na>withExcludes</span><span class=o>(</span><span class=s1>&#39;&#39;</span><span class=o>)</span>
+                <span class=o>.</span><span class=na>withSchemata</span><span class=o>([</span>
+                    <span class=k>new</span> <span class=nf>Schema</span><span class=o>().</span><span class=na>withInputSchema</span><span class=o>(</span><span class=s1>&#39;INVENTORY&#39;</span><span class=o>),</span>
+                    <span class=k>new</span> <span class=nf>Schema</span><span class=o>().</span><span class=na>withInputSchema</span><span class=o>(</span><span class=s1>&#39;PURCHASES&#39;</span><span class=o>)</span>
+                <span class=o>]))</span>
+            <span class=o>.</span><span class=na>withTarget</span><span class=o>(</span><span class=k>new</span> <span class=nf>Target</span><span class=o>()</span>
+                <span class=o>.</span><span class=na>withPackageName</span><span class=o>(</span><span class=s1>&#39;io.github.picodotdev.blogbitix.multidatabase.jooq&#39;</span><span class=o>)</span>
+                <span class=o>.</span><span class=na>withDirectory</span><span class=o>(</span><span class=s1>&#39;src/main/java&#39;</span><span class=o>)))</span>
+
+    <span class=n>GenerationTool</span><span class=o>.</span><span class=na>main</span><span class=o>(</span><span class=n>configuration</span><span class=o>)</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/build-jooq.gradle target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/build-jooq.gradle target=_blank>build-jooq.gradle</a></div></div><p>Este sería el programa de ejemplo iniciado con <a href=https://projects.spring.io/spring-boot/>Spring Boot</a> que usa ambos servicios, el de inventario y el de compras, creando un producto y haciendo una compra junto con su salida en la terminal. Ejecutándolo repetidamente con <code>./gradlew run</code> veremos aumenta el número de productos y compras guardados en cada tabla de los dos esquemas.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>java.math.BigDecimal</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.time.LocalDateTime</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>org.springframework.beans.factory.annotation.Autowired</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.springframework.boot.CommandLineRunner</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.springframework.boot.SpringApplication</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.springframework.boot.autoconfigure.SpringBootApplication</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.springframework.context.annotation.AnnotationConfigApplicationContext</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.jooq.inventory.tables.pojos.Item</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.jooq.inventory.tables.records.ItemRecord</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.jooq.purchases.tables.records.PurchaseRecord</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.service.InventoryService</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.multidatabase.service.PurchasesService</span><span class=o>;</span>
+
+<span class=nd>@SpringBootApplication</span><span class=o>(</span><span class=n>exclude</span> <span class=o>=</span> <span class=o>{</span> <span class=n>DataSourceAutoConfiguration</span><span class=o>.</span><span class=na>class</span><span class=o>,</span> <span class=n>DataSourceTransactionManagerAutoConfiguration</span><span class=o>.</span><span class=na>class</span> <span class=o>})</span>
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>Main</span> <span class=kd>implements</span> <span class=n>CommandLineRunner</span> <span class=o>{</span>
+
+    <span class=nd>@Autowired</span>
+    <span class=kd>private</span> <span class=n>InventoryService</span> <span class=n>inventoryService</span><span class=o>;</span>
+
+    <span class=nd>@Autowired</span>
+    <span class=kd>private</span> <span class=n>PurchasesService</span> <span class=n>purchasesService</span><span class=o>;</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>run</span><span class=o>(</span><span class=n>String</span><span class=o>...</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;Insertando datos...&#34;</span><span class=o>);</span>        
+        <span class=n>ItemRecord</span> <span class=n>item</span> <span class=o>=</span> <span class=n>inventoryService</span><span class=o>.</span><span class=na>create</span><span class=o>(</span><span class=k>new</span> <span class=n>Item</span><span class=o>(</span><span class=kc>null</span><span class=o>,</span> <span class=n>LocalDateTime</span><span class=o>.</span><span class=na>now</span><span class=o>(),</span> <span class=s>&#34;Libro&#34;</span><span class=o>,</span> <span class=s>&#34;Un gran libro&#34;</span><span class=o>,</span> <span class=n>10l</span><span class=o>,</span> <span class=k>new</span> <span class=n>BigDecimal</span><span class=o>(</span><span class=s>&#34;7.99&#34;</span><span class=o>)));</span>
+        <span class=n>PurchaseRecord</span> <span class=n>purchase</span> <span class=o>=</span> <span class=n>purchasesService</span><span class=o>.</span><span class=na>create</span><span class=o>(</span><span class=n>item</span><span class=o>,</span> <span class=n>2</span><span class=o>);</span>        
+
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;Número productos: %d%n&#34;</span><span class=o>,</span> <span class=n>inventoryService</span><span class=o>.</span><span class=na>count</span><span class=o>());</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;Número compras: %d%n&#34;</span><span class=o>,</span> <span class=n>purchasesService</span><span class=o>.</span><span class=na>count</span><span class=o>());</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+        <span class=n>SpringApplication</span> <span class=n>application</span> <span class=o>=</span> <span class=k>new</span> <span class=n>SpringApplication</span><span class=o>(</span><span class=n>Main</span><span class=o>.</span><span class=na>class</span><span class=o>);</span>
+        <span class=n>application</span><span class=o>.</span><span class=na>setApplicationContextClass</span><span class=o>(</span><span class=n>AnnotationConfigApplicationContext</span><span class=o>.</span><span class=na>class</span><span class=o>);</span>
+        <span class=n>SpringApplication</span><span class=o>.</span><span class=na>run</span><span class=o>(</span><span class=n>Main</span><span class=o>.</span><span class=na>class</span><span class=o>,</span> <span class=n>args</span><span class=o>);</span>
+    <span class=o>}</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/Main.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/Main.java target=_blank>Main.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>Número productos: 2
+Número compras: 2</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/System.out target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/code/System.out target=_blank>System.out</a></div></div><div class=media style=text-align:center><figure><script type=text/javascript src=https://asciinema.org/a/28856.js id=asciicast-28856 async></script><noscript><a href=https://asciinema.org/a/28856 target=_blank><img src=https://asciinema.org/a/28856.png width=734></a></noscript><figcaption>Ejecución del ejemplo multidatabase</figcaption></figure></div><p>Si quieres obtener más información sobre varias de las herramientas como jOOQ, Liquibase, Gradle o Spring Boot que forman en el momento de escribir este artículo el actual estado del arte en Java puedes leer los diferentes artículos que he he escrito sobre ellos de forma específica:</p><ul><li><a href=https://picodotdev.github.io/blog-bitix/2015/05/alternativa-a-hibernate-u-orm-y-ejemplo-de-jooq/>jOOQ</a></li><li><a href=https://elblogdepicodev.blogspot.com.es/2013/05/modificar-la-base-de-datos-con-liquibase.html>Liquibase</a></li><li><a href=https://elblogdepicodev.blogspot.com.es/2012/03/herramienta-de-construccion-gradle.html>Gradle</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2015/10/aplicacion-java-autocontenida-con-spring-boot/>Spring Boot</a></li></ul><p>El <a href=https://github.com/picodotdev/blog-ejemplos/tree/master/Multidatabase>código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos alojado en <a href=https://github.com/>GitHub</a>.</p></div></article><div class="row serie"><div class=col-md-12><h3>Este artículo forma parte de la serie <strong>jooq</strong>:</h3><ol class=serie-articles><li><a href=https://picodotdev.github.io/blog-bitix/2015/05/alternativa-a-hibernate-u-orm-y-ejemplo-de-jooq/>Alternativa a Hibernate u ORM y ejemplo de jOOQ</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2015/10/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java/>Múltiples esquemas o bases de datos con jOOQ y Spring en Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2015/11/obtener-datos-de-multiples-tablas-con-jooq/>Obtener datos de múltiples tablas con jOOQ</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2015/11/validar-objetos-con-spring-validation-ejemplo-registros-de-jooq/>Validar objetos con Spring Validation, ejemplo registros de jOOQ</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2019/05/log-de-sentencias-sql-sentencias-lentas-y-otra-informacion-en-jooq/>Log de sentencias SQL, sentencias lentas y otra información en jOOQ</a></li></ol></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><a id=comments></a><div class=row><div class=col-md-12><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='https:\/\/picodotdev.github.io\/blog-bitix\/2015\/10\/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java\/';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2015\/10\/multiples-esquemas-o-bases-de-datos-con-jooq-y-spring-en-java\/';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
+<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2019 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow rel=license><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style=border-width:0 src=https://licensebuttons.net/l/by-sa/4.0/80x15.png class=licencia></a><br><a href=https://twitter.com/blogstackinfo rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png alt="Blog Stack" title="Blog Stack"></a>
+<a href=https://www.planetacodigo.com/ rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png alt="Planeta código" title="Planeta código"></a><br><span xmlns:dct=http://purl.org/dc/terms/ property=dct:title><a href=https://picodotdev.github.io/blog-bitix/ rel=nofollow>Blog Bitix</a></span> by <a xmlns:cc=https://creativecommons.org/ns# href=https://picodotdev.github.io/blog-bitix/ property=cc:attributionName rel=cc:attributionurl>pico.dev</a> is licensed under a <a rel=license href=https://creativecommons.org/licenses/by-sa/4.0/>Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class=credit>Powered by <a href=https://gohugo.io/ rel=nofollow title="A fast and modern static website engine">Hugo</a> and <a href=https://pages.github.com/ title="Websites for you and your projects">GitHub Pages</a>.</span>
+<span class=credit>Background patterns from <a href=https://www.toptal.com/designers/subtlepatterns/ rel=nofollow>Subtle Patterns</a>.</span></div></div></footer></div><div class=blueimp-gallery-container><div id=blueimp-gallery class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal=false><div class=slides></div><h3 class=title></h3><a class=prev>‹</a>
+<a class=next>›</a>
+<a class=close>×</a>
+<a class=play-pause></a><ol class=indicator></ol><div class="modal fade"><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close aria-hidden=true>&times;</button><h4 class=modal-title></h4></div><div class="modal-body next"></div><div class=modal-footer><button type=button class="btn btn-default pull-left prev">
+<i class="glyphicon glyphicon-chevron-left"></i>Anterior</button>
+<button type=button class="btn btn-primary next">
+Siguiente
+<i class="glyphicon glyphicon-chevron-right"></i></button></div></div></div></div></div></div><script type=text/javascript>window.cookieconsent_options={"message":"Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.","dismiss":"Aceptar","learnMore":"Más información","link":null,"theme":"dark-bottom"};</script><script type=text/javascript src=//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js async></script></body></html>

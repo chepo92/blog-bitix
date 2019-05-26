@@ -1,0 +1,516 @@
+<!doctype html><html lang=es><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content=picodotdev><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="En un proyecto grande podemos tener necesidad de dividir el monolito al menos en varios módulos y yendo un paso más lejos en microservicios. La herramienta de construcción que usemos deberá de facilitarnos automatizar la tarea de construcción del código fuente de cada módulo individual, de todos a la vez o de los microservicios si tienen alguna dependencia compartida. En el artículo y ejemplo explicaré cómo usando Gradle podemos dividir el proyecto en varios módulos. No deja de ser un ejemplo pero es bastante completo y está formado por dos aplicaciones web, una librería de componentes y otra librería con el modelo de persistencia, usa Spring, jOOQ, Tapestry, PostgreSQL, Docker, Liquibase, &hellip; &hellip;"><base href=https://picodotdev.github.io/blog-bitix/><title>Ejemplo de multiproyecto con Gradle</title><link rel=author type=text/plain href=humans.txt><link rel="shortcut icon" href=assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=assets/apple-touch-icon-144-precomposed.png><link rel=canonical href=https://picodotdev.github.io/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/><link href=index.xml rel=alternate type=application/rss+xml title="Blog Bitix"><link rel=stylesheet type=text/css href="//fonts.googleapis.com/css?family=PT+Serif:400,400i,700"><link rel=stylesheet type=text/css href=assets/libs/bootstrap-4.3.1/css/bootstrap.min.css><link rel=stylesheet type=text/css href=assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=assets/css/syntax.css><link rel=stylesheet type=text/css href=assets/css/main.css><script type=text/javascript src=assets/js/require-config.js data-main=js/main defer></script><script type=text/javascript src=assets/libs/require.js data-main=js/main defer></script><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js defer></script><script type=text/javascript defer>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript defer>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script type=text/javascript src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" defer></script><script type=text/javascript src=assets/js/app.js defer></script></head><body><div class=container><div class=row><div class=col-12><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
+<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class="col-12 col-lg-4 text-center"><form name=query class="form-inline search" onsubmit="return false;"><div class=input-group><input type=text name=q class=form-control placeholder="Buscar en Blog Bitix">
+<span class=input-group-btn><button class="btn btn-secondary" type=submit>Buscar</button></span></div></form><form name=search action=https://duckduckgo.com/ method=get class=hidden data-site=https://picodotdev.github.io/blog-bitix/><input type=hidden name=q></form></div></div><div class=row><div class=col-12><nav class="nav nav-pills nav-fill"><a href=/blog-bitix/tags/java/ class="nav-item nav-link">Java</a>
+<a href=/blog-bitix/tags/gnu-linux/ class="nav-item nav-link">GNU/Linux</a>
+<a href=/blog-bitix/tags/javascript/ class="nav-item nav-link">JavaScript</a>
+<a href=/blog-bitix/tags/tapestry/ class="nav-item nav-link">Tapestry</a>
+<a href=/blog-bitix/archive/ class="nav-item nav-link">Archivo y hemeroteca</a>
+<a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
+<a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class="adblock-sidebar adblock-sidebar-right"><div class=adblock-sidebar-container><ins class="adsbygoogle adblock-sidebar-vertical" style=display:block data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format="vertical, rectangle" data-type=auto></ins></div></div><article itemprop=mainEntity itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content=es><meta itemprop=keywords content="blog-stack, java, planeta-codigo, programacion, tapestry"><h1 itemprop=name>Ejemplo de multiproyecto con Gradle</h1><p class=information>Escrito por
+<span itemprop=author itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2015-09-15>15/09/2015</time>, actualizado el <time itemprop=dateModified datetime=2015-11-10>10/11/2015</time>.<br><a href=tags/blog-stack/>blog-stack</a> <a href=tags/java/>java</a> <a href=tags/planeta-codigo/>planeta-codigo</a> <a href=tags/programacion/>programacion</a> <a href=tags/tapestry/>tapestry</a><br><a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/ itemprop=url>Enlace permanente</a>
+<a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/#comments>Comentarios</a></p><p class=summary itemprop=about>En un proyecto grande podemos tener necesidad de dividir el monolito al menos en varios módulos y yendo un paso más lejos en microservicios. La herramienta de construcción que usemos deberá de facilitarnos automatizar la tarea de construcción del código fuente de cada módulo individual, de todos a la vez o de los microservicios si tienen alguna dependencia compartida. En el artículo y ejemplo explicaré cómo usando Gradle podemos dividir el proyecto en varios módulos. No deja de ser un ejemplo pero es bastante completo y está formado por dos aplicaciones web, una librería de componentes y otra librería con el modelo de persistencia, usa Spring, jOOQ, Tapestry, PostgreSQL, Docker, Liquibase, &hellip;</p><div><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins></div><div class=content itemprop=articleBody><meta itemprop=wordCount content=1618><div class=logotypes style=float:right><img src=assets/images/logotipos/java.svg class=right width=200 alt=Java title=Java></div><div class=logotypes style=float:right;clear:right><img src=assets/images/logotipos/gradle.svg class=right width=200 alt=Gradle title=Gradle></div><p>Cuando una aplicación o proyecto crece en algún momento podemos tener necesidad de partir el monolito en varios módulos más pequeños y más manejables. Las arquitecturas basadas en microservicios proponen en vez de tener una aplicación grande que contenga toda la funcionalidad dividirla en varios servicios manejables, pequeños y lo más independientes posible. En el libro <a href="https://www.amazon.es/gp/product/1491950358/ref=as_li_ss_tl?ie=UTF8&camp=3626&creative=24822&creativeASIN=1491950358&linkCode=as2&tag=blobit-21">Building Microservices</a><img src="https://ir-es.amazon-adsystem.com/e/ir?t=blobit-21&l=as2&o=30&a=1491950358" width=1 height=1 border=0 alt style=border:none!important;margin:0!important> explican muy bien la idea y conceptos de los microservicios. La división de una aplicación implica tener un repositorio de código fuente para cada proyecto, probablemente algunos proyectos dependan de otros y haya alguno que sea utilizado por varios como uno de utilidades. Aunque diría que en los microservicios se prefiere en cierta medida duplicar código que compartir para que cada proyecto tenga un ciclo de vida independiente, esto permite desplegarlos individualmente, aún así podemos aceptar compartir cierto código de utilidades o componentes, necesitando que unos proyectos dependan de otros.</p><p>Tener varios proyectos con dependencias entre ellos exige de la herramienta de construcción que esto sea posible y sencillo. En este artículo comentaré como crear un proyecto compuesto de varios componentes con <a href=https://elblogdepicodev.blogspot.com.es/2012/03/herramienta-de-construccion-gradle.html>la herramienta de construcción Gradle</a>. El ejemplo consistirá en dos aplicaciones web basadas en el <em>framework</em> web <a href=https://tapestry.apache.org/>Apache Tapestry</a>, una será la que vea el público (<em>web</em>) y otra de administración (<em>back</em>), estas dos aplicaciones compartirán una librería de componentes de Tapestry comunes como un <em>layout</em> (<em>library</em>), la cabecera y pie de las páginas de cada proyecto web, finalmente existirá una librería con métodos o servicios de utilidad comunes y el modelo de datos a persistir en una base de datos relacional usada tanto en las aplicaciones web como por la librería de componentes (<em>core</em>).</p><p>Necesitaremos 4 proyectos para los módulos y 5 proyectos Gradle, uno para cada módulo y otro que los englobe a todos. La estructura de directorios y archivos relativos a Gradle será la siguiente:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>MultiprojectGradle
+- setttings.gradle (proyectos incluidos)
+- build.gradle (cosas comunes a todos los proyectos)
+- web (aplicación web pública)
+  - build.gradle
+- back (aplicación web privada)
+  - build.gradle
+- components (componentes comunes de Apache Tapestry: layout, header y footer)
+  - build.gradle
+- core (modelos, servicios y utilidades comunes)
+  - build.gradle</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/estructura.txt target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/estructura.txt target=_blank>estructura.txt</a></div></div><p>En el archivo <em>build.gradle</em> global podemos incluir las cosas comunes a todos los proyectos como dependencias o <em>plugins</em>, en el archivo <em>settings.gradle</em> definimos de que componentes está formado el proyecto. Las cosas comunes a todos los proyectos será el uso del <em>plugin java</em> y <a href=https://eclipse.org><em>eclipse</em></a>, el repositorio de dependencias de <em>mavenCentral</em>, algunas dependencias y una tarea para instalar el <em>wrapper</em> de Gradle que nos servirá para usarlo sin necesidad de instalar nada (se descargarán sus binarios automáticamente).</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=n>subprojects</span> <span class=o>{</span>
+    <span class=n>apply</span> <span class=nl>plugin:</span> <span class=s1>&#39;eclipse&#39;</span>
+    <span class=n>apply</span> <span class=nl>plugin:</span> <span class=s1>&#39;java&#39;</span>
+
+    <span class=n>repositories</span> <span class=o>{</span>
+        <span class=n>mavenCentral</span><span class=o>()</span>
+
+        <span class=c1>// For access to Apache Staging (Preview) packages
+</span><span class=c1></span>        <span class=n>maven</span> <span class=o>{</span>
+            <span class=n>name</span> <span class=s1>&#39;Apache Staging&#39;</span>
+            <span class=n>url</span> <span class=s1>&#39;https://repository.apache.org/content/groups/staging&#39;</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+
+    <span class=n>dependencies</span> <span class=o>{</span>
+        <span class=n>compile</span> <span class=s1>&#39;org.slf4j:slf4j-api:1.7.12&#39;</span>
+        <span class=n>compile</span> <span class=s1>&#39;org.apache.logging.log4j:log4j-slf4j-impl:2.3&#39;</span>
+        <span class=n>compile</span> <span class=s1>&#39;org.apache.logging.log4j:log4j-api:2.3&#39;</span>
+        <span class=n>compile</span> <span class=s1>&#39;org.apache.logging.log4j:log4j-core:2.3&#39;</span>
+
+        <span class=n>testCompile</span> <span class=s1>&#39;junit:junit:4.12&#39;</span>
+    <span class=o>}</span>
+
+    <span class=n>task</span> <span class=nf>wrapper</span><span class=o>(</span><span class=nl>type:</span> <span class=n>Wrapper</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>gradleVersion</span> <span class=o>=</span> <span class=s1>&#39;2.7&#39;</span>
+    <span class=o>}</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/build.gradle target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/build.gradle target=_blank>build.gradle</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=n>include</span> <span class=s1>&#39;web&#39;</span><span class=o>,</span> <span class=s1>&#39;back&#39;</span><span class=o>,</span> <span class=s1>&#39;library&#39;</span><span class=o>,</span> <span class=s1>&#39;core&#39;</span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/settings.gradle target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/settings.gradle target=_blank>settings.gradle</a></div></div><p>Podemos ver los módulos (o proyectos como los llama Gradle) de los que se compone la aplicación y las tareas que podemos ejecutar con:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ ./gradlew -daemon projects
+$ ./gradlew -daemon tasks
+$ ./gradlew -daemon eclipse</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/gradle-info.sh target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/gradle-info.sh target=_blank>gradle-info.sh</a></div></div><div class=media style=text-align:center><figure><script type=text/javascript src=https://asciinema.org/a/26292.js id=asciicast-26292 async></script><noscript><a href=https://asciinema.org/a/26292 target=_blank><img src=https://asciinema.org/a/26292.png width=734></a></noscript><figcaption>Comandos básicos de Gradle</figcaption></figure></div><p>En los proyectos web incluiremos como dependencias las propias de Apache Tapestry, el proyecto <em>library</em> y <em>core</em>, también aplicaremos el <em>plugin</em> de <a href=https://tomcat.apache.org/>Tomcat</a> para poder iniciar los proyectos con Gradle configurándolos para que cada uno se inicie en un puerto distinto <sup>8080</sup>&frasl;<sub>8443</sub> para web y <sup>9080</sup>&frasl;<sub>9443</sub> para back.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=n>apply</span> <span class=nl>plugin:</span> <span class=s1>&#39;war&#39;</span>
+<span class=n>apply</span> <span class=nl>plugin:</span> <span class=s1>&#39;com.bmuschko.tomcat&#39;</span>
+
+<span class=n>buildscript</span> <span class=o>{</span>
+    <span class=n>repositories</span> <span class=o>{</span>
+        <span class=n>mavenCentral</span><span class=o>()</span>
+        <span class=n>jcenter</span><span class=o>()</span>        
+    <span class=o>}</span>
+
+    <span class=n>dependencies</span> <span class=o>{</span>
+        <span class=n>classpath</span> <span class=s1>&#39;com.bmuschko:gradle-tomcat-plugin:2.2.2&#39;</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+
+<span class=n>repositories</span> <span class=o>{</span>
+    <span class=n>mavenCentral</span><span class=o>()</span>
+
+    <span class=c1>// All things JBoss/Hibernate
+</span><span class=c1></span>    <span class=n>maven</span> <span class=o>{</span>
+        <span class=n>name</span> <span class=s1>&#39;JBoss&#39;</span>
+        <span class=n>url</span> <span class=s1>&#39;http://repository.jboss.org/nexus/content/groups/public/&#39;</span>
+    <span class=o>}</span>
+
+    <span class=c1>// For access to Apache Staging (Preview) packages
+</span><span class=c1></span>    <span class=n>maven</span> <span class=o>{</span>
+        <span class=n>name</span> <span class=s1>&#39;Apache Staging&#39;</span>
+        <span class=n>url</span> <span class=s1>&#39;https://repository.apache.org/content/groups/staging&#39;</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+
+<span class=n>dependencies</span> <span class=o>{</span>
+    <span class=n>compile</span> <span class=nf>project</span><span class=o>(</span><span class=s2>&#34;:core&#34;</span><span class=o>)</span>
+    <span class=n>compile</span> <span class=nf>project</span><span class=o>(</span><span class=s2>&#34;:library&#34;</span><span class=o>)</span>
+
+    <span class=c1>// Tapestry
+</span><span class=c1></span>    <span class=n>compile</span> <span class=s1>&#39;org.apache.tapestry:tapestry-core:5.4-beta-36&#39;</span>
+    <span class=n>compile</span> <span class=s1>&#39;org.apache.tapestry:tapestry-webresources:5.4-beta-36&#39;</span>
+    <span class=n>compile</span> <span class=s1>&#39;org.apache.tapestry:tapestry-javadoc:5.4-beta-36&#39;</span>
+    <span class=n>compile</span> <span class=s1>&#39;org.apache.tapestry:tapestry-beanvalidator:5.4-beta-36&#39;</span>
+    
+    <span class=c1>// Spring
+</span><span class=c1></span>    <span class=n>compile</span> <span class=o>(</span><span class=s1>&#39;org.apache.tapestry:tapestry-spring:5.4-beta-36&#39;</span><span class=o>)</span> <span class=o>{</span> <span class=n>exclude</span><span class=o>(</span><span class=nl>group:</span> <span class=s1>&#39;org.springframework&#39;</span><span class=o>)</span> <span class=o>}</span>
+    <span class=n>compile</span> <span class=s1>&#39;org.springframework:spring-jdbc:4.2.1.RELEASE&#39;</span>
+    <span class=n>compile</span> <span class=s1>&#39;org.springframework:spring-web:4.2.1.RELEASE&#39;</span>
+    <span class=n>compile</span> <span class=s1>&#39;org.springframework:spring-tx:4.2.1.RELEASE&#39;</span>
+    
+    <span class=n>compile</span> <span class=s1>&#39;commons-dbcp:commons-dbcp:1.4&#39;</span>
+    
+    <span class=c1>// Tomcat embedded
+</span><span class=c1></span>    <span class=n>tomcat</span> <span class=s1>&#39;org.apache.tomcat.embed:tomcat-embed-core:8.0.26&#39;</span>
+    <span class=n>tomcat</span> <span class=s1>&#39;org.apache.tomcat.embed:tomcat-embed-logging-juli:8.0.26&#39;</span>
+    <span class=n>tomcat</span> <span class=s1>&#39;org.apache.tomcat.embed:tomcat-embed-jasper:8.0.26&#39;</span>
+<span class=o>}</span>
+
+<span class=n>tomcat</span> <span class=o>{</span>
+    <span class=n>httpPort</span> <span class=o>=</span> <span class=mi>8080</span>
+    <span class=n>httpsPort</span> <span class=o>=</span> <span class=mi>8443</span>
+    <span class=n>ajpPort</span> <span class=o>=</span> <span class=mi>8009</span>
+    <span class=n>stopPort</span> <span class=o>=</span> <span class=mi>8081</span>
+    <span class=n>enableSSL</span> <span class=o>=</span> <span class=kc>true</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/build-web.gradle target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/build-web.gradle target=_blank>build-web.gradle</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=n>apply</span> <span class=nl>plugin:</span> <span class=s1>&#39;war&#39;</span>
+<span class=n>apply</span> <span class=nl>plugin:</span> <span class=s1>&#39;com.bmuschko.tomcat&#39;</span>
+
+<span class=n>buildscript</span> <span class=o>{</span>
+    <span class=n>repositories</span> <span class=o>{</span>
+        <span class=n>mavenCentral</span><span class=o>()</span>
+        <span class=n>jcenter</span><span class=o>()</span>        
+    <span class=o>}</span>
+
+    <span class=n>dependencies</span> <span class=o>{</span>
+        <span class=n>classpath</span> <span class=s1>&#39;com.bmuschko:gradle-tomcat-plugin:2.2.2&#39;</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+
+<span class=n>dependencies</span> <span class=o>{</span>
+    <span class=n>compile</span> <span class=nf>project</span><span class=o>(</span><span class=s2>&#34;:core&#34;</span><span class=o>)</span>
+    <span class=n>compile</span> <span class=nf>project</span><span class=o>(</span><span class=s2>&#34;:library&#34;</span><span class=o>)</span>
+
+    <span class=c1>// Tapestry
+</span><span class=c1></span>    <span class=n>compile</span> <span class=s1>&#39;org.apache.tapestry:tapestry-core:5.4-beta-36&#39;</span>
+    <span class=n>compile</span> <span class=s1>&#39;org.apache.tapestry:tapestry-webresources:5.4-beta-36&#39;</span>
+    <span class=n>compile</span> <span class=s1>&#39;org.apache.tapestry:tapestry-javadoc:5.4-beta-36&#39;</span>
+    <span class=n>compile</span> <span class=s1>&#39;org.apache.tapestry:tapestry-beanvalidator:5.4-beta-36&#39;</span>
+    
+    <span class=c1>// Spring
+</span><span class=c1></span>    <span class=n>compile</span> <span class=o>(</span><span class=s1>&#39;org.apache.tapestry:tapestry-spring:5.4-beta-36&#39;</span><span class=o>)</span> <span class=o>{</span> <span class=n>exclude</span><span class=o>(</span><span class=nl>group:</span> <span class=s1>&#39;org.springframework&#39;</span><span class=o>)</span> <span class=o>}</span>
+    <span class=n>compile</span> <span class=s1>&#39;org.springframework:spring-jdbc:4.2.1.RELEASE&#39;</span>
+    <span class=n>compile</span> <span class=s1>&#39;org.springframework:spring-web:4.2.1.RELEASE&#39;</span>
+    <span class=n>compile</span> <span class=s1>&#39;org.springframework:spring-tx:4.2.1.RELEASE&#39;</span>
+    
+    <span class=n>compile</span> <span class=s1>&#39;commons-dbcp:commons-dbcp:1.4&#39;</span>
+    
+    <span class=c1>// Tomcat embedded
+</span><span class=c1></span>    <span class=n>tomcat</span> <span class=s1>&#39;org.apache.tomcat.embed:tomcat-embed-core:8.0.26&#39;</span>
+    <span class=n>tomcat</span> <span class=s1>&#39;org.apache.tomcat.embed:tomcat-embed-logging-juli:8.0.26&#39;</span>
+    <span class=n>tomcat</span> <span class=s1>&#39;org.apache.tomcat.embed:tomcat-embed-jasper:8.0.26&#39;</span>
+<span class=o>}</span>
+
+<span class=n>tomcat</span> <span class=o>{</span>
+    <span class=n>httpPort</span> <span class=o>=</span> <span class=mi>9080</span>
+    <span class=n>httpsPort</span> <span class=o>=</span> <span class=mi>9443</span>
+    <span class=n>ajpPort</span> <span class=o>=</span> <span class=mi>9009</span>
+    <span class=n>stopPort</span> <span class=o>=</span> <span class=mi>9081</span>
+    <span class=n>enableSSL</span> <span class=o>=</span> <span class=kc>true</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/build-back.gradle target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/build-back.gradle target=_blank>build-back.gradle</a></div></div><p>En el proyecto <em>library</em> incluiremos los componentes que podemos reutilizar en cualquiera de los proyectos, será una librería de componentes de Apache Tapestry. Esta librería de componentes no es más que un archivo jar, cada proyecto que necesite utilizarlos basta con que lo incluya como una dependencia.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=n>dependencies</span> <span class=o>{</span>
+    <span class=n>compile</span> <span class=nf>project</span><span class=o>(</span><span class=s2>&#34;:core&#34;</span><span class=o>)</span>
+
+    <span class=c1>// Tapestry
+</span><span class=c1></span>    <span class=n>compile</span> <span class=s1>&#39;org.apache.tapestry:tapestry-core:5.4-beta-36&#39;</span>
+    <span class=n>compile</span> <span class=s1>&#39;org.apache.tapestry:tapestry-webresources:5.4-beta-36&#39;</span>
+    <span class=n>compile</span> <span class=s1>&#39;org.apache.tapestry:tapestry-javadoc:5.4-beta-36&#39;</span>
+<span class=o>}</span>
+
+<span class=n>jar</span> <span class=o>{</span>
+    <span class=n>manifest</span> <span class=o>{</span>
+        <span class=n>attributes</span><span class=o>(</span><span class=s2>&#34;Tapestry-Module-Classes&#34;</span><span class=o>:</span> <span class=s2>&#34;io.github.picodotdev.gradle.library.services.LibraryModule&#34;</span><span class=o>)</span>
+    <span class=o>}</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/build-library.gradle target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/build-library.gradle target=_blank>build-library.gradle</a></div></div><p>En el último proyecto <em>core</em> incluiremos una clase de utilidad con los típicos métodos estáticos, incluiremos un <a href=https://github.com/picodotdev/blog-ejemplos/blob/master/MultiprojectGradle/core/src/main/java/io/github/picodotdev/gradle/core/services/ItemDAOImpl.java>servicio que nos facilitará la persistencia</a> y una <a href=https://github.com/picodotdev/blog-ejemplos/blob/master/MultiprojectGradle/core/src/main/java/io/github/picodotdev/gradle/core/models/tables/records/ItemRecord.java>clase de modelo a persistir</a> en una base de datos <a href=https://www.postgresql.org/>PostgreSQL</a> generada con <a href=https://picodotdev.github.io/blog-bitix/2015/05/alternativa-a-hibernate-u-orm-y-ejemplo-de-jooq/>jOOQ como alternativa a Hibernate</a>, añadiendo o eliminando instancias persistidas son visualizadas desde el proyecto <em>web</em> y <em>back</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=kn>import</span> <span class=nn>org.jooq.util.GenerationTool</span>
+<span class=kn>import</span> <span class=nn>org.jooq.util.jaxb.Configuration</span>
+<span class=kn>import</span> <span class=nn>org.jooq.util.jaxb.CustomType</span>
+<span class=kn>import</span> <span class=nn>org.jooq.util.jaxb.Database</span>
+<span class=kn>import</span> <span class=nn>org.jooq.util.jaxb.ForcedType</span>
+<span class=kn>import</span> <span class=nn>org.jooq.util.jaxb.Generate</span>
+<span class=kn>import</span> <span class=nn>org.jooq.util.jaxb.Generator</span>
+<span class=kn>import</span> <span class=nn>org.jooq.util.jaxb.Jdbc</span>
+<span class=kn>import</span> <span class=nn>org.jooq.util.jaxb.Target</span>
+
+<span class=n>buildscript</span> <span class=o>{</span>
+    <span class=n>repositories</span> <span class=o>{</span>
+        <span class=n>mavenCentral</span><span class=o>()</span>
+    <span class=o>}</span>
+    
+    <span class=n>dependencies</span> <span class=o>{</span>
+        <span class=n>classpath</span> <span class=s1>&#39;org.jooq:jooq-codegen:3.6.2&#39;</span>
+        <span class=n>classpath</span> <span class=s1>&#39;org.postgresql:postgresql:9.4-1202-jdbc41&#39;</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+
+<span class=n>dependencies</span> <span class=o>{</span>
+    <span class=n>compile</span> <span class=s1>&#39;org.apache.commons:commons-lang3:3.4&#39;</span>
+    <span class=n>compile</span> <span class=s1>&#39;joda-time:joda-time:2.3&#39;</span>
+    
+    <span class=n>compile</span> <span class=s1>&#39;org.jooq:jooq:3.6.2&#39;</span>
+    <span class=n>compile</span> <span class=s1>&#39;org.jooq:jooq-meta:3.6.2&#39;</span>
+
+    <span class=n>runtime</span> <span class=s1>&#39;org.postgresql:postgresql:9.4-1202-jdbc41&#39;</span>
+    
+<span class=o>}</span>
+
+<span class=n>task</span> <span class=n>generateModels</span> <span class=o>&lt;&lt;</span> <span class=o>{</span>
+    <span class=n>Configuration</span> <span class=n>configuration</span> <span class=o>=</span> <span class=k>new</span> <span class=nf>Configuration</span><span class=o>()</span>
+        <span class=o>.</span><span class=na>withJdbc</span><span class=o>(</span><span class=k>new</span> <span class=nf>Jdbc</span><span class=o>()</span>
+            <span class=o>.</span><span class=na>withDriver</span><span class=o>(</span><span class=s1>&#39;org.postgresql.Driver&#39;</span><span class=o>)</span>
+            <span class=o>.</span><span class=na>withUrl</span><span class=o>(</span><span class=s1>&#39;jdbc:postgresql://localhost:5432/app&#39;</span><span class=o>)</span>
+            <span class=o>.</span><span class=na>withUser</span><span class=o>(</span><span class=s1>&#39;sa&#39;</span><span class=o>)</span>
+            <span class=o>.</span><span class=na>withPassword</span><span class=o>(</span><span class=s1>&#39;sa&#39;</span><span class=o>))</span>
+        <span class=o>.</span><span class=na>withGenerator</span><span class=o>(</span><span class=k>new</span> <span class=nf>Generator</span><span class=o>()</span>
+            <span class=o>.</span><span class=na>withGenerate</span><span class=o>(</span><span class=k>new</span> <span class=nf>Generate</span><span class=o>()</span>
+                <span class=o>.</span><span class=na>withInterfaces</span><span class=o>(</span><span class=kc>true</span><span class=o>)</span>
+                <span class=o>.</span><span class=na>withRelations</span><span class=o>(</span><span class=kc>true</span><span class=o>))</span>
+            <span class=o>.</span><span class=na>withName</span><span class=o>(</span><span class=s1>&#39;org.jooq.util.DefaultGenerator&#39;</span><span class=o>)</span>
+            <span class=o>.</span><span class=na>withDatabase</span><span class=o>(</span><span class=k>new</span> <span class=nf>Database</span><span class=o>()</span>
+                <span class=o>.</span><span class=na>withCustomTypes</span><span class=o>([</span>
+                    <span class=k>new</span> <span class=nf>CustomType</span><span class=o>()</span>
+                        <span class=o>.</span><span class=na>withName</span><span class=o>(</span><span class=s1>&#39;org.joda.time.DateTime&#39;</span><span class=o>)</span>
+                        <span class=o>.</span><span class=na>withConverter</span><span class=o>(</span><span class=s1>&#39;io.github.picodotdev.gradle.core.jooq.DateTimeConverter&#39;</span><span class=o>)</span>
+                        
+                <span class=o>])</span>
+                <span class=o>.</span><span class=na>withForcedTypes</span><span class=o>([</span>
+                    <span class=k>new</span> <span class=nf>ForcedType</span><span class=o>()</span>
+                        <span class=o>.</span><span class=na>withName</span><span class=o>(</span><span class=s1>&#39;org.joda.time.DateTime&#39;</span><span class=o>)</span>
+                        <span class=o>.</span><span class=na>withTypes</span><span class=o>(</span><span class=s1>&#39;TIMESTAMP&#39;</span><span class=o>)</span>                     
+                <span class=o>])</span>
+                <span class=o>.</span><span class=na>withName</span><span class=o>(</span><span class=s1>&#39;org.jooq.util.postgres.PostgresDatabase&#39;</span><span class=o>)</span>
+                <span class=o>.</span><span class=na>withIncludes</span><span class=o>(</span><span class=s1>&#39;.*&#39;</span><span class=o>)</span>
+                <span class=o>.</span><span class=na>withExcludes</span><span class=o>(</span><span class=s1>&#39;&#39;</span><span class=o>)</span>
+                <span class=o>.</span><span class=na>withInputSchema</span><span class=o>(</span><span class=s1>&#39;gradle&#39;</span><span class=o>))</span>
+            <span class=o>.</span><span class=na>withTarget</span><span class=o>(</span><span class=k>new</span> <span class=nf>Target</span><span class=o>()</span>
+                <span class=o>.</span><span class=na>withPackageName</span><span class=o>(</span><span class=s1>&#39;io.github.picodotdev.gradle.core.models&#39;</span><span class=o>)</span>
+                <span class=o>.</span><span class=na>withDirectory</span><span class=o>(</span><span class=s1>&#39;src/main/java&#39;</span><span class=o>)));</span>
+
+    <span class=n>GenerationTool</span><span class=o>.</span><span class=na>main</span><span class=o>(</span><span class=n>configuration</span><span class=o>)</span>
+<span class=o>}</span>
+
+<span class=n>task</span> <span class=nf>updateDatabase</span><span class=o>(</span><span class=nl>type:</span><span class=n>Exec</span><span class=o>)</span> <span class=o>{</span>
+    <span class=n>commandLine</span> <span class=s1>&#39;./liquibase.sh&#39;</span><span class=o>,</span> <span class=s1>&#39;update&#39;</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/build-core.gradle target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/build-core.gradle target=_blank>build-core.gradle</a></div></div><p>Para arrancar los proyectos web deberemos inicializar la base de datos. Con <a href=https://docs.docker.com/compose/>docker-compose</a> y el <a href=https://github.com/picodotdev/blog-ejemplos/blob/master/MultiprojectGradle/core/misc/postgres/docker-compose.yml>archivo descriptor de Docker</a>) iniciamos el contenedor de <a href=https://www.docker.com/>Docker</a> con la base de datos PostgreSQL. La base de datos deberemos crearla manualmente pero el esquema donde se guardarán los datos los crearemos con <a href=https://elblogdepicodev.blogspot.com.es/2013/05/modificar-la-base-de-datos-con-liquibase.html>Liquibase que nos permite hacer modificaciones a una BBDD</a>, deberemos tenerlo instalado y su comando incluido en el <em>PATH</em> del sistema para este ejemplo.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=o>[</span>picodotdev@archlinux postgres<span class=o>]</span>$ docker-compose up
+$ docker <span class=nb>exec</span> -it postgres_postgres_1 bash
+$ psql -U sa
+CREATE DATABASE app<span class=p>;</span>
+<span class=se>\c</span> app
+<span class=se>\q</span>
+<span class=o>[</span>picodotdev@archlinux core<span class=o>]</span>$ ./gradlew updateDatabase</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/database.sh target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/database.sh target=_blank>database.sh</a></div></div><p>Una vez tenemos en cada directorio los archivos <em>build.gradle</em> y el resto de archivos que necesite cada proyecto (archivos .java, .tml, &hellip;) podemos construir los módulos a la vez o de forma individual. Podemos iniciar los proyectos web y acceder a ellos con el navegador con:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=o>[</span>picodotdev@archlinux MultiprojectGradle<span class=o>]</span>$ ./gradlew build
+<span class=o>[</span>picodotdev@archlinux MultiprojectGradle<span class=o>]</span>$ <span class=nb>cd</span> back
+<span class=o>[</span>picodotdev@archlinux back<span class=o>]</span>$ ./gradlew tomcatRun
+<span class=o>[</span>picodotdev@archlinux MultiprojectGradle<span class=o>]</span>$ <span class=nb>cd</span> web
+<span class=o>[</span>picodotdev@archlinux web<span class=o>]</span>$ ./gradlew tomcatRun</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/back-run.sh target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/back-run.sh target=_blank>back-run.sh</a></div></div><div class=media style=text-align:center><figure><script type=text/javascript src=https://asciinema.org/a/26293.js id=asciicast-26293 async></script><noscript><a href=https://asciinema.org/a/26293 target=_blank><img src=https://asciinema.org/a/26293.png width=734></a></noscript><figcaption>Iniciando aplicación backoffice</figcaption></figure></div><p>Creando un producto desde la consola de PostgreSQL y refrescando la página en el proyecto de <em>web</em> o <em>back</em> veremos que se visualizan sus datos.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-SQL data-lang=SQL><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-SQL data-lang=SQL><span class=k>insert</span> <span class=k>into</span> <span class=n>gradle</span><span class=p>.</span><span class=n>item</span> <span class=p>(</span><span class=s2>&#34;dateCreate&#34;</span><span class=p>,</span> <span class=n>name</span><span class=p>,</span> <span class=n>stock</span><span class=p>)</span> <span class=k>values</span> <span class=p>(</span><span class=n>now</span><span class=p>(),</span> <span class=s1>&#39;A laptop&#39;</span><span class=p>,</span> <span class=s1>&#39;3&#39;</span><span class=p>);</span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/insert.sql target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/code/insert.sql target=_blank>insert.sql</a></div></div><div class=media style=text-align:center><figure><a href=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/images/back.png title=Backoffice data-gallery><img src=/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/images/back.png width=813></a><figcaption>Aplicación backoffice</figcaption></figure></div><p>El <a href=https://github.com/picodotdev/blog-ejemplos/tree/master/MultiprojectGradle>código fuente completo del ejemplo</a> puedes verlo y descargarlo desde su repositorio de GitHub.</p><div class="alert alert-warning"><img src=assets/images/misc/PugInTapestry.png alt="Portada libro: PlugIn Tapestry" title="Portada libro: PlugIn Tapestry" style=float:left;margin-right:1.5em><h3>Libro PlugIn Tapestry</h3><p>Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este <i>framework</i> en el formato que prefieras, <a href=https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/>PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry</a>, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.</p><br style=clear:both><div class=buttons><a href=https://picodotdev.github.io/blog-bitix/assets/custom/PlugInTapestry.pdf class="btn btn-lg btn-success">PDF</a>
+<a href=https://github.com/picodotdev/blog-ejemplos/tree/master/PlugInTapestry class="btn btn-lg btn-success">Código fuente ejemplos</a></div></div><div class=reference>Referencia:<br><ul><li><a href=https://elblogdepicodev.blogspot.com.es/2012/03/herramienta-de-construccion-gradle.html>Herramienta de construcción Gradle</a></li><li><a href=https://elblogdepicodev.blogspot.com.es/2012/04/usar-gradle-mediante-gradle-wrapper.html>Usar Gradle mediante Gradle wrapper</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/05/incluir-informacion-de-la-version-en-el-artefacto-distribuible-con-gradle/>Incluir información de la versión en el artefacto distribuible con Gradle</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/>Libro PlugIn Tapestry</a></li><li><a href=http://www.javamexico.org/blogs/windoctor/gradle_multiproyectos_java>Gradle: Multiproyectos Java</a></li><li><a href="https://www.youtube.com/watch?v=eP0NBHkAwwU">Gradle: Múltiples Proyectos en Java - P1</a></li><li><a href="https://www.youtube.com/watch?v=fkzPB3IgrB8">Gradle: Múltiples Proyectos en Java - P2</a></li><li><a href="https://www.youtube.com/watch?v=-ITQ7_94iMM">Gradle: Múltiples Proyectos en Java - P3</a></li></ul></div></div></article><div class="row related"><div class=col-md-12>Artículos relacionados:<ul><li><a href=/blog-bitix/2015/06/hemeroteca-7/>Hemeroteca #7</a></li><li><a href=/blog-bitix/2015/05/patron-multiples-vistas-de-un-mismo-dato-en-tapestry/>Patrón múltiples vistas de un mismo dato en Tapestry</a></li><li><a href=/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/>Guardar contraseñas usando «Salted Password Hashing» y otras formas correctas</a></li><li><a href=/blog-bitix/2015/03/productividad-y-errores-de-compilacion-con-apache-tapestry/>Productividad y errores de compilación con Apache Tapestry</a></li><li><a href=/blog-bitix/2014/08/actualizacion-del-libro-plugin-tapestry/>Actualización del libro PlugIn Tapestry</a></li></ul></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><a id=comments></a><div class=row><div class=col-md-12><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='https:\/\/picodotdev.github.io\/blog-bitix\/2015\/09\/ejemplo-de-multiproyecto-con-gradle\/';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2015\/09\/ejemplo-de-multiproyecto-con-gradle\/';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
+<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2019 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow rel=license><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style=border-width:0 src=https://licensebuttons.net/l/by-sa/4.0/80x15.png class=licencia></a><br><a href=https://twitter.com/blogstackinfo rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png alt="Blog Stack" title="Blog Stack"></a>
+<a href=https://www.planetacodigo.com/ rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png alt="Planeta código" title="Planeta código"></a><br><span xmlns:dct=http://purl.org/dc/terms/ property=dct:title><a href=https://picodotdev.github.io/blog-bitix/ rel=nofollow>Blog Bitix</a></span> by <a xmlns:cc=https://creativecommons.org/ns# href=https://picodotdev.github.io/blog-bitix/ property=cc:attributionName rel=cc:attributionurl>pico.dev</a> is licensed under a <a rel=license href=https://creativecommons.org/licenses/by-sa/4.0/>Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class=credit>Powered by <a href=https://gohugo.io/ rel=nofollow title="A fast and modern static website engine">Hugo</a> and <a href=https://pages.github.com/ title="Websites for you and your projects">GitHub Pages</a>.</span>
+<span class=credit>Background patterns from <a href=https://www.toptal.com/designers/subtlepatterns/ rel=nofollow>Subtle Patterns</a>.</span></div></div></footer></div><div class=blueimp-gallery-container><div id=blueimp-gallery class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal=false><div class=slides></div><h3 class=title></h3><a class=prev>‹</a>
+<a class=next>›</a>
+<a class=close>×</a>
+<a class=play-pause></a><ol class=indicator></ol><div class="modal fade"><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close aria-hidden=true>&times;</button><h4 class=modal-title></h4></div><div class="modal-body next"></div><div class=modal-footer><button type=button class="btn btn-default pull-left prev">
+<i class="glyphicon glyphicon-chevron-left"></i>Anterior</button>
+<button type=button class="btn btn-primary next">
+Siguiente
+<i class="glyphicon glyphicon-chevron-right"></i></button></div></div></div></div></div></div><script type=text/javascript>window.cookieconsent_options={"message":"Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.","dismiss":"Aceptar","learnMore":"Más información","link":null,"theme":"dark-bottom"};</script><script type=text/javascript src=//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js async></script></body></html>

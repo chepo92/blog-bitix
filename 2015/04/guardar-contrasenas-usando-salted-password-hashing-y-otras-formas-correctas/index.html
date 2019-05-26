@@ -1,0 +1,331 @@
+<!doctype html><html lang=es><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content=picodotdev><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="Para cada servicio deberíamos emplear una contraseña de una longitud de al menos 8 caracteres que incluya letras en minúscula, mayúscula, números y símbolos, una herramienta que podemos utilizar para generar contraseñas más seguras con los criterios que indiquemos es Strong Password Generator. Sin embargo, recordar cada una de estas contraseñas es muy difícil de modo que es habitual que utilicemos la misma contraseña para varios o todos los servicios y no empleando todos los criterios anteriores. &hellip;"><base href=https://picodotdev.github.io/blog-bitix/><title>Guardar contraseñas usando «Salted Password Hashing» y otras formas correctas</title><link rel=author type=text/plain href=humans.txt><link rel="shortcut icon" href=assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=assets/apple-touch-icon-144-precomposed.png><link rel=canonical href=https://picodotdev.github.io/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/><link href=index.xml rel=alternate type=application/rss+xml title="Blog Bitix"><link rel=stylesheet type=text/css href="//fonts.googleapis.com/css?family=PT+Serif:400,400i,700"><link rel=stylesheet type=text/css href=assets/libs/bootstrap-4.3.1/css/bootstrap.min.css><link rel=stylesheet type=text/css href=assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=assets/css/syntax.css><link rel=stylesheet type=text/css href=assets/css/main.css><script type=text/javascript src=assets/js/require-config.js data-main=js/main defer></script><script type=text/javascript src=assets/libs/require.js data-main=js/main defer></script><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js defer></script><script type=text/javascript defer>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript defer>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script type=text/javascript src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" defer></script><script type=text/javascript src=assets/js/app.js defer></script></head><body><div class=container><div class=row><div class=col-12><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
+<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class="col-12 col-lg-4 text-center"><form name=query class="form-inline search" onsubmit="return false;"><div class=input-group><input type=text name=q class=form-control placeholder="Buscar en Blog Bitix">
+<span class=input-group-btn><button class="btn btn-secondary" type=submit>Buscar</button></span></div></form><form name=search action=https://duckduckgo.com/ method=get class=hidden data-site=https://picodotdev.github.io/blog-bitix/><input type=hidden name=q></form></div></div><div class=row><div class=col-12><nav class="nav nav-pills nav-fill"><a href=/blog-bitix/tags/java/ class="nav-item nav-link">Java</a>
+<a href=/blog-bitix/tags/gnu-linux/ class="nav-item nav-link">GNU/Linux</a>
+<a href=/blog-bitix/tags/javascript/ class="nav-item nav-link">JavaScript</a>
+<a href=/blog-bitix/tags/tapestry/ class="nav-item nav-link">Tapestry</a>
+<a href=/blog-bitix/archive/ class="nav-item nav-link">Archivo y hemeroteca</a>
+<a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
+<a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class="adblock-sidebar adblock-sidebar-right"><div class=adblock-sidebar-container><ins class="adsbygoogle adblock-sidebar-vertical" style=display:block data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format="vertical, rectangle" data-type=auto></ins></div></div><article itemprop=mainEntity itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content=es><meta itemprop=keywords content="java, programacion, seguridad, tapestry, blog-stack, planeta-linux, planeta-codigo"><h1 itemprop=name>Guardar contraseñas usando «Salted Password Hashing» y otras formas correctas</h1><p class=information>Escrito por
+<span itemprop=author itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2015-04-10>10/04/2015</time>, actualizado el <time itemprop=dateModified datetime=2015-04-14>14/04/2015</time>.<br><a href=tags/java/>java</a> <a href=tags/programacion/>programacion</a> <a href=tags/seguridad/>seguridad</a> <a href=tags/tapestry/>tapestry</a> <a href=tags/blog-stack/>blog-stack</a> <a href=tags/planeta-linux/>planeta-linux</a> <a href=tags/planeta-codigo/>planeta-codigo</a><br><a href=/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/ itemprop=url>Enlace permanente</a>
+<a href=/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/#comments>Comentarios</a></p><div class=content itemprop=articleBody><meta itemprop=wordCount content=1986><div class=logotypes style=float:right><img src=assets/images/logotipos/apache-shiro.png class=right width=300 alt="Apache Shiro" title="Apache Shiro"></div><p>Para cada servicio deberíamos emplear una contraseña de una longitud de al menos 8 caracteres que incluya letras en minúscula, mayúscula, números y símbolos, una herramienta que podemos utilizar para generar contraseñas más seguras con los criterios que indiquemos es <a href=http://strongpasswordgenerator.com/>Strong Password Generator</a>. Sin embargo, recordar cada una de estas contraseñas es muy difícil de modo que es habitual que utilicemos la misma contraseña para varios o todos los servicios y no empleando todos los criterios anteriores. Por otro lado, los desarrolladores no deberíamos guardar en la base de datos las contraseñas que nos entregan los usuarios en texto plano, para evitar guardalas en texto plano hace un tiempo se utilizaba únicamente una función de <em>hashing</em> unidireccional como MD5 o SHA, de este modo si la base de datos fuese comprometida en teoría no podrían conocer la contraseña original. En este artículo comentaré que aún guardando las contraseñas con una función de <em>hashing</em> no es suficiente para hacerlas seguras y comentaré una implementación con <a href=https://shiro.apache.org/>Apache Shiro</a> de una de las ideas propuestas.</p><h3 id=algo-de-teoría-y-algunas-explicaciones>Algo de teoría y algunas explicaciones</h3><div class=logotypes style=float:right;text-align:right><img src=assets/images/logotipos/java.svg class=right alt=Java title=Java width=200></div><p>Aunque guardemos las contraseñas con MD5 o alguna variante de SHA hoy en día no es suficiente para que en caso de que alguien obtenga los <em>hashes</em> de las contraseñas de la base de datos pueda averiguarlas o dar con una que genere el mismo <em>hash</em>, usando estas funciones se pueden encontrar colisiones en un tiempo razonable y por tanto ya no se consideran seguras. Dada la computación actual de los procesadores y las tarjetas gráficas una contraseña débil puede romperse usando un <a href=https://es.wikipedia.org/wiki/Ataque_de_fuerza_bruta>ataque de fuerza bruta</a> y quizá antes con un <a href=https://es.wikipedia.org/wiki/Ataque_de_diccionario>ataque de diccionario</a> que pruebe las más comunes. Muchos usuarios no tienen contraseñas largas ni utilizan letras en minúscula, mayúscula, números y símbolos, muchos usuarios utilizan contraseñas sencillas para ser recordadas más fácilmente, y aún <em>hasheando</em> las contraseñas pueden ser averiguadas. También se pueden usar <a href=https://es.wikipedia.org/wiki/Tabla_arco%C3%ADris>tablas arcoiris</a> o <em>rainbow tables</em> con los <em>hashes</em> precalculados de las contraseñas de un diccionario con lo que el tiempo empleado para romper una puede requerir poco tiempo de computación.</p><p>También hay que tener en cuenta que muchos usuarios usan la misma contraseña para múltiples servicios por lo que basta que alguien obtenga la contraseña original de un servicio y podrá acceder a otros más interesantes para alguien con malas intenciones por mucha seguridad que tenga esos otros servicios, este es uno de los motivos de la autenticación en dos pasos (que emplea algo que sé, la contraseña, y algo que tengo, como el móvil) y la recomendación de usar una contraseña diferente para cada servicio. Las contraseñas por si solas tiene la seguridad más baja de los diferentes servicios donde se usen.</p><p>Con <em>Salted Password Hashing</em> el uso de <em>rainbow tables</em> que aceleren el ataque no serían posibles por la entropía añadida por los <em>salt</em>. Aún así conociendo el <em>salt</em> y la función de <em>hash</em> empleada seguiría siendo posible un ataque de fuerza bruta y de diccionario. Con <em>Salted Password Hashing</em> se usa en la función de <em>hash</em> y un dato variable denominado <em>salt</em> que añade suficiente entropía y es diferente para cada contraseña, en la base de datos se guarda el resultado de la función de <em>hash</em> junto con el <em>salt</em>, esto es, el resultado de SHA-512(contraseña+<em>salt</em>) y también el <em>salt</em>.</p><h3 id=ejemplo-de-salted-password-hashing-usando-apache-shiro>Ejemplo de <em>Salted Password Hashing</em> usando Apache Shiro</h3><p>Antes de comentar alguna opción más que dificulte los ataques de fuerza bruta o de diccionario veamos como implementar <em>Salted Password Hashing</em> empleando Apache Shiro como librería de autenticación y autorización para los usuarios. El ejemplo será simple sin guardar los datos en una base de datos pero suficiente para mostrar que se debe añadir al proyecto para que Shiro compruebe las contraseñas usando una función de <em>hash</em> y un <em>salt</em>. Partiré de un ejemplo que hice para el <a href=https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/>libro PlugIn Tapestry</a> sobre el desarrollo de aplicaciones web con el <em>framework</em> <a href=https://tapestry.apache.org/>Apache Tapestry</a>. Básicamente deberemos crear un nuevo <em>Realm</em> que devuelva los datos del usuario, el <em>hash</em> y el <em>salt</em>. Una implementación suficiente para el ejemplo sería la siguiente, la parte importante está en el método <em>doGetAuthenticationInfo</em> y en la inicialización <em>static</em> de la clase:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span><span class=lnt>132
+</span><span class=lnt>133
+</span><span class=lnt>134
+</span><span class=lnt>135
+</span><span class=lnt>136
+</span><span class=lnt>137
+</span><span class=lnt>138
+</span><span class=lnt>139
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>es.com.blogspot.elblogdepicodev.plugintapestry.misc</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>java.util.Arrays</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.util.HashMap</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.util.HashSet</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.util.Map</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>java.util.Set</span><span class=o>;</span>
+
+<span class=kn>import</span> <span class=nn>org.apache.shiro.authc.AccountException</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.apache.shiro.authc.AuthenticationException</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.apache.shiro.authc.AuthenticationInfo</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.apache.shiro.authc.AuthenticationToken</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.apache.shiro.authc.ExpiredCredentialsException</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.apache.shiro.authc.LockedAccountException</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.apache.shiro.authc.SimpleAuthenticationInfo</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.apache.shiro.authc.UsernamePasswordToken</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.apache.shiro.authc.credential.HashedCredentialsMatcher</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.apache.shiro.authz.AuthorizationException</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.apache.shiro.authz.AuthorizationInfo</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.apache.shiro.authz.SimpleAuthorizationInfo</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.apache.shiro.cache.MemoryConstrainedCacheManager</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.apache.shiro.crypto.SecureRandomNumberGenerator</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.apache.shiro.crypto.hash.Sha512Hash</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.apache.shiro.realm.AuthorizingRealm</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.apache.shiro.subject.PrincipalCollection</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.apache.shiro.util.ByteSource</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nn>org.apache.shiro.util.SimpleByteSource</span><span class=o>;</span>
+
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>Realm</span> <span class=kd>extends</span> <span class=n>AuthorizingRealm</span> <span class=o>{</span>
+
+    <span class=kd>private</span> <span class=kd>static</span> <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;&gt;</span> <span class=n>users</span><span class=o>;</span>
+    <span class=kd>private</span> <span class=kd>static</span> <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Set</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;&gt;</span> <span class=n>permissions</span><span class=o>;</span>
+    
+    <span class=c1>// Para hacer más costoso el cálculo del hash y dificultar un ataque de fuerza bruta
+</span><span class=c1></span>    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=kt>int</span> <span class=n>HASH_ITERATIONS</span> <span class=o>=</span> <span class=n>5_000_000</span><span class=o>;</span>
+
+    <span class=kd>static</span> <span class=o>{</span>
+        <span class=c1>// Generar una contraseña de clave «password», con SHA-512 y con «salt» aleatorio.
+</span><span class=c1></span>        <span class=n>ByteSource</span> <span class=n>saltSource</span> <span class=o>=</span> <span class=k>new</span> <span class=n>SecureRandomNumberGenerator</span><span class=o>().</span><span class=na>nextBytes</span><span class=o>();</span>
+        <span class=kt>byte</span><span class=o>[]</span> <span class=n>salt</span> <span class=o>=</span> <span class=n>saltSource</span><span class=o>.</span><span class=na>getBytes</span><span class=o>();</span>
+        <span class=n>Sha512Hash</span> <span class=n>hash</span><span class=o>=</span> <span class=k>new</span> <span class=n>Sha512Hash</span><span class=o>(</span><span class=s>&#34;password&#34;</span><span class=o>,</span> <span class=n>saltSource</span><span class=o>,</span> <span class=n>HASH_ITERATIONS</span><span class=o>);</span>
+        <span class=n>String</span> <span class=n>password</span> <span class=o>=</span> <span class=n>hash</span><span class=o>.</span><span class=na>toHex</span><span class=o>();</span>
+        <span class=c1>// Contraseña codificada en Base64
+</span><span class=c1></span>        <span class=c1>//String password = hash.toBase64();
+</span><span class=c1></span>
+        <span class=c1>// Permissions (role, permissions)
+</span><span class=c1></span>        <span class=n>permissions</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HashMap</span><span class=o>&lt;&gt;();</span>
+        <span class=n>permissions</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;root&#34;</span><span class=o>,</span> <span class=k>new</span> <span class=n>HashSet</span><span class=o>&lt;&gt;(</span><span class=n>Arrays</span><span class=o>.</span><span class=na>asList</span><span class=o>(</span><span class=k>new</span> <span class=n>String</span><span class=o>[]</span> <span class=o>{</span> <span class=s>&#34;cuenta:reset&#34;</span> <span class=o>})));</span>
+        
+        <span class=c1>// Roles
+</span><span class=c1></span>        <span class=n>Set</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=n>roles</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HashSet</span><span class=o>&lt;&gt;();</span>
+        <span class=n>roles</span><span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=s>&#34;root&#34;</span><span class=o>);</span>
+
+        <span class=c1>// Usuario (property, value)
+</span><span class=c1></span>        <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>user</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HashMap</span><span class=o>&lt;&gt;();</span>
+        <span class=n>user</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;username&#34;</span><span class=o>,</span> <span class=s>&#34;root&#34;</span><span class=o>);</span>
+        <span class=n>user</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;password&#34;</span><span class=o>,</span> <span class=n>password</span><span class=o>);</span>
+        <span class=n>user</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;salt&#34;</span><span class=o>,</span> <span class=n>salt</span><span class=o>);</span>
+        <span class=n>user</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;locked&#34;</span><span class=o>,</span> <span class=n>Boolean</span><span class=o>.</span><span class=na>FALSE</span><span class=o>);</span>
+        <span class=n>user</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;expired&#34;</span><span class=o>,</span> <span class=n>Boolean</span><span class=o>.</span><span class=na>FALSE</span><span class=o>);</span>
+        <span class=n>user</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;roles&#34;</span><span class=o>,</span> <span class=n>roles</span><span class=o>);</span>
+
+        <span class=c1>// Usuarios
+</span><span class=c1></span>        <span class=n>users</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HashMap</span><span class=o>&lt;&gt;();</span>
+        <span class=n>users</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;root&#34;</span><span class=o>,</span> <span class=n>user</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=nf>Realm</span><span class=o>()</span> <span class=o>{</span>
+        <span class=kd>super</span><span class=o>(</span><span class=k>new</span> <span class=n>MemoryConstrainedCacheManager</span><span class=o>());</span>
+        
+        <span class=n>HashedCredentialsMatcher</span> <span class=n>cm</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HashedCredentialsMatcher</span><span class=o>(</span><span class=n>Sha512Hash</span><span class=o>.</span><span class=na>ALGORITHM_NAME</span><span class=o>);</span>
+        <span class=n>cm</span><span class=o>.</span><span class=na>setHashIterations</span><span class=o>(</span><span class=n>HASH_ITERATIONS</span><span class=o>);</span>
+        <span class=c1>//cm.setStoredCredentialsHexEncoded(false);
+</span><span class=c1></span>     
+        <span class=n>setName</span><span class=o>(</span><span class=s>&#34;local&#34;</span><span class=o>);</span>
+        <span class=n>setAuthenticationTokenClass</span><span class=o>(</span><span class=n>UsernamePasswordToken</span><span class=o>.</span><span class=na>class</span><span class=o>);</span>
+        <span class=n>setCredentialsMatcher</span><span class=o>(</span><span class=n>cm</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Proporciona la autenticación de los usuarios.
+</span><span class=cm>     */</span>
+    <span class=nd>@Override</span>
+    <span class=kd>protected</span> <span class=n>AuthenticationInfo</span> <span class=nf>doGetAuthenticationInfo</span><span class=o>(</span><span class=n>AuthenticationToken</span> <span class=n>token</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>AuthenticationException</span> <span class=o>{</span>
+        <span class=n>UsernamePasswordToken</span> <span class=n>atoken</span> <span class=o>=</span> <span class=o>(</span><span class=n>UsernamePasswordToken</span><span class=o>)</span> <span class=n>token</span><span class=o>;</span>
+
+        <span class=n>String</span> <span class=n>username</span> <span class=o>=</span> <span class=n>atoken</span><span class=o>.</span><span class=na>getUsername</span><span class=o>();</span>
+
+        <span class=k>if</span> <span class=o>(</span><span class=n>username</span> <span class=o>==</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span> <span class=k>throw</span> <span class=k>new</span> <span class=n>AccountException</span><span class=o>(</span><span class=s>&#34;Null usernames are not allowed by this realm.&#34;</span><span class=o>);</span> <span class=o>}</span>
+
+        <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>user</span> <span class=o>=</span> <span class=n>findByUsername</span><span class=o>(</span><span class=n>username</span><span class=o>);</span>
+        <span class=n>String</span> <span class=n>password</span> <span class=o>=</span> <span class=o>(</span><span class=n>String</span><span class=o>)</span> <span class=n>user</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=s>&#34;password&#34;</span><span class=o>);</span>
+        <span class=kt>byte</span><span class=o>[]</span> <span class=n>salt</span> <span class=o>=</span> <span class=o>(</span><span class=kt>byte</span> <span class=o>[])</span> <span class=n>user</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=s>&#34;salt&#34;</span><span class=o>);</span>
+        <span class=kt>boolean</span> <span class=n>locked</span> <span class=o>=</span> <span class=o>(</span><span class=kt>boolean</span><span class=o>)</span> <span class=n>user</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=s>&#34;locked&#34;</span><span class=o>);</span>
+        <span class=kt>boolean</span> <span class=n>expired</span> <span class=o>=</span> <span class=o>(</span><span class=kt>boolean</span><span class=o>)</span> <span class=n>user</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=s>&#34;expired&#34;</span><span class=o>);</span>
+
+        <span class=k>if</span> <span class=o>(</span><span class=n>locked</span><span class=o>)</span> <span class=o>{</span> <span class=k>throw</span> <span class=k>new</span> <span class=n>LockedAccountException</span><span class=o>(</span><span class=s>&#34;Account [&#34;</span> <span class=o>+</span> <span class=n>username</span> <span class=o>+</span> <span class=s>&#34;] is locked.&#34;</span><span class=o>);</span> <span class=o>}</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>expired</span><span class=o>)</span> <span class=o>{</span> <span class=k>throw</span> <span class=k>new</span> <span class=n>ExpiredCredentialsException</span><span class=o>(</span><span class=s>&#34;The credentials for account [&#34;</span> <span class=o>+</span> <span class=n>username</span> <span class=o>+</span> <span class=s>&#34;] are expired&#34;</span><span class=o>);</span> <span class=o>}</span>
+
+        <span class=k>return</span> <span class=k>new</span> <span class=n>SimpleAuthenticationInfo</span><span class=o>(</span><span class=n>username</span><span class=o>,</span> <span class=n>password</span><span class=o>,</span> <span class=k>new</span> <span class=n>SimpleByteSource</span><span class=o>(</span><span class=n>salt</span><span class=o>),</span> <span class=n>getName</span><span class=o>());</span>
+    <span class=o>}</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * Proporciona la autorización de los usuarios.
+</span><span class=cm>     */</span>
+    <span class=nd>@Override</span>
+    <span class=kd>protected</span> <span class=n>AuthorizationInfo</span> <span class=nf>doGetAuthorizationInfo</span><span class=o>(</span><span class=n>PrincipalCollection</span> <span class=n>principals</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>principals</span> <span class=o>==</span> <span class=kc>null</span><span class=o>)</span> <span class=k>throw</span> <span class=k>new</span> <span class=n>AuthorizationException</span><span class=o>(</span><span class=s>&#34;PrincipalCollection was null, which should not happen&#34;</span><span class=o>);</span>
+
+        <span class=k>if</span> <span class=o>(</span><span class=n>principals</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>())</span> <span class=k>return</span> <span class=kc>null</span><span class=o>;</span>
+
+        <span class=k>if</span> <span class=o>(</span><span class=n>principals</span><span class=o>.</span><span class=na>fromRealm</span><span class=o>(</span><span class=n>getName</span><span class=o>()).</span><span class=na>size</span><span class=o>()</span> <span class=o>&lt;=</span> <span class=n>0</span><span class=o>)</span> <span class=k>return</span> <span class=kc>null</span><span class=o>;</span>
+
+        <span class=c1>// Obtener el usuario
+</span><span class=c1></span>        <span class=n>String</span> <span class=n>username</span> <span class=o>=</span> <span class=o>(</span><span class=n>String</span><span class=o>)</span> <span class=n>principals</span><span class=o>.</span><span class=na>fromRealm</span><span class=o>(</span><span class=n>getName</span><span class=o>()).</span><span class=na>iterator</span><span class=o>().</span><span class=na>next</span><span class=o>();</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>username</span> <span class=o>==</span> <span class=kc>null</span><span class=o>)</span> <span class=k>return</span> <span class=kc>null</span><span class=o>;</span>
+            <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>user</span> <span class=o>=</span> <span class=n>findByUsername</span><span class=o>(</span><span class=n>username</span><span class=o>);</span>
+            <span class=k>if</span> <span class=o>(</span><span class=n>user</span> <span class=o>==</span> <span class=kc>null</span><span class=o>)</span> <span class=k>return</span> <span class=kc>null</span><span class=o>;</span>
+        
+            <span class=c1>// Obtener los roles
+</span><span class=c1></span>            <span class=n>Set</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=n>roles</span> <span class=o>=</span> <span class=o>(</span><span class=n>Set</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;)</span> <span class=n>user</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=s>&#34;roles&#34;</span><span class=o>);</span>
+        
+            <span class=c1>// Obtener los permisos de los roles
+</span><span class=c1></span>            <span class=n>Set</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=n>p</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HashSet</span><span class=o>&lt;&gt;();</span>
+            <span class=k>for</span> <span class=o>(</span><span class=n>String</span> <span class=n>role</span> <span class=o>:</span> <span class=n>roles</span><span class=o>)</span> <span class=o>{</span>
+                <span class=n>p</span><span class=o>.</span><span class=na>addAll</span><span class=o>((</span><span class=n>Set</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;)</span> <span class=n>permissions</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>role</span><span class=o>));</span>
+            <span class=o>}</span> 
+
+            <span class=c1>// Devolver el objeto de autorización
+</span><span class=c1></span>            <span class=n>SimpleAuthorizationInfo</span> <span class=n>ai</span> <span class=o>=</span> <span class=k>new</span> <span class=n>SimpleAuthorizationInfo</span><span class=o>();</span>
+            <span class=n>ai</span><span class=o>.</span><span class=na>setRoles</span><span class=o>(</span><span class=n>roles</span><span class=o>);</span>
+            <span class=n>ai</span><span class=o>.</span><span class=na>setStringPermissions</span><span class=o>(</span><span class=n>p</span><span class=o>);</span>
+            <span class=k>return</span> <span class=n>ai</span><span class=o>;</span>
+    <span class=o>}</span>
+
+        <span class=kd>private</span> <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=nf>findByUsername</span><span class=o>(</span><span class=n>String</span> <span class=n>username</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>users</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>username</span><span class=o>);</span>
+    <span class=o>}</span>
+<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/code/Realm.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/code/Realm.java target=_blank>Realm.java</a></div></div><p>Las contraseñas <em>hasheadas</em> tendrán la siguiente forma, podemos guardarlas codificadas en formato hexadecimal o en formato Base64:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>Hex: 53a8b4b7eb9f5b8a0754916bcf2e11443149e8d0eb933624abf6feec4a8f43799bc177e0817a2a9df204d7c3597a379689f466f9b3bfe14b534c8d824ceeee22
+Base64: U6i0t+ufW4oHVJFrzy4RRDFJ6NDrkzYkq/b+7EqPQ3mbwXfggXoqnfIE18NZejeWifRm+bO/4UtTTI2CTO7uIg==</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/code/hashed-password.txt target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/code/hashed-password.txt target=_blank>hashed-password.txt</a></div></div><p>En el ejemplo tratándose de una aplicación web usando Apache Tapestry se debe modificar la configuración para que se utilice el nuevo <em>Realm</em> el antiguo guardaba las contraseñas en texto plano (<em>shiro-users.properties</em>).</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=o>...</span>
+<span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>contributeWebSecurityManager</span><span class=o>(</span><span class=n>Configuration</span><span class=o>&lt;</span><span class=n>Realm</span><span class=o>&gt;</span> <span class=n>configuration</span><span class=o>)</span> <span class=o>{</span>
+    <span class=c1>// Realm básico
+</span><span class=c1></span> <span class=c1>//ExtendedPropertiesRealm realm = new ExtendedPropertiesRealm(&#34;classpath:shiro-users.properties&#34;);
+</span><span class=c1></span>     
+    <span class=c1>// Realm con «salted password hashing» y «salt»
+</span><span class=c1></span> <span class=n>Realm</span> <span class=n>realm</span> <span class=o>=</span> <span class=k>new</span> <span class=n>es</span><span class=o>.</span><span class=na>com</span><span class=o>.</span><span class=na>blogspot</span><span class=o>.</span><span class=na>elblogdepicodev</span><span class=o>.</span><span class=na>plugintapestry</span><span class=o>.</span><span class=na>misc</span><span class=o>.</span><span class=na>Realm</span><span class=o>();</span>
+
+    <span class=n>configuration</span><span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=n>realm</span><span class=o>);</span>
+<span class=o>}</span>
+<span class=o>...</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/code/AppModule.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/code/AppModule.java target=_blank>AppModule.java</a></div></div><p>El cambio de <em>Realm</em> para el usuario no supone ninguna modificación y podrá seguir autenticandose con su misma contraseña. En el ejemplo con <em>root</em> como usuario y <em>password</em> como contraseña.</p><div class=media style=text-align:center><figure><a href=/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/images/formulario-inicio-sesion.png title="Formulario de inicio de sesión" data-gallery><img src=/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/images/formulario-inicio-sesion.png width=789></a></figure></div><p>Este es todo el código que necesitamos para la implementación de contraseñas codificadas con una función de <em>hashing</em>, en este caso SHA-512, y un <em>salt</em>, no es mucho y además es bastante simple la implementación con Shiro y en este caso en una aplicación usando el <em>framework</em> Apache Tapestry. Estas pocas líneas de código pueden aumentar notablemente la seguridad de las contraseñas que guardamos en la base de datos. En el caso de que la base de datos se vea comprometida será más difícil para alguien con malas intenciones obtener las contraseñas originales.</p><p>El siguiente ejemplo de <a href=https://github.com/tynamo/tynamo-federatedaccounts/tree/master/tynamo-federatedaccounts-test/src/test/java/org/tynamo/security/federatedaccounts/testapp/services><em>federatedaccounts</em></a> puede verse como usar está técnica de <em>hash</em> con <em>salt</em> usando una base de datos. Básicamente es lo mismo pero accediendo a base de datos para obtener el <em>hash</em> de la contraseña y el <em>salt</em> con una entidad JPA.</p><h3 id=otras-opciones-que-añaden-más-seguridad>Otras opciones que añaden más seguridad</h3><p>Aún así como comento este ejemplo de <em>Salted Password Hashing</em> aunque dificulta un ataque aún es viable usar fuerza bruta o un diccionario. En el artículo <a href=https://stormpath.com/blog/password-security-right-way/>Password Security Right Way</a> comentan tres ideas más. Una es usar como función de <em>hash</em> <a href=http://bcrypt.sourceforge.net/>Bcrypt</a> no porque sea más segura que SHA-512 sino porque es más lenta y esto puede hacer inviable la fuerza bruta o de diccionario, hay <a href=https://issues.apache.org/jira/browse/SHIRO-290>planes de proporcionar Bcrypt en Apache Shiro</a> en futuras versiones. En el ejemplo como alternativa a bcrypt se usan varios millones de iteraciones de aplicación de la función para añadir tiempo de cálculo al <em>hash</em>, este tiempo adicional no es significativo en el cálculo de un <em>hash</em> pero en un ataque de fuerza bruta puede aumentarlo de forma tan significativa que sea inviable. La segunda idea interesante es además de <em>hashear</em> la clave es cifrarla de modo que aún habiendo sido comprometida la base de datos se necesite la clave privada de cifrado que también debería ser comprometida para producir el ataque. La tercera es partir el <em>hash</em> y distribuirlo entre varios sistemas de modo que sea necesario romperlos todos para obtener en <em>hash</em> original, lo que dificulta aún más un ataque.</p><p>Para implementar la segunda opción deberemos proporcionar implementaciones propias de <a href=https://shiro.apache.org/static/1.2.3/apidocs/org/apache/shiro/authc/credential/CredentialsMatcher.html>CredentialsMatcher</a> y de <a href=https://shiro.apache.org/static/1.2.3/apidocs/org/apache/shiro/crypto/hash/SimpleHash.html>SimpleHash</a>, quizá esto sea tema para otro artículo.</p><h3 id=código-fuente-del-ejemplo>Código fuente del ejemplo</h3><p>El <a href=https://github.com/picodotdev/elblogdepicodev/tree/master/PlugInTapestry>código fuente completo del ejemplo</a> está alojado en un repositorio de GitHub, es completamente funcional y puedes probarlo en tu equipo. Una vez descargado el siguiente comando e introduciendo en el navegador <em>http://localhost:8080/PlugInTapestry</em>, en la página que se muestra hay un botón para iniciar sesión:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ ./gradlew tomcatRun
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/code/gradlew.sh target=_blank>view raw</a></span>
+<a href=/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/code/gradlew.sh target=_blank>gradlew.sh</a></div></div><div class=media style=text-align:center><figure><a href=/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/images/iniciar-sesion.png title="Botón de inicio de sesión" data-gallery><img src=/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/images/iniciar-sesion.png width=582></a></figure></div><h3 id=nota-final>Nota final</h3><p>En este artículo recomiendo leer los interesantes enlaces del apartado de referencia del final, de ellos los siguientes dos son bastante completos <a href=https://stormpath.com/blog/password-security-right-way/>Password Security the Right Way</a> y <a href=https://crackstation.net/hashing-security.htm>The RIGHT Way: How to Hash Properly</a> aunque todos merecen el tiempo dedicado a una lectura detenida. Para terminar mucho de esto es fútil si se permiten contraseñas sencillas por lo que exigir contraseñas con cierta fortaleza de la forma comentada al principio también es necesario si la seguridad de la aplicación es un requisito importante.</p><div class=reference>Referencia:<br><ul><li><a href=https://stormpath.com/blog/password-security-right-way/>Password Security the Right Way</a></li><li><a href=http://codahale.com/how-to-safely-store-a-password/>How To Safely Store A Password</a></li><li><a href=https://stormpath.com/product/password_security/>Password Security with Stormpath</a></li><li><a href=https://stormpath.com/blog/strong-password-hashing-apache-shiro/>Strong Password Hashing With Apache Shiro</a></li><li><a href=https://crackstation.net/hashing-security.htm#properhashing>The RIGHT Way: How to Hash Properly</a></li><li><a href=http://shiro.apache.org/realm.html#Realm-HashingandCorrespondingMatchers>Apache Shiro, Hashing and Corresponding Matchers</a></li><li><a href=http://shiro.apache.org/realm.html#Realm-HashingCredentials>Apache Shiro, Hashing Credentials</a>
+<a href=http://tynamo.org/tapestry-security+guide>http://tynamo.org/tapestry-security+guide</a><br></li><li><a href=http://strongpasswordgenerator.com/>Strong Password Generator</a></li><li><a href=http://www.arumeinformatica.es/blog/encriptar-y-guardar-contrasenas-en-base-de-datos/>Encriptar y guardar contraseñas en base de datos</a></li><li><a href=http://www.michael-pratt.com/blog/8/Seguridad-en-el-almacenamiento-de-PasswordsContrasenas/>Seguridad en el almacenamiento de Passwords/Contraseñas</a></li><li><a href=http://www.osi.es/ca/node/4522>Usuarios con contraseñas repetidas: ciberdelincuentes felices</a></li><li><a href=http://www.elladodelmal.com/2015/03/un-hash-md5-en-la-password-no-susituye.html>Un HASH MD5 en la password no sustituye a SSL</a></li><li><a href=https://es.wikipedia.org/wiki/Ataque_de_fuerza_bruta>Ataque de fuerza bruta</a></li><li><a href=https://es.wikipedia.org/wiki/Ataque_de_diccionario>Ataque de diccionario</a></li><li><a href=https://es.wikipedia.org/wiki/Tabla_arco%C3%ADris>Tablas arcoiris o <em>rainbow tables</em></a></li></ul></div></div></article><div class="row related"><div class=col-md-12>Artículos relacionados:<ul><li><a href=/blog-bitix/2014/06/hemeroteca-5/>Hemeroteca #5</a></li><li><a href=/blog-bitix/2015/03/productividad-y-errores-de-compilacion-con-apache-tapestry/>Productividad y errores de compilación con Apache Tapestry</a></li><li><a href=/blog-bitix/2015/01/como-hacer-un-substring-de-una-cadena-html/>Cómo hacer un substring de una cadena HTML</a></li><li><a href=/blog-bitix/2014/12/ejercicios-katas-para-mejorar-habilidades-de-programacion-practicando/>Ejercicios (katas) para mejorar habilidades de programación practicando</a></li><li><a href=/blog-bitix/2014/12/8-plus-libros-para-mejorar-como-programadores/>8&#43; libros para mejorar como programadores</a></li></ul></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><a id=comments></a><div class=row><div class=col-md-12><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='https:\/\/picodotdev.github.io\/blog-bitix\/2015\/04\/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas\/';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2015\/04\/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas\/';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
+<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2019 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow rel=license><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style=border-width:0 src=https://licensebuttons.net/l/by-sa/4.0/80x15.png class=licencia></a><br><a href=https://twitter.com/blogstackinfo rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png alt="Blog Stack" title="Blog Stack"></a>
+<a href=https://www.planetacodigo.com/ rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png alt="Planeta código" title="Planeta código"></a><br><span xmlns:dct=http://purl.org/dc/terms/ property=dct:title><a href=https://picodotdev.github.io/blog-bitix/ rel=nofollow>Blog Bitix</a></span> by <a xmlns:cc=https://creativecommons.org/ns# href=https://picodotdev.github.io/blog-bitix/ property=cc:attributionName rel=cc:attributionurl>pico.dev</a> is licensed under a <a rel=license href=https://creativecommons.org/licenses/by-sa/4.0/>Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class=credit>Powered by <a href=https://gohugo.io/ rel=nofollow title="A fast and modern static website engine">Hugo</a> and <a href=https://pages.github.com/ title="Websites for you and your projects">GitHub Pages</a>.</span>
+<span class=credit>Background patterns from <a href=https://www.toptal.com/designers/subtlepatterns/ rel=nofollow>Subtle Patterns</a>.</span></div></div></footer></div><div class=blueimp-gallery-container><div id=blueimp-gallery class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal=false><div class=slides></div><h3 class=title></h3><a class=prev>‹</a>
+<a class=next>›</a>
+<a class=close>×</a>
+<a class=play-pause></a><ol class=indicator></ol><div class="modal fade"><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close aria-hidden=true>&times;</button><h4 class=modal-title></h4></div><div class="modal-body next"></div><div class=modal-footer><button type=button class="btn btn-default pull-left prev">
+<i class="glyphicon glyphicon-chevron-left"></i>Anterior</button>
+<button type=button class="btn btn-primary next">
+Siguiente
+<i class="glyphicon glyphicon-chevron-right"></i></button></div></div></div></div></div></div><script type=text/javascript>window.cookieconsent_options={"message":"Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.","dismiss":"Aceptar","learnMore":"Más información","link":null,"theme":"dark-bottom"};</script><script type=text/javascript src=//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js async></script></body></html>

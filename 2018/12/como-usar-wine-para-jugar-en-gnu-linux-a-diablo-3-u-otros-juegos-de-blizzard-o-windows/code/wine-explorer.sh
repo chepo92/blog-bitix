@@ -1,0 +1,2 @@
+$ wine explorer /desktop=Diablo3,1920x1080 ~/.wine/drive_c/Program\ Files\ \(x86\)/Diablo\ III/Diablo\ III.exe
+$ wine explorer /desktop=Diablo3,1600x900 ~/.wine/drive_c/Program\ Files\ \(x86\)/Diablo\ III/Diablo\ III.exe

@@ -1,0 +1,1 @@
+# ufw delete 1

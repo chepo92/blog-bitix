@@ -1,0 +1,1 @@
+(Persona persona) –> { return persona.getAltura(); }

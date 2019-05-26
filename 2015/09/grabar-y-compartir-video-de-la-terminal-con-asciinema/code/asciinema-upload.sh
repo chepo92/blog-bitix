@@ -1,0 +1,1 @@
+$ asciinema upload video.asciinema

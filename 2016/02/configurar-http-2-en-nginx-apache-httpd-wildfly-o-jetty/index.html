@@ -1,0 +1,154 @@
+<!doctype html><html lang=es><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content=picodotdev><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="HTTP/2 se puede usar ya, los principales navegadores web, servidores web y de aplicaciones ya han añadido el soporte necesario ofreciendo varias ventajas para los usuarios, desarrolladores, dispositivos cliente y los servidores. En varios de los servidores más ppulares la configuración necesaria no es complicada. &hellip;"><base href=https://picodotdev.github.io/blog-bitix/><title>Configurar HTTP/2 en Nginx, Apache HTTPD, WildFly o Jetty</title><link rel=author type=text/plain href=humans.txt><link rel="shortcut icon" href=assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=assets/apple-touch-icon-144-precomposed.png><link rel=canonical href=https://picodotdev.github.io/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/><link href=index.xml rel=alternate type=application/rss+xml title="Blog Bitix"><link rel=stylesheet type=text/css href="//fonts.googleapis.com/css?family=PT+Serif:400,400i,700"><link rel=stylesheet type=text/css href=assets/libs/bootstrap-4.3.1/css/bootstrap.min.css><link rel=stylesheet type=text/css href=assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=assets/css/syntax.css><link rel=stylesheet type=text/css href=assets/css/main.css><script type=text/javascript src=assets/js/require-config.js data-main=js/main defer></script><script type=text/javascript src=assets/libs/require.js data-main=js/main defer></script><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js defer></script><script type=text/javascript defer>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript defer>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script type=text/javascript src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" defer></script><script type=text/javascript src=assets/js/app.js defer></script></head><body><div class=container><div class=row><div class=col-12><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
+<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class="col-12 col-lg-4 text-center"><form name=query class="form-inline search" onsubmit="return false;"><div class=input-group><input type=text name=q class=form-control placeholder="Buscar en Blog Bitix">
+<span class=input-group-btn><button class="btn btn-secondary" type=submit>Buscar</button></span></div></form><form name=search action=https://duckduckgo.com/ method=get class=hidden data-site=https://picodotdev.github.io/blog-bitix/><input type=hidden name=q></form></div></div><div class=row><div class=col-12><nav class="nav nav-pills nav-fill"><a href=/blog-bitix/tags/java/ class="nav-item nav-link">Java</a>
+<a href=/blog-bitix/tags/gnu-linux/ class="nav-item nav-link">GNU/Linux</a>
+<a href=/blog-bitix/tags/javascript/ class="nav-item nav-link">JavaScript</a>
+<a href=/blog-bitix/tags/tapestry/ class="nav-item nav-link">Tapestry</a>
+<a href=/blog-bitix/archive/ class="nav-item nav-link">Archivo y hemeroteca</a>
+<a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
+<a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class="adblock-sidebar adblock-sidebar-right"><div class=adblock-sidebar-container><ins class="adsbygoogle adblock-sidebar-vertical" style=display:block data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format="vertical, rectangle" data-type=auto></ins></div></div><article itemprop=mainEntity itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content=es><meta itemprop=keywords content="blog-stack, planeta-codigo, planeta-linux"><h1 itemprop=name>Configurar HTTP/2 en Nginx, Apache HTTPD, WildFly o Jetty</h1><p class=information>Escrito por
+<span itemprop=author itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2016-02-26>26/02/2016</time>.<br><a href=tags/blog-stack/>blog-stack</a> <a href=tags/planeta-codigo/>planeta-codigo</a> <a href=tags/planeta-linux/>planeta-linux</a><br><a href=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/ itemprop=url>Enlace permanente</a>
+<a href=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/#comments>Comentarios</a></p><p class=summary itemprop=about>HTTP/2 se puede usar ya, los principales navegadores web, servidores web y de aplicaciones ya han añadido el soporte necesario ofreciendo varias ventajas para los usuarios, desarrolladores, dispositivos cliente y los servidores. En varios de los servidores más ppulares la configuración necesaria no es complicada.</p><div><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins></div><div class=content itemprop=articleBody><meta itemprop=wordCount content=576><p>HTTP/2 es el protocolo que ha surgido para mejorar la experiecia de navegación de la web, proporcionará menos latencia y más velocidad siendo más eficiente. En la <a href=https://picodotdev.github.io/blog-bitix/2016/02/introduccion-al-protocolo-http-2/>introducción al protocolo HTTP/2</a> comentaba de que necesidad surge, sus ventajas, alguna diferencia con HTTP 1.1, varias cosas que los desarrolladores hacíamos que quedarán obsoletas y otras varias que deberemos seguir haciendo. Se pubicó oficialmente en 2015 y los principales navegadores como <a href=https://www.mozilla.org/es-ES/firefox/new/>Mozilla Firefox</a>, <a href=https://www.google.es/chrome/browser/desktop/>Google Chrome</a> y <a href=https://www.microsoft.com/es-es/windows/microsoft-edge/>Microsoft Edge</a> ya lo soportan.</p><p>En el lado del servidor varios servidores web también han incluido el soporte para HTTP/2, entre ellos <a href=https://nginx.org/>Nginx</a>, <a href=https://httpd.apache.org/>Apache HTTPD</a>, <a href=https://wildfly.org/>WildFly</a> y <a href=https://eclipse.org/jetty/>Jetty</a>. Tomcat añadirá el soporte en la versión 9 cuando se publique las especificación de Servlets 4.0 con el soporte de HTTP/2, este soporte necesitará de ALPN que se incluirá en la versión 9 del JDK con lo que en el momento de publicar este artículo todavía quedarán varios meses. Para usar HTTP/2 en Nginx, Apache HTTPD, WildFly y Jetty debemos hacer algunos cambios en sus configuraciones.</p><p>Para usar HTTP/2 los navegadores Mozilla Firefox, Google Chrome y Microsoft Edge han anunciado que se necesitará cifrado, por lo tanto deberemos añadir el <a href=https://picodotdev.github.io/blog-bitix/2014/02/configurar-ssl-en-un-servidor-tomcat-jboss-wildfly-lighttpd-nginx-apache/>soporte para TLS/SSL en el servidor</a> previamente.</p><h3 id=nginx>Nginx</h3><p>En Nginx es muy sencillo, deberemos modifificar el archivo de configuración <em>default.conf</em> para que quede de forma similar a la siguiente.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>server {
+    listen       80;
+    server_name  localhost;
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl http2 default_server;
+
+    ssl_certificate    localhost.crt;
+    ssl_certificate_key localhost.key;
+
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/code/default.conf target=_blank>view raw</a></span>
+<a href=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/code/default.conf target=_blank>default.conf</a></div></div><div class=media style=text-align:center><figure><a href=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/images/http2-nginx.png title="HTTP/2 en Nginx" data-gallery><img src=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/images/http2-nginx-thumb.png width=244></a></figure></div><h3 id=apache-httpd>Apache HTTPD</h3><p>En Apache HTTPD deberemos instalar el <a href=https://www.archlinux.org/packages/extra/x86_64/nghttp2/>paquete nghttp2</a> de nuestra distribución. y usar el módulo <em>mod_http2.so</em> junto con <em>mod_ssl.so</em> para el cifrado.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>LoadModule http2_module modules/mod_http2.so
+LoadModule ssl_module modules/mod_ssl.so
+
+...
+
+Listen 443
+
+&lt;VirtualHost *:443&gt;
+    ServerName localhost
+
+    SSLEngine on
+    SSLCertificateFile localhost.crt
+    SSLCertificateKeyFile localhost.key
+    Protocols h2 http/1.1
+&lt;/VirtualHost&gt;</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/code/httpd-default.conf target=_blank>view raw</a></span>
+<a href=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/code/httpd-default.conf target=_blank>httpd-default.conf</a></div></div><div class=media style=text-align:center><figure><a href=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/images/http2-httpd.png title="HTTP/2 en Apache HTTPD" data-gallery><img src=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/images/http2-httpd-thumb.png width=248></a></figure></div><h3 id=wildfly>WildFly</h3><p>El WildFly deberemos descargar un archivo jar que ofrece el soporte para la negociación de protocolo,
+<abbr title="Application-Layer Protocol Negotiation">ALPN</abbr>, según la versión del JDK que usemos de <a href=http://central.maven.org/maven2/org/mortbay/jetty/alpn/alpn-boot/>Maven Central</a>. Modificamos el archivo de configuración <em>bin/standalone.conf</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>if [ &#34;x$JAVA_OPTS&#34; = &#34;x&#34; ]; then
+   JAVA_OPTS=&#34;-Xms64m -Xmx512m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true -Xbootclasspath/p:./alpn-boot-8.1.7.v20160121.jar&#34;
+   JAVA_OPTS=&#34;$JAVA_OPTS -Djboss.modules.system.pkgs=$JBOSS_MODULES_SYSTEM_PKGS -Djava.awt.headless=true&#34;
+else
+   echo &#34;JAVA_OPTS already set in environment; overriding default settings with values: $JAVA_OPTS&#34;
+fi</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/code/standalone.conf target=_blank>view raw</a></span>
+<a href=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/code/standalone.conf target=_blank>standalone.conf</a></div></div><p>Y el archivo <em>standalone/configuration/standalone.xml</em> añadimos un nuevo listener para el subsistema de <a href=http://undertow.io/>undertow</a> con HTTP/2 habilitado y un Realm asociado para usar TLS/SSL.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-XML data-lang=XML><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-XML data-lang=XML>...
+      <span class=nt>&lt;subsystem</span> <span class=na>xmlns=</span><span class=s>&#34;urn:jboss:domain:undertow:3.0&#34;</span><span class=nt>&gt;</span>
+            <span class=nt>&lt;buffer-cache</span> <span class=na>name=</span><span class=s>&#34;default&#34;</span><span class=nt>/&gt;</span>
+            <span class=nt>&lt;server</span> <span class=na>name=</span><span class=s>&#34;default-server&#34;</span><span class=nt>&gt;</span>
+                <span class=nt>&lt;http-listener</span> <span class=na>name=</span><span class=s>&#34;default&#34;</span> <span class=na>socket-binding=</span><span class=s>&#34;http&#34;</span> <span class=na>redirect-socket=</span><span class=s>&#34;https&#34;</span><span class=nt>/&gt;</span>
+                <span class=nt>&lt;https-listener</span> <span class=na>name=</span><span class=s>&#34;default-https&#34;</span> <span class=na>socket-binding=</span><span class=s>&#34;https&#34;</span> <span class=na>security-realm=</span><span class=s>&#34;ApplicationRealm&#34;</span> <span class=na>enable-http2=</span><span class=s>&#34;true&#34;</span><span class=nt>/&gt;</span>
+...</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/code/standalone.xml target=_blank>view raw</a></span>
+<a href=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/code/standalone.xml target=_blank>standalone.xml</a></div></div><div class=media style=text-align:center><figure><a href=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/images/http2-wildfly.png title="HTTP/2 en WildFly" data-gallery><img src=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/images/http2-wildfly-thumb.png width=189></a></figure></div><h3 id=jetty>Jetty</h3><p>Dependiendo de la versión de Java, usaremos el módulo alpn adecuado, en el momento de escribir este artículo con la versión 1.8.0_74 del <a href=https://openjdk.java.net/>OpenJDK</a>, <em>modules/alpn-impl/alpn-1.8.0_74.mod</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>[name]
+protonego-boot
+
+[files]
+http://central.maven.org/maven2/org/mortbay/jetty/alpn/alpn-boot/8.1.7.v20160121/alpn-boot-8.1.7.v20160121.jar|lib/alpn/alpn-boot-8.1.7.v20160121.jar
+
+[exec]
+-Xbootclasspath/p:lib/alpn/alpn-boot-8.1.7.v20160121.jar</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/code/alpn-1.8.0_74.mod target=_blank>view raw</a></span>
+<a href=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/code/alpn-1.8.0_74.mod target=_blank>alpn-1.8.0_74.mod</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ java -jar start.jar --add-to-startd<span class=o>=</span>https,http2
+$ java -jar start.jar</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/code/jetty.sh target=_blank>view raw</a></span>
+<a href=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/code/jetty.sh target=_blank>jetty.sh</a></div></div><div class=media style=text-align:center><figure><a href=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/images/http2-jetty.png title="HTTP/2 en Jetty" data-gallery><img src=/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/images/http2-jetty-thumb.png width=300></a></figure></div><div class=reference>Referencia:<br><ul><li><a href=https://www.nginx.com/blog/nginx-1-9-5/>NGINX Open Source 1.9.5 Released with HTTP/2 Support</a></li><li><a href=http://www.eclipse.org/jetty/documentation/current/alpn-chapter.html>Jetty ALPN</a></li><li><a href=http://central.maven.org/maven2/org/mortbay/jetty/alpn/alpn-boot/8.1.7.v20160121/>Maven ALPN</a></li><li><a href=http://undertow.io/blog/2015/03/26/HTTP2-In-Wildfly.html>Using HTTP2 With Wildfly 9.0.0.Beta1</a></li><li><a href=https://docs.jboss.org/author/display/WFLY10/Security+Realms>WildFly Security Realms</a></li></ul></div></div></article><div class="row serie"><div class=col-md-12><h3>Este artículo forma parte de la serie <strong>web</strong>:</h3><ol class=serie-articles><li><a href=https://picodotdev.github.io/blog-bitix/2014/02/generar-y-convertir-claves-y-certificados-con-openssl/>Generar y convertir claves y certificados con OpenSSL</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2014/02/configurar-ssl-en-un-servidor-tomcat-jboss-wildfly-lighttpd-nginx-apache/>Configurar SSL/TLS en un servidor Tomcat, JBoss, WildFly, Lighttpd, Nginx o Apache</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2015/04/certificado-ssl-de-empresa-wildcard-y-de-validacion-extendida/>Certificado SSL, de empresa, «wildcard» y de validación extendida</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/02/introduccion-al-protocolo-http-2/>Introducción al protocolo HTTP/2</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/>Configurar HTTP/2 en Nginx, Apache HTTPD, WildFly o Jetty</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/06/como-redirigir-peticiones-de-http-a-https-en-nginx-apache-tomcat-jetty-y-wildfly/>Cómo redirigir peticiones de HTTP a HTTPS en Nginx, Apache, Tomcat, Jetty y WildFly</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/como-optimizar-un-sitio-web-con-compresion-gzip-en-nginx-y-apache-httpd/>Cómo optimizar un sitio web con compresión GZIP en Nginx y Apache HTTPD</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/configurar-nginx-como-balanceador-de-carga/>Configurar Nginx como balanceador de carga</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/como-crear-un-proxy-inverso-entre-el-servidor-web-nginx-y-un-servidor-de-aplicaciones-java/>Cómo crear un proxy inverso entre el servidor web Nginx y un servidor de aplicaciones Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/las-cabeceras-de-cache-del-protocolo-http/>Las cabeceras de cache del protocolo HTTP</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/configurar-nginx-para-cachear-respuestas-del-servidor-de-aplicaciones/>Configurar Nginx para cachear respuestas del servidor de aplicaciones</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/>Cómo y por que redirigir tráfico web del dominio raíz al subdominio www (o viceversa)</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/>Autenticación mutua de cliente y servidor con certificados</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/08/instalar-y-renovar-un-certificado-de-lets-encrypt-en-nginx/>Instalar y renovar un certificado de Let&#39;s Encrypt en Nginx</a></li></ol></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><a id=comments></a><div class=row><div class=col-md-12><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='https:\/\/picodotdev.github.io\/blog-bitix\/2016\/02\/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty\/';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2016\/02\/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty\/';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
+<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2019 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow rel=license><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style=border-width:0 src=https://licensebuttons.net/l/by-sa/4.0/80x15.png class=licencia></a><br><a href=https://twitter.com/blogstackinfo rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png alt="Blog Stack" title="Blog Stack"></a>
+<a href=https://www.planetacodigo.com/ rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png alt="Planeta código" title="Planeta código"></a><br><span xmlns:dct=http://purl.org/dc/terms/ property=dct:title><a href=https://picodotdev.github.io/blog-bitix/ rel=nofollow>Blog Bitix</a></span> by <a xmlns:cc=https://creativecommons.org/ns# href=https://picodotdev.github.io/blog-bitix/ property=cc:attributionName rel=cc:attributionurl>pico.dev</a> is licensed under a <a rel=license href=https://creativecommons.org/licenses/by-sa/4.0/>Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class=credit>Powered by <a href=https://gohugo.io/ rel=nofollow title="A fast and modern static website engine">Hugo</a> and <a href=https://pages.github.com/ title="Websites for you and your projects">GitHub Pages</a>.</span>
+<span class=credit>Background patterns from <a href=https://www.toptal.com/designers/subtlepatterns/ rel=nofollow>Subtle Patterns</a>.</span></div></div></footer></div><div class=blueimp-gallery-container><div id=blueimp-gallery class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal=false><div class=slides></div><h3 class=title></h3><a class=prev>‹</a>
+<a class=next>›</a>
+<a class=close>×</a>
+<a class=play-pause></a><ol class=indicator></ol><div class="modal fade"><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close aria-hidden=true>&times;</button><h4 class=modal-title></h4></div><div class="modal-body next"></div><div class=modal-footer><button type=button class="btn btn-default pull-left prev">
+<i class="glyphicon glyphicon-chevron-left"></i>Anterior</button>
+<button type=button class="btn btn-primary next">
+Siguiente
+<i class="glyphicon glyphicon-chevron-right"></i></button></div></div></div></div></div></div><script type=text/javascript>window.cookieconsent_options={"message":"Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.","dismiss":"Aceptar","learnMore":"Más información","link":null,"theme":"dark-bottom"};</script><script type=text/javascript src=//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js async></script></body></html>

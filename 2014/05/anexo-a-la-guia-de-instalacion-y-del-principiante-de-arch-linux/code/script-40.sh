@@ -1,0 +1,1 @@
+$ yaourt -S vim vim-spell-es chromium firefox firefox-i18n-es-es ntfs-3g faenza-icon-theme gimp filezilla imagemagick gparted ufw shotwell libreoffice vlc gstreamer0.10-plugins calibre ntp flashplugin tomcat-native rsync jdk7-openjdk mariadb redis wget git subversion openssh unrar base-devel

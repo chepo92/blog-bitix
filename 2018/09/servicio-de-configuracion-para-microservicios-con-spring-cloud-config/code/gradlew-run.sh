@@ -1,0 +1,6 @@
+$ ./gradlew discoveryserver:run --args="--port=8761"
+$ ./gradlew discoveryserver:run --args="--port=8762"
+$ ./gradlew discoveryserver:run --args="--port=8763"
+$ ./gradlew configserver:run --args="--port=8090"
+$ ./gradlew configserver:run --args="--port=8091"
+$ ./gradlew configserver:run --args="--port=8092"

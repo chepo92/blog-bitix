@@ -1,0 +1,1 @@
+# echo archlinux > /etc/hostname
