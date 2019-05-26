@@ -1,4 +1,214 @@
-<feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/tags/software/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2019-05-10T17:00:00+02:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/</id><title>Crear de forma sencilla y rápida máquinas virtuales de VirtualBox con Vagrant</title><updated>2019-05-10T17:00:00+02:00</updated><published>2019-05-10T17:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/"/><author><name>picodotdev</name></author><content type="html">
+<feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/tags/software/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2019-05-26T11:30:00+02:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/</id><title>Registro y descubrimiento de servicios en contenedores de Docker con Consul y Registrator</title><updated>2019-05-26T11:30:00+02:00</updated><published>2019-05-26T11:30:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/"/><author><name>picodotdev</name></author><content type="html">
+&lt;p&gt;&lt;strong&gt;En los microservicios se hace necesario un servicio de registro y descubrimiento como Eureka o Consul que permita conocer la ubicación de las instancias en cada momento. Las instancias de los servicios se pueden registrar ellas mismas o esta tarea se puede delegar en una en otro servicio. Al usar contenedores de Docker una herramienta que permite delegar el registro y desregistro en Consul de los servicios es GliderLabs Registrator.&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/consul.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Consul&#34; title=&#34;Consul&#34;/&gt;
+&lt;/div&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/docker.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Docker&#34; title=&#34;Docker&#34;/&gt;
+&lt;/div&gt;
+&lt;p&gt;El registro y descubrimiento de servicios permite a los servicios registrase y a los clientes descubrir la ubicación de otros servicios, la ubicación consiste en la dirección IP y el puerto en el que contactarles. Dado la naturaleza efímera de los servicios donde nuevas instancias de servicios se inician y se detienen en diferentes máquinas y puertos el servicio de descubrimiento es esencial.&lt;/p&gt;
+&lt;p&gt;La funcionalidad de registro y descubrimiento consiste en dos partes, por un lado cuando se inicia una instancia de un servicio se registra su ubicación en el servicio de registro y descubrimiento y por otro lado los clientes cuando requieren una instancia de un servicio la buscan en el servicio de descubrimiento.&lt;/p&gt;
+&lt;p&gt;El registro en el servicio de descubrimiento puede hacerse de dos formas, que sea el propio servicio el que se registra en el servicio de descubrimiento o que se sea otro servicio el que lo registra. Para el primer caso escribí un artículo con &lt;a href=&#34;https://www.consul.io/&#34;&gt;Consul&lt;/a&gt; como servicio de descubrimiento en una aplicación de &lt;a href=&#34;https://projects.spring.io/spring-boot/&#34;&gt;Spring Boot&lt;/a&gt; que se registra al iniciarse. La ventaja es que es autosuficiente pero adquiere la tarea de autoregistrarse. Por el contrario delegar la trea de registro permite extraerla de los servicios y ofrecer esa funcionalidad por un servicio con esa misión específicamente.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/01/registro-y-descubrimiento-de-servicios-con-spring-cloud-y-consul/&#34;&gt;Registro y descubrimiento de servicios con Spring Cloud y Consul&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;En este artículo se usa &lt;a href=&#34;https://github.com/gliderlabs/registrator&#34;&gt;GliderLabs Registrator&lt;/a&gt; como servicio que se encarga de registrar en un servicio de descubrimiento como Consul los servicios que se inicien en &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt;, aunque soporta otros como &lt;a href=&#34;https://etcd.io/&#34;&gt;etcd&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Registrator es un contenedor de Docker, su funcionamiento es escuchar los eventos del demonio de Docker y monitorizar cuando se inician nuevos contenedores o cuando se paran. La monitorización la hace a través del &lt;em&gt;socket&lt;/em&gt; del servicio de Docker, para lo que hay que montar un volumen en este contenedor con el archivo &lt;em&gt;/var/run/docker.sock&lt;/em&gt; del &lt;em&gt;host&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Primero se inicia el servicio de Consul.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ consul agent -dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/code/consul.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/code/consul.sh&#34; target=&#34;_blank&#34;&gt;consul.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Luego se inicia el contenedor Registrator indicando la ubicación con dirección IP y puerto del servicio de Consul.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ docker run --rm --name&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;registrator --net&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;host --volume&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;/var/run/docker.sock:/tmp/docker.sock gliderlabs/registrator:latest consul://localhost:8500
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/code/docker-registrator.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/code/docker-registrator.sh&#34; target=&#34;_blank&#34;&gt;docker-registrator.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Iniciados estos dos servicios en la interfaz de estado de Consul se observa que no hay ningún servicio pero cuando se inicie un nuevo contenedor será registrado en Consul por Registrator.&lt;/p&gt;
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+&lt;figure&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/images/consul_hudf2f8b03877264bacf83a564e5686ede_36482_300x250_fit_box_2.png&#34; width=&#34;300&#34; class=&#34;&#34; alt=&#34;&#34; title=&#34;Dirección&#34;/&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+&lt;p&gt;En este caso se utiliza como servicio una base de datos &lt;a href=&#34;https://www.postgresql.org/&#34;&gt;PostgreSQL&lt;/a&gt;. Dado que el puerto en el que esté disponible el servicio de PostgreSQL es indiferente al utilizar un servicio de registro y descubrimiento se indica el &lt;em&gt;-p&lt;/em&gt; sin indicar el puerto del &lt;em&gt;host&lt;/em&gt;, de este modo Docker le asigna un puerto público aleatorio.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ docker run --rm --name postgres -e &lt;span class=&#34;nv&#34;&gt;POSTGRES_USER&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;user -e &lt;span class=&#34;nv&#34;&gt;POSTGRES_PASSWORD&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;password -e &lt;span class=&#34;nv&#34;&gt;POSTGRES_DB&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;database -p &lt;span class=&#34;m&#34;&gt;5432&lt;/span&gt; postgres:alpine
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/code/docker-postgres.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/code/docker-postgres.sh&#34; target=&#34;_blank&#34;&gt;docker-postgres.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ docker ps
+CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES
+cb7602605725 postgres:alpine &lt;span class=&#34;s2&#34;&gt;&amp;#34;docker-entrypoint.s…&amp;#34;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;54&lt;/span&gt; seconds ago Up &lt;span class=&#34;m&#34;&gt;53&lt;/span&gt; seconds &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;.0.0.0:32777-&amp;gt;5432/tcp postgres
+d286341148cb gliderlabs/registrator:latest &lt;span class=&#34;s2&#34;&gt;&amp;#34;/bin/registrator co…&amp;#34;&lt;/span&gt; About a minute ago Up About a minute registrator&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/code/docker-ps.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/code/docker-ps.sh&#34; target=&#34;_blank&#34;&gt;docker-ps.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;En la salida del contenedor de Registrator se emite una traza indicando que el servicio de postgres ha sido registrado en Consul.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;2019/05/26 11:05:29 Starting registrator v7 ...
+2019/05/26 11:05:29 Using consul adapter: consul://localhost:8500
+2019/05/26 11:05:29 Connecting to backend (0/0)
+2019/05/26 11:05:29 consul: current leader 127.0.0.1:8300
+2019/05/26 11:05:29 Listening for Docker events ...
+2019/05/26 11:05:29 Syncing services on 1 containers
+2019/05/26 11:05:29 ignored: d286341148cb no published ports
+2019/05/26 11:05:50 added: cb7602605725 archlinux:postgres:5432&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/code/docker-registrator.out&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/code/docker-registrator.out&#34; target=&#34;_blank&#34;&gt;docker-registrator.out&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Una vez iniciado el servicio de postgres en la consola de Consul se muestra con su dirección y puerto en el que se encuentra, en el contenedor utiliza su puerto por defecto &lt;em&gt;5432&lt;/em&gt; pero hacia el exterior en este caso al no haber especificado uno Docker le asigna un puerto aleatorio en este caso el &lt;em&gt;32777&lt;/em&gt;. Este puerto aleatorio es con el que los clientes acceden a la base de datos.&lt;/p&gt;
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+&lt;figure&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/images/consul-postgres-1_hu5336dadbc35299bcca8969f84d373cf0_39850_300x250_fit_box_2.png&#34; width=&#34;300&#34; class=&#34;&#34; alt=&#34;&#34; title=&#34;Servicio de postgres registrado en Consul&#34;/&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/images/consul-postgres-2_huf0df6f6a3d2138a93d9a38f4927788b0_43545_300x250_fit_box_2.png&#34; width=&#34;300&#34; class=&#34;&#34; alt=&#34;&#34; title=&#34;Servicio de postgres registrado en Consul&#34;/&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+&lt;p&gt;En vez de iniciar los servicios individualmente con comandos de Docker creando un archivo de &lt;a href=&#34;https://docs.docker.com/compose/&#34;&gt;Docker Compose&lt;/a&gt; con la definición de todos los contenedores se facilita iniciar todos los contenedores con un comando.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ docker-compose up&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/code/docker-compose-up.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/code/docker-compose-up.sh&#34; target=&#34;_blank&#34;&gt;docker-compose-up.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-YAML&#34; data-lang=&#34;YAML&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-YAML&#34; data-lang=&#34;YAML&#34;&gt;version&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;3.7&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;services&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;consul&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;image&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;consul&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;latest&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;container_name&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;consul&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;network_mode&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;host&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;command&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;consul&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;agent&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;-dev&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;-ui&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;registrator&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;image&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;gliderlabs/registrator&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;latest&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;container_name&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;registrator&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;network_mode&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;host&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;volumes&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;-&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;/var/run/docker.sock&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;/tmp/docker.sock&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;entrypoint&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;/bin/registrator&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;consul&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;//localhost&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;8500&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;depends_on&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;-&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;consul&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;postgres&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;image&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;postgres&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;alpine&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;container_name&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;postgres&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;ports&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;-&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;5432&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;environment&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;-&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;POSTGRES_USER=user&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;-&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;POSTGRES_PASSWORD=password&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;-&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;POSTGRES_DB=database&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;depends_on&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;-&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;registrator&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/code/docker-compose.yml&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/code/docker-compose.yml&#34; target=&#34;_blank&#34;&gt;docker-compose.yml&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;El proyecto de &lt;a href=&#34;https://projects.spring.io/spring-cloud/&#34;&gt;Spring Cloud&lt;/a&gt; ofrece soporte para ambas tareas de registrar y descubrir servicios, aunque perfectamente la tarea de registro se puede delegar como en este caso a Registrator y utilizar en los servicios de Spring Boot únicamente la parte de descubrimiento.&lt;/p&gt;
+&lt;p&gt;
+El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/Registrator&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./docker-compose-up.sh&lt;/code&gt;.
+&lt;/p&gt;</content><category term="planeta-codigo"/><category term="programacion"/><category term="software"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/</id><title>Crear de forma sencilla y rápida máquinas virtuales de VirtualBox con Vagrant</title><updated>2019-05-10T17:00:00+02:00</updated><published>2019-05-10T17:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/"/><author><name>picodotdev</name></author><content type="html">
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
 &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/vagrant.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Vagrant&#34; title=&#34;Vagrant&#34;/&gt;
 &lt;/div&gt;
@@ -4485,56 +4695,4 @@ Referencia:&lt;br&gt;
 &lt;p&gt;Para finalizar otro artículo fuera de tema del habitual de este blog con los plantones de roble que tengo, como han crecido y como están desde que los planté el año pasado. Aunque aún no lo he publicado algunos están mostrando síntomas de fallecimiento y lo que es peor no tengo claro por que si por la cantidad de agua, excesiva luz directa del sol, humedad, calor, &amp;hellip;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/05/los-plantones-de-roble/&#34;&gt;Los plantones de roble&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><category term="blog"/><category term="hemeroteca"/><category term="java"/><category term="planeta-codigo"/><category term="programacion"/><category term="software"/><category term="software-libre"/><category term="tapestry"/><category term="gnu-linux"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2018/01/gestion-de-peticiones-wiki-y-pages-con-gitlab/</id><title>Gestión de peticiones, wiki y pages con GitLab</title><updated>2018-01-20T10:00:00+01:00</updated><published>2018-01-20T10:00:00+01:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/01/gestion-de-peticiones-wiki-y-pages-con-gitlab/"/><author><name>picodotdev</name></author><content type="html">
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/gitlab.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;GitLab&#34; title=&#34;GitLab&#34;/&gt;
-&lt;/div&gt;
-&lt;p&gt;Una de las cosas que me gustan de &lt;a href=&#34;https://about.gitlab.com/&#34;&gt;GitLab&lt;/a&gt; es que se puede usar en un servidor propio, la otra cosa que me gusta es que incluye varias herramientas casi imprescindibles para cualquier proyecto como gestión de peticiones para recoger las historias, wiki como documentación e información y &lt;em&gt;pages&lt;/em&gt; para generar pequeños sitios web además de los repositorios de &lt;a href=&#34;https://git-scm.com/&#34;&gt;Git&lt;/a&gt; o el servidor de integración y entrega continua. Que GitLab incluya por defecto todas estas herramientas hace innecesario recurrir en la mayoría de los casos a varias herramientas especializadas que cubran estas necesidades como &lt;a href=&#34;https://www.atlassian.com/software/jira&#34;&gt;JIRA&lt;/a&gt;, &lt;a href=&#34;https://jenkins.io/&#34;&gt;Jenkins&lt;/a&gt;, &lt;a href=&#34;https://www.mediawiki.org/&#34;&gt;MediaWiki&lt;/a&gt; o un servidor web para los sitios web.&lt;/p&gt;
-&lt;p&gt;Después de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/gitlab-la-completa-herramienta-integrada-para-desarrollo-de-software/&#34;&gt;instalar GitLab usando Docker&lt;/a&gt; o de alguna de sus otras formas, creado un usuario no administrador y un proyecto se puede empezar a usar las herramientas de gestión de incidencias, wiki y &lt;em&gt;pages&lt;/em&gt;. Estas son solo tres de sus herramientas incluidas, además incluye &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/integracion-y-entrega-continua-con-gitlab-sobre-docker/&#34;&gt;integración y entrega continua&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 id=&#34;gestión-de-peticiones&#34;&gt;Gestión de peticiones&lt;/h3&gt;
-&lt;p&gt;La herramienta de gestión de peticiones permite crear historias que recojan las tareas a realizar, las historias pueden ser de diferente tipo como nuevas funcionalidades, mejoras técnicas o errores, es posible asignarlas a diferentes usuarios, relacionar peticiones entre si o incluir documentos adjuntos. Las historias también se pueden mostrar en un panel &lt;a href=&#34;https://es.wikipedia.org/wiki/Kanban_(desarrollo)&#34;&gt;Kanban&lt;/a&gt; para visualizar el estado de las peticiones, las que están realizándose, las desplegadas en producción, las siguientes peticiones y donde puede haber cuellos de botella en los procesos. El flujo y el panel Kanban que siguen las peticiones desde que se crean hasta que se dan por terminadas es personalizable.&lt;/p&gt;
-&lt;p&gt;Para crear una nueva petición hay que acceder en el proyecto a &lt;em&gt;Issues&lt;/em&gt; y pulsar el botón &lt;em&gt;New Issue&lt;/em&gt;. Rellenados los datos del formulario de creación se puede consultar desde &lt;em&gt;Issues &amp;gt; List&lt;/em&gt; para verlas en formato lista o &lt;em&gt;Issues &amp;gt; Board&lt;/em&gt; para verlas en formato panel Kanban. El panel Kanban se puede modificar y asignando etiquetas a las peticiones crear columnas adaptado al flujo de trabajo de una organización. Con &lt;a href=&#34;https://docs.gitlab.com/ee/user/markdown.html&#34;&gt;formato de las descripciones de las peticiones&lt;/a&gt; permite hacer referencia a otras o incluir menciones a otros usuarios.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://docs.gitlab.com/ee/user/project/issues/issues_functionalities.html#11-reference&#34;&gt;Issues Functionalities&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://docs.gitlab.com/ee/user/project/issues/crosslinking_issues.html&#34;&gt;Crosslinking Issues&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://about.gitlab.com/product/issueboard/&#34;&gt;Issue Board&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-&lt;figure&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/gestion-de-peticiones-wiki-y-pages-con-gitlab/images/new-issue-1_hu39cda9bb77c6776898ba6dc3bdb94e84_286600_2560x1440_fit_box_2.png&#34; title=&#34;Nueva petición A&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2018/01/gestion-de-peticiones-wiki-y-pages-con-gitlab/images/new-issue-1_hu39cda9bb77c6776898ba6dc3bdb94e84_286600_300x200_fit_box_2.png&#34; width=&#34;300&#34;/&gt;&lt;/a&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/gestion-de-peticiones-wiki-y-pages-con-gitlab/images/new-issue-2_hu39cda9bb77c6776898ba6dc3bdb94e84_285620_2560x1440_fit_box_2.png&#34; title=&#34;Nueva petición B&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2018/01/gestion-de-peticiones-wiki-y-pages-con-gitlab/images/new-issue-2_hu39cda9bb77c6776898ba6dc3bdb94e84_285620_300x200_fit_box_2.png&#34; width=&#34;300&#34;/&gt;&lt;/a&gt;
-&lt;figcaption&gt;Nueva petición&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;figure&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/gestion-de-peticiones-wiki-y-pages-con-gitlab/images/issues_hua9fb50b63579c6550c6f5d00c5abbfce_218131_2560x1440_fit_box_2.png&#34; title=&#34;Lista de peticiones&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2018/01/gestion-de-peticiones-wiki-y-pages-con-gitlab/images/issues_hua9fb50b63579c6550c6f5d00c5abbfce_218131_300x200_fit_box_2.png&#34; width=&#34;300&#34;/&gt;&lt;/a&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/gestion-de-peticiones-wiki-y-pages-con-gitlab/images/labels_hucf4845fc7964e54d76e32fedbafd0a71_293277_2560x1440_fit_box_2.png&#34; title=&#34;Etiquetas&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2018/01/gestion-de-peticiones-wiki-y-pages-con-gitlab/images/labels_hucf4845fc7964e54d76e32fedbafd0a71_293277_300x200_fit_box_2.png&#34; width=&#34;300&#34;/&gt;&lt;/a&gt;
-&lt;figcaption&gt;Lista de peticiones y etiquetas&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;figure&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/gestion-de-peticiones-wiki-y-pages-con-gitlab/images/board_hubcbec4cba09a225e060715df5c1b7a3b_161725_2560x1440_fit_box_2.png&#34; title=&#34;Panel Kanban&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2018/01/gestion-de-peticiones-wiki-y-pages-con-gitlab/images/board_hubcbec4cba09a225e060715df5c1b7a3b_161725_300x200_fit_box_2.png&#34; width=&#34;300&#34;/&gt;&lt;/a&gt;
-&lt;figcaption&gt;Panel Kanban&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;/div&gt;
-&lt;h3 id=&#34;wiki&#34;&gt;Wiki&lt;/h3&gt;
-&lt;p&gt;Una wiki ayuda a recoger información útil en el mismo proyecto pero no en el repositorio de código fuente, por ejemplo, cómo iniciar la aplicación de un proyecto a partir del repositorio de código fuente, qué dependencias tiene como el JDK o una base de datos. También puede recoger información general de lógica de negocio que no cambien tan a menudo como el código como pudiera ser un esquema de alto nivel de arquitectura o por que se han tomado algunas descisiones en la arquitectura y los requerimientos.&lt;/p&gt;
-&lt;p&gt;Cuando se accede por primera vez a la wiki se crea la página de inicio que se puede editar o crear nuevas páginas. Las páginas de la wiki se escriben en formato &lt;a href=&#34;https://es.wikipedia.org/wiki/Markdown&#34;&gt;Markdown&lt;/a&gt; y se guarda un historial de las ediciones que se han realizado a cada página.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://docs.gitlab.com/ce/user/project/wiki/index.html&#34;&gt;GitLab Wiki&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-&lt;figure&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/gestion-de-peticiones-wiki-y-pages-con-gitlab/images/new-page_hucf4845fc7964e54d76e32fedbafd0a71_224040_2560x1440_fit_box_2.png&#34; title=&#34;Nueva página&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2018/01/gestion-de-peticiones-wiki-y-pages-con-gitlab/images/new-page_hucf4845fc7964e54d76e32fedbafd0a71_224040_300x200_fit_box_2.png&#34; width=&#34;300&#34;/&gt;&lt;/a&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/01/gestion-de-peticiones-wiki-y-pages-con-gitlab/images/page_hucf4845fc7964e54d76e32fedbafd0a71_160172_2560x1440_fit_box_2.png&#34; title=&#34;Página&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2018/01/gestion-de-peticiones-wiki-y-pages-con-gitlab/images/page_hucf4845fc7964e54d76e32fedbafd0a71_160172_300x200_fit_box_2.png&#34; width=&#34;300&#34;/&gt;&lt;/a&gt;
-&lt;figcaption&gt;Nueva página y página&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;/div&gt;
-&lt;h3 id=&#34;pages&#34;&gt;Pages&lt;/h3&gt;
-&lt;p&gt;La herramienta de &lt;em&gt;pages&lt;/em&gt; o páginas permite crear un pequeño sitio web. Se pueden utilizar varias de las herramientas generadoras de sitios web estáticos como &lt;a href=&#34;https://jekyllrb.com/&#34;&gt;Jekyll&lt;/a&gt; o &lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt;. Para crear un sitio web hay que crear un repositorio de código fuente con un archivo &lt;em&gt;.gitlab-ci.yml&lt;/em&gt; y una tarea de nombre &lt;em&gt;pages&lt;/em&gt; que contiene los comandos para construir el sitio web.&lt;/p&gt;
-&lt;p&gt;Es posible asignar a los sitios web de &lt;em&gt;pages&lt;/em&gt; un dominio propio y añadirles seguridad con el protocolo HTTPS. En &lt;a href=&#34;https://gitlab.com/pages&#34;&gt;estos repositorios&lt;/a&gt; hay ejemplos de como generar un sitio web del proyecto con varios de los más populares generadores de sitios web estáticos. Dependiendo de si el sitio web es para el proyecto o del usuario o grupo el sitio estará accesible en la dirección u otra.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://docs.gitlab.com/ee/user/project/pages/index.html#gitlab-pages-documentation&#34;&gt;GitLab Pages&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;En resumen, ya con esta pequeña serie de artículos queda claro que GitLab es una herramienta muy completa y que incluye las funcionalidades de varias que son suficientes para la mayoría de los casos sin tener que recurrir a Jira, Jenkins, MediaWiki o un servidor web. Además, con la muy completa &lt;a href=&#34;https://docs.gitlab.com/ce/api/&#34;&gt;API de GitLab&lt;/a&gt; es posible hacer desarrollos a medida y según las necesidades que se tengan.&lt;/p&gt;
-&lt;p&gt;
-El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/GitLab&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;docker-compose -f docker-compose-all.yml up&lt;/code&gt;.
-&lt;/p&gt;</content><category term="blog-stack"/><category term="planeta-codigo"/><category term="software"/><category term="software-libre"/></entry></feed>
+&lt;/ul&gt;</content><category term="blog"/><category term="hemeroteca"/><category term="java"/><category term="planeta-codigo"/><category term="programacion"/><category term="software"/><category term="software-libre"/><category term="tapestry"/><category term="gnu-linux"/></entry></feed>
