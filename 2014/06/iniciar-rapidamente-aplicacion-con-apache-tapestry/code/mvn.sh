@@ -1,1 +1,0 @@
-$ mvn archetype:generate -DarchetypeCatalog=https://repository.apache.org/content/repositories/staging

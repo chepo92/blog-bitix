@@ -1,1 +1,0 @@
-$ winetrics corefonts

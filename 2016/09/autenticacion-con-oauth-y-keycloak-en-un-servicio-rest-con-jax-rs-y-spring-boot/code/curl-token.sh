@@ -1,2 +1,0 @@
-$ curl -i http://localhost:9080/auth/realms/springbootjaxrs/.well-known/openid-configuration
-$ curl -i http://localhost:9080/auth/realms/springbootjaxrs/protocol/openid-connect/token -d "grant_type=client_credentials&client_id=client&client_secret=751e83fe-ee29-4239-81f8-ceafab189c66"

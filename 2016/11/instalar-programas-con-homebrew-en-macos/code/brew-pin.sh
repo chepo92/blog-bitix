@@ -1,1 +1,0 @@
-$ brew pin mysql

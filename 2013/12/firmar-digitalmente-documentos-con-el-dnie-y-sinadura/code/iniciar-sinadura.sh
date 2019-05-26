@@ -1,1 +1,0 @@
-$ ./sinadura.sh

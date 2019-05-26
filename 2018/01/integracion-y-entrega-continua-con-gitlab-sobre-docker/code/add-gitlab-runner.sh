@@ -1,1 +1,0 @@
-$ docker exec -it gitlab-runner gitlab-runner register --url "https://gitlab" --registration-token "RhoFva9z8Ri6cuDYbXN1" --tag-list "gitlab-runner-01" --run-untagged "true" --locked "false" --executor "docker"

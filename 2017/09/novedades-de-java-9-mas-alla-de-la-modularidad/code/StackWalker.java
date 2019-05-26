@@ -1,1 +1,0 @@
-StackWalker.getInstance().walk(s -> s.limit(5).collect(Collectors.toList()));

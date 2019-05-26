@@ -1,2 +1,0 @@
-$ nomad job promote nginx
-

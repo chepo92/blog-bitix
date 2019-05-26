@@ -1,2 +1,0 @@
-$ javah -d src/main/c -classpath buil/classes/main io.github.picodotdev.blogbitix.javaraspberrypi.JniHelloWorld
-$ gcc -I"/usr/lib/jvm/java-8-openjdk/include" -I"/usr/lib/jvm/java-8-openjdk/include/linux" -shared -fPIC -L/usr/lib -o src/main/resources/libjnihelloworld-amd64.so src/main/c/JniHelloWorld.c

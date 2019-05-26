@@ -1,2 +1,0 @@
-# pacman -S sudo
-# visudo

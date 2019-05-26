@@ -1,2 +1,0 @@
-$ ffmpeg -encoders
-$ ffmpeg -decoders

@@ -1,1 +1,0 @@
-# nano /etc/vconsole.conf

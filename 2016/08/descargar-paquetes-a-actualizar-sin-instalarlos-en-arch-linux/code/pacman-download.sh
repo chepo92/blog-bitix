@@ -1,2 +1,0 @@
-# pacman -Syuw
-$ yaourt -Syuw

@@ -1,2 +1,0 @@
-$ rake generate
-$ rake deploy

@@ -1,1 +1,0 @@
-# cgdisk /dev/sda
