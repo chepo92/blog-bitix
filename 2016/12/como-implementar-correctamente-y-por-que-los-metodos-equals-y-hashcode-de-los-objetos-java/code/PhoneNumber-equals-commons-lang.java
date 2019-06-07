@@ -13,7 +13,7 @@ public class PhoneNumber {
         if (!(o instanceof PhoneNumber))
             return false;
 
-        PhoneNumber that = (PhoneNumber)o;
+        PhoneNumber that = (PhoneNumber) o;
         return new EqualsBuilder()
             .appendSuper(super.equals(that))
             .append(this.lineNumber, that.lineNumber)

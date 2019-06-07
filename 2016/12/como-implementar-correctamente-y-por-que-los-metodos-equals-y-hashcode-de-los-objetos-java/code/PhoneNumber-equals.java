@@ -13,10 +13,10 @@ public class PhoneNumber {
         if (!(o instanceof PhoneNumber))
             return false;
 
-        PhoneNumber that = (PhoneNumber)o;
+        PhoneNumber that = (PhoneNumber) o;
         return super.equals(that)
-            && this.lineNumber == that.lineNumber
-            && this.prefix == that.prefix
-            && this.areaCode == that.areaCode;
+            && Objects.equals(this.lineNumber, that.lineNumber)
+            && Objects.equals(this.prefix, that.prefix)
+            && Objects.equals(this.areaCode, that.areaCode);
     }
 }
