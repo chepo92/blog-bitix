@@ -1,0 +1,138 @@
+<!doctype html><html lang=es><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content=picodotdev><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="En algunos que un servicio devuelva los datos esperados no es suficiente, otros requisitos no funcionales o de términos de servicio son que sus tiempos de respuesta sean menores al especificado en sus requisitos, que sea capaz de soportar cierto número de peticiones concurrentes o de atender un número de peticiones por minuto. Para asegurar que el servicio es capaz de cumplir estos requisitos funcionales hay que utilizar herramientas que permitan evaluar su desempeño, una de ellas muy fácil de utilizar y que proporciona valiosa información es Apache Bench. &hellip;"><base href=https://picodotdev.github.io/blog-bitix/><title>Pruebas de carga y rendimiento de un servicio web con Apache Bench</title><link rel=author type=text/plain href=humans.txt><link rel="shortcut icon" href=assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=assets/apple-touch-icon-144-precomposed.png><link rel=canonical href=https://picodotdev.github.io/blog-bitix/2019/06/pruebas-de-carga-y-rendimiento-de-un-servicio-web-con-apache-bench/><link href=index.xml rel=alternate type=application/rss+xml title="Blog Bitix"><link rel=stylesheet type=text/css href="//fonts.googleapis.com/css?family=PT+Serif:400,400i,700"><link rel=stylesheet type=text/css href=assets/libs/bootstrap-4.3.1/css/bootstrap.min.css><link rel=stylesheet type=text/css href=assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=assets/css/syntax.css><link rel=stylesheet type=text/css href=assets/css/main.css><script type=text/javascript src=assets/js/require-config.js data-main=js/main defer></script><script type=text/javascript src=assets/libs/require.js data-main=js/main defer></script><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js defer></script><script type=text/javascript defer>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript defer>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script type=text/javascript src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" defer></script><script type=text/javascript src=assets/js/app.js defer></script></head><body><div class=container><div class=row><div class=col-12><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
+<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class="col-12 col-lg-4 text-center"><form name=query class="form-inline search" onsubmit="return false;"><div class=input-group><input type=text name=q class=form-control placeholder="Buscar en Blog Bitix">
+<span class=input-group-btn><button class="btn btn-secondary" type=submit>Buscar</button></span></div></form><form name=search action=https://duckduckgo.com/ method=get class=hidden data-site=https://picodotdev.github.io/blog-bitix/><input type=hidden name=q></form></div></div><div class=row><div class=col-12><nav class="nav nav-pills nav-fill"><a href=/blog-bitix/tags/java/ class="nav-item nav-link">Java</a>
+<a href=/blog-bitix/tags/gnu-linux/ class="nav-item nav-link">GNU/Linux</a>
+<a href=/blog-bitix/tags/javascript/ class="nav-item nav-link">JavaScript</a>
+<a href=/blog-bitix/tags/tapestry/ class="nav-item nav-link">Tapestry</a>
+<a href=/blog-bitix/archive/ class="nav-item nav-link">Archivo y hemeroteca</a>
+<a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
+<a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class="adblock-sidebar adblock-sidebar-right"><div class=adblock-sidebar-container><ins class="adsbygoogle adblock-sidebar-vertical" style=display:block data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format="vertical, rectangle" data-type=auto></ins></div></div><article itemprop=mainEntity itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content=es><meta itemprop=keywords content="planeta-codigo, software"><h1 itemprop=name>Pruebas de carga y rendimiento de un servicio web con Apache Bench</h1><p class=information>Escrito por
+<span itemprop=author itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2019-06-14>14/06/2019</time>.<br><a href=tags/planeta-codigo/>planeta-codigo</a> <a href=tags/software/>software</a><br><a href=/blog-bitix/2019/06/pruebas-de-carga-y-rendimiento-de-un-servicio-web-con-apache-bench/ itemprop=url>Enlace permanente</a>
+<a href=/blog-bitix/2019/06/pruebas-de-carga-y-rendimiento-de-un-servicio-web-con-apache-bench/#comments>Comentarios</a></p><p class=summary itemprop=about>En algunos que un servicio devuelva los datos esperados no es suficiente, otros requisitos no funcionales o de términos de servicio son que sus tiempos de respuesta sean menores al especificado en sus requisitos, que sea capaz de soportar cierto número de peticiones concurrentes o de atender un número de peticiones por minuto. Para asegurar que el servicio es capaz de cumplir estos requisitos funcionales hay que utilizar herramientas que permitan evaluar su desempeño, una de ellas muy fácil de utilizar y que proporciona valiosa información es Apache Bench.</p><div><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins></div><div class=content itemprop=articleBody><meta itemprop=wordCount content=734><div class=logotypes style=float:right><img src=assets/images/logotipos/apache.svg class=right width=200 alt=Apache title=Apache></div><p>Para hacer pruebas de carga o medir el rendimiento de cualquier servicio que funcione mediante el protocolo HTTP hay multitud de herramientas. Una de las más sencillas de utilizar y con un informe con información interesante es <a href=https://httpd.apache.org/docs/2.4/programs/ab.html>Apache Bench</a> o simplemente <em>ab</em>. Este comando se puede utilizar con simplemente tres parámetros el <em>endpoint</em> a probar, el número de peticiones en total a realizar (<em>-n</em>) y cuantas peticiones concurrentes al mismo tiempo (<em>-c</em>). Otos parámetros son los datos POST a enviar, cabeceras (<em>-H</em>) y <em>cookies</em> (<em>-C</em>) de las peticiones, tiempos de <em>timeout</em> (<em>-s</em>) o cerficado de cliente (<em>-E</em>) entre algunos otros. En vez limitar las pruebas a un número de peticiones las pruebas se pueden limitar a un tiempo determinado por ejemplo 60 segundos (<em>-t</em>).</p><p>Es una herramienta que se utiliza para medir el rendimiento de el servidor Apache pero utilizable para cualquier otro servicio por ejemplo una web o una API REST o <a href=https://graphql.org/>GraphQL</a>. Está disponible por supuesto para <a href=https://www.gnu.org/>GNU</a>/<a href=https://www.linux.com/>Linux</a> pero también para <a href=https://www.apple.com/macos/>macOS</a> y para <a href=https://www.microsoft.com/es-es/windows/>Windows</a>.</p><p>Si quisiese medir el rendimiento en mi blog alojado en <a href=https://pages.github.com/>GitHub Pages</a> podría hacerlo lanzando 1000 peticiones para que sea una muestra suficientemente amplia con 20 usuarios de forma concurrente que son los que en los momentos de más tráfico tiene mi blog. Mi conexión de internet es un ADSL que no llega a 1 MB/s de subida por lo que la conexión en cierta medida limite el test.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ ab -n <span class=m>1000</span> -c <span class=m>20</span> https://picodotdev.github.io/blog-bitix/
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/06/pruebas-de-carga-y-rendimiento-de-un-servicio-web-con-apache-bench/code/ab.sh target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/06/pruebas-de-carga-y-rendimiento-de-un-servicio-web-con-apache-bench/code/ab.sh target=_blank>ab.sh</a></div></div><p>El informe de resultado que ofrece <em>ab</em> al finalizar la prueba incluye el tiempo dedicado en la conexión, en el procesado, esperando y en total con los valores para cada uno de ellos con mínimo y máximo, de media y la mediana. El tiempo total empleado por la prueba, el protocolo SSL/TLS usado, los bytes devueltos en la petición, el número de peticiones servidas por segundo, el tiempo de media empleado de media por cada petición y de media teniendo en cuenta la concurrencia, la tasa de transferencia en la respuesta y finalmente el tiempo de respuesta según percentil que van que desde el 50 al 100, es decir, que el 50% de las peticiones se han respondido en el tiempo en milisegundos indicado. Si las hubiera también muestra las peticiones fallidas y las que han devuelto un código de respuesta distinto de 200.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>This is ApacheBench, Version 2.3 &lt;$Revision: 1843412 $&gt;
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking picodotdev.github.io (be patient)
+Completed 100 requests
+Completed 200 requests
+Completed 300 requests
+Completed 400 requests
+Completed 500 requests
+Completed 600 requests
+Completed 700 requests
+Completed 800 requests
+Completed 900 requests
+Completed 1000 requests
+Finished 1000 requests
+
+
+Server Software:        GitHub.com
+Server Hostname:        picodotdev.github.io
+Server Port:            443
+SSL/TLS Protocol:       TLSv1.2,ECDHE-RSA-AES128-GCM-SHA256,2048,128
+Server Temp Key:        X25519 253 bits
+TLS Server Name:        picodotdev.github.io
+
+Document Path:          /blog-bitix/
+Document Length:        28389 bytes
+
+Concurrency Level:      20
+Time taken for tests:   29.220 seconds
+Complete requests:      1000
+Failed requests:        0
+Total transferred:      29007394 bytes
+HTML transferred:       28389000 bytes
+Requests per second:    34.22 [#/sec] (mean)
+Time per request:       584.404 [ms] (mean)
+Time per request:       29.220 [ms] (mean, across all concurrent requests)
+Transfer rate:          969.45 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:      149  349 149.7    303    1361
+Processing:   122  225  75.5    207     586
+Waiting:       53  122  68.8    108     481
+Total:        329  574 174.0    512    1612
+
+Percentage of the requests served within a certain time (ms)
+  50%    512
+  66%    534
+  75%    555
+  80%    744
+  90%    832
+  95%    915
+  98%   1104
+  99%   1171
+ 100%   1612 (longest request)</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/06/pruebas-de-carga-y-rendimiento-de-un-servicio-web-con-apache-bench/code/ab.out target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/06/pruebas-de-carga-y-rendimiento-de-un-servicio-web-con-apache-bench/code/ab.out target=_blank>ab.out</a></div></div><p>Esta herramienta puede ser utilizada para par medir el rendimiento de cualquier servicio web. Un blog de <a href=https://wordpress.org/>Wordpress</a>, una página de una organización. un <em>endpoint</em> de un servicio REST o GraphQL, etc&hellip; Es muy sencilla de utilizar y genera un informe corto pero con interesante información sobre el rendimiento. Si se hacen cambios se puede medir el antes y el después y comparar los resultados para observar de que modo han afectado al redimiento si de forma positiva o negativa y en que grado.</p></div></article><div class="row serie"><div class=col-md-12><h3>Este artículo forma parte de la serie <strong>web</strong>:</h3><ol class=serie-articles><li><a href=https://picodotdev.github.io/blog-bitix/2014/02/generar-y-convertir-claves-y-certificados-con-openssl/>Generar y convertir claves y certificados con OpenSSL</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2014/02/configurar-ssl-en-un-servidor-tomcat-jboss-wildfly-lighttpd-nginx-apache/>Configurar SSL/TLS en un servidor Tomcat, JBoss, WildFly, Lighttpd, Nginx o Apache</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2015/04/certificado-ssl-de-empresa-wildcard-y-de-validacion-extendida/>Certificado SSL, de empresa, «wildcard» y de validación extendida</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/02/introduccion-al-protocolo-http-2/>Introducción al protocolo HTTP/2</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/>Configurar HTTP/2 en Nginx, Apache HTTPD, WildFly o Jetty</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/06/como-redirigir-peticiones-de-http-a-https-en-nginx-apache-tomcat-jetty-y-wildfly/>Cómo redirigir peticiones de HTTP a HTTPS en Nginx, Apache, Tomcat, Jetty y WildFly</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/como-optimizar-un-sitio-web-con-compresion-gzip-en-nginx-y-apache-httpd/>Cómo optimizar un sitio web con compresión GZIP en Nginx y Apache HTTPD</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/configurar-nginx-como-balanceador-de-carga/>Configurar Nginx como balanceador de carga</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/como-crear-un-proxy-inverso-entre-el-servidor-web-nginx-y-un-servidor-de-aplicaciones-java/>Cómo crear un proxy inverso entre el servidor web Nginx y un servidor de aplicaciones Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/las-cabeceras-de-cache-del-protocolo-http/>Las cabeceras de cache del protocolo HTTP</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/configurar-nginx-para-cachear-respuestas-del-servidor-de-aplicaciones/>Configurar Nginx para cachear respuestas del servidor de aplicaciones</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/>Cómo y por que redirigir tráfico web del dominio raíz al subdominio www (o viceversa)</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/>Autenticación mutua de cliente y servidor con certificados</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/08/instalar-y-renovar-un-certificado-de-lets-encrypt-en-nginx/>Instalar y renovar un certificado de Let&#39;s Encrypt en Nginx</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2019/06/pruebas-de-carga-y-rendimiento-de-un-servicio-web-con-apache-bench/>Pruebas de carga y rendimiento de un servicio web con Apache Bench</a></li></ol></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><a id=comments></a><div class=row><div class=col-md-12><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='https:\/\/picodotdev.github.io\/blog-bitix\/2019\/06\/pruebas-de-carga-y-rendimiento-de-un-servicio-web-con-apache-bench\/';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2019\/06\/pruebas-de-carga-y-rendimiento-de-un-servicio-web-con-apache-bench\/';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
+<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2019 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow rel=license><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style=border-width:0 src=https://licensebuttons.net/l/by-sa/4.0/80x15.png class=licencia></a><br><a href=https://twitter.com/blogstackinfo rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png alt="Blog Stack" title="Blog Stack"></a>
+<a href=https://www.planetacodigo.com/ rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png alt="Planeta código" title="Planeta código"></a><br><span xmlns:dct=http://purl.org/dc/terms/ property=dct:title><a href=https://picodotdev.github.io/blog-bitix/ rel=nofollow>Blog Bitix</a></span> by <a xmlns:cc=https://creativecommons.org/ns# href=https://picodotdev.github.io/blog-bitix/ property=cc:attributionName rel=cc:attributionurl>pico.dev</a> is licensed under a <a rel=license href=https://creativecommons.org/licenses/by-sa/4.0/>Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class=credit>Powered by <a href=https://gohugo.io/ rel=nofollow title="A fast and modern static website engine">Hugo</a> and <a href=https://pages.github.com/ title="Websites for you and your projects">GitHub Pages</a>.</span>
+<span class=credit>Background patterns from <a href=https://www.toptal.com/designers/subtlepatterns/ rel=nofollow>Subtle Patterns</a>.</span></div></div></footer></div><div class=blueimp-gallery-container><div id=blueimp-gallery class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal=false><div class=slides></div><h3 class=title></h3><a class=prev>‹</a>
+<a class=next>›</a>
+<a class=close>×</a>
+<a class=play-pause></a><ol class=indicator></ol><div class="modal fade"><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close aria-hidden=true>&times;</button><h4 class=modal-title></h4></div><div class="modal-body next"></div><div class=modal-footer><button type=button class="btn btn-default pull-left prev">
+<i class="glyphicon glyphicon-chevron-left"></i>Anterior</button>
+<button type=button class="btn btn-primary next">
+Siguiente
+<i class="glyphicon glyphicon-chevron-right"></i></button></div></div></div></div></div></div><script type=text/javascript>window.cookieconsent_options={"message":"Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.","dismiss":"Aceptar","learnMore":"Más información","link":null,"theme":"dark-bottom"};</script><script type=text/javascript src=//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js async></script></body></html>
