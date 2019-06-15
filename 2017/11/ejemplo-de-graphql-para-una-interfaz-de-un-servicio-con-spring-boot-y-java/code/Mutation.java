@@ -1,10 +1,6 @@
-package io.github.picodotdev.blogbitix.graphql;
+package io.github.picodotdev.blogbitix.graphql.resolver;
 
-import com.coxautodev.graphql.tools.GraphQLMutationResolver;
-import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import graphql.schema.DataFetchingEnvironment;
-
-import java.util.Collection;
+...
 
 public class Mutation implements GraphQLMutationResolver {
 
@@ -15,6 +11,7 @@ public class Mutation implements GraphQLMutationResolver {
     }
 
     public Book addBook(String title, Long author, DataFetchingEnvironment env) throws Exception {
+        //String user = request.getHeader("User");
         return libraryRepository.addBook(title, author, env.<AuthContext>getContext());
     }
 }

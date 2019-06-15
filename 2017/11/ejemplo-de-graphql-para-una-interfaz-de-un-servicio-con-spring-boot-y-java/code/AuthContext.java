@@ -1,19 +1,15 @@
-package io.github.picodotdev.blogbitix.graphql;
-
-import graphql.servlet.GraphQLContext;
+package io.github.picodotdev.blogbitix.graphql.misc;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
-public class AuthContext extends GraphQLContext {
+public class AuthContext {
 
     private String user;
-    private Optional<HttpServletRequest> request;
-    private Optional<HttpServletResponse> response;
+    private HttpServletRequest request;
+    private HttpServletResponse response;
 
-    public AuthContext(String user, Optional<HttpServletRequest> request, Optional<HttpServletResponse> response) {
-        super(request, response);
+    public AuthContext(String user, HttpServletRequest request, HttpServletResponse response) {
         this.user = user;
         this.request = request;
         this.response = response;
@@ -23,23 +19,11 @@ public class AuthContext extends GraphQLContext {
         return user;
     }
 
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public Optional<HttpServletRequest> getRequest() {
+    public HttpServletRequest getRequest() {
         return request;
     }
 
-    public void setRequest(Optional<HttpServletRequest> request) {
-        this.request = request;
-    }
-
-    public Optional<HttpServletResponse> getResponse() {
+    public HttpServletResponse getResponse() {
         return response;
-    }
-
-    public void setResponse(Optional<HttpServletResponse> response) {
-        this.response = response;
     }
 }

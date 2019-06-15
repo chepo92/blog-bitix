@@ -1,4 +1,4 @@
-$ curl -XPOST -H "Content-Type: application/json" -d '{"query": "query Books{books{title}}"}' http://localhost:8080/library
+$ curl -XPOST -H "Content-Type: application/json" -d '{"query": "query Books{books{title}}"}' http://localhost:8080/graphql
 {
   "data": {
     "books": [
@@ -21,7 +21,7 @@ $ curl -XPOST -H "Content-Type: application/json" -d '{"query": "query Books{boo
   }
 }
 
-$ curl -XPOST -H "Content-Type: application/json" -H "User: admin" -d '{"query": "mutation addBook($title: String, $author: Long){addBook(title: $title, author: $author){title}}", "variables": { "title": "El lazarillo de Tormes", "author": 6}}' http://localhost:8080/library
+$ curl -XPOST -H "Content-Type: application/json" -H "User: admin" -d '{"query": "mutation addBook($title: String, $author: Long){addBook(title: $title, author: $author){title}}", "variables": { "title": "El lazarillo de Tormes", "author": 6}}' http://localhost:8080/graphql
 {
   "data": {
     "addBook": {

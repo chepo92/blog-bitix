@@ -1,4 +1,4 @@
-package io.github.picodotdev.blogbitix.graphql;
+package io.github.picodotdev.blogbitix.graphql.repository;
 
 ...
 
@@ -8,12 +8,14 @@ public class LibraryRepository {
     private List<Book> books;
     private List<Comment> comments;
     private List<Author> authors;
+    private List<Magazine> magazines;
 
     public LibraryRepository() {
         this.sequence = 0l;
         this.books = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.authors = new ArrayList<>();
+        this.magazines = new ArrayList<>();
 
         Author a1 = new Author(nextId(), "Philip K. Dick");
         Author a2 = new Author(nextId(), "George R. R. Martin");
@@ -35,8 +37,14 @@ public class LibraryRepository {
                 new Book(nextId(), "Ready Player One", a5, LocalDate.of(2011, 1, 1), this.comments)
             )
         );
+
+        this.magazines.addAll(
+            List.of(
+                new Magazine(nextId(), "Muy interesante", 65L),
+                new Magazine(nextId(), "PC Actual", 90L)
+            )
+        );
     }
-  
+
     ...
-      
 }

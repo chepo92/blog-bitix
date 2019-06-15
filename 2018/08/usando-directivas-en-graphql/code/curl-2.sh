@@ -1,1 +1,1 @@
-$ curl -XPOST -H "Content-Type: application/json" -d '{"query": "query Books($include: Boolean!) { books { id title date @include(if: $include) }}", "variables": { "include": false }}' http://localhost:8080/library
+$ curl -XPOST -H "Content-Type: application/json" -d '{"query": "query Books($include: Boolean!) { books { id title date @include(if: $include) }}", "variables": { "include": false }}' http://localhost:8080/graphql

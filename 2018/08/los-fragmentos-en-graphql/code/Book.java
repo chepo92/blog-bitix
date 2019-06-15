@@ -1,6 +1,7 @@
-package io.github.picodotdev.blogbitix.graphql;
+package io.github.picodotdev.blogbitix.graphql.type;
 
-...
+import java.time.LocalDate;
+import java.util.List;
 
 public class Book extends Publication {
     

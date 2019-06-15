@@ -3,10 +3,9 @@ package io.github.picodotdev.blogbitix.graphql;
 ...
 
 @SpringBootApplication
-@ServletComponentScan
 public class Main {
 
-    public static final Logger log = LoggerFactory.getLogger(DefaultGraphQLErrorHandler.class);
+    public static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     @Bean
     public LibraryRepository buildLibraryRepository() {
@@ -14,17 +13,17 @@ public class Main {
     }
 
     @Bean
-    public ServletRegistrationBean graphQLServletRegistrationBean(LibraryRepository libraryRepository) throws Exception {
-        GraphQLSchema schema = SchemaParser.newParser()
+    public GraphQLSchema graphQLSchema(LibraryRepository libraryRepository) throws IOException {
+        return SchemaParser.newParser()
                 .schemaString(IOUtils.resourceToString("/library.graphqls", Charset.forName("UTF-8")))
-                .resolvers(new Query(libraryRepository), new Mutation(libraryRepository), new BookResolver())
+                .resolvers(new Query(libraryRepository), new Mutation(libraryRepository), new BookResolver(libraryRepository), new MagazineResolver(libraryRepository))
+                .scalars(GraphQLScalarType.newScalar().name("LocalDate").description("LocalDate scalar").coercing(new LocalDateCoercing()).build())
+                .dictionary(Magazine.class)
                 .build()
                 .makeExecutableSchema();
-
-        ...
-
-        return new ServletRegistrationBean(new SimpleGraphQLServlet(schema, new DefaultExecutionStrategyProvider(), null, null, null, errorHandler, contextBuilder, null), "/library");
     }
+
+    ...
 
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);

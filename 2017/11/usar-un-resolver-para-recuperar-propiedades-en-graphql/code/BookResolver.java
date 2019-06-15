@@ -1,15 +1,21 @@
-package io.github.picodotdev.blogbitix.graphql;
+package io.github.picodotdev.blogbitix.graphql.resolver;
 
-import com.coxautodev.graphql.tools.GraphQLResolver;
-
-import java.util.UUID;
+...
 
 public class BookResolver implements GraphQLResolver<Book> {
 
-    public BookResolver() {
+    private LibraryRepository libraryRespository;
+
+    public BookResolver(LibraryRepository libraryRespository) {
+        this.libraryRespository = libraryRespository;
     }
 
-    public String getIsbn(Book book) {
+    public String getIsbn(Book book) throws InterruptedException {
+        System.out.printf("Getting ISBN %d...", book.getId());
+        Thread.sleep(3000);
+        System.out.printf("ok%n");
         return UUID.randomUUID().toString();
     }
+
+    ...
 }

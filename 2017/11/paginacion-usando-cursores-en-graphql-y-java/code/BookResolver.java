@@ -1,11 +1,6 @@
-package io.github.picodotdev.blogbitix.graphql;
+package io.github.picodotdev.blogbitix.graphql.resolver;
 
-import com.coxautodev.graphql.tools.GraphQLResolver;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+...
 
 public class BookResolver implements GraphQLResolver<Book> {
 
@@ -15,9 +10,14 @@ public class BookResolver implements GraphQLResolver<Book> {
         this.libraryRespository = libraryRespository;
     }
 
-    public String getIsbn(Book book) {
+    public String getIsbn(Book book) throws InterruptedException {
+        System.out.printf("Getting ISBN %d...", book.getId());
+        Thread.sleep(3000);
+        System.out.printf("ok%n");
         return UUID.randomUUID().toString();
     }
+
+    ...
 
     public CommentsConnection getComments(Book book, String after, Long limit) {
         Long idAfter = null;
@@ -47,4 +47,6 @@ public class BookResolver implements GraphQLResolver<Book> {
 
         return new CommentsConnection(comments, new PageInfo(startCursor, endCursor, hasNextPage));
     }
+
+    ...
 }

@@ -1,4 +1,4 @@
-$ curl "http://localhost:8080/library?query=\{books\{title\}authors\{name\}author(id:1)\{name\}\}"
+$ curl "http://localhost:8080/graphql?query=\{books\{title\}authors\{name\}author(id:1)\{name\}\}"
 {
   "data": {
     "books": [

@@ -1,11 +1,6 @@
 package io.github.picodotdev.blogbitix.graphql;
 
-import graphql.schema.Coercing;
-import graphql.schema.CoercingParseValueException;
-import graphql.schema.CoercingSerializeException;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+...
 
 public class LocalDateCoercing implements Coercing<LocalDate, String> {
 

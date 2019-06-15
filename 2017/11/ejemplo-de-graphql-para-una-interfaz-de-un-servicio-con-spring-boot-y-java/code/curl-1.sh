@@ -47,7 +47,7 @@ $ curl "http://localhost:8080/library?query=\{authors\{name\}\}"
   }
 }
 
-$ curl "http://localhost:8080/library?query=\{books\{title+author\{name\}\}\}"
+$ curl "http://localhost:8080/graphql?query=\{books\{title+author\{name\}\}\}"
 {
   "data": {
     "books": [

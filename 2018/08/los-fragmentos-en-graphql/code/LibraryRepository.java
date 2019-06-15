@@ -1,17 +1,20 @@
-package io.github.picodotdev.blogbitix.graphql;
+package io.github.picodotdev.blogbitix.graphql.repository;
 
 ...
 
 public class LibraryRepository {
 
-    ...
+    private long sequence;
     private List<Book> books;
+    private List<Comment> comments;
+    private List<Author> authors;
     private List<Magazine> magazines;
 
     public LibraryRepository() {
         this.sequence = 0l;
-        ...
         this.books = new ArrayList<>();
+        this.comments = new ArrayList<>();
+        this.authors = new ArrayList<>();
         this.magazines = new ArrayList<>();
 
         ...

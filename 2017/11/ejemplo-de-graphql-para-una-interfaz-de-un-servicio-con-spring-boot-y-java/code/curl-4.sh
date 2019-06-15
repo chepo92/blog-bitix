@@ -1,4 +1,4 @@
-$ curl -XPOST -H "Content-Type: application/json" -H "User: admin" -d '{"query": "mutation addBook($title: String, $author: Long){addBook(title: $title, author: $author){title}}", "variables": { "title": "El lazarillo de Tormes", "author": 6}}' http://localhost:8080/library
+$ curl -XPOST -H "Content-Type: application/json" -H "User: admin" -d '{"query": "mutation addBook($title: String, $author: Long){addBook(title: $title, author: $author){title}}", "variables": { "title": "El lazarillo de Tormes", "author": 6}}' http://localhost:8080/graphql
 {
   "data": {
     "addBook": {
@@ -7,7 +7,7 @@ $ curl -XPOST -H "Content-Type: application/json" -H "User: admin" -d '{"query":
   }
 }
 
-$ curl -XPOST -H "Content-Type: application/json" -H "User: admin" -d '{"query": "mutation addBook($title: String, $author: Long){addBook(title: $title, author: $author){title}}", "variables": { "title": "El lazarillo de Tormes", "author": 99}}' http://localhost:8080/library
+$ curl -XPOST -H "Content-Type: application/json" -H "User: admin" -d '{"query": "mutation addBook($title: String, $author: Long){addBook(title: $title, author: $author){title}}", "variables": { "title": "El lazarillo de Tormes", "author": 99}}' http://localhost:8080/graphql
 {
   "data": {
     "addBook": null
@@ -22,13 +22,13 @@ $ curl -XPOST -H "Content-Type: application/json" -H "User: admin" -d '{"query":
 }
 
 io.github.picodotdev.blogbitix.graphql.ValidationException: Invalid author
-	at io.github.picodotdev.blogbitix.graphql.LibraryRepository.addBook(LibraryRepository.java:57) ~[main/:na]
-	at io.github.picodotdev.blogbitix.graphql.Mutation.addBook(Mutation.java:18) ~[main/:na]
-	at io.github.picodotdev.blogbitix.graphql.MutationMethodAccess.invoke(Unknown Source) ~[reflectasm-1.11.3.jar:na]
+	at io.github.picodotdev.blogbitix.graphql.repository.LibraryRepository.addBook(LibraryRepository.java:57) ~[main/:na]
+	at io.github.picodotdev.blogbitix.graphql.resolver.Mutation.addBook(Mutation.java:18) ~[main/:na]
+	at io.github.picodotdev.blogbitix.graphql.resolver.MutationMethodAccess.invoke(Unknown Source) ~[reflectasm-1.11.3.jar:na]
 	at com.coxautodev.graphql.tools.MethodFieldResolverDataFetcher.get(MethodFieldResolver.kt:111) ~[graphql-java-tools-4.1.2.jar:na]
   ...
 
-$ curl -XPOST -H "Content-Type: application/json" -d '{"query": "mutation addBook($title: String, $author: Long){addBook(title: $title, author: $author){title}}", "variables": { "title": "El lazarillo de Tormes", "author": 6}}' http://localhost:8080/library
+$ curl -XPOST -H "Content-Type: application/json" -d '{"query": "mutation addBook($title: String, $author: Long){addBook(title: $title, author: $author){title}}", "variables": { "title": "El lazarillo de Tormes", "author": 6}}' http://localhost:8080/graphql
 {
   "data": {
     "addBook": null
@@ -43,8 +43,8 @@ $ curl -XPOST -H "Content-Type: application/json" -d '{"query": "mutation addBoo
 }
 
 io.github.picodotdev.blogbitix.graphql.PermissionException: Invalid permissions
-	at io.github.picodotdev.blogbitix.graphql.LibraryRepository.addBook(LibraryRepository.java:53) ~[main/:na]
-	at io.github.picodotdev.blogbitix.graphql.Mutation.addBook(Mutation.java:18) ~[main/:na]
-	at io.github.picodotdev.blogbitix.graphql.MutationMethodAccess.invoke(Unknown Source) ~[reflectasm-1.11.3.jar:na]
+	at io.github.picodotdev.blogbitix.graphql.repository.LibraryRepository.addBook(LibraryRepository.java:53) ~[main/:na]
+	at io.github.picodotdev.blogbitix.graphql.resolver.Mutation.addBook(Mutation.java:18) ~[main/:na]
+	at io.github.picodotdev.blogbitix.graphql.resolver.MutationMethodAccess.invoke(Unknown Source) ~[reflectasm-1.11.3.jar:na]
 	at com.coxautodev.graphql.tools.MethodFieldResolverDataFetcher.get(MethodFieldResolver.kt:111) ~[graphql-java-tools-4.1.2.jar:na]
   ...

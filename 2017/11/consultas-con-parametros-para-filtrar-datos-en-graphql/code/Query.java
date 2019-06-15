@@ -1,21 +1,22 @@
-package io.github.picodotdev.blogbitix.graphql;
+package io.github.picodotdev.blogbitix.graphql.resolver;
 
-import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-
-import java.util.List;
+...
 
 public class Query implements GraphQLQueryResolver {
-    
+
     private LibraryRepository libraryRepository;
 
     public Query(LibraryRepository libraryRepository) {
         this.libraryRepository = libraryRepository;
     }
 
-    ...
+    public List<Book> books(BookFilter filter, DataFetchingEnvironment environment) throws InterruptedException  {
+        List<Book> books = libraryRepository.findBooks(filter);
+        DefaultGraphQLContext context = environment.getContext();
 
-    public List<Book> books(BookFilter filter) {
-        return libraryRepository.findBooks(filter);
+        ...
+
+        return books;
     }
 
     ...

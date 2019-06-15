@@ -1,6 +1,4 @@
-package io.github.picodotdev.blogbitix.graphql;
-
-...
+package io.github.picodotdev.blogbitix.graphql.type;
 
 public class Magazine extends Publication {
     
@@ -13,6 +11,6 @@ public class Magazine extends Publication {
         this.name = name;
         this.pages = pages;
     }
-    
+
     ...
 }
