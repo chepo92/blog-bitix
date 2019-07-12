@@ -1,4 +1,4 @@
-$ curl "http://localhost:8080/graphql?query=\{books\{title\}authors\{name\}author(id:1)\{name\}\}"
+$ curl -XPOST -H 'Content-Type: application/json' -d '{"query":"query{books{title} authors{name} author(id:1){name}}"}' http://localhost:8080/graphql
 {
   "data": {
     "books": [

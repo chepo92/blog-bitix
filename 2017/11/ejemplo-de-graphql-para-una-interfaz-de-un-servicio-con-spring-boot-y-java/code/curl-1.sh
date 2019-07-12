@@ -1,4 +1,4 @@
-$ curl "http://localhost:8080/library?query=\{books\{title\}\}"
+$ curl -XPOST -H 'Content-Type: application/json' -d '{"query":"query{books{title}}"}' http://localhost:8080/graphql
 {
   "data": {
     "books": [
@@ -21,7 +21,7 @@ $ curl "http://localhost:8080/library?query=\{books\{title\}\}"
   }
 }
 
-$ curl "http://localhost:8080/library?query=\{authors\{name\}\}"
+$ curl -XPOST -H 'Content-Type: application/json' -d '{"query":"query{authors{name}}"}' http://localhost:8080/graphql
 {
   "data": {
     "authors": [
@@ -47,7 +47,7 @@ $ curl "http://localhost:8080/library?query=\{authors\{name\}\}"
   }
 }
 
-$ curl "http://localhost:8080/graphql?query=\{books\{title+author\{name\}\}\}"
+$ curl -XPOST -H 'Content-Type: application/json' -d '{"query":"query{books{title author{name}}}"}' http://localhost:8080/graphql
 {
   "data": {
     "books": [
