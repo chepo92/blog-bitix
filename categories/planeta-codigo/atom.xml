@@ -1,4 +1,265 @@
-<feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/tags/planeta-codigo/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2019-07-12T18:00:00+02:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2019/07/recuperar-datos-eficientemente-en-graphql-usando-batching-con-data-loaders/</id><title>Recuperar datos eficientemente en GraphQL usando batching con data loaders</title><updated>2019-07-12T18:00:00+02:00</updated><published>2019-07-12T18:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/07/recuperar-datos-eficientemente-en-graphql-usando-batching-con-data-loaders/"/><author><name>picodotdev</name></author><content type="html">
+<feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/tags/planeta-codigo/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2019-07-19T19:00:00+02:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/</id><title>Publicación y suscripción de eventos con Guava EventBus en una aplicación Java</title><updated>2019-07-19T19:00:00+02:00</updated><published>2019-07-19T19:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/"/><author><name>picodotdev</name></author><content type="html">
+&lt;p&gt;&lt;strong&gt;Guava EventBus es una solución simple para la publicación y suscripción de eventos en una misma aplicación y como tal no posee muchas de las capacidades que si tiene JMS o RabbitMQ, sin embargo, en algunos casos puede ser muy útil, una solución sencilla y sin requerimientos adicionales de infraesrtuctura.&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+&lt;p&gt;En programación los eventos son una buena forma de comunicación que permite desacoplar el emisor del evento del receptor o receptores. Los eventos permiten reaccionar a situaciones que se producen a la aplicación. El emisor los lanza cuando considera adecuado y los receptores se suscriben a los eventos que quieren recibir y actúan según su funcionalidad.&lt;/p&gt;
+&lt;p&gt;Hay herramientas especificas para eventos en Java está JMS si la aplicación está basada en &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/03/introduccion-y-nuevas-caracteristicas-de-java-ee-7/&#34;&gt;la plataforma en Java EE&lt;/a&gt;, en caso de necesitar un servidor de mensajes adecuado para múltiples plataformas y lenguajes uno de los más conocidos es &lt;a href=&#34;https://www.rabbitmq.com/&#34;&gt;RabbitMQ&lt;/a&gt;. Estas opciones permiten que el emisor y los receptores estén aplicaciones distintas.&lt;/p&gt;
+&lt;p&gt;En el caso de que el emisor y receptor estén en la misma aplicación una opción más sencilla por no requerir un servidor de mensajería es usando la librería &lt;a href=&#34;https://github.com/google/guava&#34;&gt;Guava&lt;/a&gt; y su funcionalidad de &lt;a href=&#34;https://github.com/google/guava/wiki/EventBusExplained&#34;&gt;Event Bus&lt;/a&gt;. Una de las ventajas de Guava Event Bus es que el receptor no requiere un registro explícito en el emisor como ocurre en algunas de las soluciones con clases &lt;em&gt;Listener&lt;/em&gt; de Java.&lt;/p&gt;
+&lt;p&gt;Para hacer uso de Guava Event Bus hay que obtener una referencia a la clase &lt;a href=&#34;https://guava.dev/releases/snapshot-jre/api/docs/com/google/common/eventbus/EventBus.html&#34;&gt;EventBus&lt;/a&gt; que usando &lt;a href=&#34;https://spring.io/&#34;&gt;Spring&lt;/a&gt; se puede definir como un &lt;em&gt;bean singleton&lt;/em&gt; en el contenedor de dependencias y ser inyectado en las clases que lo necesiten. Los eventos se envían a haciendo uso del método &lt;a href=&#34;https://guava.dev/releases/snapshot-jre/api/docs/com/google/common/eventbus/EventBus.html#post-java.lang.Object-&#34;&gt;post()&lt;/a&gt; con el objeto que representa el evento como argumento. Los manejadores de los eventos o &lt;em&gt;listener&lt;/em&gt; son simplemente un método anotado con &lt;a href=&#34;https://guava.dev/releases/snapshot-jre/api/docs/com/google/common/eventbus/Subscribe.html&#34;&gt;@Suscribe&lt;/a&gt; y el tipo del evento como argumento, la clases &lt;em&gt;listener&lt;/em&gt; han de registrarse en el &lt;em&gt;EventBus&lt;/em&gt; y una misma clase con múltiples métodos anotados puede manejar diferentes eventos.&lt;/p&gt;
+&lt;p&gt;En el contenedor de Spring se define como un &lt;em&gt;bean&lt;/em&gt; la clase &lt;em&gt;EventBus&lt;/em&gt; que es inicializada con las clases &lt;em&gt;listener&lt;/em&gt; con métodos anotados con &lt;em&gt;@Suscribe&lt;/em&gt; registradas con el método &lt;a href=&#34;https://guava.dev/releases/snapshot-jre/api/docs/com/google/common/eventbus/EventBus.html#register-java.lang.Object-&#34;&gt;register()&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;io.github.picodotdev.blogbitix.guava&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.boot.SpringApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.boot.autoconfigure.SpringBootApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.context.annotation.Bean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.google.common.eventbus.EventBus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@SpringBootApplication&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Main&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;EventBus&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;eventBus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;EventBus&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;eventbus&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;EventBus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;eventbus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;register&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;EventListener&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;eventbus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;SpringApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;run&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Main&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/Main.java&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/Main.java&#34; target=&#34;_blank&#34;&gt;Main.java&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;io.github.picodotdev.blogbitix.guava&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.google.common.eventbus.Subscribe&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;EventListener&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Subscribe&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;onEvent&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Event&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;event&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Event: %s%n&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;event&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getMessage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/EventListener.java&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/EventListener.java&#34; target=&#34;_blank&#34;&gt;EventListener.java&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;En este ejemplo sencillo se lanza un evento cuando se realiza una petición y como reacción a este evento se imprime un mensaje en la salida. Una aplicación real del &lt;em&gt;EventBus&lt;/em&gt; será más complicada pero este ejemplo muestra perfectamente el mecanismo de lanzado y recepción de eventos en una misma aplicación. La clase que se lanza como evento en este caso es un &lt;em&gt;POJO&lt;/em&gt; sin ningún requerimiento especial.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;io.github.picodotdev.blogbitix.guava&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.beans.factory.annotation.Autowired&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.web.bind.annotation.RequestParam&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.web.bind.annotation.RestController&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.web.bind.annotation.RequestMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.google.common.eventbus.EventBus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@RestController&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;DefaultRestController&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;EventBus&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;eventbus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Event&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;hello&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@RequestParam&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;value&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;defaultValue&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Hello World!&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;Event&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;event&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Event&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;eventbus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;post&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;event&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;event&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/DefaultRestController.java&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/DefaultRestController.java&#34; target=&#34;_blank&#34;&gt;DefaultRestController.java&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;io.github.picodotdev.blogbitix.guava&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Event&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Event&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;message&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getMessage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/Event.java&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/Event.java&#34; target=&#34;_blank&#34;&gt;Event.java&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Al realizar peticiones a la aplicación el controlador emite un evento que es recibido por &lt;em&gt;listener&lt;/em&gt; al procesar el evento, en la salida de la aplicación aparecen los mensajes.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;Event: Hello World!
+Event: A message&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/System.out&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/System.out&#34; target=&#34;_blank&#34;&gt;System.out&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;En el proyecto hay que incluir como dependencia la librería Guava en este caso usando &lt;a href=&#34;https://gradle.org/&#34;&gt;Gradle&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Groovy&#34; data-lang=&#34;Groovy&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Groovy&#34; data-lang=&#34;Groovy&#34;&gt;&lt;span class=&#34;n&#34;&gt;plugins&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;java&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;application&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;org.springframework.boot&amp;#39;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;version&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;2.1.6.RELEASE&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;group&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;io.github.picodotdev.blogbitix&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;version&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;0.0.1-SNAPSHOT&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;sourceCompatibility&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;11&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;mainClassName&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;io.github.picodotdev.blogbitix.guava.Main&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;repositories&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;mavenCentral&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;dependencies&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;implementation&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;platform&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;org.springframework.boot:spring-boot-dependencies:2.1.6.RELEASE&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;implementation&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;org.springframework.boot:spring-boot-starter-web&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;implementation&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;org.springframework.boot:spring-boot-starter-jersey&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;implementation&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;com.google.guava:guava:28.0-jre&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/build.gradle&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/build.gradle&#34; target=&#34;_blank&#34;&gt;build.gradle&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;
+El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/Guava&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+&lt;div class=&#34;reference&#34;&gt;
+Referencia:&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.baeldung.com/guava-eventbus&#34;&gt;Guide to Guava’s EventBus&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/ejemplo-de-rabbitmq-con-java-para-enviar-y-recibir-mensajes/&#34;&gt;Ejemplo de RabbitMQ con Java para enviar y recibir mensajes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/introduccion-y-ejemplo-sencillo-de-java-message-service-jms/&#34;&gt;Introducción y ejemplo sencillo de Java Message Service (JMS)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/04/aplicacion-de-ejemplo-usando-varias-especificaciones-de-java-ee-7/&#34;&gt;Aplicación de ejemplo usando varias especificaciones de Java EE 7&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;</content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/07/recuperar-datos-eficientemente-en-graphql-usando-batching-con-data-loaders/</id><title>Recuperar datos eficientemente en GraphQL usando batching con data loaders</title><updated>2019-07-12T18:00:00+02:00</updated><published>2019-07-12T18:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/07/recuperar-datos-eficientemente-en-graphql-usando-batching-con-data-loaders/"/><author><name>picodotdev</name></author><content type="html">
 &lt;p&gt;&lt;strong&gt;Al diferencia de una API REST donde cada recurso posee un &lt;em&gt;endpoint&lt;/em&gt; propio en GraphQL los recursos están relacionados y forman un grafo. Por otro lado las propiedades devueltas en una consulta de GraphQL son las que se indiquen en la consulta en vez de prefijadas como en una API REST. Hay que tener en cuenta que GraphQL para recuperar las propiedades de las entidades usa un &lt;em&gt;resolver&lt;/em&gt; y las recupera una a una, si se devuelve una lista de elementos y de cada uno de esos elementos otra propiedad para la que hay que generar una consulta adicional a la base de datos el rendimiento no será bueno. Los &lt;em&gt;data loaders&lt;/em&gt; permiten recuperar las propiedades relacionadas de una colección de entidades eficientemente evitando el problema 1+N.&lt;/strong&gt;&lt;/p&gt;
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
 &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/graphql.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
@@ -2695,93 +2956,4 @@ El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/Regis
 &lt;p&gt;Las bases de datos MySQL y PostgreSQL también ofrecen la posibilidad de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/02/log-de-sqls-y-de-sqls-lentas-en-myql-y-postgresql/&#34;&gt;emitir en las sentencias en un &lt;em&gt;log&lt;/em&gt;&lt;/a&gt; incluidas las sentencias lentas. Otra posibilidad es &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/11/formatear-con-color-sentencias-sql-o-codigo-fuente-en-la-terminal-con-java-y-jansi/&#34;&gt;resaltar la sintaxis de las sentencias en la salida a la terminal&lt;/a&gt; para una mejor lectura dando color a las palabras claves.&lt;/p&gt;
 &lt;p&gt;
 El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/PlugInTapestry&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
-&lt;/p&gt;</content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/05/combinaciones-de-teclado-en-html-javascript-y-paginas-web/</id><title>Combinaciones de teclado en HTML, JavaScript y páginas web</title><updated>2019-05-19T09:00:00+02:00</updated><published>2019-05-19T09:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/05/combinaciones-de-teclado-en-html-javascript-y-paginas-web/"/><author><name>picodotdev</name></author><content type="html">
-&lt;p&gt;&lt;strong&gt;En las páginas y aplicaciones web también es posible utilizar combinaciones de teclas para proporcionar acceso rápido a funciones usadas frecuentemente. Utilizando la propiedad global &lt;em&gt;accesskey&lt;/em&gt; para los campos de texto la acción es ubicar el foco en el campo y para los botones realizar la acción de clic. Los &lt;em&gt;listeners&lt;/em&gt; como &lt;em&gt;onkeydown&lt;/em&gt; permiten conocer que teclas modificadoras como &lt;kbd&gt;Ctrl&lt;/kbd&gt;, &lt;kbd&gt;Shift&lt;/kbd&gt; y &lt;kbd&gt;Alt&lt;/kbd&gt; se han pulsado al mismo tiempo.&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/html.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;HTML&#34; title=&#34;HTML&#34;/&gt;
-&lt;/div&gt;
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/javascript.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;JavaScript&#34; title=&#34;JavaScript&#34;/&gt;
-&lt;/div&gt;
-&lt;p&gt;En las aplicaciones de escritorio es habitual usar atajos de teclado o combinaciones de teclas para realizar acciones sin necesidad del ratón y sin requerir levantar las manos del teclado. Estos atajos de teclado permiten ahorrar tiempo al realizar acciones habituales ya que conociendo y usando la combinación de teclas es mucho más rápido que usar el ratón. Los usuarios que trabajan con una aplicación gran cantidad de tiempo les facilita la tarea. En las aplicaciones web ya no es tan habitual encontrar asignaciones de combinación de teclas pero también se pueden emplear y son igual de útiles.&lt;/p&gt;
-&lt;p&gt;La forma de utilizar combinaciones de teclas en una página web es haciendo uso de los eventos &lt;em&gt;onKeyDown&lt;/em&gt; y &lt;em&gt;onKeyUp&lt;/em&gt; o el &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/accesskey&#34;&gt;atributo global &lt;em&gt;accesskey&lt;/em&gt;&lt;/a&gt; que puede ser empleado en cualquier elemento aunque dependiendo del tipo de elemento el comportamiento puede ser distinto. El &lt;em&gt;listener&lt;/em&gt; del evento recibe como argumento un objeto que representa el evento, entre la información que contiene está la tecla pulsada y las teclas de control adicionales pulsadas al mismo tiempo.&lt;/p&gt;
-&lt;p&gt;En este ejemplo se captura la combinación de teclas &lt;kbd&gt;Ctrl + Shift + s&lt;/kbd&gt; a nivel de página que muestra una ventana emergente utilizando la función &lt;em&gt;alert()&lt;/em&gt; de JavaScript. El &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent&#34;&gt;objeto del evento&lt;/a&gt; que se recibe como parámetro del &lt;em&gt;listener&lt;/em&gt; posee las propiedades &lt;em&gt;ctrlKey&lt;/em&gt;, &lt;em&gt;shiftKey&lt;/em&gt; y &lt;em&gt;altKey&lt;/em&gt; con las que determinar además de la tecla pulsada las teclas modificadoras adicionales pulsadas al mismo tiempo.&lt;/p&gt;
-&lt;div class=&#34;code&#34;&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-HTML&#34; data-lang=&#34;HTML&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-HTML&#34; data-lang=&#34;HTML&#34;&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;html&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;head&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;title&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;Key combinations test&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;title&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;script&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;text/javascript&amp;#34;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;https://code.jquery.com/jquery-3.3.1.min.js&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;script&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;head&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
-Press Ctrl + Shift + s&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;br&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;br&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;input&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;text&amp;#34;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;accesskey&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;t&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;br&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;br&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;input&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;id &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;button&amp;#34;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;button&amp;#34;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;accesskey&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;b&amp;#34;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Button&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;script&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;text/javascript&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;body&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;on&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;keydown&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;ctrlKey&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;shiftKey&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;which&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;===&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;83&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;alert&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;You pressed Ctrl + Shift + s&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;preventDefault&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;#button&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;on&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;click&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;alert&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;You clicked button&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;script&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;html&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;&#34; target=&#34;_blank&#34;&gt;HtmlKeyCombinations.html&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-&lt;figure&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/combinaciones-de-teclado-en-html-javascript-y-paginas-web/images/key-combinations-1_hucdbf9b80216b5889f92e6ea3089b108a_13920_2560x1440_fit_box_2.png&#34; title=&#34;Ejemplo combinaciones de teclas&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/05/combinaciones-de-teclado-en-html-javascript-y-paginas-web/images/key-combinations-1_hucdbf9b80216b5889f92e6ea3089b108a_13920_300x200_fit_box_2.png&#34; width=&#34;300&#34;/&gt;&lt;/a&gt;
-&lt;figcaption&gt;Ejemplo combinaciones de teclas&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;/div&gt;
-&lt;p&gt;Los usos que se les pueden dar a estas combinaciones de teclas van desde posicionar el foco en un determinado campo de entrada o realizar alguna acción como enviar los datos de un formulario una vez están rellenados y son válidos o cualquiera otra acción mediante &lt;a href=&#34;https://es.wikipedia.org/wiki/JavaScript&#34;&gt;JavaScript&lt;/a&gt;. Haciendo uso del método &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault&#34;&gt;preventDefault()&lt;/a&gt; del objeto evento se evita que el evento dispare la acción por defecto si tiene una asignada.&lt;/p&gt;
-&lt;p&gt;La propiedad global &lt;em&gt;accesskey&lt;/em&gt; puede utilizarse en cualquier elemento de HTML, en el ejemplo en un elemento de formulario &lt;em&gt;input&lt;/em&gt; y en un botón. En &lt;a href=&#34;https://www.mozilla.org/es-ES/firefox/new/&#34;&gt;Firefox&lt;/a&gt; y &lt;a href=&#34;https://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;https://www.linux.com/&#34;&gt;Linux&lt;/a&gt; la combinación de teclas es &lt;kbd&gt;Alt + Shift + [key]&lt;/kbd&gt;, para el campo de texto la combinación es &lt;kbd&gt;Alt + Shift + t&lt;/kbd&gt; y para el botón &lt;kbd&gt;Alt + Shift + b&lt;/kbd&gt;, en el botón la acción es ubicar el foco de entrada en el campo de texto y para el botón realizar la acción clic.&lt;/p&gt;
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-&lt;figure&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/combinaciones-de-teclado-en-html-javascript-y-paginas-web/images/key-combinations-2_hucb0a71650a1fecca4774a5fbc5f53aea_17644_2560x1440_fit_box_2.png&#34; title=&#34;Captura de Ctrl &amp;#43; Shift &amp;#43; s&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/05/combinaciones-de-teclado-en-html-javascript-y-paginas-web/images/key-combinations-2_hucb0a71650a1fecca4774a5fbc5f53aea_17644_200x150_fit_box_2.png&#34; width=&#34;200&#34;/&gt;&lt;/a&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/combinaciones-de-teclado-en-html-javascript-y-paginas-web/images/key-combinations-3_hu8f2ee8de5de0b6cc5962cdd220a09655_14112_2560x1440_fit_box_2.png&#34; title=&#34;Captura de Alt &amp;#43; Shift &amp;#43; t, ubica el foco en el campo de texto&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/05/combinaciones-de-teclado-en-html-javascript-y-paginas-web/images/key-combinations-3_hu8f2ee8de5de0b6cc5962cdd220a09655_14112_200x150_fit_box_2.png&#34; width=&#34;200&#34;/&gt;&lt;/a&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/combinaciones-de-teclado-en-html-javascript-y-paginas-web/images/key-combinations-4_hu28de0382bc89a65a2ee12340ecc6d3a9_17581_2560x1440_fit_box_2.png&#34; title=&#34;Captura de Alt &amp;#43; Shift &amp;#43; b, ejecuta la acción clic del botón&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/05/combinaciones-de-teclado-en-html-javascript-y-paginas-web/images/key-combinations-4_hu28de0382bc89a65a2ee12340ecc6d3a9_17581_200x150_fit_box_2.png&#34; width=&#34;200&#34;/&gt;&lt;/a&gt;
-&lt;figcaption&gt;Acciones con combinaciones de teclas&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;/div&gt;
-&lt;div class=&#34;reference&#34;&gt;
-Referencia:&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;[Atributos globales][&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes&#34;&gt;https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/12/introduccion-al-javascript-de-ecmascript-6/&#34;&gt;Introducción al JavaScript de ECMAScript 6&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;</content><category term="javascript"/><category term="programacion"/><category term="planeta-codigo"/></entry></feed>
+&lt;/p&gt;</content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/></entry></feed>

@@ -1,4 +1,265 @@
-<feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/tags/programacion/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2019-07-12T18:00:00+02:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2019/07/recuperar-datos-eficientemente-en-graphql-usando-batching-con-data-loaders/</id><title>Recuperar datos eficientemente en GraphQL usando batching con data loaders</title><updated>2019-07-12T18:00:00+02:00</updated><published>2019-07-12T18:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/07/recuperar-datos-eficientemente-en-graphql-usando-batching-con-data-loaders/"/><author><name>picodotdev</name></author><content type="html">
+<feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/tags/programacion/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2019-07-19T19:00:00+02:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/</id><title>Publicación y suscripción de eventos con Guava EventBus en una aplicación Java</title><updated>2019-07-19T19:00:00+02:00</updated><published>2019-07-19T19:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/"/><author><name>picodotdev</name></author><content type="html">
+&lt;p&gt;&lt;strong&gt;Guava EventBus es una solución simple para la publicación y suscripción de eventos en una misma aplicación y como tal no posee muchas de las capacidades que si tiene JMS o RabbitMQ, sin embargo, en algunos casos puede ser muy útil, una solución sencilla y sin requerimientos adicionales de infraesrtuctura.&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+&lt;p&gt;En programación los eventos son una buena forma de comunicación que permite desacoplar el emisor del evento del receptor o receptores. Los eventos permiten reaccionar a situaciones que se producen a la aplicación. El emisor los lanza cuando considera adecuado y los receptores se suscriben a los eventos que quieren recibir y actúan según su funcionalidad.&lt;/p&gt;
+&lt;p&gt;Hay herramientas especificas para eventos en Java está JMS si la aplicación está basada en &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/03/introduccion-y-nuevas-caracteristicas-de-java-ee-7/&#34;&gt;la plataforma en Java EE&lt;/a&gt;, en caso de necesitar un servidor de mensajes adecuado para múltiples plataformas y lenguajes uno de los más conocidos es &lt;a href=&#34;https://www.rabbitmq.com/&#34;&gt;RabbitMQ&lt;/a&gt;. Estas opciones permiten que el emisor y los receptores estén aplicaciones distintas.&lt;/p&gt;
+&lt;p&gt;En el caso de que el emisor y receptor estén en la misma aplicación una opción más sencilla por no requerir un servidor de mensajería es usando la librería &lt;a href=&#34;https://github.com/google/guava&#34;&gt;Guava&lt;/a&gt; y su funcionalidad de &lt;a href=&#34;https://github.com/google/guava/wiki/EventBusExplained&#34;&gt;Event Bus&lt;/a&gt;. Una de las ventajas de Guava Event Bus es que el receptor no requiere un registro explícito en el emisor como ocurre en algunas de las soluciones con clases &lt;em&gt;Listener&lt;/em&gt; de Java.&lt;/p&gt;
+&lt;p&gt;Para hacer uso de Guava Event Bus hay que obtener una referencia a la clase &lt;a href=&#34;https://guava.dev/releases/snapshot-jre/api/docs/com/google/common/eventbus/EventBus.html&#34;&gt;EventBus&lt;/a&gt; que usando &lt;a href=&#34;https://spring.io/&#34;&gt;Spring&lt;/a&gt; se puede definir como un &lt;em&gt;bean singleton&lt;/em&gt; en el contenedor de dependencias y ser inyectado en las clases que lo necesiten. Los eventos se envían a haciendo uso del método &lt;a href=&#34;https://guava.dev/releases/snapshot-jre/api/docs/com/google/common/eventbus/EventBus.html#post-java.lang.Object-&#34;&gt;post()&lt;/a&gt; con el objeto que representa el evento como argumento. Los manejadores de los eventos o &lt;em&gt;listener&lt;/em&gt; son simplemente un método anotado con &lt;a href=&#34;https://guava.dev/releases/snapshot-jre/api/docs/com/google/common/eventbus/Subscribe.html&#34;&gt;@Suscribe&lt;/a&gt; y el tipo del evento como argumento, la clases &lt;em&gt;listener&lt;/em&gt; han de registrarse en el &lt;em&gt;EventBus&lt;/em&gt; y una misma clase con múltiples métodos anotados puede manejar diferentes eventos.&lt;/p&gt;
+&lt;p&gt;En el contenedor de Spring se define como un &lt;em&gt;bean&lt;/em&gt; la clase &lt;em&gt;EventBus&lt;/em&gt; que es inicializada con las clases &lt;em&gt;listener&lt;/em&gt; con métodos anotados con &lt;em&gt;@Suscribe&lt;/em&gt; registradas con el método &lt;a href=&#34;https://guava.dev/releases/snapshot-jre/api/docs/com/google/common/eventbus/EventBus.html#register-java.lang.Object-&#34;&gt;register()&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;io.github.picodotdev.blogbitix.guava&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.boot.SpringApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.boot.autoconfigure.SpringBootApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.context.annotation.Bean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.google.common.eventbus.EventBus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@SpringBootApplication&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Main&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;EventBus&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;eventBus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;EventBus&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;eventbus&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;EventBus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;eventbus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;register&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;EventListener&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;eventbus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;SpringApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;run&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Main&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/Main.java&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/Main.java&#34; target=&#34;_blank&#34;&gt;Main.java&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;io.github.picodotdev.blogbitix.guava&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.google.common.eventbus.Subscribe&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;EventListener&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Subscribe&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;onEvent&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Event&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;event&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Event: %s%n&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;event&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getMessage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/EventListener.java&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/EventListener.java&#34; target=&#34;_blank&#34;&gt;EventListener.java&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;En este ejemplo sencillo se lanza un evento cuando se realiza una petición y como reacción a este evento se imprime un mensaje en la salida. Una aplicación real del &lt;em&gt;EventBus&lt;/em&gt; será más complicada pero este ejemplo muestra perfectamente el mecanismo de lanzado y recepción de eventos en una misma aplicación. La clase que se lanza como evento en este caso es un &lt;em&gt;POJO&lt;/em&gt; sin ningún requerimiento especial.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;io.github.picodotdev.blogbitix.guava&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.beans.factory.annotation.Autowired&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.web.bind.annotation.RequestParam&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.web.bind.annotation.RestController&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.web.bind.annotation.RequestMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.google.common.eventbus.EventBus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@RestController&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;DefaultRestController&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;EventBus&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;eventbus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Event&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;hello&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@RequestParam&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;value&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;defaultValue&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Hello World!&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;Event&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;event&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Event&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;eventbus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;post&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;event&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;event&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/DefaultRestController.java&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/DefaultRestController.java&#34; target=&#34;_blank&#34;&gt;DefaultRestController.java&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;io.github.picodotdev.blogbitix.guava&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Event&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Event&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;message&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getMessage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/Event.java&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/Event.java&#34; target=&#34;_blank&#34;&gt;Event.java&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Al realizar peticiones a la aplicación el controlador emite un evento que es recibido por &lt;em&gt;listener&lt;/em&gt; al procesar el evento, en la salida de la aplicación aparecen los mensajes.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;Event: Hello World!
+Event: A message&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/System.out&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/System.out&#34; target=&#34;_blank&#34;&gt;System.out&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;En el proyecto hay que incluir como dependencia la librería Guava en este caso usando &lt;a href=&#34;https://gradle.org/&#34;&gt;Gradle&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Groovy&#34; data-lang=&#34;Groovy&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Groovy&#34; data-lang=&#34;Groovy&#34;&gt;&lt;span class=&#34;n&#34;&gt;plugins&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;java&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;application&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;org.springframework.boot&amp;#39;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;version&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;2.1.6.RELEASE&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;group&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;io.github.picodotdev.blogbitix&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;version&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;0.0.1-SNAPSHOT&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;sourceCompatibility&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;11&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;mainClassName&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;io.github.picodotdev.blogbitix.guava.Main&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;repositories&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;mavenCentral&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;dependencies&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;implementation&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;platform&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;org.springframework.boot:spring-boot-dependencies:2.1.6.RELEASE&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;implementation&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;org.springframework.boot:spring-boot-starter-web&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;implementation&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;org.springframework.boot:spring-boot-starter-jersey&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;implementation&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;com.google.guava:guava:28.0-jre&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/build.gradle&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/code/build.gradle&#34; target=&#34;_blank&#34;&gt;build.gradle&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;
+El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/Guava&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./gradlew run&lt;/code&gt;.
+&lt;/p&gt;
+&lt;div class=&#34;reference&#34;&gt;
+Referencia:&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.baeldung.com/guava-eventbus&#34;&gt;Guide to Guava’s EventBus&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/02/ejemplo-de-rabbitmq-con-java-para-enviar-y-recibir-mensajes/&#34;&gt;Ejemplo de RabbitMQ con Java para enviar y recibir mensajes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/introduccion-y-ejemplo-sencillo-de-java-message-service-jms/&#34;&gt;Introducción y ejemplo sencillo de Java Message Service (JMS)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/04/aplicacion-de-ejemplo-usando-varias-especificaciones-de-java-ee-7/&#34;&gt;Aplicación de ejemplo usando varias especificaciones de Java EE 7&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;</content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/07/recuperar-datos-eficientemente-en-graphql-usando-batching-con-data-loaders/</id><title>Recuperar datos eficientemente en GraphQL usando batching con data loaders</title><updated>2019-07-12T18:00:00+02:00</updated><published>2019-07-12T18:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/07/recuperar-datos-eficientemente-en-graphql-usando-batching-con-data-loaders/"/><author><name>picodotdev</name></author><content type="html">
 &lt;p&gt;&lt;strong&gt;Al diferencia de una API REST donde cada recurso posee un &lt;em&gt;endpoint&lt;/em&gt; propio en GraphQL los recursos están relacionados y forman un grafo. Por otro lado las propiedades devueltas en una consulta de GraphQL son las que se indiquen en la consulta en vez de prefijadas como en una API REST. Hay que tener en cuenta que GraphQL para recuperar las propiedades de las entidades usa un &lt;em&gt;resolver&lt;/em&gt; y las recupera una a una, si se devuelve una lista de elementos y de cada uno de esos elementos otra propiedad para la que hay que generar una consulta adicional a la base de datos el rendimiento no será bueno. Los &lt;em&gt;data loaders&lt;/em&gt; permiten recuperar las propiedades relacionadas de una colección de entidades eficientemente evitando el problema 1+N.&lt;/strong&gt;&lt;/p&gt;
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
 &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/graphql.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;GraphQL&#34; title=&#34;GraphQL&#34;/&gt;
@@ -3071,18 +3332,4 @@ Referencia:&lt;br&gt;
 &lt;p&gt;La interfaz &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html&#34;&gt;Collection&lt;/a&gt; es implementada por varias interfaces y clases &lt;em&gt;ArrayList&lt;/em&gt;, &lt;em&gt;HashSet&lt;/em&gt;, &lt;em&gt;List&lt;/em&gt;, &lt;em&gt;Queue&lt;/em&gt;, &lt;em&gt;Set&lt;/em&gt;, &lt;em&gt;SortedSet&lt;/em&gt;, &lt;em&gt;Stack&lt;/em&gt;, &lt;em&gt;TreeSet&lt;/em&gt; y algunas otras, por otro lado está la interfaz &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html&#34;&gt;Map&lt;/a&gt; para estructuras clave-valor. Las colecciones que mantienen un orden en sus elementos heredan de la interfaz &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html&#34;&gt;List&lt;/a&gt; que posee métodos con operaciones basadas en un índice como obtener, insertar o eliminar un elemento en una determinada posición. Los &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html&#34;&gt;Set&lt;/a&gt; no permiten elementos que sean iguales según determine el método &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)&#34;&gt;equals&lt;/a&gt; del objeto y los presentes en la colección. Los &lt;em&gt;Map&lt;/em&gt; asocian una clave a cada objeto que se utiliza para realizar operaciones en la colección.&lt;/p&gt;
 &lt;p&gt;Muchos de los métodos de las colecciones funcionan en términos de los métodos &lt;em&gt;equals&lt;/em&gt; y &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#hashCode()&#34;&gt;hashCode&lt;/a&gt; de modo que si en una determinada clase se sobreescriben se ha de hacer implementando el contrato de estos métodos correctamente de otra manera una aplicación puede presentar errores de difícil depuración.&lt;/p&gt;
 &lt;p&gt;La clase &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collections.html&#34;&gt;Collections&lt;/a&gt; contiene numerosos métodos estáticos entre ellos para hacer una colección que no lo sea en inmutable o sincronizada. Con los métodos &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collections.html#synchronizedCollection(java.util.Collection)&#34;&gt;synchronizedCollection&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collections.html#synchronizedList(java.util.List)&#34;&gt;synchronizedList&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collections.html#synchronizedMap(java.util.Map)&#34;&gt;synchronizedMap&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collections.html#synchronizedSet(java.util.Set)&#34;&gt;synchronizedSet&lt;/a&gt; para hacerlas sincronizadas y los métodos &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collections.html#unmodifiableCollection(java.util.Collection)&#34;&gt;unmodifiableCollection&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collections.html#unmodifiableList(java.util.List)&#34;&gt;unmodifiableList&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collections.html#unmodifiableMap(java.util.Map)&#34;&gt;unmodifiableMap&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collections.html#unmodifiableSet(java.util.Set)&#34;&gt;unmodifiableSet&lt;/a&gt;. Estos métodos estáticos de la clase &lt;em&gt;Collections&lt;/em&gt; reciben como parámetro una colección no sincronizada o inmutable y devuelven una colección sincronizada o inmutable.&lt;/p&gt;
-&lt;p&gt;Las colecciones específicas para la concurrencia son más eficientes que convertir una colección no sincronizada en sincronizada con los métodos de &lt;em&gt;Collections&lt;/em&gt;. Las colecciones que se convierten en sincronizadas tienen una contención en toda la colección cuando no es necesario para las operaciones de lectura. Si las operaciones de lectura son mayoría las colecciones específicas para la concurrencia son más eficientes, no tienen tanta contención, por ejemplo, &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/ConcurrentHashMap.html&#34;&gt;ConcurrentHashMap&lt;/a&gt; divide el mapa en varios segmentos y solo bloquea los segmentos relevantes lo que permite a múltiples &lt;em&gt;threads&lt;/em&gt; acceder a otros segmentos del mismo mapa sin contención. &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/CopyOnWriteArrayList.html&#34;&gt;CopyOnWriteArrayList&lt;/a&gt; permite varios lectores sin necesidad de sincronización y cuando ocurre una escritura copia el &lt;em&gt;ArrayList&lt;/em&gt; a uno nuevo.&lt;/p&gt;</content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/02/las-colecciones-de-java-estructuras-de-datos-para-guardar-referencias-a-objetos/</id><title>Las colecciones de Java, estructuras de datos para guardar referencias a objetos</title><updated>2019-02-22T18:45:00+01:00</updated><published>2019-02-22T18:45:00+01:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/02/las-colecciones-de-java-estructuras-de-datos-para-guardar-referencias-a-objetos/"/><author><name>picodotdev</name></author><content type="html">
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
-&lt;/div&gt;
-&lt;p&gt;Los programas en su funcionamiento manejan información y esta se guarda en algún tipo de estructura adecuada según el tipo de uso de esa información, ya sea para lectura al recuperar datos y escritura par insertar nuevos datos. En Java hay dos interfaces que el resto de colecciones implementa, una interfaz es &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html&#34;&gt;Collection&lt;/a&gt; y la otra es &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html&#34;&gt;Map&lt;/a&gt;, estas en su contrato define una serie de métodos que las implementaciones deben proporcionar.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Collection&lt;/em&gt; tiene métodos para saber si un determinado elementos está en la colección con &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html#contains(java.lang.Object)&#34;&gt;contains&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html#containsAll(java.util.Collection)&#34;&gt;containsAll&lt;/a&gt; basándose en el método &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)&#34;&gt;equals&lt;/a&gt;, iterar los elementos de la colección con iterator, desde Java 8 convertir la colección en un &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html&#34;&gt;Stream&lt;/a&gt;, añadir elementos con &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html#add(E)&#34;&gt;add&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html#addAll(java.util.Collection)&#34;&gt;addAll&lt;/a&gt;, eliminar elementos con &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html#remove(java.lang.Object)&#34;&gt;remove&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html#removeAll(java.util.Collection)&#34;&gt;removeAll&lt;/a&gt;, comprobar si la colección está vacía con &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html#isEmpty()&#34;&gt;isEmpty&lt;/a&gt;, vaciar la colección con &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html#clear()&#34;&gt;clear&lt;/a&gt;, obtener el número de elementos con &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html#size()&#34;&gt;size&lt;/a&gt; y algunos pocos métodos más.&lt;/p&gt;
-&lt;p&gt;La interfaz &lt;em&gt;Map&lt;/em&gt; es para estructuras de datos que asocian a cada valor una clave por la que se recuperan los elementos tiene métodos para saber si existe una clave con &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html#containsKey(java.lang.Object)&#34;&gt;containsKey&lt;/a&gt; o un valor con &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html#containsValue(java.lang.Object)&#34;&gt;containsValue&lt;/a&gt;, obtener un valor por su clave con &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html#get(java.lang.Object)&#34;&gt;get&lt;/a&gt;, eliminar un valor según su clave con &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html#remove(java.lang.Object)&#34;&gt;remove&lt;/a&gt; obtener el conjunto de clave con &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html#keySet()&#34;&gt;keySet&lt;/a&gt; o los valores con &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html#values()&#34;&gt;values&lt;/a&gt;, obtener el número de elementos de la colección con &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html#size()&#34;&gt;size&lt;/a&gt;, comprobar si está vacía con &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html#isEmpty()&#34;&gt;isEmpty&lt;/a&gt; también entre algunos otros más. La interfaz &lt;em&gt;Map&lt;/em&gt; se basa en el método &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#hashCode()&#34;&gt;hashCode&lt;/a&gt;, por eso es importante &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2016/12/como-implementar-correctamente-y-por-que-los-metodos-equals-y-hashcode-de-los-objetos-java/&#34;&gt;implementar correctamente los métodos &lt;em&gt;equals&lt;/em&gt; y &lt;em&gt;hashCode&lt;/em&gt; correctamente&lt;/a&gt; en los objetos, de no hacerlo al usar el framework de colecciones se producirán comportamientos no deseados.&lt;/p&gt;
-&lt;p&gt;La interfaz &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html&#34;&gt;List&lt;/a&gt; la implementan estructuras de datos en ls que los elementos están ordenados según el orden de inserción, como están ordenados se puede acceder por ellos mediante un índice, para ello añade dos métodos con &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html#get(int)&#34;&gt;get&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html#remove(java.lang.Object)&#34;&gt;remove&lt;/a&gt; con un índice por parámetro.&lt;/p&gt;
-&lt;p&gt;Las colecciones que implementan la interfaz &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html&#34;&gt;Set&lt;/a&gt; no mantienen un orden y no permite valores duplicados basando la igualdad según el método &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html#equals(java.lang.Object)&#34;&gt;equals&lt;/a&gt; de &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html&#34;&gt;Object&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Queue.html&#34;&gt;Queue&lt;/a&gt; también mantiene un orden en los elementos pero los elementos siguen la regla &lt;abbr title=&#34;First Input First Output&#34;&gt;FIFO&lt;/abbr&gt; donde los elementos se añaden al final de la cola con &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Queue.html#add(E)&#34;&gt;add&lt;/a&gt; y los elementos se extraen de el inicio de la cola con &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Queue.html#element()&#34;&gt;element&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Queue.html#peek()&#34;&gt;peek&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Queue.html#poll()&#34;&gt;poll&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Queue.html#remove()&#34;&gt;remove&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Stack.html&#34;&gt;Stack&lt;/a&gt; es una pila donde se sigue la regla &lt;abbr title=&#34;Last Input First Output&#34;&gt;LIFO&lt;/abbr&gt;, el método &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Stack.html#push(E)&#34;&gt;push&lt;/a&gt; añade un elemento en la parte de arriba de la pila y &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Stack.html#peek()&#34;&gt;peek&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Stack.html#pop()&#34;&gt;pop&lt;/a&gt; obtiene el elemento son extraerlo y extraen elementos de la cima de la pila.&lt;/p&gt;
-&lt;p&gt;Las colecciones &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TreeSet.html&#34;&gt;TreeSet&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TreeMap.html&#34;&gt;TreeMap&lt;/a&gt; mantienen los elementos ordenados según el orden natural definido por el método &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Comparable.html#compareTo(T)&#34;&gt;compareTo&lt;/a&gt; de la interfaz &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Comparable.html&#34;&gt;Comparable&lt;/a&gt; guarda la información en una estructura de árbol de forma que las búsquedas son más rápidas que un una lista.&lt;/p&gt;
-&lt;p&gt;Las implementaciones más utilizadas de estas estas interfaces son &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ArrayList.html&#34;&gt;ArrayList&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/HashSet.html&#34;&gt;HashSet&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/HashMap.html&#34;&gt;HashMap&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TreeSet.html&#34;&gt;TreeSet&lt;/a&gt;, &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ArrayDeque.html&#34;&gt;ArrayDeque&lt;/a&gt; y &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Stack.html&#34;&gt;Stack&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Desde que &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/03/novedades-y-nuevas-caracteristicas-de-java-8/&#34;&gt;en Java 8 se permiten implementaciones de métodos en las interfaces&lt;/a&gt; se proporcionan en algunas de estas varios métodos factoría para crear fácilmente colecciones generalmente con un método de nombre &lt;em&gt;of&lt;/em&gt; como en la interfaz &lt;em&gt;List&lt;/em&gt;. La clase &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collections.html&#34;&gt;Collections&lt;/a&gt; tiene métodos para hacer las &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/03/colecciones-sincronizadas-e-inmutables-en-java/&#34;&gt;colecciones inmutables y sincronizadas&lt;/a&gt; impidiendo que se les realicen modificaciones o sincronizadas si varios &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Thread.html&#34;&gt;Thread&lt;/a&gt; de forma simultánea.&lt;/p&gt;
-&lt;p&gt;La &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/introduccion-a-la-programacion-funcional-con-java-y-la-libreria-vavr/&#34;&gt;librería Vavr&lt;/a&gt; proporciona otra API y conjunto de colecciones sin algunos errores de diseño pero que se han de mantener por compatibilidad o con algunas funcionalidades adicionales que la API de colecciones de Java no tiene.&lt;/p&gt;</content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/></entry></feed>
+&lt;p&gt;Las colecciones específicas para la concurrencia son más eficientes que convertir una colección no sincronizada en sincronizada con los métodos de &lt;em&gt;Collections&lt;/em&gt;. Las colecciones que se convierten en sincronizadas tienen una contención en toda la colección cuando no es necesario para las operaciones de lectura. Si las operaciones de lectura son mayoría las colecciones específicas para la concurrencia son más eficientes, no tienen tanta contención, por ejemplo, &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/ConcurrentHashMap.html&#34;&gt;ConcurrentHashMap&lt;/a&gt; divide el mapa en varios segmentos y solo bloquea los segmentos relevantes lo que permite a múltiples &lt;em&gt;threads&lt;/em&gt; acceder a otros segmentos del mismo mapa sin contención. &lt;a href=&#34;https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/CopyOnWriteArrayList.html&#34;&gt;CopyOnWriteArrayList&lt;/a&gt; permite varios lectores sin necesidad de sincronización y cuando ocurre una escritura copia el &lt;em&gt;ArrayList&lt;/em&gt; a uno nuevo.&lt;/p&gt;</content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/></entry></feed>
