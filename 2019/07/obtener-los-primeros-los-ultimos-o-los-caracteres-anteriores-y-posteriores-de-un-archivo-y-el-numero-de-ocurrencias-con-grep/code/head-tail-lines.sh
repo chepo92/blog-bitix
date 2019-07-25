@@ -1,0 +1,7 @@
+$ # Primeras o últimas 2 lineas de un archivo
+$ head -n 2 archivo.txt
+Lorem ipsum dolor sit amet consectetur adipiscing elit pulvinar et praesent, egestas fermentum mauris phasellus non nec rutrum nibh accumsan, placerat natoque interdum dui duis viverra molestie id parturient. Imperdiet commodo viverra arcu ridiculus blandit interdum litora bibendum felis ac purus, eu facilisi habitasse ultrices nisl magnis lobortis phasellus turpis velit vestibulum faucibus, auctor sagittis consequat quis cubilia inceptos donec enim gravida mus. Lacinia felis cras leo porta imperdiet tellus ridiculus convallis praesent ante, dapibus laoreet nibh dictumst penatibus a euismod nisi nulla, luctus lacus porttitor neque magnis sed molestie curae quisque. Hac volutpat curabitur laoreet ultrices est nibh parturient quam libero, faucibus ac metus gravida quis venenatis aliquam placerat cubilia, vel ligula litora dapibus dignissim auctor rhoncus at.
+
+$ tail -n 2 archivo.txt
+
+Bibendum hendrerit sociosqu id libero neque, ad mollis donec consequat sagittis, tempus litora morbi nisi. Augue gravida aliquet rhoncus porta odio dui auctor velit erat lectus magna phasellus fringilla, quam praesent class cursus blandit nulla curabitur nostra feugiat consequat egestas cubilia, tortor magnis senectus volutpat ad urna semper himenaeos nascetur luctus posuere interdum. Nam quisque aliquet convallis taciti maecenas euismod vulputate mauris commodo et eleifend vel duis ultricies, a dictumst velit dapibus leo pellentesque dictum dui ligula aliquam eu dignissim rhoncus.
