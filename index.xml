@@ -1,4 +1,220 @@
-<feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2019-07-25T20:00:00+02:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2019/07/obtener-los-primeros-los-ultimos-o-los-caracteres-anteriores-y-posteriores-de-un-archivo-y-el-numero-de-ocurrencias-con-head-tail-y-grep/</id><title>Obtener los primeros, los últimos o los caracteres anteriores y posteriores de un archivo y el número de ocurrencias con head, tail y grep</title><updated>2019-07-25T20:00:00+02:00</updated><published>2019-07-25T20:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/07/obtener-los-primeros-los-ultimos-o-los-caracteres-anteriores-y-posteriores-de-un-archivo-y-el-numero-de-ocurrencias-con-head-tail-y-grep/"/><author><name>picodotdev</name></author><content type="html">
+<feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2019-07-27T18:30:00+02:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/</id><title>Administrar secretos y proteger datos sensibles con Vault</title><updated>2019-07-27T18:30:00+02:00</updated><published>2019-07-27T18:30:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/"/><author><name>picodotdev</name></author><content type="html">
+&lt;p&gt;&lt;strong&gt;Herramientas como Chef, Puppet y Ansible solucionan el problema de forma similar utilizando una única clave de cifrado. Los datos cifrados están siempre a un secreto (contraseña, clave, &amp;hellip;) de ser descifrados y generalmente no está bien protegido dado que en un entorno elástico cada servidor necesita disponer de este secreto para descifrar los datos. Adicionalmente el acceso a los datos cifrados no está registrado de modo que si hay una intrusión no está claro que dato ha sido accedido y por quien. Usar variables de entorno para proporcionar secretos no es seguro como puede emplearse en Docker.&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/vault.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Vault&#34; title=&#34;Vault&#34;/&gt;
+&lt;/div&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/hashicorp.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;HashiCorp&#34; title=&#34;HashiCorp&#34;/&gt;
+&lt;/div&gt;
+&lt;p&gt;La seguridad es un aspecto muy importante de los sistemas informáticos, no darle la consideración necesaria puede dar lugar a caídas de servicio y robo de datos potencialmente ocasionando importantes pérdidas de dinero, sanciones y pérdida de confianza de los clientes y proveedores de una organización.&lt;/p&gt;
+&lt;p&gt;La seguridad se mantiene mediante mecanismos de autenticación identifican al solicitante solicitante, de autorización permitiendo realiza únicamente las acciones para las que se tienen permisos y mediante firma y cifrado para impedir la modificación de los datos y el acceso a la información sin las credenciales y autorización requerida.&lt;/p&gt;
+&lt;p&gt;La infraestructura informática de los sistemas actuales es cada vez más compleja por el número y tipo de las distintas de piezas que emplean como bases de datos, sistemas de mensajes u otros servicios, también por el aspecto efímero en la tendencia actual de microservicios como por la utilización de entornos en la nube con una infraestructura no confiable al estar fuera del control de una organización y estar compartida con otras organizaciones.&lt;/p&gt;
+&lt;p&gt;No es seguro utilizar archivos sin cifrar aún utilizando los permisos del sistema de archivos dado que una intrusión en el sistema posibilita el acceso al secreto. Cifrarlos los archivos es el mismo caso de herramientas como &lt;a href=&#34;https://www.getchef.com/&#34;&gt;Chef&lt;/a&gt;, &lt;a href=&#34;https://puppet.com/&#34;&gt;Puppet&lt;/a&gt; y &lt;a href=&#34;https://www.ansible.com/&#34;&gt;Ansible&lt;/a&gt;. Utilizar variables de entorno para proporcionar secretos tampoco es seguro ya que aunque los secretos no están en el sistema de archivos se pueden inspeccionar las variables de entorno de un proceso.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ env &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep SECRET
+$ docker inspect
+$ sudo cat /proc/&lt;span class=&#34;nv&#34;&gt;$pid&lt;/span&gt;/environ&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/code/commands.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/code/commands.sh&#34; target=&#34;_blank&#34;&gt;commands.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Por otra parte las contraseñas y claves han de rotarse regularmente para limitar en el tiempo el acceso ante el filtrado de las credenciales en un sistema o para denegar el acceso a una persona que en algún momento haya tenido credenciales de acceso como un empleado que ya no pertenece a la compañía.&lt;/p&gt;
+&lt;h3 id=&#34;vault&#34;&gt;Vault&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.vaultproject.io/&#34;&gt;Vault&lt;/a&gt; es una herramienta para acceder de forma segura a secretos. Un secreto es cualquier cosa a la que se quiera tener severamente controlado como claves de API, contraseñas y certificados. Vault proporciona una interfaz para cualquier secreto a la vez que mantiene un control de acceso y un &lt;em&gt;log&lt;/em&gt; de acceso detallado.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.vaultproject.io/docs/what-is-vault/index.html&#34;&gt;Introduction to Vault&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.vaultproject.io/docs/use-cases/index.html&#34;&gt;Use Cases&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Las características principales de Vault se engloban en tres aspectos de la seguridad: cifrado, control de acceso y ciclo de vida.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Almacenamiento seguro de secretos: se pueden almacenar secretos arbitrarios clave/valor. Los secretos son cifrados previamente a ser almacenados en el almacenamiento persistente de modo que obtener acceso al almacenamiento persistente no es suficiente para acceder a los secretos. Vault puede almacenar los secretos en disco, &lt;a href=&#34;https://www.consul.io/&#34;&gt;Consul&lt;/a&gt; y más.&lt;/li&gt;
+&lt;li&gt;Secretos dinámicos: puede generar secretos bajo demanda para algunos sistemas como AWS o bases de datos SQL. Por ejemplo, cuando una aplicación necesita acceso a una base de datos SQL solicita a Vault unas credenciales, Vault genera unas credenciales con los permisos adecuados. Después de crear estos secretos dinámicos también los revoca automáticamente una vez pasado su tiempo de concesión.&lt;/li&gt;
+&lt;li&gt;Cifrado de datos: puede cifrar y descifrar datos sin almacenarlos. Esto permite definir parámetros de seguridad y los desarrolladores almacenar los datos cifrados en localizaciones como bases de datos sin tener que diseñar sus propios métodos de cifrado.&lt;/li&gt;
+&lt;li&gt;Concesión y renovación: todos los secretos en Vault tienen un tiempo de concesión asociado. Al finalizar la concesión Vault los revoca automáticamente, los clientes pueden solicitar renovar las concesiones mediante las API disponibles de Vault.&lt;/li&gt;
+&lt;li&gt;Revocación: integra la funcionalidad de revocación, no solo secretos individuales sino jerarquías de secretos. La revocación asiste en la rotación de las claves así como cerrar el sistema en caso de intrusión.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;conceptos&#34;&gt;Conceptos&lt;/h3&gt;
+&lt;p&gt;Los motores de secretos son uno de los conceptos en el ámbito de Vault. Son componentes que permite almacenar, generar o cifrar datos. Algunos motores de secretos simplemente almacenan y leen datos, otros se conectan a otros servicios y generan credenciales dinámicamente bajo demanda. Otros motores de secretos proporcionan el cifrado como servicio, &lt;em&gt;tokens&lt;/em&gt; de un solo uso, certificados y mucho más.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.vaultproject.io/api/secret/index.html&#34;&gt;Secrets Engines&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.vaultproject.io/docs/secrets/kv/index.html&#34;&gt;KV Secrets Engine&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.vaultproject.io/docs/secrets/databases/index.html&#34;&gt;Databases Secrets Engine&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.vaultproject.io/docs/secrets/rabbitmq/index.html&#34;&gt;RabbitMQ Secrets Engine&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.vaultproject.io/docs/secrets/pki/index.html&#34;&gt;PKI Secrets Engine&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.vaultproject.io/docs/secrets/ssh/index.html&#34;&gt;SSH Secrets Engine&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Otro concepto es la &lt;a href=&#34;https://www.vaultproject.io/docs/auth/index.html&#34;&gt;autenticación&lt;/a&gt;. Permiten realizar la autenticación y son responsables de asignar una identidad y un conjunto de &lt;em&gt;policies&lt;/em&gt; a un usuario. Por ejemplo, para los desarrolladores el método de autenticación de GitHub es fácil de usar pero para servidores el método &lt;em&gt;AppRole&lt;/em&gt; es el recomendado&lt;/p&gt;
+&lt;p&gt;Los secretos necesitan &lt;a href=&#34;https://www.vaultproject.io/docs/configuration/storage/index.html&#34;&gt;almacenamiento&lt;/a&gt;. Algunos tipos de almacenamiento son mejores para la alta disponibilidad y otros facilitan la copia de seguridad y la restauración. Puede ser en memoria, sistema de archivos, una herramienta como Consul o varias bases de datos entre ellas bases de datos relacionales.&lt;/p&gt;
+&lt;p&gt;La &lt;a href=&#34;(https://www.vaultproject.io/docs/audit/index.html)&#34;&gt;auditoria&lt;/a&gt; permite obtener una trazabilidad de las operaciones que se han realizado, dado que todas las operaciones se realizan mediante una API el &lt;em&gt;log&lt;/em&gt; de auditoría es simplemente cada interacción autenticada con Vault, incluidas los errores. Puede ser un archivo o un &lt;em&gt;socket&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Todo en Vault está basado en &lt;em&gt;paths&lt;/em&gt;. Las &lt;a href=&#34;(https://www.vaultproject.io/docs/concepts/policies.html)&#34;&gt;&lt;em&gt;policies&lt;/em&gt;&lt;/a&gt; permiten o deniegan el acceso a ciertos &lt;em&gt;paths&lt;/em&gt;. Poseen la siguiente sintaxis, donde las &lt;em&gt;capabilities&lt;/em&gt; son las operaciones CRUD permitidas.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;path &amp;#34;secret/*&amp;#34; {
+capabilities = [&amp;#34;create&amp;#34;, &amp;#34;read&amp;#34;, &amp;#34;update&amp;#34;, &amp;#34;delete&amp;#34;, &amp;#34;list&amp;#34;]
+}&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/code/policy.hcl&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/code/policy.hcl&#34; target=&#34;_blank&#34;&gt;policy.hcl&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;h3 id=&#34;instalación-y-un-caso-de-uso&#34;&gt;Instalación y un caso de uso&lt;/h3&gt;
+&lt;p&gt;La &lt;a href=&#34;https://www.vaultproject.io/docs/install/index.html&#34;&gt;instalación de Vault&lt;/a&gt; es muy sencilla ya que es un único binario sin más dependencias. En una distribución &lt;a href=&#34;https://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;https://www.linux.com/&#34;&gt;Linux&lt;/a&gt; estará en los repositorios oficiales. En &lt;a href=&#34;https://www.archlinux.org/&#34;&gt;Arch Linux&lt;/a&gt; se instala con el comando.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ sudo pacman -S vault&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/code/install.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/code/install.sh&#34; target=&#34;_blank&#34;&gt;install.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;En el siguiente ejemplo en modo desarrollo de uso de Vault se inicia, se realiza la autenticación con el &lt;em&gt;token&lt;/em&gt; &lt;em&gt;root&lt;/em&gt; de superusuario y se crea un secreto. Aquí solo se muestra el caso de uso de guardar y recuperar secretos, otros son generar credenciales para conectarse a una base de datos y proporcionar cifrado y descifrado como servicio.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ vault server -dev
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Vault server configuration:
+Api Address: http://127.0.0.1:8200
+Cgo: disabled
+Cluster Address: https://127.0.0.1:8201
+Listener &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;: tcp &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;addr: &lt;span class=&#34;s2&#34;&gt;&amp;#34;127.0.0.1:8200&amp;#34;&lt;/span&gt;, cluster address: &lt;span class=&#34;s2&#34;&gt;&amp;#34;127.0.0.1:8201&amp;#34;&lt;/span&gt;, max_request_duration: &lt;span class=&#34;s2&#34;&gt;&amp;#34;1m30s&amp;#34;&lt;/span&gt;, max_request_size: &lt;span class=&#34;s2&#34;&gt;&amp;#34;33554432&amp;#34;&lt;/span&gt;, tls: &lt;span class=&#34;s2&#34;&gt;&amp;#34;disabled&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Log Level: info
+Mlock: supported: true, enabled: &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+Storage: inmem
+Version: Vault v1.1.1
+Version Sha: a3dcd63451cf6da1d04928b601bbe9748d53842e
+WARNING! dev mode is enabled! In this mode, Vault runs entirely in-memory
+and starts unsealed with a single unseal key. The root token is already
+authenticated to the CLI, so you can immediately begin using Vault.
+You may need to &lt;span class=&#34;nb&#34;&gt;set&lt;/span&gt; the following environment variable:
+$ &lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;VAULT_ADDR&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;http://127.0.0.1:8200&amp;#39;&lt;/span&gt;
+The unseal key and root token are displayed below in &lt;span class=&#34;k&#34;&gt;case&lt;/span&gt; you want to
+seal/unseal the Vault or re-authenticate.
+Unseal Key: &lt;span class=&#34;nv&#34;&gt;R6MKrMxcJtTTUuIjeQjwDxnv4sHbKtjmuRn0Fok98zk&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;
+Root Token: s.hQoeIivTHHgl1AtsoVz1UF1G
+Development mode should NOT be used in production installations!&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/code/vault.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/code/vault.sh&#34; target=&#34;_blank&#34;&gt;vault.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;$ &lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;VAULT_ADDR&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;http://127.0.0.1:8200&amp;#39;&lt;/span&gt;
+$ vault kv put secret/key &lt;span class=&#34;nv&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;s3cr3t
+Key Value
+--- -----
+created_time &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-07-27T17:30:29.559274833Z
+deletion_time n/a
+destroyed &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+version &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+$ vault kv get secret/key
+&lt;span class=&#34;o&#34;&gt;======&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;Metadata&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;======&lt;/span&gt;
+Key Value
+--- -----
+created_time &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt;-07-27T17:30:29.559274833Z
+deletion_time n/a
+destroyed &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+version &lt;span class=&#34;nv&#34;&gt;1&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;===&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;Data&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;===&lt;/span&gt;
+Key Value
+--- -----
+key s3cr3t&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/code/secret.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/code/secret.sh&#34; target=&#34;_blank&#34;&gt;secret.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Vault al igual que otras de las herramientas de &lt;a href=&#34;https://www.hashicorp.com/&#34;&gt;HashiCorp&lt;/a&gt; como Consul y &lt;a href=&#34;https://www.nomadproject.io/&#34;&gt;Nomad&lt;/a&gt; posee una interfaz gráfica accesible mediante el navegador que permite realizar las mismas operaciones que a través de la API o desde la linea de comandos.&lt;/p&gt;
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+&lt;figure&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/images/vault-ui-1_hu835606e7b9de313fbe556011bb61b531_35945_2560x1440_fit_box_2.png&#34; title=&#34;Interfaz gráfica de Vault&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/images/vault-ui-1_hu835606e7b9de313fbe556011bb61b531_35945_300x200_fit_box_2.png&#34; width=&#34;300&#34;/&gt;&lt;/a&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/images/vault-ui-2_hu643c4f275edb6aabb6ede21353b42f5b_36609_2560x1440_fit_box_2.png&#34; title=&#34;&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/images/vault-ui-2_hu643c4f275edb6aabb6ede21353b42f5b_36609_300x200_fit_box_2.png&#34; width=&#34;300&#34;/&gt;&lt;/a&gt;
+&lt;figcaption&gt;Interfaz gráfica de Vault&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+&lt;p&gt;Vault a igual que otras de las herramientas de HashiCorp tiene una muy buena documentación en formato de &lt;a href=&#34;https://learn.hashicorp.com/vault&#34;&gt;guía&lt;/a&gt; y en formato de &lt;a href=&#34;https://www.vaultproject.io/docs/&#34;&gt;documentación&lt;/a&gt;. En una aplicación Java el proyecto &lt;a href=&#34;https://spring.io/&#34;&gt;Spring&lt;/a&gt; facilita su uso con &lt;a href=&#34;https://projects.spring.io/spring-vault/&#34;&gt;Spring Vault&lt;/a&gt; y &lt;a href=&#34;https://cloud.spring.io/spring-cloud-vault/&#34;&gt;Spring Cloud Vault&lt;/a&gt;.&lt;/p&gt;</content><category term="planeta-codigo"/><category term="programacion"/><category term="software"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/07/obtener-los-primeros-los-ultimos-o-los-caracteres-anteriores-y-posteriores-de-un-archivo-y-el-numero-de-ocurrencias-con-head-tail-y-grep/</id><title>Obtener los primeros, los últimos o los caracteres anteriores y posteriores de un archivo y el número de ocurrencias con head, tail y grep</title><updated>2019-07-25T20:00:00+02:00</updated><published>2019-07-25T20:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/07/obtener-los-primeros-los-ultimos-o-los-caracteres-anteriores-y-posteriores-de-un-archivo-y-el-numero-de-ocurrencias-con-head-tail-y-grep/"/><author><name>picodotdev</name></author><content type="html">
 &lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
 &lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/gnu.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;GNU&#34; title=&#34;GNU&#34;/&gt;
 &lt;/div&gt;
@@ -2516,75 +2732,4 @@ Percentage of the requests served within a certain time (ms)
 &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/06/teses-unitarios-parametrizados-con-junit/code/CalculatorTest.java&#34; target=&#34;_blank&#34;&gt;CalculatorTest.java&lt;/a&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;p&gt;Con estas posibilidades de JUnit y para hacer &lt;em&gt;mocking&lt;/em&gt; con &lt;a href=&#34;https://site.mockito.org/&#34;&gt;Mockito&lt;/a&gt; realmente los dos motivos que tenía para usar Spock no son imprescindibles además de disponer de un lenguaje con buena asistencia de código en los IDEs. También para los teses igualmente se aplican las &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/05/10-razones-para-seguir-usando-java/&#34;&gt;10 razones que tengo para seguir usando Java&lt;/a&gt;.&lt;/p&gt;</content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/05/implementar-la-paginacion-eficientemente-en-consultas-sql-con-seek/</id><title>Implementar la paginación eficientemente en consultas SQL con seek</title><updated>2019-05-31T18:00:00+02:00</updated><published>2019-05-31T18:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/05/implementar-la-paginacion-eficientemente-en-consultas-sql-con-seek/"/><author><name>picodotdev</name></author><content type="html">
-&lt;p&gt;&lt;strong&gt;Las aplicaciones que muestran listados probablemente necesiten mostrarlos paginados. Sin embargo, implementar la paginación correctamente para que sea eficiente no pasa por emplear las clausulas &lt;em&gt;limit&lt;/em&gt; ni &lt;em&gt;offset&lt;/em&gt; que habitualmente se utilizan sino con &lt;em&gt;seek&lt;/em&gt;. Además de que &lt;em&gt;limit&lt;/em&gt; y &lt;em&gt;offset&lt;/em&gt; da lugar a resultados no deseados si entre obtención de página y página se insertan filas en páginas anteriores.&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/jooq.png&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;jOOQ&#34; title=&#34;jOOQ&#34;/&gt;
-&lt;/div&gt;
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
-&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
-&lt;/div&gt;
-&lt;p&gt;La paginación habitualmente se implementa con las palabras reservadas &lt;em&gt;limit&lt;/em&gt; y &lt;em&gt;offset&lt;/em&gt; del lenguaje SQL pero esto es ineficiente ya que para llegar los resultados de las últimas páginas la base de datos ha de recuperar antes todos los resultados anteriores. Cuando hay varios cientos de miles o millones de filas en una tabla esto es ineficiente y hace que las consultas sean lentas y añadan una importante carga al servidor de base de datos que al final afecta al rendimiento de la aplicación o su capacidad para atender a gran número de peticiones.&lt;/p&gt;
-&lt;p&gt;Además del rendimiento, otro problema de la paginación con &lt;em&gt;limit&lt;/em&gt; y &lt;em&gt;offset&lt;/em&gt; es que si se insertan filas en una página anterior mientras se están recorriendo los resultados, uno o varios resultados al avanzar por las páginas en la típica tabla de resultados en una aplicación web podría aparecer dos veces, en un proceso automatizado sería aún peor ya que un resultado podría procesarse dos veces.&lt;/p&gt;
-&lt;p&gt;La paginación con &lt;em&gt;limit&lt;/em&gt; y &lt;em&gt;offset&lt;/em&gt; permite ir a una página directamente en una búsqueda pero en los casos que hay miles de resultados realmente a un usuario no le interesa ir a una determinada página cuando hay cientos de páginas, en un proceso automatizado ir a una página en concreto tampoco suele ser un requerimiento.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://www.jooq.org/&#34;&gt;jOOQ&lt;/a&gt; con la cláusula &lt;a href=&#34;https://www.jooq.org/javadoc/latest/org/jooq/SelectSeekStep1.html&#34;&gt;seek&lt;/a&gt; permite hacer la paginación eficiente de una forma cómoda. La técnica se basa en ordenar los resultados por unas determinadas columnas y filtrar por condición &lt;em&gt;where&lt;/em&gt; sobre las mismas columnas los resultados anteriores, los valores por los que se filtra en la condición son los obtenidos de la última página.&lt;/p&gt;
-&lt;p&gt;Haciendo &lt;em&gt;seek&lt;/em&gt; la paginación es más eficiente ya que la base de datos no necesita recuperar los datos de las páginas anteriores ya que los descarta utilizando la cláusula &lt;em&gt;where&lt;/em&gt; que al final es en lo que se traduce la clausula &lt;em&gt;seek&lt;/em&gt;. Y se elimina el problema de que se inserten datos en páginas anteriores y alguno se pudiese aparecer dos veces en los resultados ya que manteniendo la ordenación de la conlsulta si se insertan filas en páginas anteriores no afectarán a las páginas siguientes.&lt;/p&gt;
-&lt;div class=&#34;code&#34;&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;9
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.jooq.DSLContext&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DSLContext&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;selectFrom&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Tables&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;PRODUCTO&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;orderBy&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;PRODUCTO&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;CANTIDAD&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;PRODUCTO&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;ID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;seek&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;3l&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;2l&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;limit&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;fetchInto&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Producto&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/implementar-la-paginacion-eficientemente-en-consultas-sql-con-seek/code/Seek.java&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/implementar-la-paginacion-eficientemente-en-consultas-sql-con-seek/code/Seek.java&#34; target=&#34;_blank&#34;&gt;Seek.java&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;La SQL generada por jOOQ es la siguiente donde la clausula &lt;em&gt;seek&lt;/em&gt; se añade como una condición en la cláusula &lt;em&gt;where&lt;/em&gt;. El campo de la clausula &lt;em&gt;seek&lt;/em&gt; coincide con el campo del criterio de ordenación, el operador mayor que en la condición coincide también con el orden ascendente del &lt;em&gt;order by&lt;/em&gt;.&lt;/p&gt;
-&lt;div class=&#34;code&#34;&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Sql&#34; data-lang=&#34;Sql&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Sql&#34; data-lang=&#34;Sql&#34;&gt; &lt;span class=&#34;k&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;PRODUCTO&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;ID&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;PRODUCTO&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;NOMBRE&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;PRODUCTO&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;DESCRIPCION&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;PRODUCTO&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;CANTIDAD&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;PRODUCTO&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;FECHA&amp;#34;&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;PRODUCTO&amp;#34;&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;where&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;PRODUCTO&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;CANTIDAD&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;PRODUCTO&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;ID&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;cast&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;?&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;as&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;bigint&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;cast&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;?&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;as&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;bigint&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;order&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;by&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;PRODUCTO&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;CANTIDAD&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;PRODUCTO&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;ID&amp;#34;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;limit&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;?&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;highlight-meta&#34;&gt;
-&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/implementar-la-paginacion-eficientemente-en-consultas-sql-con-seek/code/seek.sql&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/05/implementar-la-paginacion-eficientemente-en-consultas-sql-con-seek/code/seek.sql&#34; target=&#34;_blank&#34;&gt;Seek.sql&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;Para que el &lt;em&gt;seek&lt;/em&gt; sea correcto los valores de las filas para los campos que forman parte del &lt;em&gt;seek&lt;/em&gt; han de ser únicos por eso entre los campos de los ejemplos se incluye el identificativo de la fila, que siempre se incluye como último campo si hubiese más criterios de ordenación y valores para el &lt;em&gt;seek&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;Si además se tiene un índice para los campos que forman parte del &lt;em&gt;seek&lt;/em&gt; el rendimiento será muy alto y la diferencia entre la primera y la última página mínimo, además se puede considerar independiente del número de filas de la tabla. Son varias las ventajas perdiendo solo la capacidad de navegar a cierta página pero en la mayoría de los casos esto es asumible.&lt;/p&gt;
-&lt;p&gt;En los siguientes interesantes artículos se comenta detalladamente como implementar la paginación eficientemente y se dan más detalles.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://wiki.postgresql.org/images/3/35/Pagination_Done_the_PostgreSQL_Way.pdf&#34;&gt;Pagination Done the PostgreSQL Way&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://blog.jooq.org/2016/08/10/why-most-programmers-get-pagination-wrong/&#34;&gt;Why Most Programmers Get Pagination Wrong&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://dba.stackexchange.com/questions/73175/pagination-with-postgresql-9-3-counting-number-of-pages&#34;&gt;Pagination with PostgreSQL 9.3: counting number of pages&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/></entry></feed>
+&lt;p&gt;Con estas posibilidades de JUnit y para hacer &lt;em&gt;mocking&lt;/em&gt; con &lt;a href=&#34;https://site.mockito.org/&#34;&gt;Mockito&lt;/a&gt; realmente los dos motivos que tenía para usar Spock no son imprescindibles además de disponer de un lenguaje con buena asistencia de código en los IDEs. También para los teses igualmente se aplican las &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2015/05/10-razones-para-seguir-usando-java/&#34;&gt;10 razones que tengo para seguir usando Java&lt;/a&gt;.&lt;/p&gt;</content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/></entry></feed>
