@@ -95,91 +95,91 @@
 </span><span class=lnt>83
 </span><span class=lnt>84
 </span><span class=lnt>85
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.javaraspberrypi</span><span class=o>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nf>io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>javaraspberrypi</span><span class=p>;</span>
 
-<span class=kn>import</span> <span class=nn>java.io.File</span><span class=o>;</span>
-<span class=kn>import</span> <span class=nn>java.io.IOException</span><span class=o>;</span>
-<span class=kn>import</span> <span class=nn>java.io.InputStream</span><span class=o>;</span>
-<span class=kn>import</span> <span class=nn>java.nio.file.Files</span><span class=o>;</span>
-<span class=kn>import</span> <span class=nn>java.nio.file.Path</span><span class=o>;</span>
-<span class=kn>import</span> <span class=nn>java.nio.file.StandardCopyOption</span><span class=o>;</span>
-<span class=kn>import</span> <span class=nn>java.time.LocalDateTime</span><span class=o>;</span>
-<span class=kn>import</span> <span class=nn>java.util.Optional</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nf>java</span><span class=p>.</span><span class=na>io</span><span class=p>.</span><span class=na>File</span><span class=p>;</span>
+<span class=kn>import</span> <span class=nf>java</span><span class=p>.</span><span class=na>io</span><span class=p>.</span><span class=na>IOException</span><span class=p>;</span>
+<span class=kn>import</span> <span class=nf>java</span><span class=p>.</span><span class=na>io</span><span class=p>.</span><span class=na>InputStream</span><span class=p>;</span>
+<span class=kn>import</span> <span class=nf>java</span><span class=p>.</span><span class=na>nio</span><span class=p>.</span><span class=na>file</span><span class=p>.</span><span class=na>Files</span><span class=p>;</span>
+<span class=kn>import</span> <span class=nf>java</span><span class=p>.</span><span class=na>nio</span><span class=p>.</span><span class=na>file</span><span class=p>.</span><span class=na>Path</span><span class=p>;</span>
+<span class=kn>import</span> <span class=nf>java</span><span class=p>.</span><span class=na>nio</span><span class=p>.</span><span class=na>file</span><span class=p>.</span><span class=na>StandardCopyOption</span><span class=p>;</span>
+<span class=kn>import</span> <span class=nf>java</span><span class=p>.</span><span class=na>time</span><span class=p>.</span><span class=na>LocalDateTime</span><span class=p>;</span>
+<span class=kn>import</span> <span class=nf>java</span><span class=p>.</span><span class=na>util</span><span class=p>.</span><span class=na>Optional</span><span class=p>;</span>
 
-<span class=kd>public</span> <span class=kd>class</span> <span class=nc>Dht11</span> <span class=o>{</span>
+<span class=kd>public</span> <span class=nf>class</span> <span class=n>Dht11</span> <span class=p>{</span>
 
-    <span class=kd>static</span> <span class=o>{</span>
-        <span class=n>String</span> <span class=n>architecture</span> <span class=o>=</span> <span class=n>System</span><span class=o>.</span><span class=na>getProperty</span><span class=o>(</span><span class=s>&#34;os.arch&#34;</span><span class=o>);</span>
-        <span class=n>String</span> <span class=n>library</span> <span class=o>=</span> <span class=n>String</span><span class=o>.</span><span class=na>format</span><span class=o>(</span><span class=s>&#34;/libdht11-%s.so&#34;</span><span class=o>,</span> <span class=n>architecture</span><span class=o>);</span>
-        <span class=k>try</span> <span class=o>(</span><span class=n>InputStream</span> <span class=n>is</span> <span class=o>=</span> <span class=n>Dht11</span><span class=o>.</span><span class=na>class</span><span class=o>.</span><span class=na>getResourceAsStream</span><span class=o>(</span><span class=n>library</span><span class=o>))</span> <span class=o>{</span>
-            <span class=n>Path</span> <span class=n>path</span> <span class=o>=</span> <span class=n>File</span><span class=o>.</span><span class=na>createTempFile</span><span class=o>(</span><span class=s>&#34;libdht11&#34;</span><span class=o>,</span> <span class=s>&#34;so&#34;</span><span class=o>).</span><span class=na>toPath</span><span class=o>();</span>
-            <span class=n>Files</span><span class=o>.</span><span class=na>copy</span><span class=o>(</span><span class=n>is</span><span class=o>,</span> <span class=n>path</span><span class=o>,</span> <span class=n>StandardCopyOption</span><span class=o>.</span><span class=na>REPLACE_EXISTING</span><span class=o>);</span>
-            <span class=n>System</span><span class=o>.</span><span class=na>load</span><span class=o>(</span><span class=n>path</span><span class=o>.</span><span class=na>toAbsolutePath</span><span class=o>().</span><span class=na>toString</span><span class=o>());</span>
-        <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>IOException</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
-            <span class=n>e</span><span class=o>.</span><span class=na>printStackTrace</span><span class=o>();</span>
-        <span class=o>}</span>
-    <span class=o>}</span>
+    <span class=kd>static</span> <span class=p>{</span>
+        <span class=n>String</span> <span class=nf>architecture</span> <span class=o>=</span> <span class=n>System</span><span class=p>.</span><span class=na>getProperty</span><span class=p>(</span><span class=s>&#34;os.arch&#34;</span><span class=p>);</span>
+        <span class=n>String</span> <span class=nf>library</span> <span class=o>=</span> <span class=n>String</span><span class=p>.</span><span class=na>format</span><span class=p>(</span><span class=s>&#34;/libdht11-%s.so&#34;</span><span class=p>,</span> <span class=n>architecture</span><span class=p>);</span>
+        <span class=k>try</span> <span class=p>(</span><span class=n>InputStream</span> <span class=nf>is</span> <span class=o>=</span> <span class=n>Dht11</span><span class=p>.</span><span class=na>class</span><span class=p>.</span><span class=na>getResourceAsStream</span><span class=p>(</span><span class=n>library</span><span class=p>))</span> <span class=p>{</span>
+            <span class=n>Path</span> <span class=nf>path</span> <span class=o>=</span> <span class=n>File</span><span class=p>.</span><span class=na>createTempFile</span><span class=p>(</span><span class=s>&#34;libdht11&#34;</span><span class=p>,</span> <span class=s>&#34;so&#34;</span><span class=p>).</span><span class=na>toPath</span><span class=p>();</span>
+            <span class=n>Files</span><span class=p>.</span><span class=na>copy</span><span class=p>(</span><span class=n>is</span><span class=p>,</span> <span class=n>path</span><span class=p>,</span> <span class=n>StandardCopyOption</span><span class=p>.</span><span class=na>REPLACE_EXISTING</span><span class=p>);</span>
+            <span class=n>System</span><span class=p>.</span><span class=na>load</span><span class=p>(</span><span class=n>path</span><span class=p>.</span><span class=na>toAbsolutePath</span><span class=p>().</span><span class=na>toString</span><span class=p>());</span>
+        <span class=p>}</span> <span class=k>catch</span> <span class=p>(</span><span class=n>IOException</span> <span class=nf>e</span><span class=p>)</span> <span class=p>{</span>
+            <span class=n>e</span><span class=p>.</span><span class=na>printStackTrace</span><span class=p>();</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
 
-    <span class=kd>private</span> <span class=kt>int</span> <span class=n>gpio</span><span class=o>;</span>
-    <span class=kd>private</span> <span class=n>Optional</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=n>temperature</span><span class=o>;</span>
-    <span class=kd>private</span> <span class=n>Optional</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=n>humidity</span><span class=o>;</span>
-    <span class=kd>private</span> <span class=n>Optional</span><span class=o>&lt;</span><span class=n>LocalDateTime</span><span class=o>&gt;</span> <span class=n>date</span><span class=o>;</span>
+    <span class=kd>private</span> <span class=nf>int</span> <span class=n>gpio</span><span class=p>;</span>
+    <span class=kd>private</span> <span class=nf>Optional</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=nf>temperature</span><span class=p>;</span>
+    <span class=kd>private</span> <span class=nf>Optional</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=nf>humidity</span><span class=p>;</span>
+    <span class=kd>private</span> <span class=nf>Optional</span><span class=o>&lt;</span><span class=n>LocalDateTime</span><span class=o>&gt;</span> <span class=nf>date</span><span class=p>;</span>
 
-    <span class=kd>public</span> <span class=nf>Dht11</span><span class=o>(</span><span class=kt>int</span> <span class=n>gpio</span><span class=o>)</span> <span class=o>{</span>
-        <span class=k>this</span><span class=o>.</span><span class=na>gpio</span> <span class=o>=</span> <span class=n>gpio</span><span class=o>;</span>
-        <span class=k>this</span><span class=o>.</span><span class=na>temperature</span> <span class=o>=</span> <span class=n>Optional</span><span class=o>.</span><span class=na>empty</span><span class=o>();</span>
-        <span class=k>this</span><span class=o>.</span><span class=na>humidity</span> <span class=o>=</span> <span class=n>Optional</span><span class=o>.</span><span class=na>empty</span><span class=o>();</span>
-        <span class=k>this</span><span class=o>.</span><span class=na>date</span> <span class=o>=</span> <span class=n>Optional</span><span class=o>.</span><span class=na>empty</span><span class=o>();</span>
+    <span class=kd>public</span> <span class=nf>Dht11</span><span class=p>(</span><span class=kt>int</span> <span class=nf>gpio</span><span class=p>)</span> <span class=p>{</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>gpio</span> <span class=o>=</span> <span class=n>gpio</span><span class=p>;</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>temperature</span> <span class=o>=</span> <span class=n>Optional</span><span class=p>.</span><span class=na>empty</span><span class=p>();</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>humidity</span> <span class=o>=</span> <span class=n>Optional</span><span class=p>.</span><span class=na>empty</span><span class=p>();</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>date</span> <span class=o>=</span> <span class=n>Optional</span><span class=p>.</span><span class=na>empty</span><span class=p>();</span>
 
-        <span class=n>init</span><span class=o>();</span>
-    <span class=o>}</span>
+        <span class=n>init</span><span class=p>();</span>
+    <span class=p>}</span>
 
-    <span class=kd>private</span> <span class=kd>native</span> <span class=kt>void</span> <span class=nf>init</span><span class=o>();</span>
-    <span class=kd>private</span> <span class=kd>native</span> <span class=kt>void</span> <span class=nf>read</span><span class=o>(</span><span class=kt>int</span> <span class=n>gpio</span><span class=o>);</span>
+    <span class=kd>private</span> <span class=nf>native</span> <span class=kt>void</span> <span class=nf>init</span><span class=p>();</span>
+    <span class=kd>private</span> <span class=nf>native</span> <span class=kt>void</span> <span class=nf>read</span><span class=p>(</span><span class=kt>int</span> <span class=nf>gpio</span><span class=p>);</span>
 
-    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>update</span><span class=o>()</span> <span class=o>{</span>
-        <span class=k>try</span> <span class=o>{</span>
-            <span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>5</span><span class=o>;</span> <span class=o>++</span><span class=n>i</span><span class=o>)</span> <span class=o>{</span>
-                <span class=k>try</span> <span class=o>{</span>
-                    <span class=n>read</span><span class=o>(</span><span class=n>gpio</span><span class=o>);</span>
-                    <span class=k>break</span><span class=o>;</span>
-                <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>Exception</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
-                    <span class=n>Thread</span><span class=o>.</span><span class=na>sleep</span><span class=o>(</span><span class=n>3000</span><span class=o>);</span>
-                <span class=o>}</span>
-            <span class=o>}</span>
-        <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>Exception</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
-            <span class=n>e</span><span class=o>.</span><span class=na>printStackTrace</span><span class=o>();</span>
-        <span class=o>}</span>
-    <span class=o>}</span>
+    <span class=kd>public</span> <span class=nf>void</span> <span class=n>update</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>try</span> <span class=p>{</span>
+            <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=nf>i</span> <span class=o>=</span> <span class=n>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>5</span><span class=p>;</span> <span class=o>++</span><span class=n>i</span><span class=p>)</span> <span class=p>{</span>
+                <span class=k>try</span> <span class=p>{</span>
+                    <span class=n>read</span><span class=p>(</span><span class=n>gpio</span><span class=p>);</span>
+                    <span class=k>break</span><span class=p>;</span>
+                <span class=p>}</span> <span class=k>catch</span> <span class=p>(</span><span class=n>Exception</span> <span class=nf>e</span><span class=p>)</span> <span class=p>{</span>
+                    <span class=n>Thread</span><span class=p>.</span><span class=na>sleep</span><span class=p>(</span><span class=n>3000</span><span class=p>);</span>
+                <span class=p>}</span>
+            <span class=p>}</span>
+        <span class=p>}</span> <span class=k>catch</span> <span class=p>(</span><span class=n>Exception</span> <span class=nf>e</span><span class=p>)</span> <span class=p>{</span>
+            <span class=n>e</span><span class=p>.</span><span class=na>printStackTrace</span><span class=p>();</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
 
-    <span class=kd>public</span> <span class=n>Optional</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=nf>getTemperature</span><span class=o>()</span> <span class=o>{</span>
-        <span class=k>return</span> <span class=n>temperature</span><span class=o>;</span>
-    <span class=o>}</span>
+    <span class=kd>public</span> <span class=nf>Optional</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=nf>getTemperature</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=n>temperature</span><span class=p>;</span>
+    <span class=p>}</span>
 
-    <span class=kd>public</span> <span class=n>Optional</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=nf>getHumidity</span><span class=o>()</span> <span class=o>{</span>
-        <span class=k>return</span> <span class=n>humidity</span><span class=o>;</span>
-    <span class=o>}</span>
+    <span class=kd>public</span> <span class=nf>Optional</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=nf>getHumidity</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=n>humidity</span><span class=p>;</span>
+    <span class=p>}</span>
 
-    <span class=kd>public</span> <span class=n>Optional</span><span class=o>&lt;</span><span class=n>LocalDateTime</span><span class=o>&gt;</span> <span class=nf>getDate</span><span class=o>()</span> <span class=o>{</span>
-        <span class=k>return</span> <span class=n>date</span><span class=o>;</span>
-    <span class=o>}</span>
+    <span class=kd>public</span> <span class=nf>Optional</span><span class=o>&lt;</span><span class=n>LocalDateTime</span><span class=o>&gt;</span> <span class=nf>getDate</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=n>date</span><span class=p>;</span>
+    <span class=p>}</span>
 
-    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>setTemperatureHumidity</span><span class=o>(</span><span class=kt>int</span> <span class=n>temperature</span><span class=o>,</span> <span class=kt>int</span> <span class=n>humidity</span><span class=o>)</span> <span class=o>{</span>
-        <span class=k>this</span><span class=o>.</span><span class=na>temperature</span> <span class=o>=</span> <span class=n>Optional</span><span class=o>.</span><span class=na>of</span><span class=o>(</span><span class=n>temperature</span><span class=o>);</span>
-        <span class=k>this</span><span class=o>.</span><span class=na>humidity</span> <span class=o>=</span> <span class=n>Optional</span><span class=o>.</span><span class=na>of</span><span class=o>(</span><span class=n>humidity</span><span class=o>);</span>
-        <span class=k>this</span><span class=o>.</span><span class=na>date</span> <span class=o>=</span> <span class=n>Optional</span><span class=o>.</span><span class=na>of</span><span class=o>(</span><span class=n>LocalDateTime</span><span class=o>.</span><span class=na>now</span><span class=o>());</span>
-    <span class=o>}</span>
+    <span class=kd>public</span> <span class=nf>void</span> <span class=n>setTemperatureHumidity</span><span class=p>(</span><span class=kt>int</span> <span class=nf>temperature</span><span class=p>,</span> <span class=kt>int</span> <span class=nf>humidity</span><span class=p>)</span> <span class=p>{</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>temperature</span> <span class=o>=</span> <span class=n>Optional</span><span class=p>.</span><span class=na>of</span><span class=p>(</span><span class=n>temperature</span><span class=p>);</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>humidity</span> <span class=o>=</span> <span class=n>Optional</span><span class=p>.</span><span class=na>of</span><span class=p>(</span><span class=n>humidity</span><span class=p>);</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>date</span> <span class=o>=</span> <span class=n>Optional</span><span class=p>.</span><span class=na>of</span><span class=p>(</span><span class=n>LocalDateTime</span><span class=p>.</span><span class=na>now</span><span class=p>());</span>
+    <span class=p>}</span>
 
-    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=o>{</span>
-        <span class=n>Dht11</span> <span class=n>sensor</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Dht11</span><span class=o>(</span><span class=n>2</span><span class=o>);</span>
-        <span class=n>sensor</span><span class=o>.</span><span class=na>update</span><span class=o>();</span>
-        <span class=k>if</span> <span class=o>(</span><span class=n>sensor</span><span class=o>.</span><span class=na>getTemperature</span><span class=o>().</span><span class=na>isPresent</span><span class=o>()</span> <span class=o>&amp;&amp;</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getHumidity</span><span class=o>().</span><span class=na>isPresent</span><span class=o>())</span> <span class=o>{</span>
-            <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;Temperature (C): %f, Humidity: %f%n&#34;</span><span class=o>,</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getTemperature</span><span class=o>().</span><span class=na>get</span><span class=o>(),</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getHumidity</span><span class=o>().</span><span class=na>get</span><span class=o>());</span>
-        <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
-            <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;No temperature/humidity&#34;</span><span class=o>);</span>
-        <span class=o>}</span>
-    <span class=o>}</span>
-<span class=o>}</span>
+    <span class=kd>public</span> <span class=nf>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=p>(</span><span class=n>String</span><span class=p>[]</span> <span class=nf>args</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>Dht11</span> <span class=nf>sensor</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Dht11</span><span class=p>(</span><span class=n>2</span><span class=p>);</span>
+        <span class=n>sensor</span><span class=p>.</span><span class=na>update</span><span class=p>();</span>
+        <span class=k>if</span> <span class=p>(</span><span class=n>sensor</span><span class=p>.</span><span class=na>getTemperature</span><span class=p>().</span><span class=na>isPresent</span><span class=p>()</span> <span class=o>&amp;&amp;</span> <span class=n>sensor</span><span class=p>.</span><span class=na>getHumidity</span><span class=p>().</span><span class=na>isPresent</span><span class=p>())</span> <span class=p>{</span>
+            <span class=n>System</span><span class=p>.</span><span class=na>out</span><span class=p>.</span><span class=na>printf</span><span class=p>(</span><span class=s>&#34;Temperature (C): %f, Humidity: %f%n&#34;</span><span class=p>,</span> <span class=n>sensor</span><span class=p>.</span><span class=na>getTemperature</span><span class=p>().</span><span class=na>get</span><span class=p>(),</span> <span class=n>sensor</span><span class=p>.</span><span class=na>getHumidity</span><span class=p>().</span><span class=na>get</span><span class=p>());</span>
+        <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+            <span class=n>System</span><span class=p>.</span><span class=na>out</span><span class=p>.</span><span class=na>println</span><span class=p>(</span><span class=s>&#34;No temperature/humidity&#34;</span><span class=p>);</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+<span class=p>}</span>
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/Dht11.java target=_blank>view raw</a></span>
 <a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/Dht11.java target=_blank>Dht11.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-C data-lang=C><span class=lnt> 1
 </span><span class=lnt> 2
@@ -432,51 +432,51 @@
 </span><span class=lnt>43
 </span><span class=lnt>44
 </span><span class=lnt>45
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.javaraspberrypi</span><span class=o>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nf>io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>javaraspberrypi</span><span class=p>;</span>
 
-<span class=kn>import</span> <span class=nn>com.diozero.I2CLcd</span><span class=o>;</span>
-<span class=kn>import</span> <span class=nn>com.diozero.api.I2CConstants</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nf>com</span><span class=p>.</span><span class=na>diozero</span><span class=p>.</span><span class=na>I2CLcd</span><span class=p>;</span>
+<span class=kn>import</span> <span class=nf>com</span><span class=p>.</span><span class=na>diozero</span><span class=p>.</span><span class=na>api</span><span class=p>.</span><span class=na>I2CConstants</span><span class=p>;</span>
 
-<span class=kn>import</span> <span class=nn>java.nio.ByteOrder</span><span class=o>;</span>
-<span class=kn>import</span> <span class=nn>java.time.format.DateTimeFormatter</span><span class=o>;</span>
-<span class=kn>import</span> <span class=nn>java.util.concurrent.Executors</span><span class=o>;</span>
-<span class=kn>import</span> <span class=nn>java.util.concurrent.ScheduledExecutorService</span><span class=o>;</span>
-<span class=kn>import</span> <span class=nn>java.util.concurrent.TimeUnit</span><span class=o>;</span>
+<span class=kn>import</span> <span class=nf>java</span><span class=p>.</span><span class=na>nio</span><span class=p>.</span><span class=na>ByteOrder</span><span class=p>;</span>
+<span class=kn>import</span> <span class=nf>java</span><span class=p>.</span><span class=na>time</span><span class=p>.</span><span class=na>format</span><span class=p>.</span><span class=na>DateTimeFormatter</span><span class=p>;</span>
+<span class=kn>import</span> <span class=nf>java</span><span class=p>.</span><span class=na>util</span><span class=p>.</span><span class=na>concurrent</span><span class=p>.</span><span class=na>Executors</span><span class=p>;</span>
+<span class=kn>import</span> <span class=nf>java</span><span class=p>.</span><span class=na>util</span><span class=p>.</span><span class=na>concurrent</span><span class=p>.</span><span class=na>ScheduledExecutorService</span><span class=p>;</span>
+<span class=kn>import</span> <span class=nf>java</span><span class=p>.</span><span class=na>util</span><span class=p>.</span><span class=na>concurrent</span><span class=p>.</span><span class=na>TimeUnit</span><span class=p>;</span>
 
-<span class=kd>public</span> <span class=kd>class</span> <span class=nc>TemperatureHumidity</span> <span class=o>{</span>
+<span class=kd>public</span> <span class=nf>class</span> <span class=n>TemperatureHumidity</span> <span class=p>{</span>
 
-    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
-        <span class=n>Dht11</span> <span class=n>sensor</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Dht11</span><span class=o>(</span><span class=n>2</span><span class=o>);</span>
-        <span class=n>ScheduledExecutorService</span> <span class=n>service</span> <span class=o>=</span> <span class=n>Executors</span><span class=o>.</span><span class=na>newSingleThreadScheduledExecutor</span><span class=o>();</span>
+    <span class=kd>public</span> <span class=nf>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=p>(</span><span class=n>String</span><span class=p>[]</span> <span class=nf>args</span><span class=p>)</span> <span class=kd>throws</span> <span class=nf>Exception</span> <span class=p>{</span>
+        <span class=n>Dht11</span> <span class=nf>sensor</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Dht11</span><span class=p>(</span><span class=n>2</span><span class=p>);</span>
+        <span class=n>ScheduledExecutorService</span> <span class=nf>service</span> <span class=o>=</span> <span class=n>Executors</span><span class=p>.</span><span class=na>newSingleThreadScheduledExecutor</span><span class=p>();</span>
 
-        <span class=k>try</span> <span class=o>(</span><span class=n>I2CLcd</span> <span class=n>lcd</span> <span class=o>=</span> <span class=k>new</span> <span class=n>I2CLcd</span><span class=o>(</span><span class=n>I2CConstants</span><span class=o>.</span><span class=na>BUS_0</span><span class=o>,</span> <span class=n>I2CLcd</span><span class=o>.</span><span class=na>DEFAULT_DEVICE_ADDRESS</span><span class=o>,</span> <span class=n>ByteOrder</span><span class=o>.</span><span class=na>LITTLE_ENDIAN</span><span class=o>,</span> <span class=n>16</span><span class=o>,</span> <span class=n>2</span><span class=o>))</span> <span class=o>{</span>
-            <span class=n>Runnable</span> <span class=n>monitor</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Runnable</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>try</span> <span class=p>(</span><span class=n>I2CLcd</span> <span class=nf>lcd</span> <span class=o>=</span> <span class=k>new</span> <span class=n>I2CLcd</span><span class=p>(</span><span class=n>I2CConstants</span><span class=p>.</span><span class=na>BUS_0</span><span class=p>,</span> <span class=n>I2CLcd</span><span class=p>.</span><span class=na>DEFAULT_DEVICE_ADDRESS</span><span class=p>,</span> <span class=n>ByteOrder</span><span class=p>.</span><span class=na>LITTLE_ENDIAN</span><span class=p>,</span> <span class=n>16</span><span class=p>,</span> <span class=n>2</span><span class=p>))</span> <span class=p>{</span>
+            <span class=n>Runnable</span> <span class=nf>monitor</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Runnable</span><span class=p>()</span> <span class=p>{</span>
                 <span class=nd>@Override</span>
-                <span class=kd>public</span> <span class=kt>void</span> <span class=nf>run</span><span class=o>()</span> <span class=o>{</span>
-                    <span class=k>try</span> <span class=o>{</span>
-                        <span class=n>sensor</span><span class=o>.</span><span class=na>update</span><span class=o>();</span>
+                <span class=kd>public</span> <span class=nf>void</span> <span class=n>run</span><span class=p>()</span> <span class=p>{</span>
+                    <span class=k>try</span> <span class=p>{</span>
+                        <span class=n>sensor</span><span class=p>.</span><span class=na>update</span><span class=p>();</span>
 
-                        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;Temperature: %dºC, Humidity: %d%%, Date: %s%n&#34;</span><span class=o>,</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getTemperature</span><span class=o>().</span><span class=na>get</span><span class=o>(),</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getHumidity</span><span class=o>().</span><span class=na>get</span><span class=o>(),</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getDate</span><span class=o>().</span><span class=na>get</span><span class=o>().</span><span class=na>format</span><span class=o>(</span><span class=n>DateTimeFormatter</span><span class=o>.</span><span class=na>ISO_DATE_TIME</span><span class=o>));</span>
+                        <span class=n>System</span><span class=p>.</span><span class=na>out</span><span class=p>.</span><span class=na>printf</span><span class=p>(</span><span class=s>&#34;Temperature: %dºC, Humidity: %d%%, Date: %s%n&#34;</span><span class=p>,</span> <span class=n>sensor</span><span class=p>.</span><span class=na>getTemperature</span><span class=p>().</span><span class=na>get</span><span class=p>(),</span> <span class=n>sensor</span><span class=p>.</span><span class=na>getHumidity</span><span class=p>().</span><span class=na>get</span><span class=p>(),</span> <span class=n>sensor</span><span class=p>.</span><span class=na>getDate</span><span class=p>().</span><span class=na>get</span><span class=p>().</span><span class=na>format</span><span class=p>(</span><span class=n>DateTimeFormatter</span><span class=p>.</span><span class=na>ISO_DATE_TIME</span><span class=p>));</span>
 
-                        <span class=k>if</span> <span class=o>(</span><span class=n>sensor</span><span class=o>.</span><span class=na>getTemperature</span><span class=o>().</span><span class=na>isPresent</span><span class=o>()</span> <span class=o>&amp;&amp;</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getHumidity</span><span class=o>().</span><span class=na>isPresent</span><span class=o>()</span> <span class=o>&amp;&amp;</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getDate</span><span class=o>().</span><span class=na>isPresent</span><span class=o>())</span> <span class=o>{</span>
-                            <span class=n>lcd</span><span class=o>.</span><span class=na>setText</span><span class=o>(</span><span class=n>0</span><span class=o>,</span> <span class=n>String</span><span class=o>.</span><span class=na>format</span><span class=o>(</span><span class=s>&#34;T: %dC, H: %d%% &#34;</span><span class=o>,</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getTemperature</span><span class=o>().</span><span class=na>get</span><span class=o>(),</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getHumidity</span><span class=o>().</span><span class=na>get</span><span class=o>()));</span>
-                            <span class=n>lcd</span><span class=o>.</span><span class=na>setText</span><span class=o>(</span><span class=n>1</span><span class=o>,</span> <span class=n>String</span><span class=o>.</span><span class=na>format</span><span class=o>(</span><span class=s>&#34;%s&#34;</span><span class=o>,</span> <span class=n>sensor</span><span class=o>.</span><span class=na>getDate</span><span class=o>().</span><span class=na>get</span><span class=o>().</span><span class=na>format</span><span class=o>(</span><span class=n>DateTimeFormatter</span><span class=o>.</span><span class=na>ofPattern</span><span class=o>(</span><span class=s>&#34;HH:mm:ss&#34;</span><span class=o>))));</span>
-                        <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
-                            <span class=n>lcd</span><span class=o>.</span><span class=na>setText</span><span class=o>(</span><span class=n>0</span><span class=o>,</span> <span class=n>String</span><span class=o>.</span><span class=na>format</span><span class=o>(</span><span class=s>&#34;No data&#34;</span><span class=o>));</span>
-                        <span class=o>}</span>
-                    <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>Exception</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
-                        <span class=n>e</span><span class=o>.</span><span class=na>printStackTrace</span><span class=o>();</span>
-                    <span class=o>}</span>
-                <span class=o>}</span>
-            <span class=o>};</span>
+                        <span class=k>if</span> <span class=p>(</span><span class=n>sensor</span><span class=p>.</span><span class=na>getTemperature</span><span class=p>().</span><span class=na>isPresent</span><span class=p>()</span> <span class=o>&amp;&amp;</span> <span class=n>sensor</span><span class=p>.</span><span class=na>getHumidity</span><span class=p>().</span><span class=na>isPresent</span><span class=p>()</span> <span class=o>&amp;&amp;</span> <span class=n>sensor</span><span class=p>.</span><span class=na>getDate</span><span class=p>().</span><span class=na>isPresent</span><span class=p>())</span> <span class=p>{</span>
+                            <span class=n>lcd</span><span class=p>.</span><span class=na>setText</span><span class=p>(</span><span class=n>0</span><span class=p>,</span> <span class=n>String</span><span class=p>.</span><span class=na>format</span><span class=p>(</span><span class=s>&#34;T: %dC, H: %d%% &#34;</span><span class=p>,</span> <span class=n>sensor</span><span class=p>.</span><span class=na>getTemperature</span><span class=p>().</span><span class=na>get</span><span class=p>(),</span> <span class=n>sensor</span><span class=p>.</span><span class=na>getHumidity</span><span class=p>().</span><span class=na>get</span><span class=p>()));</span>
+                            <span class=n>lcd</span><span class=p>.</span><span class=na>setText</span><span class=p>(</span><span class=n>1</span><span class=p>,</span> <span class=n>String</span><span class=p>.</span><span class=na>format</span><span class=p>(</span><span class=s>&#34;%s&#34;</span><span class=p>,</span> <span class=n>sensor</span><span class=p>.</span><span class=na>getDate</span><span class=p>().</span><span class=na>get</span><span class=p>().</span><span class=na>format</span><span class=p>(</span><span class=n>DateTimeFormatter</span><span class=p>.</span><span class=na>ofPattern</span><span class=p>(</span><span class=s>&#34;HH:mm:ss&#34;</span><span class=p>))));</span>
+                        <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+                            <span class=n>lcd</span><span class=p>.</span><span class=na>setText</span><span class=p>(</span><span class=n>0</span><span class=p>,</span> <span class=n>String</span><span class=p>.</span><span class=na>format</span><span class=p>(</span><span class=s>&#34;No data&#34;</span><span class=p>));</span>
+                        <span class=p>}</span>
+                    <span class=p>}</span> <span class=k>catch</span> <span class=p>(</span><span class=n>Exception</span> <span class=nf>e</span><span class=p>)</span> <span class=p>{</span>
+                        <span class=n>e</span><span class=p>.</span><span class=na>printStackTrace</span><span class=p>();</span>
+                    <span class=p>}</span>
+                <span class=p>}</span>
+            <span class=p>};</span>
 
-            <span class=n>service</span><span class=o>.</span><span class=na>scheduleAtFixedRate</span><span class=o>(</span><span class=n>monitor</span><span class=o>,</span> <span class=n>1</span><span class=o>,</span> <span class=n>5</span><span class=o>,</span> <span class=n>TimeUnit</span><span class=o>.</span><span class=na>SECONDS</span><span class=o>);</span>
-            <span class=n>Thread</span><span class=o>.</span><span class=na>sleep</span><span class=o>(</span><span class=n>60000</span><span class=o>);</span>
-        <span class=o>}</span> <span class=k>finally</span> <span class=o>{</span>
-            <span class=n>service</span><span class=o>.</span><span class=na>shutdown</span><span class=o>();</span>
-        <span class=o>}</span>
-    <span class=o>}</span>
-<span class=o>}</span>
+            <span class=n>service</span><span class=p>.</span><span class=na>scheduleAtFixedRate</span><span class=p>(</span><span class=n>monitor</span><span class=p>,</span> <span class=n>1</span><span class=p>,</span> <span class=n>5</span><span class=p>,</span> <span class=n>TimeUnit</span><span class=p>.</span><span class=na>SECONDS</span><span class=p>);</span>
+            <span class=n>Thread</span><span class=p>.</span><span class=na>sleep</span><span class=p>(</span><span class=n>60000</span><span class=p>);</span>
+        <span class=p>}</span> <span class=k>finally</span> <span class=p>{</span>
+            <span class=n>service</span><span class=p>.</span><span class=na>shutdown</span><span class=p>();</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+<span class=p>}</span>
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/TemperatureHumidity.java target=_blank>view raw</a></span>
 <a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/code/TemperatureHumidity.java target=_blank>TemperatureHumidity.java</a></div></div><p>Este es el esquema de conexiones que he utilizado para el ejemplo y una foto del cableado real, he usado del <em>pin</em> GPIO número 2 según la nomenclatura de wiringPi para el cable de datos del sensor DHT11 que se corresponde con pin número 13 según la nomenclatura del <em>header</em> de la Raspberry Pi. Para ver el cableado del <em>display</em> 1602 más detalladamente y la activación del bus de comunicación I2C que necesita consulta el artículo <a href=https://picodotdev.github.io/blog-bitix/2017/03/controlar-un-display-lcd-1602-para-mostrar-texto-con-la-raspberry-pi-y-java/>Controlar un display LCD 1602 para mostrar texto con la Raspberry Pi y Java</a>.</p><div class=media style=text-align:center><figure><a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/images/cableado.jpg title="Cableado sensor DHT11 y display 1602" data-gallery><img src=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/images/cableado-thumb.jpg width=263></a><figcaption>Cableado sensor DHT11 y display 1602</figcaption></figure></div><p>Ejecutando el programa del ejemplo y usando el display 1602 (16 columnas y 2 filas) se muestra la temperatura y humedad obtenida del sensor.</p><div class=media style=text-align:center><figure><a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/images/temperature-humidity.jpg title="Cableado ejemplo y funcionando" data-gallery><img src=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/images/temperature-humidity-thumb.jpg width=294></a>
 <a href=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/images/display.jpg title="Cableado ejemplo y funcionando" data-gallery><img src=/blog-bitix/2017/03/obtener-la-temperatura-y-humedad-con-el-sensor-dht11-la-raspberry-pi-c-y-java/images/display-thumb.jpg width=300></a><figcaption>Cableado ejemplo y funcionando</figcaption></figure></div><p>En el kernel de Linux hay un módulo que proporciona también los valores del sensor, sin embargo, no he conseguido obtener la temperatura y humedad usándolo. Lo he probado con el kernel 4.4 de Arch Linux ARM y en la versión 4.9 veo que hay cambios en este módulo que quizá lo hagan funcionar. Para usar el módulo del kernel hay que añadir un poco de configuración para el inicio de la Raspberry Pi. En los archivos <em>/sys/devices/platform/dht11@0/iio:device0/in_temp_input</em> y <em>/sys/devices/platform/dht11@0/iio:device0/in_temp_input</em> estarán la temperatura y humedad respectivamente.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt>1

@@ -86,20 +86,20 @@ schema {
 </span><span class=lnt>12
 </span><span class=lnt>13
 </span><span class=lnt>14
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.graphql.type</span><span class=o>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nf>io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>graphql</span><span class=p>.</span><span class=na>type</span><span class=p>;</span>
 
-<span class=kd>public</span> <span class=kd>class</span> <span class=nc>BookFilter</span> <span class=o>{</span>
+<span class=kd>public</span> <span class=nf>class</span> <span class=n>BookFilter</span> <span class=p>{</span>
 
-    <span class=kd>private</span> <span class=n>String</span> <span class=n>title</span><span class=o>;</span>
+    <span class=kd>private</span> <span class=nf>String</span> <span class=n>title</span><span class=p>;</span>
 
-    <span class=kd>public</span> <span class=n>String</span> <span class=nf>getTitle</span><span class=o>()</span> <span class=o>{</span>
-        <span class=k>return</span> <span class=n>title</span><span class=o>;</span>
-    <span class=o>}</span>
+    <span class=kd>public</span> <span class=nf>String</span> <span class=n>getTitle</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=n>title</span><span class=p>;</span>
+    <span class=p>}</span>
 
-    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>setTitle</span><span class=o>(</span><span class=n>String</span> <span class=n>title</span><span class=o>)</span> <span class=o>{</span>
-        <span class=k>this</span><span class=o>.</span><span class=na>title</span> <span class=o>=</span> <span class=n>title</span><span class=o>;</span>
-    <span class=o>}</span>
-<span class=o>}</span>
+    <span class=kd>public</span> <span class=nf>void</span> <span class=n>setTitle</span><span class=p>(</span><span class=n>String</span> <span class=nf>title</span><span class=p>)</span> <span class=p>{</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>title</span> <span class=o>=</span> <span class=n>title</span><span class=p>;</span>
+    <span class=p>}</span>
+<span class=p>}</span>
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/11/consultas-con-parametros-para-filtrar-datos-en-graphql/code/BookFilter.java target=_blank>view raw</a></span>
 <a href=/blog-bitix/2017/11/consultas-con-parametros-para-filtrar-datos-en-graphql/code/BookFilter.java target=_blank>BookFilter.java</a></div></div><p>La clase <em>Query</em> es el punto de entrada a las consultas raíz y posee un método con el mimo nombre que la consulta solicitada en GraphQL y que en este caso es <em>findBooks</em> que recibe como argumento una instancia del objeto <em>BookFilter</em> que a su vez se lo proporciona al servicio de repositorio independiente de GraphQL para que haga la búsqueda adecuada según corresponda en el sistema de persistencia empleado. En el caso que los datos se guarden en una base de datos relacional posiblemente el filtrado se realiza ejecutando una sentencia SQL. En el caso del ejemplo como los datos están en una colección de una estructura de datos Java el filtrado se realiza usando los <em>streams</em>, expresiones regulares y código Java.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
 </span><span class=lnt> 2
@@ -124,29 +124,29 @@ schema {
 </span><span class=lnt>21
 </span><span class=lnt>22
 </span><span class=lnt>23
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.graphql.resolver</span><span class=o>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nf>io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>graphql</span><span class=p>.</span><span class=na>resolver</span><span class=p>;</span>
 
-<span class=o>...</span>
+<span class=p>...</span>
 
-<span class=kd>public</span> <span class=kd>class</span> <span class=nc>Query</span> <span class=kd>implements</span> <span class=n>GraphQLQueryResolver</span> <span class=o>{</span>
+<span class=kd>public</span> <span class=nf>class</span> <span class=n>Query</span> <span class=nf>implements</span> <span class=n>GraphQLQueryResolver</span> <span class=p>{</span>
 
-    <span class=kd>private</span> <span class=n>LibraryRepository</span> <span class=n>libraryRepository</span><span class=o>;</span>
+    <span class=kd>private</span> <span class=nf>LibraryRepository</span> <span class=n>libraryRepository</span><span class=p>;</span>
 
-    <span class=kd>public</span> <span class=nf>Query</span><span class=o>(</span><span class=n>LibraryRepository</span> <span class=n>libraryRepository</span><span class=o>)</span> <span class=o>{</span>
-        <span class=k>this</span><span class=o>.</span><span class=na>libraryRepository</span> <span class=o>=</span> <span class=n>libraryRepository</span><span class=o>;</span>
-    <span class=o>}</span>
+    <span class=kd>public</span> <span class=nf>Query</span><span class=p>(</span><span class=n>LibraryRepository</span> <span class=nf>libraryRepository</span><span class=p>)</span> <span class=p>{</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>libraryRepository</span> <span class=o>=</span> <span class=n>libraryRepository</span><span class=p>;</span>
+    <span class=p>}</span>
 
-    <span class=kd>public</span> <span class=n>List</span><span class=o>&lt;</span><span class=n>Book</span><span class=o>&gt;</span> <span class=nf>books</span><span class=o>(</span><span class=n>BookFilter</span> <span class=n>filter</span><span class=o>,</span> <span class=n>DataFetchingEnvironment</span> <span class=n>environment</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>InterruptedException</span>  <span class=o>{</span>
-        <span class=n>List</span><span class=o>&lt;</span><span class=n>Book</span><span class=o>&gt;</span> <span class=n>books</span> <span class=o>=</span> <span class=n>libraryRepository</span><span class=o>.</span><span class=na>findBooks</span><span class=o>(</span><span class=n>filter</span><span class=o>);</span>
-        <span class=n>DefaultGraphQLContext</span> <span class=n>context</span> <span class=o>=</span> <span class=n>environment</span><span class=o>.</span><span class=na>getContext</span><span class=o>();</span>
+    <span class=kd>public</span> <span class=nf>List</span><span class=o>&lt;</span><span class=n>Book</span><span class=o>&gt;</span> <span class=nf>books</span><span class=p>(</span><span class=n>BookFilter</span> <span class=nf>filter</span><span class=p>,</span> <span class=n>DataFetchingEnvironment</span> <span class=nf>environment</span><span class=p>)</span> <span class=kd>throws</span> <span class=nf>InterruptedException</span>  <span class=p>{</span>
+        <span class=n>List</span><span class=o>&lt;</span><span class=n>Book</span><span class=o>&gt;</span> <span class=nf>books</span> <span class=o>=</span> <span class=n>libraryRepository</span><span class=p>.</span><span class=na>findBooks</span><span class=p>(</span><span class=n>filter</span><span class=p>);</span>
+        <span class=n>DefaultGraphQLContext</span> <span class=nf>context</span> <span class=o>=</span> <span class=n>environment</span><span class=p>.</span><span class=na>getContext</span><span class=p>();</span>
 
-        <span class=o>...</span>
+        <span class=p>...</span>
 
-        <span class=k>return</span> <span class=n>books</span><span class=o>;</span>
-    <span class=o>}</span>
+        <span class=k>return</span> <span class=n>books</span><span class=p>;</span>
+    <span class=p>}</span>
 
-    <span class=o>...</span>
-<span class=o>}</span>
+    <span class=p>...</span>
+<span class=p>}</span>
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/11/consultas-con-parametros-para-filtrar-datos-en-graphql/code/Query.java target=_blank>view raw</a></span>
 <a href=/blog-bitix/2017/11/consultas-con-parametros-para-filtrar-datos-en-graphql/code/Query.java target=_blank>Query.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
 </span><span class=lnt> 2
@@ -217,75 +217,75 @@ schema {
 </span><span class=lnt>67
 </span><span class=lnt>68
 </span><span class=lnt>69
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.graphql.repository</span><span class=o>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nf>io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>graphql</span><span class=p>.</span><span class=na>repository</span><span class=p>;</span>
 
-<span class=o>...</span>
+<span class=p>...</span>
 
-<span class=kd>public</span> <span class=kd>class</span> <span class=nc>LibraryRepository</span> <span class=o>{</span>
+<span class=kd>public</span> <span class=nf>class</span> <span class=n>LibraryRepository</span> <span class=p>{</span>
 
-    <span class=kd>private</span> <span class=kt>long</span> <span class=n>sequence</span><span class=o>;</span>
-    <span class=kd>private</span> <span class=n>List</span><span class=o>&lt;</span><span class=n>Book</span><span class=o>&gt;</span> <span class=n>books</span><span class=o>;</span>
-    <span class=kd>private</span> <span class=n>List</span><span class=o>&lt;</span><span class=n>Comment</span><span class=o>&gt;</span> <span class=n>comments</span><span class=o>;</span>
-    <span class=kd>private</span> <span class=n>List</span><span class=o>&lt;</span><span class=n>Author</span><span class=o>&gt;</span> <span class=n>authors</span><span class=o>;</span>
-    <span class=kd>private</span> <span class=n>List</span><span class=o>&lt;</span><span class=n>Magazine</span><span class=o>&gt;</span> <span class=n>magazines</span><span class=o>;</span>
+    <span class=kd>private</span> <span class=nf>long</span> <span class=n>sequence</span><span class=p>;</span>
+    <span class=kd>private</span> <span class=nf>List</span><span class=o>&lt;</span><span class=n>Book</span><span class=o>&gt;</span> <span class=nf>books</span><span class=p>;</span>
+    <span class=kd>private</span> <span class=nf>List</span><span class=o>&lt;</span><span class=n>Comment</span><span class=o>&gt;</span> <span class=nf>comments</span><span class=p>;</span>
+    <span class=kd>private</span> <span class=nf>List</span><span class=o>&lt;</span><span class=n>Author</span><span class=o>&gt;</span> <span class=nf>authors</span><span class=p>;</span>
+    <span class=kd>private</span> <span class=nf>List</span><span class=o>&lt;</span><span class=n>Magazine</span><span class=o>&gt;</span> <span class=nf>magazines</span><span class=p>;</span>
 
-    <span class=kd>public</span> <span class=nf>LibraryRepository</span><span class=o>()</span> <span class=o>{</span>
-        <span class=k>this</span><span class=o>.</span><span class=na>sequence</span> <span class=o>=</span> <span class=n>0l</span><span class=o>;</span>
-        <span class=k>this</span><span class=o>.</span><span class=na>books</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;&gt;();</span>
-        <span class=k>this</span><span class=o>.</span><span class=na>comments</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;&gt;();</span>
-        <span class=k>this</span><span class=o>.</span><span class=na>authors</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;&gt;();</span>
-        <span class=k>this</span><span class=o>.</span><span class=na>magazines</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;&gt;();</span>
+    <span class=kd>public</span> <span class=nf>LibraryRepository</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>sequence</span> <span class=o>=</span> <span class=n>0l</span><span class=p>;</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>books</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;&gt;</span><span class=p>();</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>comments</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;&gt;</span><span class=p>();</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>authors</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;&gt;</span><span class=p>();</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>magazines</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;&gt;</span><span class=p>();</span>
 
-        <span class=n>Author</span> <span class=n>a1</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Author</span><span class=o>(</span><span class=n>nextId</span><span class=o>(),</span> <span class=s>&#34;Philip K. Dick&#34;</span><span class=o>);</span>
-        <span class=n>Author</span> <span class=n>a2</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Author</span><span class=o>(</span><span class=n>nextId</span><span class=o>(),</span> <span class=s>&#34;George R. R. Martin&#34;</span><span class=o>);</span>
-        <span class=n>Author</span> <span class=n>a3</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Author</span><span class=o>(</span><span class=n>nextId</span><span class=o>(),</span> <span class=s>&#34;Umberto Eco&#34;</span><span class=o>);</span>
-        <span class=n>Author</span> <span class=n>a4</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Author</span><span class=o>(</span><span class=n>nextId</span><span class=o>(),</span> <span class=s>&#34;Andreas Eschbach&#34;</span><span class=o>);</span>
-        <span class=n>Author</span> <span class=n>a5</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Author</span><span class=o>(</span><span class=n>nextId</span><span class=o>(),</span> <span class=s>&#34;Ernest Cline&#34;</span><span class=o>);</span>
-        <span class=n>Author</span> <span class=n>a6</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Author</span><span class=o>(</span><span class=n>nextId</span><span class=o>(),</span> <span class=s>&#34;Anónimo&#34;</span><span class=o>);</span>
+        <span class=n>Author</span> <span class=nf>a1</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Author</span><span class=p>(</span><span class=n>nextId</span><span class=p>(),</span> <span class=s>&#34;Philip K. Dick&#34;</span><span class=p>);</span>
+        <span class=n>Author</span> <span class=nf>a2</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Author</span><span class=p>(</span><span class=n>nextId</span><span class=p>(),</span> <span class=s>&#34;George R. R. Martin&#34;</span><span class=p>);</span>
+        <span class=n>Author</span> <span class=nf>a3</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Author</span><span class=p>(</span><span class=n>nextId</span><span class=p>(),</span> <span class=s>&#34;Umberto Eco&#34;</span><span class=p>);</span>
+        <span class=n>Author</span> <span class=nf>a4</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Author</span><span class=p>(</span><span class=n>nextId</span><span class=p>(),</span> <span class=s>&#34;Andreas Eschbach&#34;</span><span class=p>);</span>
+        <span class=n>Author</span> <span class=nf>a5</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Author</span><span class=p>(</span><span class=n>nextId</span><span class=p>(),</span> <span class=s>&#34;Ernest Cline&#34;</span><span class=p>);</span>
+        <span class=n>Author</span> <span class=nf>a6</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Author</span><span class=p>(</span><span class=n>nextId</span><span class=p>(),</span> <span class=s>&#34;Anónimo&#34;</span><span class=p>);</span>
 
-        <span class=k>this</span><span class=o>.</span><span class=na>authors</span><span class=o>.</span><span class=na>addAll</span><span class=o>(</span><span class=n>List</span><span class=o>.</span><span class=na>of</span><span class=o>(</span><span class=n>a1</span><span class=o>,</span> <span class=n>a2</span><span class=o>,</span> <span class=n>a3</span><span class=o>,</span> <span class=n>a4</span><span class=o>,</span> <span class=n>a5</span><span class=o>,</span> <span class=n>a6</span><span class=o>));</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>authors</span><span class=p>.</span><span class=na>addAll</span><span class=p>(</span><span class=n>List</span><span class=p>.</span><span class=na>of</span><span class=p>(</span><span class=n>a1</span><span class=p>,</span> <span class=n>a2</span><span class=p>,</span> <span class=n>a3</span><span class=p>,</span> <span class=n>a4</span><span class=p>,</span> <span class=n>a5</span><span class=p>,</span> <span class=n>a6</span><span class=p>));</span>
 
-        <span class=n>LongStream</span><span class=o>.</span><span class=na>range</span><span class=o>(</span><span class=n>1</span><span class=o>,</span> <span class=n>10</span><span class=o>).</span><span class=na>forEach</span><span class=o>(</span><span class=n>i</span> <span class=o>-&gt;</span> <span class=k>this</span><span class=o>.</span><span class=na>comments</span><span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=k>new</span> <span class=n>Comment</span><span class=o>(</span><span class=n>i</span><span class=o>,</span><span class=s>&#34;Comment &#34;</span> <span class=o>+</span> <span class=n>i</span><span class=o>)));</span>
+        <span class=n>LongStream</span><span class=p>.</span><span class=na>range</span><span class=p>(</span><span class=n>1</span><span class=p>,</span> <span class=n>10</span><span class=p>).</span><span class=na>forEach</span><span class=p>(</span><span class=n>i</span> <span class=o>-&gt;</span> <span class=k>this</span><span class=p>.</span><span class=na>comments</span><span class=p>.</span><span class=na>add</span><span class=p>(</span><span class=k>new</span> <span class=n>Comment</span><span class=p>(</span><span class=n>i</span><span class=p>,</span><span class=s>&#34;Comment &#34;</span> <span class=o>+</span> <span class=n>i</span><span class=p>)));</span>
 
-        <span class=k>this</span><span class=o>.</span><span class=na>books</span><span class=o>.</span><span class=na>addAll</span><span class=o>(</span>
-            <span class=n>List</span><span class=o>.</span><span class=na>of</span><span class=o>(</span>
-                <span class=k>new</span> <span class=n>Book</span><span class=o>(</span><span class=n>nextId</span><span class=o>(),</span> <span class=s>&#34;Ojo en el cielo&#34;</span><span class=o>,</span> <span class=n>a1</span><span class=o>,</span> <span class=n>LocalDate</span><span class=o>.</span><span class=na>of</span><span class=o>(</span><span class=n>1957</span><span class=o>,</span> <span class=n>1</span><span class=o>,</span> <span class=n>1</span><span class=o>),</span> <span class=k>this</span><span class=o>.</span><span class=na>comments</span><span class=o>),</span>
-                <span class=k>new</span> <span class=n>Book</span><span class=o>(</span><span class=n>nextId</span><span class=o>(),</span> <span class=s>&#34;Muerte de la luz&#34;</span><span class=o>,</span> <span class=n>a2</span><span class=o>,</span> <span class=n>LocalDate</span><span class=o>.</span><span class=na>of</span><span class=o>(</span><span class=n>1977</span><span class=o>,</span> <span class=n>1</span><span class=o>,</span> <span class=n>1</span><span class=o>),</span> <span class=k>this</span><span class=o>.</span><span class=na>comments</span><span class=o>),</span>
-                <span class=k>new</span> <span class=n>Book</span><span class=o>(</span><span class=n>nextId</span><span class=o>(),</span> <span class=s>&#34;El nombre de la rosa&#34;</span><span class=o>,</span> <span class=n>a3</span><span class=o>,</span> <span class=n>LocalDate</span><span class=o>.</span><span class=na>of</span><span class=o>(</span><span class=n>1980</span><span class=o>,</span> <span class=n>1</span><span class=o>,</span> <span class=n>1</span><span class=o>),</span> <span class=k>this</span><span class=o>.</span><span class=na>comments</span><span class=o>),</span>
-                <span class=k>new</span> <span class=n>Book</span><span class=o>(</span><span class=n>nextId</span><span class=o>(),</span> <span class=s>&#34;Los tejedores de cabellos&#34;</span><span class=o>,</span> <span class=n>a4</span><span class=o>,</span> <span class=n>LocalDate</span><span class=o>.</span><span class=na>of</span><span class=o>(</span><span class=n>1995</span><span class=o>,</span> <span class=n>1</span><span class=o>,</span> <span class=n>1</span><span class=o>),</span> <span class=k>this</span><span class=o>.</span><span class=na>comments</span><span class=o>),</span>
-                <span class=k>new</span> <span class=n>Book</span><span class=o>(</span><span class=n>nextId</span><span class=o>(),</span> <span class=s>&#34;Ready Player One&#34;</span><span class=o>,</span> <span class=n>a5</span><span class=o>,</span> <span class=n>LocalDate</span><span class=o>.</span><span class=na>of</span><span class=o>(</span><span class=n>2011</span><span class=o>,</span> <span class=n>1</span><span class=o>,</span> <span class=n>1</span><span class=o>),</span> <span class=k>this</span><span class=o>.</span><span class=na>comments</span><span class=o>)</span>
-            <span class=o>)</span>
-        <span class=o>);</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>books</span><span class=p>.</span><span class=na>addAll</span><span class=p>(</span>
+            <span class=n>List</span><span class=p>.</span><span class=na>of</span><span class=p>(</span>
+                <span class=k>new</span> <span class=n>Book</span><span class=p>(</span><span class=n>nextId</span><span class=p>(),</span> <span class=s>&#34;Ojo en el cielo&#34;</span><span class=p>,</span> <span class=n>a1</span><span class=p>,</span> <span class=n>LocalDate</span><span class=p>.</span><span class=na>of</span><span class=p>(</span><span class=n>1957</span><span class=p>,</span> <span class=n>1</span><span class=p>,</span> <span class=n>1</span><span class=p>),</span> <span class=k>this</span><span class=p>.</span><span class=na>comments</span><span class=p>),</span>
+                <span class=k>new</span> <span class=n>Book</span><span class=p>(</span><span class=n>nextId</span><span class=p>(),</span> <span class=s>&#34;Muerte de la luz&#34;</span><span class=p>,</span> <span class=n>a2</span><span class=p>,</span> <span class=n>LocalDate</span><span class=p>.</span><span class=na>of</span><span class=p>(</span><span class=n>1977</span><span class=p>,</span> <span class=n>1</span><span class=p>,</span> <span class=n>1</span><span class=p>),</span> <span class=k>this</span><span class=p>.</span><span class=na>comments</span><span class=p>),</span>
+                <span class=k>new</span> <span class=n>Book</span><span class=p>(</span><span class=n>nextId</span><span class=p>(),</span> <span class=s>&#34;El nombre de la rosa&#34;</span><span class=p>,</span> <span class=n>a3</span><span class=p>,</span> <span class=n>LocalDate</span><span class=p>.</span><span class=na>of</span><span class=p>(</span><span class=n>1980</span><span class=p>,</span> <span class=n>1</span><span class=p>,</span> <span class=n>1</span><span class=p>),</span> <span class=k>this</span><span class=p>.</span><span class=na>comments</span><span class=p>),</span>
+                <span class=k>new</span> <span class=n>Book</span><span class=p>(</span><span class=n>nextId</span><span class=p>(),</span> <span class=s>&#34;Los tejedores de cabellos&#34;</span><span class=p>,</span> <span class=n>a4</span><span class=p>,</span> <span class=n>LocalDate</span><span class=p>.</span><span class=na>of</span><span class=p>(</span><span class=n>1995</span><span class=p>,</span> <span class=n>1</span><span class=p>,</span> <span class=n>1</span><span class=p>),</span> <span class=k>this</span><span class=p>.</span><span class=na>comments</span><span class=p>),</span>
+                <span class=k>new</span> <span class=n>Book</span><span class=p>(</span><span class=n>nextId</span><span class=p>(),</span> <span class=s>&#34;Ready Player One&#34;</span><span class=p>,</span> <span class=n>a5</span><span class=p>,</span> <span class=n>LocalDate</span><span class=p>.</span><span class=na>of</span><span class=p>(</span><span class=n>2011</span><span class=p>,</span> <span class=n>1</span><span class=p>,</span> <span class=n>1</span><span class=p>),</span> <span class=k>this</span><span class=p>.</span><span class=na>comments</span><span class=p>)</span>
+            <span class=p>)</span>
+        <span class=p>);</span>
 
-        <span class=k>this</span><span class=o>.</span><span class=na>magazines</span><span class=o>.</span><span class=na>addAll</span><span class=o>(</span>
-            <span class=n>List</span><span class=o>.</span><span class=na>of</span><span class=o>(</span>
-                <span class=k>new</span> <span class=n>Magazine</span><span class=o>(</span><span class=n>nextId</span><span class=o>(),</span> <span class=s>&#34;Muy interesante&#34;</span><span class=o>,</span> <span class=n>65L</span><span class=o>),</span>
-                <span class=k>new</span> <span class=n>Magazine</span><span class=o>(</span><span class=n>nextId</span><span class=o>(),</span> <span class=s>&#34;PC Actual&#34;</span><span class=o>,</span> <span class=n>90L</span><span class=o>)</span>
-            <span class=o>)</span>
-        <span class=o>);</span>
-    <span class=o>}</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>magazines</span><span class=p>.</span><span class=na>addAll</span><span class=p>(</span>
+            <span class=n>List</span><span class=p>.</span><span class=na>of</span><span class=p>(</span>
+                <span class=k>new</span> <span class=n>Magazine</span><span class=p>(</span><span class=n>nextId</span><span class=p>(),</span> <span class=s>&#34;Muy interesante&#34;</span><span class=p>,</span> <span class=n>65L</span><span class=p>),</span>
+                <span class=k>new</span> <span class=n>Magazine</span><span class=p>(</span><span class=n>nextId</span><span class=p>(),</span> <span class=s>&#34;PC Actual&#34;</span><span class=p>,</span> <span class=n>90L</span><span class=p>)</span>
+            <span class=p>)</span>
+        <span class=p>);</span>
+    <span class=p>}</span>
 
-    <span class=kd>public</span> <span class=n>Book</span> <span class=nf>findBook</span><span class=o>(</span><span class=n>Long</span> <span class=n>id</span><span class=o>)</span> <span class=o>{</span>
-        <span class=k>return</span> <span class=n>books</span><span class=o>.</span><span class=na>stream</span><span class=o>().</span><span class=na>filter</span><span class=o>(</span><span class=n>b</span> <span class=o>-&gt;</span> <span class=n>b</span><span class=o>.</span><span class=na>getId</span><span class=o>().</span><span class=na>equals</span><span class=o>(</span><span class=n>id</span><span class=o>)).</span><span class=na>findFirst</span><span class=o>().</span><span class=na>orElse</span><span class=o>(</span><span class=kc>null</span><span class=o>);</span>
-    <span class=o>}</span>
+    <span class=kd>public</span> <span class=nf>Book</span> <span class=n>findBook</span><span class=p>(</span><span class=n>Long</span> <span class=nf>id</span><span class=p>)</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=n>books</span><span class=p>.</span><span class=na>stream</span><span class=p>().</span><span class=na>filter</span><span class=p>(</span><span class=n>b</span> <span class=o>-&gt;</span> <span class=n>b</span><span class=p>.</span><span class=na>getId</span><span class=p>().</span><span class=na>equals</span><span class=p>(</span><span class=n>id</span><span class=p>)).</span><span class=na>findFirst</span><span class=p>().</span><span class=na>orElse</span><span class=p>(</span><span class=kc>null</span><span class=p>);</span>
+    <span class=p>}</span>
 
-    <span class=kd>public</span> <span class=n>List</span><span class=o>&lt;</span><span class=n>Book</span><span class=o>&gt;</span> <span class=nf>findBooks</span><span class=o>(</span><span class=n>BookFilter</span> <span class=n>filter</span><span class=o>)</span> <span class=o>{</span>
-        <span class=n>Stream</span><span class=o>&lt;</span><span class=n>Book</span><span class=o>&gt;</span> <span class=n>stream</span> <span class=o>=</span> <span class=n>books</span><span class=o>.</span><span class=na>stream</span><span class=o>();</span>
-        <span class=k>if</span> <span class=o>(</span><span class=n>filter</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
-            <span class=n>stream</span> <span class=o>=</span> <span class=n>stream</span><span class=o>.</span><span class=na>filter</span><span class=o>(</span><span class=n>b</span> <span class=o>-&gt;</span> <span class=n>b</span><span class=o>.</span><span class=na>getTitle</span><span class=o>().</span><span class=na>matches</span><span class=o>(</span><span class=n>filter</span><span class=o>.</span><span class=na>getTitle</span><span class=o>()));</span>
-        <span class=o>}</span>
-        <span class=k>return</span> <span class=n>stream</span><span class=o>.</span><span class=na>collect</span><span class=o>(</span><span class=n>Collectors</span><span class=o>.</span><span class=na>toList</span><span class=o>());</span>
-    <span class=o>}</span>
+    <span class=kd>public</span> <span class=nf>List</span><span class=o>&lt;</span><span class=n>Book</span><span class=o>&gt;</span> <span class=nf>findBooks</span><span class=p>(</span><span class=n>BookFilter</span> <span class=nf>filter</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>Stream</span><span class=o>&lt;</span><span class=n>Book</span><span class=o>&gt;</span> <span class=nf>stream</span> <span class=o>=</span> <span class=n>books</span><span class=p>.</span><span class=na>stream</span><span class=p>();</span>
+        <span class=k>if</span> <span class=p>(</span><span class=n>filter</span> <span class=o>!=</span> <span class=kc>null</span><span class=p>)</span> <span class=p>{</span>
+            <span class=n>stream</span> <span class=o>=</span> <span class=n>stream</span><span class=p>.</span><span class=na>filter</span><span class=p>(</span><span class=n>b</span> <span class=o>-&gt;</span> <span class=n>b</span><span class=p>.</span><span class=na>getTitle</span><span class=p>().</span><span class=na>matches</span><span class=p>(</span><span class=n>filter</span><span class=p>.</span><span class=na>getTitle</span><span class=p>()));</span>
+        <span class=p>}</span>
+        <span class=k>return</span> <span class=n>stream</span><span class=p>.</span><span class=na>collect</span><span class=p>(</span><span class=n>Collectors</span><span class=p>.</span><span class=na>toList</span><span class=p>());</span>
+    <span class=p>}</span>
 
-    <span class=kd>public</span> <span class=n>List</span><span class=o>&lt;</span><span class=n>Publication</span><span class=o>&gt;</span> <span class=nf>findPublications</span><span class=o>()</span> <span class=o>{</span>
-        <span class=n>List</span><span class=o>&lt;</span><span class=n>Publication</span><span class=o>&gt;</span> <span class=n>publications</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;&gt;();</span>
-        <span class=n>publications</span><span class=o>.</span><span class=na>addAll</span><span class=o>(</span><span class=n>books</span><span class=o>);</span>
-        <span class=n>publications</span><span class=o>.</span><span class=na>addAll</span><span class=o>(</span><span class=n>magazines</span><span class=o>);</span>
-        <span class=k>return</span> <span class=n>publications</span><span class=o>;</span>
-    <span class=o>}</span>
+    <span class=kd>public</span> <span class=nf>List</span><span class=o>&lt;</span><span class=n>Publication</span><span class=o>&gt;</span> <span class=nf>findPublications</span><span class=p>()</span> <span class=p>{</span>
+        <span class=n>List</span><span class=o>&lt;</span><span class=n>Publication</span><span class=o>&gt;</span> <span class=nf>publications</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;&gt;</span><span class=p>();</span>
+        <span class=n>publications</span><span class=p>.</span><span class=na>addAll</span><span class=p>(</span><span class=n>books</span><span class=p>);</span>
+        <span class=n>publications</span><span class=p>.</span><span class=na>addAll</span><span class=p>(</span><span class=n>magazines</span><span class=p>);</span>
+        <span class=k>return</span> <span class=n>publications</span><span class=p>;</span>
+    <span class=p>}</span>
 
-    <span class=o>...</span>
-<span class=o>}</span>
+    <span class=p>...</span>
+<span class=p>}</span>
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/11/consultas-con-parametros-para-filtrar-datos-en-graphql/code/LibraryRepository.java target=_blank>view raw</a></span>
 <a href=/blog-bitix/2017/11/consultas-con-parametros-para-filtrar-datos-en-graphql/code/LibraryRepository.java target=_blank>LibraryRepository.java</a></div></div><p>Siguiendo la idea del ejemplo es posible realizar el filtrado de los datos con los argumentos que sean necesarios y la lógica adecuada según el repositorio donde estén almacenados los datos ya sea en un sistema con una base de datos relacional como <a href=https://www.postgresql.org/>PostgreSQL</a> o NoSQL como <a href=https://www.mongodb.com/>MongoDB</a>. Se podrían añadir más datos por ejemplo para filtrar por otros criterios como el número de páginas, autor o incluir otros parámetros para realizar otras funciones como especificar criterios de ordenación.</p><p>Esta petición busca los libros que su título comience por las letras <em>O</em> o <em>R</em> obteniendo dos coincidencias como resultado. En este caso entre los datos solo se devuelve el título del libro pero perfectamente podrían haber sido cualesquiera otros de entre los que posee el tipo <em>Book</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt> 1
 </span><span class=lnt> 2
