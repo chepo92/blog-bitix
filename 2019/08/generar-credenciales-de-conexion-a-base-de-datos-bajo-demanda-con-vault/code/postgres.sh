@@ -1,4 +1,7 @@
 $ docker run -it -p "5432:5432" -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres postgres:alpine
+$ docker ps 
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+2792b13c36c1        postgres:alpine     "docker-entrypoint.s…"   3 minutes ago       Up 3 minutes        0.0.0.0:5432->5432/tcp   distracted_keldysh
 $ docker exec -it 2792b13c36c1 bash
 bash-5.0# psql -U postgres
 psql (11.4)
