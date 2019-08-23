@@ -1,0 +1,1 @@
+$ vault policy write database-app database-app.hcl
