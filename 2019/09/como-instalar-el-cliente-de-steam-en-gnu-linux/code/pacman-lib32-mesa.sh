@@ -1,0 +1,1 @@
+$ sudo pacman -S lib32-mesa
