@@ -44,7 +44,7 @@ require(['jquery', 'jquery-blueimp-gallery'], function ($, blueimp) {
         };
     
         var i = random(0, spec.backgrounds.length - 1);
-        var b = spec.backgrounds[i];
+        var b = spec.backgrounds[i];        
         $('body').css('background-image', 'url("assets/images/backgrounds/' + b + '")');
     }
     
