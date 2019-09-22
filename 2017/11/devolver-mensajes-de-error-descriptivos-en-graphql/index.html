@@ -9,7 +9,7 @@
 <a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
 <a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class="adblock-sidebar adblock-sidebar-right"><div class=adblock-sidebar-container><ins class="adsbygoogle adblock-sidebar-vertical" style=display:block data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format="vertical, rectangle" data-type=auto></ins></div></div><article itemprop=mainEntity itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content=es><meta itemprop=keywords content="blog-stack, java, planeta-codigo, programacion"><h1 itemprop=name>Devolver mensajes de error descriptivos en GraphQL</h1><p class=information>Escrito por
 <span itemprop=author itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2017-11-12>12/11/2017</time>, actualizado el <time itemprop=dateModified datetime=2019-06-15>15/06/2019</time>.<br><a href=tags/blog-stack/>blog-stack</a> <a href=tags/java/>java</a> <a href=tags/planeta-codigo/>planeta-codigo</a> <a href=tags/programacion/>programacion</a><br><a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/ itemprop=url>Enlace permanente</a>
-<a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/#comments>Comentarios</a></p><div class=content itemprop=articleBody><meta itemprop=wordCount content=1437><div class=logotypes style=float:right><img src=assets/images/logotipos/graphql.svg class=right width=200 alt=GraphQL title=GraphQL></div><p>Por defecto <a href=https://graphql.org/>GraphQL</a> devuelve errores con mensajes descriptivos para los errores del cliente como son los errores de sintaxis en la sentencia de consulta o mutación, en el caso de que el campo solicitado no exista o no se ha indicado ninguno. En el caso de Java si se lanza una excepción en la clase repositorio que guarda los datos o en la lógica de negocio y no se captura GraphQL indicará que se ha producido un error interno en el servidor. Esto no es muy descriptivo y es mejor indicar errores más útiles para el usuario de la API como podría ser que no se tienen permisos para realizar la modificación o el error que se ha producido al validar los datos y por los que la operación no se ha completado.</p><p>Los errores en GraphQL usando el lenguaje Java se gestionan implementando en una clase la interfaz <a href=https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/GraphQLError.java>GrapQLError</a>, este podría ser en caso de una excepción que además de heredar de <a href=https://docs.oracle.com/javase/9/docs/api/java/lang/Exception.html>Exception</a> implemente la interfaz <em>GraphQLError</em>. Sin embargo, GraphQL cuando una clase hereda de <em>Exception</em> lo considera un error interno del servidor y para no dar información interna del servicio a los clientes como mensaje indica únicamente <em>Internal Server Error(s) while executing query</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt> 1
+<a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/#comments>Comentarios</a></p><div class=content itemprop=articleBody><meta itemprop=wordCount content=1271><div class=logotypes style=float:right><img src=assets/images/logotipos/graphql.svg class=right width=200 alt=GraphQL title=GraphQL></div><p>Por defecto <a href=https://graphql.org/>GraphQL</a> devuelve errores con mensajes descriptivos para los errores del cliente como son los errores de sintaxis en la sentencia de consulta o mutación, en el caso de que el campo solicitado no exista o no se ha indicado ninguno. En el caso de Java si se lanza una excepción en la clase repositorio que guarda los datos o en la lógica de negocio y no se captura GraphQL indicará que se ha producido un error interno en el servidor. Esto no es muy descriptivo y es mejor indicar errores más útiles para el usuario de la API como podría ser que no se tienen permisos para realizar la modificación o el error que se ha producido al validar los datos y por los que la operación no se ha completado.</p><p>Los errores en GraphQL usando el lenguaje Java se gestionan implementando en una clase la interfaz <a href=https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/GraphQLError.java>GrapQLError</a>, este podría ser en caso de una excepción que además de heredar de <a href=https://docs.oracle.com/javase/9/docs/api/java/lang/Exception.html>Exception</a> implemente la interfaz <em>GraphQLError</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -29,34 +29,6 @@
 </span><span class=lnt>18
 </span><span class=lnt>19
 </span><span class=lnt>20
-</span><span class=lnt>21
-</span><span class=lnt>22
-</span><span class=lnt>23
-</span><span class=lnt>24
-</span><span class=lnt>25
-</span><span class=lnt>26
-</span><span class=lnt>27
-</span><span class=lnt>28
-</span><span class=lnt>29
-</span><span class=lnt>30
-</span><span class=lnt>31
-</span><span class=lnt>32
-</span><span class=lnt>33
-</span><span class=lnt>34
-</span><span class=lnt>35
-</span><span class=lnt>36
-</span><span class=lnt>37
-</span><span class=lnt>38
-</span><span class=lnt>39
-</span><span class=lnt>40
-</span><span class=lnt>41
-</span><span class=lnt>42
-</span><span class=lnt>43
-</span><span class=lnt>44
-</span><span class=lnt>45
-</span><span class=lnt>46
-</span><span class=lnt>47
-</span><span class=lnt>48
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ curl -XPOST -H <span class=s2>&#34;Content-Type: application/json&#34;</span> -d <span class=s1>&#39;{&#34;query&#34;: &#34;query Books{books{none}}&#34;}&#39;</span> http://localhost:8080/graphql
 <span class=o>{</span>
   <span class=s2>&#34;data&#34;</span>: null,
@@ -77,34 +49,7 @@
     <span class=o>}</span>
   <span class=o>]</span>
 <span class=o>}</span>
-
-$ curl -XPOST -H <span class=s2>&#34;Content-Type: application/json&#34;</span> -H <span class=s2>&#34;User: admin&#34;</span> -d <span class=s1>&#39;{&#34;query&#34;: &#34;mutation addBook($title: String, $author: Long){addBook(title: $title, author: $author){title}}&#34;, &#34;variables&#34;: { &#34;title&#34;: &#34;El lazarillo de Tormes&#34;, &#34;author&#34;: 99}}&#39;</span> http://localhost:8080/graphql
-<span class=o>{</span>
-  <span class=s2>&#34;data&#34;</span>: <span class=o>{</span>
-    <span class=s2>&#34;addBook&#34;</span>: null
-  <span class=o>}</span>,
-  <span class=s2>&#34;errors&#34;</span>: <span class=o>[</span>
-    <span class=o>{</span>
-      <span class=s2>&#34;message&#34;</span>: <span class=s2>&#34;Internal Server Error(s) while executing query&#34;</span>,
-      <span class=s2>&#34;extensions&#34;</span>: null,
-      <span class=s2>&#34;path&#34;</span>: null
-    <span class=o>}</span>
-  <span class=o>]</span>
-<span class=o>}</span>
-
-$ curl -XPOST -H <span class=s2>&#34;Content-Type: application/json&#34;</span> -d <span class=s1>&#39;{&#34;query&#34;: &#34;mutation addBook($title: String, $author: Long){addBook(title: $title, author: $author){title}}&#34;, &#34;variables&#34;: { &#34;title&#34;: &#34;El lazarillo de Tormes&#34;, &#34;author&#34;: 6}}&#39;</span> http://localhost:8080/graphql
-<span class=o>{</span>
-  <span class=s2>&#34;data&#34;</span>: <span class=o>{</span>
-    <span class=s2>&#34;addBook&#34;</span>: null
-  <span class=o>}</span>,
-  <span class=s2>&#34;errors&#34;</span>: <span class=o>[</span>
-    <span class=o>{</span>
-      <span class=s2>&#34;message&#34;</span>: <span class=s2>&#34;Internal Server Error(s) while executing query&#34;</span>,
-      <span class=s2>&#34;extensions&#34;</span>: null,
-      <span class=s2>&#34;path&#34;</span>: null
-    <span class=o>}</span>
-  <span class=o>]</span>
-<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/code/curl-default-errors.sh target=_blank>view raw</a></span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/code/curl-default-errors.sh target=_blank>view raw</a></span>
 <a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/code/curl-default-errors.sh target=_blank>curl-default-errors.sh</a></div></div><p>Para que GraphQL muestre el error personalizado deseado lanzando excepciones hay que adaptar esa excepción y que implementa <em>GraphQLError</em> con una clase que únicamente implemente la interfaz <em>GraphQLError</em> pero no herede de <em>Exception</em>. Esta sería una clase adaptador necesaria.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
