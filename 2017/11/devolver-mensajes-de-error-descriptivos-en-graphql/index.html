@@ -9,7 +9,7 @@
 <a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
 <a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class="adblock-sidebar adblock-sidebar-right"><div class=adblock-sidebar-container><ins class="adsbygoogle adblock-sidebar-vertical" style=display:block data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format="vertical, rectangle" data-type=auto></ins></div></div><article itemprop=mainEntity itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content=es><meta itemprop=keywords content="blog-stack, java, planeta-codigo, programacion"><h1 itemprop=name>Devolver mensajes de error descriptivos en GraphQL</h1><p class=information>Escrito por
 <span itemprop=author itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2017-11-12>12/11/2017</time>, actualizado el <time itemprop=dateModified datetime=2019-06-15>15/06/2019</time>.<br><a href=tags/blog-stack/>blog-stack</a> <a href=tags/java/>java</a> <a href=tags/planeta-codigo/>planeta-codigo</a> <a href=tags/programacion/>programacion</a><br><a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/ itemprop=url>Enlace permanente</a>
-<a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/#comments>Comentarios</a></p><div class=content itemprop=articleBody><meta itemprop=wordCount content=1271><div class=logotypes style=float:right><img src=assets/images/logotipos/graphql.svg class=right width=200 alt=GraphQL title=GraphQL></div><p>Por defecto <a href=https://graphql.org/>GraphQL</a> devuelve errores con mensajes descriptivos para los errores del cliente como son los errores de sintaxis en la sentencia de consulta o mutación, en el caso de que el campo solicitado no exista o no se ha indicado ninguno. En el caso de Java si se lanza una excepción en la clase repositorio que guarda los datos o en la lógica de negocio y no se captura GraphQL indicará que se ha producido un error interno en el servidor. Esto no es muy descriptivo y es mejor indicar errores más útiles para el usuario de la API como podría ser que no se tienen permisos para realizar la modificación o el error que se ha producido al validar los datos y por los que la operación no se ha completado.</p><p>Los errores en GraphQL usando el lenguaje Java se gestionan implementando en una clase la interfaz <a href=https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/GraphQLError.java>GrapQLError</a>, este podría ser en caso de una excepción que además de heredar de <a href=https://docs.oracle.com/javase/9/docs/api/java/lang/Exception.html>Exception</a> implemente la interfaz <em>GraphQLError</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt> 1
+<a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/#comments>Comentarios</a></p><div class=content itemprop=articleBody><meta itemprop=wordCount content=1359><div class=logotypes style=float:right><img src=assets/images/logotipos/graphql.svg class=right width=200 alt=GraphQL title=GraphQL></div><p>Por defecto <a href=https://graphql.org/>GraphQL</a> devuelve errores con mensajes descriptivos para los errores del cliente como son los errores de sintaxis en la sentencia de consulta o mutación, en el caso de que el campo solicitado no exista o no se ha indicado ninguno. En el caso de Java si se lanza una excepción en la clase repositorio que guarda los datos o en la lógica de negocio y no se captura GraphQL indicará que se ha producido un error interno en el servidor. Esto no es muy descriptivo y es mejor indicar errores más útiles para el usuario de la API como podría ser que no se tienen permisos para realizar la modificación o el error que se ha producido al validar los datos y por los que la operación no se ha completado.</p><p>Los errores en GraphQL usando el lenguaje Java se gestionan implementando en una clase la interfaz <a href=https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/GraphQLError.java>GrapQLError</a>, este podría ser en caso de una excepción que además de heredar de <a href=https://docs.oracle.com/javase/9/docs/api/java/lang/Exception.html>Exception</a> implemente la interfaz <em>GraphQLError</em>. Sin embargo, GraphQL cuando una clase hereda únicamente de <em>Exception</em> lo considera un error interno del servidor y para no dar información interna del servicio a los clientes como mensaje indica únicamente <em>Internal Server Error(s) while executing query</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -98,6 +98,19 @@
 </span><span class=lnt>46
 </span><span class=lnt>47
 </span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nf>io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>graphql</span><span class=p>.</span><span class=na>misc</span><span class=p>;</span>
 
 <span class=kn>import</span> <span class=nf>graphql</span><span class=p>.</span><span class=na>ErrorClassification</span><span class=p>;</span>
@@ -118,7 +131,20 @@
 
     <span class=nd>@Override</span>
     <span class=kd>public</span> <span class=nf>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=p>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=nf>getExtensions</span><span class=p>()</span> <span class=p>{</span>
-        <span class=k>return</span> <span class=n>error</span><span class=p>.</span><span class=na>getExtensions</span><span class=p>();</span>
+        <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=p>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=nf>extensions</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HashMap</span><span class=o>&lt;&gt;</span><span class=p>();</span>
+        <span class=k>if</span> <span class=p>(</span><span class=n>error</span><span class=p>.</span><span class=na>getExtensions</span><span class=p>()</span> <span class=o>!=</span> <span class=kc>null</span><span class=p>)</span> <span class=p>{</span>
+            <span class=n>extensions</span><span class=p>.</span><span class=na>putAll</span><span class=p>(</span><span class=n>error</span><span class=p>.</span><span class=na>getExtensions</span><span class=p>());</span>
+        <span class=p>}</span>
+        <span class=k>if</span> <span class=p>(</span><span class=n>error</span> <span class=nf>instanceof</span> <span class=n>ExceptionWhileDataFetching</span><span class=p>)</span> <span class=p>{</span>
+            <span class=n>StringWriter</span> <span class=nf>sw</span> <span class=o>=</span> <span class=k>new</span> <span class=n>StringWriter</span><span class=p>();</span>
+            <span class=n>PrintWriter</span> <span class=nf>pw</span> <span class=o>=</span> <span class=k>new</span> <span class=n>PrintWriter</span><span class=p>(</span><span class=n>sw</span><span class=p>);</span>
+            <span class=n>Throwable</span> <span class=nf>exception</span> <span class=o>=</span> <span class=p>((</span><span class=n>ExceptionWhileDataFetching</span><span class=p>)</span> <span class=n>error</span><span class=p>).</span><span class=na>getException</span><span class=p>();</span>
+            <span class=n>exception</span><span class=p>.</span><span class=na>printStackTrace</span><span class=p>(</span><span class=n>pw</span><span class=p>);</span>
+            <span class=n>String</span> <span class=nf>stacktrace</span> <span class=o>=</span> <span class=n>sw</span><span class=p>.</span><span class=na>toString</span><span class=p>();</span>
+            <span class=n>extensions</span><span class=p>.</span><span class=na>put</span><span class=p>(</span><span class=s>&#34;stacktrace&#34;</span><span class=p>,</span> <span class=n>stacktrace</span><span class=p>);</span>
+            <span class=n>extensions</span><span class=p>.</span><span class=na>put</span><span class=p>(</span><span class=s>&#34;exception&#34;</span><span class=p>,</span> <span class=n>exception</span><span class=p>.</span><span class=na>getClass</span><span class=p>().</span><span class=na>getName</span><span class=p>());</span>
+        <span class=p>}</span>
+        <span class=k>return</span> <span class=p>(</span><span class=n>extensions</span><span class=p>.</span><span class=na>isEmpty</span><span class=p>())</span> <span class=o>?</span> <span class=kc>null</span> <span class=o>:</span> <span class=n>extensions</span><span class=p>;</span>
     <span class=p>}</span>
 
     <span class=nd>@Override</span>
@@ -210,10 +236,6 @@
 </span><span class=lnt>61
 </span><span class=lnt>62
 </span><span class=lnt>63
-</span><span class=lnt>64
-</span><span class=lnt>65
-</span><span class=lnt>66
-</span><span class=lnt>67
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nf>io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>graphql</span><span class=p>;</span>
 
 <span class=p>...</span>
@@ -241,11 +263,12 @@
 
     <span class=nd>@Bean</span>
     <span class=kd>public</span> <span class=nf>GraphQLErrorHandler</span> <span class=n>graphQLErrorHandler</span><span class=p>()</span> <span class=p>{</span>
-        <span class=k>return</span> <span class=k>new</span> <span class=n>GraphQLErrorHandler</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=k>new</span> <span class=n>DefaultGraphQLErrorHandler</span><span class=p>()</span> <span class=p>{</span>
             <span class=nd>@Override</span>
             <span class=kd>public</span> <span class=nf>List</span><span class=o>&lt;</span><span class=n>GraphQLError</span><span class=o>&gt;</span> <span class=nf>processErrors</span><span class=p>(</span><span class=n>List</span><span class=o>&lt;</span><span class=n>GraphQLError</span><span class=o>&gt;</span> <span class=nf>errors</span><span class=p>)</span> <span class=p>{</span>
                 <span class=n>List</span><span class=o>&lt;</span><span class=n>GraphQLError</span><span class=o>&gt;</span> <span class=nf>clientErrors</span> <span class=o>=</span> <span class=n>errors</span><span class=p>.</span><span class=na>stream</span><span class=p>()</span>
-                        <span class=p>.</span><span class=na>filter</span><span class=p>(</span><span class=k>this</span><span class=o>::</span><span class=n>isClientError</span><span class=p>)</span>
+                        <span class=p>.</span><span class=na>filter</span><span class=p>(</span><span class=n>e</span> <span class=o>-&gt;</span> <span class=n>isClientError</span><span class=p>(</span><span class=n>e</span><span class=p>))</span>
+                        <span class=p>.</span><span class=na>map</span><span class=p>(</span><span class=n>GraphQLErrorAdapter</span><span class=o>::</span><span class=k>new</span><span class=p>)</span>
                         <span class=p>.</span><span class=na>collect</span><span class=p>(</span><span class=n>Collectors</span><span class=p>.</span><span class=na>toList</span><span class=p>());</span>
 
                 <span class=n>List</span><span class=o>&lt;</span><span class=n>GraphQLError</span><span class=o>&gt;</span> <span class=nf>serverErrors</span> <span class=o>=</span> <span class=n>errors</span><span class=p>.</span><span class=na>stream</span><span class=p>()</span>
@@ -257,20 +280,15 @@
                     <span class=n>logger</span><span class=p>.</span><span class=na>error</span><span class=p>(</span><span class=s>&#34;Error executing query ({}): {}&#34;</span><span class=p>,</span> <span class=n>error</span><span class=p>.</span><span class=na>getClass</span><span class=p>().</span><span class=na>getSimpleName</span><span class=p>(),</span> <span class=n>error</span><span class=p>.</span><span class=na>getMessage</span><span class=p>());</span>
                 <span class=p>});</span>
 
+                <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>serverErrors</span><span class=p>.</span><span class=na>isEmpty</span><span class=p>())</span> <span class=p>{</span>
+                    <span class=n>serverErrors</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;&gt;</span><span class=p>();</span>
+                    <span class=n>serverErrors</span><span class=p>.</span><span class=na>add</span><span class=p>(</span><span class=k>new</span> <span class=n>GenericGraphQLError</span><span class=p>(</span><span class=s>&#34;Internal Server Error(s) while executing query&#34;</span><span class=p>));</span>
+                <span class=p>}</span>
+
                 <span class=n>List</span><span class=o>&lt;</span><span class=n>GraphQLError</span><span class=o>&gt;</span> <span class=nf>e</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;&gt;</span><span class=p>();</span>
                 <span class=n>e</span><span class=p>.</span><span class=na>addAll</span><span class=p>(</span><span class=n>clientErrors</span><span class=p>);</span>
                 <span class=n>e</span><span class=p>.</span><span class=na>addAll</span><span class=p>(</span><span class=n>serverErrors</span><span class=p>);</span>
                 <span class=k>return</span> <span class=n>e</span><span class=p>;</span>
-            <span class=p>}</span>
-
-            <span class=kd>protected</span> <span class=nf>List</span><span class=o>&lt;</span><span class=n>GraphQLError</span><span class=o>&gt;</span> <span class=nf>filterGraphQLErrors</span><span class=p>(</span><span class=n>List</span><span class=o>&lt;</span><span class=n>GraphQLError</span><span class=o>&gt;</span> <span class=nf>errors</span><span class=p>)</span> <span class=p>{</span>
-                <span class=k>return</span> <span class=n>errors</span><span class=p>.</span><span class=na>stream</span><span class=p>()</span>
-                        <span class=p>.</span><span class=na>filter</span><span class=p>(</span><span class=k>this</span><span class=o>::</span><span class=n>isClientError</span><span class=p>)</span>
-                        <span class=p>.</span><span class=na>collect</span><span class=p>(</span><span class=n>Collectors</span><span class=p>.</span><span class=na>toList</span><span class=p>());</span>
-            <span class=p>}</span>
-
-            <span class=kd>protected</span> <span class=nf>boolean</span> <span class=n>isClientError</span><span class=p>(</span><span class=n>GraphQLError</span> <span class=nf>error</span><span class=p>)</span> <span class=p>{</span>
-                <span class=k>return</span> <span class=o>!</span><span class=p>(</span><span class=n>error</span> <span class=nf>instanceof</span> <span class=n>ExceptionWhileDataFetching</span> <span class=o>||</span> <span class=n>error</span> <span class=nf>instanceof</span> <span class=n>Throwable</span><span class=p>);</span>
             <span class=p>}</span>
         <span class=p>};</span>
     <span class=p>}</span>
