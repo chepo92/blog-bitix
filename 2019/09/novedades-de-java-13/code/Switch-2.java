@@ -1,4 +1,4 @@
-String numericString = switch (integer) { 
+String numericString = switch(integer) { 
    case 0 -> {
        String value = calculateZero();
        yield value;
