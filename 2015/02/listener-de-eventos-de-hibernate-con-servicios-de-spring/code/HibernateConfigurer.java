@@ -1,4 +1,4 @@
-package es.com.blogspot.elblogdepicodev.plugintapestry.services.hibernate;
+package io.github.picodotdev.plugintapestry.services.hibernate;
 
 import javax.annotation.PostConstruct;
 
@@ -21,13 +21,13 @@ public class HibernateConfigurer {
 	@PostConstruct
 	public void registerListeners() {
 		SessionFactoryImpl sfi = (SessionFactoryImpl) sessionFactory;
-		EventListenerRegistry elr = sfi.getServiceRegistry().getService(EventListenerRegistry.class);
+	    EventListenerRegistry elr = sfi.getServiceRegistry().getService(EventListenerRegistry.class);
 
-		elr.setListeners(EventType.PRE_INSERT, productoEventAdapter);
-		elr.setListeners(EventType.PRE_UPDATE, productoEventAdapter);
-		elr.setListeners(EventType.PRE_DELETE, productoEventAdapter);
-		elr.setListeners(EventType.POST_INSERT, productoEventAdapter);
-		elr.setListeners(EventType.POST_UPDATE, productoEventAdapter);
-		elr.setListeners(EventType.POST_DELETE, productoEventAdapter);
+        elr.setListeners(EventType.PRE_INSERT, productoEventAdapter);
+        elr.setListeners(EventType.PRE_UPDATE, productoEventAdapter);
+        elr.setListeners(EventType.PRE_DELETE, productoEventAdapter);
+        elr.setListeners(EventType.POST_INSERT, productoEventAdapter);
+        elr.setListeners(EventType.POST_UPDATE, productoEventAdapter);
+        elr.setListeners(EventType.POST_DELETE, productoEventAdapter);
 	}
 }

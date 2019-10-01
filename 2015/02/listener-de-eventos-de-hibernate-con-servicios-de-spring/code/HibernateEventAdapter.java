@@ -1,4 +1,4 @@
-package es.com.blogspot.elblogdepicodev.plugintapestry.services.hibernate;
+package io.github.picodotdev.plugintapestry.services.hibernate;
 
 import org.hibernate.event.spi.PostDeleteEvent;
 import org.hibernate.event.spi.PostDeleteEventListener;

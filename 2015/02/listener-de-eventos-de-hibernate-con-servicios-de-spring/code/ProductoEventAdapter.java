@@ -1,4 +1,4 @@
-package es.com.blogspot.elblogdepicodev.plugintapestry.services.hibernate;
+package io.github.picodotdev.plugintapestry.services.hibernate;
 
 import org.hibernate.event.spi.PostDeleteEvent;
 import org.hibernate.event.spi.PostInsertEvent;
@@ -8,7 +8,7 @@ import org.hibernate.event.spi.PreInsertEvent;
 import org.hibernate.event.spi.PreUpdateEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import es.com.blogspot.elblogdepicodev.plugintapestry.services.spring.DummyService;
+import io.github.picodotdev.plugintapestry.services.spring.DummyService;
 
 public class ProductoEventAdapter extends HibernateEventAdapter {
 

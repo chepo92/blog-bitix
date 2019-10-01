@@ -1,82 +1,122 @@
-package es.com.blogspot.elblogdepicodev.plugintapestry.services.spring;
+package io.github.picodotdev.plugintapestry.spring;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.sql.DataSource;
-
-import org.apache.commons.dbcp.BasicDataSource;
-import org.hibernate.SessionFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
-import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.support.ResourceTransactionManager;
-
-import es.com.blogspot.elblogdepicodev.plugintapestry.services.dao.ProductoDAO;
-import es.com.blogspot.elblogdepicodev.plugintapestry.services.dao.ProductoDAOImpl;
-import es.com.blogspot.elblogdepicodev.plugintapestry.services.hibernate.ProductoEventAdapter;
+...
 
 @Configuration
-@ComponentScan({ "es.com.blogspot.elblogdepicodev.plugintapestry" })
+@ComponentScan({ "io.github.picodotdev.plugintapestry" })
 @EnableTransactionManagement
 public class AppConfiguration {
 
-	@Bean(destroyMethod = "close")
-	public DataSource dataSource() {
-		BasicDataSource ds = new BasicDataSource();
-		ds.setDriverClassName("org.h2.Driver");
-		ds.setUrl("jdbc:h2:mem:test");
-		ds.setUsername("sa");
-		ds.setPassword("sa");
-		return ds;
-	}
+    @Bean(destroyMethod = "close")
+    public DataSource dataSource() {
+        BasicDataSource ds = new BasicDataSource();
+        ds.setDriverClassName(Driver.class.getCanonicalName());
+        ds.setUrl("jdbc:h2:./misc/database/app");
+        ds.setUsername("sa");
+        ds.setPassword("sa");
+        return ds;
+    }
 
-	@Bean
-	public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
-		LocalSessionFactoryBean sf = new LocalSessionFactoryBean();
-		sf.setDataSource(dataSource);
-		sf.setPackagesToScan("es.com.blogspot.elblogdepicodev.plugintapestry.entities");
-		sf.setHibernateProperties(getHibernateProperties());
-		return sf;
-	}
+    // Hibernate
+    @Bean(name = "sessionFactory")
+    public LocalSessionFactoryBean sessionFactoryBean(DataSource dataSource) {
+        Map<String, Object> m = new HashMap<>();
+        m.put("hibernate.dialect", H2Dialect.class.getCanonicalName());
+        m.put("hibernate.hbm2ddl.auto", "validate");
+        // Debug
+        m.put("hibernate.generate_statistics", true);
+        m.put("hibernate.show_sql", true);
 
-	@Bean
-	public ResourceTransactionManager transactionManager(SessionFactory sessionFactory) {
-		HibernateTransactionManager tm = new HibernateTransactionManager();
-		tm.setSessionFactory(sessionFactory);
-		return tm;
-	}
+        Properties properties = new Properties();
+        properties.putAll(m);
 
-	@Bean
-	public ProductoEventAdapter productoEventAdapter() {
-		return new ProductoEventAdapter();
-	}
+        //
+        LocalSessionFactoryBean sf = new LocalSessionFactoryBean();
+        sf.setDataSource(dataSource);
+        sf.setPackagesToScan("io.github.picodotdev.plugintapestry.entities");
+        sf.setHibernateProperties(properties);
+        return sf;
+    }
 
-	@Bean
-	public ProductoDAO productoDAO(SessionFactory sessionFactory) {
-		return new ProductoDAOImpl(sessionFactory);
-	}
+    // jOOQ
+    @Bean
+    public ConnectionProvider connectionProvider(DataSource dataSource) {
+        return new DataSourceConnectionProvider(dataSource);
+    }
 
-	@Bean
-	public DummyService dummyService() {
-		return new DummyService();
-	}
+    @Bean
+    public ExecuteListenerProvider executeListenerProvider() {
+        return new ExecuteListenerProvider() {
+            @Override
+            public ExecuteListener provide() {
+                return new JooqExecuteListener();
+            }
+        };
+    }
 
-	private Properties getHibernateProperties() {
-		Map<String, Object> m = new HashMap<>();
-		m.put("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
-		//m.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-		m.put("hibernate.hbm2ddl.auto", "create");
-		// Debug
-		m.put("hibernate.generate_statistics", true);
-		m.put("hibernate.show_sql", true);
+    @Bean
+    public org.jooq.Configuration config(ConnectionProvider connectionProvider, ExecuteListenerProvider executeListenerProvider) {
+        DefaultConfiguration config = new DefaultConfiguration();
+        config.set(connectionProvider);
+        config.set(SQLDialect.H2);
+        config.set(executeListenerProvider);
+        return config;
+    }
 
-		Properties properties = new Properties();
-		properties.putAll(m);
-		return properties;
-	}
+    @Bean
+    public DSLContext dsl(org.jooq.Configuration config) {
+        return DSL.using(config);
+    }
+
+    @Bean
+    public ServletContextInitializer initializer() {
+        return new ServletContextInitializer() {
+            @Override
+            public void onStartup(ServletContext servletContext) throws ServletException {
+                servletContext.setInitParameter("tapestry.app-package", "io.github.picodotdev.plugintapestry");
+                servletContext.setInitParameter("tapestry.use-external-spring-context", "true");
+                servletContext.addFilter("filter", AppFilter.class).addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR), false, "/*");
+                servletContext.addFilter("app", TapestrySpringFilter.class).addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR), false, "/*");
+                servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
+            }
+        };
+    }
+
+    // Tomcat
+    @Bean
+    public ConfigurableServletWebServerFactory webServerFactory() {
+        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+        Http11NioProtocol protocol = (Http11NioProtocol) connector.getProtocolHandler();
+        connector.setScheme("http");
+        connector.setSecure(false);
+        connector.setPort(8080);
+
+        TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
+        factory.addAdditionalTomcatConnectors(connector);
+        factory.getSession().setTimeout(Duration.ofMinutes(10));
+        factory.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/error404"));
+        factory.addErrorPages(new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/error500"));
+        return factory;
+    }
+
+    // Servicios
+    @Bean
+    public ProductoEventAdapter productoEventAdapter() {
+        return new ProductoEventAdapter();
+    }
+    
+    @Bean
+    public HibernateProductoDAO hibenateProductoDAO(SessionFactory sessionFactory) {
+        return new DefaultHibernateProductoDAO(sessionFactory);
+    }
+    
+    @Bean
+    public JooqProductoDAO jooqProductoDAO(DSLContext context) {
+        return new DefaultJooqProductoDAO(context);
+    }
+
+    @Bean
+    public DummyService dummyService() {
+        return new DummyService();
+    }
 }

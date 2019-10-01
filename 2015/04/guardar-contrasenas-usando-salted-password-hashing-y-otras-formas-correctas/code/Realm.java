@@ -1,4 +1,4 @@
-package es.com.blogspot.elblogdepicodev.plugintapestry.misc;
+package io.github.picodotdev.plugintapestry.misc;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -38,7 +38,7 @@ public class Realm extends AuthorizingRealm {
         // Generar una contraseña de clave «password», con SHA-512 y con «salt» aleatorio.
         ByteSource saltSource = new SecureRandomNumberGenerator().nextBytes();
         byte[] salt = saltSource.getBytes();
-        Sha512Hash hash= new Sha512Hash("password", saltSource, HASH_ITERATIONS);
+        Sha512Hash hash = new Sha512Hash("password", saltSource, HASH_ITERATIONS);
         String password = hash.toHex();
         // Contraseña codificada en Base64
         //String password = hash.toBase64();
@@ -65,75 +65,79 @@ public class Realm extends AuthorizingRealm {
         users.put("root", user);
     }
 
-    public Realm() {
-        super(new MemoryConstrainedCacheManager());
+	public Realm() {
+		super(new MemoryConstrainedCacheManager());
 		
-        HashedCredentialsMatcher cm = new HashedCredentialsMatcher(Sha512Hash.ALGORITHM_NAME);
-        cm.setHashIterations(HASH_ITERATIONS);
-        //cm.setStoredCredentialsHexEncoded(false);
+		HashedCredentialsMatcher cm = new HashedCredentialsMatcher(Sha512Hash.ALGORITHM_NAME);
+		cm.setHashIterations(HASH_ITERATIONS);
+		//cm.setStoredCredentialsHexEncoded(false);
 		
-        setName("local");
-        setAuthenticationTokenClass(UsernamePasswordToken.class);
-        setCredentialsMatcher(cm);
-    }
+		setName("local");
+		setAuthenticationTokenClass(UsernamePasswordToken.class);
+		setCredentialsMatcher(cm);
+	}
 
     /**
      * Proporciona la autenticación de los usuarios.
      */
-    @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        UsernamePasswordToken atoken = (UsernamePasswordToken) token;
+	@Override
+	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+		UsernamePasswordToken atoken = (UsernamePasswordToken) token;
 
-        String username = atoken.getUsername();
+		String username = atoken.getUsername();
 
-        if (username == null) { throw new AccountException("Null usernames are not allowed by this realm."); }
+		if (username == null) { throw new AccountException("Null usernames are not allowed by this realm."); }
 
-        Map<String, Object> user = findByUsername(username);
+		Map<String, Object> user = findByUsername(username);
+		if (user == null) {
+		    return null;
+        }
+
         String password = (String) user.get("password");
         byte[] salt = (byte []) user.get("salt");
         boolean locked = (boolean) user.get("locked");
         boolean expired = (boolean) user.get("expired");
 
-        if (locked) { throw new LockedAccountException("Account [" + username + "] is locked."); }
-        if (expired) { throw new ExpiredCredentialsException("The credentials for account [" + username + "] are expired"); }
+		if (locked) { throw new LockedAccountException("Account [" + username + "] is locked."); }
+		if (expired) { throw new ExpiredCredentialsException("The credentials for account [" + username + "] are expired"); }
 
-        return new SimpleAuthenticationInfo(username, password, new SimpleByteSource(salt), getName());
-    }
+		return new SimpleAuthenticationInfo(username, password, new SimpleByteSource(salt), getName());
+	}
 
     /**
      * Proporciona la autorización de los usuarios.
      */
-    @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        if (principals == null) throw new AuthorizationException("PrincipalCollection was null, which should not happen");
+	@Override
+	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+		if (principals == null) { throw new AuthorizationException("PrincipalCollection was null, which should not happen"); }
 
-        if (principals.isEmpty()) return null;
+		if (principals.isEmpty()) { return null; }
 
-        if (principals.fromRealm(getName()).size() <= 0) return null;
+		if (principals.fromRealm(getName()).size() <= 0) { return null; }
 
-        // Obtener el usuario
-        String username = (String) principals.fromRealm(getName()).iterator().next();
-        if (username == null) return null;
-            Map<String, Object> user = findByUsername(username);
-            if (user == null) return null;
+		// Obtener el usuario
+		String username = (String) principals.fromRealm(getName()).iterator().next();
+		if (username == null) { return null; }
+		Map<String, Object> user = findByUsername(username);
+		if (user == null) { return null; }
 		
-            // Obtener los roles
-            Set<String> roles = (Set<String>) user.get("roles");
+		// Obtener los roles
+        Set<String> roles = (Set<String>) user.get("roles");
         
-            // Obtener los permisos de los roles
-            Set<String> p = new HashSet<>();
-            for (String role : roles) {
-                p.addAll((Set<String>) permissions.get(role));
-            } 
+        // Obtener los permisos de los roles
+        Set<String> p = new HashSet<>();
+        for (String role : roles) {
+        	p.addAll((Set<String>) permissions.get(role));
+        } 
 
-            // Devolver el objeto de autorización
-            SimpleAuthorizationInfo ai = new SimpleAuthorizationInfo();
-            ai.setRoles(roles);
-            ai.setStringPermissions(p);
-            return ai;
+        // Devolver el objeto de autorización
+        SimpleAuthorizationInfo ai = new SimpleAuthorizationInfo();
+        ai.setRoles(roles);
+        ai.setStringPermissions(p);
+		return ai;
 	}
 
-        private Map<String, Object> findByUsername(String username) {
+	private Map<String, Object> findByUsername(String username) {
         return users.get(username);
-    }
+	}
 }
