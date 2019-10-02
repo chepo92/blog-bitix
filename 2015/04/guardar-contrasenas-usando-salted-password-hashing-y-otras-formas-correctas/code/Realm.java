@@ -65,32 +65,32 @@ public class Realm extends AuthorizingRealm {
         users.put("root", user);
     }
 
-	public Realm() {
-		super(new MemoryConstrainedCacheManager());
-		
-		HashedCredentialsMatcher cm = new HashedCredentialsMatcher(Sha512Hash.ALGORITHM_NAME);
-		cm.setHashIterations(HASH_ITERATIONS);
-		//cm.setStoredCredentialsHexEncoded(false);
-		
-		setName("local");
-		setAuthenticationTokenClass(UsernamePasswordToken.class);
-		setCredentialsMatcher(cm);
-	}
+    public Realm() {
+        super(new MemoryConstrainedCacheManager());
+
+        HashedCredentialsMatcher cm = new HashedCredentialsMatcher(Sha512Hash.ALGORITHM_NAME);
+        cm.setHashIterations(HASH_ITERATIONS);
+        //cm.setStoredCredentialsHexEncoded(false);
+
+        setName("local");
+        setAuthenticationTokenClass(UsernamePasswordToken.class);
+        setCredentialsMatcher(cm);
+    }
 
     /**
      * Proporciona la autenticación de los usuarios.
      */
-	@Override
-	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-		UsernamePasswordToken atoken = (UsernamePasswordToken) token;
+    @Override
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        UsernamePasswordToken atoken = (UsernamePasswordToken) token;
 
-		String username = atoken.getUsername();
+        String username = atoken.getUsername();
 
-		if (username == null) { throw new AccountException("Null usernames are not allowed by this realm."); }
+        if (username == null) { throw new AccountException("Null usernames are not allowed by this realm."); }
 
-		Map<String, Object> user = findByUsername(username);
-		if (user == null) {
-		    return null;
+        Map<String, Object> user = findByUsername(username);
+        if (user == null) {
+            return null;
         }
 
         String password = (String) user.get("password");
@@ -98,30 +98,30 @@ public class Realm extends AuthorizingRealm {
         boolean locked = (boolean) user.get("locked");
         boolean expired = (boolean) user.get("expired");
 
-		if (locked) { throw new LockedAccountException("Account [" + username + "] is locked."); }
-		if (expired) { throw new ExpiredCredentialsException("The credentials for account [" + username + "] are expired"); }
+        if (locked) { throw new LockedAccountException("Account [" + username + "] is locked."); }
+        if (expired) { throw new ExpiredCredentialsException("The credentials for account [" + username + "] are expired"); }
 
-		return new SimpleAuthenticationInfo(username, password, new SimpleByteSource(salt), getName());
-	}
+        return new SimpleAuthenticationInfo(username, password, new SimpleByteSource(salt), getName());
+    }
 
     /**
      * Proporciona la autorización de los usuarios.
      */
-	@Override
-	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-		if (principals == null) { throw new AuthorizationException("PrincipalCollection was null, which should not happen"); }
+    @Override
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+        if (principals == null) { throw new AuthorizationException("PrincipalCollection was null, which should not happen"); }
 
-		if (principals.isEmpty()) { return null; }
+        if (principals.isEmpty()) { return null; }
 
-		if (principals.fromRealm(getName()).size() <= 0) { return null; }
+        if (principals.fromRealm(getName()).size() <= 0) { return null; }
 
-		// Obtener el usuario
-		String username = (String) principals.fromRealm(getName()).iterator().next();
-		if (username == null) { return null; }
-		Map<String, Object> user = findByUsername(username);
-		if (user == null) { return null; }
-		
-		// Obtener los roles
+        // Obtener el usuario
+        String username = (String) principals.fromRealm(getName()).iterator().next();
+        if (username == null) { return null; }
+        Map<String, Object> user = findByUsername(username);
+        if (user == null) { return null; }
+
+        // Obtener los roles
         Set<String> roles = (Set<String>) user.get("roles");
         
         // Obtener los permisos de los roles
@@ -134,10 +134,10 @@ public class Realm extends AuthorizingRealm {
         SimpleAuthorizationInfo ai = new SimpleAuthorizationInfo();
         ai.setRoles(roles);
         ai.setStringPermissions(p);
-		return ai;
-	}
+        return ai;
+    }
 
-	private Map<String, Object> findByUsername(String username) {
+    private Map<String, Object> findByUsername(String username) {
         return users.get(username);
-	}
+    }
 }
