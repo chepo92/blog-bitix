@@ -1,4 +1,571 @@
-<feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/tags/software-libre/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2018-12-30T19:00:00+01:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2018/12/hemeroteca-14/</id><title>Hemeroteca #14</title><updated>2018-12-30T19:00:00+01:00</updated><published>2018-12-30T19:00:00+01:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/12/hemeroteca-14/"/><author><name>picodotdev</name></author><content type="html">
+<feed xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/tags/software-libre/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2019-10-12T02:30:00+02:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix//assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/</id><title>Microservicios con Spring Cloud, Consul, Nomad y Traefik</title><updated>2019-10-12T02:30:00+02:00</updated><published>2019-10-12T02:30:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/"/><author><name>picodotdev</name></author><content type="html">
+&lt;p&gt;&lt;strong&gt;Sin entrar a si los microservicios son adecuados o no son adecuados en una aplicación, está claro que si se utilizan estos tienen varias necesidades. Un servicio de registro y descubrimiento, configuración centralizada, tolerancia a fallos, &lt;em&gt;gateway/load balancer/reverse proxy&lt;/em&gt;, trazabilidad y métricas, autenticación, orquestación, &amp;hellip; Los microservicios quiza no sean un gran monolito, quizá mas pequeños y con funcinalidad más acotada, pero el hecho de que se comuniquen a través de un medio más complejo y menos fiable como la red en vez de una llamada a un método y sean más numerosos hacen que la complejidad sea incluso mayor. Este artículo propone un ejemplo con Spring Cloud para los servicios, Consul para el registro y descubrimiento, Nomad para la orquestación y Traefik como &lt;em&gt;gateway&lt;/em&gt;.&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/java.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Java&#34; title=&#34;Java&#34;/&gt;
+&lt;/div&gt;
+&lt;div class=&#34;logotypes&#34; style=&#34;float: right; clear: right;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/spring.svg&#34; class=&#34;right &#34; width=&#34;200&#34; alt=&#34;Spring&#34; title=&#34;Spring&#34;/&gt;
+&lt;/div&gt;
+&lt;p&gt;En otro artículo mostraba un ejemplo de &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/09/registro-y-descubrimiento-de-servicios-con-spring-cloud-netflix/&#34;&gt;microservicios con Spring Cloud&lt;/a&gt; usando únicamente herramientas de &lt;a href=&#34;https://spring.io/&#34;&gt;Spring&lt;/a&gt;. Cada una de esas herramientas cubren una funcionalidad que necesitan los microservicios. Entre ellas:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Registro y descubrimiento, con &lt;a href=&#34;https://github.com/Netflix/eureka&#34;&gt;Eureka&lt;/a&gt;. Los microservicios son numerosos, de vida efímera creándose y destruyéndose en diferentes ubicaciones por lo tanto necesitan una forma de localizarse unos a otros, la forma para encontrarse es acudiendo a un servicio donde se registran cuando se inician y se descubren cuando necesitan la ubicación de otro servicio.&lt;/li&gt;
+&lt;li&gt;Configuración centralizada, con &lt;a href=&#34;https://cloud.spring.io/spring-cloud-config/&#34;&gt;Spring Cloud Config&lt;/a&gt;. Dado el número de microservicios actualizar la configuración de cada uno de ellos puede ser un problema, además dado que se pueden iniciar en diferentes ubicaciones aprovisionarles la configuración adecuada es un reto. En vez de aprovisionar la configuración otra técnica es hacer que cuando se inicien la obtengan de un servicio donde queda centralizada la configuración.&lt;/li&gt;
+&lt;li&gt;Tolerancia a fallos, con &lt;a href=&#34;https://github.com/Netflix/Hystrix&#34;&gt;Hyxtrix&lt;/a&gt; y &lt;a href=&#34;https://github.com/resilience4j/resilience4j&#34;&gt;Resilience4j&lt;/a&gt;. El medio de comunicación de los microservicios es a través de la red un medio mucho menos confiable que una llamada a un método en un lenguaje de programación en una aplicación monolítica. De modo que los microservicios han de estar preparados para tolerar fallos en sus comunicaciones con otros servicios.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Gateway&lt;/em&gt;, &lt;em&gt;load balancer&lt;/em&gt; y &lt;em&gt;reverse proxy&lt;/em&gt; con tolerancia a fallos, con &lt;a href=&#34;https://github.com/Netflix/zuul&#34;&gt;Zuul&lt;/a&gt;. Para aumentar la disponibilidad, escalabilidad y tolerar fallos en algunos servicios se suelen crear varias instancias de cada microservicio pero tener varias instancias hace que sea necesario balancear la carga entre cada una de las instancias. Para que los clientes sean agnósticos del número de instancias se emplea un &lt;em&gt;gateway&lt;/em&gt; que proporciona balanceo de carga e implementa a su vez patrones de tolerancia a fallos.&lt;/li&gt;
+&lt;li&gt;Trazabilidad y correlación de trazas entre diferentes servicios, con &lt;a href=&#34;https://spring.io/projects/spring-cloud-sleuth&#34;&gt;Spring Cloud Sleuth&lt;/a&gt;. Una petición puede desencadenar una cadena de peticiones entre diferentes servicios ubicados en múltiples nodos, para tareas de diagnóstico en caso de querer investigar un &lt;em&gt;bug&lt;/em&gt; o que ha ocurrido es necesario correlacionar todas las trazas que ha desencadenado una petición, se implementa asignado un identificativo global a la petición que es transmitido en las llamadas de microservicio a microservicio.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;En otro &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/02/servidor-oauth-gateway-y-servicio-rest-utilizando-tokens-jwt-con-spring/&#34;&gt;ejemplo sobre OAuth con Spring&lt;/a&gt; mostraba otra funcionalidad:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Gateway&lt;/em&gt;, con &lt;a href=&#34;https://spring.io/projects/spring-cloud-gateway&#34;&gt;Spring Cloud Gateway&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Autenticación y autorización, con &lt;a href=&#34;https://spring.io/projects/spring-security-oauth&#34;&gt;Spring Security OAuth&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Los microservicios también necesitan monitorización y métricas, en el ejemplo &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/&#34;&gt;Monitorizar una aplicación Java de Spring Boot con Micrometer, Prometheus y Grafana&lt;/a&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Con &lt;a href=&#34;https://prometheus.io/&#34;&gt;Prometheus&lt;/a&gt; y &lt;a href=&#34;https://grafana.com/&#34;&gt;Grafana&lt;/a&gt;. Nuevamente el número de instancias que requiere una arquitectura orientada a microservicios origina la necesidad en mayor medida de conocer el estado del sistema, ya sean métricas de los sistemas como uso de CPU, memoria o almacenamiento o de la aplicación como peticiones por segundo y porcentaje de correctas e incorrectas.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;En esta lista falta un orquestador para el despliegue de los microservicios, que se encargue de su ciclo de vida, escalado de instancias y despliegue con estrategias &lt;em&gt;rolling&lt;/em&gt;, &lt;em&gt;blue/green&lt;/em&gt; y &lt;em&gt;canary&lt;/em&gt;. Es una cosa que le faltaba al ejemplo de microservicios con Spring Cloud.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Orquestador de servicios, con &lt;a href=&#34;https://www.nomadproject.io/&#34;&gt;Nomad&lt;/a&gt;. &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/&#34;&gt;Introducción a Nomad para gestionar aplicaciones y microservicios&lt;/a&gt;, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/&#34;&gt;Estrategias de despliegue para microservicios con Nomad&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Además, en este ejemplo reemplazo varias de estas herramientas de Spring. Sustituyo el servicio de registro y descubrimiento proporcionado por Eureka por &lt;a href=&#34;https://www.consul.io/&#34;&gt;Consul&lt;/a&gt;, el &lt;em&gt;gateway&lt;/em&gt;, &lt;em&gt;load balancer&lt;/em&gt; y &lt;em&gt;reverse proxy&lt;/em&gt; proporcionado por Zuul por &lt;a href=&#34;https://traefik.io/&#34;&gt;Traefik&lt;/a&gt; y añado el orquestador de microservicios &lt;a href=&#34;https://www.nomadproject.io/&#34;&gt;Nomad&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/consul.svg&#34; alt=&#34;Consul&#34; title=&#34;Consul&#34; width=&#34;200&#34;/&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/nomad.svg&#34; alt=&#34;Nomad&#34; title=&#34;Nomad&#34; width=&#34;200&#34;/&gt;
+&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/traefik.svg&#34; alt=&#34;Traefik&#34; title=&#34;Traefik&#34; width=&#34;200&#34;/&gt;
+&lt;/div&gt;
+&lt;p&gt;Traefik se configura con los servicios iniciados en los contenedores de Docker utilizando junto con los bloques o &lt;em&gt;stanzas&lt;/em&gt; de &lt;em&gt;config&lt;/em&gt; y &lt;em&gt;labels&lt;/em&gt; en la definición de los servicios de Nomad. Según el criterio definido por el servicio Traefik es capaz de redirigir el tráfico que le llegue al servicio apropiado, entre las posibilidades que puede realizar Traefik es balanceo de carga entre las múltiples instancias que se hayan definido pero también implementa patrones de tolerancia a fallos con reintentos, el patrón &lt;em&gt;circuit breaker&lt;/em&gt; o limitar el tráfico para evitar saturar a un servicio con demasiadas peticiones.&lt;/p&gt;
+&lt;p&gt;El esquema de servicios sería el siguiente. Los &lt;em&gt;job&lt;/em&gt; son enviados a Nomad desde la linea de comandos que inicia los contenedores en Docker y registra los servicios en Consul, Traefik monitoriza los contenedores que se inician en Docker y se autoconfigura según las propiedades de los &lt;em&gt;labels&lt;/em&gt; definidos para los contenedores. Una vez iniciados los servicios desde la terminal con un &lt;em&gt;curl&lt;/em&gt; o desde la aplicación cliente que accede a Consul para conocer la ubicación del servicio de Traefik envían una petición a Traefik que haciendo balanceo de carga la reenvía a una de las instancias del servicio, el servicio responde y Traefik envía la respuesta al cliente. Para ser más funcional Traefik debería configurarse a partir de Consul en vez de Docker para posibilitar que los contenedores pudieran estar en varios nodos.&lt;/p&gt;
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+&lt;figure&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/esquema-arquitectura_hud9745ca4e3e6c708b4af1c72fc0d4ff7_167252_2560x1440_fit_box_2.png&#34; title=&#34;Esquema arquitectura&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/esquema-arquitectura_hud9745ca4e3e6c708b4af1c72fc0d4ff7_167252_600x450_fit_box_2.png&#34; width=&#34;600&#34;/&gt;&lt;/a&gt;
+&lt;figcaption&gt;Esquema arquitectura&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+&lt;p&gt;La ejecución del ejemplo requiere &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt; ya que es en este caso el &lt;em&gt;driver&lt;/em&gt; empleado en Nomad para ejecutar los servicios del servicio de configuración, el &lt;em&gt;gateway&lt;/em&gt;, el servicio y el cliente del servicio. Nomad además se encarga de registrar los servicios en el servicio de registro y descubrimiento de Consul.&lt;/p&gt;
+&lt;p&gt;Los contenedores de Docker se añade a una misma red para que puedan comunicarse entre ellos, ha de ser así hasta que no se resuelva una &lt;a href=&#34;https://github.com/docker/for-linux/issues/264&#34;&gt;petición de Docker para que los contenedores puedan comunicarse con la máquina &lt;em&gt;host&lt;/em&gt;&lt;/a&gt; que los alberga.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;docker network create --subnet &lt;span class=&#34;m&#34;&gt;172&lt;/span&gt;.30.0.0/16 nomad
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/code/docker-network-create.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/code/docker-network-create.sh&#34; target=&#34;_blank&#34;&gt;docker-network-create.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Poteriormente hay que ejecutar Consul y Nomad tras lo cual se puede acceder a sus consolas de estado.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;consul agent -dev -ui -client&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;.0.0.0
+nomad agent -dev&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/code/nomad-consul-run.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/code/nomad-consul-run.sh&#34; target=&#34;_blank&#34;&gt;nomad-consul-run.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Enviar a Nomad los &lt;em&gt;job&lt;/em&gt; de Traefik tras lo cual se puede acceder a su consola de estado. El siguiente paso es enviar el &lt;em&gt;job&lt;/em&gt; del servicio que proporciona la configuración a los microservicios. Lo anterior únicamente es infraestructura aún no hay ningún servicio que proporcione alguna funcionalidad, la funcionalidad que proporciona el servicio implementado con Spring es simplemente devolver un mensaje como respuesta a la petición que se le realice, se envía el &lt;em&gt;job&lt;/em&gt; del servicio a Nomad. Finalmente, el servicio es consumido por un cliente que realiza una petición al servicio cada 1 segundo.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;./gradlew assemble
+nomad job run nomad/traefik.nomad
+nomad job run nomad/configserver.nomad
+nomad job run nomad/service.nomad
+nomad job run nomad/client.nomad&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/code/nomad-job-run.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/code/nomad-job-run.sh&#34; target=&#34;_blank&#34;&gt;nomad-job-run.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Definición de un servicio en un &lt;em&gt;job&lt;/em&gt; para Nomad. &lt;em&gt;count&lt;/em&gt; define cuantas instancias del servicio se inicia, la &lt;em&gt;stanza&lt;/em&gt; &lt;em&gt;update&lt;/em&gt; define como será la actualización cuando se actualice el servicio, la &lt;em&gt;stanza&lt;/em&gt; &lt;em&gt;labels&lt;/em&gt; contiene la configuración para Traefik, &lt;em&gt;check&lt;/em&gt; define los parámetros para la monitorización.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-HCL&#34; data-lang=&#34;HCL&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;44
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;45
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;46
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;47
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;48
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;49
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;50
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;51
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;52
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;53
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;54
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;55
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;56
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;57
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;58
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;59
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;60
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;61
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;62
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;63
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;64
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;65
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;66
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;67
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;68
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-HCL&#34; data-lang=&#34;HCL&#34;&gt;&lt;span class=&#34;k&#34;&gt;job&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;service&amp;#34;&lt;/span&gt; {
+&lt;span class=&#34;n&#34;&gt; datacenters&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;dc1&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;group&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;service&amp;#34;&lt;/span&gt; {
+&lt;span class=&#34;n&#34;&gt; count&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;update&lt;/span&gt; {
+&lt;span class=&#34;n&#34;&gt; max_parallel&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; health_check&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;checks&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; min_healthy_time&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;20s&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; healthy_deadline&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;10m&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; progress_deadline&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;20m&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; canary&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; stagger&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;15s&amp;#34;&lt;/span&gt;
+}
+&lt;span class=&#34;k&#34;&gt;task&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;service&amp;#34;&lt;/span&gt; {
+&lt;span class=&#34;n&#34;&gt; driver&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;docker&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;config&lt;/span&gt; {
+&lt;span class=&#34;n&#34;&gt; image&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;openjdk:11-jdk&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; args&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;bash&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;-c&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; &amp;#34;(cd /app &amp;amp;&amp;amp; java -jar /app/service/build/libs/service-1.0.jar --port&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;8080&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;port_map&lt;/span&gt; {
+&lt;span class=&#34;n&#34;&gt; http&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;8080&amp;#34;&lt;/span&gt;
+}
+&lt;span class=&#34;n&#34;&gt; network_mode&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;nomad&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; extra_hosts&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;traefik:172.30.0.3&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; volumes&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;/home/picodotdev/Software/personal/blog-ejemplos/SpringCloudConsulNomadTraefik/:/app&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;labels&lt;/span&gt; {
+&lt;span class=&#34;n&#34;&gt; traefik.http.middlewares.service1-stripprefix.stripprefix.prefixes&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/service&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; traefik.http.middlewares.service1-retry.retry.attempts&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;10&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; traefik.http.routers.service1.middlewares&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;service1-stripprefix,service1-retry&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; traefik.http.routers.service1.rule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;PathPrefix(`/service`)&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; traefik.http.services.service1.loadbalancer.server.port&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;8080&amp;#34;&lt;/span&gt;
+}
+}
+&lt;span class=&#34;k&#34;&gt;service&lt;/span&gt; {
+&lt;span class=&#34;n&#34;&gt; name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;service&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; port&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;http&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;check&lt;/span&gt; {
+&lt;span class=&#34;n&#34;&gt; type&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;http&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; port&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;http&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; path&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/actuator/health&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; interval&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;5s&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; timeout&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;2s&amp;#34;&lt;/span&gt;
+}
+}
+&lt;span class=&#34;k&#34;&gt;resources&lt;/span&gt; {
+&lt;span class=&#34;n&#34;&gt; cpu&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;200&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt; memory&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1024&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;network&lt;/span&gt; {
+&lt;span class=&#34;n&#34;&gt; mbits&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;20&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;port&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;http&amp;#34;&lt;/span&gt; {}
+}
+}
+}
+}
+}&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/code/service.nomad&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/code/service.nomad&#34; target=&#34;_blank&#34;&gt;service.nomad&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Tanto Consul, Nomad como Traefik ofrecen una consola para ver su estado ubicadas en las siguientes direcciones respectivamente accesibles con el navegador &lt;em&gt;http://127.0.0.1:8500&lt;/em&gt;, &lt;em&gt;http://127.0.0.1:4646&lt;/em&gt;, &lt;em&gt;http://127.0.0.1:8092&lt;/em&gt;.&lt;/p&gt;
+&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
+&lt;figure&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/consul_hudc42d06e92419bb68cedcf920ffbb9e1_66952_2560x1440_fit_box_2.png&#34; title=&#34;Consul&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/consul_hudc42d06e92419bb68cedcf920ffbb9e1_66952_200x150_fit_box_2.png&#34; width=&#34;200&#34;/&gt;&lt;/a&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/nomad-1_hu236530498253a3dba6bcdeea43b58303_63779_2560x1440_fit_box_2.png&#34; title=&#34;Nomad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/nomad-1_hu236530498253a3dba6bcdeea43b58303_63779_200x150_fit_box_2.png&#34; width=&#34;200&#34;/&gt;&lt;/a&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/nomad-2_huf614ca5d87e91f36d0a6f0dc0f7e1da1_112167_2560x1440_fit_box_2.png&#34; title=&#34;Nomad&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/nomad-2_huf614ca5d87e91f36d0a6f0dc0f7e1da1_112167_200x150_fit_box_2.png&#34; width=&#34;200&#34;/&gt;&lt;/a&gt;
+&lt;/figure&gt;
+&lt;figure&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/traefik-1_hu752c6a0b248029866df45cca04eee0f1_104793_2560x1440_fit_box_2.png&#34; title=&#34;Traefik&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/traefik-1_hu752c6a0b248029866df45cca04eee0f1_104793_200x150_fit_box_2.png&#34; width=&#34;200&#34;/&gt;&lt;/a&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/traefik-2_hu3d23c9c51ffc17299ed33c1319107a0c_130051_2560x1440_fit_box_2.png&#34; title=&#34;Traefik&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/traefik-2_hu3d23c9c51ffc17299ed33c1319107a0c_130051_200x150_fit_box_2.png&#34; width=&#34;200&#34;/&gt;&lt;/a&gt;
+&lt;figcaption&gt;Consolas de administración de Consul, Nomad y Traefik&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/div&gt;
+&lt;p&gt;El código del servicio, del cliente implementados con Spring y la salida del cliente son los siguientes.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;io&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;github&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;picodotdev&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;blogbitix&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;springcloud&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;service&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;...&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@RestController&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DefaultController&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;DefaultConfiguration&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;configuration&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Tracing&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tracing&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Tracer&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tracer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Random&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;random&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Counter&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;counter&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;DefaultController&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;MeterRegistry&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;registry&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;random&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Random&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;counter&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Counter&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;builder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;service.invocations&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;description&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Total service invocations&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;register&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;registry&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;home&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HttpServletRequest&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;throws&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Exception&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;counter&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;increment&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;// Timeout simulation
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;//Thread.sleep(random.nextInt(4000));
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;TraceContext&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Extractor&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HttpServletRequest&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;extractor&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tracing&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;propagation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;extractor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HttpServletRequest&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;carrier&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;carrier&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getHeader&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;Span&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;span&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tracer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;nextSpan&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;extractor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;extract&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;));&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Service Span (traceId: %s, spanId: %s)%n&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;span&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;traceIdString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;span&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;spanIdString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;format&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Hello world (url: %s, remoteAddress_%s, localAddress: %s, traceId: %s, spanId: %s, key: %s)&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getRequestURL&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(),&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getRemoteAddr&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getLocalAddr&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;span&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;traceIdString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;span&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;spanIdString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;configuration&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getKey&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/code/DefaultController.java&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/code/DefaultController.java&#34; target=&#34;_blank&#34;&gt;DefaultController.java&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;44
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;45
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;46
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;47
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;48
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;49
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;50
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;51
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;52
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;53
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;54
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;55
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;56
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;57
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;58
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;59
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;60
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;61
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;62
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;63
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;64
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;65
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;66
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;67
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;68
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;69
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;70
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;71
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;72
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;73
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;74
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Java&#34; data-lang=&#34;Java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;io&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;github&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;picodotdev&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;blogbitix&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;springcloud&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;client&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;...&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Component&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ProxyService&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;LoadBalancerClient&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;loadBalancer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Tracing&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tracing&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Tracer&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tracer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;CircuitBreakerConfig&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;circuitBreakerConfiguration&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;TimeLimiterConfig&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;timeLimiterConfiguration&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;HttpClient&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;client&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;ProxyService&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;circuitBreakerConfiguration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;CircuitBreakerConfig&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;custom&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;failureRateThreshold&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;50&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;recordExceptions&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IOException&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;TimeoutException&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;build&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;timeLimiterConfiguration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;TimeLimiterConfig&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;custom&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;timeoutDuration&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Duration&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;ofMillis&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;2500&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;cancelRunningFuture&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;build&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;client&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;HttpClient&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;newBuilder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;version&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HttpClient&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Version&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;HTTP_2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;build&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;ServiceInstance&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;loadBalancer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;choose&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;traefik&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;URI&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;uri&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getUri&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;resource&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;format&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;%s%s&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;uri&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;toString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;127.0.0.1&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;traefik&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;/service&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;HttpRequest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Builder&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;r&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;try&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;r&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;HttpRequest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;newBuilder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;URI&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;resource&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;catch&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Exception&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;getFallback&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;HttpRequest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Builder&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;r&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;Span&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;span&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tracer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;newTrace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;start&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;TraceContext&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Injector&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HttpRequest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Builder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;injector&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tracing&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;propagation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;injector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HttpRequest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Builder&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;carrier&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;carrier&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;header&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;injector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;inject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;span&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Client Span (traceId: %s, spanId: %s)%n&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;span&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;traceIdString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;span&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;spanIdString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;CircuitBreaker&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;circuitBreaker&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;CircuitBreaker&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;of&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;resilience4jCircuitBreakerProxyService&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;circuitBreakerConfiguration&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;TimeLimiter&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;timeLimiter&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;TimeLimiter&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;of&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;timeLimiterConfiguration&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;Supplier&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CompletableFuture&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;get&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;CompletableFuture&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;supplyAsync&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;try&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;HttpResponse&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;client&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;send&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;build&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;HttpResponse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;BodyHandlers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;ofString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;response&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;catch&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Exception&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;getFallback&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;};&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;Callable&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getLimiter&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;TimeLimiter&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;decorateFutureSupplier&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;timeLimiter&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;Callable&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getCircuitBreaker&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;CircuitBreaker&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;decorateCallable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;circuitBreaker&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;getLimiter&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Try&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;of&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;getCircuitBreaker&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;::&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;call&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;recover&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;throwable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;getFallback&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;getFallback&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Fallback&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/code/ProxyService.java&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/code/ProxyService.java&#34; target=&#34;_blank&#34;&gt;ProxyService.java&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Como hay 2 instancias del servicio y Traefik realiza balanceo de carga utilizando el algoritmo &lt;em&gt;round robbin&lt;/em&gt; se observa en la salida con las respuestas que la dirección IP que ha atendido la petición es alternativamente una de las dos instancias del servicio.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Plaintext&#34; data-lang=&#34;Plaintext&#34;&gt;...
+Service response: Hello world (url: http://172.30.0.3/, remoteAddress_172.30.0.3, localAddress: 172.30.0.4, traceId: 63afa4d0cd4f466c, spanId: 4719dfcc16b6104e, key: value)
+Client Span (traceId: 57eeaa436aa09238, spanId: 57eeaa436aa09238)
+Service response: Hello world (url: http://172.30.0.3/, remoteAddress_172.30.0.3, localAddress: 172.30.0.5, traceId: 57eeaa436aa09238, spanId: 26dc213be2d933ac, key: value)
+Client Span (traceId: 23c748bf222052a6, spanId: 23c748bf222052a6)
+Service response: Hello world (url: http://172.30.0.3/, remoteAddress_172.30.0.3, localAddress: 172.30.0.4, traceId: 23c748bf222052a6, spanId: 0404d949c6e04c18, key: value)
+Client Span (traceId: c45d66a4ec9cf14c, spanId: c45d66a4ec9cf14c)
+Service response: Hello world (url: http://172.30.0.3/, remoteAddress_172.30.0.3, localAddress: 172.30.0.5, traceId: c45d66a4ec9cf14c, spanId: e7f6ccf2efb8234b, key: value)
+Client Span (traceId: 2fdb3b71a682d2e6, spanId: 2fdb3b71a682d2e6)
+Service response: Hello world (url: http://172.30.0.3/, remoteAddress_172.30.0.3, localAddress: 172.30.0.4, traceId: 2fdb3b71a682d2e6, spanId: 24ac2a8d2bfb1e6e, key: value)
+Client Span (traceId: a33b010e02709c6a, spanId: a33b010e02709c6a)
+Service response: Hello world (url: http://172.30.0.3/, remoteAddress_172.30.0.3, localAddress: 172.30.0.5, traceId: a33b010e02709c6a, spanId: 0abe6074fc277af6, key: value)
+...&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/code/System.out&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/code/System.out&#34; target=&#34;_blank&#34;&gt;System.out&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;En un momento posterior si surge la necesidad de querer desplegar una nueva versión del microservicio basta con generar de nuevo el artefacto del microservicio, cambiando la versión en el archivo &lt;em&gt;build.gradle&lt;/em&gt;. El despliegue de la nueva versión se realizan mediante la estrategia &lt;em&gt;canary&lt;/em&gt;, manteniendo las instancias con la versión anterior del servicio y añadiendo una nueva con la nueva versión. Si se descubre algún error en la instancia &lt;em&gt;canary&lt;/em&gt; se puede revertir el estado a la versión anterior, que consiste en detener la instancia &lt;em&gt;canary&lt;/em&gt;. Una vez se comprueba que la instancia con la nueva versión funciona correctamente analizando sus trazas y métricas se envía la order a Nomad de promocionar las instancias de forma progresiva con la versión antigua a la nueva versión.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;nomad job run nomad/service.nomad
+nomad job promote service
+nomad job revert service &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/code/nomad-job-promote.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/code/nomad-job-promote.sh&#34; target=&#34;_blank&#34;&gt;nomad-job-promote.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;El servicio exporta métricas en formato para Prometheus que con Grafana. Según se realizan peticiones al servicio el valor de métrica de contador de llamadas al servicio aumenta de forma progresiva.&lt;/p&gt;
+&lt;div class=&#34;code&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;curl http://127.0.0.1:8093/service/actuator/prometheus &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep &lt;span class=&#34;s2&#34;&gt;&amp;#34;service.invocations&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# HELP service_invocations_total Total service invocations&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# TYPE service_invocations_total counter&lt;/span&gt;
+service_invocations_total &lt;span class=&#34;m&#34;&gt;20&lt;/span&gt;.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;highlight-meta&#34;&gt;
+&lt;span class=&#34;raw&#34;&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/code/service-prometheus.sh&#34; target=&#34;_blank&#34;&gt;view raw&lt;/a&gt;&lt;/span&gt;
+&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/code/service-prometheus.sh&#34; target=&#34;_blank&#34;&gt;service-prometheus.sh&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;
+El &lt;a href=&#34;https://github.com/picodotdev/blog-ejemplos/tree/master/SpringCloudConsulNomadTraefik&#34;&gt;código fuente completo del ejemplo&lt;/a&gt; puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt; y probarlo en tu equipo ejecutando el comando &lt;code&gt;./run.sh&lt;/code&gt;.
+&lt;/p&gt;</content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/><category term="software"/><category term="software-libre"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2018/12/hemeroteca-14/</id><title>Hemeroteca #14</title><updated>2018-12-30T19:00:00+01:00</updated><published>2018-12-30T19:00:00+01:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/12/hemeroteca-14/"/><author><name>picodotdev</name></author><content type="html">
 &lt;p&gt;Casi 9 años publicando de forma constante un artículo a la semana, dos artículos algunas semanas. Durante casi está década creo que ha habido pocas semanas en las que no he publicado. Este último años no ha sido distinto, el siguiente espero&amp;hellip; espero que sea parecido o mejor ahora que tengo mi propio equipo personal que he estado mucho tiempo esperando hasta que fuese comercializado, un &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/11/desempaquetado-intel-nuc-nuc8i5bek-bean-canyon-hyperx-impact-ram-y-samsung-970-evo-nvme-ssd/&#34;&gt;Intel NUC Bean Canyon&lt;/a&gt; del que en este semestre he publicado un artículo con de su desempaquetado junto con otros artículos del &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/10/desempaquetado-y-analisis-de-monitor-benq-pd2700q/&#34;&gt;monitor Benq PD2700Q&lt;/a&gt; y &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/09/desempaquetado-y-analisis-de-teclado-y-raton-inalambrico-v7-ckw200/&#34;&gt;teclado ratón&lt;/a&gt; pero también comentando las opciones que he barajado.&lt;/p&gt;
 &lt;p&gt;Casi 9 años publicando artículos algunos mejor que otros pero siempre intentando compartir lo que sé o voy aprendiendo, para llegar a esta cifra hay que tener constancia para llegar a escribir tanto tiempo, dedicación, no abandonar fácil para no empezar una cosa y dejarlo al cabo de poco e incluso de publicar aún cuando el ánimo no es el de los mejores momentos, planificación y organización para saber que publicar, tiempo ya que cuesta escribir los artículos, motivación y perseverancia para tener más visitas, comentarios de algunos usuarios, más ingresos de AdSense, compartir, &amp;hellip; No es fácil, en mi caso sabiendo que mucho de lo que escribo no lo aplico en el trabajo, donde actualmente tengo un Mac por obligación y no trabajo con Java y mis temas principales son GNU/Linux y Java, con lo que a veces tengo la sensación de no serme útil. Al finalizar este 2018 ya van 371 artículos publicados desde finales del 2013 que empecé a hacerlo en Blog Bitix.&lt;/p&gt;
 &lt;p&gt;Ahora que tengo mi propio equipo y como de nuevo estoy usando &lt;a href=&#34;https://www.archlinux.org/&#34;&gt;Arch Linux&lt;/a&gt; podré publicar más artículos sobre &lt;a href=&#34;https://www.gnu.org/&#34;&gt;GNU&lt;/a&gt;/&lt;a href=&#34;https://www.linux.com/&#34;&gt;Linux&lt;/a&gt;, he empezado por publicar como jugar a &lt;a href=&#34;https://eu.diablo3.com/es/&#34;&gt;Diablo 3&lt;/a&gt; u otros juegos de &lt;a href=&#34;https://www.blizzard.com/es-es/&#34;&gt;Blizzard&lt;/a&gt; en Linux con &lt;a href=&#34;https://www.winehq.org/&#34;&gt;Wine&lt;/a&gt;.&lt;/p&gt;
@@ -1395,7 +1962,7 @@ El &lt;a href=&#34;https://github.com/picodotdev/alis/tree/master/&#34;&gt;códi
 &lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/04/la-sentencia-try-with-resources-de-java/&#34;&gt;La sentencia try-with-resources de Java&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/04/la-clase-optional-de-java-para-evitar-la-excepcion-nullpointerexception/&#34;&gt;La clase Optional de Java para evitar la excepción NullPointerException&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/05/plantillas-con-etiquetas-no-balanceadas-en-apache-tapestry/&#34;&gt;Plantillas con etiquetas no balanceadas en Apache Tapestry&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/05/gestion-de-errores-con-either-o-try-en-vez-de-con-codigo-de-error-null-pptional-checked-exception-o-unchecked-exception/&#34;&gt;Gestión de errores con Either o Try en vez de con código de error, null, Optional, checked exception o unchecked exception&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/05/gestion-de-errores-con-either-o-try-en-vez-de-con-codigo-de-error-null-optional-checked-exception-o-unchecked-exception/&#34;&gt;Gestión de errores con Either o Try en vez de con código de error, null, Optional, checked exception o unchecked exception&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/05/depurar-codigo-javascript-con-la-instruccion-debugger/&#34;&gt;Depurar código JavaScript con la instrucción debugger&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/05/recuperar-datos-eficientemente-en-graphql-usando-batching/&#34;&gt;Recuperar datos eficientemente en GraphQL usando batching&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2018/05/empaquetar-una-aplicacion-java-en-un-archivo-jar-ejecutable-incluyendo-sus-dependencias/&#34;&gt;Empaquetar una aplicación Java en un archivo jar ejecutable incluyendo sus dependencias&lt;/a&gt;&lt;/li&gt;
@@ -2238,37 +2805,4 @@ $ convert -strip source.jpg destination.jpg &lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;/figure&gt;
 &lt;/div&gt;
 &lt;p&gt;¿Puedes averiguar el dispositivo, la fecha en la que hizo la foto y con que software fotográfico se editó?&lt;/p&gt;
-&lt;p&gt;Independientemente de los datos EXIF al compartir fotos hay que tener un poco de cuidado, si tu privacidad no te importa mucho y compartes cualquier cosa personal tuya y así lo has decidido, tú mismo, eso sí simplemente se respetuoso y respeta la privacidad de las personas de las que tienes intención de compartir fotos. Ten en cuenta que compartir que estás de vacaciones, amigos, familiares y con el resto del historial de tu red social se puede conocer bastante acerca de la vida de una persona.&lt;/p&gt;</content><category term="blog-stack"/><category term="gnu-linux"/><category term="planeta-codigo"/><category term="software-libre"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2017/12/microsoft-does-not-care-if-you-use-windows-or-office-without-a-license/</id><title>Microsoft does not care if you use Windows or Office without a license</title><updated>2017-12-03T12:00:00+01:00</updated><published>2017-12-03T12:00:00+01:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2017/12/microsoft-does-not-care-if-you-use-windows-or-office-without-a-license/"/><author><name>picodotdev</name></author><content type="html">
-&lt;p&gt;&lt;strong&gt;If Microsoft wished there would be no Windows users using it without the corresponding license. But they consents, they does not care that for a personal use it pirated. A few days after July 29, Windows 10 will appear on the file sharing networks and download pages, also a few days later a program will appear that avoids the validation system as has happened with previous versions.&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&#34;logotypes&#34; style=&#34;float: right;&#34;&gt;
-&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/assets/images/logotipos/microsoft.svg&#34; class=&#34;right &#34; width=&#34;300&#34; alt=&#34;Microsoft&#34; title=&#34;Microsoft&#34;/&gt;
-&lt;/div&gt;
-&lt;p&gt;Microsoft has released for sale and will pre-install the right-of-use (not product ownership) license of its next operating system, Windows 10. Although most will acquire this license through the &lt;a href=&#34;https://en.wikipedia.org/wiki/Bundling_of_Microsoft_Windows#The_.22Windows_tax.22&#34;&gt;Windows tax&lt;/a&gt; when buying a new computer and although (rarely) it is possible to get their reimbursement it is still with obstacles, the great majority will not request the reimbursement maybe for lack of knowledge that the equipment and its operating system are two different products (many do not know either that it is an operating system), ignorance of the possibility of reimbursement or for not making the effort (I plead guilty) of which the manufacturer is habitual that provides zero information on how to proceed and when it is done is with difficulties. Many of us pay for the Windows license even if we do not want it, and although Microsoft logically prefers you to acquire the license, I think it does not matter that you do not pay it for personal use.&lt;/p&gt;
-&lt;p&gt;There are few but a few options to purchase a laptop without Windows or with some Linux distribution, good quality, good specifications and reasonably priced, one of them are &lt;a href=&#34;https://slimbook.es/&#34;&gt;Slimbook&lt;/a&gt; laptops. In the blog of &lt;a href=&#34;https://www.kdeblog.com/&#34;&gt;KDE Blog&lt;/a&gt; there is an &lt;a href=&#34;https://www.kdeblog.com/slimbook-tu-portatil-linux-de-calidad.html&#34;&gt;article about an model of these laptops&lt;/a&gt; and &lt;a href=&#34;https://www.kdeblog.com/unboxing-de-mi-slimbook-con-kubuntu-15-04-y-plasma-5.html&#34;&gt;a video with a &lt;em&gt;unboxing&lt;/em&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-&lt;figure&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/microsoft-does-not-care-if-you-use-windows-or-office-without-a-license/images/windows-10.png&#34; title=&#34;Windows 10&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2017/12/microsoft-does-not-care-if-you-use-windows-or-office-without-a-license/images/windows-10.png&#34; width=&#34;500&#34;/&gt;&lt;/a&gt;
-&lt;/figure&gt;
-&lt;/div&gt;
-&lt;p&gt;Why do I say that they do not mind not paying the license? Because version after version the measures included in Windows or Office to protect them from an unlicensed use are avoided without apparently many difficulties and after a very short time appear in the pages of downloads the images along with the instructions to follow to install it without any type of problem. And in Windows 10 it will be the same. Why do not the included validation measures prevent unlicensed use? Because it suits Microsoft not to be too restrictive. If they were, some would pay the license, but many would say, what? Does the license cost 119 € (or 199, or 50 depending on what is returned with a new computer)? A third (aprox.) of what the computer cost me?, and that only Windows, if we add Office and other programs the cost of the licenses could far exceed the price of the equipment. Worse still, amount to be disbursed every few years due to obsolescence and new versions. And what would those who could not use Windows or Office do? Find alternatives and &amp;hellip; what do you think they would choose? The expensive competition of &lt;a href=&#34;https://www.apple.com/&#34;&gt;Apple&lt;/a&gt; with its &lt;a href=&#34;https://www.apple.com/es/mac/&#34;&gt;Macs&lt;/a&gt; or some distribution GNU/Linux like &lt;a href=&#34;https://www.ubuntu.com/&#34;&gt;Ubuntu&lt;/a&gt;, &lt;a href=&#34;https://www.linuxmint.com/&#34;&gt;Linux Mint&lt;/a&gt;, &lt;a href=&#34;https://www.debian.org/&#34;&gt;Debian&lt;/a&gt;, &lt;a href=&#34;https://fedoraproject.org/&#34;&gt;Fedora&lt;/a&gt;, &lt;a href=&#34;https://www.opensuse.org/es/&#34;&gt;openSUSE&lt;/a&gt;, etc &amp;hellip; That people knew and paid the cost of the software licenses would probably be one of the best ways to encourage the use of free software and GNU/Linux.&lt;/p&gt;
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-&lt;figure&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/microsoft-does-not-care-if-you-use-windows-or-office-without-a-license/images/linux-gnu-ditributions.png&#34; title=&#34;Linux, GNU, distribuciones&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2017/12/microsoft-does-not-care-if-you-use-windows-or-office-without-a-license/images/linux-gnu-ditributions.png&#34; width=&#34;600&#34;/&gt;&lt;/a&gt;
-&lt;/figure&gt;
-&lt;/div&gt;
-&lt;p&gt;Does anyone believe that a company like Microsoft with the resources and capacity it possesses could not implement a validation that would prevent its misuse, more now where the internet connection is common? No, the answer is that he does not want to and the time has had to prove otherwise. Losing many users in favor of their alternatives would make them able to use those same alternatives at work (including schools and training companies), the business world where Microsoft is easier for them to claim their right legally rather than individually and from where they will get higher income. Doing so would cause Windows usage quota to drop at current monopoly levels and possibly in the long run a risk of their income.&lt;/p&gt;
-&lt;p&gt;One only has to see the obscene millionades that are adjudicated in contracts for the purchase of licenses in the public administration. Money that comes out of your taxes that many politicians and officials responsible for such awards do not understand (or do not want to understand) that this hefty recurring expense is much better invested in local companies that create jobs in the region and in free software of which anyone can benefit instead of a company that little of its development does in each country where it is used. The cost of the free software can be equally obscene, equally bulging or much smaller but the difference among others is that very probably not by the licenses but by the services of consultancy or development that can be offered by local companies and of which depending on the case any could to benefit.&lt;/p&gt;
-&lt;div class=&#34;media&#34; style=&#34;text-align: center;&#34;&gt;
-&lt;figure&gt;
-&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/12/microsoft-does-not-care-if-you-use-windows-or-office-without-a-license/images/windows-genuine.jpg&#34; title=&#34;Windows Genuine&#34; data-gallery&gt;&lt;img src=&#34;https://picodotdev.github.io/blog-bitix/2017/12/microsoft-does-not-care-if-you-use-windows-or-office-without-a-license/images/windows-genuine.jpg&#34; width=&#34;400&#34;/&gt;&lt;/a&gt;
-&lt;/figure&gt;
-&lt;/div&gt;
-&lt;p&gt;Microsoft knows that you are using your software without the corresponding license and tells you to show you a message from time to time or you remove the wallpaper, a bit annoying but not prevent its use. Voluntary or negligent validation systems built into Windows or Office allow many users to use the Pirated Edition, users who are not willing to pay the considerable cost of the license. Although it will prefer that users buy the license Microsoft allows to a certain extent the use of its software without it, the alternative would be to lose the possibility of convincing some to use the software legally apart from losing use quota in favor of other alternatives, perhaps they prefer a situation where their software is used illegally rather than an alternative is more helpful. Microsoft also commits the injustices that the law leaves or no one demands, pre-installed its undesirable system by some who do not want it at the same time as it does not provide clear information and the process is simple to get its return together with the reimbursement of its cost and in taxes that using tax engineering along with other companies are taken to where they pay least.&lt;/p&gt;
-&lt;p&gt;A new version of Windows or a new computer is an ideal occasion for instead of migrating to the new version of Windows make the jump to GNU/Linux and stop worrying about being raped by slavering licenses or accepting clauses that most people would read and understood they would not accept it so cheerfully. I did it a few years ago going through various distributions, &lt;a href=&#34;https://elblogdepicodev.blogspot.com.es/2010/03/de-windows-arch-linux.html&#34;&gt;from Windows to Arch Linux&lt;/a&gt;, and after almost six years I still follow Arch, &lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2014/08/de-arch-linux-a-arch-linux/&#34;&gt;from Arch Linux to Arch Linux&lt;/a&gt;.&lt;/p&gt;
-&lt;div class=&#34;reference&#34;&gt;
-Referencia:&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/04/windows-10-and-office-2016-as-easy-to-use-without-license-as-always/&#34;&gt;Windows 10 and Office 2016 as easy to use without license as always&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://picodotdev.github.io/blog-bitix/2017/04/3-office-alternative-options-to-microsoft-office/&#34;&gt;3 office alternative options to Microsoft Office&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;</content><category term="blog-stack"/><category term="microsoft"/><category term="opinion"/><category term="planeta-codigo"/><category term="planeta-linux"/><category term="software-libre"/></entry></feed>
+&lt;p&gt;Independientemente de los datos EXIF al compartir fotos hay que tener un poco de cuidado, si tu privacidad no te importa mucho y compartes cualquier cosa personal tuya y así lo has decidido, tú mismo, eso sí simplemente se respetuoso y respeta la privacidad de las personas de las que tienes intención de compartir fotos. Ten en cuenta que compartir que estás de vacaciones, amigos, familiares y con el resto del historial de tu red social se puede conocer bastante acerca de la vida de una persona.&lt;/p&gt;</content><category term="blog-stack"/><category term="gnu-linux"/><category term="planeta-codigo"/><category term="software-libre"/></entry></feed>
