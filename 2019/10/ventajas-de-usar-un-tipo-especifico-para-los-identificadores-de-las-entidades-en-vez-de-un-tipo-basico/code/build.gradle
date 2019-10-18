@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+    ...
+    id 'nu.studer.jooq' version '3.0.3'
+}
+
+...
+
+jooq {
+    version = versions.jooq
+    edition = 'OSS'
+    mysql(sourceSets.main) {
+        jdbc {
+            driver = 'com.mysql.cj.jdbc.Driver'
+            url = "jdbc:mysql://localhost:3306/${mysqlDdlJooqSchema}"
+            user = 'root'
+            password = ''
+        }
+        generator {
+            name = 'org.jooq.codegen.DefaultGenerator'
+            database {
+                name = 'org.jooq.meta.mysql.MySQLDatabase'
+                inputSchema = mysqlDdlJooqSchema
+                outputSchema = 'application'
+                includes = """
+                    event
+                """
+                excludes = ''
+                ...
+                forcedTypes {
+                    ...
+                    // Ids
+                    forcedType {
+                        types = 'BIGINT'
+                        userType = 'io.github.picodotdev.domain.event.EventId'
+                        converter = 'io.github.picodotdev.infrastructure.datasource.jooq.converter.EventIdConverter'
+                        expression = '.*\\.event\\.id'
+                    }                   
+                }
+            }
+            generate {
+                javaTimeTypes = true
+                interfaces = false
+                pojos = true
+                records = true
+                relations = true
+            }
+            target {
+                packageName = 'io.github.picodotdev.infrastructure.datasource.jooq.entities'
+                directory = 'src/main/java-generated'
+            }
+        }
+    }
+}
+
+...
