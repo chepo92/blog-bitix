@@ -16,7 +16,7 @@ public class EventIdConverter extends implements Converter<Long, EventId> {
 
     @Override
     public EventId from(Long value) {
-        return new EventId(value;
+        return new EventId(value);
     }
 
     @Override

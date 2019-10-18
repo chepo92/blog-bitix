@@ -10,11 +10,11 @@ public class EventIdConverter implements AttributeConverter<EventId, Long> {
 
     @Override
     public Long convertToDatabaseColumn(EventId id) {
-        return long.getValue();
+        return id.getValue();
     }
 
     @Override
-    public LongId convertToEntityAttribute(Long locale) {
-        return LocaleUtils.toLocale(locale);
+    public eventId convertToEntityAttribute(Long value) {
+        return new EventId(value);
     }
 }
