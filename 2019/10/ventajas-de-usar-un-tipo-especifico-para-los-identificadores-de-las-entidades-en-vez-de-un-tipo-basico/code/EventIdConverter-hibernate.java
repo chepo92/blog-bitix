@@ -14,7 +14,7 @@ public class EventIdConverter implements AttributeConverter<EventId, Long> {
     }
 
     @Override
-    public eventId convertToEntityAttribute(Long value) {
+    public EventId convertToEntityAttribute(Long value) {
         return new EventId(value);
     }
 }
