@@ -5,11 +5,6 @@ import io.github.picodotdev.domain.event.EventId;
 public class EventIdConverter extends implements Converter<Long, EventId> {
 
     @Override
-    public Long to(final EventId id) {
-        return id.getValue());
-    }
-
-    @Override
     public Class<Long> fromType() {
         return Long.class;
     }
@@ -17,6 +12,11 @@ public class EventIdConverter extends implements Converter<Long, EventId> {
     @Override
     public EventId from(Long value) {
         return new EventId(value);
+    }
+
+    @Override
+    public Long to(EventId id) {
+        return id.getValue());
     }
 
     @Override
