@@ -2,7 +2,7 @@ package io.github.picodotdev.infrastructure.datasource.jooq.converter;
 
 import io.github.picodotdev.domain.event.EventId;
 
-public class EventIdConverter extends implements Converter<Long, EventId> {
+public class EventIdConverter implements Converter<Long, EventId> {
 
     @Override
     public Class<Long> fromType() {
