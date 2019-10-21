@@ -15,12 +15,12 @@ public class EventIdConverter implements Converter<Long, EventId> {
     }
 
     @Override
-    public Long to(EventId id) {
-        return id.getValue());
+    public Class<EventId> toType() {
+        return EventId.class;
     }
 
     @Override
-    public Class<EventId> toType() {
-        return EventId.class;
+    public Long to(EventId id) {
+        return id.getValue());
     }
 }
