@@ -1,0 +1,2 @@
+$ jconsole
+$ ./visualvm
