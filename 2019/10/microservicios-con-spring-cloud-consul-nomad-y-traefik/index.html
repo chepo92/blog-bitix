@@ -208,39 +208,39 @@ $ nomad job run nomad/client.nomad</code></pre></td></tr></table></div></div><di
 </span><span class=lnt>37
 </span><span class=lnt>38
 </span><span class=lnt>39
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nf>io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>springcloud</span><span class=p>.</span><span class=na>service</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>springcloud</span><span class=p>.</span><span class=na>service</span><span class=p>;</span>
 
 <span class=p>...</span>
 
 <span class=nd>@RestController</span>
-<span class=kd>public</span> <span class=nf>class</span> <span class=n>DefaultController</span> <span class=p>{</span>
+<span class=err>public class </span><span class=n>DefaultController</span> <span class=p>{</span>
 
     <span class=nd>@Autowired</span>
-    <span class=kd>private</span> <span class=nf>DefaultConfiguration</span> <span class=n>configuration</span><span class=p>;</span>
+    <span class=err>private DefaultConfiguration </span><span class=n>configuration</span><span class=p>;</span>
 
     <span class=nd>@Autowired</span>
-    <span class=kd>private</span> <span class=nf>Tracing</span> <span class=n>tracing</span><span class=p>;</span>
+    <span class=err>private Tracing </span><span class=n>tracing</span><span class=p>;</span>
 
     <span class=nd>@Autowired</span>
-    <span class=kd>private</span> <span class=nf>Tracer</span> <span class=n>tracer</span><span class=p>;</span>
+    <span class=err>private Tracer </span><span class=n>tracer</span><span class=p>;</span>
 
-    <span class=kd>private</span> <span class=nf>Random</span> <span class=n>random</span><span class=p>;</span>
-    <span class=kd>private</span> <span class=nf>Counter</span> <span class=n>counter</span><span class=p>;</span>
+    <span class=err>private Random </span><span class=n>random</span><span class=p>;</span>
+    <span class=err>private Counter </span><span class=n>counter</span><span class=p>;</span>
 
-    <span class=kd>public</span> <span class=nf>DefaultController</span><span class=p>(</span><span class=n>MeterRegistry</span> <span class=nf>registry</span><span class=p>)</span> <span class=p>{</span>
+    <span class=err>public DefaultController</span><span class=p>(</span><span class=err>MeterRegistry registry</span><span class=p>)</span> <span class=p>{</span>
         <span class=k>this</span><span class=p>.</span><span class=na>random</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Random</span><span class=p>();</span>
         <span class=k>this</span><span class=p>.</span><span class=na>counter</span> <span class=o>=</span> <span class=n>Counter</span><span class=p>.</span><span class=na>builder</span><span class=p>(</span><span class=s>&#34;service.invocations&#34;</span><span class=p>).</span><span class=na>description</span><span class=p>(</span><span class=s>&#34;Total service invocations&#34;</span><span class=p>).</span><span class=na>register</span><span class=p>(</span><span class=n>registry</span><span class=p>);</span>
     <span class=p>}</span>
 
     <span class=nd>@RequestMapping</span><span class=p>(</span><span class=s>&#34;/&#34;</span><span class=p>)</span>
-    <span class=kd>public</span> <span class=nf>String</span> <span class=n>home</span><span class=p>(</span><span class=n>HttpServletRequest</span> <span class=nf>request</span><span class=p>)</span> <span class=kd>throws</span> <span class=nf>Exception</span> <span class=p>{</span>
+    <span class=err>public String </span><span class=n>home</span><span class=p>(</span><span class=err>HttpServletRequest request</span><span class=p>)</span> <span class=err>throws Exception </span><span class=p>{</span>
         <span class=n>counter</span><span class=p>.</span><span class=na>increment</span><span class=p>();</span>
 
         <span class=c1>// Timeout simulation
 </span><span class=c1></span>        <span class=c1>//Thread.sleep(random.nextInt(4000));
 </span><span class=c1></span>
-        <span class=n>TraceContext</span><span class=p>.</span><span class=na>Extractor</span><span class=o>&lt;</span><span class=n>HttpServletRequest</span><span class=o>&gt;</span> <span class=nf>extractor</span> <span class=o>=</span> <span class=n>tracing</span><span class=p>.</span><span class=na>propagation</span><span class=p>().</span><span class=na>extractor</span><span class=p>((</span><span class=n>HttpServletRequest</span> <span class=nf>carrier</span><span class=p>,</span> <span class=n>String</span> <span class=nf>key</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=p>{</span> <span class=k>return</span> <span class=n>carrier</span><span class=p>.</span><span class=na>getHeader</span><span class=p>(</span><span class=n>key</span><span class=p>);</span> <span class=p>});</span>
-        <span class=n>Span</span> <span class=nf>span</span> <span class=o>=</span> <span class=n>tracer</span><span class=p>.</span><span class=na>nextSpan</span><span class=p>(</span><span class=n>extractor</span><span class=p>.</span><span class=na>extract</span><span class=p>(</span><span class=n>request</span><span class=p>));</span>
+        <span class=err>TraceContext.Extractor&lt;HttpServletRequest&gt; extractor </span><span class=o>=</span> <span class=n>tracing</span><span class=p>.</span><span class=na>propagation</span><span class=p>().</span><span class=na>extractor</span><span class=p>((</span><span class=err>HttpServletRequest carrier</span><span class=p>,</span> <span class=err>String key</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=p>{</span> <span class=k>return</span> <span class=n>carrier</span><span class=p>.</span><span class=na>getHeader</span><span class=p>(</span><span class=n>key</span><span class=p>);</span> <span class=p>});</span>
+        <span class=err>Span span </span><span class=o>=</span> <span class=n>tracer</span><span class=p>.</span><span class=na>nextSpan</span><span class=p>(</span><span class=n>extractor</span><span class=p>.</span><span class=na>extract</span><span class=p>(</span><span class=n>request</span><span class=p>));</span>
         <span class=n>System</span><span class=p>.</span><span class=na>out</span><span class=p>.</span><span class=na>printf</span><span class=p>(</span><span class=s>&#34;Service Span (traceId: %s, spanId: %s)%n&#34;</span><span class=p>,</span> <span class=n>span</span><span class=p>.</span><span class=na>context</span><span class=p>().</span><span class=na>traceIdString</span><span class=p>(),</span> <span class=n>span</span><span class=p>.</span><span class=na>context</span><span class=p>().</span><span class=na>spanIdString</span><span class=p>());</span>
 
         <span class=k>return</span> <span class=n>String</span><span class=p>.</span><span class=na>format</span><span class=p>(</span><span class=s>&#34;Hello world (url: %s, remoteAddress_%s, localAddress: %s, traceId: %s, spanId: %s, key: %s)&#34;</span><span class=p>,</span> <span class=n>request</span><span class=p>.</span><span class=na>getRequestURL</span><span class=p>(),</span> 
@@ -322,27 +322,27 @@ $ nomad job run nomad/client.nomad</code></pre></td></tr></table></div></div><di
 </span><span class=lnt>72
 </span><span class=lnt>73
 </span><span class=lnt>74
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nf>io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>springcloud</span><span class=p>.</span><span class=na>client</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>springcloud</span><span class=p>.</span><span class=na>client</span><span class=p>;</span>
 
 <span class=p>...</span>
 
 <span class=nd>@Component</span>
-<span class=kd>public</span> <span class=nf>class</span> <span class=n>ProxyService</span> <span class=p>{</span>
+<span class=err>public class </span><span class=n>ProxyService</span> <span class=p>{</span>
 
     <span class=nd>@Autowired</span>
-    <span class=kd>private</span> <span class=nf>LoadBalancerClient</span> <span class=n>loadBalancer</span><span class=p>;</span>
+    <span class=err>private LoadBalancerClient </span><span class=n>loadBalancer</span><span class=p>;</span>
 
     <span class=nd>@Autowired</span>
-    <span class=kd>private</span> <span class=nf>Tracing</span> <span class=n>tracing</span><span class=p>;</span>
+    <span class=err>private Tracing </span><span class=n>tracing</span><span class=p>;</span>
 
     <span class=nd>@Autowired</span>
-    <span class=kd>private</span> <span class=nf>Tracer</span> <span class=n>tracer</span><span class=p>;</span>
+    <span class=err>private Tracer </span><span class=n>tracer</span><span class=p>;</span>
 
-    <span class=kd>private</span> <span class=nf>CircuitBreakerConfig</span> <span class=n>circuitBreakerConfiguration</span><span class=p>;</span>
-    <span class=kd>private</span> <span class=nf>TimeLimiterConfig</span> <span class=n>timeLimiterConfiguration</span><span class=p>;</span>
-    <span class=kd>private</span> <span class=nf>HttpClient</span> <span class=n>client</span><span class=p>;</span>
+    <span class=err>private CircuitBreakerConfig </span><span class=n>circuitBreakerConfiguration</span><span class=p>;</span>
+    <span class=err>private TimeLimiterConfig </span><span class=n>timeLimiterConfiguration</span><span class=p>;</span>
+    <span class=err>private HttpClient </span><span class=n>client</span><span class=p>;</span>
 
-    <span class=kd>public</span> <span class=nf>ProxyService</span><span class=p>()</span> <span class=p>{</span>
+    <span class=err>public ProxyService</span><span class=p>()</span> <span class=p>{</span>
         <span class=n>circuitBreakerConfiguration</span> <span class=o>=</span> <span class=n>CircuitBreakerConfig</span><span class=p>.</span><span class=na>custom</span><span class=p>()</span>
                 <span class=p>.</span><span class=na>failureRateThreshold</span><span class=p>(</span><span class=n>50</span><span class=p>)</span>
                 <span class=p>.</span><span class=na>recordExceptions</span><span class=p>(</span><span class=n>IOException</span><span class=p>.</span><span class=na>class</span><span class=p>,</span> <span class=n>TimeoutException</span><span class=p>.</span><span class=na>class</span><span class=p>)</span>
@@ -356,43 +356,43 @@ $ nomad job run nomad/client.nomad</code></pre></td></tr></table></div></div><di
         <span class=n>client</span> <span class=o>=</span> <span class=n>HttpClient</span><span class=p>.</span><span class=na>newBuilder</span><span class=p>().</span><span class=na>version</span><span class=p>(</span><span class=n>HttpClient</span><span class=p>.</span><span class=na>Version</span><span class=p>.</span><span class=na>HTTP_2</span><span class=p>).</span><span class=na>build</span><span class=p>();</span>
     <span class=p>}</span>
 
-    <span class=kd>public</span> <span class=nf>String</span> <span class=n>get</span><span class=p>()</span> <span class=p>{</span>
-        <span class=n>ServiceInstance</span> <span class=nf>instance</span> <span class=o>=</span> <span class=n>loadBalancer</span><span class=p>.</span><span class=na>choose</span><span class=p>(</span><span class=s>&#34;traefik&#34;</span><span class=p>);</span>
-        <span class=n>URI</span> <span class=nf>uri</span> <span class=o>=</span> <span class=n>instance</span><span class=p>.</span><span class=na>getUri</span><span class=p>();</span>
-        <span class=n>String</span> <span class=nf>resource</span> <span class=o>=</span> <span class=n>String</span><span class=p>.</span><span class=na>format</span><span class=p>(</span><span class=s>&#34;%s%s&#34;</span><span class=p>,</span> <span class=n>uri</span><span class=p>.</span><span class=na>toString</span><span class=p>().</span><span class=na>replace</span><span class=p>(</span><span class=s>&#34;127.0.0.1&#34;</span><span class=p>,</span> <span class=s>&#34;traefik&#34;</span><span class=p>),</span> <span class=s>&#34;/service&#34;</span><span class=p>);</span>        
-        <span class=n>HttpRequest</span><span class=p>.</span><span class=na>Builder</span> <span class=nf>r</span> <span class=o>=</span> <span class=kc>null</span><span class=p>;</span>
+    <span class=err>public String </span><span class=n>get</span><span class=p>()</span> <span class=p>{</span>
+        <span class=err>ServiceInstance instance </span><span class=o>=</span> <span class=n>loadBalancer</span><span class=p>.</span><span class=na>choose</span><span class=p>(</span><span class=s>&#34;traefik&#34;</span><span class=p>);</span>
+        <span class=err>URI uri </span><span class=o>=</span> <span class=n>instance</span><span class=p>.</span><span class=na>getUri</span><span class=p>();</span>
+        <span class=err>String resource </span><span class=o>=</span> <span class=n>String</span><span class=p>.</span><span class=na>format</span><span class=p>(</span><span class=s>&#34;%s%s&#34;</span><span class=p>,</span> <span class=n>uri</span><span class=p>.</span><span class=na>toString</span><span class=p>().</span><span class=na>replace</span><span class=p>(</span><span class=s>&#34;127.0.0.1&#34;</span><span class=p>,</span> <span class=s>&#34;traefik&#34;</span><span class=p>),</span> <span class=s>&#34;/service&#34;</span><span class=p>);</span>        
+        <span class=err>HttpRequest.Builder r </span><span class=o>=</span> <span class=kc>null</span><span class=p>;</span>
         <span class=k>try</span> <span class=p>{</span> 
             <span class=n>r</span> <span class=o>=</span> <span class=n>HttpRequest</span><span class=p>.</span><span class=na>newBuilder</span><span class=p>(</span><span class=k>new</span> <span class=n>URI</span><span class=p>(</span><span class=n>resource</span><span class=p>)).</span><span class=na>GET</span><span class=p>();</span>
-        <span class=p>}</span> <span class=k>catch</span> <span class=p>(</span><span class=n>Exception</span> <span class=nf>e</span><span class=p>)</span> <span class=p>{</span>
+        <span class=p>}</span> <span class=k>catch</span> <span class=p>(</span><span class=err>Exception e</span><span class=p>)</span> <span class=p>{</span>
             <span class=k>return</span> <span class=n>getFallback</span><span class=p>();</span>
         <span class=p>}</span>
-        <span class=kd>final</span> <span class=nf>HttpRequest</span><span class=p>.</span><span class=na>Builder</span> <span class=n>request</span> <span class=o>=</span> <span class=n>r</span><span class=p>;</span>
+        <span class=err>final HttpRequest</span><span class=p>.</span><span class=na>Builder</span> <span class=n>request</span> <span class=o>=</span> <span class=n>r</span><span class=p>;</span>
 
-        <span class=n>Span</span> <span class=nf>span</span> <span class=o>=</span> <span class=n>tracer</span><span class=p>.</span><span class=na>newTrace</span><span class=p>().</span><span class=na>start</span><span class=p>();</span>
-        <span class=n>TraceContext</span><span class=p>.</span><span class=na>Injector</span><span class=o>&lt;</span><span class=n>HttpRequest</span><span class=p>.</span><span class=na>Builder</span><span class=o>&gt;</span> <span class=nf>injector</span> <span class=o>=</span> <span class=n>tracing</span><span class=p>.</span><span class=na>propagation</span><span class=p>().</span><span class=na>injector</span><span class=p>((</span><span class=n>HttpRequest</span><span class=p>.</span><span class=na>Builder</span> <span class=nf>carrier</span><span class=p>,</span> <span class=n>String</span> <span class=nf>key</span><span class=p>,</span> <span class=n>String</span> <span class=nf>value</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=p>{</span> <span class=n>carrier</span><span class=p>.</span><span class=na>header</span><span class=p>(</span><span class=n>key</span><span class=p>,</span> <span class=n>value</span><span class=p>);</span> <span class=p>});</span>
+        <span class=err>Span span </span><span class=o>=</span> <span class=n>tracer</span><span class=p>.</span><span class=na>newTrace</span><span class=p>().</span><span class=na>start</span><span class=p>();</span>
+        <span class=err>TraceContext.Injector&lt;HttpRequest.Builder&gt; injector </span><span class=o>=</span> <span class=n>tracing</span><span class=p>.</span><span class=na>propagation</span><span class=p>().</span><span class=na>injector</span><span class=p>((</span><span class=err>HttpRequest.Builder carrier</span><span class=p>,</span> <span class=err>String key</span><span class=p>,</span> <span class=err>String value</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=p>{</span> <span class=n>carrier</span><span class=p>.</span><span class=na>header</span><span class=p>(</span><span class=n>key</span><span class=p>,</span> <span class=n>value</span><span class=p>);</span> <span class=p>});</span>
         <span class=n>injector</span><span class=p>.</span><span class=na>inject</span><span class=p>(</span><span class=n>span</span><span class=p>.</span><span class=na>context</span><span class=p>(),</span> <span class=n>request</span><span class=p>);</span>
         <span class=n>System</span><span class=p>.</span><span class=na>out</span><span class=p>.</span><span class=na>printf</span><span class=p>(</span><span class=s>&#34;Client Span (traceId: %s, spanId: %s)%n&#34;</span><span class=p>,</span> <span class=n>span</span><span class=p>.</span><span class=na>context</span><span class=p>().</span><span class=na>traceIdString</span><span class=p>(),</span> <span class=n>span</span><span class=p>.</span><span class=na>context</span><span class=p>().</span><span class=na>spanIdString</span><span class=p>());</span>
 
-        <span class=n>CircuitBreaker</span> <span class=nf>circuitBreaker</span> <span class=o>=</span> <span class=n>CircuitBreaker</span><span class=p>.</span><span class=na>of</span><span class=p>(</span><span class=s>&#34;resilience4jCircuitBreakerProxyService&#34;</span><span class=p>,</span> <span class=n>circuitBreakerConfiguration</span><span class=p>);</span>
-        <span class=n>TimeLimiter</span> <span class=nf>timeLimiter</span> <span class=o>=</span> <span class=n>TimeLimiter</span><span class=p>.</span><span class=na>of</span><span class=p>(</span><span class=n>timeLimiterConfiguration</span><span class=p>);</span>
+        <span class=err>CircuitBreaker circuitBreaker </span><span class=o>=</span> <span class=n>CircuitBreaker</span><span class=p>.</span><span class=na>of</span><span class=p>(</span><span class=s>&#34;resilience4jCircuitBreakerProxyService&#34;</span><span class=p>,</span> <span class=n>circuitBreakerConfiguration</span><span class=p>);</span>
+        <span class=err>TimeLimiter timeLimiter </span><span class=o>=</span> <span class=n>TimeLimiter</span><span class=p>.</span><span class=na>of</span><span class=p>(</span><span class=n>timeLimiterConfiguration</span><span class=p>);</span>
 
-        <span class=n>Supplier</span><span class=o>&lt;</span><span class=n>CompletableFuture</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;&gt;</span> <span class=nf>get</span> <span class=o>=</span> <span class=p>()</span> <span class=o>-&gt;</span> <span class=p>{</span>
+        <span class=err>Supplier&lt;CompletableFuture&lt;String&gt;&gt; get </span><span class=o>=</span> <span class=p>()</span> <span class=o>-&gt;</span> <span class=p>{</span>
             <span class=k>return</span> <span class=n>CompletableFuture</span><span class=p>.</span><span class=na>supplyAsync</span><span class=p>(()</span> <span class=o>-&gt;</span> <span class=p>{</span>
                 <span class=k>try</span> <span class=p>{</span> 
-                    <span class=n>HttpResponse</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=nf>response</span> <span class=o>=</span> <span class=n>client</span><span class=p>.</span><span class=na>send</span><span class=p>(</span><span class=n>request</span><span class=p>.</span><span class=na>build</span><span class=p>(),</span> <span class=n>HttpResponse</span><span class=p>.</span><span class=na>BodyHandlers</span><span class=p>.</span><span class=na>ofString</span><span class=p>());</span>
+                    <span class=err>HttpResponse&lt;String&gt; response </span><span class=o>=</span> <span class=n>client</span><span class=p>.</span><span class=na>send</span><span class=p>(</span><span class=n>request</span><span class=p>.</span><span class=na>build</span><span class=p>(),</span> <span class=n>HttpResponse</span><span class=p>.</span><span class=na>BodyHandlers</span><span class=p>.</span><span class=na>ofString</span><span class=p>());</span>
                     <span class=k>return</span> <span class=n>response</span><span class=p>.</span><span class=na>body</span><span class=p>();</span>
-                <span class=p>}</span> <span class=k>catch</span> <span class=p>(</span><span class=n>Exception</span> <span class=nf>e</span><span class=p>)</span> <span class=p>{</span>
+                <span class=p>}</span> <span class=k>catch</span> <span class=p>(</span><span class=err>Exception e</span><span class=p>)</span> <span class=p>{</span>
                     <span class=k>return</span> <span class=n>getFallback</span><span class=p>();</span>
                 <span class=p>}</span>
             <span class=p>});</span>
         <span class=p>};</span>
-        <span class=n>Callable</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=nf>getLimiter</span> <span class=o>=</span> <span class=n>TimeLimiter</span><span class=p>.</span><span class=na>decorateFutureSupplier</span><span class=p>(</span><span class=n>timeLimiter</span><span class=p>,</span> <span class=n>get</span><span class=p>);</span>
-        <span class=n>Callable</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=nf>getCircuitBreaker</span> <span class=o>=</span> <span class=n>CircuitBreaker</span><span class=p>.</span><span class=na>decorateCallable</span><span class=p>(</span><span class=n>circuitBreaker</span><span class=p>,</span> <span class=n>getLimiter</span><span class=p>);</span>
+        <span class=err>Callable&lt;String&gt; getLimiter </span><span class=o>=</span> <span class=n>TimeLimiter</span><span class=p>.</span><span class=na>decorateFutureSupplier</span><span class=p>(</span><span class=n>timeLimiter</span><span class=p>,</span> <span class=n>get</span><span class=p>);</span>
+        <span class=err>Callable&lt;String&gt; getCircuitBreaker </span><span class=o>=</span> <span class=n>CircuitBreaker</span><span class=p>.</span><span class=na>decorateCallable</span><span class=p>(</span><span class=n>circuitBreaker</span><span class=p>,</span> <span class=n>getLimiter</span><span class=p>);</span>
 
         <span class=k>return</span> <span class=n>Try</span><span class=p>.</span><span class=na>of</span><span class=p>(</span><span class=n>getCircuitBreaker</span><span class=o>::</span><span class=n>call</span><span class=p>).</span><span class=na>recover</span><span class=p>((</span><span class=n>throwable</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=n>getFallback</span><span class=p>()).</span><span class=na>get</span><span class=p>();</span>
     <span class=p>}</span>
 
-    <span class=kd>private</span> <span class=nf>String</span> <span class=n>getFallback</span><span class=p>()</span> <span class=p>{</span>
+    <span class=err>private String </span><span class=n>getFallback</span><span class=p>()</span> <span class=p>{</span>
         <span class=k>return</span> <span class=s>&#34;Fallback&#34;</span><span class=p>;</span>
     <span class=p>}</span>
 <span class=p>}</span>

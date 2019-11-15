@@ -1,0 +1,30 @@
+configuration:
+  status: warn
+
+  appenders:
+    console:
+      name: STDOUT
+      patternLayout:
+        Pattern: "%d{DEFAULT} %X{uuid} %-5level %60.60logger %msg%n"
+
+    rollingFile:
+      name: RollingFile
+      fileName: "logs/app.log"
+      filePattern: "logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz"
+      patternLayout:
+        pattern: "%d{DEFAULT} %X{uuid} %-5level %60.60logger %msg%n"
+      policies:
+        cronTriggeringPolicy:
+          schedule: "0 0 * * * ?"
+        sizeBasedTriggeringPolicy:
+          size: "500 MB"
+      defaultRollOverStrategy:
+        max: "10"
+
+  loggers:
+    root:
+      level: info
+      appenderRef:
+        ref: STDOUT
+      appenderRef:
+        ref: RollingFile
