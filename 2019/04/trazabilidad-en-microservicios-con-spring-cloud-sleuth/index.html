@@ -39,7 +39,7 @@
 │ └──────────────┘ │          └───────────────────┘        │ └──────────────┘ │
 │                  │                                       │                  │
 └──────────────────┘                                       └──────────────────┘</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/sleuth-headers.txt target=_blank>view raw</a></span>
-<a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/sleuth-headers.txt target=_blank>sleuth-headers.txt</a></div></div><p>Sleuth se encarga de propagar las cabeceras del servicio cliente al servicio servidor automáticamente instrumentando los clientes HTTP de <em>RestTemplate</em>, <em>AsyncRestTemplate</em>, <em>WebClient</em>, <em>Apache HttpClient</em> y <em>Netty HttpClient</em>. Para enviar, recibir, obtener y establecer los identificativos de correlación con Sleuth junto con el cliente HTTP de Java hay que hacer la instrumentación manualmente con las clases <em>Tracing</em> y <em>Tracer</em> si no está entre los soportados como en el caso del <a href=https://picodotdev.github.io/blog-bitix/2018/09/novedades-y-nuevas-caracteristicas-de-java-11/>cliente HTTP que se añadió en Java 11 en el propio JDK</a> con el soporte para HTTP/2.</p><p>En la parte servidora Sleuth proporciona un filtro que se encarga de obtener y crear el <em>span</em> de la petición que contiene los identificativos de correlación que con <a href=https://spring.io/>Spring</a> y las dependencias adecuadas se configura automáticamente. Para inyectar y extraer las cabeceras de Sleuth con el cliente HTTP de Java o como en el ejemplo con el de <a href=https://jersey.github.io/>Jersey</a> basta con proporcionar una <em>lambda</em> que realice el añadido o extracción de las cabeceras con la API del cliente.</p><p>Este es el código para instrumentalizar el cliente HTTP de <em>Jersey</em> que utiliza el servicio cliente que invoca al <em>gateway</em> y el código para crear el <em>span</em> en el cliente con los identificativos de correlación y recogerlos en el servicio servidor.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+<a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/sleuth-headers.txt target=_blank>sleuth-headers.txt</a></div></div><p>Sleuth se encarga de propagar las cabeceras del servicio cliente al servicio servidor automáticamente instrumentando los clientes HTTP de <em>RestTemplate</em>, <em>AsyncRestTemplate</em>, <em>WebClient</em>, <em>Apache HttpClient</em> y <em>Netty HttpClient</em>. Para enviar, recibir, obtener y establecer los identificativos de correlación con Sleuth junto con el cliente HTTP de Java hay que hacer la instrumentación manualmente con las clases <em>Tracing</em> y <em>Tracer</em> si no está entre los soportados como en el caso del <a href=https://picodotdev.github.io/blog-bitix/2018/09/novedades-y-nuevas-caracteristicas-de-java-11/>cliente HTTP que se añadió en Java 11 en el propio JDK</a> con el soporte para HTTP/2.</p><p>En la parte servidora Sleuth proporciona un filtro que se encarga de obtener y crear el <em>span</em> de la petición que contiene los identificativos de correlación que con <a href=https://spring.io/>Spring</a> y las dependencias adecuadas se configura automáticamente. Para inyectar y extraer las cabeceras de Sleuth con el cliente HTTP de Java o como en el ejemplo con el de <a href=https://jersey.github.io/>Jersey</a> basta con proporcionar una <em>lambda</em> que realice el añadido o extracción de las cabeceras con la API del cliente.</p><p>Este es el código para instrumentalizar el cliente HTTP de <em>Jersey</em> que utiliza el servicio cliente que invoca al <em>gateway</em> y el código para crear el <em>span</em> en el cliente con los identificativos de correlación y recogerlos en el servicio servidor.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -78,7 +78,7 @@
 </span><span class=lnt>37
 </span><span class=lnt>38
 </span><span class=lnt>39
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>springcloud</span><span class=p>.</span><span class=na>client</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>springcloud</span><span class=p>.</span><span class=na>client</span><span class=p>;</span>
 
 <span class=p>...</span>
 
@@ -118,7 +118,7 @@
     <span class=p>}</span>
 <span class=p>}</span>
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/ProxyService.java target=_blank>view raw</a></span>
-<a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/ProxyService.java target=_blank>ProxyService.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+<a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/ProxyService.java target=_blank>ProxyService.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -156,7 +156,7 @@
 </span><span class=lnt>36
 </span><span class=lnt>37
 </span><span class=lnt>38
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>springcloud</span><span class=p>.</span><span class=na>service</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>springcloud</span><span class=p>.</span><span class=na>service</span><span class=p>;</span>
 
 <span class=p>...</span>
 
@@ -205,12 +205,12 @@
 Service Span (traceId: 94fcd131178298fd, spanId: 6e6380e239f30917)
 ...
 Service response: Hello world (http://archlinux:8080/, value)</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/System.out target=_blank>view raw</a></span>
-<a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/System.out target=_blank>System.out</a></div></div><p>Para iniciar los diferentes microservicios de la aplicación hay que utilizar los siguientes comandos.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
+<a href=/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/code/System.out target=_blank>System.out</a></div></div><p>Para iniciar los diferentes microservicios de la aplicación hay que utilizar los siguientes comandos.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ ./gradlew discoveryserver:run --args<span class=o>=</span><span class=s2>&#34;--port=8761&#34;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ ./gradlew discoveryserver:run --args<span class=o>=</span><span class=s2>&#34;--port=8761&#34;</span>
 $ ./gradlew configserver:run --args<span class=o>=</span><span class=s2>&#34;--port=8090&#34;</span>
 $ ./gradlew service:run --args<span class=o>=</span><span class=s2>&#34;--port=8080&#34;</span>
 $ ./gradlew proxy:run --args<span class=o>=</span><span class=s2>&#34;--port=8085&#34;</span>

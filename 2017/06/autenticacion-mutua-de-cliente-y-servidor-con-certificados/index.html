@@ -9,7 +9,7 @@
 <a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
 <a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class="adblock-sidebar adblock-sidebar-right"><div class=adblock-sidebar-container><ins class="adsbygoogle adblock-sidebar-vertical" style=display:block data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format="vertical, rectangle" data-type=auto></ins></div></div><article itemprop=mainEntity itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content="es"><meta itemprop=keywords content="blog-stack, java, planeta-codigo, planeta-linux, programacion, seguridad"><h1 itemprop=name>Autenticación mutua de cliente y servidor con certificados</h1><p class=information>Escrito por
 <span itemprop=author itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2017-06-17>17/06/2017</time>, actualizado el <time itemprop=dateModified datetime=2017-06-18>18/06/2017</time>.<br><a href=tags/blog-stack/>blog-stack</a> <a href=tags/java/>java</a> <a href=tags/planeta-codigo/>planeta-codigo</a> <a href=tags/planeta-linux/>planeta-linux</a> <a href=tags/programacion/>programacion</a> <a href=tags/seguridad/>seguridad</a><br><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/ itemprop=url>Enlace permanente</a>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/#comments>Comentarios</a></p><div class=content itemprop=articleBody><meta itemprop=wordCount content="3379"><div class=logotypes style=float:right><img src=assets/images/logotipos/openssl.svg class=right width=400 alt=OpenSSL title=OpenSSL></div><p>Los certificados no solo sirven para autenticar a un servidor o acceder solo a aquellos en los que confiamos. El servidor también puede autenticar a los clientes mediante un certificado como alternativa a usar un usuario y contraseña ya sea una autenticación <em>BASIC</em> o un formulario personalizado. Al igual que en el cliente usa el certificado de la autoridad de certificación en la que confía para validar el que presenta el servidor, el servidor puede requerir que el cliente también proporcione un certificado que el servidor valida según las autoridades de certificación en las que confía, en ambos casos el servidor o cliente usan su clave privada para iniciar la conexión segura con el <em>handsake</em> del <a href=https://es.wikipedia.org/wiki/Transport_Layer_Security>protocolo TLS</a>.</p><p>Para el ejemplo usaré un servidor web <a href=https://nginx.org/>nginx</a> ejecutado como un contenedor de <a href=https://www.docker.com/>Docker</a> configurado de tal manera que requiere autenticación para el cliente con certificados.</p><p>Inicialmente deberemos generar tres parejas de claves privadas y públicas, una para nuestra propia autoridad de certificación, una clave para el servidor y otra para el cliente. Al mismo tiempo generaré otras tres parejas de claves privadas y públicas para comprobar que cuando se proporciona un certificado incorrecto la autenticación falla.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt> 1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/#comments>Comentarios</a></p><div class=content itemprop=articleBody><meta itemprop=wordCount content="3379"><div class=logotypes style=float:right><img src=assets/images/logotipos/openssl.svg class=right width=400 alt=OpenSSL title=OpenSSL></div><p>Los certificados no solo sirven para autenticar a un servidor o acceder solo a aquellos en los que confiamos. El servidor también puede autenticar a los clientes mediante un certificado como alternativa a usar un usuario y contraseña ya sea una autenticación <em>BASIC</em> o un formulario personalizado. Al igual que en el cliente usa el certificado de la autoridad de certificación en la que confía para validar el que presenta el servidor, el servidor puede requerir que el cliente también proporcione un certificado que el servidor valida según las autoridades de certificación en las que confía, en ambos casos el servidor o cliente usan su clave privada para iniciar la conexión segura con el <em>handsake</em> del <a href=https://es.wikipedia.org/wiki/Transport_Layer_Security>protocolo TLS</a>.</p><p>Para el ejemplo usaré un servidor web <a href=https://nginx.org/>nginx</a> ejecutado como un contenedor de <a href=https://www.docker.com/>Docker</a> configurado de tal manera que requiere autenticación para el cliente con certificados.</p><p>Inicialmente deberemos generar tres parejas de claves privadas y públicas, una para nuestra propia autoridad de certificación, una clave para el servidor y otra para el cliente. Al mismo tiempo generaré otras tres parejas de claves privadas y públicas para comprobar que cuando se proporciona un certificado incorrecto la autenticación falla.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -20,7 +20,7 @@
 </span><span class=lnt> 9
 </span><span class=lnt>10
 </span><span class=lnt>11
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ openssl genrsa -out ca.key <span class=m>8192</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ openssl genrsa -out ca.key <span class=m>8192</span>
 Generating RSA private key, <span class=m>8192</span> bit long modulus
 ............................................................................................................................................++
 .........................................................................................................................................................................................................................................................................................................................................++
@@ -73,19 +73,19 @@ cjTj5Uwjc5Tr7RY724924amECHXcldJGc3c/BpdbyYboxsTau8BbAk45c61QKeoT
 GtQ+K4a2/X0oArroTtHOlRFFUB9tyKSD20Vj80Ks4op/Q7ucEcZ8mr9zAXzhfokK
 ...
 -----END PUBLIC KEY-----</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/ca.pub target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/ca.pub target=_blank>ca.pub</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/ca.pub target=_blank>ca.pub</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ openssl genrsa -out ca-unknown.key <span class=m>8192</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ openssl genrsa -out ca-unknown.key <span class=m>8192</span>
 $ openssl rsa -in ca-unknown.key -pubout &gt; ca-unknown.pub
 $ openssl genrsa -out server-unknown.key <span class=m>8192</span>
 $ openssl rsa -in server-unknown.key -pubout &gt; server-unknown.pub
 $ openssl genrsa -out client-unknown.key <span class=m>8192</span>
 $ openssl rsa -in ca-unknown.key -pubout &gt; client-unknown.pub</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-genrsa-unknown.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-genrsa-unknown.sh target=_blank>openssl-genrsa-unknown.sh</a></div></div><p>El siguiente paso es generar los certificados y firmar con la clave y certificado de la autoridad de certificado los certificados del servidor y cliente. Como paso previo a que la autoridad de certificación emita los certificados del servidor y cliente hay que generar una petición de firma de certificado, los archivos <em>.csr</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt> 1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-genrsa-unknown.sh target=_blank>openssl-genrsa-unknown.sh</a></div></div><p>El siguiente paso es generar los certificados y firmar con la clave y certificado de la autoridad de certificado los certificados del servidor y cliente. Como paso previo a que la autoridad de certificación emita los certificados del servidor y cliente hay que generar una petición de firma de certificado, los archivos <em>.csr</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -129,7 +129,7 @@ $ openssl rsa -in ca-unknown.key -pubout &gt; client-unknown.pub</code></pre></t
 </span><span class=lnt>42
 </span><span class=lnt>43
 </span><span class=lnt>44
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ openssl req -new -x509 -days <span class=m>1825</span> -key ca.key -out ca.crt
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ openssl req -new -x509 -days <span class=m>1825</span> -key ca.key -out ca.crt
 You are about to be asked to enter information that will be incorporated
 into your certificate request.
 What you are about to enter is what is called a Distinguished Name or a DN.
@@ -173,25 +173,25 @@ Signature ok
 <span class=nv>subject</span><span class=o>=</span><span class=nv>C</span> <span class=o>=</span> ES, <span class=nv>ST</span> <span class=o>=</span> Spain, <span class=nv>O</span> <span class=o>=</span> Blog Bitix, <span class=nv>CN</span> <span class=o>=</span> localhost
 Getting CA Private Key
 $ openssl x509 -req -days <span class=m>1825</span> -in client.csr -CA ca.crt -CAkey ca.key -set_serial <span class=m>02</span> -out client.crt</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-req.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-req.sh target=_blank>openssl-req.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-req.sh target=_blank>openssl-req.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ openssl req -new -x509 -days <span class=m>1825</span> -key ca-unknown.key -out ca-unknown.crt
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ openssl req -new -x509 -days <span class=m>1825</span> -key ca-unknown.key -out ca-unknown.crt
 $ openssl req -new -key server-unknown.key -out server-unknown.csr
 $ openssl req -new -key client-unknown.key -out client-unknown.csr
 $ openssl x509 -req -days <span class=m>1825</span> -in server-unknown.csr -CA ca-unknown.crt -CAkey ca-unknown.key -set_serial <span class=m>01</span> -out server-unknown.crt
 $ openssl x509 -req -days <span class=m>1825</span> -in client-unknown.csr -CA ca-unknown.crt -CAkey ca-unknown.key -set_serial <span class=m>02</span> -out client-unknown.crt</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-req-unknown.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-req-unknown.sh target=_blank>openssl-req-unknown.sh</a></div></div><p>Con la misma herramienta de <a href=https://www.openssl.org/>OpenSSL</a> es posible comprobar si un certificado es válido para una autoridad de certificación en la que se confía, para ello se usa el certificado raiz de la autoridad.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-req-unknown.sh target=_blank>openssl-req-unknown.sh</a></div></div><p>Con la misma herramienta de <a href=https://www.openssl.org/>OpenSSL</a> es posible comprobar si un certificado es válido para una autoridad de certificación en la que se confía, para ello se usa el certificado raiz de la autoridad.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ openssl verify -CAfile ca.crt server.crt
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ openssl verify -CAfile ca.crt server.crt
 server.crt: OK
 $ openssl verify -CAfile ca.crt client.crt
 client.crt: OK</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-verify.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-verify.sh target=_blank>openssl-verify.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-verify.sh target=_blank>openssl-verify.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -199,7 +199,7 @@ client.crt: OK</code></pre></td></tr></table></div></div><div class=highlight-me
 </span><span class=lnt>6
 </span><span class=lnt>7
 </span><span class=lnt>8
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ openssl verify -CAfile ca.crt server-unknown.crt
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ openssl verify -CAfile ca.crt server-unknown.crt
 <span class=nv>C</span> <span class=o>=</span> ES, <span class=nv>ST</span> <span class=o>=</span> Spain, <span class=nv>O</span> <span class=o>=</span> Unknown, <span class=nv>CN</span> <span class=o>=</span> localhost
 error <span class=m>20</span> at <span class=m>0</span> depth lookup: unable to get <span class=nb>local</span> issuer certificate
 error server-unknown.crt: verification failed
@@ -239,8 +239,8 @@ error client-unknown.crt: verification failed</code></pre></td></tr></table></di
         ...
     }
 }</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/nginx.conf target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/nginx.conf target=_blank>nginx.conf</a></div></div><p>Con el siguiente archivo descriptor de <a href=https://docs.docker.com/compose/>Docker Compose</a> y comando se inicia el servidor web nginx.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ docker-compose up
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/nginx.conf target=_blank>nginx.conf</a></div></div><p>Con el siguiente archivo descriptor de <a href=https://docs.docker.com/compose/>Docker Compose</a> y comando se inicia el servidor web nginx.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ docker-compose up
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/docker-compose.sh target=_blank>view raw</a></span>
 <a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/docker-compose.sh target=_blank>docker-compose.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-YAML data-lang=YAML><span class=lnt> 1
 </span><span class=lnt> 2
@@ -262,7 +262,7 @@ error client-unknown.crt: verification failed</code></pre></td></tr></table></di
 </span><span class=w>  </span>ports<span class=p>:</span><span class=w>
 </span><span class=w>    </span>-<span class=w> </span><span class=s2>&#34;80:80&#34;</span><span class=w>
 </span><span class=w>    </span>-<span class=w> </span><span class=s2>&#34;443:443&#34;</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/docker-compose.yml target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/docker-compose.yml target=_blank>docker-compose.yml</a></div></div><p>Iniciado el servidor web ya se pueden realizar peticiones y el servidor y el cliente se autenticarán mutuamente. El servidor devolverá el código HTML de la página de bienvenida por defecto con las cabeceras del protocolo HTTP después de realizar el <em>handsake</em> donde se valida el certificado del servidor.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt> 1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/docker-compose.yml target=_blank>docker-compose.yml</a></div></div><p>Iniciado el servidor web ya se pueden realizar peticiones y el servidor y el cliente se autenticarán mutuamente. El servidor devolverá el código HTML de la página de bienvenida por defecto con las cabeceras del protocolo HTTP después de realizar el <em>handsake</em> donde se valida el certificado del servidor.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -334,7 +334,7 @@ error client-unknown.crt: verification failed</code></pre></td></tr></table></di
 </span><span class=lnt>70
 </span><span class=lnt>71
 </span><span class=lnt>72
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ curl -v --cacert ca.crt --cert client.crt --key client.key <span class=s2>&#34;https://localhost/&#34;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ curl -v --cacert ca.crt --cert client.crt --key client.key <span class=s2>&#34;https://localhost/&#34;</span>
 *   Trying ::1...
 * TCP_NODELAY <span class=nb>set</span>
 * Connected to localhost <span class=o>(</span>::1<span class=o>)</span> port <span class=m>443</span> <span class=o>(</span><span class=c1>#0)</span>
@@ -406,7 +406,7 @@ Commercial support is available at
 &lt;/body&gt;
 &lt;/html&gt;
 * Connection <span class=c1>#0 to host localhost left intact</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/curl.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/curl.sh target=_blank>curl.sh</a></div></div><p>Si se intenta realizar una petición sin certificado de cliente o con un certificado de cliente en el que no confié el servidor (que no esté firmado por la autoridad de certificación en la que confía) se devolverá un código de estado 400 que indica que la petición se ha rechazado. También el cliente advertirá si la autoridad de certificación en la que confía no valida el certificado del servidor con un error 400 y título <em>400 The SSL certificate error</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>  1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/curl.sh target=_blank>curl.sh</a></div></div><p>Si se intenta realizar una petición sin certificado de cliente o con un certificado de cliente en el que no confié el servidor (que no esté firmado por la autoridad de certificación en la que confía) se devolverá un código de estado 400 que indica que la petición se ha rechazado. También el cliente advertirá si la autoridad de certificación en la que confía no valida el certificado del servidor con un error 400 y título <em>400 The SSL certificate error</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt>  1
 </span><span class=lnt>  2
 </span><span class=lnt>  3
 </span><span class=lnt>  4
@@ -544,7 +544,7 @@ Commercial support is available at
 </span><span class=lnt>136
 </span><span class=lnt>137
 </span><span class=lnt>138
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ curl -v --cacert ca.crt <span class=s2>&#34;https://localhost/&#34;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ curl -v --cacert ca.crt <span class=s2>&#34;https://localhost/&#34;</span>
 *   Trying ::1...
 * TCP_NODELAY <span class=nb>set</span>
 * Connected to localhost <span class=o>(</span>::1<span class=o>)</span> port <span class=m>443</span> <span class=o>(</span><span class=c1>#0)</span>
@@ -682,14 +682,14 @@ curl performs SSL certificate verification by default, using a <span class=s2>&#
 </span><span class=s1>If you&#39;</span>d like to turn off curl<span class=err>&#39;</span>s verification of the certificate, use
  the -k <span class=o>(</span>or --insecure<span class=o>)</span> option.
 HTTPS-proxy has similar options --proxy-cacert and --proxy-insecure.</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/curl-unknown.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/curl-unknown.sh target=_blank>curl-unknown.sh</a></div></div><p>El siguiente <em>script</em> escrito en lenguaje <a href=https://www.groovy-lang.org/>Groovy</a> muestra como desde un programa para la plataforma Java se realiza autenticación mutua y que error da cuando alguno de los certificados es inválido ya sea el del cliente o el del servidor. Generando previamente los <em>keystores</em> de la autoridad de certificado y del cliente introduciendo como clave en el ejemplo <em>password</em> cuando se solicita.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/curl-unknown.sh target=_blank>curl-unknown.sh</a></div></div><p>El siguiente <em>script</em> escrito en lenguaje <a href=https://www.groovy-lang.org/>Groovy</a> muestra como desde un programa para la plataforma Java se realiza autenticación mutua y que error da cuando alguno de los certificados es inválido ya sea el del cliente o el del servidor. Generando previamente los <em>keystores</em> de la autoridad de certificado y del cliente introduciendo como clave en el ejemplo <em>password</em> cuando se solicita.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ keytool -importcert -keystore ca.jks -trustcacerts -alias ca -file ca.crt
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ keytool -importcert -keystore ca.jks -trustcacerts -alias ca -file ca.crt
 $ openssl pkcs12 -export -out client.p12 -inkey client.key -in client.crt
 $ keytool -importkeystore -destkeystore client.jks -srckeystore client.p12 -srcstoretype pkcs12
 
@@ -786,7 +786,7 @@ $ keytool -importkeystore -destkeystore client-unknown.jks -srckeystore client-u
 <span class=o>}</span>
 
 <span class=k>new</span> <span class=nf>Main</span><span class=o>().</span><span class=na>get</span><span class=o>()</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/MutualCertAuth.groovy target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/MutualCertAuth.groovy target=_blank>MutualCertAuth.groovy</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt> 1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/MutualCertAuth.groovy target=_blank>MutualCertAuth.groovy</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -813,7 +813,7 @@ $ keytool -importkeystore -destkeystore client-unknown.jks -srckeystore client-u
 </span><span class=lnt>25
 </span><span class=lnt>26
 </span><span class=lnt>27
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ groovy MutualCertAuth.groovy
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ groovy MutualCertAuth.groovy
 <span class=m>200</span>
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
@@ -840,7 +840,7 @@ Commercial support is available at
 &lt;p&gt;&lt;em&gt;Thank you <span class=k>for</span> using nginx.&lt;/em&gt;&lt;/p&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/groovy.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/groovy.sh target=_blank>groovy.sh</a></div></div><p>En caso de que al usar un <em>keystore</em> con un certificado de una autoridad que no valida el certificado del servidor se producirán un error, también cuando el certificado del cliente no sea válido para el servidor.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt> 1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/groovy.sh target=_blank>groovy.sh</a></div></div><p>En caso de que al usar un <em>keystore</em> con un certificado de una autoridad que no valida el certificado del servidor se producirán un error, también cuando el certificado del cliente no sea válido para el servidor.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -876,7 +876,7 @@ Commercial support is available at
 </span><span class=lnt>34
 </span><span class=lnt>35
 </span><span class=lnt>36
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ groovy MutualCertAuth.groovy <span class=c1># with code change .trustStoreFile(&#34;ca-unknown.jks&#34;)</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ groovy MutualCertAuth.groovy <span class=c1># with code change .trustStoreFile(&#34;ca-unknown.jks&#34;)</span>
 Caught: javax.ws.rs.ProcessingException: javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
 javax.ws.rs.ProcessingException: javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
     at org.glassfish.jersey.client.internal.HttpUrlConnector.apply<span class=o>(</span>HttpUrlConnector.java:287<span class=o>)</span>

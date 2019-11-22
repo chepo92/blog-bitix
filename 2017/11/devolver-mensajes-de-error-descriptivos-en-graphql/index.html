@@ -9,7 +9,7 @@
 <a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
 <a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class="adblock-sidebar adblock-sidebar-right"><div class=adblock-sidebar-container><ins class="adsbygoogle adblock-sidebar-vertical" style=display:block data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format="vertical, rectangle" data-type=auto></ins></div></div><article itemprop=mainEntity itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content="es"><meta itemprop=keywords content="blog-stack, java, planeta-codigo, programacion"><h1 itemprop=name>Devolver mensajes de error descriptivos en GraphQL</h1><p class=information>Escrito por
 <span itemprop=author itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2017-11-12>12/11/2017</time>, actualizado el <time itemprop=dateModified datetime=2019-06-15>15/06/2019</time>.<br><a href=tags/blog-stack/>blog-stack</a> <a href=tags/java/>java</a> <a href=tags/planeta-codigo/>planeta-codigo</a> <a href=tags/programacion/>programacion</a><br><a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/ itemprop=url>Enlace permanente</a>
-<a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/#comments>Comentarios</a></p><div class=content itemprop=articleBody><meta itemprop=wordCount content="1359"><div class=logotypes style=float:right><img src=assets/images/logotipos/graphql.svg class=right width=200 alt=GraphQL title=GraphQL></div><p>Por defecto <a href=https://graphql.org/>GraphQL</a> devuelve errores con mensajes descriptivos para los errores del cliente como son los errores de sintaxis en la sentencia de consulta o mutación, en el caso de que el campo solicitado no exista o no se ha indicado ninguno. En el caso de Java si se lanza una excepción en la clase repositorio que guarda los datos o en la lógica de negocio y no se captura GraphQL indicará que se ha producido un error interno en el servidor. Esto no es muy descriptivo y es mejor indicar errores más útiles para el usuario de la API como podría ser que no se tienen permisos para realizar la modificación o el error que se ha producido al validar los datos y por los que la operación no se ha completado.</p><p>Los errores en GraphQL usando el lenguaje Java se gestionan implementando en una clase la interfaz <a href=https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/GraphQLError.java>GrapQLError</a>, este podría ser en caso de una excepción que además de heredar de <a href=https://docs.oracle.com/javase/9/docs/api/java/lang/Exception.html>Exception</a> implemente la interfaz <em>GraphQLError</em>. Sin embargo, GraphQL cuando una clase hereda únicamente de <em>Exception</em> lo considera un error interno del servidor y para no dar información interna del servicio a los clientes como mensaje indica únicamente <em>Internal Server Error(s) while executing query</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt> 1
+<a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/#comments>Comentarios</a></p><div class=content itemprop=articleBody><meta itemprop=wordCount content="1359"><div class=logotypes style=float:right><img src=assets/images/logotipos/graphql.svg class=right width=200 alt=GraphQL title=GraphQL></div><p>Por defecto <a href=https://graphql.org/>GraphQL</a> devuelve errores con mensajes descriptivos para los errores del cliente como son los errores de sintaxis en la sentencia de consulta o mutación, en el caso de que el campo solicitado no exista o no se ha indicado ninguno. En el caso de Java si se lanza una excepción en la clase repositorio que guarda los datos o en la lógica de negocio y no se captura GraphQL indicará que se ha producido un error interno en el servidor. Esto no es muy descriptivo y es mejor indicar errores más útiles para el usuario de la API como podría ser que no se tienen permisos para realizar la modificación o el error que se ha producido al validar los datos y por los que la operación no se ha completado.</p><p>Los errores en GraphQL usando el lenguaje Java se gestionan implementando en una clase la interfaz <a href=https://github.com/graphql-java/graphql-java/blob/master/src/main/java/graphql/GraphQLError.java>GrapQLError</a>, este podría ser en caso de una excepción que además de heredar de <a href=https://docs.oracle.com/javase/9/docs/api/java/lang/Exception.html>Exception</a> implemente la interfaz <em>GraphQLError</em>. Sin embargo, GraphQL cuando una clase hereda únicamente de <em>Exception</em> lo considera un error interno del servidor y para no dar información interna del servicio a los clientes como mensaje indica únicamente <em>Internal Server Error(s) while executing query</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -29,7 +29,7 @@
 </span><span class=lnt>18
 </span><span class=lnt>19
 </span><span class=lnt>20
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ curl -XPOST -H <span class=s2>&#34;Content-Type: application/json&#34;</span> -d <span class=s1>&#39;{&#34;query&#34;: &#34;query Books{books{none}}&#34;}&#39;</span> http://localhost:8080/graphql
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ curl -XPOST -H <span class=s2>&#34;Content-Type: application/json&#34;</span> -d <span class=s1>&#39;{&#34;query&#34;: &#34;query Books{books{none}}&#34;}&#39;</span> http://localhost:8080/graphql
 <span class=o>{</span>
   <span class=s2>&#34;data&#34;</span>: null,
   <span class=s2>&#34;errors&#34;</span>: <span class=o>[</span>
@@ -50,7 +50,7 @@
   <span class=o>]</span>
 <span class=o>}</span>
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/code/curl-default-errors.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/code/curl-default-errors.sh target=_blank>curl-default-errors.sh</a></div></div><p>Para que GraphQL muestre el error personalizado deseado lanzando excepciones hay que adaptar esa excepción y que implementa <em>GraphQLError</em> con una clase que únicamente implemente la interfaz <em>GraphQLError</em> pero no herede de <em>Exception</em>. Esta sería una clase adaptador necesaria.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+<a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/code/curl-default-errors.sh target=_blank>curl-default-errors.sh</a></div></div><p>Para que GraphQL muestre el error personalizado deseado lanzando excepciones hay que adaptar esa excepción y que implementa <em>GraphQLError</em> con una clase que únicamente implemente la interfaz <em>GraphQLError</em> pero no herede de <em>Exception</em>. Esta sería una clase adaptador necesaria.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -111,7 +111,7 @@
 </span><span class=lnt>59
 </span><span class=lnt>60
 </span><span class=lnt>61
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>graphql</span><span class=p>.</span><span class=na>misc</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>graphql</span><span class=p>.</span><span class=na>misc</span><span class=p>;</span>
 
 <span class=err>import graphql</span><span class=p>.</span><span class=na>ErrorClassification</span><span class=p>;</span>
 <span class=err>import graphql</span><span class=p>.</span><span class=na>ExceptionWhileDataFetching</span><span class=p>;</span>
@@ -173,7 +173,7 @@
     <span class=p>}</span>
 <span class=p>}</span>
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/code/GraphQLErrorAdapter.java target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/code/GraphQLErrorAdapter.java target=_blank>GraphQLErrorAdapter.java</a></div></div><p>Para adaptar las clases excepción hay que cambiar el comportamiento de la clase <em>GraphQLErrorHandler</em> de modo que transforme las excepciones a la clase <em>GraphQLError</em> propia. Esta clase se indica al construir el objeto <em>SimpleGraphQLServlet</em> y <em>ServletRegistrationBean</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+<a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/code/GraphQLErrorAdapter.java target=_blank>GraphQLErrorAdapter.java</a></div></div><p>Para adaptar las clases excepción hay que cambiar el comportamiento de la clase <em>GraphQLErrorHandler</em> de modo que transforme las excepciones a la clase <em>GraphQLError</em> propia. Esta clase se indica al construir el objeto <em>SimpleGraphQLServlet</em> y <em>ServletRegistrationBean</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -236,7 +236,7 @@
 </span><span class=lnt>61
 </span><span class=lnt>62
 </span><span class=lnt>63
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>graphql</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>graphql</span><span class=p>;</span>
 
 <span class=p>...</span>
 
@@ -300,7 +300,7 @@
     <span class=p>}</span>
 <span class=p>}</span>
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/code/Main.java target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/code/Main.java target=_blank>Main.java</a></div></div><p>En el caso de este ejemplo solo un usuario de nombre <em>admin</em> tiene permitido hacer modificaciones en la colección de libros guardados en la clase repositorio <em>LibraryRepository</em>. Por otro lado, cuando se añade un libro se hace una validación de los datos comprobando que el autor del libro a añadir exista en la librería. Estas son las peticiones válidas.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt> 1
+<a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/code/Main.java target=_blank>Main.java</a></div></div><p>En el caso de este ejemplo solo un usuario de nombre <em>admin</em> tiene permitido hacer modificaciones en la colección de libros guardados en la clase repositorio <em>LibraryRepository</em>. Por otro lado, cuando se añade un libro se hace una validación de los datos comprobando que el autor del libro a añadir exista en la librería. Estas son las peticiones válidas.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -331,7 +331,7 @@
 </span><span class=lnt>29
 </span><span class=lnt>30
 </span><span class=lnt>31
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ curl -XPOST -H <span class=s2>&#34;Content-Type: application/json&#34;</span> -d <span class=s1>&#39;{&#34;query&#34;: &#34;query Books{books{title}}&#34;}&#39;</span> http://localhost:8080/graphql
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ curl -XPOST -H <span class=s2>&#34;Content-Type: application/json&#34;</span> -d <span class=s1>&#39;{&#34;query&#34;: &#34;query Books{books{title}}&#34;}&#39;</span> http://localhost:8080/graphql
 <span class=o>{</span>
   <span class=s2>&#34;data&#34;</span>: <span class=o>{</span>
     <span class=s2>&#34;books&#34;</span>: <span class=o>[</span>
@@ -362,7 +362,7 @@ $ curl -XPOST -H <span class=s2>&#34;Content-Type: application/json&#34;</span> 
     <span class=o>}</span>
   <span class=o>}</span>
 <span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/code/curl.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/code/curl.sh target=_blank>curl.sh</a></div></div><p>Y estas las inválidas que devuelve los mensajes propios más descriptivos de los errores o validaciones realizadas en el servidor de más utilidad para un usuario del servicio.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt> 1
+<a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/code/curl.sh target=_blank>curl.sh</a></div></div><p>Y estas las inválidas que devuelve los mensajes propios más descriptivos de los errores o validaciones realizadas en el servidor de más utilidad para un usuario del servicio.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -410,7 +410,7 @@ $ curl -XPOST -H <span class=s2>&#34;Content-Type: application/json&#34;</span> 
 </span><span class=lnt>46
 </span><span class=lnt>47
 </span><span class=lnt>48
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ curl -XPOST -H <span class=s2>&#34;Content-Type: application/json&#34;</span> -d <span class=s1>&#39;{&#34;query&#34;: &#34;mutation addBook($title: String, $author: Long){addBook(title: $title, author: $author){title}}&#34;, &#34;variables&#34;: { &#34;title&#34;: &#34;El lazarillo de Tormes&#34;, &#34;author&#34;: 6}}&#39;</span> http://localhost:8080/graphql
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ curl -XPOST -H <span class=s2>&#34;Content-Type: application/json&#34;</span> -d <span class=s1>&#39;{&#34;query&#34;: &#34;mutation addBook($title: String, $author: Long){addBook(title: $title, author: $author){title}}&#34;, &#34;variables&#34;: { &#34;title&#34;: &#34;El lazarillo de Tormes&#34;, &#34;author&#34;: 6}}&#39;</span> http://localhost:8080/graphql
 <span class=o>{</span>
   <span class=s2>&#34;data&#34;</span>: <span class=o>{</span>
     <span class=s2>&#34;addBook&#34;</span>: null
@@ -458,7 +458,7 @@ $ curl -XPOST -H <span class=s2>&#34;Content-Type: application/json&#34;</span> 
     <span class=o>}</span>
   <span class=o>]</span>
 <span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/code/curl-custom-errors.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/code/curl-custom-errors.sh target=_blank>curl-custom-errors.sh</a></div></div><p>La interfaz <em>GraphQLError</em> posee el método <em>getMessage()</em> para devolver la descripción del mensaje pero con el método <em>getExtensions()</em> es posible incluir cualquier dato en forma de clave-valor que deseemos como un código de error o cualquier otra información deseada. El caso de la excepción <em>PermissionException</em> devuelve dos datos adicionales <em>foo</em> y <em>fizz</em>, en un caso real se implementaría una lógica más útil para devolver estos datos adicionales posiblemente proporcionándolos en el constructor u obteniéndolos con la referencia a algún objeto.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+<a href=/blog-bitix/2017/11/devolver-mensajes-de-error-descriptivos-en-graphql/code/curl-custom-errors.sh target=_blank>curl-custom-errors.sh</a></div></div><p>La interfaz <em>GraphQLError</em> posee el método <em>getMessage()</em> para devolver la descripción del mensaje pero con el método <em>getExtensions()</em> es posible incluir cualquier dato en forma de clave-valor que deseemos como un código de error o cualquier otra información deseada. El caso de la excepción <em>PermissionException</em> devuelve dos datos adicionales <em>foo</em> y <em>fizz</em>, en un caso real se implementaría una lógica más útil para devolver estos datos adicionales posiblemente proporcionándolos en el constructor u obteniéndolos con la referencia a algún objeto.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -486,7 +486,7 @@ $ curl -XPOST -H <span class=s2>&#34;Content-Type: application/json&#34;</span> 
 </span><span class=lnt>26
 </span><span class=lnt>27
 </span><span class=lnt>28
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>graphql</span><span class=p>.</span><span class=na>misc</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>graphql</span><span class=p>.</span><span class=na>misc</span><span class=p>;</span>
 
 <span class=p>...</span>
 

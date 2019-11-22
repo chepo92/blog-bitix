@@ -9,7 +9,7 @@
 <a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
 <a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class="adblock-sidebar adblock-sidebar-right"><div class=adblock-sidebar-container><ins class="adsbygoogle adblock-sidebar-vertical" style=display:block data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format="vertical, rectangle" data-type=auto></ins></div></div><article itemprop=mainEntity itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content="es"><meta itemprop=keywords content="blog-stack, java, planeta-codigo, programacion"><h1 itemprop=name>Listener de eventos de Hibernate con servicios de Spring</h1><p class=information>Escrito por
 <span itemprop=author itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2015-02-28>28/02/2015</time>.<br><a href=tags/blog-stack/>blog-stack</a> <a href=tags/java/>java</a> <a href=tags/planeta-codigo/>planeta-codigo</a> <a href=tags/programacion/>programacion</a><br><a href=/blog-bitix/2015/02/listener-de-eventos-de-hibernate-con-servicios-de-spring/ itemprop=url>Enlace permanente</a>
-<a href=/blog-bitix/2015/02/listener-de-eventos-de-hibernate-con-servicios-de-spring/#comments>Comentarios</a></p><div class=content itemprop=articleBody><meta itemprop=wordCount content="1161"><div class=logotypes style=float:right><img src=assets/images/logotipos/java.svg class=right width=200 alt=Java title=Java></div><p>En el anterior artículo explicaba como <a href=https://picodotdev.github.io/blog-bitix/2015/02/ejemplo-de-listener-de-eventos-de-hibernate/>crear un <em>listener</em> que reciba eventos de Hibernate</a> pero quizá necesitemos en el <em>listener</em> hacer uso de un servicio de <a href=https://spring.io/>Spring</a> si el proceso de la acción necesita aprovecharse de la funcionalidad proporcionada en los servicios. En este artículo mostraré como crear un <em>listener</em> de <a href=https://hibernate.org/>Hibernate</a> que use un servicio de Spring, es decir, un <em>listener</em> de Hibernate con la posibilidad de inyectar servicios de Spring.</p><p>Para hacer la integración de los <em>listeners</em> con Spring debemos sustituir el <em>Interceptor</em> por un servicio que haga lo mismo pero al inicio del contenedor de Spring con la anotación <em>@PostConstruct</em>. Para ello creamos una clase con el siguiente contenido:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+<a href=/blog-bitix/2015/02/listener-de-eventos-de-hibernate-con-servicios-de-spring/#comments>Comentarios</a></p><div class=content itemprop=articleBody><meta itemprop=wordCount content="1161"><div class=logotypes style=float:right><img src=assets/images/logotipos/java.svg class=right width=200 alt=Java title=Java></div><p>En el anterior artículo explicaba como <a href=https://picodotdev.github.io/blog-bitix/2015/02/ejemplo-de-listener-de-eventos-de-hibernate/>crear un <em>listener</em> que reciba eventos de Hibernate</a> pero quizá necesitemos en el <em>listener</em> hacer uso de un servicio de <a href=https://spring.io/>Spring</a> si el proceso de la acción necesita aprovecharse de la funcionalidad proporcionada en los servicios. En este artículo mostraré como crear un <em>listener</em> de <a href=https://hibernate.org/>Hibernate</a> que use un servicio de Spring, es decir, un <em>listener</em> de Hibernate con la posibilidad de inyectar servicios de Spring.</p><p>Para hacer la integración de los <em>listeners</em> con Spring debemos sustituir el <em>Interceptor</em> por un servicio que haga lo mismo pero al inicio del contenedor de Spring con la anotación <em>@PostConstruct</em>. Para ello creamos una clase con el siguiente contenido:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -42,7 +42,7 @@
 </span><span class=lnt>31
 </span><span class=lnt>32
 </span><span class=lnt>33
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>plugintapestry</span><span class=p>.</span><span class=na>services</span><span class=p>.</span><span class=na>hibernate</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>plugintapestry</span><span class=p>.</span><span class=na>services</span><span class=p>.</span><span class=na>hibernate</span><span class=p>;</span>
 
 <span class=err>import javax</span><span class=p>.</span><span class=na>annotation</span><span class=p>.</span><span class=na>PostConstruct</span><span class=p>;</span>
 
@@ -75,7 +75,7 @@
         <span class=n>elr</span><span class=p>.</span><span class=na>setListeners</span><span class=p>(</span><span class=n>EventType</span><span class=p>.</span><span class=na>POST_DELETE</span><span class=p>,</span> <span class=n>productoEventAdapter</span><span class=p>);</span>
     <span class=p>}</span>
 <span class=p>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/02/listener-de-eventos-de-hibernate-con-servicios-de-spring/code/HibernateConfigurer.java target=_blank>view raw</a></span>
-<a href=/blog-bitix/2015/02/listener-de-eventos-de-hibernate-con-servicios-de-spring/code/HibernateConfigurer.java target=_blank>HibernateConfigurer.java</a></div></div><p>Configurando Spring con anotaciones y código Java, como es recomendable en vez de xml, la configuración del ejemplo es la siguiente y un archivo xml casi testimonial de Spring. En esta configuraicón vemos el servicio <em>ProductoEventAdapter</em> que usaremos para recibir los eventos y el servicio <em>DummyService</em> que se inyectará en el anterior:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt>  1
+<a href=/blog-bitix/2015/02/listener-de-eventos-de-hibernate-con-servicios-de-spring/code/HibernateConfigurer.java target=_blank>HibernateConfigurer.java</a></div></div><p>Configurando Spring con anotaciones y código Java, como es recomendable en vez de xml, la configuración del ejemplo es la siguiente y un archivo xml casi testimonial de Spring. En esta configuraicón vemos el servicio <em>ProductoEventAdapter</em> que usaremos para recibir los eventos y el servicio <em>DummyService</em> que se inyectará en el anterior:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=lnt>  1
 </span><span class=lnt>  2
 </span><span class=lnt>  3
 </span><span class=lnt>  4
@@ -197,7 +197,7 @@
 </span><span class=lnt>120
 </span><span class=lnt>121
 </span><span class=lnt>122
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>plugintapestry</span><span class=p>.</span><span class=na>spring</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>plugintapestry</span><span class=p>.</span><span class=na>spring</span><span class=p>;</span>
 
 <span class=p>...</span>
 
@@ -320,7 +320,7 @@
     <span class=p>}</span>
 <span class=p>}</span>
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/02/listener-de-eventos-de-hibernate-con-servicios-de-spring/code/AppConfiguration.java target=_blank>view raw</a></span>
-<a href=/blog-bitix/2015/02/listener-de-eventos-de-hibernate-con-servicios-de-spring/code/AppConfiguration.java target=_blank>AppConfiguration.java</a></div></div><p>En el <em>listener</em> haremos uso de un servicio de Spring que podemos inyectar usando la anotación <em>@Autorwire</em> tal y como hacemos normalmente usando el contenedor de depednecias de Spring. La implementación con respecto a usar un <em>listener</em> con solo Hibernate varía ligeramente para adaptarse a los cambios de usar un servicio.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+<a href=/blog-bitix/2015/02/listener-de-eventos-de-hibernate-con-servicios-de-spring/code/AppConfiguration.java target=_blank>AppConfiguration.java</a></div></div><p>En el <em>listener</em> haremos uso de un servicio de Spring que podemos inyectar usando la anotación <em>@Autorwire</em> tal y como hacemos normalmente usando el contenedor de depednecias de Spring. La implementación con respecto a usar un <em>listener</em> con solo Hibernate varía ligeramente para adaptarse a los cambios de usar un servicio.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -373,7 +373,7 @@
 </span><span class=lnt>51
 </span><span class=lnt>52
 </span><span class=lnt>53
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>plugintapestry</span><span class=p>.</span><span class=na>services</span><span class=p>.</span><span class=na>hibernate</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>plugintapestry</span><span class=p>.</span><span class=na>services</span><span class=p>.</span><span class=na>hibernate</span><span class=p>;</span>
 
 <span class=err>import org</span><span class=p>.</span><span class=na>hibernate</span><span class=p>.</span><span class=na>event</span><span class=p>.</span><span class=na>spi</span><span class=p>.</span><span class=na>PostDeleteEvent</span><span class=p>;</span>
 <span class=err>import org</span><span class=p>.</span><span class=na>hibernate</span><span class=p>.</span><span class=na>event</span><span class=p>.</span><span class=na>spi</span><span class=p>.</span><span class=na>PostDeleteEventListener</span><span class=p>;</span>
@@ -426,7 +426,7 @@
         <span class=k>return</span> <span class=kc>false</span><span class=p>;</span>
     <span class=p>}</span>
 <span class=p>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/02/listener-de-eventos-de-hibernate-con-servicios-de-spring/code/HibernateEventAdapter.java target=_blank>view raw</a></span>
-<a href=/blog-bitix/2015/02/listener-de-eventos-de-hibernate-con-servicios-de-spring/code/HibernateEventAdapter.java target=_blank>HibernateEventAdapter.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+<a href=/blog-bitix/2015/02/listener-de-eventos-de-hibernate-con-servicios-de-spring/code/HibernateEventAdapter.java target=_blank>HibernateEventAdapter.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -482,7 +482,7 @@
 </span><span class=lnt>54
 </span><span class=lnt>55
 </span><span class=lnt>56
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>plugintapestry</span><span class=p>.</span><span class=na>services</span><span class=p>.</span><span class=na>hibernate</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>plugintapestry</span><span class=p>.</span><span class=na>services</span><span class=p>.</span><span class=na>hibernate</span><span class=p>;</span>
 
 <span class=err>import org</span><span class=p>.</span><span class=na>hibernate</span><span class=p>.</span><span class=na>event</span><span class=p>.</span><span class=na>spi</span><span class=p>.</span><span class=na>PostDeleteEvent</span><span class=p>;</span>
 <span class=err>import org</span><span class=p>.</span><span class=na>hibernate</span><span class=p>.</span><span class=na>event</span><span class=p>.</span><span class=na>spi</span><span class=p>.</span><span class=na>PostInsertEvent</span><span class=p>;</span>
@@ -538,7 +538,7 @@
         <span class=k>return</span> <span class=kc>false</span><span class=p>;</span>
     <span class=p>}</span>
 <span class=p>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2015/02/listener-de-eventos-de-hibernate-con-servicios-de-spring/code/ProductoEventAdapter.java target=_blank>view raw</a></span>
-<a href=/blog-bitix/2015/02/listener-de-eventos-de-hibernate-con-servicios-de-spring/code/ProductoEventAdapter.java target=_blank>ProductoEventAdapter.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+<a href=/blog-bitix/2015/02/listener-de-eventos-de-hibernate-con-servicios-de-spring/code/ProductoEventAdapter.java target=_blank>ProductoEventAdapter.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -551,7 +551,7 @@
 </span><span class=lnt>11
 </span><span class=lnt>12
 </span><span class=lnt>13
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>plugintapestry</span><span class=p>.</span><span class=na>services</span><span class=p>.</span><span class=na>spring</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>plugintapestry</span><span class=p>.</span><span class=na>services</span><span class=p>.</span><span class=na>spring</span><span class=p>;</span>
 
 <span class=err>import io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>plugintapestry</span><span class=p>.</span><span class=na>entities</span><span class=p>.</span><span class=na>hibernate</span><span class=p>.</span><span class=na>Producto</span><span class=p>;</span>
 

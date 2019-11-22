@@ -27,7 +27,7 @@
 </span><span class=w>
 </span><span class=w></span>encrypt<span class=p>:</span><span class=w>
 </span><span class=w>  </span>key<span class=p>:</span><span class=w> </span>ma8FvTm1t8uWRlYE3ghPsQxxESaZwpOGdlsFwIyPNIWE25yNg1dsvvnd7orlZL9FH0qJyRkG8kcf5CBVdjmi8b2yxKzpXyfxpMXj</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2018/09/almacenar-cifrados-los-valores-de-configuracion-sensibles-en-spring-cloud-config/code/bootstrap.yml target=_blank>view raw</a></span>
-<a href=/blog-bitix/2018/09/almacenar-cifrados-los-valores-de-configuracion-sensibles-en-spring-cloud-config/code/bootstrap.yml target=_blank>bootstrap.yml</a></div></div><p>Definida la clave simétrica e iniciado el servidor de configuración este ofrece dos <em>endpoints</em> para cifrar y descifrar datos. Utilizando el de cifrado se obtiene el valor cifrado del dato sensible que se quiere proteger. Con el <em>endpoint</em> de descifrado se puede descifrar. Se observa que utilizando varias veces el <em>endpoint</em> de cifrado se devuelve en cada una un valor distinto, sin embargo, descifrando cada uno de estos valores con el <em>endpoint</em> de descifrado siempre se obtiene el valor original. Esto es debido seguramente a que en la operación de cifrado se utiliza la técnica del <em>salt</em> para que a los valores cifrados se les pueda aplicar un ataque de diccionario, el <em>salt</em> es incluido en el valor devuelto para que la operación de descifrado devuelva el valor original.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt> 1
+<a href=/blog-bitix/2018/09/almacenar-cifrados-los-valores-de-configuracion-sensibles-en-spring-cloud-config/code/bootstrap.yml target=_blank>bootstrap.yml</a></div></div><p>Definida la clave simétrica e iniciado el servidor de configuración este ofrece dos <em>endpoints</em> para cifrar y descifrar datos. Utilizando el de cifrado se obtiene el valor cifrado del dato sensible que se quiere proteger. Con el <em>endpoint</em> de descifrado se puede descifrar. Se observa que utilizando varias veces el <em>endpoint</em> de cifrado se devuelve en cada una un valor distinto, sin embargo, descifrando cada uno de estos valores con el <em>endpoint</em> de descifrado siempre se obtiene el valor original. Esto es debido seguramente a que en la operación de cifrado se utiliza la técnica del <em>salt</em> para que a los valores cifrados se les pueda aplicar un ataque de diccionario, el <em>salt</em> es incluido en el valor devuelto para que la operación de descifrado devuelva el valor original.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -40,7 +40,7 @@
 </span><span class=lnt>11
 </span><span class=lnt>12
 </span><span class=lnt>13
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ curl localhost:8090/encrypt -d secret
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ curl localhost:8090/encrypt -d secret
 fb416133716acf5b6e3ffb64a396d521cd68fb0c2cb58727d5e938badefa942b
 $ curl localhost:8090/encrypt -d secret
 2b5ab02e4653bebb1b325e88eb9711df0e97e8f7efbbffc0dd0c5ae532dceedc
@@ -59,7 +59,7 @@ secret</code></pre></td></tr></table></div></div><div class=highlight-meta><span
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-YAML data-lang=YAML>config<span class=p>:</span><span class=w>
 </span><span class=w>  </span>key<span class=p>:</span><span class=w> </span>dev<span class=w>
 </span><span class=w>  </span>password<span class=p>:</span><span class=w> </span><span class=s1>&#39;{cipher}fb416133716acf5b6e3ffb64a396d521cd68fb0c2cb58727d5e938badefa942b&#39;</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2018/09/almacenar-cifrados-los-valores-de-configuracion-sensibles-en-spring-cloud-config/code/client.yml target=_blank>view raw</a></span>
-<a href=/blog-bitix/2018/09/almacenar-cifrados-los-valores-de-configuracion-sensibles-en-spring-cloud-config/code/client.yml target=_blank>client.yml</a></div></div><p>En este caso el servicio al iniciarse obtiene su configuración del servicio de configuración, los datos se transmiten en forma plana sin cifrar y el cifrado utilizando en el servidor de configuración es transparente para el cliente. Accediendo al <em>endpoint</em> del servidor de configuración que devuelve la configuración de un servicio con una propiedad cifrada se observa que al obtener el valor se devuelve en texto plano al cliente, esta petición es la misma que hace el servicio para obtener su configuración, de modo que aunque la información está cifrada en el servidor de configuración se transmite al servicio sin cifrar en texto plano. En este ejemplo se utiliza el protocolo inseguro HTTP, lo recomendable es utilizar el protocolo HTTPS para cifrar el tráfico entre el servidor de configuración y el cliente de modo que los valores sensibles queden protegidos también en la transmisión.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt> 1
+<a href=/blog-bitix/2018/09/almacenar-cifrados-los-valores-de-configuracion-sensibles-en-spring-cloud-config/code/client.yml target=_blank>client.yml</a></div></div><p>En este caso el servicio al iniciarse obtiene su configuración del servicio de configuración, los datos se transmiten en forma plana sin cifrar y el cifrado utilizando en el servidor de configuración es transparente para el cliente. Accediendo al <em>endpoint</em> del servidor de configuración que devuelve la configuración de un servicio con una propiedad cifrada se observa que al obtener el valor se devuelve en texto plano al cliente, esta petición es la misma que hace el servicio para obtener su configuración, de modo que aunque la información está cifrada en el servidor de configuración se transmite al servicio sin cifrar en texto plano. En este ejemplo se utiliza el protocolo inseguro HTTP, lo recomendable es utilizar el protocolo HTTPS para cifrar el tráfico entre el servidor de configuración y el cliente de modo que los valores sensibles queden protegidos también en la transmisión.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -83,7 +83,7 @@ secret</code></pre></td></tr></table></div></div><div class=highlight-meta><span
 </span><span class=lnt>22
 </span><span class=lnt>23
 </span><span class=lnt>24
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ curl http://localhost:8090/client/default.yml
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ curl http://localhost:8090/client/default.yml
 <span class=o>{</span>
    <span class=s2>&#34;name&#34;</span>:<span class=s2>&#34;client&#34;</span>,
    <span class=s2>&#34;profiles&#34;</span>:<span class=o>[</span>
@@ -107,11 +107,11 @@ secret</code></pre></td></tr></table></div></div><div class=highlight-meta><span
       <span class=o>}</span>
    <span class=o>]</span>
 <span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2018/09/almacenar-cifrados-los-valores-de-configuracion-sensibles-en-spring-cloud-config/code/curl-2.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2018/09/almacenar-cifrados-los-valores-de-configuracion-sensibles-en-spring-cloud-config/code/curl-2.sh target=_blank>curl-2.sh</a></div></div><p>Iniciado el servicio de descubrimiento, el de configuración y un servicio que tiene un dato cifrado de configuración el valor que obtiene está ya descifrado. En este caso el servicio <em>client</em> obtiene el valor de la propiedad <em>config.password</em> descifrado con el valor <em>secret</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash><span class=lnt>1
+<a href=/blog-bitix/2018/09/almacenar-cifrados-los-valores-de-configuracion-sensibles-en-spring-cloud-config/code/curl-2.sh target=_blank>curl-2.sh</a></div></div><p>Iniciado el servicio de descubrimiento, el de configuración y un servicio que tiene un dato cifrado de configuración el valor que obtiene está ya descifrado. En este caso el servicio <em>client</em> obtiene el valor de la propiedad <em>config.password</em> descifrado con el valor <em>secret</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Bash data-lang=Bash>$ ./gradlew discoveryserver:run --args<span class=o>=</span><span class=s2>&#34;--port=8761&#34;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ ./gradlew discoveryserver:run --args<span class=o>=</span><span class=s2>&#34;--port=8761&#34;</span>
 $ ./gradlew configserver:run --args<span class=o>=</span><span class=s2>&#34;--port=8090&#34;</span>
 $ ./gradlew service:run --args<span class=o>=</span><span class=s2>&#34;--port=8080&#34;</span>
 $ ./gradlew client:run</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2018/09/almacenar-cifrados-los-valores-de-configuracion-sensibles-en-spring-cloud-config/code/gradlew-run.sh target=_blank>view raw</a></span>
@@ -133,7 +133,7 @@ $ ./gradlew client:run</code></pre></td></tr></table></div></div><div class=high
 2018-09-30 00:56:08,695  INFO        io.github.picodotdev.blogbitix.springcloud.client.Main Started Main in 19.901 seconds (JVM running for 22.013)
 Valor de propiedad de configuración (config.key): dev
 Valor de propiedad de configuración (config.password): secret</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2018/09/almacenar-cifrados-los-valores-de-configuracion-sensibles-en-spring-cloud-config/code/System.out target=_blank>view raw</a></span>
-<a href=/blog-bitix/2018/09/almacenar-cifrados-los-valores-de-configuracion-sensibles-en-spring-cloud-config/code/System.out target=_blank>System.out</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+<a href=/blog-bitix/2018/09/almacenar-cifrados-los-valores-de-configuracion-sensibles-en-spring-cloud-config/code/System.out target=_blank>System.out</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -163,7 +163,7 @@ Valor de propiedad de configuración (config.password): secret</code></pre></td>
 </span><span class=lnt>28
 </span><span class=lnt>29
 </span><span class=lnt>30
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>springcloud</span><span class=p>.</span><span class=na>client</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>springcloud</span><span class=p>.</span><span class=na>client</span><span class=p>;</span>
 
 <span class=p>...</span>
 
@@ -194,7 +194,7 @@ Valor de propiedad de configuración (config.password): secret</code></pre></td>
     <span class=p>}</span>
 <span class=p>}</span>
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2018/09/almacenar-cifrados-los-valores-de-configuracion-sensibles-en-spring-cloud-config/code/Main.java target=_blank>view raw</a></span>
-<a href=/blog-bitix/2018/09/almacenar-cifrados-los-valores-de-configuracion-sensibles-en-spring-cloud-config/code/Main.java target=_blank>Main.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+<a href=/blog-bitix/2018/09/almacenar-cifrados-los-valores-de-configuracion-sensibles-en-spring-cloud-config/code/Main.java target=_blank>Main.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -224,7 +224,7 @@ Valor de propiedad de configuración (config.password): secret</code></pre></td>
 </span><span class=lnt>28
 </span><span class=lnt>29
 </span><span class=lnt>30
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>springcloud</span><span class=p>.</span><span class=na>client</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>springcloud</span><span class=p>.</span><span class=na>client</span><span class=p>;</span>
 
 <span class=err>import org</span><span class=p>.</span><span class=na>springframework</span><span class=p>.</span><span class=na>beans</span><span class=p>.</span><span class=na>factory</span><span class=p>.</span><span class=na>annotation</span><span class=p>.</span><span class=na>Value</span><span class=p>;</span>
 <span class=err>import org</span><span class=p>.</span><span class=na>springframework</span><span class=p>.</span><span class=na>context</span><span class=p>.</span><span class=na>annotation</span><span class=p>.</span><span class=na>Configuration</span><span class=p>;</span>

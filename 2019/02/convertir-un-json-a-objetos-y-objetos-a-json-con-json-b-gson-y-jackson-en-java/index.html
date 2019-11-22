@@ -10,7 +10,7 @@ En las dos primeras si los datos son muchos o son todos la tarea de recuperar lo
 <a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
 <a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class="adblock-sidebar adblock-sidebar-right"><div class=adblock-sidebar-container><ins class="adsbygoogle adblock-sidebar-vertical" style=display:block data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format="vertical, rectangle" data-type=auto></ins></div></div><article itemprop=mainEntity itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content="es"><meta itemprop=keywords content="java, planeta-codigo, programacion"><h1 itemprop=name>Convertir un JSON a objetos y objetos a JSON con JSON-B, Gson y Jackson en Java</h1><p class=information>Escrito por
 <span itemprop=author itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2019-02-01>01/02/2019</time>, actualizado el <time itemprop=dateModified datetime=2019-02-02>02/02/2019</time>.<br><a href=tags/java/>java</a> <a href=tags/planeta-codigo/>planeta-codigo</a> <a href=tags/programacion/>programacion</a><br><a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/ itemprop=url>Enlace permanente</a>
-<a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/#comments>Comentarios</a></p><div class=content itemprop=articleBody><meta itemprop=wordCount content="1075"><div class=logotypes style=float:right><img src=assets/images/logotipos/java.svg class=right width=200 alt=Java title=Java></div><p>Continuando la serie de pequeños artículos sobre cómo procesar JSON después de ver anteriormente otras dos formas, <a href=https://picodotdev.github.io/blog-bitix/2019/01/generar-procesar-y-modificar-documentos-json-con-json-p-en-java/>Generar, procesar y modificar documentos JSON con JSON-P en Java</a> y <a href=https://picodotdev.github.io/blog-bitix/2019/01/usar-expresiones-jsonpath-para-extraer-datos-de-un-json-en-java/>Usar expresiones JSONPath para extraer datos de un JSON en Java</a>, en este artículo hay una tercera.</p><p>En las dos primeras si los datos son muchos o son todos la tarea de recuperar los datos uno a uno requiere una buena cantidad de código. Dado que un JSON no son nada más que valores, arrays y mapas utilizando la estructuras de datos equivalentes de Java se puede hacer una correspondencia entre los datos del JSON a objetos POJO siguiendo ciertas convenciones.</p><p>Una vez que los datos han sido cargados en instancias de objetos se recuperan con los correspondientes métodos <em>get</em> que contengan las instancias, además dado que las propiedades de los objetos tiene un tipo se realiza la conversión adecuada para convertir el dato del JSON al tipo de la propiedad del objeto.</p><p>Hay tres librerías distintas populares para hacer este <em>binding</em> entre JSON y objetos. <a href=http://json-b.net/>JSON-B</a>, <a href=https://github.com/google/gson>Gson</a> y <a href=https://github.com/FasterXML/jackson>Jackson</a> siendo la primera la más estándar en el lenguaje Java. En los siguientes ejemplos dada una cadena con JSON y la clase raíz a la que hacer la correspondencia de las propiedades se crea una instancia de <em>Comprador</em> y múltiples de <em>Direccion</em>. La correspondencia entre las propiedades del JSON y del objeto se hace en base al nombre.</p><p>Se utilizan los métodos <em>toJson()</em> tanto en JSON-B como en Gson y el método <em>writeValueAsString()</em> en Jackson para convertir a JSON y los métodos <em>fromJson()</em> y <em>readValue()</em> para convertir desde JSON a objetos. Estos métodos devuelven una instancia de la clase raíz indicada y acceder a las propiedades se hace con los correspondientes <em>getter</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+<a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/#comments>Comentarios</a></p><div class=content itemprop=articleBody><meta itemprop=wordCount content="1075"><div class=logotypes style=float:right><img src=assets/images/logotipos/java.svg class=right width=200 alt=Java title=Java></div><p>Continuando la serie de pequeños artículos sobre cómo procesar JSON después de ver anteriormente otras dos formas, <a href=https://picodotdev.github.io/blog-bitix/2019/01/generar-procesar-y-modificar-documentos-json-con-json-p-en-java/>Generar, procesar y modificar documentos JSON con JSON-P en Java</a> y <a href=https://picodotdev.github.io/blog-bitix/2019/01/usar-expresiones-jsonpath-para-extraer-datos-de-un-json-en-java/>Usar expresiones JSONPath para extraer datos de un JSON en Java</a>, en este artículo hay una tercera.</p><p>En las dos primeras si los datos son muchos o son todos la tarea de recuperar los datos uno a uno requiere una buena cantidad de código. Dado que un JSON no son nada más que valores, arrays y mapas utilizando la estructuras de datos equivalentes de Java se puede hacer una correspondencia entre los datos del JSON a objetos POJO siguiendo ciertas convenciones.</p><p>Una vez que los datos han sido cargados en instancias de objetos se recuperan con los correspondientes métodos <em>get</em> que contengan las instancias, además dado que las propiedades de los objetos tiene un tipo se realiza la conversión adecuada para convertir el dato del JSON al tipo de la propiedad del objeto.</p><p>Hay tres librerías distintas populares para hacer este <em>binding</em> entre JSON y objetos. <a href=http://json-b.net/>JSON-B</a>, <a href=https://github.com/google/gson>Gson</a> y <a href=https://github.com/FasterXML/jackson>Jackson</a> siendo la primera la más estándar en el lenguaje Java. En los siguientes ejemplos dada una cadena con JSON y la clase raíz a la que hacer la correspondencia de las propiedades se crea una instancia de <em>Comprador</em> y múltiples de <em>Direccion</em>. La correspondencia entre las propiedades del JSON y del objeto se hace en base al nombre.</p><p>Se utilizan los métodos <em>toJson()</em> tanto en JSON-B como en Gson y el método <em>writeValueAsString()</em> en Jackson para convertir a JSON y los métodos <em>fromJson()</em> y <em>readValue()</em> para convertir desde JSON a objetos. Estos métodos devuelven una instancia de la clase raíz indicada y acceder a las propiedades se hace con los correspondientes <em>getter</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -67,7 +67,7 @@ En las dos primeras si los datos son muchos o son todos la tarea de recuperar lo
 </span><span class=lnt>55
 </span><span class=lnt>56
 </span><span class=lnt>57
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>javajson</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>javajson</span><span class=p>;</span>
 
 <span class=p>...</span>
 
@@ -125,7 +125,7 @@ En las dos primeras si los datos son muchos o son todos la tarea de recuperar lo
     <span class=p>}</span>
 <span class=p>}</span>
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/code/Main.java target=_blank>view raw</a></span>
-<a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/code/Main.java target=_blank>Main.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+<a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/code/Main.java target=_blank>Main.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -163,7 +163,7 @@ En las dos primeras si los datos son muchos o son todos la tarea de recuperar lo
 </span><span class=lnt>36
 </span><span class=lnt>37
 </span><span class=lnt>38
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>javajson</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>javajson</span><span class=p>;</span>
 
 <span class=p>...</span>
 
@@ -201,7 +201,7 @@ En las dos primeras si los datos son muchos o son todos la tarea de recuperar lo
         <span class=k>this</span><span class=p>.</span><span class=na>direcciones</span> <span class=o>=</span> <span class=n>direcciones</span><span class=p>;</span>
     <span class=p>}</span>
 <span class=p>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/code/Comprador.java target=_blank>view raw</a></span>
-<a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/code/Comprador.java target=_blank>Comprador.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+<a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/code/Comprador.java target=_blank>Comprador.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -252,7 +252,7 @@ En las dos primeras si los datos son muchos o son todos la tarea de recuperar lo
 </span><span class=lnt>49
 </span><span class=lnt>50
 </span><span class=lnt>51
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>javajson</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>javajson</span><span class=p>;</span>
 
 <span class=err>public class </span><span class=n>Direccion</span> <span class=p>{</span>
 
@@ -315,7 +315,7 @@ Gson: {&#34;nombre&#34;:&#34;Juan&#34;,&#34;fechaNacimiento&#34;:&#34;2019-02-01
 Gson (comprador): Juan, 2019-02-01, 2
 Jackson: {&#34;nombre&#34;:&#34;Juan&#34;,&#34;fechaNacimiento&#34;:&#34;2019-02-01&#34;,&#34;direcciones&#34;:[{&#34;calle&#34;:&#34;calle&#34;,&#34;ciudad&#34;:&#34;ciudad&#34;,&#34;codigoPostal&#34;:&#34;codigoPostal&#34;,&#34;pais&#34;:&#34;pais&#34;},{&#34;calle&#34;:&#34;calle&#34;,&#34;ciudad&#34;:&#34;ciudad&#34;,&#34;codigoPostal&#34;:&#34;codigoPostal&#34;,&#34;pais&#34;:&#34;pais&#34;}]}
 Jackson (comprador): Juan, 2019-02-01, 2</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/code/System.out target=_blank>view raw</a></span>
-<a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/code/System.out target=_blank>System.out</a></div></div><p>Para añadir tipos de datos que no están entre los básicos de JSON como es una fecha cada librería proporciona interfaces o clases abstractas para hacer la conversión desde el dato a un tipo de JSON y desde JSON al tipo del dato. En este caso para un tipo de dato <a href=https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/LocalDate.html>LocalDate</a>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+<a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/code/System.out target=_blank>System.out</a></div></div><p>Para añadir tipos de datos que no están entre los básicos de JSON como es una fecha cada librería proporciona interfaces o clases abstractas para hacer la conversión desde el dato a un tipo de JSON y desde JSON al tipo del dato. En este caso para un tipo de dato <a href=https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/LocalDate.html>LocalDate</a>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -331,7 +331,7 @@ Jackson (comprador): Juan, 2019-02-01, 2</code></pre></td></tr></table></div></d
 </span><span class=lnt>14
 </span><span class=lnt>15
 </span><span class=lnt>16
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>javajson</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>javajson</span><span class=p>;</span>
 
 <span class=p>...</span>
 
@@ -348,7 +348,7 @@ Jackson (comprador): Juan, 2019-02-01, 2</code></pre></td></tr></table></div></d
     <span class=p>}</span>
 <span class=p>}</span>
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/code/JsonLocalDateAdapter.java target=_blank>view raw</a></span>
-<a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/code/JsonLocalDateAdapter.java target=_blank>JsonLocalDateAdapter.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+<a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/code/JsonLocalDateAdapter.java target=_blank>JsonLocalDateAdapter.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -364,7 +364,7 @@ Jackson (comprador): Juan, 2019-02-01, 2</code></pre></td></tr></table></div></d
 </span><span class=lnt>14
 </span><span class=lnt>15
 </span><span class=lnt>16
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>javajson</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>javajson</span><span class=p>;</span>
 
 <span class=p>...</span>
 
@@ -381,7 +381,7 @@ Jackson (comprador): Juan, 2019-02-01, 2</code></pre></td></tr></table></div></d
     <span class=p>}</span>
 <span class=p>}</span>
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/code/GsonLocalDateTypeAdapter.java target=_blank>view raw</a></span>
-<a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/code/GsonLocalDateTypeAdapter.java target=_blank>GsonLocalDateTypeAdapter.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+<a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/code/GsonLocalDateTypeAdapter.java target=_blank>GsonLocalDateTypeAdapter.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -392,7 +392,7 @@ Jackson (comprador): Juan, 2019-02-01, 2</code></pre></td></tr></table></div></d
 </span><span class=lnt> 9
 </span><span class=lnt>10
 </span><span class=lnt>11
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>javajson</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>javajson</span><span class=p>;</span>
 
 <span class=p>...</span>
 
@@ -404,7 +404,7 @@ Jackson (comprador): Juan, 2019-02-01, 2</code></pre></td></tr></table></div></d
     <span class=p>}</span>
 <span class=p>}</span>
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/code/JacksonLocalDateSerializer.java target=_blank>view raw</a></span>
-<a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/code/JacksonLocalDateSerializer.java target=_blank>JacksonLocalDateSerializer.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+<a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/code/JacksonLocalDateSerializer.java target=_blank>JacksonLocalDateSerializer.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -415,7 +415,7 @@ Jackson (comprador): Juan, 2019-02-01, 2</code></pre></td></tr></table></div></d
 </span><span class=lnt> 9
 </span><span class=lnt>10
 </span><span class=lnt>11
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>javajson</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=err>package io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>javajson</span><span class=p>;</span>
 
 <span class=p>...</span>
 
