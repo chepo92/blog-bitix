@@ -216,9 +216,9 @@ $ ./visualvm</code></pre></td></tr></table></div></div><div class=highlight-meta
     <span class=p>}</span>
 <span class=p>}</span>
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/Main-springboot.java target=_blank>view raw</a></span>
-<a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/Main-springboot.java target=_blank>Main-springboot.java</a></div></div><p>Tanto en el ejemplo de <em>MBean</em> con Java como con Spring el puerto RMI para acceder a JMX se configura con varias propiedades de la máquina virtual o con un archivo <em>properties</em> de configuración.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt>1
+<a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/Main-springboot.java target=_blank>Main-springboot.java</a></div></div><p>Tanto en el ejemplo de <em>MBean</em> con Java como con Spring el puerto RMI para acceder a JMX se configura con varias propiedades de la máquina virtual o con un archivo <em>properties</em> de configuración.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>com.sun.management.jmxremote=false
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext>com.sun.management.jmxremote=false
 com.sun.management.jmxremote.ssl=false</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/jmxremote-1.properties target=_blank>view raw</a></span>
 <a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/jmxremote-1.properties target=_blank>jmxremote-1.properties</a></div></div><h3 id=cómo-añadir-acceso-remoto-y-añadir-seguridad-securizad-a-jmx>Cómo añadir acceso remoto y añadir seguridad securizad a JMX</h3><p>Por defecto JMX solo es accesible desde la maquina local, esto en producción no es muy útil pero activar el acceso remoto requiere añadir nuevas propiedades de configuración para proporcionar seguridad realizando autenticación y usando una comunicación segura con SSL. Para la comunicación segura se requiere crear un <em>keystore</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt>1
 </span><span class=lnt>2
@@ -226,14 +226,14 @@ com.sun.management.jmxremote.ssl=false</code></pre></td></tr></table></div></div
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ keytool -genkey -keyalg RSA -keystore keystore.jks -keysize <span class=m>8192</span>
 $ keytool -export -keystore keystore.jks -file certificate.cer -storepass password
 $ keytool -import -file certificate.cer -keystore trustore.jks -storepass password -noprompt</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/keystore.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/keystore.sh target=_blank>keystore.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt>1
+<a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/keystore.sh target=_blank>keystore.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>com.sun.management.jmxremote=true
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext>com.sun.management.jmxremote=true
 com.sun.management.jmxremote.port=1419
 com.sun.management.jmxremote.rmi.port=31419
 com.sun.management.jmxremote.ssl=true
@@ -241,25 +241,25 @@ com.sun.management.jmxremote.password.file=jmxremote.password
 com.sun.management.jmxremote.access.file=jmxremote.access
 com.sun.management.jmxremote.ssl.config.file=jmxremote-ssl.properties
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/jmxremote-2.properties target=_blank>view raw</a></span>
-<a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/jmxremote-2.properties target=_blank>jmxremote-2.properties</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt>1
+<a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/jmxremote-2.properties target=_blank>jmxremote-2.properties</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>javax.net.ssl.keyStore=keystore.jks
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext>javax.net.ssl.keyStore=keystore.jks
 javax.net.ssl.keyStorePassword=password
 javax.net.ssl.trustStore=truststore.jks
 javax.net.ssl.trustStorePassword=password
 
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/jmxremote-ssl.properties target=_blank>view raw</a></span>
-<a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/jmxremote-ssl.properties target=_blank>jmxremote-ssl.properties</a></div></div><p>Los archivos <em>jmxremote.password</em> y <em>jmxremote.access</em> configuran la autenticación mediante clave y contraseña además de la autorización a las operaciones que el usuario tiene permiso para realizar. Estos archivos han tener restringidos los permisos de lectura para el usuario que inicia la aplicación o se produce una excepción.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt>1
+<a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/jmxremote-ssl.properties target=_blank>jmxremote-ssl.properties</a></div></div><p>Los archivos <em>jmxremote.password</em> y <em>jmxremote.access</em> configuran la autenticación mediante clave y contraseña además de la autorización a las operaciones que el usuario tiene permiso para realizar. Estos archivos han tener restringidos los permisos de lectura para el usuario que inicia la aplicación o se produce una excepción.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext># The passwords in this file are hashed.
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext># The passwords in this file are hashed.
 # In order to change the password for a role, replace the hashed password entry
 # with a clear text password or a new hashed password. If the new password is in clear,
 # it will be replaced with its hash when a new login attempt is made.
@@ -267,12 +267,12 @@ javax.net.ssl.trustStorePassword=password
 admin password
 user password
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/jmxremote.password target=_blank>view raw</a></span>
-<a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/jmxremote.password target=_blank>jmxremote.password</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt>1
+<a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/jmxremote.password target=_blank>jmxremote.password</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>admin readwrite
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext>admin readwrite
 user  readonly
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/jmxremote.access target=_blank>view raw</a></span>
-<a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/jmxremote.access target=_blank>jmxremote.access</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext><span class=lnt>1
+<a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/code/jmxremote.access target=_blank>jmxremote.access</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -280,7 +280,7 @@ user  readonly
 </span><span class=lnt>6
 </span><span class=lnt>7
 </span><span class=lnt>8
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Plaintext data-lang=Plaintext>Error: Se debe restringir el acceso de lectura al archivo de contraseñas: jmxremote.password
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext>Error: Se debe restringir el acceso de lectura al archivo de contraseñas: jmxremote.password
 jdk.internal.agent.AgentConfigurationError
     at jdk.management.agent/sun.management.jmxremote.ConnectorBootstrap.checkPasswordFile(ConnectorBootstrap.java:590)
     at jdk.management.agent/sun.management.jmxremote.ConnectorBootstrap.startRemoteConnectorServer(ConnectorBootstrap.java:436)
