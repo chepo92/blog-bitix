@@ -1,0 +1,726 @@
+<!doctype html><html lang=es><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content=picodotdev><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="El segundo factor de autenticación es una medida adicional en la autenticación que proporciona una notable mayor seguridad que utilizar solo un usuario y contraseña. Utilizando Spring y la aplicación para smatphone Google Authenticator se puede implementar en una aplicación Java el segundo factor de autenticación o 2FA con códigos temporales o TOTP. &hellip;"><base href=https://picodotdev.github.io/blog-bitix/><title>Implementar un segundo factor de autenticación en una aplicación web Java con Spring</title><link rel=author type=text/plain href=humans.txt><link rel="shortcut icon" href=assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=assets/apple-touch-icon-144-precomposed.png><link rel=canonical href=https://picodotdev.github.io/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/><link href=index.xml rel=alternate type=application/rss+xml title="Blog Bitix"><link rel=stylesheet type=text/css href=assets/css/font.css><link rel=stylesheet type=text/css href=assets/libs/bootstrap-4.3.1/css/bootstrap.min.css><link rel=stylesheet type=text/css href=assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=assets/css/syntax.css><link rel=stylesheet type=text/css href=assets/css/main.css><script type=text/javascript src=assets/js/require-config.js data-main=js/main defer></script><script type=text/javascript src=assets/libs/require.js data-main=js/main defer></script><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js defer></script><script type=text/javascript defer>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript defer>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script type=text/javascript src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" defer></script><script type=text/javascript src=assets/js/app.js defer></script></head><body><div class=container><div class=row><div class=col-12><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
+<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class="col-12 col-lg-4 text-center"><form name=query class="form-inline search" onsubmit="return false;"><div class=input-group><input type=text name=q class=form-control placeholder="Buscar en Blog Bitix">
+<span class=input-group-btn><button class="btn btn-secondary" type=submit>Buscar</button></span></div></form><form name=search action=https://duckduckgo.com/ method=get class=hidden data-site=https://picodotdev.github.io/blog-bitix/><input type=hidden name=q></form></div></div><div class=row><div class=col-12><nav class="nav nav-pills nav-fill"><a href=/blog-bitix/tags/java/ class="nav-item nav-link">Java</a>
+<a href=/blog-bitix/tags/gnu-linux/ class="nav-item nav-link">GNU/Linux</a>
+<a href=/blog-bitix/tags/javascript/ class="nav-item nav-link">JavaScript</a>
+<a href=/blog-bitix/tags/tapestry/ class="nav-item nav-link">Tapestry</a>
+<a href=/blog-bitix/archive/ class="nav-item nav-link">Archivo y hemeroteca</a>
+<a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
+<a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class="adblock-sidebar adblock-sidebar-right"><div class=adblock-sidebar-container><ins class="adsbygoogle adblock-sidebar-vertical" style=display:block data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format="vertical, rectangle" data-type=auto></ins></div></div><article itemprop=mainEntity itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content=es><meta itemprop=keywords content="java, planeta-codigo, programacion, seguridad, spring"><h1 itemprop=name>Implementar un segundo factor de autenticación en una aplicación web Java con Spring</h1><p class=information>Escrito por
+<span itemprop=author itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2019-11-29>29/11/2019</time>.<br><a href=tags/java/>java</a> <a href=tags/planeta-codigo/>planeta-codigo</a> <a href=tags/programacion/>programacion</a> <a href=tags/seguridad/>seguridad</a> <a href=tags/spring/>spring</a><br><a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/ itemprop=url>Enlace permanente</a>
+<a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/#comments>Comentarios</a></p><p class=summary itemprop=about>El segundo factor de autenticación es una medida adicional en la autenticación que proporciona una notable mayor seguridad que utilizar solo un usuario y contraseña. Utilizando Spring y la aplicación para <em>smatphone</em> Google Authenticator se puede implementar en una aplicación Java el segundo factor de autenticación o <em>2FA</em> con códigos temporales o <em>TOTP</em>.</p><div><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins></div><div class=content itemprop=articleBody><meta itemprop=wordCount content=2141><div class=logotypes style=float:right><img src=assets/images/logotipos/java.svg class=right width=200 alt=Java title=Java></div><div class=logotypes style=float:right;clear:right><img src=assets/images/logotipos/spring.svg class=right width=200 alt=Spring title=Spring></div><p>Comúnmente para realizar el proceso de autenticar a un usuario se ha realizado simplemente con el método de usuario y contraseña. Sin embargo, verificar la identidad mediante usuario y contraseña para algunos usuarios no es suficientemente seguro dado que los usuarios pueden elegir contraseñas débiles con pocos caracteres o sin usar una combinación que incluya letras, números y símbolos, pueden elegir contraseñas comunes muy utilizadas fáciles de adivinar con un ataque de diccionario, pueden usar la misma contraseña para varios servicios de modo que si las contraseñas de un servicio son descubiertas cualquier otro servicio que las utilice potencialmente corre un riesgo de seguridad. Usar solo usuario y contraseña no proporciona la suficiente seguridad para ciertos servicios que permiten realizar transacciones que involucra dinero, tratan datos sensibles o son servicios atractivos para ser atacados.</p><p>Para que las contraseñas sean seguras las aplicaciones en sus bases de datos <a href=https://picodotdev.github.io/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/>guardar las contraseñas usando <em>Salted Password Hashing</em></a>, los usuarios por su parte deben utilizar un generador de contraseñas, utilizar una contraseña distinta para cada servicio y <a href=https://picodotdev.github.io/blog-bitix/2016/11/guardar-contrasenas-de-forma-segura-con-keepassxc/>guardalas en una base de datos cifrada como KeePassXC</a> para recordar cada una de ellas. Las contraseñas son algo que se conoce, cualquier persona que conozca la contraseña puede autenticarse, más recientemente una capa adicional de seguridad es requerir algo que se tiene, el segundo factor de autenticación o 2FA.</p><p>La aplicación <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en">Google Authenticator</a> para dispositivos móviles <a href=https://www.android.com/>Android</a> permite utilizarse como segundo factor de autenticación, esta aplicación genera códigos con un tiempo corto de duración que son requeridos en un segundo paso de la autenticación después de introducir el usuario y contraseña. Con un segundo factor de autenticación se requiere algo que se sabe, el usuario y contraseña, y algo que se tiene, el dispositivo móvil que genera códigos con lo que aunque la contraseña quede comprometida no se podría realizar la autenticación sin poseer el segundo factor de autenticación.</p><p>Dado que los códigos de verificación tienen un tiempo de vida corto, habitualmente de 30 segundos, y acceder al generador del segundo factor de autenticación requiere acceso físico al dispositivo móvil la combinación de que las credenciales queden comprometidas es significativamente más difícil y por tanto la seguridad aumenta al mismo tiempo. Los principales servicios de internet como <a href=https://www.google.es/>Google</a>, <a href=https://amzn.to/2flFhHA>Amazon</a>, <a href=https://twitter.com/>Twitter</a> y otros servicios utilizados por millones de usuarios permiten ya utilizar 2FA, un fallo en su seguridad por la cantidad de usuarios e importante información que registran les supodría una muy mala imagen, pérdida de ingresos, costes, reputación, usuarios o dependiendo de la gravedad del fallo y los datos comprometidos multas millonarias.</p><p>A través de <a href=https://spring.io/projects/spring-security>Spring Security</a> y la librería <a href=https://github.com/aerogear/aerogear-otp-java>aerogear-otp-java</a> una aplicación Java puede implementar el segundo factor de autenticación, incluso posibilitar de que el requerimiento de solicitar segundo factor de autenticación sea opcional según la preferencia de un usuario o como forma de que los usuarios progresivamente habiliten el 2FA. El primer paso es proporcionar al usuario una clave secreta a través de un código QR que codifica una clave secreta que se utiliza para generar los códigos de verificación, el usuario debe escanearlo con la aplicación Google Authenticator con la cámara para que genere código de 6 dígitos con una validez de 30 segundos en el momento de autenticarse, este paso se realiza en el momento de registrarse o de activar el 2FA si es opcional. Con Google Authenticator el código en vez con la cámara también se puede introducir mediante el teclado si la aplicación se lo proporciona en forma de texto en vez de como imagen QR. La ventaja del código QR es que es más rápido y cómodo.</p><p>El primer paso de la autenticación utilizando 2FA es introducir el usuario y contraseña. El segundo paso es introducir el código del segundo factor de autenticación. Introducidos ambos el usuario es redirigido a la página de inicio.</p><div class=media style=text-align:center><figure><a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/images/autenticacion-2fa-1_hua9ee30696f9356c56487d9b5ce908954_39508_2560x1440_fit_box_2.png title="Autenticación con segundo factor de autenticación" data-gallery><img src=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/images/autenticacion-2fa-1_hua9ee30696f9356c56487d9b5ce908954_39508_200x150_fit_box_2.png width=120></a>
+<a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/images/autenticacion-2fa-2_hu444c0787e54ca21d9ef698a533bad663_23630_2560x1440_fit_box_2.png title="Autenticación con segundo factor de autenticación" data-gallery><img src=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/images/autenticacion-2fa-2_hu444c0787e54ca21d9ef698a533bad663_23630_200x150_fit_box_2.png width=120></a>
+<a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/images/autenticacion-2fa-3_hu6d853ec4973549638fd3cc79bdd6076c_19573_2560x1440_fit_box_2.png title="Autenticación con segundo factor de autenticación" data-gallery><img src=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/images/autenticacion-2fa-3_hu6d853ec4973549638fd3cc79bdd6076c_19573_200x150_fit_box_2.png width=120></a><figcaption>Autenticación con segundo factor de autenticación</figcaption></figure></div><div class=media style=text-align:center><figure><a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/images/google-authenticator_hud7c7130da01810ea81284c92c02cbefa_101109_2560x1440_fit_box_2.png title="Aplicación Google Authenticator con varios generadores de códigos temporales" data-gallery><img src=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/images/google-authenticator_hud7c7130da01810ea81284c92c02cbefa_101109_300x200_fit_box_2.png width=113></a><figcaption>Aplicación Google Authenticator con varios generadores de códigos temporales</figcaption></figure></div><p>Validado el código del 2FA al usuario se le asignan los permisos que le corresponden en el sistema y que le otorgan permisos para realizar acciones, en este caso entrar a la página de inicio.</p><p>La implementación en código contiene las clases que representan una cuenta en el sistema, en <em>InMemoryAccountRepository</em> se crean dos usuarios <em>admin</em> y <em>user</em> con sus contraseñas en el ejemplo en texto plano y los roles que tiene asignados que les otorgarán permisos para realizar acciones en la aplicación.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nf>io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>spring2fa</span><span class=p>.</span><span class=na>account</span><span class=p>;</span>
+
+<span class=kd>public</span> <span class=nf>interface</span> <span class=n>AccountRepository</span> <span class=p>{</span>
+
+    <span class=n>Account</span> <span class=nf>find</span><span class=p>(</span><span class=n>String</span> <span class=nf>username</span><span class=p>);</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/AccountRepository.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/AccountRepository.java target=_blank>AccountRepository.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nf>io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>spring2fa</span><span class=p>.</span><span class=na>account</span><span class=p>;</span>
+
+<span class=p>...</span>
+
+<span class=nd>@Repository</span>
+<span class=kd>public</span> <span class=nf>class</span> <span class=n>InMemoryAccountRepository</span> <span class=nf>implements</span> <span class=n>AccountRepository</span> <span class=p>{</span>
+
+    <span class=kd>private</span> <span class=nf>static</span> <span class=n>String</span> <span class=nf>ADMIN_SECRET</span> <span class=o>=</span> <span class=s>&#34;6YFX5TVT76OHHNMS&#34;</span><span class=p>;</span>
+
+    <span class=kd>private</span> <span class=nf>List</span><span class=o>&lt;</span><span class=n>Account</span><span class=o>&gt;</span> <span class=nf>accounts</span><span class=p>;</span>
+
+    <span class=kd>public</span> <span class=nf>InMemoryAccountRepository</span><span class=p>()</span> <span class=p>{</span>
+        <span class=n>accounts</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;</span><span class=n>Account</span><span class=o>&gt;</span><span class=p>();</span>
+        <span class=n>init</span><span class=p>();</span>
+    <span class=p>}</span>
+
+    <span class=kd>private</span> <span class=nf>void</span> <span class=n>init</span><span class=p>()</span> <span class=p>{</span>
+        <span class=n>Account</span> <span class=nf>admin</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Account</span><span class=p>();</span>
+        <span class=n>admin</span><span class=p>.</span><span class=na>setUsername</span><span class=p>(</span><span class=s>&#34;admin&#34;</span><span class=p>);</span>
+        <span class=n>admin</span><span class=p>.</span><span class=na>setPassword</span><span class=p>(</span><span class=s>&#34;{noop}password&#34;</span><span class=p>);</span>
+        <span class=n>admin</span><span class=p>.</span><span class=na>setAuth2fa</span><span class=p>(</span><span class=kc>true</span><span class=p>);</span>
+        <span class=n>admin</span><span class=p>.</span><span class=na>setSecret</span><span class=p>(</span><span class=n>ADMIN_SECRET</span><span class=p>);</span>
+        <span class=n>admin</span><span class=p>.</span><span class=na>setRoles</span><span class=p>(</span><span class=n>Arrays</span><span class=p>.</span><span class=na>asList</span><span class=p>(</span><span class=s>&#34;ROLE_USER&#34;</span><span class=p>));</span>
+
+        <span class=n>Account</span> <span class=nf>user</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Account</span><span class=p>();</span>
+        <span class=n>user</span><span class=p>.</span><span class=na>setUsername</span><span class=p>(</span><span class=s>&#34;user&#34;</span><span class=p>);</span>
+        <span class=n>user</span><span class=p>.</span><span class=na>setPassword</span><span class=p>(</span><span class=s>&#34;{noop}password&#34;</span><span class=p>);</span>
+        <span class=n>user</span><span class=p>.</span><span class=na>setAuth2fa</span><span class=p>(</span><span class=kc>false</span><span class=p>);</span>
+        <span class=n>user</span><span class=p>.</span><span class=na>setRoles</span><span class=p>(</span><span class=n>Arrays</span><span class=p>.</span><span class=na>asList</span><span class=p>(</span><span class=s>&#34;ROLE_USER&#34;</span><span class=p>));</span>
+
+        <span class=n>accounts</span><span class=p>.</span><span class=na>add</span><span class=p>(</span><span class=n>admin</span><span class=p>);</span>
+        <span class=n>accounts</span><span class=p>.</span><span class=na>add</span><span class=p>(</span><span class=n>user</span><span class=p>);</span>
+    <span class=p>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=nf>Account</span> <span class=n>find</span><span class=p>(</span><span class=n>String</span> <span class=nf>username</span><span class=p>)</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=n>accounts</span><span class=p>.</span><span class=na>stream</span><span class=p>().</span><span class=na>filter</span><span class=p>(</span><span class=n>account</span> <span class=o>-&gt;</span> <span class=n>account</span><span class=p>.</span><span class=na>getUsername</span><span class=p>().</span><span class=na>equals</span><span class=p>(</span><span class=n>username</span><span class=p>)).</span><span class=na>findFirst</span><span class=p>().</span><span class=na>orElse</span><span class=p>(</span><span class=kc>null</span><span class=p>);</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/InMemoryAccountRepository.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/InMemoryAccountRepository.java target=_blank>InMemoryAccountRepository.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nf>io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>spring2fa</span><span class=p>.</span><span class=na>account</span><span class=p>;</span>
+
+<span class=p>...</span>
+
+<span class=kd>public</span> <span class=nf>class</span> <span class=n>Account</span> <span class=p>{</span>
+
+    <span class=kd>private</span> <span class=nf>String</span> <span class=n>username</span><span class=p>;</span>
+    <span class=kd>private</span> <span class=nf>String</span> <span class=n>password</span><span class=p>;</span>
+
+    <span class=kd>private</span> <span class=nf>String</span> <span class=n>secret</span><span class=p>;</span>
+    <span class=kd>private</span> <span class=nf>Boolean</span> <span class=n>auth2fa</span><span class=p>;</span>
+
+    <span class=kd>private</span> <span class=nf>List</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=nf>roles</span><span class=p>;</span>
+
+    <span class=kd>public</span> <span class=nf>String</span> <span class=n>getUsername</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=n>username</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=kd>public</span> <span class=nf>void</span> <span class=n>setUsername</span><span class=p>(</span><span class=n>String</span> <span class=nf>username</span><span class=p>)</span> <span class=p>{</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>username</span> <span class=o>=</span> <span class=n>username</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=kd>public</span> <span class=nf>String</span> <span class=n>getPassword</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=n>password</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=kd>public</span> <span class=nf>void</span> <span class=n>setPassword</span><span class=p>(</span><span class=n>String</span> <span class=nf>password</span><span class=p>)</span> <span class=p>{</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>password</span> <span class=o>=</span> <span class=n>password</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=kd>public</span> <span class=nf>String</span> <span class=n>getSecret</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=n>secret</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=kd>public</span> <span class=nf>void</span> <span class=n>setSecret</span><span class=p>(</span><span class=n>String</span> <span class=nf>secret</span><span class=p>)</span> <span class=p>{</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>secret</span> <span class=o>=</span> <span class=n>secret</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=kd>public</span> <span class=nf>Boolean</span> <span class=n>isAuth2fa</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=n>auth2fa</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=kd>public</span> <span class=nf>void</span> <span class=n>setAuth2fa</span><span class=p>(</span><span class=n>Boolean</span> <span class=nf>auth2fa</span><span class=p>)</span> <span class=p>{</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>auth2fa</span> <span class=o>=</span> <span class=n>auth2fa</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=kd>public</span> <span class=nf>List</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=nf>getRoles</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=n>roles</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=kd>public</span> <span class=nf>void</span> <span class=n>setRoles</span><span class=p>(</span><span class=n>List</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=nf>roles</span><span class=p>)</span> <span class=p>{</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>roles</span> <span class=o>=</span> <span class=n>roles</span><span class=p>;</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/Account.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/Account.java target=_blank>Account.java</a></div></div><p>La configuración de seguridad en Spring Security indica para cada URL que permisos se requieren. Para acceder a la página de contenido <em>/home</em> de la aplicación se requiere el rol <em>USER</em>, a la página de inicio de sesión <em>/login</em> se permite acceder a los usuario no autenticados donde introducen sus credenciales de usuario y contraseña, una vez validado el usuario y contraseña el usuario autenticado tiene el rol <em>PRE_AUTH_USER</em>, dependiendo de si el usuario en su prefrencia usa 2FA o no en el manejador de autenticación exitosa <em>SecondFactorAuthenticationSuccessHandler</em> redirige al usuario a la página <em>/home</em> o la página <em>/code</em> para intorducir el código de verificación del segundo factor autenticación. Al usuario autenticado exitosamente de forma completa se le sustituye el permiso <em>PRE_AUTH_USER</em> por los que tenga asignado, en el ejemplo el rol <em>USER</em>.</p><p>La verificación del código del segundo paso de autenticación se realiza en la clase <em>CodeController</em> con la clase <em>Totp</em> a partir del código enviado y el código secreto con el cual se generó la imagen de código QR.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nf>io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>spring2fa</span><span class=p>.</span><span class=na>spring</span><span class=p>;</span>
+
+<span class=p>...</span>
+
+<span class=nd>@Configuration</span>
+<span class=nd>@EnableWebSecurity</span>
+<span class=kd>public</span> <span class=nf>class</span> <span class=n>WebSecurityConfig</span> <span class=nf>extends</span> <span class=n>WebSecurityConfigurerAdapter</span> <span class=p>{</span>
+
+    <span class=nd>@Autowired</span>
+    <span class=kd>private</span> <span class=nf>UserDetailsService</span> <span class=n>userDetailsService</span><span class=p>;</span>
+
+    <span class=nd>@Autowired</span>
+    <span class=kd>private</span> <span class=nf>AuthenticationSuccessHandler</span> <span class=n>authenticationSuccessHandler</span><span class=p>;</span>
+
+    <span class=nd>@Bean</span>
+    <span class=kd>public</span> <span class=nf>PasswordEncoder</span> <span class=n>encoder</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=n>PasswordEncoderFactories</span><span class=p>.</span><span class=na>createDelegatingPasswordEncoder</span><span class=p>();</span>
+    <span class=p>}</span>
+
+    <span class=nd>@Bean</span>
+    <span class=kd>public</span> <span class=nf>AuthenticationSuccessHandler</span> <span class=n>authenticationSuccessHandler</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=k>new</span> <span class=n>SecondFactorAuthenticationSuccessHandler</span><span class=p>();</span>
+    <span class=p>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>protected</span> <span class=nf>void</span> <span class=n>configure</span><span class=p>(</span><span class=n>HttpSecurity</span> <span class=nf>http</span><span class=p>)</span> <span class=kd>throws</span> <span class=nf>Exception</span> <span class=p>{</span>
+        <span class=n>http</span><span class=p>.</span><span class=na>authorizeRequests</span><span class=p>()</span>
+                <span class=p>.</span><span class=na>antMatchers</span><span class=p>(</span><span class=s>&#34;/static/**&#34;</span><span class=p>).</span><span class=na>permitAll</span><span class=p>()</span>
+                <span class=p>.</span><span class=na>antMatchers</span><span class=p>(</span><span class=s>&#34;/code&#34;</span><span class=p>).</span><span class=na>hasRole</span><span class=p>(</span><span class=s>&#34;PRE_AUTH_USER&#34;</span><span class=p>)</span>
+                <span class=p>.</span><span class=na>antMatchers</span><span class=p>(</span><span class=s>&#34;/home&#34;</span><span class=p>).</span><span class=na>hasRole</span><span class=p>(</span><span class=s>&#34;USER&#34;</span><span class=p>)</span>
+                <span class=p>.</span><span class=na>anyRequest</span><span class=p>().</span><span class=na>authenticated</span><span class=p>();</span>
+
+        <span class=n>http</span><span class=p>.</span><span class=na>formLogin</span><span class=p>()</span>
+                <span class=p>.</span><span class=na>loginPage</span><span class=p>(</span><span class=s>&#34;/login&#34;</span><span class=p>)</span>
+                <span class=p>.</span><span class=na>permitAll</span><span class=p>()</span>
+                <span class=p>.</span><span class=na>successHandler</span><span class=p>(</span><span class=n>authenticationSuccessHandler</span><span class=p>);</span>
+
+        <span class=n>http</span><span class=p>.</span><span class=na>logout</span><span class=p>()</span>
+                <span class=p>.</span><span class=na>permitAll</span><span class=p>();</span>
+    <span class=p>}</span>
+
+    <span class=nd>@Autowired</span>
+    <span class=kd>public</span> <span class=nf>void</span> <span class=n>registerAuthentication</span><span class=p>(</span><span class=n>AuthenticationManagerBuilder</span> <span class=nf>auth</span><span class=p>)</span> <span class=kd>throws</span> <span class=nf>Exception</span> <span class=p>{</span>
+        <span class=n>auth</span><span class=p>.</span><span class=na>userDetailsService</span><span class=p>(</span><span class=n>userDetailsService</span><span class=p>);</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/WebSecurityConfig.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/WebSecurityConfig.java target=_blank>WebSecurityConfig.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nf>io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>spring2fa</span><span class=p>.</span><span class=na>spring</span><span class=p>;</span>
+
+<span class=p>...</span>
+
+<span class=nd>@EnableWebMvc</span>
+<span class=nd>@Configuration</span>
+<span class=kd>public</span> <span class=nf>class</span> <span class=n>WebMvcConfig</span> <span class=nf>implements</span> <span class=n>WebMvcConfigurer</span> <span class=p>{</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=nf>void</span> <span class=n>addViewControllers</span><span class=p>(</span><span class=n>ViewControllerRegistry</span> <span class=nf>registry</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>registry</span><span class=p>.</span><span class=na>addViewController</span><span class=p>(</span><span class=s>&#34;/login&#34;</span><span class=p>).</span><span class=na>setViewName</span><span class=p>(</span><span class=s>&#34;login&#34;</span><span class=p>);</span>
+        <span class=n>registry</span><span class=p>.</span><span class=na>addViewController</span><span class=p>(</span><span class=s>&#34;/code&#34;</span><span class=p>).</span><span class=na>setViewName</span><span class=p>(</span><span class=s>&#34;code&#34;</span><span class=p>);</span>
+        <span class=n>registry</span><span class=p>.</span><span class=na>addViewController</span><span class=p>(</span><span class=s>&#34;/home&#34;</span><span class=p>).</span><span class=na>setViewName</span><span class=p>(</span><span class=s>&#34;home&#34;</span><span class=p>);</span>
+    <span class=p>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=nf>void</span> <span class=n>addResourceHandlers</span><span class=p>(</span><span class=n>ResourceHandlerRegistry</span> <span class=nf>registry</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>registry</span><span class=p>.</span><span class=na>addResourceHandler</span><span class=p>(</span><span class=s>&#34;/static/**&#34;</span><span class=p>).</span><span class=na>addResourceLocations</span><span class=p>(</span><span class=s>&#34;classpath:/static/&#34;</span><span class=p>);</span>
+    <span class=p>}</span>
+
+    <span class=nd>@Bean</span>
+    <span class=kd>public</span> <span class=nf>ClassLoaderTemplateResolver</span> <span class=n>templateResolver</span><span class=p>()</span> <span class=p>{</span>
+        <span class=n>ClassLoaderTemplateResolver</span> <span class=nf>result</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ClassLoaderTemplateResolver</span><span class=p>();</span>
+        <span class=n>result</span><span class=p>.</span><span class=na>setPrefix</span><span class=p>(</span><span class=s>&#34;templates/&#34;</span><span class=p>);</span>
+        <span class=n>result</span><span class=p>.</span><span class=na>setSuffix</span><span class=p>(</span><span class=s>&#34;.html&#34;</span><span class=p>);</span>
+        <span class=n>result</span><span class=p>.</span><span class=na>setTemplateMode</span><span class=p>(</span><span class=s>&#34;HTML&#34;</span><span class=p>);</span>
+        <span class=k>return</span> <span class=n>result</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=nd>@Bean</span>
+    <span class=kd>public</span> <span class=nf>SpringTemplateEngine</span> <span class=n>templateEngine</span><span class=p>(</span><span class=n>ClassLoaderTemplateResolver</span> <span class=nf>templateResolver</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>SpringTemplateEngine</span> <span class=nf>templateEngine</span> <span class=o>=</span> <span class=k>new</span> <span class=n>SpringTemplateEngine</span><span class=p>();</span>
+        <span class=n>templateEngine</span><span class=p>.</span><span class=na>addDialect</span><span class=p>(</span><span class=k>new</span> <span class=n>LayoutDialect</span><span class=p>());</span>
+        <span class=n>templateEngine</span><span class=p>.</span><span class=na>setTemplateResolver</span><span class=p>(</span><span class=n>templateResolver</span><span class=p>);</span>
+        <span class=k>return</span> <span class=n>templateEngine</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=nd>@Bean</span>
+    <span class=kd>public</span> <span class=nf>ThymeleafViewResolver</span> <span class=n>viewResolver</span><span class=p>(</span><span class=n>SpringTemplateEngine</span> <span class=nf>engine</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>ThymeleafViewResolver</span> <span class=nf>viewResolver</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ThymeleafViewResolver</span><span class=p>();</span>
+        <span class=n>viewResolver</span><span class=p>.</span><span class=na>setTemplateEngine</span><span class=p>(</span><span class=n>engine</span><span class=p>);</span>
+        <span class=n>viewResolver</span><span class=p>.</span><span class=na>setCache</span><span class=p>(</span><span class=kc>false</span><span class=p>);</span>
+        <span class=k>return</span> <span class=n>viewResolver</span><span class=p>;</span>
+    <span class=p>}</span>
+<span class=p>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/WebMvcConfig.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/WebMvcConfig.java target=_blank>WebMvcConfig.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nf>io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>spring2fa</span><span class=p>.</span><span class=na>spring</span><span class=p>;</span>
+
+<span class=p>...</span>
+
+<span class=kd>public</span> <span class=nf>class</span> <span class=n>SecondFactorAuthenticationSuccessHandler</span> <span class=nf>implements</span> <span class=n>AuthenticationSuccessHandler</span> <span class=p>{</span>
+  
+    <span class=kd>private</span> <span class=nf>RedirectStrategy</span> <span class=n>redirectStrategy</span> <span class=o>=</span> <span class=k>new</span> <span class=n>DefaultRedirectStrategy</span><span class=p>();</span>
+ 
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=nf>void</span> <span class=n>onAuthenticationSuccess</span><span class=p>(</span><span class=n>HttpServletRequest</span> <span class=nf>request</span><span class=p>,</span> <span class=n>HttpServletResponse</span> <span class=nf>response</span><span class=p>,</span> <span class=n>Authentication</span> <span class=nf>authentication</span><span class=p>)</span> <span class=kd>throws</span> <span class=nf>IOException</span> <span class=p>{</span>
+        <span class=n>handle</span><span class=p>(</span><span class=n>request</span><span class=p>,</span> <span class=n>response</span><span class=p>,</span> <span class=n>authentication</span><span class=p>);</span>
+        <span class=n>clearAuthenticationAttributes</span><span class=p>(</span><span class=n>request</span><span class=p>);</span>
+    <span class=p>}</span>
+ 
+    <span class=kd>protected</span> <span class=nf>void</span> <span class=n>handle</span><span class=p>(</span><span class=n>HttpServletRequest</span> <span class=nf>request</span><span class=p>,</span> <span class=n>HttpServletResponse</span> <span class=nf>response</span><span class=p>,</span> <span class=n>Authentication</span> <span class=nf>authentication</span><span class=p>)</span> <span class=kd>throws</span> <span class=nf>IOException</span> <span class=p>{</span>
+          <span class=n>String</span> <span class=nf>targetUrl</span> <span class=o>=</span> <span class=n>getTargetUrl</span><span class=p>(</span><span class=n>authentication</span><span class=p>);</span>
+ 
+        <span class=k>if</span> <span class=p>(</span><span class=n>response</span><span class=p>.</span><span class=na>isCommitted</span><span class=p>())</span> <span class=p>{</span>
+            <span class=k>return</span><span class=p>;</span>
+        <span class=p>}</span>
+ 
+        <span class=n>redirectStrategy</span><span class=p>.</span><span class=na>sendRedirect</span><span class=p>(</span><span class=n>request</span><span class=p>,</span> <span class=n>response</span><span class=p>,</span> <span class=n>targetUrl</span><span class=p>);</span>
+    <span class=p>}</span>
+ 
+    <span class=kd>protected</span> <span class=nf>String</span> <span class=n>getTargetUrl</span><span class=p>(</span><span class=n>Authentication</span> <span class=nf>authentication</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>UserDetailsAdapter</span> <span class=nf>userDetailsAdapter</span> <span class=o>=</span> <span class=p>(</span><span class=n>UserDetailsAdapter</span><span class=p>)</span> <span class=n>SecurityContextHolder</span><span class=p>.</span><span class=na>getContext</span><span class=p>().</span><span class=na>getAuthentication</span><span class=p>().</span><span class=na>getPrincipal</span><span class=p>();</span>
+        <span class=k>if</span> <span class=p>(</span><span class=n>userDetailsAdapter</span><span class=p>.</span><span class=na>getAccount</span><span class=p>().</span><span class=na>isAuth2fa</span><span class=p>())</span> <span class=p>{</span>
+            <span class=k>return</span> <span class=s>&#34;/code&#34;</span><span class=p>;</span>
+        <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+            <span class=n>Utils</span><span class=p>.</span><span class=na>setAuthentication</span><span class=p>();</span>
+            <span class=k>return</span> <span class=s>&#34;/home&#34;</span><span class=p>;</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+ 
+    <span class=kd>protected</span> <span class=nf>void</span> <span class=n>clearAuthenticationAttributes</span><span class=p>(</span><span class=n>HttpServletRequest</span> <span class=nf>request</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>HttpSession</span> <span class=nf>session</span> <span class=o>=</span> <span class=n>request</span><span class=p>.</span><span class=na>getSession</span><span class=p>(</span><span class=kc>false</span><span class=p>);</span>
+        <span class=k>if</span> <span class=p>(</span><span class=n>session</span> <span class=o>==</span> <span class=kc>null</span><span class=p>)</span> <span class=p>{</span>
+            <span class=k>return</span><span class=p>;</span>
+        <span class=p>}</span>
+        <span class=n>session</span><span class=p>.</span><span class=na>removeAttribute</span><span class=p>(</span><span class=n>WebAttributes</span><span class=p>.</span><span class=na>AUTHENTICATION_EXCEPTION</span><span class=p>);</span>
+    <span class=p>}</span>
+ 
+    <span class=kd>public</span> <span class=nf>void</span> <span class=n>setRedirectStrategy</span><span class=p>(</span><span class=n>RedirectStrategy</span> <span class=nf>redirectStrategy</span><span class=p>)</span> <span class=p>{</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>redirectStrategy</span> <span class=o>=</span> <span class=n>redirectStrategy</span><span class=p>;</span>
+    <span class=p>}</span>
+    <span class=kd>protected</span> <span class=nf>RedirectStrategy</span> <span class=n>getRedirectStrategy</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=n>redirectStrategy</span><span class=p>;</span>
+    <span class=p>}</span>
+<span class=p>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/SecondFactorAuthenticationSuccessHandler.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/SecondFactorAuthenticationSuccessHandler.java target=_blank>SecondFactorAuthenticationSuccessHandler.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nf>io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>spring2fa</span><span class=p>.</span><span class=na>spring</span><span class=p>;</span>
+
+<span class=p>...</span>
+
+<span class=kd>public</span> <span class=nf>class</span> <span class=n>Utils</span> <span class=p>{</span>
+
+    <span class=kd>public</span> <span class=nf>static</span> <span class=kt>void</span> <span class=nf>setAuthentication</span><span class=p>()</span> <span class=p>{</span>
+        <span class=n>Authentication</span> <span class=nf>authentication</span> <span class=o>=</span> <span class=n>SecurityContextHolder</span><span class=p>.</span><span class=na>getContext</span><span class=p>().</span><span class=na>getAuthentication</span><span class=p>();</span>
+        <span class=n>UserDetailsAdapter</span> <span class=nf>userDetailsAdapter</span> <span class=o>=</span> <span class=p>(</span><span class=n>UserDetailsAdapter</span><span class=p>)</span> <span class=n>SecurityContextHolder</span><span class=p>.</span><span class=na>getContext</span><span class=p>().</span><span class=na>getAuthentication</span><span class=p>().</span><span class=na>getPrincipal</span><span class=p>();</span>
+        <span class=n>List</span><span class=o>&lt;</span><span class=n>GrantedAuthority</span><span class=o>&gt;</span> <span class=nf>authorities</span> <span class=o>=</span> <span class=n>AuthorityUtils</span><span class=p>.</span><span class=na>createAuthorityList</span><span class=p>(</span><span class=n>userDetailsAdapter</span><span class=p>.</span><span class=na>getAccount</span><span class=p>().</span><span class=na>getRoles</span><span class=p>().</span><span class=na>toArray</span><span class=p>(</span><span class=k>new</span> <span class=n>String</span><span class=p>[</span><span class=n>0</span><span class=p>]));</span>
+
+        <span class=n>Authentication</span> <span class=nf>newAuth</span> <span class=o>=</span> <span class=k>new</span> <span class=n>UsernamePasswordAuthenticationToken</span><span class=p>(</span><span class=n>authentication</span><span class=p>.</span><span class=na>getPrincipal</span><span class=p>(),</span> <span class=n>authentication</span><span class=p>.</span><span class=na>getCredentials</span><span class=p>(),</span> <span class=n>authorities</span><span class=p>);</span>
+        <span class=n>SecurityContextHolder</span><span class=p>.</span><span class=na>getContext</span><span class=p>().</span><span class=na>setAuthentication</span><span class=p>(</span><span class=n>newAuth</span><span class=p>);</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/Utils.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/Utils.java target=_blank>Utils.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nf>io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>spring2fa</span><span class=p>.</span><span class=na>spring</span><span class=p>;</span>
+
+<span class=p>...</span>
+
+<span class=kd>public</span> <span class=nf>class</span> <span class=n>UserDetailsAdapter</span> <span class=nf>implements</span> <span class=n>UserDetails</span> <span class=p>{</span>
+
+    <span class=kd>private</span> <span class=nf>Account</span> <span class=n>account</span><span class=p>;</span>
+
+    <span class=kd>public</span> <span class=nf>UserDetailsAdapter</span><span class=p>(</span><span class=n>Account</span> <span class=nf>account</span><span class=p>)</span> <span class=p>{</span>
+        <span class=k>this</span><span class=p>.</span><span class=na>account</span> <span class=o>=</span> <span class=n>account</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=nf>Collection</span><span class=o>&lt;?</span> <span class=kd>extends</span> <span class=nf>GrantedAuthority</span><span class=o>&gt;</span> <span class=n>getAuthorities</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=n>AuthorityUtils</span><span class=p>.</span><span class=na>createAuthorityList</span><span class=p>(</span><span class=s>&#34;ROLE_PRE_AUTH_USER&#34;</span><span class=p>);</span>
+    <span class=p>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=nf>String</span> <span class=n>getUsername</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=n>account</span><span class=p>.</span><span class=na>getUsername</span><span class=p>();</span>
+    <span class=p>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=nf>String</span> <span class=n>getPassword</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=n>account</span><span class=p>.</span><span class=na>getPassword</span><span class=p>();</span>
+    <span class=p>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=nf>boolean</span> <span class=n>isAccountNonExpired</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=kc>true</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=nf>boolean</span> <span class=n>isAccountNonLocked</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=kc>true</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=nf>boolean</span> <span class=n>isCredentialsNonExpired</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=kc>true</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=nf>boolean</span> <span class=n>isEnabled</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=kc>true</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=kd>public</span> <span class=nf>Account</span> <span class=n>getAccount</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=n>account</span><span class=p>;</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/UserDetailsAdapter.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/UserDetailsAdapter.java target=_blank>UserDetailsAdapter.java</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java><span class=kn>package</span> <span class=nf>io</span><span class=p>.</span><span class=na>github</span><span class=p>.</span><span class=na>picodotdev</span><span class=p>.</span><span class=na>blogbitix</span><span class=p>.</span><span class=na>spring2fa</span><span class=p>.</span><span class=na>spring</span><span class=p>;</span>
+
+<span class=p>...</span>
+
+<span class=nd>@Component</span>
+<span class=nd>@Primary</span>
+<span class=kd>public</span> <span class=nf>class</span> <span class=n>UserDetailsServiceAdapter</span> <span class=nf>implements</span> <span class=n>UserDetailsService</span> <span class=p>{</span>
+
+    <span class=nd>@Autowired</span>
+    <span class=kd>private</span> <span class=nf>AccountRepository</span> <span class=n>accountRepository</span><span class=p>;</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=nf>UserDetails</span> <span class=n>loadUserByUsername</span><span class=p>(</span><span class=n>String</span> <span class=nf>username</span><span class=p>)</span> <span class=kd>throws</span> <span class=nf>UsernameNotFoundException</span> <span class=p>{</span>
+        <span class=n>Account</span> <span class=nf>account</span> <span class=o>=</span> <span class=n>accountRepository</span><span class=p>.</span><span class=na>find</span><span class=p>(</span><span class=n>username</span><span class=p>);</span>
+
+        <span class=k>if</span> <span class=p>(</span><span class=n>account</span> <span class=o>==</span> <span class=kc>null</span><span class=p>)</span> <span class=p>{</span>
+            <span class=k>throw</span> <span class=k>new</span> <span class=n>UsernameNotFoundException</span><span class=p>(</span><span class=n>username</span><span class=p>);</span>
+        <span class=p>}</span>
+
+        <span class=k>return</span> <span class=k>new</span> <span class=n>UserDetailsAdapter</span><span class=p>(</span><span class=n>account</span><span class=p>);</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/UserDetailsServiceAdapter.java target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/UserDetailsServiceAdapter.java target=_blank>UserDetailsServiceAdapter.java</a></div></div><p>El código QR es una imagen generada a partir del código secreto y una información adicional que al usurio le permite identificar la cuenta, hay <em>webs</em> que permiten <a href=https://zxing.org/w/decode.jspx>decodificar una imagen QR</a> para analizar que información incorpora, en esta la información de la cuenta <em>Spring2FA (admin)</em> y el secreto <em>6YFX5TVT76OHHNMS</em> utilizado para generar los códigos temporales. En el HTML devuelto se incluye una imagen con la información embebida en el enlace de la imagen, la imagen se genera por un servicio de Google.</p><div class=media style=text-align:center><figure><a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/images/qr-code-decoder_hu0bd1b6584fcbf4a08a8542128e141a4a_43488_2560x1440_fit_box_2.png title="Decodificador de imágenes código QR" data-gallery><img src=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/images/qr-code-decoder_hu0bd1b6584fcbf4a08a8542128e141a4a_43488_300x200_fit_box_2.png width=300></a><figcaption>Decodificador de imágenes código QR</figcaption></figure></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-html data-lang=html><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-html data-lang=html><span class=cp>&lt;!DOCTYPE html&gt;</span>
+<span class=p>&lt;</span><span class=nt>html</span> <span class=na>xmlns</span><span class=o>=</span><span class=s>&#34;http://www.w3.org/1999/xhtml&#34;</span> <span class=na>xmlns:th</span><span class=o>=</span><span class=s>&#34;http://www.thymeleaf.org&#34;</span> <span class=na>xmlns:layout</span><span class=o>=</span><span class=s>&#34;http://www.ultraq.net.nz/web/thymeleaf/layout&#34;</span> <span class=na>layout:decorate</span><span class=o>=</span><span class=s>&#34;~{layout}&#34;</span><span class=p>&gt;</span>
+<span class=p>&lt;</span><span class=nt>body</span><span class=p>&gt;</span>
+    ...
+    <span class=p>&lt;</span><span class=nt>p</span><span class=p>&gt;&lt;</span><span class=nt>img</span> <span class=na>src</span><span class=o>=</span><span class=s>&#34;http://chart.googleapis.com/chart?chs=200x200&amp;amp;chld=M%7C0&amp;amp;cht=qr&amp;amp;chl=otpauth%3A%2F%2Ftotp%2FSpring2FA%20(admin)%3Fsecret%3D6YFX5TVT76OHHNMS&#34;</span> <span class=p>/&gt;&lt;/</span><span class=nt>p</span><span class=p>&gt;</span>
+    ...
+<span class=p>&lt;/</span><span class=nt>body</span><span class=p>&gt;</span>
+<span class=p>&lt;/</span><span class=nt>html</span><span class=p>&gt;</span>
+
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href target=_blank>view raw</a></span>
+<a href target=_blank>login.html</a></div></div><p>Las dependencias de librerías son las siguientes.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-groovy data-lang=groovy><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-groovy data-lang=groovy><span class=o>...</span>
+
+<span class=n>dependencies</span> <span class=o>{</span>
+    <span class=n>implementation</span> <span class=s1>&#39;org.springframework.boot:spring-boot-starter-web&#39;</span>
+    <span class=n>implementation</span> <span class=s1>&#39;org.springframework.boot:spring-boot-starter-security&#39;</span>
+    <span class=n>implementation</span> <span class=s1>&#39;org.thymeleaf:thymeleaf-spring5:3.0.11.RELEASE&#39;</span>
+    <span class=n>implementation</span> <span class=s1>&#39;nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.4.1&#39;</span>
+    <span class=n>implementation</span> <span class=s1>&#39;org.jboss.aerogear:aerogear-otp-java:1.0.0&#39;</span>
+<span class=o>}</span>
+
+</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/build.gradle target=_blank>view raw</a></span>
+<a href=/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/code/build.gradle target=_blank>build.gradle</a></div></div><p>Este ejemplo está hecho con la infraestructura que proporciona Spring pero el proceso de autenticación es igualmente implementable con cualquier otro <em>framework</em> o librería.</p><p>Muchos de los servicios populares en internet implementan 2FA como medida de proteger las cuentas de los usuarios y la información en esos servicios. Hay bancos que como contraseña de acceso solo tienen un número de seis dígitos con el riesgo que representa sus usuarios por la importancia que tiene la banca en línea de los datos que se trata.</p><p>El <a href=https://github.com/picodotdev/blog-ejemplos/tree/master/Spring2FA>código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href=https://github.com/>GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew run</code>.</p><div class=reference>Referencia:<br><ul><li><a href=https://www.baeldung.com/spring-security-two-factor-authentication-with-soft-token>Two Factor Auth with Spring Security</a></li><li><a href=https://www.baeldung.com/spring_redirect_after_login>Redirect to Different Pages after Login with Spring Security</a></li><li><a href=https://github.com/altfatterz/two-step-login/>Two Step Login Example</a></li></ul></div></div></article><div class="row related"><div class=col-md-12>Artículos relacionados:<ul><li><a href=/blog-bitix/2019/04/aumentar-el-tamano-del-identificativo-de-la-cookie-de-sesion-de-tomcat-o-spring-session/>Aumentar el tamaño del identificativo de la cookie de sesión de Tomcat o Spring Session</a></li><li><a href=/blog-bitix/2019/02/servidor-oauth-gateway-y-servicio-rest-utilizando-tokens-jwt-con-spring/>Servidor OAuth, gateway y servicio REST utilizando tokens JWT con Spring</a></li><li><a href=/blog-bitix/2019/01/las-contrasenas-e-informacion-sensible-en-el-codigo-fuente-o-bytecode-de-java-no-son-seguras/>Las contraseñas e información sensible en el código fuente o bytecode de Java no son seguras</a></li><li><a href=/blog-bitix/2018/12/exponer-las-metricas-de-hystrix-en-grafana-con-prometheus-de-una-aplicacion-spring-boot/>Exponer las métricas de Hystrix en Grafana con Prometheus de una aplicación Spring Boot</a></li><li><a href=/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/>Monitorizar una aplicación Java de Spring Boot con Micrometer, Prometheus y Grafana</a></li></ul></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><a id=comments></a><div class=row><div class=col-md-12><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='https:\/\/picodotdev.github.io\/blog-bitix\/2019\/11\/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring\/';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2019\/11\/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring\/';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
+<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2019 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow rel=license><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style=border-width:0 src=https://licensebuttons.net/l/by-sa/4.0/80x15.png class=licencia></a><br><a href=https://twitter.com/blogstackinfo rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png alt="Blog Stack" title="Blog Stack"></a>
+<a href=https://www.planetacodigo.com/ rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png alt="Planeta código" title="Planeta código"></a><br><span xmlns:dct=http://purl.org/dc/terms/ property=dct:title><a href=https://picodotdev.github.io/blog-bitix/ rel=nofollow>Blog Bitix</a></span> by <a xmlns:cc=https://creativecommons.org/ns# href=https://picodotdev.github.io/blog-bitix/ property=cc:attributionName rel=cc:attributionurl>pico.dev</a> is licensed under a <a rel=license href=https://creativecommons.org/licenses/by-sa/4.0/>Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class=credit>Powered by <a href=https://gohugo.io/ rel=nofollow title="A fast and modern static website engine">Hugo</a> and <a href=https://pages.github.com/ title="Websites for you and your projects">GitHub Pages</a>.</span>
+<span class=credit>Background patterns from <a href=https://www.toptal.com/designers/subtlepatterns/ rel=nofollow>Subtle Patterns</a>.</span></div></div></footer></div><div class=blueimp-gallery-container><div id=blueimp-gallery class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal=false><div class=slides></div><h3 class=title></h3><a class=prev>‹</a>
+<a class=next>›</a>
+<a class=close>×</a>
+<a class=play-pause></a><ol class=indicator></ol><div class="modal fade"><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close aria-hidden=true>&times;</button><h4 class=modal-title></h4></div><div class="modal-body next"></div><div class=modal-footer><button type=button class="btn btn-default pull-left prev">
+<i class="glyphicon glyphicon-chevron-left"></i>Anterior</button>
+<button type=button class="btn btn-primary next">
+Siguiente
+<i class="glyphicon glyphicon-chevron-right"></i></button></div></div></div></div></div></div><script type=text/javascript>window.cookieconsent_options={"message":"Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.","dismiss":"Aceptar","learnMore":"Más información","link":null,"theme":"dark-bottom"};</script><script type=text/javascript src=//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js async></script></body></html>
