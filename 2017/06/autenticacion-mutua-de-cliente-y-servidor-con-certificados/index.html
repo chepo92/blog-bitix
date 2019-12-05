@@ -1,4 +1,4 @@
-<!doctype html><html lang=es><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content=picodotdev><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="Los certificados no solo sirven para autenticar a un servidor o acceder solo a aquellos en los que confiamos. El servidor también puede autenticar a los clientes mediante un certificado como alternativa a usar un usuario y contraseña ya sea una autenticación BASIC o un formulario personalizado. Al igual que en el cliente usa el certificado de la autoridad de certificación en la que confía para validar el que presenta el servidor, el servidor puede requerir que el cliente también proporcione un certificado que el servidor valida según las autoridades de certificación en las que confía, en ambos casos el servidor o cliente usan su clave privada para iniciar la conexión segura con el handsake del protocolo TLS. &hellip;"><base href=https://picodotdev.github.io/blog-bitix/><title>Autenticación mutua de cliente y servidor con certificados</title><link rel=author type=text/plain href=humans.txt><link rel="shortcut icon" href=assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=assets/apple-touch-icon-144-precomposed.png><link rel=canonical href=https://picodotdev.github.io/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/><link href=index.xml rel=alternate type=application/rss+xml title="Blog Bitix"><link rel=stylesheet type=text/css href=assets/css/font.css><link rel=stylesheet type=text/css href=assets/libs/bootstrap-4.3.1/css/bootstrap.min.css><link rel=stylesheet type=text/css href=assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=assets/css/syntax.css><link rel=stylesheet type=text/css href=assets/css/main.css><script type=text/javascript src=assets/js/require-config.js data-main=js/main defer></script><script type=text/javascript src=assets/libs/require.js data-main=js/main defer></script><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js defer></script><script type=text/javascript defer>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript defer>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script type=text/javascript src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" defer></script><script type=text/javascript src=assets/js/app.js defer></script></head><body><div class=container><div class=row><div class=col-12><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<!doctype html><html lang=es><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="picodotdev"><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="Los certificados no solo sirven para autenticar a un servidor o acceder solo a aquellos en los que confiamos. El servidor también puede autenticar a los clientes mediante un certificado como alternativa a usar un usuario y contraseña ya sea una autenticación BASIC o un formulario personalizado. Al igual que en el cliente usa el certificado de la autoridad de certificación en la que confía para validar el que presenta el servidor, el servidor puede requerir que el cliente también proporcione un certificado que el servidor valida según las autoridades de certificación en las que confía, en ambos casos el servidor o cliente usan su clave privada para iniciar la conexión segura con el handsake del protocolo TLS. &hellip;"><base href=https://picodotdev.github.io/blog-bitix/><title>Autenticación mutua de cliente y servidor con certificados</title><link rel=author type=text/plain href=humans.txt><link rel="shortcut icon" href=assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=assets/apple-touch-icon-144-precomposed.png><link rel=canonical href=https://picodotdev.github.io/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/><link href=index.xml rel=alternate type=application/rss+xml title="Blog Bitix"><link rel=stylesheet type=text/css href=assets/css/font.css><link rel=stylesheet type=text/css href=assets/libs/bootstrap-4.3.1/css/bootstrap.min.css><link rel=stylesheet type=text/css href=assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=assets/css/syntax.css><link rel=stylesheet type=text/css href=assets/css/main.css><script type=text/javascript src=assets/js/require-config.js data-main=js/main defer></script><script type=text/javascript src=assets/libs/require.js data-main=js/main defer></script><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js defer></script><script type=text/javascript defer>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript defer>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script type=text/javascript src="//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons" defer></script><script type=text/javascript src=assets/js/app.js defer></script></head><body><div class=container><div class=row><div class=col-12><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
 <a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
 <a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class="col-12 col-lg-4 text-center"><form name=query class="form-inline search" onsubmit="return false;"><div class=input-group><input type=text name=q class=form-control placeholder="Buscar en Blog Bitix">
 <span class=input-group-btn><button class="btn btn-secondary" type=submit>Buscar</button></span></div></form><form name=search action=https://duckduckgo.com/ method=get class=hidden data-site=https://picodotdev.github.io/blog-bitix/><input type=hidden name=q></form></div></div><div class=row><div class=col-12><nav class="nav nav-pills nav-fill"><a href=/blog-bitix/tags/java/ class="nav-item nav-link">Java</a>
@@ -7,9 +7,9 @@
 <a href=/blog-bitix/tags/tapestry/ class="nav-item nav-link">Tapestry</a>
 <a href=/blog-bitix/archive/ class="nav-item nav-link">Archivo y hemeroteca</a>
 <a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
-<a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class="adblock-sidebar adblock-sidebar-right"><div class=adblock-sidebar-container><ins class="adsbygoogle adblock-sidebar-vertical" style=display:block data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format="vertical, rectangle" data-type=auto></ins></div></div><article itemprop=mainEntity itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content=es><meta itemprop=keywords content="blog-stack, java, planeta-codigo, planeta-linux, programacion, seguridad"><h1 itemprop=name>Autenticación mutua de cliente y servidor con certificados</h1><p class=information>Escrito por
+<a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class="adblock-sidebar adblock-sidebar-right"><div class=adblock-sidebar-container><ins class="adsbygoogle adblock-sidebar-vertical" style=display:block data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format="vertical, rectangle" data-type=auto></ins></div></div><article itemprop=mainEntity itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content="es"><meta itemprop=keywords content="blog-stack, java, planeta-codigo, planeta-linux, programacion, seguridad"><h1 itemprop=name>Autenticación mutua de cliente y servidor con certificados</h1><p class=information>Escrito por
 <span itemprop=author itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2017-06-17>17/06/2017</time>, actualizado el <time itemprop=dateModified datetime=2017-06-18>18/06/2017</time>.<br><a href=tags/blog-stack/>blog-stack</a> <a href=tags/java/>java</a> <a href=tags/planeta-codigo/>planeta-codigo</a> <a href=tags/planeta-linux/>planeta-linux</a> <a href=tags/programacion/>programacion</a> <a href=tags/seguridad/>seguridad</a><br><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/ itemprop=url>Enlace permanente</a>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/#comments>Comentarios</a></p><div class=content itemprop=articleBody><meta itemprop=wordCount content=3379><div class=logotypes style=float:right><img src=assets/images/logotipos/openssl.svg class=right width=400 alt=OpenSSL title=OpenSSL></div><p>Los certificados no solo sirven para autenticar a un servidor o acceder solo a aquellos en los que confiamos. El servidor también puede autenticar a los clientes mediante un certificado como alternativa a usar un usuario y contraseña ya sea una autenticación <em>BASIC</em> o un formulario personalizado. Al igual que en el cliente usa el certificado de la autoridad de certificación en la que confía para validar el que presenta el servidor, el servidor puede requerir que el cliente también proporcione un certificado que el servidor valida según las autoridades de certificación en las que confía, en ambos casos el servidor o cliente usan su clave privada para iniciar la conexión segura con el <em>handsake</em> del <a href=https://es.wikipedia.org/wiki/Transport_Layer_Security>protocolo TLS</a>.</p><p>Para el ejemplo usaré un servidor web <a href=https://nginx.org/>nginx</a> ejecutado como un contenedor de <a href=https://www.docker.com/>Docker</a> configurado de tal manera que requiere autenticación para el cliente con certificados.</p><p>Inicialmente deberemos generar tres parejas de claves privadas y públicas, una para nuestra propia autoridad de certificación, una clave para el servidor y otra para el cliente. Al mismo tiempo generaré otras tres parejas de claves privadas y públicas para comprobar que cuando se proporciona un certificado incorrecto la autenticación falla.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt> 1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/#comments>Comentarios</a></p><div class=content itemprop=articleBody><meta itemprop=wordCount content="3379"><div class=logotypes style=float:right><img src=assets/images/logotipos/openssl.svg class=right width=400 alt=OpenSSL title=OpenSSL></div><p>Los certificados no solo sirven para autenticar a un servidor o acceder solo a aquellos en los que confiamos. El servidor también puede autenticar a los clientes mediante un certificado como alternativa a usar un usuario y contraseña ya sea una autenticación <em>BASIC</em> o un formulario personalizado. Al igual que en el cliente usa el certificado de la autoridad de certificación en la que confía para validar el que presenta el servidor, el servidor puede requerir que el cliente también proporcione un certificado que el servidor valida según las autoridades de certificación en las que confía, en ambos casos el servidor o cliente usan su clave privada para iniciar la conexión segura con el <em>handsake</em> del <a href=https://es.wikipedia.org/wiki/Transport_Layer_Security>protocolo TLS</a>.</p><p>Para el ejemplo usaré un servidor web <a href=https://nginx.org/>nginx</a> ejecutado como un contenedor de <a href=https://www.docker.com/>Docker</a> configurado de tal manera que requiere autenticación para el cliente con certificados.</p><p>Inicialmente deberemos generar tres parejas de claves privadas y públicas, una para nuestra propia autoridad de certificación, una clave para el servidor y otra para el cliente. Al mismo tiempo generaré otras tres parejas de claves privadas y públicas para comprobar que cuando se proporciona un certificado incorrecto la autenticación falla.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -31,7 +31,7 @@ $ openssl genrsa -out server.key <span class=m>8192</span>
 $ openssl rsa -in server.key -pubout &gt; server.pub
 $ openssl genrsa -out client.key <span class=m>8192</span>
 $ openssl rsa -in ca.key -pubout &gt; client.pub</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-genrsa.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-genrsa.sh target=_blank>openssl-genrsa.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext><span class=lnt>1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-genrsa.sh target=_blank>openssl-genrsa.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -45,7 +45,7 @@ MDQwNzA2NTcxNVoXDTIyMDQwNjA2NTcxNVowMTELMAkGA1UEBhMCRVMxDjAMBgNV
 BAgTBVNwYWluMRIwEAYDVQQKEwlsb2NhbGhvc3QwggQiMA0GCSqGSIb3DQEBAQUA
 ...
 -----END CERTIFICATE-----</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/ca.crt target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/ca.crt target=_blank>ca.crt</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext><span class=lnt>1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/ca.crt target=_blank>ca.crt</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -59,7 +59,7 @@ ldJGc3c/BpdbyYboxsTau8BbAk45c61QKeoTGtQ+K4a2/X0oArroTtHOlRFFUB9t
 yKSD20Vj80Ks4op/Q7ucEcZ8mr9zAXzhfokK72PLRGWmmvd1NBoHUzbrkNH9A8he
 ...
 -----END RSA PRIVATE KEY-----</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/ca.key target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/ca.key target=_blank>ca.key</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext><span class=lnt>1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/ca.key target=_blank>ca.key</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -73,7 +73,7 @@ cjTj5Uwjc5Tr7RY724924amECHXcldJGc3c/BpdbyYboxsTau8BbAk45c61QKeoT
 GtQ+K4a2/X0oArroTtHOlRFFUB9tyKSD20Vj80Ks4op/Q7ucEcZ8mr9zAXzhfokK
 ...
 -----END PUBLIC KEY-----</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/ca.pub target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/ca.pub target=_blank>ca.pub</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt>1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/ca.pub target=_blank>ca.pub</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -85,7 +85,7 @@ $ openssl genrsa -out server-unknown.key <span class=m>8192</span>
 $ openssl rsa -in server-unknown.key -pubout &gt; server-unknown.pub
 $ openssl genrsa -out client-unknown.key <span class=m>8192</span>
 $ openssl rsa -in ca-unknown.key -pubout &gt; client-unknown.pub</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-genrsa-unknown.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-genrsa-unknown.sh target=_blank>openssl-genrsa-unknown.sh</a></div></div><p>El siguiente paso es generar los certificados y firmar con la clave y certificado de la autoridad de certificado los certificados del servidor y cliente. Como paso previo a que la autoridad de certificación emita los certificados del servidor y cliente hay que generar una petición de firma de certificado, los archivos <em>.csr</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt> 1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-genrsa-unknown.sh target=_blank>openssl-genrsa-unknown.sh</a></div></div><p>El siguiente paso es generar los certificados y firmar con la clave y certificado de la autoridad de certificado los certificados del servidor y cliente. Como paso previo a que la autoridad de certificación emita los certificados del servidor y cliente hay que generar una petición de firma de certificado, los archivos <em>.csr</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -139,11 +139,11 @@ If you enter <span class=s1>&#39;.&#39;</span>, the field will be left blank.
 -----
 Country Name <span class=o>(</span><span class=m>2</span> letter code<span class=o>)</span> <span class=o>[</span>AU<span class=o>]</span>:ES
 State or Province Name <span class=o>(</span>full name<span class=o>)</span> <span class=o>[</span>Some-State<span class=o>]</span>:Spain
-Locality Name <span class=o>(</span>eg, city<span class=o>)</span> <span class=o>[]</span>:
+Locality Name <span class=o>(</span>eg, city<span class=o>)</span> <span class=o>[</span><span class=o>]</span>:
 Organization Name <span class=o>(</span>eg, company<span class=o>)</span> <span class=o>[</span>Internet Widgits Pty Ltd<span class=o>]</span>:Blog Bitix Certiticate Authority
-Organizational Unit Name <span class=o>(</span>eg, section<span class=o>)</span> <span class=o>[]</span>:
-Common Name <span class=o>(</span>e.g. server FQDN or YOUR name<span class=o>)</span> <span class=o>[]</span>:
-Email Address <span class=o>[]</span>:
+Organizational Unit Name <span class=o>(</span>eg, section<span class=o>)</span> <span class=o>[</span><span class=o>]</span>:
+Common Name <span class=o>(</span>e.g. server FQDN or YOUR name<span class=o>)</span> <span class=o>[</span><span class=o>]</span>:
+Email Address <span class=o>[</span><span class=o>]</span>:
 
 $ openssl req -new -key server.key -out server.csr
 You are about to be asked to enter information that will be incorporated
@@ -155,16 +155,16 @@ If you enter <span class=s1>&#39;.&#39;</span>, the field will be left blank.
 -----
 Country Name <span class=o>(</span><span class=m>2</span> letter code<span class=o>)</span> <span class=o>[</span>AU<span class=o>]</span>:ES
 State or Province Name <span class=o>(</span>full name<span class=o>)</span> <span class=o>[</span>Some-State<span class=o>]</span>:Spain
-Locality Name <span class=o>(</span>eg, city<span class=o>)</span> <span class=o>[]</span>:
+Locality Name <span class=o>(</span>eg, city<span class=o>)</span> <span class=o>[</span><span class=o>]</span>:
 Organization Name <span class=o>(</span>eg, company<span class=o>)</span> <span class=o>[</span>Internet Widgits Pty Ltd<span class=o>]</span>:Blog Bitix
-Organizational Unit Name <span class=o>(</span>eg, section<span class=o>)</span> <span class=o>[]</span>:
-Common Name <span class=o>(</span>e.g. server FQDN or YOUR name<span class=o>)</span> <span class=o>[]</span>:localhost
-Email Address <span class=o>[]</span>:
+Organizational Unit Name <span class=o>(</span>eg, section<span class=o>)</span> <span class=o>[</span><span class=o>]</span>:
+Common Name <span class=o>(</span>e.g. server FQDN or YOUR name<span class=o>)</span> <span class=o>[</span><span class=o>]</span>:localhost
+Email Address <span class=o>[</span><span class=o>]</span>:
 
 Please enter the following <span class=s1>&#39;extra&#39;</span> attributes
 to be sent with your certificate request
-A challenge password <span class=o>[]</span>:
-An optional company name <span class=o>[]</span>:
+A challenge password <span class=o>[</span><span class=o>]</span>:
+An optional company name <span class=o>[</span><span class=o>]</span>:
 
 $ openssl req -new -key client.key -out client.csr
 
@@ -173,7 +173,7 @@ Signature ok
 <span class=nv>subject</span><span class=o>=</span><span class=nv>C</span> <span class=o>=</span> ES, <span class=nv>ST</span> <span class=o>=</span> Spain, <span class=nv>O</span> <span class=o>=</span> Blog Bitix, <span class=nv>CN</span> <span class=o>=</span> localhost
 Getting CA Private Key
 $ openssl x509 -req -days <span class=m>1825</span> -in client.csr -CA ca.crt -CAkey ca.key -set_serial <span class=m>02</span> -out client.crt</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-req.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-req.sh target=_blank>openssl-req.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt>1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-req.sh target=_blank>openssl-req.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -183,7 +183,7 @@ $ openssl req -new -key server-unknown.key -out server-unknown.csr
 $ openssl req -new -key client-unknown.key -out client-unknown.csr
 $ openssl x509 -req -days <span class=m>1825</span> -in server-unknown.csr -CA ca-unknown.crt -CAkey ca-unknown.key -set_serial <span class=m>01</span> -out server-unknown.crt
 $ openssl x509 -req -days <span class=m>1825</span> -in client-unknown.csr -CA ca-unknown.crt -CAkey ca-unknown.key -set_serial <span class=m>02</span> -out client-unknown.crt</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-req-unknown.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-req-unknown.sh target=_blank>openssl-req-unknown.sh</a></div></div><p>Con la misma herramienta de <a href=https://www.openssl.org/>OpenSSL</a> es posible comprobar si un certificado es válido para una autoridad de certificación en la que se confía, para ello se usa el certificado raiz de la autoridad.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt>1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-req-unknown.sh target=_blank>openssl-req-unknown.sh</a></div></div><p>Con la misma herramienta de <a href=https://www.openssl.org/>OpenSSL</a> es posible comprobar si un certificado es válido para una autoridad de certificación en la que se confía, para ello se usa el certificado raiz de la autoridad.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -191,7 +191,7 @@ $ openssl x509 -req -days <span class=m>1825</span> -in client-unknown.csr -CA c
 server.crt: OK
 $ openssl verify -CAfile ca.crt client.crt
 client.crt: OK</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-verify.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-verify.sh target=_blank>openssl-verify.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt>1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-verify.sh target=_blank>openssl-verify.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -207,7 +207,7 @@ $ openssl verify -CAfile ca.crt client-unknown.crt
 <span class=nv>C</span> <span class=o>=</span> ES, <span class=nv>ST</span> <span class=o>=</span> Spain, <span class=nv>O</span> <span class=o>=</span> Unknown Client
 error <span class=m>20</span> at <span class=m>0</span> depth lookup: unable to get <span class=nb>local</span> issuer certificate
 error client-unknown.crt: verification failed</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-verify-unknown.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-verify-unknown.sh target=_blank>openssl-verify-unknown.sh</a></div></div><p>Para hacer que el servidor nginx requiera autenticación mediante certificados para el cliente hay que añadir un poco de configuración mediante las directivas <em>ssl</em> donde se indica el certificado del servidor, la clave privada del servidor, el certificado de la autoridad de certificación contra la que se validarán los certificados de los clientes y finalmente la directiva que establece que se ha de verificar a los clientes mediante certificados.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext><span class=lnt> 1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/openssl-verify-unknown.sh target=_blank>openssl-verify-unknown.sh</a></div></div><p>Para hacer que el servidor nginx requiera autenticación mediante certificados para el cliente hay que añadir un poco de configuración mediante las directivas <em>ssl</em> donde se indica el certificado del servidor, la clave privada del servidor, el certificado de la autoridad de certificación contra la que se validarán los certificados de los clientes y finalmente la directiva que establece que se ha de verificar a los clientes mediante certificados.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -239,10 +239,10 @@ error client-unknown.crt: verification failed</code></pre></td></tr></table></di
         ...
     }
 }</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/nginx.conf target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/nginx.conf target=_blank>nginx.conf</a></div></div><p>Con el siguiente archivo descriptor de <a href=https://docs.docker.com/compose/>Docker Compose</a> y comando se inicia el servidor web nginx.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt>1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/nginx.conf target=_blank>nginx.conf</a></div></div><p>Con el siguiente archivo descriptor de <a href=https://docs.docker.com/compose/>Docker Compose</a> y comando se inicia el servidor web nginx.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ docker-compose up
 </code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/docker-compose.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/docker-compose.sh target=_blank>docker-compose.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-YAML data-lang=YAML><span class=lnt> 1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/docker-compose.sh target=_blank>docker-compose.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -262,7 +262,7 @@ error client-unknown.crt: verification failed</code></pre></td></tr></table></di
 </span><span class=w>  </span>ports<span class=p>:</span><span class=w>
 </span><span class=w>    </span>-<span class=w> </span><span class=s2>&#34;80:80&#34;</span><span class=w>
 </span><span class=w>    </span>-<span class=w> </span><span class=s2>&#34;443:443&#34;</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/docker-compose.yml target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/docker-compose.yml target=_blank>docker-compose.yml</a></div></div><p>Iniciado el servidor web ya se pueden realizar peticiones y el servidor y el cliente se autenticarán mutuamente. El servidor devolverá el código HTML de la página de bienvenida por defecto con las cabeceras del protocolo HTTP después de realizar el <em>handsake</em> donde se valida el certificado del servidor.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt> 1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/docker-compose.yml target=_blank>docker-compose.yml</a></div></div><p>Iniciado el servidor web ya se pueden realizar peticiones y el servidor y el cliente se autenticarán mutuamente. El servidor devolverá el código HTML de la página de bienvenida por defecto con las cabeceras del protocolo HTTP después de realizar el <em>handsake</em> donde se valida el certificado del servidor.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -344,24 +344,24 @@ error client-unknown.crt: verification failed</code></pre></td></tr></table></di
 * successfully <span class=nb>set</span> certificate verify locations:
 *   CAfile: ca.crt
   CApath: none
-* TLSv1.2 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Client hello <span class=o>(</span><span class=m>1</span><span class=o>)</span>:
-* TLSv1.2 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server hello <span class=o>(</span><span class=m>2</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Certificate <span class=o>(</span><span class=m>11</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server key exchange <span class=o>(</span><span class=m>12</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Request CERT <span class=o>(</span><span class=m>13</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server finished <span class=o>(</span><span class=m>14</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Certificate <span class=o>(</span><span class=m>11</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Client key exchange <span class=o>(</span><span class=m>16</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, CERT verify <span class=o>(</span><span class=m>15</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS change cipher, Client hello <span class=o>(</span><span class=m>1</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Finished <span class=o>(</span><span class=m>20</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Finished <span class=o>(</span><span class=m>20</span><span class=o>)</span>:
+* TLSv1.2 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Client hello <span class=o>(</span>1<span class=o>)</span>:
+* TLSv1.2 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server hello <span class=o>(</span>2<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Certificate <span class=o>(</span>11<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server key exchange <span class=o>(</span>12<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Request CERT <span class=o>(</span>13<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server finished <span class=o>(</span>14<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Certificate <span class=o>(</span>11<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Client key exchange <span class=o>(</span>16<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, CERT verify <span class=o>(</span>15<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS change cipher, Client hello <span class=o>(</span>1<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Finished <span class=o>(</span>20<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Finished <span class=o>(</span>20<span class=o>)</span>:
 * SSL connection using TLSv1.0 / ECDHE-RSA-AES256-SHA
 * ALPN, server accepted to use http/1.1
 * Server certificate:
 *  subject: <span class=nv>C</span><span class=o>=</span>ES<span class=p>;</span> <span class=nv>ST</span><span class=o>=</span>Spain<span class=p>;</span> <span class=nv>O</span><span class=o>=</span>Blog Bitix<span class=p>;</span> <span class=nv>CN</span><span class=o>=</span>localhost
-*  start date: Jun <span class=m>16</span> <span class=m>22</span>:16:18 <span class=m>2017</span> GMT
-*  expire date: Jun <span class=m>15</span> <span class=m>22</span>:16:18 <span class=m>2022</span> GMT
+*  start date: Jun <span class=m>16</span> 22:16:18 <span class=m>2017</span> GMT
+*  expire date: Jun <span class=m>15</span> 22:16:18 <span class=m>2022</span> GMT
 *  common name: localhost <span class=o>(</span>matched<span class=o>)</span>
 *  issuer: <span class=nv>C</span><span class=o>=</span>ES<span class=p>;</span> <span class=nv>ST</span><span class=o>=</span>Spain<span class=p>;</span> <span class=nv>O</span><span class=o>=</span>Blog Bitix Certiticate Authority
 *  SSL certificate verify ok.
@@ -372,10 +372,10 @@ error client-unknown.crt: verification failed</code></pre></td></tr></table></di
 &gt;
 &lt; HTTP/1.1 <span class=m>200</span> OK
 &lt; Server: nginx/1.13.0
-&lt; Date: Fri, <span class=m>16</span> Jun <span class=m>2017</span> <span class=m>22</span>:30:06 GMT
+&lt; Date: Fri, <span class=m>16</span> Jun <span class=m>2017</span> 22:30:06 GMT
 &lt; Content-Type: text/html
 &lt; Content-Length: <span class=m>612</span>
-&lt; Last-Modified: Tue, <span class=m>25</span> Apr <span class=m>2017</span> <span class=m>17</span>:23:03 GMT
+&lt; Last-Modified: Tue, <span class=m>25</span> Apr <span class=m>2017</span> 17:23:03 GMT
 &lt; Connection: keep-alive
 &lt; ETag: <span class=s2>&#34;58ff85f7-264&#34;</span>
 &lt; Accept-Ranges: bytes
@@ -406,7 +406,7 @@ Commercial support is available at
 &lt;/body&gt;
 &lt;/html&gt;
 * Connection <span class=c1>#0 to host localhost left intact</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/curl.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/curl.sh target=_blank>curl.sh</a></div></div><p>Si se intenta realizar una petición sin certificado de cliente o con un certificado de cliente en el que no confié el servidor (que no esté firmado por la autoridad de certificación en la que confía) se devolverá un código de estado 400 que indica que la petición se ha rechazado. También el cliente advertirá si la autoridad de certificación en la que confía no valida el certificado del servidor con un error 400 y título <em>400 The SSL certificate error</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt>  1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/curl.sh target=_blank>curl.sh</a></div></div><p>Si se intenta realizar una petición sin certificado de cliente o con un certificado de cliente en el que no confié el servidor (que no esté firmado por la autoridad de certificación en la que confía) se devolverá un código de estado 400 que indica que la petición se ha rechazado. También el cliente advertirá si la autoridad de certificación en la que confía no valida el certificado del servidor con un error 400 y título <em>400 The SSL certificate error</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>  1
 </span><span class=lnt>  2
 </span><span class=lnt>  3
 </span><span class=lnt>  4
@@ -554,23 +554,23 @@ Commercial support is available at
 * successfully <span class=nb>set</span> certificate verify locations:
 *   CAfile: ca.crt
   CApath: none
-* TLSv1.2 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Client hello <span class=o>(</span><span class=m>1</span><span class=o>)</span>:
-* TLSv1.2 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server hello <span class=o>(</span><span class=m>2</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Certificate <span class=o>(</span><span class=m>11</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server key exchange <span class=o>(</span><span class=m>12</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Request CERT <span class=o>(</span><span class=m>13</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server finished <span class=o>(</span><span class=m>14</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Certificate <span class=o>(</span><span class=m>11</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Client key exchange <span class=o>(</span><span class=m>16</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS change cipher, Client hello <span class=o>(</span><span class=m>1</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Finished <span class=o>(</span><span class=m>20</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Finished <span class=o>(</span><span class=m>20</span><span class=o>)</span>:
+* TLSv1.2 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Client hello <span class=o>(</span>1<span class=o>)</span>:
+* TLSv1.2 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server hello <span class=o>(</span>2<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Certificate <span class=o>(</span>11<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server key exchange <span class=o>(</span>12<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Request CERT <span class=o>(</span>13<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server finished <span class=o>(</span>14<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Certificate <span class=o>(</span>11<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Client key exchange <span class=o>(</span>16<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS change cipher, Client hello <span class=o>(</span>1<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Finished <span class=o>(</span>20<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Finished <span class=o>(</span>20<span class=o>)</span>:
 * SSL connection using TLSv1.0 / ECDHE-RSA-AES256-SHA
 * ALPN, server accepted to use http/1.1
 * Server certificate:
 *  subject: <span class=nv>C</span><span class=o>=</span>ES<span class=p>;</span> <span class=nv>ST</span><span class=o>=</span>Spain<span class=p>;</span> <span class=nv>O</span><span class=o>=</span>Blog Bitix<span class=p>;</span> <span class=nv>CN</span><span class=o>=</span>localhost
-*  start date: Jun <span class=m>16</span> <span class=m>22</span>:16:18 <span class=m>2017</span> GMT
-*  expire date: Jun <span class=m>15</span> <span class=m>22</span>:16:18 <span class=m>2022</span> GMT
+*  start date: Jun <span class=m>16</span> 22:16:18 <span class=m>2017</span> GMT
+*  expire date: Jun <span class=m>15</span> 22:16:18 <span class=m>2022</span> GMT
 *  common name: localhost <span class=o>(</span>matched<span class=o>)</span>
 *  issuer: <span class=nv>C</span><span class=o>=</span>ES<span class=p>;</span> <span class=nv>ST</span><span class=o>=</span>Spain<span class=p>;</span> <span class=nv>O</span><span class=o>=</span>Blog Bitix Certiticate Authority
 *  SSL certificate verify ok.
@@ -581,7 +581,7 @@ Commercial support is available at
 &gt;
 &lt; HTTP/1.1 <span class=m>400</span> Bad Request
 &lt; Server: nginx/1.13.0
-&lt; Date: Fri, <span class=m>16</span> Jun <span class=m>2017</span> <span class=m>22</span>:30:49 GMT
+&lt; Date: Fri, <span class=m>16</span> Jun <span class=m>2017</span> 22:30:49 GMT
 &lt; Content-Type: text/html
 &lt; Content-Length: <span class=m>253</span>
 &lt; Connection: close
@@ -595,7 +595,7 @@ Commercial support is available at
 &lt;/body&gt;
 &lt;/html&gt;
 * Closing connection <span class=m>0</span>
-* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS alert, Client hello <span class=o>(</span><span class=m>1</span><span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS alert, Client hello <span class=o>(</span>1<span class=o>)</span>:
 
 $ curl -v --cacert ca.crt --cert client-unknown.crt --key client-unknown.key <span class=s2>&#34;https://localhost/&#34;</span>
 *   Trying ::1...
@@ -607,24 +607,24 @@ $ curl -v --cacert ca.crt --cert client-unknown.crt --key client-unknown.key <sp
 * successfully <span class=nb>set</span> certificate verify locations:
 *   CAfile: ca.crt
   CApath: none
-* TLSv1.2 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Client hello <span class=o>(</span><span class=m>1</span><span class=o>)</span>:
-* TLSv1.2 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server hello <span class=o>(</span><span class=m>2</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Certificate <span class=o>(</span><span class=m>11</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server key exchange <span class=o>(</span><span class=m>12</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Request CERT <span class=o>(</span><span class=m>13</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server finished <span class=o>(</span><span class=m>14</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Certificate <span class=o>(</span><span class=m>11</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Client key exchange <span class=o>(</span><span class=m>16</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, CERT verify <span class=o>(</span><span class=m>15</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS change cipher, Client hello <span class=o>(</span><span class=m>1</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Finished <span class=o>(</span><span class=m>20</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Finished <span class=o>(</span><span class=m>20</span><span class=o>)</span>:
+* TLSv1.2 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Client hello <span class=o>(</span>1<span class=o>)</span>:
+* TLSv1.2 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server hello <span class=o>(</span>2<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Certificate <span class=o>(</span>11<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server key exchange <span class=o>(</span>12<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Request CERT <span class=o>(</span>13<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server finished <span class=o>(</span>14<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Certificate <span class=o>(</span>11<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Client key exchange <span class=o>(</span>16<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, CERT verify <span class=o>(</span>15<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS change cipher, Client hello <span class=o>(</span>1<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Finished <span class=o>(</span>20<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Finished <span class=o>(</span>20<span class=o>)</span>:
 * SSL connection using TLSv1.0 / ECDHE-RSA-AES256-SHA
 * ALPN, server accepted to use http/1.1
 * Server certificate:
 *  subject: <span class=nv>C</span><span class=o>=</span>ES<span class=p>;</span> <span class=nv>ST</span><span class=o>=</span>Spain<span class=p>;</span> <span class=nv>O</span><span class=o>=</span>Blog Bitix<span class=p>;</span> <span class=nv>CN</span><span class=o>=</span>localhost
-*  start date: Jun <span class=m>16</span> <span class=m>22</span>:16:18 <span class=m>2017</span> GMT
-*  expire date: Jun <span class=m>15</span> <span class=m>22</span>:16:18 <span class=m>2022</span> GMT
+*  start date: Jun <span class=m>16</span> 22:16:18 <span class=m>2017</span> GMT
+*  expire date: Jun <span class=m>15</span> 22:16:18 <span class=m>2022</span> GMT
 *  common name: localhost <span class=o>(</span>matched<span class=o>)</span>
 *  issuer: <span class=nv>C</span><span class=o>=</span>ES<span class=p>;</span> <span class=nv>ST</span><span class=o>=</span>Spain<span class=p>;</span> <span class=nv>O</span><span class=o>=</span>Blog Bitix Certiticate Authority
 *  SSL certificate verify ok.
@@ -635,7 +635,7 @@ $ curl -v --cacert ca.crt --cert client-unknown.crt --key client-unknown.key <sp
 &gt;
 &lt; HTTP/1.1 <span class=m>400</span> Bad Request
 &lt; Server: nginx/1.13.0
-&lt; Date: Fri, <span class=m>16</span> Jun <span class=m>2017</span> <span class=m>22</span>:32:55 GMT
+&lt; Date: Fri, <span class=m>16</span> Jun <span class=m>2017</span> 22:32:55 GMT
 &lt; Content-Type: text/html
 &lt; Content-Length: <span class=m>231</span>
 &lt; Connection: close
@@ -649,7 +649,7 @@ $ curl -v --cacert ca.crt --cert client-unknown.crt --key client-unknown.key <sp
 &lt;/body&gt;
 &lt;/html&gt;
 * Closing connection <span class=m>0</span>
-* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS alert, Client hello <span class=o>(</span><span class=m>1</span><span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS alert, Client hello <span class=o>(</span>1<span class=o>)</span>:
 
 $ curl -v --cacert ca-unknown.crt --cert client.crt --key client.key <span class=s2>&#34;https://localhost/&#34;</span>
 *   Trying ::1...
@@ -661,14 +661,14 @@ $ curl -v --cacert ca-unknown.crt --cert client.crt --key client.key <span class
 * successfully <span class=nb>set</span> certificate verify locations:
 *   CAfile: ca-unknown.crt
   CApath: none
-* TLSv1.2 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Client hello <span class=o>(</span><span class=m>1</span><span class=o>)</span>:
-* TLSv1.2 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server hello <span class=o>(</span><span class=m>2</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Certificate <span class=o>(</span><span class=m>11</span><span class=o>)</span>:
-* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS alert, Server hello <span class=o>(</span><span class=m>2</span><span class=o>)</span>:
+* TLSv1.2 <span class=o>(</span>OUT<span class=o>)</span>, TLS handshake, Client hello <span class=o>(</span>1<span class=o>)</span>:
+* TLSv1.2 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Server hello <span class=o>(</span>2<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>IN<span class=o>)</span>, TLS handshake, Certificate <span class=o>(</span>11<span class=o>)</span>:
+* TLSv1.0 <span class=o>(</span>OUT<span class=o>)</span>, TLS alert, Server hello <span class=o>(</span>2<span class=o>)</span>:
 * SSL certificate problem: unable to get <span class=nb>local</span> issuer certificate
 * stopped the pause stream!
 * Closing connection <span class=m>0</span>
-curl: <span class=o>(</span><span class=m>60</span><span class=o>)</span> SSL certificate problem: unable to get <span class=nb>local</span> issuer certificate
+curl: <span class=o>(</span>60<span class=o>)</span> SSL certificate problem: unable to get <span class=nb>local</span> issuer certificate
 More details here: https://curl.haxx.se/docs/sslcerts.html
 
 curl performs SSL certificate verification by default, using a <span class=s2>&#34;bundle&#34;</span>
@@ -682,7 +682,7 @@ curl performs SSL certificate verification by default, using a <span class=s2>&#
 </span><span class=s1>If you&#39;</span>d like to turn off curl<span class=err>&#39;</span>s verification of the certificate, use
  the -k <span class=o>(</span>or --insecure<span class=o>)</span> option.
 HTTPS-proxy has similar options --proxy-cacert and --proxy-insecure.</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/curl-unknown.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/curl-unknown.sh target=_blank>curl-unknown.sh</a></div></div><p>El siguiente <em>script</em> escrito en lenguaje <a href=https://www.groovy-lang.org/>Groovy</a> muestra como desde un programa para la plataforma Java se realiza autenticación mutua y que error da cuando alguno de los certificados es inválido ya sea el del cliente o el del servidor. Generando previamente los <em>keystores</em> de la autoridad de certificado y del cliente introduciendo como clave en el ejemplo <em>password</em> cuando se solicita.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt>1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/curl-unknown.sh target=_blank>curl-unknown.sh</a></div></div><p>El siguiente <em>script</em> escrito en lenguaje <a href=https://www.groovy-lang.org/>Groovy</a> muestra como desde un programa para la plataforma Java se realiza autenticación mutua y que error da cuando alguno de los certificados es inválido ya sea el del cliente o el del servidor. Generando previamente los <em>keystores</em> de la autoridad de certificado y del cliente introduciendo como clave en el ejemplo <em>password</em> cuando se solicita.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -696,7 +696,7 @@ $ keytool -importkeystore -destkeystore client.jks -srckeystore client.p12 -srcs
 $ keytool -importcert -keystore ca-unknown.jks -trustcacerts -alias ca -file ca-unknown.crt
 $ openssl pkcs12 -export -out client-unknown.p12 -inkey client-unknown.key -in client-unknown.crt
 $ keytool -importkeystore -destkeystore client-unknown.jks -srckeystore client-unknown.p12 -srcstoretype pkcs12</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/keytool.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/keytool.sh target=_blank>keytool.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-Groovy data-lang=Groovy><span class=lnt> 1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/keytool.sh target=_blank>keytool.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -758,35 +758,35 @@ $ keytool -importkeystore -destkeystore client-unknown.jks -srckeystore client-u
 
 <span class=kd>class</span> <span class=nc>Main</span> <span class=o>{</span>
 
-    <span class=kt>void</span> <span class=nf>get</span><span class=o>()</span> <span class=o>{</span>
-        <span class=n>Response</span> <span class=n>response</span> <span class=o>=</span> <span class=n>buildSslClient</span><span class=o>()</span>
-                <span class=o>.</span><span class=na>target</span><span class=o>(</span><span class=s2>&#34;https://localhost&#34;</span><span class=o>).</span><span class=na>path</span><span class=o>(</span><span class=s2>&#34;/&#34;</span><span class=o>)</span>
-                <span class=o>.</span><span class=na>request</span><span class=o>()</span>
+    <span class=kt>void</span> <span class=nf>get</span><span class=o>(</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>Response</span> <span class=n>response</span> <span class=o>=</span> <span class=n>buildSslClient</span><span class=o>(</span><span class=o>)</span>
+                <span class=o>.</span><span class=na>target</span><span class=o>(</span><span class=s2>&#34;https://localhost&#34;</span><span class=o>)</span><span class=o>.</span><span class=na>path</span><span class=o>(</span><span class=s2>&#34;/&#34;</span><span class=o>)</span>
+                <span class=o>.</span><span class=na>request</span><span class=o>(</span><span class=o>)</span>
                 <span class=o>.</span><span class=na>header</span><span class=o>(</span><span class=s2>&#34;Accept&#34;</span><span class=o>,</span> <span class=s2>&#34;text/html&#34;</span><span class=o>)</span>
-                <span class=o>.</span><span class=na>get</span><span class=o>()</span>
+                <span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=o>)</span>
 
-        <span class=n>println</span><span class=o>(</span><span class=n>response</span><span class=o>.</span><span class=na>getStatus</span><span class=o>())</span>
-        <span class=n>println</span><span class=o>(</span><span class=n>response</span><span class=o>.</span><span class=na>readEntity</span><span class=o>(</span><span class=n>String</span><span class=o>.</span><span class=na>class</span><span class=o>))</span>
+        <span class=n>println</span><span class=o>(</span><span class=n>response</span><span class=o>.</span><span class=na>getStatus</span><span class=o>(</span><span class=o>)</span><span class=o>)</span>
+        <span class=n>println</span><span class=o>(</span><span class=n>response</span><span class=o>.</span><span class=na>readEntity</span><span class=o>(</span><span class=n>String</span><span class=o>.</span><span class=na>class</span><span class=o>)</span><span class=o>)</span>
     <span class=o>}</span>
 
-    <span class=kd>private</span> <span class=kd>static</span> <span class=n>Client</span> <span class=nf>buildSslClient</span><span class=o>()</span> <span class=o>{</span>
-        <span class=k>return</span> <span class=n>ClientBuilder</span><span class=o>.</span><span class=na>newBuilder</span><span class=o>().</span><span class=na>sslContext</span><span class=o>(</span><span class=n>buildSslContext</span><span class=o>()).</span><span class=na>build</span><span class=o>()</span>
+    <span class=kd>private</span> <span class=kd>static</span> <span class=n>Client</span> <span class=nf>buildSslClient</span><span class=o>(</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>ClientBuilder</span><span class=o>.</span><span class=na>newBuilder</span><span class=o>(</span><span class=o>)</span><span class=o>.</span><span class=na>sslContext</span><span class=o>(</span><span class=n>buildSslContext</span><span class=o>(</span><span class=o>)</span><span class=o>)</span><span class=o>.</span><span class=na>build</span><span class=o>(</span><span class=o>)</span>
     <span class=o>}</span>
 
-    <span class=kd>private</span> <span class=kd>static</span> <span class=n>SSLContext</span> <span class=nf>buildSslContext</span><span class=o>()</span> <span class=o>{</span>
-        <span class=k>return</span> <span class=n>SslConfigurator</span><span class=o>.</span><span class=na>newInstance</span><span class=o>()</span>
+    <span class=kd>private</span> <span class=kd>static</span> <span class=n>SSLContext</span> <span class=nf>buildSslContext</span><span class=o>(</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>SslConfigurator</span><span class=o>.</span><span class=na>newInstance</span><span class=o>(</span><span class=o>)</span>
                 <span class=o>.</span><span class=na>trustStoreFile</span><span class=o>(</span><span class=s2>&#34;ca.jks&#34;</span><span class=o>)</span>
                 <span class=c1>//.trustStoreFile(&#34;ca-unknown.jks&#34;)
 </span><span class=c1></span>                <span class=o>.</span><span class=na>trustStorePassword</span><span class=o>(</span><span class=s2>&#34;password&#34;</span><span class=o>)</span>
                 <span class=o>.</span><span class=na>keyStoreFile</span><span class=o>(</span><span class=s2>&#34;client.jks&#34;</span><span class=o>)</span>
                 <span class=c1>//.keyStoreFile(&#34;client-unknown.jks&#34;)
 </span><span class=c1></span>                <span class=o>.</span><span class=na>keyPassword</span><span class=o>(</span><span class=s2>&#34;password&#34;</span><span class=o>)</span>
-                <span class=o>.</span><span class=na>createSSLContext</span><span class=o>();</span>
+                <span class=o>.</span><span class=na>createSSLContext</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>
     <span class=o>}</span>
 <span class=o>}</span>
 
-<span class=k>new</span> <span class=nf>Main</span><span class=o>().</span><span class=na>get</span><span class=o>()</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/MutualCertAuth.groovy target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/MutualCertAuth.groovy target=_blank>MutualCertAuth.groovy</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt> 1
+<span class=k>new</span> <span class=nf>Main</span><span class=o>(</span><span class=o>)</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=o>)</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/MutualCertAuth.groovy target=_blank>view raw</a></span>
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/MutualCertAuth.groovy target=_blank>MutualCertAuth.groovy</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -840,7 +840,7 @@ Commercial support is available at
 &lt;p&gt;&lt;em&gt;Thank you <span class=k>for</span> using nginx.&lt;/em&gt;&lt;/p&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/groovy.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/groovy.sh target=_blank>groovy.sh</a></div></div><p>En caso de que al usar un <em>keystore</em> con un certificado de una autoridad que no valida el certificado del servidor se producirán un error, también cuando el certificado del cliente no sea válido para el servidor.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=lnt> 1
+<a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/code/groovy.sh target=_blank>groovy.sh</a></div></div><p>En caso de que al usar un <em>keystore</em> con un certificado de una autoridad que no valida el certificado del servidor se producirán un error, también cuando el certificado del cliente no sea válido para el servidor.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -919,7 +919,7 @@ $ groovy MutualCertAuth.groovy <span class=c1># with code change .keyStoreFile(&
 <a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/images/firefox-ca.png title="Añadir certificado de CA" data-gallery><img src=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/images/firefox-ca-thumb.png width=200></a></figure><figure><a href=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/images/firefox-select-cert.png title="Selección de certificado de cliente" data-gallery><img src=/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/images/firefox-select-cert-thumb.png width=159></a><figcaption>Autenticación mutua de cliente y servidor con el navegador web Firefox</figcaption></figure></div><p>El <a href=https://github.com/picodotdev/blog-ejemplos/tree/master/MutualCertAuth>código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href=https://github.com/>GitHub</a> y probarlo en tu equipo ejecutando el comando <code>docker-compose up, groovy MutualCertAuth.groovy</code>.</p><div class=reference>Referencia:<br><ul><li><a href=https://picodotdev.github.io/blog-bitix/series/docker/>Serie de artículos sobre Docker</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2015/04/guardar-contrasenas-usando-salted-password-hashing-y-otras-formas-correctas/>Guardar contraseñas usando «Salted Password Hashing» y otras formas correctas</a></li></ul></div></div></article><div class="row serie"><div class=col-md-12><h3>Este artículo forma parte de la serie <strong>web</strong>:</h3><ol class=serie-articles><li><a href=https://picodotdev.github.io/blog-bitix/2014/02/generar-y-convertir-claves-y-certificados-con-openssl/>Generar y convertir claves y certificados con OpenSSL</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2014/02/configurar-ssl-en-un-servidor-tomcat-jboss-wildfly-lighttpd-nginx-apache/>Configurar SSL/TLS en un servidor Tomcat, JBoss, WildFly, Lighttpd, Nginx o Apache</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2015/04/certificado-ssl-de-empresa-wildcard-y-de-validacion-extendida/>Certificado SSL, de empresa, «wildcard» y de validación extendida</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/02/introduccion-al-protocolo-http-2/>Introducción al protocolo HTTP/2</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/>Configurar HTTP/2 en Nginx, Apache HTTPD, WildFly o Jetty</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/06/como-redirigir-peticiones-de-http-a-https-en-nginx-apache-tomcat-jetty-y-wildfly/>Cómo redirigir peticiones de HTTP a HTTPS en Nginx, Apache, Tomcat, Jetty y WildFly</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/como-optimizar-un-sitio-web-con-compresion-gzip-en-nginx-y-apache-httpd/>Cómo optimizar un sitio web con compresión GZIP en Nginx y Apache HTTPD</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/configurar-nginx-como-balanceador-de-carga/>Configurar Nginx como balanceador de carga</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/como-crear-un-proxy-inverso-entre-el-servidor-web-nginx-y-un-servidor-de-aplicaciones-java/>Cómo crear un proxy inverso entre el servidor web Nginx y un servidor de aplicaciones Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/las-cabeceras-de-cache-del-protocolo-http/>Las cabeceras de cache del protocolo HTTP</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/configurar-nginx-para-cachear-respuestas-del-servidor-de-aplicaciones/>Configurar Nginx para cachear respuestas del servidor de aplicaciones</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/>Cómo y por que redirigir tráfico web del dominio raíz al subdominio www (o viceversa)</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/>Autenticación mutua de cliente y servidor con certificados</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/08/instalar-y-renovar-un-certificado-de-lets-encrypt-en-nginx/>Instalar y renovar un certificado de Let&#39;s Encrypt en Nginx</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2019/06/pruebas-de-carga-y-rendimiento-de-un-servicio-web-con-apache-bench/>Pruebas de carga y rendimiento de un servicio web con Apache Bench</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2019/06/comprobar-la-seguridad-de-un-sitio-web-que-use-ssl-tls/>Comprobar la seguridad de un sitio web que use SSL/TLS</a></li></ol></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><a id=comments></a><div class=row><div class=col-md-12><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='https:\/\/picodotdev.github.io\/blog-bitix\/2017\/06\/autenticacion-mutua-de-cliente-y-servidor-con-certificados\/';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2017\/06\/autenticacion-mutua-de-cliente-y-servidor-con-certificados\/';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
 <a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
 <a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2019 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow rel=license><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style=border-width:0 src=https://licensebuttons.net/l/by-sa/4.0/80x15.png class=licencia></a><br><a href=https://twitter.com/blogstackinfo rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png alt="Blog Stack" title="Blog Stack"></a>
-<a href=https://www.planetacodigo.com/ rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png alt="Planeta código" title="Planeta código"></a><br><span xmlns:dct=http://purl.org/dc/terms/ property=dct:title><a href=https://picodotdev.github.io/blog-bitix/ rel=nofollow>Blog Bitix</a></span> by <a xmlns:cc=https://creativecommons.org/ns# href=https://picodotdev.github.io/blog-bitix/ property=cc:attributionName rel=cc:attributionurl>pico.dev</a> is licensed under a <a rel=license href=https://creativecommons.org/licenses/by-sa/4.0/>Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class=credit>Powered by <a href=https://gohugo.io/ rel=nofollow title="A fast and modern static website engine">Hugo</a> and <a href=https://pages.github.com/ title="Websites for you and your projects">GitHub Pages</a>.</span>
+<a href=https://www.planetacodigo.com/ rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png alt="Planeta código" title="Planeta código"></a><br><span xmlns:dct=http://purl.org/dc/terms/ property="dct:title"><a href=https://picodotdev.github.io/blog-bitix/ rel=nofollow>Blog Bitix</a></span> by <a xmlns:cc=https://creativecommons.org/ns# href=https://picodotdev.github.io/blog-bitix/ property="cc:attributionName" rel=cc:attributionurl>pico.dev</a> is licensed under a <a rel=license href=https://creativecommons.org/licenses/by-sa/4.0/>Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class=credit>Powered by <a href=https://gohugo.io/ rel=nofollow title="A fast and modern static website engine">Hugo</a> and <a href=https://pages.github.com/ title="Websites for you and your projects">GitHub Pages</a>.</span>
 <span class=credit>Background patterns from <a href=https://www.toptal.com/designers/subtlepatterns/ rel=nofollow>Subtle Patterns</a>.</span></div></div></footer></div><div class=blueimp-gallery-container><div id=blueimp-gallery class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal=false><div class=slides></div><h3 class=title></h3><a class=prev>‹</a>
 <a class=next>›</a>
 <a class=close>×</a>
