@@ -28,14 +28,14 @@
 &lt;li>Orquestador de servicios, con &lt;a href="https://www.nomadproject.io/">Nomad&lt;/a>. &lt;a href="https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/">Introducción a Nomad para gestionar aplicaciones y microservicios&lt;/a>, &lt;a href="https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/">Estrategias de despliegue para microservicios con Nomad&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;p>Además, en este ejemplo reemplazo varias de estas herramientas de Spring. Sustituyo el servicio de registro y descubrimiento proporcionado por Eureka por &lt;a href="https://www.consul.io/">Consul&lt;/a>, el &lt;em>gateway&lt;/em>, &lt;em>load balancer&lt;/em> y &lt;em>reverse proxy&lt;/em> proporcionado por Zuul por &lt;a href="https://traefik.io/">Traefik&lt;/a> y añado el orquestador de microservicios &lt;a href="https://www.nomadproject.io/">Nomad&lt;/a>.&lt;/p>
-&lt;div class="media" style="text-align: center;">
+&lt;div class="media">
 &lt;img src="assets/images/logotipos/consul.svg" alt="Consul" title="Consul" width="200"/>
 &lt;img src="assets/images/logotipos/nomad.svg" alt="Nomad" title="Nomad" width="200"/>
 &lt;img src="assets/images/logotipos/traefik.svg" alt="Traefik" title="Traefik" width="200"/>
 &lt;/div>
 &lt;p>Traefik se configura con los servicios iniciados en los contenedores de Docker utilizando junto con los bloques o &lt;em>stanzas&lt;/em> de &lt;em>config&lt;/em> y &lt;em>labels&lt;/em> en la definición de los servicios de Nomad. Según el criterio definido por el servicio Traefik es capaz de redirigir el tráfico que le llegue al servicio apropiado, entre las posibilidades que puede realizar Traefik es balanceo de carga entre las múltiples instancias que se hayan definido pero también implementa patrones de tolerancia a fallos con reintentos, el patrón &lt;em>circuit breaker&lt;/em> o limitar el tráfico para evitar saturar a un servicio con demasiadas peticiones.&lt;/p>
 &lt;p>El esquema de servicios sería el siguiente. Los &lt;em>job&lt;/em> son enviados a Nomad desde la linea de comandos que inicia los contenedores en Docker y registra los servicios en Consul, Traefik monitoriza los contenedores que se inician en Docker y se autoconfigura según las propiedades de los &lt;em>labels&lt;/em> definidos para los contenedores. Una vez iniciados los servicios desde la terminal con un &lt;em>curl&lt;/em> o desde la aplicación cliente que accede a Consul para conocer la ubicación del servicio de Traefik envían una petición a Traefik que haciendo balanceo de carga la reenvía a una de las instancias del servicio, el servicio responde y Traefik envía la respuesta al cliente. Para ser más funcional Traefik debería configurarse a partir de Consul en vez de Docker para posibilitar que los contenedores pudieran estar en varios nodos.&lt;/p>
-&lt;div class="media" style="text-align: center;">
+&lt;div class="media">
 &lt;figure>
 &lt;a href="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/esquema-arquitectura_hud9745ca4e3e6c708b4af1c72fc0d4ff7_167252_2560x1440_fit_box_2.png" title="Esquema arquitectura" data-gallery>&lt;img src="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/esquema-arquitectura_hud9745ca4e3e6c708b4af1c72fc0d4ff7_167252_600x450_fit_box_2.png" width="600"/>&lt;/a>
 &lt;figcaption>Esquema arquitectura&lt;/figcaption>
@@ -243,7 +243,7 @@ $ nomad job run nomad/client.nomad&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>
 &lt;p>Tanto Consul, Nomad como Traefik ofrecen una consola para ver su estado ubicadas en las siguientes direcciones respectivamente accesibles con el navegador &lt;em>http://127.0.0.1:8500&lt;/em>, &lt;em>http://127.0.0.1:4646&lt;/em>, &lt;em>http://127.0.0.1:8092&lt;/em>.&lt;/p>
-&lt;div class="media" style="text-align: center;">
+&lt;div class="media">
 &lt;figure>
 &lt;a href="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/consul_hudc42d06e92419bb68cedcf920ffbb9e1_66952_2560x1440_fit_box_2.png" title="Consul" data-gallery>&lt;img src="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/consul_hudc42d06e92419bb68cedcf920ffbb9e1_66952_200x150_fit_box_2.png" width="200"/>&lt;/a>
 &lt;a href="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/nomad-1_hu236530498253a3dba6bcdeea43b58303_63779_2560x1440_fit_box_2.png" title="Nomad" data-gallery>&lt;img src="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/nomad-1_hu236530498253a3dba6bcdeea43b58303_63779_200x150_fit_box_2.png" width="200"/>&lt;/a>
@@ -1666,7 +1666,7 @@ key s3cr3t&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>
 &lt;p>Vault al igual que otras de las herramientas de &lt;a href="https://www.hashicorp.com/">HashiCorp&lt;/a> como Consul y &lt;a href="https://www.nomadproject.io/">Nomad&lt;/a> posee una interfaz gráfica accesible mediante el navegador que permite realizar las mismas operaciones que a través de la API o desde la linea de comandos.&lt;/p>
-&lt;div class="media" style="text-align: center;">
+&lt;div class="media">
 &lt;figure>
 &lt;a href="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/images/vault-ui-1_hu835606e7b9de313fbe556011bb61b531_35945_2560x1440_fit_box_2.png" title="Interfaz gráfica de Vault" data-gallery>&lt;img src="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/images/vault-ui-1_hu835606e7b9de313fbe556011bb61b531_35945_300x200_fit_box_2.png" width="300"/>&lt;/a>
 &lt;a href="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/images/vault-ui-2_hu643c4f275edb6aabb6ede21353b42f5b_36609_2560x1440_fit_box_2.png" title="" data-gallery>&lt;img src="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/images/vault-ui-2_hu643c4f275edb6aabb6ede21353b42f5b_36609_300x200_fit_box_2.png" width="300"/>&lt;/a>
@@ -1728,7 +1728,7 @@ Referencia:&lt;br>
 &lt;/div>
 &lt;/div>
 &lt;p>Iniciados estos dos servicios en la interfaz de estado de Consul se observa que no hay ningún servicio pero cuando se inicie un nuevo contenedor será registrado en Consul por Registrator.&lt;/p>
-&lt;div class="media" style="text-align: center;">
+&lt;div class="media">
 &lt;figure>
 &lt;a href="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/images/consul_hudf2f8b03877264bacf83a564e5686ede_36482_2560x1440_fit_box_2.png" title="Dirección" data-gallery>&lt;img src="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/images/consul_hudf2f8b03877264bacf83a564e5686ede_36482_300x200_fit_box_2.png" width="287"/>&lt;/a>
 &lt;/figure>
@@ -1799,7 +1799,7 @@ d286341148cb gliderlabs/registrator:latest &lt;span class="s2">&amp;#34;/bin/reg
 &lt;/div>
 &lt;/div>
 &lt;p>Una vez iniciado el servicio de postgres en la consola de Consul se muestra con su dirección y puerto en el que se encuentra, en el contenedor utiliza su puerto por defecto &lt;em>5432&lt;/em> pero hacia el exterior en este caso al no haber especificado uno Docker le asigna un puerto aleatorio en este caso el &lt;em>32777&lt;/em>. Este puerto aleatorio es con el que los clientes acceden a la base de datos.&lt;/p>
-&lt;div class="media" style="text-align: center;">
+&lt;div class="media">
 &lt;figure>
 &lt;a href="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/images/consul-postgres-1_hu5336dadbc35299bcca8969f84d373cf0_39850_2560x1440_fit_box_2.png" title="Servicio de postgres registrado en Consul" data-gallery>&lt;img src="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/images/consul-postgres-1_hu5336dadbc35299bcca8969f84d373cf0_39850_300x200_fit_box_2.png" width="300"/>&lt;/a>
 &lt;a href="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/images/consul-postgres-2_huf0df6f6a3d2138a93d9a38f4927788b0_43545_2560x1440_fit_box_2.png" title="Servicio de postgres registrado en Consul" data-gallery>&lt;img src="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/05/registro-y-descubrimiento-de-servicios-en-contenedores-de-docker-con-consul-y-registrator/images/consul-postgres-2_huf0df6f6a3d2138a93d9a38f4927788b0_43545_300x200_fit_box_2.png" width="300"/>&lt;/a>
@@ -1899,7 +1899,7 @@ El &lt;a href="https://github.com/picodotdev/blog-ejemplos/tree/master/Registrat
 &lt;/div>
 &lt;p>&lt;a href="https://www.virtualbox.org/">VirtualBox&lt;/a> es una de las herramientas que permiten virtualizar un sistema operativo completo y sus aplicaciones dentro de otra máquina. Como es un sistema operativo completo requiere que el sistema que la alberga tenga RAM suficiente para sí mismo y RAM suficiente para el sistema virtualizado, se puede configurar la cantidad de RAM y almacenamiento persistente de la máquina virtual. En el proceso de virtualización se pierde algo de rendimiento por la sobrecarga que añade virtualizar un sistema operativo completo, los procesadores modernos ofrecen soporte para que el rendimiento sea lo mayor posible pero no es igual a ejecutar el sistema de forma nativa en el sistema, sobre todo en el aspecto de interfaces gráficas y aceleración 2D y 3D.&lt;/p>
 &lt;p>La virtualización es una buena forma de probar una distribución &lt;a href="https://www.gnu.org/">GNU&lt;/a>/&lt;a href="https://www.linux.com/">Linux&lt;/a> para evaluarla o ejecutar &lt;a href="https://www.microsoft.com/es-es/windows/">Windows&lt;/a> en un Linux. Hay otras herramientas de virtualización como &lt;a href="https://www.qemu.org/">QEMU&lt;/a> y &lt;a href="https://www.linux-kvm.org/page/Main_Page">KVM&lt;/a> pero la virtud de VirtualBox es que es muy sencilla y está disponible para Windows, GNU/Linux y &lt;a href="https://www.apple.com/macos/">macOS&lt;/a>.&lt;/p>
-&lt;div class="media" style="text-align: center;">
+&lt;div class="media">
 &lt;figure>
 &lt;a href="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/virtualbox_hu714198bdeca98f2fa85206e0a2e30ff9_109657_2560x1440_fit_box_2.png" title="VirtualBox" data-gallery>&lt;img src="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/virtualbox_hu714198bdeca98f2fa85206e0a2e30ff9_109657_300x200_fit_box_2.png" width="300"/>&lt;/a>
 &lt;figcaption>VirtualBox&lt;/figcaption>
@@ -2035,7 +2035,7 @@ $ vagrant halt&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;a href="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/code/vagrant-up.sh" target="_blank">vagrant-up.sh&lt;/a>
 &lt;/div>
 &lt;/div>
-&lt;div class="media" style="text-align: center;">
+&lt;div class="media">
 &lt;figure>
 &lt;a href="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/virtualbox-vagrant-vm_hu714198bdeca98f2fa85206e0a2e30ff9_116254_2560x1440_fit_box_2.png" title="VirtualBox Vagrant VM" data-gallery>&lt;img src="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/virtualbox-vagrant-vm_hu714198bdeca98f2fa85206e0a2e30ff9_116254_300x200_fit_box_2.png" width="300"/>&lt;/a>
 &lt;figcaption>VirtualBox Vagrant VM&lt;/figcaption>
@@ -2058,14 +2058,14 @@ $ vagrant halt&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;a href="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/code/vagrant-ssh.sh" target="_blank">vagrant-ssh.sh&lt;/a>
 &lt;/div>
 &lt;/div>
-&lt;div class="media" style="text-align: center;">
+&lt;div class="media">
 &lt;figure>
 &lt;a href="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/vagrant-ssh_huf84e0a9edfdc6e443883ef5a755439df_64066_2560x1440_fit_box_2.png" title="Vagrant SSH" data-gallery>&lt;img src="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/vagrant-ssh_huf84e0a9edfdc6e443883ef5a755439df_64066_300x200_fit_box_2.png" width="244"/>&lt;/a>
 &lt;figcaption>Vagrant SSH&lt;/figcaption>
 &lt;/figure>
 &lt;/div>
 &lt;p>La máquina en el ejemplo ha sido aprovisionada con Docker mediante un &lt;em>script&lt;/em> con los comandos para instalarlo y un archivo de &lt;a href="https://docs.docker.com/compose/">Docker Compose&lt;/a> con un servicio del servidor web &lt;a href="https://nginx.org/">nginx&lt;/a>. Desde la terminal de la máquina virtual se inicia el servicio con Docker que queda accesible tanto desde la pripia máquina virtual como desde el &lt;em>host&lt;/em> indicando la dirección IP que se le ha asignado.&lt;/p>
-&lt;div class="media" style="text-align: center;">
+&lt;div class="media">
 &lt;figure>
 &lt;a href="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/docker-compose-up_huee84648a7050cd57115fd67bb683562f_66997_2560x1440_fit_box_2.png" title="docker-compose up y curl (desde la MV)" data-gallery>&lt;img src="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/docker-compose-up_huee84648a7050cd57115fd67bb683562f_66997_300x200_fit_box_2.png" width="281"/>&lt;/a>
 &lt;a href="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/curl_hu26f710045e8e9b42060c9d2ccd60a851_58845_2560x1440_fit_box_2.png" title="curl (desde el host)" data-gallery>&lt;img src="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/05/crear-de-forma-sencilla-y-rapida-maquinas-virtuales-de-virtualbox-con-vagrant/images/curl_hu26f710045e8e9b42060c9d2ccd60a851_58845_300x200_fit_box_2.png" width="244"/>&lt;/a>
@@ -2963,7 +2963,7 @@ ead6d23f d18851d5 services &lt;span class="m">0&lt;/span> stop &lt;span class="n
 &lt;/figure>
 &lt;/div>
 &lt;p>El proceso de despliegue también se puede monitorizar desde la interfaz web que ofrece Nomad.&lt;/p>
-&lt;div class="media" style="text-align: center;">
+&lt;div class="media">
 &lt;figure>
 &lt;a href="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/images/nomad-rolling-update-before_hu67a332684efae6ed992319050f36f296_119290_2560x1440_fit_box_2.png" title="Antes del proceso de despliegue rolling update en Nomad" data-gallery>&lt;img src="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/images/nomad-rolling-update-before_hu67a332684efae6ed992319050f36f296_119290_300x200_fit_box_2.png" width="197"/>&lt;/a>
 &lt;a href="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/images/nomad-rolling-update-while_hu1bb43ff17075cacd6588f52ea91a2b44_119731_2560x1440_fit_box_2.png" title="Durante el proceso de despliegue rolling update en Nomad" data-gallery>&lt;img src="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/images/nomad-rolling-update-while_hu1bb43ff17075cacd6588f52ea91a2b44_119731_300x200_fit_box_2.png" width="197"/>&lt;/a>
@@ -3359,7 +3359,7 @@ $ nomad alloc logs 60f3d102
 &lt;/div>
 &lt;/div>
 &lt;p>También poseen una interfaz web integrada en la que consultar la misma información, la de Consul está en el puerto &lt;em>8500&lt;/em> y la de Nomad en el &lt;em>4646&lt;/em> donde ver el estado de los &lt;em>jobs&lt;/em> y el progreso de los despliegues.&lt;/p>
-&lt;div class="media" style="text-align: center;">
+&lt;div class="media">
 &lt;figure>
 &lt;a href="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/images/consul_hu04dfd0a784258ffab8de29ae08a6fa53_49981_2560x1440_fit_box_2.png" title="Consul" data-gallery>&lt;img src="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/images/consul_hu04dfd0a784258ffab8de29ae08a6fa53_49981_200x150_fit_box_2.png" width="200"/>&lt;/a>
 &lt;a href="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/images/nomad-1_hu543e80f6165a80d0eda612b240feaa6b_34563_2560x1440_fit_box_2.png" title="Nomad" data-gallery>&lt;img src="https://picodotdev.github.io/blog-bitix/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/images/nomad-1_hu543e80f6165a80d0eda612b240feaa6b_34563_200x150_fit_box_2.png" width="200"/>&lt;/a>
@@ -3369,7 +3369,7 @@ $ nomad alloc logs 60f3d102
 &lt;/div>
 &lt;p>Nomad permite varias estrategias para actualizar los &lt;em>jobs&lt;/em> a una nueva versión de un servicio, basta modificar la configuración del &lt;em>job&lt;/em>, volverlo a enviar a Nomad y este se encarga de &lt;a href="https://picodotdev.github.io/blog-bitix/2019/04/estrategias-de-despliegue-para-microservicios-con-nomad/">actualizar las instancias siguiendo la estrategia &lt;em>rolling&lt;/em>, &lt;em>blue/green&lt;/em> o &lt;em>canary&lt;/em>&lt;/a> definida en el &lt;em>job&lt;/em>, pero eso lo muestro mas detalladamente en otro artículo.&lt;/p>
 &lt;p>La &lt;a href="https://www.nomadproject.io/docs/index.html">documentación de Nomad&lt;/a>, Nomad y otros productos de HashiCorp dedicados a la infraestructura en la nube esta muy bien explicada y detallada, este artículo solo es un resumen de las partes básicas para conocer como empezar a usarlo. En el siguiente vídeo se hace una pequeña explicación y demostración.&lt;/p>
-&lt;div class="media media-video" style="text-align: center;">
+&lt;div class="media media-video">
 &lt;iframe width="640" height="360" src="https://www.youtube.com/embed/A6CuZUoINX0?rel=0" frameborder="0" allowfullscreen>&lt;/iframe>
 &lt;/div>
 &lt;div class="reference">
