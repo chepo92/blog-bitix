@@ -9,77 +9,739 @@
 <a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
 <a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class="adblock-sidebar adblock-sidebar-right"><div class=adblock-sidebar-container><ins class="adsbygoogle adblock-sidebar-vertical" style=display:block data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format="vertical, rectangle" data-type=auto></ins></div></div><article itemprop=mainEntity itemscope itemtype=http://schema.org/BlogPosting><meta itemprop=inLanguage content="es"><meta itemprop=keywords content="planeta-codigo, planeta-linux, software, software-libre"><h1 itemprop=name>Cómo y por que redirigir tráfico web del dominio raíz al subdominio www (o viceversa)</h1><p class=information>Escrito por
 <span itemprop=author itemscope itemtype=http://schema.org/Person><span itemprop=name>picodotdev</span></span> el <time itemprop=datePublished datetime=2016-08-05>05/08/2016</time>, actualizado el <time itemprop=dateModified datetime=2016-08-05>05/08/2016</time>.<br><a href=tags/planeta-codigo/>planeta-codigo</a> <a href=tags/planeta-linux/>planeta-linux</a> <a href=tags/software/>software</a> <a href=tags/software-libre/>software-libre</a><br><a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/ itemprop=url>Enlace permanente</a>
-<a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/#comments>Comentarios</a></p><p class=summary itemprop=about>La redirección del dominio raíz al subdominio es una de las cosas básicas que es recomendable realizar en todo dominio, para ello hay que añadir algo de configuración propia de cada servidor para realizar la redirección. Junto con usar el uso del protocolo HTTPS y forzar su uso con otra redirección mejoraremos el SEO y evitaremos penalizaciones por contenido duplicado.</p><div><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins></div><div class=content itemprop=articleBody><meta itemprop=wordCount content="569"><div class=logotypes style=float:right><img src=/blog-bitix/assets/images/logotipos/html.svg class=right width=200 alt=HTML title=HTML></div><p>El nombre de un dominio está formado por varios subdominios separados por un caracter punto. Están los dominios de nivel superior, los genéricos y más antiguos <em>.com</em>, <em>.org</em>, <em>.info</em>, <em>.net</em>, los propios de cada país o territoriales <em>.es</em>, <em>.fr</em>, <em>.de</em> y más recientemente un montón de <a href=https://es.wikipedia.org/wiki/Dominio_de_nivel_superior>nuevos dominios de nivel superior</a> (<em>.futbol</em>, <em>.arte</em>, <em>.blog</em>, <em>.madrid</em>, &mldr;) aunque significativamente más caros. Después del dominio de nivel superior está el subdominio de la empresa, marca o personal, por ejemplo, <em>empresa.com</em> que es realmente lo que compramos cuando solicitamos registrar un dominio. En nuestro dominio <em>empresa.com</em> podemos administrar múltiples subdominios los clásicos son <em>www.empresa.com</em> para el servidor web, <em>smpt.empresa.com</em> para el correo electrónico, <em>ftp.empresa.com</em> para la transferencia de archivos y otros cualesquiera que deseemos.</p><p>En el caso del tráfico web debemos evitar que el servidor y la página o aplicación sea accedida por <em>empresa.com</em> y <em>www.empresa.com</em> ya que los buscadores tratarán a la página como dos diferentes y posiblemente detectando contenido duplicado que afectará negativamente o penalizando al SEO de la web. Lo que se suele hacer es hacer una <a href=https://es.wikipedia.org/wiki/HTTP_301>redirección permanente</a> (cuyo código de estado HTTP para la respuesta es 301) a nivel de servidor que redirija el tráfico de <em>empresa.com</em> a <em>www.empresa.com</em> cuando el usuario acceda con su navegador con la primera.</p><p>Esta es una de las cosas básicas que debemos realizar cuando instalemos un servidor web, otras cosas recomendadas para mejorar el SEO y la seguridad de los usuarios es <a href=https://picodotdev.github.io/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/>configurar el servidor web para usar el protocolo seguro HTTPS</a> y <a href=https://picodotdev.github.io/blog-bitix/2016/06/como-redirigir-peticiones-de-http-a-https-en-nginx-apache-tomcat-jetty-y-wildfly/>configurar el servidor web para forzar el uso de HTTPS</a> también haciendo una redirección cuando la petición use el protocolo no cifrado HTTP entre otras cosas que indico en la <a href=https://picodotdev.github.io/blog-bitix/series/web/>serie web</a>.</p><p>Dependiendo del servidor web que utilicemos la configuración a añadir para hacer la redirección será distinta, a continuación indicaré como hacerlo en dos de los servidores web más populares como son <a href=https://nginx.org/>Nginx</a> y <a href=https://httpd.apache.org/>Apache HTTPD</a>.</p><h3 id=nginx>Nginx</h3><p>Usando Docker y el archivo de configuración completo podemos probar que funciona en local sin necesidad de instalar o cambiar la configuración de Nginx si tenemos instalado su paquete.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ docker run --rm -p 80:80 -v <span class=sb>`</span><span class=nb>pwd</span><span class=sb>`</span>/nginx.conf:/etc/nginx/conf.d/default.conf:ro nginx:alpine
-</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/code/docker-run-nginx.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/code/docker-run-nginx.sh target=_blank>docker-run-nginx.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
-</span><span class=lnt> 2
-</span><span class=lnt> 3
-</span><span class=lnt> 4
-</span><span class=lnt> 5
-</span><span class=lnt> 6
-</span><span class=lnt> 7
-</span><span class=lnt> 8
-</span><span class=lnt> 9
-</span><span class=lnt>10
-</span><span class=lnt>11
-</span><span class=lnt>12
-</span><span class=lnt>13
-</span><span class=lnt>14
-</span><span class=lnt>15
-</span><span class=lnt>16
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext>server {
-    listen       80;
-    server_name  localhost;
-
-    return 301 http://www.$host$request_uri;
-}
-
-server {
-    listen       80;
-    server_name  www.localhost;
-
-    location / {
-        root   /usr/share/nginx/html;
-        index  index.html index.htm;
-    }
-}</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/code/nginx.conf target=_blank>view raw</a></span>
-<a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/code/nginx.conf target=_blank>nginx.conf</a></div></div><div class=media><figure><a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/images/nginx.png title="Dominio antes de acceder al sitio" data-gallery=data-gallery><img src=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/images/nginx-thumb.png width=292></a>
-<a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/images/nginx-www.png title="Dominio después de acceder al sitio" data-gallery=data-gallery><img src=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/images/nginx-www-thumb.png width=292></a><figcaption>Dominio antes y después de acceder al sitio con Nginx</figcaption></figure></div><h3 id=apache>Apache</h3><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ docker run --rm -p 80:80 -v <span class=sb>`</span><span class=nb>pwd</span><span class=sb>`</span>/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro httpd:alpine
-</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/code/docker-run-httpd.sh target=_blank>view raw</a></span>
-<a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/code/docker-run-httpd.sh target=_blank>docker-run-httpd.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
-</span><span class=lnt> 2
-</span><span class=lnt> 3
-</span><span class=lnt> 4
-</span><span class=lnt> 5
-</span><span class=lnt> 6
-</span><span class=lnt> 7
-</span><span class=lnt> 8
-</span><span class=lnt> 9
-</span><span class=lnt>10
-</span><span class=lnt>11
-</span><span class=lnt>12
-</span><span class=lnt>13
-</span><span class=lnt>14
-</span><span class=lnt>15
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext>...
-
-ServerName www.localhost
-
-&lt;VirtualHost *:80&gt;
-   ServerName localhost
-   RewriteEngine On
-   RewriteCond %{HTTPS} off
-   RewriteRule (.*) http://www.%{SERVER_NAME}$1 [R,L]
-&lt;/VirtualHost&gt;
-
-&lt;VirtualHost *:80&gt;
-   ServerName www.localhost
-   DocumentRoot /usr/local/apache2/htdocs
-&lt;/VirtualHost&gt;</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/code/httpd.conf target=_blank>view raw</a></span>
-<a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/code/httpd.conf target=_blank>httpd.conf</a></div></div><div class=media><figure><a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/images/httpd.png title="Dominio antes de acceder al sitio" data-gallery=data-gallery><img src=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/images/httpd-thumb.png width=292></a>
-<a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/images/httpd-www.png title="Dominio después de acceder al sitio" data-gallery=data-gallery><img src=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/images/httpd-www-thumb.png width=292></a><figcaption>Dominio antes y después de acceder al sitio con Apache HTTPD</figcaption></figure></div><p>Si prefieriesemos hacer la redirección al revés, del subdominio www al dominio, variaríamos los valores de los nombres del servidor y los valores de las directivas de redirección. En los enlaces de referencia se incluye un ejemplo de esta configuración.</p><p>El <a href=https://github.com/picodotdev/blog-ejemplos/tree/master/RedirigirSubdominio>código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href=https://github.com/>GitHub</a>.</p><p>Referencia:<div class=reference>Referencia:<br><ul><li><a href=https://easyengine.io/tutorials/nginx/www-non-www-redirection/>Nginx config for www to non-www and non-www to www redirection</a></li><li><a href=http://www.thesitewizard.com/apache/redirect-domain-www-subdomain.shtml>How to Redirect URLs from Your Root Domain to the WWW Subdomain and Vice Versa</a></li></ul></p><p></div></p></div></article><div class="row serie"><div class=col-md-12><h3>Este artículo forma parte de la serie <strong>web</strong>:</h3><ol class=serie-articles><li><a href=https://picodotdev.github.io/blog-bitix/2014/02/generar-y-convertir-claves-y-certificados-con-openssl/>Generar y convertir claves y certificados con OpenSSL</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2014/02/configurar-ssl-en-un-servidor-tomcat-jboss-wildfly-lighttpd-nginx-apache/>Configurar SSL/TLS en un servidor Tomcat, JBoss, WildFly, Lighttpd, Nginx o Apache</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2015/04/certificado-ssl-de-empresa-wildcard-y-de-validacion-extendida/>Certificado SSL, de empresa, «wildcard» y de validación extendida</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/02/introduccion-al-protocolo-http-2/>Introducción al protocolo HTTP/2</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/>Configurar HTTP/2 en Nginx, Apache HTTPD, WildFly o Jetty</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/06/como-redirigir-peticiones-de-http-a-https-en-nginx-apache-tomcat-jetty-y-wildfly/>Cómo redirigir peticiones de HTTP a HTTPS en Nginx, Apache, Tomcat, Jetty y WildFly</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/como-optimizar-un-sitio-web-con-compresion-gzip-en-nginx-y-apache-httpd/>Cómo optimizar un sitio web con compresión GZIP en Nginx y Apache HTTPD</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/configurar-nginx-como-balanceador-de-carga/>Configurar Nginx como balanceador de carga</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/como-crear-un-proxy-inverso-entre-el-servidor-web-nginx-y-un-servidor-de-aplicaciones-java/>Cómo crear un proxy inverso entre el servidor web Nginx y un servidor de aplicaciones Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/las-cabeceras-de-cache-del-protocolo-http/>Las cabeceras de cache del protocolo HTTP</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/configurar-nginx-para-cachear-respuestas-del-servidor-de-aplicaciones/>Configurar Nginx para cachear respuestas del servidor de aplicaciones</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/>Cómo y por que redirigir tráfico web del dominio raíz al subdominio www (o viceversa)</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/>Autenticación mutua de cliente y servidor con certificados</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/08/instalar-y-renovar-un-certificado-de-lets-encrypt-en-nginx/>Instalar y renovar un certificado de Let's Encrypt en Nginx</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2019/06/pruebas-de-carga-y-rendimiento-de-un-servicio-web-con-apache-bench/>Pruebas de carga y rendimiento de un servicio web con Apache Bench</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2019/06/comprobar-la-seguridad-de-un-sitio-web-que-use-ssl-tls/>Comprobar la seguridad de un sitio web que use SSL/TLS</a></li></ol></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><a id=comments></a><div class=row><div class=col-md-12><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='blog-bitix-166';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2016\/08\/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www\/';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
+<a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/#comments>Comentarios</a></p><p class=summary itemprop=about>La redirección del dominio raíz al subdominio es una de las cosas básicas que es recomendable realizar en todo dominio, para ello hay que añadir algo de configuración propia de cada servidor para realizar la redirección. Junto con usar el uso del protocolo HTTPS y forzar su uso con otra redirección mejoraremos el SEO y evitaremos penalizaciones por contenido duplicado.</p><div><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins></div><div class=content itemprop=articleBody><meta itemprop=wordCount content="1970"><div class=logotypes style=float:right><img src=/blog-bitix/assets/images/logotipos/html.svg class=right width=200 alt=HTML title=HTML></div><p>El nombre de un dominio está formado por varios subdominios separados por un caracter punto. Están los dominios de nivel superior, los genéricos y más antiguos <em>.com</em>, <em>.org</em>, <em>.info</em>, <em>.net</em>, los propios de cada país o territoriales <em>.es</em>, <em>.fr</em>, <em>.de</em> y más recientemente un montón de <a href=https://es.wikipedia.org/wiki/Dominio_de_nivel_superior>nuevos dominios de nivel superior</a> (<em>.futbol</em>, <em>.arte</em>, <em>.blog</em>, <em>.madrid</em>, &mldr;) aunque significativamente más caros. Después del dominio de nivel superior está el subdominio de la empresa, marca o personal, por ejemplo, <em>empresa.com</em> que es realmente lo que compramos cuando solicitamos registrar un dominio. En nuestro dominio <em>empresa.com</em> podemos administrar múltiples subdominios los clásicos son <em>www.empresa.com</em> para el servidor web, <em>smpt.empresa.com</em> para el correo electrónico, <em>ftp.empresa.com</em> para la transferencia de archivos y otros cualesquiera que deseemos.</p><p>En el caso del tráfico web debemos evitar que el servidor y la página o aplicación sea accedida por <em>empresa.com</em> y <em>www.empresa.com</em> ya que los buscadores tratarán a la página como dos diferentes y posiblemente detectando contenido duplicado que afectará negativamente o penalizando al SEO de la web. Lo que se suele hacer es hacer una <a href=https://es.wikipedia.org/wiki/HTTP_301>redirección permanente</a> (cuyo código de estado HTTP para la respuesta es 301) a nivel de servidor que redirija el tráfico de <em>empresa.com</em> a <em>www.empresa.com</em> cuando el usuario acceda con su navegador con la primera.</p><p>Esta es una de las cosas básicas que debemos realizar cuando instalemos un servidor web, otras cosas recomendadas para mejorar el SEO y la seguridad de los usuarios es <a href=https://picodotdev.github.io/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/>configurar el servidor web para usar el protocolo seguro HTTPS</a> y <a href=https://picodotdev.github.io/blog-bitix/2016/06/como-redirigir-peticiones-de-http-a-https-en-nginx-apache-tomcat-jetty-y-wildfly/>configurar el servidor web para forzar el uso de HTTPS</a> también haciendo una redirección cuando la petición use el protocolo no cifrado HTTP entre otras cosas que indico en la <a href=https://picodotdev.github.io/blog-bitix/series/web/>serie web</a>.</p><p>Dependiendo del servidor web que utilicemos la configuración a añadir para hacer la redirección será distinta, a continuación indicaré como hacerlo en dos de los servidores web más populares como son <a href=https://nginx.org/>Nginx</a> y <a href=https://httpd.apache.org/>Apache HTTPD</a>.</p><h3 id=nginx>Nginx</h3><p>Usando Docker y el archivo de configuración completo podemos probar que funciona en local sin necesidad de instalar o cambiar la configuración de Nginx si tenemos instalado su paquete.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ docker run --rm -p 80:80 -v <span class=sb>`</span><span class=nb>pwd</span><span class=sb>`</span>/nginx.conf:/etc/nginx/conf.d/default.conf:ro nginx:alpine&#10;</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/code/docker-run-nginx.sh target=_blank>view raw</a></span>
+<a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/code/docker-run-nginx.sh target=_blank>docker-run-nginx.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1&#10;</span><span class=lnt> 2&#10;</span><span class=lnt> 3&#10;</span><span class=lnt> 4&#10;</span><span class=lnt> 5&#10;</span><span class=lnt> 6&#10;</span><span class=lnt> 7&#10;</span><span class=lnt> 8&#10;</span><span class=lnt> 9&#10;</span><span class=lnt>10&#10;</span><span class=lnt>11&#10;</span><span class=lnt>12&#10;</span><span class=lnt>13&#10;</span><span class=lnt>14&#10;</span><span class=lnt>15&#10;</span><span class=lnt>16&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext>server {&#10;&nbsp;&nbsp;&nbsp;&nbsp;listen&nbsp;&nbsp;&nbsp;&nbsp;   80;&#10;&nbsp;&nbsp;&nbsp;&nbsp;server_name  localhost;&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;return 301 http://www.$host$request_uri;&#10;}&#10;&#10;server {&#10;&nbsp;&nbsp;&nbsp;&nbsp;listen&nbsp;&nbsp;&nbsp;&nbsp;   80;&#10;&nbsp;&nbsp;&nbsp;&nbsp;server_name  www.localhost;&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;location / {&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;root   /usr/share/nginx/html;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;index  index.html index.htm;&#10;&nbsp;&nbsp;&nbsp;&nbsp;}&#10;}</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/code/nginx.conf target=_blank>view raw</a></span>
+<a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/code/nginx.conf target=_blank>nginx.conf</a></div></div><div class=media><figure><p><a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/images/nginx.png title="Dominio antes de acceder al sitio" data-gallery=data-gallery><img src=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/images/nginx-thumb.png width=292></a></p><p><a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/images/nginx-www.png title="Dominio después de acceder al sitio" data-gallery=data-gallery><img src=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/images/nginx-www-thumb.png width=292></a></p><pre><code>&lt;figcaption&gt;Dominio antes y después de acceder al sitio con Nginx&lt;/figcaption&gt;
+</code></pre></figure></div><h3 id=apache>Apache</h3><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ docker run --rm -p 80:80 -v <span class=sb>`</span><span class=nb>pwd</span><span class=sb>`</span>/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro httpd:alpine&#10;</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/code/docker-run-httpd.sh target=_blank>view raw</a></span>
+<a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/code/docker-run-httpd.sh target=_blank>docker-run-httpd.sh</a></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1&#10;</span><span class=lnt> 2&#10;</span><span class=lnt> 3&#10;</span><span class=lnt> 4&#10;</span><span class=lnt> 5&#10;</span><span class=lnt> 6&#10;</span><span class=lnt> 7&#10;</span><span class=lnt> 8&#10;</span><span class=lnt> 9&#10;</span><span class=lnt>10&#10;</span><span class=lnt>11&#10;</span><span class=lnt>12&#10;</span><span class=lnt>13&#10;</span><span class=lnt>14&#10;</span><span class=lnt>15&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext>...&#10;&#10;ServerName www.localhost&#10;&#10;&lt;VirtualHost *:80&gt;&#10;   ServerName localhost&#10;   RewriteEngine On&#10;   RewriteCond %{HTTPS} off&#10;   RewriteRule (.*) http://www.%{SERVER_NAME}$1 [R,L]&#10;&lt;/VirtualHost&gt;&#10;&#10;&lt;VirtualHost *:80&gt;&#10;   ServerName www.localhost&#10;   DocumentRoot /usr/local/apache2/htdocs&#10;&lt;/VirtualHost&gt;</code></pre></td></tr></table></div></div><div class=highlight-meta><span class=raw><a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/code/httpd.conf target=_blank>view raw</a></span>
+<a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/code/httpd.conf target=_blank>httpd.conf</a></div></div><div class=media><figure><p><a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/images/httpd.png title="Dominio antes de acceder al sitio" data-gallery=data-gallery><img src=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/images/httpd-thumb.png width=292></a></p><p><a href=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/images/httpd-www.png title="Dominio después de acceder al sitio" data-gallery=data-gallery><img src=/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/images/httpd-www-thumb.png width=292></a></p><pre><code>&lt;figcaption&gt;Dominio antes y después de acceder al sitio con Apache HTTPD&lt;/figcaption&gt;
+</code></pre></figure></div><p>Si prefieriesemos hacer la redirección al revés, del subdominio www al dominio, variaríamos los valores de los nombres del servidor y los valores de las directivas de redirección. En los enlaces de referencia se incluye un ejemplo de esta configuración.</p><p>El <a href=https://github.com/picodotdev/blog-ejemplos/tree/master/RedirigirSubdominio>código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href=https://github.com/>GitHub</a>.</p><p>Referencia:
+<a href=http://www.abiword.org/>abiword</a>: <a href=http://www.abiword.org/>http://www.abiword.org/</a>
+<a href=https://es.wikipedia.org/wiki/ACID>acid</a>: <a href=https://es.wikipedia.org/wiki/ACID>https://es.wikipedia.org/wiki/ACID</a>
+<a href=http://activiti.org/>activiti</a>: <a href=http://activiti.org/>http://activiti.org/</a>
+<a href=https://adblockplus.org/es/faq_basics#disable>adblockplus-disable</a>: <a href=https://adblockplus.org/es/faq_basics#disable>https://adblockplus.org/es/faq_basics#disable</a>
+<a href=https://acrobat.adobe.com/es/es/acrobat.html>adobe-acrobat</a>: <a href=https://acrobat.adobe.com/es/es/acrobat.html>https://acrobat.adobe.com/es/es/acrobat.html</a>
+<a href=https://get.adobe.com/es/reader/otherversions/>adobe-acrobat-reader</a>: <a href=https://get.adobe.com/es/reader/otherversions/>https://get.adobe.com/es/reader/otherversions/</a>
+<a href=https://www.adobe.com/es/products/aftereffects.html>adobe-aftereffects</a>: <a href=https://www.adobe.com/es/products/aftereffects.html>https://www.adobe.com/es/products/aftereffects.html</a>
+<a href=https://www.adobe.com/es/products/illustrator.html>adobe-illustrator</a>: <a href=https://www.adobe.com/es/products/illustrator.html>https://www.adobe.com/es/products/illustrator.html</a>
+<a href=https://www.adobe.com/es/products/indesign.html>adobe-indesign</a>: <a href=https://www.adobe.com/es/products/indesign.html>https://www.adobe.com/es/products/indesign.html</a>
+<a href=https://www.adobe.com/es/products/photoshop-lightroom.html>adobe-lightroom</a>: <a href=https://www.adobe.com/es/products/photoshop-lightroom.html>https://www.adobe.com/es/products/photoshop-lightroom.html</a>
+<a href=http://www.adobe.com/es/products/photoshop.html>adobe-photoshop</a>: <a href=http://www.adobe.com/es/products/photoshop.html>http://www.adobe.com/es/products/photoshop.html</a>
+<a href=https://www.adobe.com/es/products/premiere.html>adobe-premiere</a>: <a href=https://www.adobe.com/es/products/premiere.html>https://www.adobe.com/es/products/premiere.html</a>
+<a href=https://adblockplus.org/es/>adblockplus</a>: <a href=https://adblockplus.org/es/>https://adblockplus.org/es/</a>
+<a href=https://www.alfresco.com/>alfresco</a>: <a href=https://www.alfresco.com/>https://www.alfresco.com/</a>
+<a href=https://www.alpinelinux.org/>alpine-linux</a>: <a href=https://www.alpinelinux.org/>https://www.alpinelinux.org/</a>
+<a href=https://alternativeto.net/>alternativeto</a>: <a href=https://alternativeto.net/>https://alternativeto.net/</a>
+<a href=https://es.aliexpress.com/>aliexpress</a>: <a href=https://es.aliexpress.com/>https://es.aliexpress.com/</a>
+<a href=https://amzn.to/2flFhHA>amazon</a>: <a href=https://amzn.to/2flFhHA>https://amzn.to/2flFhHA</a>
+<a href=https://aws.amazon.com/es/ebs/>amazon-ebs</a>: <a href=https://aws.amazon.com/es/ebs/>https://aws.amazon.com/es/ebs/</a>
+<a href=https://aws.amazon.com/es/ec2/>amazon-ec2</a>: <a href=https://aws.amazon.com/es/ec2/>https://aws.amazon.com/es/ec2/</a>
+<a href=https://amzn.to/365cflK>amazon-kindle</a>: <a href=https://amzn.to/365cflK>https://amzn.to/365cflK</a>
+<a href=https://amzn.to/2Zqcc1t>amazon-kindle-fire-7</a>: <a href=https://amzn.to/2Zqcc1t>https://amzn.to/2Zqcc1t</a>
+<a href=https://amzn.to/2EZao5W>amazon-kindle-paperwhite</a>: <a href=https://amzn.to/2EZao5W>https://amzn.to/2EZao5W</a>
+<a href=https://amzn.to/2Qn2poP>amazon-kindle-oasis</a>: <a href=https://amzn.to/2Qn2poP>https://amzn.to/2Qn2poP</a>
+<a href=https://amazonlightsail.com/>amazon-lightsail</a>: <a href=https://amazonlightsail.com/>https://amazonlightsail.com/</a>
+<a href=https://music.amazon.es/home>amazon-music</a>: <a href=https://music.amazon.es/home>https://music.amazon.es/home</a>
+<a href=https://amzn.to/34WAyB7>amazon-playstation-4</a>: <a href=https://amzn.to/34WAyB7>https://amzn.to/34WAyB7</a>
+<a href=https://amzn.to/2ETnmlV>amazon-raspberrypi</a>: <a href=https://amzn.to/2ETnmlV>https://amzn.to/2ETnmlV</a>
+<a href="https://www.amazon.es/b/ref=nav_shopall_apv_all?_encoding=UTF8&node=12092245031#all">amazon-video</a>: <a href="https://www.amazon.es/b/ref=nav_shopall_apv_all?_encoding=UTF8&node=12092245031#all">https://www.amazon.es/b/ref=nav_shopall_apv_all?_encoding=UTF8&node=12092245031#all</a>
+<a href=https://aws.amazon.com/es/>amazon-web-services</a>: <a href=https://aws.amazon.com/es/>https://aws.amazon.com/es/</a>
+<a href=https://www.amd.com/es>amd</a>: <a href=https://www.amd.com/es>https://www.amd.com/es</a>
+<a href=https://es.wikipedia.org/wiki/AMD_Athlon>amd-athlon</a>: <a href=https://es.wikipedia.org/wiki/AMD_Athlon>https://es.wikipedia.org/wiki/AMD_Athlon</a>
+<a href=https://www.amd.com/es/ryzen>amd-ryzen</a>: <a href=https://www.amd.com/es/ryzen>https://www.amd.com/es/ryzen</a>
+<a href=https://en.wikipedia.org/wiki/AMD_RX_Vega_series>amd-vega</a>: <a href=https://en.wikipedia.org/wiki/AMD_RX_Vega_series>https://en.wikipedia.org/wiki/AMD_RX_Vega_series</a>
+<a href=https://www.android.com/>android</a>: <a href=https://www.android.com/>https://www.android.com/</a>
+<a href=https://angular.io/>angular</a>: <a href=https://angular.io/>https://angular.io/</a>
+<a href=https://www.ansible.com/>ansible</a>: <a href=https://www.ansible.com/>https://www.ansible.com/</a>
+<a href=https://ant.apache.org/>ant</a>: <a href=https://ant.apache.org/>https://ant.apache.org/</a>
+<a href=https://antergos.com/>antergos</a>: <a href=https://antergos.com/>https://antergos.com/</a>
+<a href=https://en.wikipedia.org/wiki/Aspect-oriented_programming>aop</a>: <a href=https://en.wikipedia.org/wiki/Aspect-oriented_programming>https://en.wikipedia.org/wiki/Aspect-oriented_programming</a>
+<a href=https://www.apache.org/>apache</a>: <a href=https://www.apache.org/>https://www.apache.org/</a>
+<a href=https://httpd.apache.org/docs/current/programs/ab.html>apache-bench</a>: <a href=https://httpd.apache.org/docs/current/programs/ab.html>https://httpd.apache.org/docs/current/programs/ab.html</a>
+<a href=https://commons.apache.org/proper/commons-csv/>apache-commons-csv</a>: <a href=https://commons.apache.org/proper/commons-csv/>https://commons.apache.org/proper/commons-csv/</a>
+<a href=https://httpd.apache.org/>apache-httpd</a>: <a href=https://httpd.apache.org/>https://httpd.apache.org/</a>
+<a href=https://hc.apache.org/>apache-httpcomponents</a>: <a href=https://hc.apache.org/>https://hc.apache.org/</a>
+<a href=https://www.apache.org/licenses/LICENSE-2.0>apache-license</a>: <a href=https://www.apache.org/licenses/LICENSE-2.0>https://www.apache.org/licenses/LICENSE-2.0</a>
+<a href=https://pdfbox.apache.org/>apache-pdfbox</a>: <a href=https://pdfbox.apache.org/>https://pdfbox.apache.org/</a>
+<a href=https://portals.apache.org/pluto/>apache-pluto</a>: <a href=https://portals.apache.org/pluto/>https://portals.apache.org/pluto/</a>
+<a href=https://poi.apache.org/>apache-poi</a>: <a href=https://poi.apache.org/>https://poi.apache.org/</a>
+<a href=https://wicket.apache.org/>apache-wicket</a>: <a href=https://wicket.apache.org/>https://wicket.apache.org/</a>
+<a href=https://www.appfog.com/>appfog</a>: <a href=https://www.appfog.com/>https://www.appfog.com/</a>
+<a href=https://www.apple.com/>apple</a>: <a href=https://www.apple.com/>https://www.apple.com/</a>
+<a href=https://www.apple.com/es/ios/ios-12/>apple-ios</a>: <a href=https://www.apple.com/es/ios/ios-12/>https://www.apple.com/es/ios/ios-12/</a>
+<a href=https://www.apple.com/macbook/>apple-macbook</a>: <a href=https://www.apple.com/macbook/>https://www.apple.com/macbook/</a>
+<a href=https://www.apple.com/es/apple-music/>apple-music</a>: <a href=https://www.apple.com/es/apple-music/>https://www.apple.com/es/apple-music/</a>
+<a href=https://arch-anywhere.org/>arch-anywhere</a>: <a href=https://arch-anywhere.org/>https://arch-anywhere.org/</a>
+<a href=https://archive.org/>archive</a>: <a href=https://archive.org/>https://archive.org/</a>
+<a href=https://www.archlinux.org/>archlinux</a>: <a href=https://www.archlinux.org/>https://www.archlinux.org/</a>
+<a href=https://wiki.archlinux.org/index.php/Arch_Linux>archlinux-archway</a>: <a href=https://wiki.archlinux.org/index.php/Arch_Linux>https://wiki.archlinux.org/index.php/Arch_Linux</a>
+<a href=https://www.archlinux.org/download/>archlinux-download</a>: <a href=https://www.archlinux.org/download/>https://www.archlinux.org/download/</a>
+<a href=https://wiki.archlinux.org/index.php/General_recommendations>archlinux-general-recomendations</a>: <a href=https://wiki.archlinux.org/index.php/General_recommendations>https://wiki.archlinux.org/index.php/General_recommendations</a>
+<a href=https://www.archlinux.org/feeds/news/>archlinux-feed-news</a>: <a href=https://www.archlinux.org/feeds/news/>https://www.archlinux.org/feeds/news/</a>
+<a href=https://bbs.archlinux.org/>archlinux-forums</a>: <a href=https://bbs.archlinux.org/>https://bbs.archlinux.org/</a>
+<a href=https://foros.archlinux-es.org/>archlinux-forums-es</a>: <a href=https://foros.archlinux-es.org/>https://foros.archlinux-es.org/</a>
+<a href=https://wiki.archlinux.org/index.php/Installation_guide>archlinux-install-guide</a>: <a href=https://wiki.archlinux.org/index.php/Installation_guide>https://wiki.archlinux.org/index.php/Installation_guide</a>
+<a href=https://wiki.archlinux.org/>archlinux-wiki</a>: <a href=https://wiki.archlinux.org/>https://wiki.archlinux.org/</a>
+<a href=https://archlinuxarm.org/>archlinuxarm</a>: <a href=https://archlinuxarm.org/>https://archlinuxarm.org/</a>
+<a href=https://www.arm.com/>arm</a>: <a href=https://www.arm.com/>https://www.arm.com/</a>
+<a href=https://www.armbian.com/>armbian</a>: <a href=https://www.armbian.com/>https://www.armbian.com/</a>
+<a href=https://www.arsys.es/>arsys</a>: <a href=https://www.arsys.es/>https://www.arsys.es/</a>
+<a href=https://asciinema.org/>asciinema</a>: <a href=https://asciinema.org/>https://asciinema.org/</a>
+<a href=https://asm.ow2.io/>asm</a>: <a href=https://asm.ow2.io/>https://asm.ow2.io/</a>
+<a href=https://atom.io/>atom</a>: <a href=https://atom.io/>https://atom.io/</a>
+<a href=https://www.autodesk.es/products/autocad/overview>autocad</a>: <a href=https://www.autodesk.es/products/autocad/overview>https://www.autodesk.es/products/autocad/overview</a>
+<a href=https://docs.oracle.com/javase/8/docs/api/java/awt/package-summary.html>awt</a>: <a href=https://docs.oracle.com/javase/8/docs/api/java/awt/package-summary.html>https://docs.oracle.com/javase/8/docs/api/java/awt/package-summary.html</a>
+<a href=https://babeljs.io/>babeljs</a>: <a href=https://babeljs.io/>https://babeljs.io/</a>
+<a href=https://backbonejs.org/>backbone</a>: <a href=https://backbonejs.org/>https://backbonejs.org/</a>
+<a href=https://www.baidu.com/>baidu</a>: <a href=https://www.baidu.com/>https://www.baidu.com/</a>
+<a href=http://barrapunto.com/>barrapunto</a>: <a href=http://barrapunto.com/>http://barrapunto.com/</a>
+<a href=https://es.wikipedia.org/wiki/Bash>bash</a>: <a href=https://es.wikipedia.org/wiki/Bash>https://es.wikipedia.org/wiki/Bash</a>
+<a href=https://bilbostack.com/>bilbostack</a>: <a href=https://bilbostack.com/>https://bilbostack.com/</a>
+<a href=https://www.bing.com/>bing</a>: <a href=https://www.bing.com/>https://www.bing.com/</a>
+<a href=https://bitbucket.org/>bitbucket</a>: <a href=https://bitbucket.org/>https://bitbucket.org/</a>
+<a href=https://bitnami.com/>bitnami</a>: <a href=https://bitnami.com/>https://bitnami.com/</a>
+<a href=https://es.wikipedia.org/wiki/BitTorrent>bittorrent</a>: <a href=https://es.wikipedia.org/wiki/BitTorrent>https://es.wikipedia.org/wiki/BitTorrent</a>
+<a href=https://www.blizzard.com/es-es/>blizzard</a>: <a href=https://www.blizzard.com/es-es/>https://www.blizzard.com/es-es/</a>
+<a href=https://www.blizzard.com/es-es/apps/battle.net/desktop>blizzard-battlenet</a>: <a href=https://www.blizzard.com/es-es/apps/battle.net/desktop>https://www.blizzard.com/es-es/apps/battle.net/desktop</a>
+<a href=https://eu.diablo3.com/es/>blizzard-diablo3</a>: <a href=https://eu.diablo3.com/es/>https://eu.diablo3.com/es/</a>
+<a href=https://eu.battle.net/hearthstone/>blizzard-hearthstone</a>: <a href=https://eu.battle.net/hearthstone/>https://eu.battle.net/hearthstone/</a>
+<a href=https://eu.battle.net/heroes/>blizzard-heroesofthestorm</a>: <a href=https://eu.battle.net/heroes/>https://eu.battle.net/heroes/</a>
+<a href=https://eu.battle.net/sc2>blizzard-starcraft2</a>: <a href=https://eu.battle.net/sc2>https://eu.battle.net/sc2</a>
+<a href=https://playoverwatch.com/>blizzard-overwatch</a>: <a href=https://playoverwatch.com/>https://playoverwatch.com/</a>
+<a href=https://eu.blizzard.com/es-es/games/war3/>blizzard-warcraft3</a>: <a href=https://eu.blizzard.com/es-es/games/war3/>https://eu.blizzard.com/es-es/games/war3/</a>
+<a href=https://worldofwarcraft.com/>blizzard-worldofwarcraft</a>: <a href=https://worldofwarcraft.com/>https://worldofwarcraft.com/</a>
+<a href=https://www.blogger.com/>blogger</a>: <a href=https://www.blogger.com/>https://www.blogger.com/</a>
+<a href=https://es.wikipedia.org/wiki/Bluetooth>bluetooth</a>: <a href=https://es.wikipedia.org/wiki/Bluetooth>https://es.wikipedia.org/wiki/Bluetooth</a>
+<a href=http://boot2docker.io/>boot2docker</a>: <a href=http://boot2docker.io/>http://boot2docker.io/</a>
+<a href=https://getbootstrap.com/>bootstrap</a>: <a href=https://getbootstrap.com/>https://getbootstrap.com/</a>
+<a href=https://bower.io/>bower</a>: <a href=https://bower.io/>https://bower.io/</a>
+<a href=https://www.broadcom.com/>broadcom</a>: <a href=https://www.broadcom.com/>https://www.broadcom.com/</a>
+<a href=https://es.wikipedia.org/wiki/Berkeley_Software_Distribution>bsd</a>: <a href=https://es.wikipedia.org/wiki/Berkeley_Software_Distribution>https://es.wikipedia.org/wiki/Berkeley_Software_Distribution</a>
+<a href=https://www.bugzilla.org/>bugzilla</a>: <a href=https://www.bugzilla.org/>https://www.bugzilla.org/</a>
+<a href=https://www.busybox.net/>busybox</a>: <a href=https://www.busybox.net/>https://www.busybox.net/</a>
+<a href=https://bytebuddy.net/>bytebuddy</a>: <a href=https://bytebuddy.net/>https://bytebuddy.net/</a>
+<a href=https://calibre-ebook.com/>calibre</a>: <a href=https://calibre-ebook.com/>https://calibre-ebook.com/</a>
+<a href=https://www.calligra.org/>calligra</a>: <a href=https://www.calligra.org/>https://www.calligra.org/</a>
+<a href=https://es.camelcamelcamel.com/>camelcamelcamel</a>: <a href=https://es.camelcamelcamel.com/>https://es.camelcamelcamel.com/</a>
+<a href=https://www.canonical.com/>canonical</a>: <a href=https://www.canonical.com/>https://www.canonical.com/</a>
+<a href=https://cassandra.apache.org/>cassandra</a>: <a href=https://cassandra.apache.org/>https://cassandra.apache.org/</a>
+<a href=https://www.centos.org/>centos</a>: <a href=https://www.centos.org/>https://www.centos.org/</a>
+<a href=https://ceylon-lang.org/>ceylon</a>: <a href=https://ceylon-lang.org/>https://ceylon-lang.org/</a>
+<a href=https://github.com/cglib/cglib>cglib</a>: <a href=https://github.com/cglib/cglib>https://github.com/cglib/cglib</a>
+<a href=http://checkstyle.sourceforge.net/>checkstyle</a>: <a href=http://checkstyle.sourceforge.net/>http://checkstyle.sourceforge.net/</a>
+<a href=https://www.getchef.com/>chef</a>: <a href=https://www.getchef.com/>https://www.getchef.com/</a>
+<a href=https://www.chromium.org/>chromium</a>: <a href=https://www.chromium.org/>https://www.chromium.org/</a>
+<a href=https://www.cisco.com/>cisco</a>: <a href=https://www.cisco.com/>https://www.cisco.com/</a>
+<a href=https://cloudfoundry.org/>cloudfoundry</a>: <a href=https://cloudfoundry.org/>https://cloudfoundry.org/</a>
+<a href=https://clojure.org/>clojure</a>: <a href=https://clojure.org/>https://clojure.org/</a>
+<a href=https://en.wikipedia.org/wiki/Cloud_computing>cloud-computing</a>: <a href=https://en.wikipedia.org/wiki/Cloud_computing>https://en.wikipedia.org/wiki/Cloud_computing</a>
+<a href=https://clouding.io/>cloudingio</a>: <a href=https://clouding.io/>https://clouding.io/</a>
+<a href=https://es.wikipedia.org/wiki/Sistema_de_gesti%C3%B3n_de_contenidos>cms</a>: <a href=https://es.wikipedia.org/wiki/Sistema_de_gesti%C3%B3n_de_contenidos>https://es.wikipedia.org/wiki/Sistema_de_gesti%C3%B3n_de_contenidos</a>
+<a href=https://cmus.github.io/>cmus</a>: <a href=https://cmus.github.io/>https://cmus.github.io/</a>
+<a href=https://es.wikipedia.org/wiki/COBOL>cobol</a>: <a href=https://es.wikipedia.org/wiki/COBOL>https://es.wikipedia.org/wiki/COBOL</a>
+<a href=https://es.wikipedia.org/wiki/C%C3%B3digo_espagueti>codigo-espagueti</a>: <a href=https://es.wikipedia.org/wiki/C%C3%B3digo_espagueti>https://es.wikipedia.org/wiki/C%C3%B3digo_espagueti</a>
+<a href=https://commons.apache.org/proper/commons-lang/>commons-lang</a>: <a href=https://commons.apache.org/proper/commons-lang/>https://commons.apache.org/proper/commons-lang/</a>
+<a href=https://www.consul.io/>consul</a>: <a href=https://www.consul.io/>https://www.consul.io/</a>
+<a href=https://coffeescript.org/>coffeescript</a>: <a href=https://coffeescript.org/>https://coffeescript.org/</a>
+<a href=https://coobis.com/>coobis</a>: <a href=https://coobis.com/>https://coobis.com/</a>
+<a href=https://es.wikipedia.org/wiki/CORBA>corba</a>: <a href=https://es.wikipedia.org/wiki/CORBA>https://es.wikipedia.org/wiki/CORBA</a>
+<a href=https://coreos.com/>coreos</a>: <a href=https://coreos.com/>https://coreos.com/</a>
+<a href=https://en.wikipedia.org/wiki/Create,_read,_update_and_delete>crud</a>: <a href=https://en.wikipedia.org/wiki/Create,_read,_update_and_delete>https://en.wikipedia.org/wiki/Create,_read,_update_and_delete</a>
+<a href=https://dotnet.microsoft.com/>csharp</a>: <a href=https://dotnet.microsoft.com/>https://dotnet.microsoft.com/</a>
+<a href=https://www.cups.org/>cups</a>: <a href=https://www.cups.org/>https://www.cups.org/</a>
+<a href=https://www.dartlang.org/>dart</a>: <a href=https://www.dartlang.org/>https://www.dartlang.org/</a>
+<a href=https://www.ibm.com/analytics/us/en/technology/db2/>db2</a>: <a href=https://www.ibm.com/analytics/us/en/technology/db2/>https://www.ibm.com/analytics/us/en/technology/db2/</a>
+<a href=https://www.debian.org/>debian</a>: <a href=https://www.debian.org/>https://www.debian.org/</a>
+<a href=https://www.dell.com/>dell</a>: <a href=https://www.dell.com/>https://www.dell.com/</a>
+<a href=https://en.wikipedia.org/wiki/DevOps>devops</a>: <a href=https://en.wikipedia.org/wiki/DevOps>https://en.wikipedia.org/wiki/DevOps</a>
+<a href=https://www.digitalocean.com/>digital-ocean</a>: <a href=https://www.digitalocean.com/>https://www.digitalocean.com/</a>
+<a href=http://rtd.diozero.com/en/latest/>diozero</a>: <a href=http://rtd.diozero.com/en/latest/>http://rtd.diozero.com/en/latest/</a>
+<a href=https://en.wikipedia.org/wiki/Dependency_inversion_principle>dip</a>: <a href=https://en.wikipedia.org/wiki/Dependency_inversion_principle>https://en.wikipedia.org/wiki/Dependency_inversion_principle</a>
+<a href=https://disqus.com/>disqus</a>: <a href=https://disqus.com/>https://disqus.com/</a>
+<a href=https://en.wikipedia.org/wiki/DisplayPort>displayport</a>: <a href=https://en.wikipedia.org/wiki/DisplayPort>https://en.wikipedia.org/wiki/DisplayPort</a>
+<a href=https://distrowatch.com/>distrowatch</a>: <a href=https://distrowatch.com/>https://distrowatch.com/</a>
+<a href=https://www.djangoproject.com/>django</a>: <a href=https://www.djangoproject.com/>https://www.djangoproject.com/</a>
+<a href=https://www.docker.com/>docker</a>: <a href=https://www.docker.com/>https://www.docker.com/</a>
+<a href=https://docs.docker.com/compose/>docker-compose</a>: <a href=https://docs.docker.com/compose/>https://docs.docker.com/compose/</a>
+<a href=https://registry.hub.docker.com/>docker-hub</a>: <a href=https://registry.hub.docker.com/>https://registry.hub.docker.com/</a>
+<a href=https://docs.docker.com/machine/>docker-machine</a>: <a href=https://docs.docker.com/machine/>https://docs.docker.com/machine/</a>
+<a href=https://docs.docker.com/engine/swarm/secrets/>docker-secrets</a>: <a href=https://docs.docker.com/engine/swarm/secrets/>https://docs.docker.com/engine/swarm/secrets/</a>
+<a href=https://docs.docker.com/swarm/>docker-swarm</a>: <a href=https://docs.docker.com/swarm/>https://docs.docker.com/swarm/</a>
+<a href=https://www.dondominio.com/>dondominio</a>: <a href=https://www.dondominio.com/>https://www.dondominio.com/</a>
+<a href=https://dotcms.com/>dotcms</a>: <a href=https://dotcms.com/>https://dotcms.com/</a>
+<a href=https://www.microsoft.com/net>dotnet</a>: <a href=https://www.microsoft.com/net>https://www.microsoft.com/net</a>
+<a href=https://www.asp.net/mvc>dotnet-mvc</a>: <a href=https://www.asp.net/mvc>https://www.asp.net/mvc</a>
+<a href=https://www.drools.org/>drools</a>: <a href=https://www.drools.org/>https://www.drools.org/</a>
+<a href=https://www.drupal.org/>drupal</a>: <a href=https://www.drupal.org/>https://www.drupal.org/</a>
+<a href=https://en.wikipedia.org/wiki/DTrace>dtrace</a>: <a href=https://en.wikipedia.org/wiki/DTrace>https://en.wikipedia.org/wiki/DTrace</a>
+<a href=https://duckduckgo.com/>duckduckgo</a>: <a href=https://duckduckgo.com/>https://duckduckgo.com/</a>
+<a href=https://www.ebay.es/>ebay</a>: <a href=https://www.ebay.es/>https://www.ebay.es/</a>
+<a href=https://eclipse.org>eclipse</a>: <a href=https://eclipse.org>https://eclipse.org</a>
+<a href=https://es.wikipedia.org/wiki/ECMAScript>ecmascript</a>: <a href=https://es.wikipedia.org/wiki/ECMAScript>https://es.wikipedia.org/wiki/ECMAScript</a>
+<a href=https://www.ehcache.org/>ehcache</a>: <a href=https://www.ehcache.org/>https://www.ehcache.org/</a>
+<a href=https://www.elastic.co/products/elasticsearch/>elasticsearch</a>: <a href=https://www.elastic.co/products/elasticsearch/>https://www.elastic.co/products/elasticsearch/</a>
+<a href=https://elchapuzasinformatico.com/>elchapuzasinformatico</a>: <a href=https://elchapuzasinformatico.com/>https://elchapuzasinformatico.com/</a>
+<a href=https://www.meetup.com/es-ES/elcomite/>elcomite</a>: <a href=https://www.meetup.com/es-ES/elcomite/>https://www.meetup.com/es-ES/elcomite/</a>
+<a href=https://www.elcorteingles.es/>elcorteingles</a>: <a href=https://www.elcorteingles.es/>https://www.elcorteingles.es/</a>
+<a href=https://electronjs.org/>electronjs</a>: <a href=https://electronjs.org/>https://electronjs.org/</a>
+<a href=https://elementary.io/es/>elementary</a>: <a href=https://elementary.io/es/>https://elementary.io/es/</a>
+<a href=https://www.gnu.org/software/emacs/>emacs</a>: <a href=https://www.gnu.org/software/emacs/>https://www.gnu.org/software/emacs/</a>
+<a href=https://www.emule-project.net>emule</a>: <a href=https://www.emule-project.net>https://www.emule-project.net</a>
+<a href=https://eslint.org/>eslint</a>: <a href=https://eslint.org/>https://eslint.org/</a>
+<a href=https://etcd.io/>etcd</a>: <a href=https://etcd.io/>https://etcd.io/</a>
+<a href=https://www.balena.io/etcher/>etcher</a>: <a href=https://www.balena.io/etcher/>https://www.balena.io/etcher/</a>
+<a href=https://www.euskalduna.eus/>euskalduna</a>: <a href=https://www.euskalduna.eus/>https://www.euskalduna.eus/</a>
+<a href=https://wiki.gnome.org/Apps/Evolution/>evolution</a>: <a href=https://wiki.gnome.org/Apps/Evolution/>https://wiki.gnome.org/Apps/Evolution/</a>
+<a href=https://fabiolb.net/>fabio</a>: <a href=https://fabiolb.net/>https://fabiolb.net/</a>
+<a href=https://www.facebook.com/>facebook</a>: <a href=https://www.facebook.com/>https://www.facebook.com/</a>
+<a href=https://fedoraproject.org/>fedora</a>: <a href=https://fedoraproject.org/>https://fedoraproject.org/</a>
+<a href=https://www.ffmpeg.org/>ffmpeg</a>: <a href=https://www.ffmpeg.org/>https://www.ffmpeg.org/</a>
+<a href=https://www.mozilla.org/es-ES/firefox/new/>firefox</a>: <a href=https://www.mozilla.org/es-ES/firefox/new/>https://www.mozilla.org/es-ES/firefox/new/</a>
+<a href=https://flatpak.org/>flatpak</a>: <a href=https://flatpak.org/>https://flatpak.org/</a>
+<a href=https://flow.org/>flowjs</a>: <a href=https://flow.org/>https://flow.org/</a>
+<a href=https://www.freebsd.org/es/>freebsd</a>: <a href=https://www.freebsd.org/es/>https://www.freebsd.org/es/</a>
+<a href=https://freedns.afraid.org/>freedns</a>: <a href=https://freedns.afraid.org/>https://freedns.afraid.org/</a>
+<a href=https://freefilesync.org/>freefilesync</a>: <a href=https://freefilesync.org/>https://freefilesync.org/</a>
+<a href=https://freemarker.apache.org/>freemarker</a>: <a href=https://freemarker.apache.org/>https://freemarker.apache.org/</a>
+<a href=https://www.nxp.com/>freescale</a>: <a href=https://www.nxp.com/>https://www.nxp.com/</a>
+<a href=https://www.fsf.org/>fsf</a>: <a href=https://www.fsf.org/>https://www.fsf.org/</a>
+<a href=https://fsfe.org/index.en.html>fsfe</a>: <a href=https://fsfe.org/index.en.html>https://fsfe.org/index.en.html</a>
+<a href=https://gcc.gnu.org/>gcc</a>: <a href=https://gcc.gnu.org/>https://gcc.gnu.org/</a>
+<a href=https://www.gearbest.com/>gearbest</a>: <a href=https://www.gearbest.com/>https://www.gearbest.com/</a>
+<a href=https://wiki.gnome.org/Apps/Geary>geary</a>: <a href=https://wiki.gnome.org/Apps/Geary>https://wiki.gnome.org/Apps/Geary</a>
+<a href=https://gebish.org/>geb</a>: <a href=https://gebish.org/>https://gebish.org/</a>
+<a href=https://www.geexbox.org/>geexbox</a>: <a href=https://www.geexbox.org/>https://www.geexbox.org/</a>
+<a href=https://www.gentoo.org/>gentoo</a>: <a href=https://www.gentoo.org/>https://www.gentoo.org/</a>
+<a href=https://www.gimp.org/>gimp</a>: <a href=https://www.gimp.org/>https://www.gimp.org/</a>
+<a href=https://git-scm.com/>git</a>: <a href=https://git-scm.com/>https://git-scm.com/</a>
+<a href=https://github.com/>github</a>: <a href=https://github.com/>https://github.com/</a>
+<a href=https://gist.github.com/>github-gist</a>: <a href=https://gist.github.com/>https://gist.github.com/</a>
+<a href=https://pages.github.com/>github-pages</a>: <a href=https://pages.github.com/>https://pages.github.com/</a>
+<a href=https://about.gitlab.com/>gitlab</a>: <a href=https://about.gitlab.com/>https://about.gitlab.com/</a>
+<a href=https://github.com/gliderlabs/registrator>gliderlabs-registrator</a>: <a href=https://github.com/gliderlabs/registrator>https://github.com/gliderlabs/registrator</a>
+<a href=http://www.gnewsense.org/>gnewsense</a>: <a href=http://www.gnewsense.org/>http://www.gnewsense.org/</a>
+<a href=https://www.gnome.org/>gnome</a>: <a href=https://www.gnome.org/>https://www.gnome.org/</a>
+<a href=https://wiki.gnome.org/Apps/Builder>gnome-builder</a>: <a href=https://wiki.gnome.org/Apps/Builder>https://wiki.gnome.org/Apps/Builder</a>
+<a href=https://www.gnu.org/>gnu</a>: <a href=https://www.gnu.org/>https://www.gnu.org/</a>
+<a href=https://www.gnu.org/licenses/agpl-3.0.en.html>gnu-agpl</a>: <a href=https://www.gnu.org/licenses/agpl-3.0.en.html>https://www.gnu.org/licenses/agpl-3.0.en.html</a>
+<a href=https://www.gnu.org/licenses/gpl-3.0.html>gnu-gpl</a>: <a href=https://www.gnu.org/licenses/gpl-3.0.html>https://www.gnu.org/licenses/gpl-3.0.html</a>
+<a href=https://www.gnu.org/licenses/lgpl-3.0.html>gnu-lgpl</a>: <a href=https://www.gnu.org/licenses/lgpl-3.0.html>https://www.gnu.org/licenses/lgpl-3.0.html</a>
+<a href=https://golang.org/>go</a>: <a href=https://golang.org/>https://golang.org/</a>
+<a href=https://www.google.es/>google</a>: <a href=https://www.google.es/>https://www.google.es/</a>
+<a href=https://www.google.com/adsense/>google-adsense</a>: <a href=https://www.google.com/adsense/>https://www.google.com/adsense/</a>
+<a href=https://www.google.es/intl/es/analytics/>google-analytics</a>: <a href=https://www.google.es/intl/es/analytics/>https://www.google.es/intl/es/analytics/</a>
+<a href=https://cloud.google.com/appengine/>google-appengine</a>: <a href=https://cloud.google.com/appengine/>https://cloud.google.com/appengine/</a>
+<a href=https://cloud.google.com/>google-cloud</a>: <a href=https://cloud.google.com/>https://cloud.google.com/</a>
+<a href=https://www.google.com/calendar/about/>google-calendar</a>: <a href=https://www.google.com/calendar/about/>https://www.google.com/calendar/about/</a>
+<a href=https://cloud.google.com/>google-cloud</a>: <a href=https://cloud.google.com/>https://cloud.google.com/</a>
+<a href=https://cloud.google.com/compute/>google-compute</a>: <a href=https://cloud.google.com/compute/>https://cloud.google.com/compute/</a>
+<a href=https://contacts.google.com/>google-contacts</a>: <a href=https://contacts.google.com/>https://contacts.google.com/</a>
+<a href=https://www.google.es/chrome/browser/desktop/>google-chrome</a>: <a href=https://www.google.es/chrome/browser/desktop/>https://www.google.es/chrome/browser/desktop/</a>
+<a href=https://www.chromium.org/chromium-os>google-chromium-os</a>: <a href=https://www.chromium.org/chromium-os>https://www.chromium.org/chromium-os</a>
+<a href=https://www.chromium.org/chromium-os>google-chromebook</a>: <a href=https://www.chromium.org/chromium-os>https://www.chromium.org/chromium-os</a>
+<a href=https://www.google.es/intl/es/docs/about/>google-docs</a>: <a href=https://www.google.es/intl/es/docs/about/>https://www.google.es/intl/es/docs/about/</a>
+<a href=https://www.google.es/drive/apps.html>google-drive</a>: <a href=https://www.google.es/drive/apps.html>https://www.google.es/drive/apps.html</a>
+<a href=https://www.google.com/intl/es/gmail/about/>google-gmail</a>: <a href=https://www.google.com/intl/es/gmail/about/>https://www.google.com/intl/es/gmail/about/</a>
+<a href=https://myaccount.google.com/>google-myaccount</a>: <a href=https://myaccount.google.com/>https://myaccount.google.com/</a>
+<a href=https://www.google.com/photos/about/>google-photos</a>: <a href=https://www.google.com/photos/about/>https://www.google.com/photos/about/</a>
+<a href=https://www.google.com/intl/es/sheets/about/>google-sheets</a>: <a href=https://www.google.com/intl/es/sheets/about/>https://www.google.com/intl/es/sheets/about/</a>
+<a href=https://www.google.com/intl/es/slides/about/>google-slides</a>: <a href=https://www.google.com/intl/es/slides/about/>https://www.google.com/intl/es/slides/about/</a>
+<a href=https://cloud.google.com/speech-to-text/>google-speech</a>: <a href=https://cloud.google.com/speech-to-text/>https://cloud.google.com/speech-to-text/</a>
+<a href=https://stadia.dev/>google-stadia</a>: <a href=https://stadia.dev/>https://stadia.dev/</a>
+<a href=https://www.google.es/intl/es/streetview/>google-streetview</a>: <a href=https://www.google.es/intl/es/streetview/>https://www.google.es/intl/es/streetview/</a>
+<a href=http://www.gnumeric.org/>gnumeric</a>: <a href=http://www.gnumeric.org/>http://www.gnumeric.org/</a>
+<a href=https://www.gnupg.org/>gnupg</a>: <a href=https://www.gnupg.org/>https://www.gnupg.org/</a>
+<a href=http://gnuplot.info/>gnuplot</a>: <a href=http://gnuplot.info/>http://gnuplot.info/</a>
+<a href=https://www.gnu.org/licenses/gpl.html>gpl</a>: <a href=https://www.gnu.org/licenses/gpl.html>https://www.gnu.org/licenses/gpl.html</a>
+<a href=https://gradle.org/>gradle</a>: <a href=https://gradle.org/>https://gradle.org/</a>
+<a href=https://grafana.com/>grafana</a>: <a href=https://grafana.com/>https://grafana.com/</a>
+<a href=https://grails.org/>grails</a>: <a href=https://grails.org/>https://grails.org/</a>
+<a href=https://graphql.org/>graphql</a>: <a href=https://graphql.org/>https://graphql.org/</a>
+<a href=https://github.com/graphql/graphiql>graphiql</a>: <a href=https://github.com/graphql/graphiql>https://github.com/graphql/graphiql</a>
+<a href=https://github.com/graphql-java/graphql-java-tools>graphql-java-tools</a>: <a href=https://github.com/graphql-java/graphql-java-tools>https://github.com/graphql-java/graphql-java-tools</a>
+<a href=https://golang.org/>go</a>: <a href=https://golang.org/>https://golang.org/</a>
+<a href=https://www.gog.com/>gog</a>: <a href=https://www.gog.com/>https://www.gog.com/</a>
+<a href=https://www.groovy-lang.org/>groovy</a>: <a href=https://www.groovy-lang.org/>https://www.groovy-lang.org/</a>
+<a href=https://grpc.io/>grpc</a>: <a href=https://grpc.io/>https://grpc.io/</a>
+<a href=https://gruntjs.com/>grunt</a>: <a href=https://gruntjs.com/>https://gruntjs.com/</a>
+<a href=https://github.com/google/gson>gson</a>: <a href=https://github.com/google/gson>https://github.com/google/gson</a>
+<a href=https://gstreamer.freedesktop.org/>gstreamer</a>: <a href=https://gstreamer.freedesktop.org/>https://gstreamer.freedesktop.org/</a>
+<a href=https://github.com/google/guava>guava</a>: <a href=https://github.com/google/guava>https://github.com/google/guava</a>
+<a href=https://gulpjs.com/>gulpjs</a>: <a href=https://gulpjs.com/>https://gulpjs.com/</a>
+<a href=https://gufw.org/>gufw</a>: <a href=https://gufw.org/>https://gufw.org/</a>
+<a href=https://www.h2database.com/html/main.html>h2</a>: <a href=https://www.h2database.com/html/main.html>https://www.h2database.com/html/main.html</a>
+<a href=https://es.wikipedia.org/wiki/High-Definition_Multimedia_Interface>hdmi</a>: <a href=https://es.wikipedia.org/wiki/High-Definition_Multimedia_Interface>https://es.wikipedia.org/wiki/High-Definition_Multimedia_Interface</a>
+<a href=https://hadoop.apache.org/>hadoop</a>: <a href=https://hadoop.apache.org/>https://hadoop.apache.org/</a>
+<a href=https://www.haproxy.org/>haproxy</a>: <a href=https://www.haproxy.org/>https://www.haproxy.org/</a>
+<a href=https://www.hardkernel.com>hardkernel</a>: <a href=https://www.hardkernel.com>https://www.hardkernel.com</a>
+<a href=https://www.hashicorp.com/>hashicorp</a>: <a href=https://www.hashicorp.com/>https://www.hashicorp.com/</a>
+<a href=https://es.hboespana.com/>hbo</a>: <a href=https://es.hboespana.com/>https://es.hboespana.com/</a>
+<a href=https://www.heroku.com/>heroku</a>: <a href=https://www.heroku.com/>https://www.heroku.com/</a>
+<a href=https://en.wikipedia.org/wiki/HATEOAS>hateoas</a>: <a href=https://en.wikipedia.org/wiki/HATEOAS>https://en.wikipedia.org/wiki/HATEOAS</a>
+<a href=https://hibernate.org/>hibernate</a>: <a href=https://hibernate.org/>https://hibernate.org/</a>
+<a href=https://brew.sh/>homebrew</a>: <a href=https://brew.sh/>https://brew.sh/</a>
+<a href=https://caskroom.github.io/>homebrew-cask</a>: <a href=https://caskroom.github.io/>https://caskroom.github.io/</a>
+<a href=http://hc.apache.org/>http-components</a>: <a href=http://hc.apache.org/>http://hc.apache.org/</a>
+<a href=https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol_Secure>https</a>: <a href=https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol_Secure>https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol_Secure</a>
+<a href=https://www.holaluz.com/>holaluz</a>: <a href=https://www.holaluz.com/>https://www.holaluz.com/</a>
+<a href=https://www.how-fixit.com>how-fixit</a>: <a href=https://www.how-fixit.com>https://www.how-fixit.com</a>
+<a href=https://gohugo.io/>hugo</a>: <a href=https://gohugo.io/>https://gohugo.io/</a>
+<a href=https://en.wikipedia.org/wiki/Cloud_computing>iaas</a>: <a href=https://en.wikipedia.org/wiki/Cloud_computing>https://en.wikipedia.org/wiki/Cloud_computing</a>
+<a href=http://i18next.com/>i18next</a>: <a href=http://i18next.com/>http://i18next.com/</a>
+<a href=https://www.ibm.com/us-en/>ibm</a>: <a href=https://www.ibm.com/us-en/>https://www.ibm.com/us-en/</a>
+<a href=https://www.ibm.com/cloud-computing/bluemix/es>ibm-cloud</a>: <a href=https://www.ibm.com/cloud-computing/bluemix/es>https://www.ibm.com/cloud-computing/bluemix/es</a>
+<a href=https://www.ibm.com/it-infrastructure/power>ibm-power</a>: <a href=https://www.ibm.com/it-infrastructure/power>https://www.ibm.com/it-infrastructure/power</a>
+<a href=https://www.ibm.com/it-infrastructure/z>ibm-z</a>: <a href=https://www.ibm.com/it-infrastructure/z>https://www.ibm.com/it-infrastructure/z</a>
+<a href=https://es.ifixit.com>ifixit</a>: <a href=https://es.ifixit.com>https://es.ifixit.com</a>
+<a href=https://www.infojobs.net/>infojobs</a>: <a href=https://www.infojobs.net/>https://www.infojobs.net/</a>
+<a href=https://inkscape.org/es/>inkscape</a>: <a href=https://inkscape.org/es/>https://inkscape.org/es/</a>
+<a href=https://www.imagemagick.org>imagemagick</a>: <a href=https://www.imagemagick.org>https://www.imagemagick.org</a>
+<a href=https://www.intel.es>intel</a>: <a href=https://www.intel.es>https://www.intel.es</a>
+<a href=https://ark.intel.com/es-es/products/33916/Intel-Core2-Duo-Processor-T8100-3M-Cache-2_10-GHz-800-MHz-FSB>intel-core-t8100</a>: <a href=https://ark.intel.com/es-es/products/33916/Intel-Core2-Duo-Processor-T8100-3M-Cache-2_10-GHz-800-MHz-FSB>https://ark.intel.com/es-es/products/33916/Intel-Core2-Duo-Processor-T8100-3M-Cache-2_10-GHz-800-MHz-FSB</a>
+<a href=https://en.wikipedia.org/wiki/Intel_Graphics_Technology#Ivy_Bridge>intel-hd-4000</a>: <a href=https://en.wikipedia.org/wiki/Intel_Graphics_Technology#Ivy_Bridge>https://en.wikipedia.org/wiki/Intel_Graphics_Technology#Ivy_Bridge</a>
+<a href=https://ark.intel.com/es-es/products/67355/Intel-Core-i5-3210M-Processor-3M-Cache-up-to-3_10-GHz-rPGA>intel-i5-3210M</a>: <a href=https://ark.intel.com/es-es/products/67355/Intel-Core-i5-3210M-Processor-3M-Cache-up-to-3_10-GHz-rPGA>https://ark.intel.com/es-es/products/67355/Intel-Core-i5-3210M-Processor-3M-Cache-up-to-3_10-GHz-rPGA</a>
+<a href=https://ark.intel.com/products/135935/Intel-Core-i5-8259U-Processor-6M-Cache-up-to-3_80-GHz>intel-i5-8259U</a>: <a href=https://ark.intel.com/products/135935/Intel-Core-i5-8259U-Processor-6M-Cache-up-to-3_80-GHz>https://ark.intel.com/products/135935/Intel-Core-i5-8259U-Processor-6M-Cache-up-to-3_80-GHz</a>
+<a href=https://en.wikipedia.org/wiki/Intel_Graphics_Technology#Kaby_Lake_Refresh_/_Coffee_Lake>intel-iris-graphics-655</a>: <a href=https://en.wikipedia.org/wiki/Intel_Graphics_Technology#Kaby_Lake_Refresh_/_Coffee_Lake>https://en.wikipedia.org/wiki/Intel_Graphics_Technology#Kaby_Lake_Refresh_/_Coffee_Lake</a>
+<a href=https://en.wikipedia.org/wiki/Next_Unit_of_Computing>intel-nuc</a>: <a href=https://en.wikipedia.org/wiki/Next_Unit_of_Computing>https://en.wikipedia.org/wiki/Next_Unit_of_Computing</a>
+<a href=https://www.intel.com/content/www/us/en/products/boards-kits/nuc/kits/nuc8i5bek.html>intel-nuc8i5bek</a>: <a href=https://www.intel.com/content/www/us/en/products/boards-kits/nuc/kits/nuc8i5bek.html>https://www.intel.com/content/www/us/en/products/boards-kits/nuc/kits/nuc8i5bek.html</a>
+<a href=https://en.wikipedia.org/wiki/Next_Unit_of_Computing#Kaby_Lake-U_(Baby_Canyon)>intel-nuc-baby-canyon</a>: <a href=https://en.wikipedia.org/wiki/Next_Unit_of_Computing#Kaby_Lake-U_(Baby_Canyon)>https://en.wikipedia.org/wiki/Next_Unit_of_Computing#Kaby_Lake-U_(Baby_Canyon)</a>
+<a href=https://en.wikipedia.org/wiki/Next_Unit_of_Computing#Coffee_Lake-U>intel-nuc-bean-canyon</a>: <a href=https://en.wikipedia.org/wiki/Next_Unit_of_Computing#Coffee_Lake-U>https://en.wikipedia.org/wiki/Next_Unit_of_Computing#Coffee_Lake-U</a>
+<a href=https://en.wikipedia.org/wiki/Next_Unit_of_Computing#Kaby_Lake-G>intel-nuc-hades-canyon</a>: <a href=https://en.wikipedia.org/wiki/Next_Unit_of_Computing#Kaby_Lake-G>https://en.wikipedia.org/wiki/Next_Unit_of_Computing#Kaby_Lake-G</a>
+<a href=https://en.wikipedia.org/wiki/Intel_HD_and_Iris_Graphics>intel-graphics</a>: <a href=https://en.wikipedia.org/wiki/Intel_HD_and_Iris_Graphics>https://en.wikipedia.org/wiki/Intel_HD_and_Iris_Graphics</a>
+<a href=https://www.jetbrains.com/idea/>intellij</a>: <a href=https://www.jetbrains.com/idea/>https://www.jetbrains.com/idea/</a>
+<a href=https://www.imgburn.com/>imgburn</a>: <a href=https://www.imgburn.com/>https://www.imgburn.com/</a>
+<a href=https://es.wikipedia.org/wiki/Internet_de_las_cosas>iot</a>: <a href=https://es.wikipedia.org/wiki/Internet_de_las_cosas>https://es.wikipedia.org/wiki/Internet_de_las_cosas</a>
+<a href=https://itextpdf.com/es>itext</a>: <a href=https://itextpdf.com/es>https://itextpdf.com/es</a>
+<a href=https://github.com/FasterXML/jackson>jackson</a>: <a href=https://github.com/FasterXML/jackson>https://github.com/FasterXML/jackson</a>
+<a href=https://www.jacoco.org/jacoco/>jacoco</a>: <a href=https://www.jacoco.org/jacoco/>https://www.jacoco.org/jacoco/</a>
+<a href=https://jakarta.ee/>jakartaee</a>: <a href=https://jakarta.ee/>https://jakarta.ee/</a>
+<a href=https://github.com/fusesource/jansi>jansi</a>: <a href=https://github.com/fusesource/jansi>https://github.com/fusesource/jansi</a>
+<a href=https://www.jamendo.com/>jamendo</a>: <a href=https://www.jamendo.com/>https://www.jamendo.com/</a>
+<a href=https://en.wikipedia.org/wiki/James_Gosling>james-gosling</a>: <a href=https://en.wikipedia.org/wiki/James_Gosling>https://en.wikipedia.org/wiki/James_Gosling</a>
+<a href=https://jasmine.github.io/>jasmine</a>: <a href=https://jasmine.github.io/>https://jasmine.github.io/</a>
+<a href=https://community.jaspersoft.com/project/jasperreports-library>jasperreports</a>: <a href=https://community.jaspersoft.com/project/jasperreports-library>https://community.jaspersoft.com/project/jasperreports-library</a>
+<a href=https://community.jaspersoft.com/project/jaspersoft-studio>jaspersoft-studio</a>: <a href=https://community.jaspersoft.com/project/jaspersoft-studio>https://community.jaspersoft.com/project/jaspersoft-studio</a>
+<a href=https://www.oracle.com/technetwork/java/index.html>java</a>: <a href=https://www.oracle.com/technetwork/java/index.html>https://www.oracle.com/technetwork/java/index.html</a>
+<a href=https://es.wikipedia.org/wiki/JavaBean>java-bean</a>: <a href=https://es.wikipedia.org/wiki/JavaBean>https://es.wikipedia.org/wiki/JavaBean</a>
+<a href=https://www.oracle.com/technetwork/java/javaee/overview/index.html>java-ee</a>: <a href=https://www.oracle.com/technetwork/java/javaee/overview/index.html>https://www.oracle.com/technetwork/java/javaee/overview/index.html</a>
+<a href=http://www.javassist.org/>javassist</a>: <a href=http://www.javassist.org/>http://www.javassist.org/</a>
+<a href=https://docs.oracle.com/javase/8/docs/api/overview-summary.html>javadoc-8</a>: <a href=https://docs.oracle.com/javase/8/docs/api/overview-summary.html>https://docs.oracle.com/javase/8/docs/api/overview-summary.html</a>
+<a href=https://docs.oracle.com/javase/9/docs/api/overview-summary.html>javadoc-9</a>: <a href=https://docs.oracle.com/javase/9/docs/api/overview-summary.html>https://docs.oracle.com/javase/9/docs/api/overview-summary.html</a>
+<a href=https://docs.oracle.com/javase/10/docs/api/overview-summary.html>javadoc-10</a>: <a href=https://docs.oracle.com/javase/10/docs/api/overview-summary.html>https://docs.oracle.com/javase/10/docs/api/overview-summary.html</a>
+<a href=https://docs.oracle.com/en/java/javase/11/docs/api/index.html>javadoc-11</a>: <a href=https://docs.oracle.com/en/java/javase/11/docs/api/index.html>https://docs.oracle.com/en/java/javase/11/docs/api/index.html</a>
+<a href=https://docs.oracle.com/javase/8/javafx/api/overview-summary.html>javafx</a>: <a href=https://docs.oracle.com/javase/8/javafx/api/overview-summary.html>https://docs.oracle.com/javase/8/javafx/api/overview-summary.html</a>
+<a href=https://www.oracle.com/technetwork/java/javase/downloads/javafxscenebuilder-info-2157684.html>javafx-scene-builder</a>: <a href=https://www.oracle.com/technetwork/java/javase/downloads/javafxscenebuilder-info-2157684.html>https://www.oracle.com/technetwork/java/javase/downloads/javafxscenebuilder-info-2157684.html</a>
+<a href=https://en.wikipedia.org/wiki/JavaMail>javamail</a>: <a href=https://en.wikipedia.org/wiki/JavaMail>https://en.wikipedia.org/wiki/JavaMail</a>
+<a href=https://es.wikipedia.org/wiki/JavaScript>javascript</a>: <a href=https://es.wikipedia.org/wiki/JavaScript>https://es.wikipedia.org/wiki/JavaScript</a>
+<a href=http://www.javahispano.org/>javahispano</a>: <a href=http://www.javahispano.org/>http://www.javahispano.org/</a>
+<a href=https://www.javaworld.com/>javaworld</a>: <a href=https://www.javaworld.com/>https://www.javaworld.com/</a>
+<a href=https://www.oracle.com/technetwork/java/javamagazine/index.html>java-magazine</a>: <a href=https://www.oracle.com/technetwork/java/javamagazine/index.html>https://www.oracle.com/technetwork/java/javamagazine/index.html</a>
+<a href=https://javamoney.github.io/>java-money</a>: <a href=https://javamoney.github.io/>https://javamoney.github.io/</a>
+<a href=https://javers.org/>javers</a>: <a href=https://javers.org/>https://javers.org/</a>
+<a href=http://jdbi.org/>jdbi</a>: <a href=http://jdbi.org/>http://jdbi.org/</a>
+<a href=https://www.jboss.org/>jboss</a>: <a href=https://www.jboss.org/>https://www.jboss.org/</a>
+<a href=https://jekyllrb.com/>jekyll</a>: <a href=https://jekyllrb.com/>https://jekyllrb.com/</a>
+<a href=https://jelastic.com/>jelastic</a>: <a href=https://jelastic.com/>https://jelastic.com/</a>
+<a href=https://jenkins.io/>jenkins</a>: <a href=https://jenkins.io/>https://jenkins.io/</a>
+<a href=https://eclipse.org/jetty/>jetty</a>: <a href=https://eclipse.org/jetty/>https://eclipse.org/jetty/</a>
+<a href=https://jersey.github.io/>jersey</a>: <a href=https://jersey.github.io/>https://jersey.github.io/</a>
+<a href=http://www.jfree.org/jfreechart/>jfreechart</a>: <a href=http://www.jfree.org/jfreechart/>http://www.jfree.org/jfreechart/</a>
+<a href=https://www.atlassian.com/software/jira>jira</a>: <a href=https://www.atlassian.com/software/jira>https://www.atlassian.com/software/jira</a>
+<a href=http://jmespath.org/>jmespath</a>: <a href=http://jmespath.org/>http://jmespath.org/</a>
+<a href=http://jmonkeyengine.org/>jmonkeyengine</a>: <a href=http://jmonkeyengine.org/>http://jmonkeyengine.org/</a>
+<a href=https://www.joda.org/joda-time/>jodatime</a>: <a href=https://www.joda.org/joda-time/>https://www.joda.org/joda-time/</a>
+<a href=https://www.joomla.org/>joomla</a>: <a href=https://www.joomla.org/>https://www.joomla.org/</a>
+<a href=https://www.jooq.org/>jooq</a>: <a href=https://www.jooq.org/>https://www.jooq.org/</a>
+<a href=https://jquery.com/>jquery</a>: <a href=https://jquery.com/>https://jquery.com/</a>
+<a href=https://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html>jsf</a>: <a href=https://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html>https://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html</a>
+<a href=http://json.org/>json</a>: <a href=http://json.org/>http://json.org/</a>
+<a href=http://json-b.net/>json-b</a>: <a href=http://json-b.net/>http://json-b.net/</a>
+<a href=http://www.json.org/java/index.html>json-java</a>: <a href=http://www.json.org/java/index.html>http://www.json.org/java/index.html</a>
+<a href=https://javaee.github.io/jsonp/>json-p</a>: <a href=https://javaee.github.io/jsonp/>https://javaee.github.io/jsonp/</a>
+<a href=https://github.com/json-path/JsonPath>jsonpath</a>: <a href=https://github.com/json-path/JsonPath>https://github.com/json-path/JsonPath</a>
+<a href=https://jsoup.org/>jsoup</a>: <a href=https://jsoup.org/>https://jsoup.org/</a>
+<a href=https://junit.org/junit5/>junit</a>: <a href=https://junit.org/junit5/>https://junit.org/junit5/</a>
+<a href=https://es.wikipedia.org/wiki/M%C3%A1quina_virtual_Java>jvm</a>: <a href=https://es.wikipedia.org/wiki/M%C3%A1quina_virtual_Java>https://es.wikipedia.org/wiki/M%C3%A1quina_virtual_Java</a>
+<a href=https://jwt.io/>jwt</a>: <a href=https://jwt.io/>https://jwt.io/</a>
+<a href=https://kaosx.us/>kaos</a>: <a href=https://kaosx.us/>https://kaosx.us/</a>
+<a href=https://karma-runner.github.io>karma</a>: <a href=https://karma-runner.github.io>https://karma-runner.github.io</a>
+<a href=https://karmacracy.com/>karmacracy</a>: <a href=https://karmacracy.com/>https://karmacracy.com/</a>
+<a href=https://www.kde.org/>kde</a>: <a href=https://www.kde.org/>https://www.kde.org/</a>
+<a href=https://keepass.info/>keepass</a>: <a href=https://keepass.info/>https://keepass.info/</a>
+<a href=https://www.keepassx.org/>keepassx</a>: <a href=https://www.keepassx.org/>https://www.keepassx.org/</a>
+<a href=https://www.keepassx.org/>keepassx</a>: <a href=https://www.keepassx.org/>https://www.keepassx.org/</a>
+<a href=https://keepassxc.org/>keepassxc</a>: <a href=https://keepassxc.org/>https://keepassxc.org/</a>
+<a href=https://www.keycloak.org/>keycloak</a>: <a href=https://www.keycloak.org/>https://www.keycloak.org/</a>
+<a href=https://www.elastic.co/es/products/kibana>kibana</a>: <a href=https://www.elastic.co/es/products/kibana>https://www.elastic.co/es/products/kibana</a>
+<a href=http://www.klowner.com/>klowner</a>: <a href=http://www.klowner.com/>http://www.klowner.com/</a>
+<a href=https://kodi.tv/>kodi</a>: <a href=https://kodi.tv/>https://kodi.tv/</a>
+<a href=https://kotlinlang.org/>kotlin</a>: <a href=https://kotlinlang.org/>https://kotlinlang.org/</a>
+<a href=https://kubernetes.io/>kubernetes</a>: <a href=https://kubernetes.io/>https://kubernetes.io/</a>
+<a href=https://ee.kumuluz.com/>kumuluzee</a>: <a href=https://ee.kumuluz.com/>https://ee.kumuluz.com/</a>
+<a href=https://www.linux-kvm.org/page/Main_Page>kvm</a>: <a href=https://www.linux-kvm.org/page/Main_Page>https://www.linux-kvm.org/page/Main_Page</a>
+<a href=https://www.lakka.tv/>lakka</a>: <a href=https://www.lakka.tv/>https://www.lakka.tv/</a>
+<a href=http://lesscss.org/>less</a>: <a href=http://lesscss.org/>http://lesscss.org/</a>
+<a href=https://letsencrypt.org/>letsencrypt</a>: <a href=https://letsencrypt.org/>https://letsencrypt.org/</a>
+<a href=https://www.gnu.org/licenses/lgpl.html>lgpl</a>: <a href=https://www.gnu.org/licenses/lgpl.html>https://www.gnu.org/licenses/lgpl.html</a>
+<a href=https://libreelec.tv/>libreelec</a>: <a href=https://libreelec.tv/>https://libreelec.tv/</a>
+<a href=https://www.libreoffice.org/>libreoffice</a>: <a href=https://www.libreoffice.org/>https://www.libreoffice.org/</a>
+<a href=https://www.liferay.com/>liferay</a>: <a href=https://www.liferay.com/>https://www.liferay.com/</a>
+<a href=https://www.lighttpd.net/>lighttpd</a>: <a href=https://www.lighttpd.net/>https://www.lighttpd.net/</a>
+<a href=https://lineageos.org/>lineageos</a>: <a href=https://lineageos.org/>https://lineageos.org/</a>
+<a href=https://www.linkedin.com/>linkedin</a>: <a href=https://www.linkedin.com/>https://www.linkedin.com/</a>
+<a href=https://www.linode.com/>linode</a>: <a href=https://www.linode.com/>https://www.linode.com/</a>
+<a href=https://www.linux.com/>linux</a>: <a href=https://www.linux.com/>https://www.linux.com/</a>
+<a href=https://www.linuxfoundation.org/>linux-foundation</a>: <a href=https://www.linuxfoundation.org/>https://www.linuxfoundation.org/</a>
+<a href=https://www.linuxmint.com/>linuxmint</a>: <a href=https://www.linuxmint.com/>https://www.linuxmint.com/</a>
+<a href=https://www.liquibase.org/>liquibase</a>: <a href=https://www.liquibase.org/>https://www.liquibase.org/</a>
+<a href=https://logging.apache.org/log4j/2.x/>log4j</a>: <a href=https://logging.apache.org/log4j/2.x/>https://logging.apache.org/log4j/2.x/</a>
+<a href=https://logback.qos.ch/>logback</a>: <a href=https://logback.qos.ch/>https://logback.qos.ch/</a>
+<a href=https://www.logitech.com/es-es>logitech</a>: <a href=https://www.logitech.com/es-es>https://www.logitech.com/es-es</a>
+<a href=https://www.elastic.co/es/products/logstash>logstash</a>: <a href=https://www.elastic.co/es/products/logstash>https://www.elastic.co/es/products/logstash</a>
+<a href=https://projectlombok.org/>lombok</a>: <a href=https://projectlombok.org/>https://projectlombok.org/</a>
+<a href=https://lubuntu.net/>lubuntu</a>: <a href=https://lubuntu.net/>https://lubuntu.net/</a>
+<a href=https://www.lyx.org/>lyx</a>: <a href=https://www.lyx.org/>https://www.lyx.org/</a>
+<a href=https://lxde.org/>lxde</a>: <a href=https://lxde.org/>https://lxde.org/</a>
+<a href=https://www.apple.com/es/mac/>mac</a>: <a href=https://www.apple.com/es/mac/>https://www.apple.com/es/mac/</a>
+<a href=https://www.apple.com/macos/>macos</a>: <a href=https://www.apple.com/macos/>https://www.apple.com/macos/</a>
+<a href=https://www.mame.net/>mame</a>: <a href=https://www.mame.net/>https://www.mame.net/</a>
+<a href=https://manjaro.org/>manjaro</a>: <a href=https://manjaro.org/>https://manjaro.org/</a>
+<a href=https://www.mantisbt.org/>mantis</a>: <a href=https://www.mantisbt.org/>https://www.mantisbt.org/</a>
+<a href=https://mariadb.org/>mariadb</a>: <a href=https://mariadb.org/>https://mariadb.org/</a>
+<a href=https://marionettejs.com/>marionettejs</a>: <a href=https://marionettejs.com/>https://marionettejs.com/</a>
+<a href=https://es.wikipedia.org/wiki/Markdown>markdown</a>: <a href=https://es.wikipedia.org/wiki/Markdown>https://es.wikipedia.org/wiki/Markdown</a>
+<a href=https://es.wikipedia.org/wiki/Mark_Shuttleworth>mark-shuttleworth</a>: <a href=https://es.wikipedia.org/wiki/Mark_Shuttleworth>https://es.wikipedia.org/wiki/Mark_Shuttleworth</a>
+<a href=https://maven.apache.org/>maven</a>: <a href=https://maven.apache.org/>https://maven.apache.org/</a>
+<a href=https://search.maven.org/>mavencentral</a>: <a href=https://search.maven.org/>https://search.maven.org/</a>
+<a href=https://www.mediamarkt.es/>mediamarkt</a>: <a href=https://www.mediamarkt.es/>https://www.mediamarkt.es/</a>
+<a href=https://www.mediawiki.org/>mediawiki</a>: <a href=https://www.mediawiki.org/>https://www.mediawiki.org/</a>
+<a href=https://memcached.org/>memcached</a>: <a href=https://memcached.org/>https://memcached.org/</a>
+<a href=https://micrometer.io/>micrometer</a>: <a href=https://micrometer.io/>https://micrometer.io/</a>
+<a href=https://microprofile.io/>microprofile</a>: <a href=https://microprofile.io/>https://microprofile.io/</a>
+<a href=https://www.microsoft.com/>microsoft</a>: <a href=https://www.microsoft.com/>https://www.microsoft.com/</a>
+<a href=https://products.office.com/es-ES/access>microsoft-access</a>: <a href=https://products.office.com/es-ES/access>https://products.office.com/es-ES/access</a>
+<a href=https://azure.microsoft.com/es-es/>microsoft-azure</a>: <a href=https://azure.microsoft.com/es-es/>https://azure.microsoft.com/es-es/</a>
+<a href=https://www.microsoft.com/es-es/windows/microsoft-edge/>microsoft-edge</a>: <a href=https://www.microsoft.com/es-es/windows/microsoft-edge/>https://www.microsoft.com/es-es/windows/microsoft-edge/</a>
+<a href=https://products.office.com/es-es/>microsoft-office</a>: <a href=https://products.office.com/es-es/>https://products.office.com/es-es/</a>
+<a href=https://visualstudio.microsoft.com/>microsoft-visual-studio</a>: <a href=https://visualstudio.microsoft.com/>https://visualstudio.microsoft.com/</a>
+<a href=https://code.visualstudio.com/>microsoft-visual-studio-code</a>: <a href=https://code.visualstudio.com/>https://code.visualstudio.com/</a>
+<a href=https://www.microsoft.com/en-us/sql-server/sql-server-2016>microsoft-sqlserver</a>: <a href=https://www.microsoft.com/en-us/sql-server/sql-server-2016>https://www.microsoft.com/en-us/sql-server/sql-server-2016</a>
+<a href=https://www.xbox.com/es-ES/xbox-one-s>microsoft-xbox-one-s</a>: <a href=https://www.xbox.com/es-ES/xbox-one-s>https://www.xbox.com/es-ES/xbox-one-s</a>
+<a href=https://www.milanuncios.com>milanuncios</a>: <a href=https://www.milanuncios.com>https://www.milanuncios.com</a>
+<a href=https://minecraft.net/>minecraft</a>: <a href=https://minecraft.net/>https://minecraft.net/</a>
+<a href=https://kubernetes.io/docs/setup/minikube/>minikube</a>: <a href=https://kubernetes.io/docs/setup/minikube/>https://kubernetes.io/docs/setup/minikube/</a>
+<a href=http://www.minix3.org/>minix</a>: <a href=http://www.minix3.org/>http://www.minix3.org/</a>
+<a href=https://en.wikipedia.org/wiki/Mir_(software)>mir</a>: <a href=https://en.wikipedia.org/wiki/Mir_(software)>https://en.wikipedia.org/wiki/Mir_(software)</a>
+<a href=https://mochajs.org/>mochajs</a>: <a href=https://mochajs.org/>https://mochajs.org/</a>
+<a href=https://site.mockito.org/>mockito</a>: <a href=https://site.mockito.org/>https://site.mockito.org/</a>
+<a href=http://modelmapper.org/>modelmapper</a>: <a href=http://modelmapper.org/>http://modelmapper.org/</a>
+<a href=https://es.wikipedia.org/wiki/Modelo%E2%80%93vista%E2%80%93controlador>modelo-vista-controlador</a>: <a href=https://es.wikipedia.org/wiki/Modelo%E2%80%93vista%E2%80%93controlador>https://es.wikipedia.org/wiki/Modelo%E2%80%93vista%E2%80%93controlador</a>
+<a href=https://modernizr.com/>modernizr</a>: <a href=https://modernizr.com/>https://modernizr.com/</a>
+<a href=https://momentjs.com/>momentjs</a>: <a href=https://momentjs.com/>https://momentjs.com/</a>
+<a href=https://www.mongodb.com/>mongodb</a>: <a href=https://www.mongodb.com/>https://www.mongodb.com/</a>
+<a href=https://www.mozilla.org/>mozilla</a>: <a href=https://www.mozilla.org/>https://www.mozilla.org/</a>
+<a href=https://developer.mozilla.org/es/>mozilla-mdn</a>: <a href=https://developer.mozilla.org/es/>https://developer.mozilla.org/es/</a>
+<a href=https://www.musl-libc.org/>musl-libc</a>: <a href=https://www.musl-libc.org/>https://www.musl-libc.org/</a>
+<a href=https://mustache.github.io/>mustache</a>: <a href=https://mustache.github.io/>https://mustache.github.io/</a>
+<a href=http://www.mybatis.org/mybatis-3/es/>mybatis</a>: <a href=http://www.mybatis.org/mybatis-3/es/>http://www.mybatis.org/mybatis-3/es/</a>
+<a href=https://www.mysql.com/>mysql</a>: <a href=https://www.mysql.com/>https://www.mysql.com/</a>
+<a href=https://www.mythtv.org/>mythtv</a>: <a href=https://www.mythtv.org/>https://www.mythtv.org/</a>
+<a href=http://nanopi.org/>nanopi</a>: <a href=http://nanopi.org/>http://nanopi.org/</a>
+<a href=https://github.com/dylanaraps/neofetch>neofetch</a>: <a href=https://github.com/dylanaraps/neofetch>https://github.com/dylanaraps/neofetch</a>
+<a href=https://netbeans.org/>netbeans</a>: <a href=https://netbeans.org/>https://netbeans.org/</a>
+<a href=https://www.netflix.com/es/>netflix</a>: <a href=https://www.netflix.com/es/>https://www.netflix.com/es/</a>
+<a href=https://github.com/Netflix/eureka>netflix-eureka</a>: <a href=https://github.com/Netflix/eureka>https://github.com/Netflix/eureka</a>
+<a href=https://github.com/Netflix/Hystrix>netflix-hystrix</a>: <a href=https://github.com/Netflix/Hystrix>https://github.com/Netflix/Hystrix</a>
+<a href=https://github.com/Netflix/ribbon>netflix-ribbon</a>: <a href=https://github.com/Netflix/ribbon>https://github.com/Netflix/ribbon</a>
+<a href=https://github.com/Netflix/zuul>netflix-zuul</a>: <a href=https://github.com/Netflix/zuul>https://github.com/Netflix/zuul</a>
+<a href=https://wiki.gnome.org/Projects/NetworkManager>networkmanager</a>: <a href=https://wiki.gnome.org/Projects/NetworkManager>https://wiki.gnome.org/Projects/NetworkManager</a>
+<a href=https://nextcloud.com/>nextcloud</a>: <a href=https://nextcloud.com/>https://nextcloud.com/</a>
+<a href=https://newrelic.com/>newrelic</a>: <a href=https://newrelic.com/>https://newrelic.com/</a>
+<a href=https://nginx.org/>nginx</a>: <a href=https://nginx.org/>https://nginx.org/</a>
+<a href=https://www.nintendo.com/>nintendo</a>: <a href=https://www.nintendo.com/>https://www.nintendo.com/</a>
+<a href=https://nodejs.org/en/>nodejs</a>: <a href=https://nodejs.org/en/>https://nodejs.org/en/</a>
+<a href=https://www.nokia.com/es_int/>nokia</a>: <a href=https://www.nokia.com/es_int/>https://www.nokia.com/es_int/</a>
+<a href=https://www.nomadproject.io/>nomad</a>: <a href=https://www.nomadproject.io/>https://www.nomadproject.io/</a>
+<a href=https://es.wikipedia.org/wiki/NoSQL>nosql</a>: <a href=https://es.wikipedia.org/wiki/NoSQL>https://es.wikipedia.org/wiki/NoSQL</a>
+<a href=https://www.noticias3d.com/>noticias3d</a>: <a href=https://www.noticias3d.com/>https://www.noticias3d.com/</a>
+<a href=https://www.npmjs.com/>npm</a>: <a href=https://www.npmjs.com/>https://www.npmjs.com/</a>
+<a href=https://www.nuxeo.com/>nuxeo</a>: <a href=https://www.nuxeo.com/>https://www.nuxeo.com/</a>
+<a href=https://www.nvidia.com/es-es/>nvidia</a>: <a href=https://www.nvidia.com/es-es/>https://www.nvidia.com/es-es/</a>
+<a href=https://www.nvidia.com/page/geforce2mx.html>nvidia-geforce2</a>: <a href=https://www.nvidia.com/page/geforce2mx.html>https://www.nvidia.com/page/geforce2mx.html</a>
+<a href=https://github.com/creationix/nvm>nvm</a>: <a href=https://github.com/creationix/nvm>https://github.com/creationix/nvm</a>
+<a href=https://oauth.net/>oauth</a>: <a href=https://oauth.net/>https://oauth.net/</a>
+<a href=https://www.onlyoffice.com/es/>onlyoffice</a>: <a href=https://www.onlyoffice.com/es/>https://www.onlyoffice.com/es/</a>
+<a href=http://octopress.org/>octopress</a>: <a href=http://octopress.org/>http://octopress.org/</a>
+<a href=http://oocss.org/>oocss</a>: <a href=http://oocss.org/>http://oocss.org/</a>
+<a href=http://opencsv.sourceforge.net/>opencsv</a>: <a href=http://opencsv.sourceforge.net/>http://opencsv.sourceforge.net/</a>
+<a href=https://openelec.tv/>openelec</a>: <a href=https://openelec.tv/>https://openelec.tv/</a>
+<a href=https://www.opengl.org/>openglorg</a>: <a href=https://www.opengl.org/>https://www.opengl.org/</a>
+<a href=https://www.khronos.org/opengl/>opengl</a>: <a href=https://www.khronos.org/opengl/>https://www.khronos.org/opengl/</a>
+<a href=https://www.khronos.org/opengles/>opengles</a>: <a href=https://www.khronos.org/opengles/>https://www.khronos.org/opengles/</a>
+<a href=https://www.khronos.org/opencl/>opencl</a>: <a href=https://www.khronos.org/opencl/>https://www.khronos.org/opencl/</a>
+<a href=https://www.khronos.org/openvg/>openvg</a>: <a href=https://www.khronos.org/openvg/>https://www.khronos.org/openvg/</a>
+<a href=https://openjdk.java.net/>openjdk</a>: <a href=https://openjdk.java.net/>https://openjdk.java.net/</a>
+<a href=https://openlibra.com>openlibra</a>: <a href=https://openlibra.com>https://openlibra.com</a>
+<a href=https://openliberty.io>openliberty</a>: <a href=https://openliberty.io>https://openliberty.io</a>
+<a href=https://www.openshift.com/>openshift</a>: <a href=https://www.openshift.com/>https://www.openshift.com/</a>
+<a href=https://www.openshot.org/>openshot</a>: <a href=https://www.openshot.org/>https://www.openshot.org/</a>
+<a href=https://www.openssh.com/>openssh</a>:https://www.openssh.com/
+<a href=https://www.openssl.org/>openssl</a>: <a href=https://www.openssl.org/>https://www.openssl.org/</a>
+<a href=https://www.openstack.org/>openstack</a>: <a href=https://www.openstack.org/>https://www.openstack.org/</a>
+<a href=https://www.opensuse.org/es/>opensuse</a>: <a href=https://www.opensuse.org/es/>https://www.opensuse.org/es/</a>
+<a href=https://openvz.org/>openvz</a>: <a href=https://openvz.org/>https://openvz.org/</a>
+<a href=https://www.oracle.com/>oracle</a>: <a href=https://www.oracle.com/>https://www.oracle.com/</a>
+<a href=https://www.oracle.com/cloud/>oracle-cloud</a>: <a href=https://www.oracle.com/cloud/>https://www.oracle.com/cloud/</a>
+<a href=https://www.oracle.com/database/>oracle-database</a>: <a href=https://www.oracle.com/database/>https://www.oracle.com/database/</a>
+<a href=https://es.wikipedia.org/wiki/Mapeo_objeto-relacional>orm</a>: <a href=https://es.wikipedia.org/wiki/Mapeo_objeto-relacional>https://es.wikipedia.org/wiki/Mapeo_objeto-relacional</a>
+<a href=https://osmc.tv/>osmc</a>: <a href=https://osmc.tv/>https://osmc.tv/</a>
+<a href=https://owncloud.org/>owncloud</a>: <a href=https://owncloud.org/>https://owncloud.org/</a>
+<a href=https://en.wikipedia.org/wiki/Cloud_computing>paas</a>: <a href=https://en.wikipedia.org/wiki/Cloud_computing>https://en.wikipedia.org/wiki/Cloud_computing</a>
+<a href=https://parceljs.org/>parceljs</a>: <a href=https://parceljs.org/>https://parceljs.org/</a>
+<a href=https://www.patreon.com/>patreon</a>: <a href=https://www.patreon.com/>https://www.patreon.com/</a>
+<a href=https://www.payara.fish/>payara</a>: <a href=https://www.payara.fish/>https://www.payara.fish/</a>
+<a href=https://www.paypal.com/>paypal</a>: <a href=https://www.paypal.com/>https://www.paypal.com/</a>
+<a href=https://www.pccomponentes.com/>pccomponentes</a>: <a href=https://www.pccomponentes.com/>https://www.pccomponentes.com/</a>
+<a href=https://www.peazip.org/peazip-64bit.html>peazip</a>: <a href=https://www.peazip.org/peazip-64bit.html>https://www.peazip.org/peazip-64bit.html</a>
+<a href=https://docs.getpelican.com/en/stable/>pelican</a>: <a href=https://docs.getpelican.com/en/stable/>https://docs.getpelican.com/en/stable/</a>
+<a href=https://www.pepephone.com/>pepephone</a>: <a href=https://www.pepephone.com/>https://www.pepephone.com/</a>
+<a href=https://www.pepeenergy.com/>pepeenergy</a>: <a href=https://www.pepeenergy.com/>https://www.pepeenergy.com/</a>
+<a href=https://es.wikipedia.org/wiki/Phishing>phishing</a>: <a href=https://es.wikipedia.org/wiki/Phishing>https://es.wikipedia.org/wiki/Phishing</a>
+<a href=https://phoenicis.org/>phoenicis</a>: <a href=https://phoenicis.org/>https://phoenicis.org/</a>
+<a href=https://secure.php.net/>php</a>: <a href=https://secure.php.net/>https://secure.php.net/</a>
+<a href=https://www.phpbb.com/>phpbb</a>: <a href=https://www.phpbb.com/>https://www.phpbb.com/</a>
+<a href=https://phpunit.de/>phpunit</a>: <a href=https://phpunit.de/>https://phpunit.de/</a>
+<a href=https://pi4j.com/>pi4j</a>: <a href=https://pi4j.com/>https://pi4j.com/</a>
+<a href=https://www.piensasolutions.com/>piensasolutions</a>: <a href=https://www.piensasolutions.com/>https://www.piensasolutions.com/</a>
+<a href=https://www.pine64.org/>pine64</a>: <a href=https://www.pine64.org/>https://www.pine64.org/</a>
+<a href=https://pitest.org/>pit</a>: <a href=https://pitest.org/>https://pitest.org/</a>
+<a href=https://www.playframework.com/>playframework</a>: <a href=https://www.playframework.com/>https://www.playframework.com/</a>
+<a href=https://www.playonlinux.com/en/>playonlinux</a>: <a href=https://www.playonlinux.com/en/>https://www.playonlinux.com/en/</a>
+<a href=https://www.playstation.com/es-es/>playstation</a>: <a href=https://www.playstation.com/es-es/>https://www.playstation.com/es-es/</a>
+<a href=https://www.playstation.com/es-es/explore/playstation-network/>playstation-network</a>: <a href=https://www.playstation.com/es-es/explore/playstation-network/>https://www.playstation.com/es-es/explore/playstation-network/</a>
+<a href=https://plone.org/>plone</a>: <a href=https://plone.org/>https://plone.org/</a>
+<a href=https://pmd.github.io/>pmd</a>: <a href=https://pmd.github.io/>https://pmd.github.io/</a>
+<a href=https://www.polymer-project.org/1.0/>polymer</a>: <a href=https://www.polymer-project.org/1.0/>https://www.polymer-project.org/1.0/</a>
+<a href=https://es.wikipedia.org/wiki/Portal_%28Internet%29>portal-internet</a>: <a href=https://es.wikipedia.org/wiki/Portal_%28Internet%29>https://es.wikipedia.org/wiki/Portal_%28Internet%29</a>
+<a href=https://www.postgresql.org/>postgresql</a>: <a href=https://www.postgresql.org/>https://www.postgresql.org/</a>
+<a href=https://prettier.io/>prettier</a>: <a href=https://prettier.io/>https://prettier.io/</a>
+<a href=https://www.profesionalreview.com/>profesionalreview</a>: <a href=https://www.profesionalreview.com/>https://www.profesionalreview.com/</a>
+<a href=https://es.wikipedia.org/wiki/Programaci%C3%B3n_extrema>programacion-extrema</a>: <a href=https://es.wikipedia.org/wiki/Programaci%C3%B3n_extrema>https://es.wikipedia.org/wiki/Programaci%C3%B3n_extrema</a>
+<a href=https://prometheus.io/>prometheus</a>: <a href=https://prometheus.io/>https://prometheus.io/</a>
+<a href=http://prototypejs.org/>prototypejs</a>: <a href=http://prototypejs.org/>http://prototypejs.org/</a>
+<a href=https://www.publisuites.com/>publisuites</a>: <a href=https://www.publisuites.com/>https://www.publisuites.com/</a>
+<a href=https://www.publisuites.com/aff/b6b76b095907d91e588d1c714c4a39ad9735c8cf/>publisuites-afiliado</a>: <a href=https://www.publisuites.com/aff/b6b76b095907d91e588d1c714c4a39ad9735c8cf/>https://www.publisuites.com/aff/b6b76b095907d91e588d1c714c4a39ad9735c8cf/</a>
+<a href=https://puppet.com/>puppet</a>: <a href=https://puppet.com/>https://puppet.com/</a>
+<a href=http://puppylinux.com/>puppylinux</a>: <a href=http://puppylinux.com/>http://puppylinux.com/</a>
+<a href=https://www.putty.org/>putty</a>: <a href=https://www.putty.org/>https://www.putty.org/</a>
+<a href=https://www.python.org/>python</a>: <a href=https://www.python.org/>https://www.python.org/</a>
+<a href=https://www.qualcomm.com/>qualcomm</a>: <a href=https://www.qualcomm.com/>https://www.qualcomm.com/</a>
+<a href=https://quartz-scheduler.org/>quartz</a>: <a href=https://quartz-scheduler.org/>https://quartz-scheduler.org/</a>
+<a href=https://www.qemu.org/>qemu</a>: <a href=https://www.qemu.org/>https://www.qemu.org/</a>
+<a href=https://www.r-project.org/>r</a>: <a href=https://www.r-project.org/>https://www.r-project.org/</a>
+<a href=https://reasonml.github.io/>reasonjs</a>: <a href=https://reasonml.github.io/>https://reasonml.github.io/</a>
+<a href=https://redux.js.org/>redux</a>: <a href=https://redux.js.org/>https://redux.js.org/</a>
+<a href=https://rexray.codedellemc.com/>rex-ray</a>: <a href=https://rexray.codedellemc.com/>https://rexray.codedellemc.com/</a>
+<a href=https://www.rabbitmq.com/>rabbitmq</a>: <a href=https://www.rabbitmq.com/>https://www.rabbitmq.com/</a>
+<a href=https://www.rackspace.com/es>rackspace</a>: <a href=https://www.rackspace.com/es>https://www.rackspace.com/es</a>
+<a href=https://www.raspberrypi.org/>raspberrypi</a>: <a href=https://www.raspberrypi.org/>https://www.raspberrypi.org/</a>
+<a href=https://en.wikipedia.org/wiki/Relational_database_management_system>rdbms</a>: <a href=https://en.wikipedia.org/wiki/Relational_database_management_system>https://en.wikipedia.org/wiki/Relational_database_management_system</a>
+<a href=https://reactjs.org/>react</a>: <a href=https://reactjs.org/>https://reactjs.org/</a>
+<a href=https://www.redhat.com/es>redhat</a>: <a href=https://www.redhat.com/es>https://www.redhat.com/es</a>
+<a href=https://www.redhat.com/en/technologies/storage/ceph>redhat-ceph</a>: <a href=https://www.redhat.com/en/technologies/storage/ceph>https://www.redhat.com/en/technologies/storage/ceph</a>
+<a href=https://www.redhat.com/en/technologies/storage/gluster>redhat-gluster</a>: <a href=https://www.redhat.com/en/technologies/storage/gluster>https://www.redhat.com/en/technologies/storage/gluster</a>
+<a href=https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux>rhel</a>: <a href=https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux>https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux</a>
+<a href=https://redis.io/>redis</a>: <a href=https://redis.io/>https://redis.io/</a>
+<a href=https://www.redmine.org/>redmine</a>: <a href=https://www.redmine.org/>https://www.redmine.org/</a>
+<a href=https://www.replicant.us/>replicant</a>: <a href=https://www.replicant.us/>https://www.replicant.us/</a>
+<a href=https://github.com/resilience4j/resilience4j>resilience4j</a>: <a href=https://github.com/resilience4j/resilience4j>https://github.com/resilience4j/resilience4j</a>
+<a href=https://es.wikipedia.org/wiki/Representational_State_Transfer>rest</a>: <a href=https://es.wikipedia.org/wiki/Representational_State_Transfer>https://es.wikipedia.org/wiki/Representational_State_Transfer</a>
+<a href=https://resteasy.jboss.org/>resteasy</a>: <a href=https://resteasy.jboss.org/>https://resteasy.jboss.org/</a>
+<a href=https://requirejs.org/>requirejs</a>: <a href=https://requirejs.org/>https://requirejs.org/</a>
+<a href=https://rexray.readthedocs.io/en/v0.3.3/>rexray</a>: <a href=https://rexray.readthedocs.io/en/v0.3.3/>https://rexray.readthedocs.io/en/v0.3.3/</a>
+<a href=https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux>rhel</a>: <a href=https://www.redhat.com/es/technologies/linux-platforms/enterprise-linux>https://www.redhat.com/es/technologies/linux-platforms/enterprise-linux</a>
+<a href=https://coreos.com/rkt/>rkt</a>: <a href=https://coreos.com/rkt/>https://coreos.com/rkt/</a>
+<a href=https://en.wikipedia.org/wiki/Java_remote_method_invocation>rmi</a>: <a href=https://en.wikipedia.org/wiki/Java_remote_method_invocation>https://en.wikipedia.org/wiki/Java_remote_method_invocation</a>
+<a href=https://es.wikipedia.org/wiki/Remote_Procedure_Call>rpc</a>: <a href=https://es.wikipedia.org/wiki/Remote_Procedure_Call>https://es.wikipedia.org/wiki/Remote_Procedure_Call</a>
+<a href="https://www.pine64.org/?page_id=7147">rock64</a>: <a href="https://www.pine64.org/?page_id=7147">https://www.pine64.org/?page_id=7147</a>
+<a href=https://en.wikipedia.org/wiki/Rolling_release>rollingrelease</a>: <a href=https://en.wikipedia.org/wiki/Rolling_release>https://en.wikipedia.org/wiki/Rolling_release</a>
+<a href=https://rollupjs.org/guide/en>rollupjs</a>: <a href=https://rollupjs.org/guide/en>https://rollupjs.org/guide/en</a>
+<a href=https://rsync.samba.org/>rsync</a>: <a href=https://rsync.samba.org/>https://rsync.samba.org/</a>
+<a href=https://www.ruby-lang.org/es/>ruby</a>: <a href=https://www.ruby-lang.org/es/>https://www.ruby-lang.org/es/</a>
+<a href=https://rubyonrails.org/>rubyonrails</a>: <a href=https://rubyonrails.org/>https://rubyonrails.org/</a>
+<a href=https://www.rust-lang.org/>rust</a>: <a href=https://www.rust-lang.org/>https://www.rust-lang.org/</a>
+<a href=https://www.samsung.com/es/>samsung</a>: <a href=https://www.samsung.com/es/>https://www.samsung.com/es/</a>
+<a href=https://sass-lang.com/>sass</a>: <a href=https://sass-lang.com/>https://sass-lang.com/</a>
+<a href=https://www.scala-lang.org/>scala</a>: <a href=https://www.scala-lang.org/>https://www.scala-lang.org/</a>
+<a href=https://github.com/KittyKatt/screenFetch/>screenfetch</a>: <a href=https://github.com/KittyKatt/screenFetch/>https://github.com/KittyKatt/screenFetch/</a>
+<a href=https://es.wikipedia.org/wiki/Scrum_(desarrollo_de_software)>scrum</a>: <a href=https://es.wikipedia.org/wiki/Scrum_(desarrollo_de_software)>https://es.wikipedia.org/wiki/Scrum_(desarrollo_de_software)</a>
+<a href=https://www.scummvm.org/>scummvm</a>: <a href=https://www.scummvm.org/>https://www.scummvm.org/</a>
+<a href=https://docs.seleniumhq.org/>selenium</a>: <a href=https://docs.seleniumhq.org/>https://docs.seleniumhq.org/</a>
+<a href=https://en.wikipedia.org/wiki/Search_engine_optimization>seo</a>: <a href=https://en.wikipedia.org/wiki/Search_engine_optimization>https://en.wikipedia.org/wiki/Search_engine_optimization</a>
+<a href=https://www.sharethis.com/>sharethis</a>: <a href=https://www.sharethis.com/>https://www.sharethis.com/</a>
+<a href=https://shiro.apache.org/>shiro</a>: <a href=https://shiro.apache.org/>https://shiro.apache.org/</a>
+<a href=https://www.slf4j.org/>slf4j</a>: <a href=https://www.slf4j.org/>https://www.slf4j.org/</a>
+<a href=https://slack.com/>slack</a>: <a href=https://slack.com/>https://slack.com/</a>
+<a href=http://slick.lightbend.com/>slick</a>: <a href=http://slick.lightbend.com/>http://slick.lightbend.com/</a>
+<a href=http://slick.ninjacave.com/>slick2d</a>: <a href=http://slick.ninjacave.com/>http://slick.ninjacave.com/</a>
+<a href=https://es.slideshare.net/>slideshare</a>: <a href=https://es.slideshare.net/>https://es.slideshare.net/</a>
+<a href=https://en.wikipedia.org/wiki/SLiM>slim</a>: <a href=https://en.wikipedia.org/wiki/SLiM>https://en.wikipedia.org/wiki/SLiM</a>
+<a href=https://slimbook.es/>slimbook</a>: <a href=https://slimbook.es/>https://slimbook.es/</a>
+<a href=https://slimbook.es/aio-curve-el-all-in-one-curvo-de-gnu-linux>slimbook-curve</a>: <a href=https://slimbook.es/aio-curve-el-all-in-one-curvo-de-gnu-linux>https://slimbook.es/aio-curve-el-all-in-one-curvo-de-gnu-linux</a>
+<a href=https://slimbook.es/one-minipc-potente>slimbook-one</a>: <a href=https://slimbook.es/one-minipc-potente>https://slimbook.es/one-minipc-potente</a>
+<a href=https://slimbook.es/pro-ultrabook-13-aluminio>slimbook-pro2</a>: <a href=https://slimbook.es/pro-ultrabook-13-aluminio>https://slimbook.es/pro-ultrabook-13-aluminio</a>
+<a href=https://snapcraft.io/>snaps</a>: <a href=https://snapcraft.io/>https://snapcraft.io/</a>
+<a href=https://es.wikipedia.org/wiki/Simple_Object_Access_Protocol>soap</a>: <a href=https://es.wikipedia.org/wiki/Simple_Object_Access_Protocol>https://es.wikipedia.org/wiki/Simple_Object_Access_Protocol</a>
+<a href=https://en.wikipedia.org/wiki/Solaris_(operating_system)>solaris</a>: <a href=https://en.wikipedia.org/wiki/Solaris_(operating_system)>https://en.wikipedia.org/wiki/Solaris_(operating_system)</a>
+<a href=https://en.wikipedia.org/wiki/SOLID_(object-oriented_design)>solid</a>: <a href=https://en.wikipedia.org/wiki/SOLID_(object-oriented_design)>https://en.wikipedia.org/wiki/SOLID_(object-oriented_design)</a>
+<a href=https://www.solid-run.com/>solid-run</a>: <a href=https://www.solid-run.com/>https://www.solid-run.com/</a>
+<a href=https://www.sonarqube.org/>sonarqube</a>: <a href=https://www.sonarqube.org/>https://www.sonarqube.org/</a>
+<a href=https://www.sony.es/>sony</a>: <a href=https://www.sony.es/>https://www.sony.es/</a>
+<a href=https://www.playstation.com/es-es/explore/ps3/>sony-play-station-3</a>: <a href=https://www.playstation.com/es-es/explore/ps3/>https://www.playstation.com/es-es/explore/ps3/</a>
+<a href=https://www.playstation.com/es-es/explore/ps4/>sony-play-station-4</a>: <a href=https://www.playstation.com/es-es/explore/ps4/>https://www.playstation.com/es-es/explore/ps4/</a>
+<a href=https://en.wikipedia.org/wiki/SPARC>sparc</a>: <a href=https://en.wikipedia.org/wiki/SPARC>https://en.wikipedia.org/wiki/SPARC</a>
+<a href=https://spark.apache.org/>spark</a>: <a href=https://spark.apache.org/>https://spark.apache.org/</a>
+<a href=http://sparkjava.com/>sparkjava</a>: <a href=http://sparkjava.com/>http://sparkjava.com/</a>
+<a href=https://speakerdeck.com/>speakerdeck</a>: <a href=https://speakerdeck.com/>https://speakerdeck.com/</a>
+<a href=https://spring.io/>spring</a>: <a href=https://spring.io/>https://spring.io/</a>
+<a href=https://projects.spring.io/spring-boot/>spring-boot</a>: <a href=https://projects.spring.io/spring-boot/>https://projects.spring.io/spring-boot/</a>
+<a href=https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready>spring-boot-actuator</a>: <a href=https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready>https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready</a>
+<a href=https://projects.spring.io/spring-cloud/>spring-cloud</a>: <a href=https://projects.spring.io/spring-cloud/>https://projects.spring.io/spring-cloud/</a>
+<a href=https://cloud.spring.io/spring-cloud-bus/>spring-cloud-bus</a>: <a href=https://cloud.spring.io/spring-cloud-bus/>https://cloud.spring.io/spring-cloud-bus/</a>
+<a href=https://cloud.spring.io/spring-cloud-config/>spring-cloud-config</a>: <a href=https://cloud.spring.io/spring-cloud-config/>https://cloud.spring.io/spring-cloud-config/</a>
+<a href=https://cloud.spring.io/spring-cloud-consul/>spring-cloud-consul</a>: <a href=https://cloud.spring.io/spring-cloud-consul/>https://cloud.spring.io/spring-cloud-consul/</a>
+<a href=https://spring.io/projects/spring-cloud-gateway>spring-cloud-gateway</a>: <a href=https://spring.io/projects/spring-cloud-gateway>https://spring.io/projects/spring-cloud-gateway</a>
+<a href=https://cloud.spring.io/spring-cloud-netflix/>spring-cloud-netflix</a>: <a href=https://cloud.spring.io/spring-cloud-netflix/>https://cloud.spring.io/spring-cloud-netflix/</a>
+<a href=https://spring.io/projects/spring-cloud-sleuth>spring-cloud-sleuth</a>: <a href=https://spring.io/projects/spring-cloud-sleuth>https://spring.io/projects/spring-cloud-sleuth</a>
+<a href=https://cloud.spring.io/spring-cloud-vault/>spring-cloud-vault</a>: <a href=https://cloud.spring.io/spring-cloud-vault/>https://cloud.spring.io/spring-cloud-vault/</a>
+<a href=https://projects.spring.io/spring-framework/>spring-framework</a>: <a href=https://projects.spring.io/spring-framework/>https://projects.spring.io/spring-framework/</a>
+<a href=https://start.spring.io/>spring-initializr</a>: <a href=https://start.spring.io/>https://start.spring.io/</a>
+<a href=https://spring.io/projects>spring-projects</a>: <a href=https://spring.io/projects>https://spring.io/projects</a>
+<a href=https://github.com/spring-projects/spring-retry>spring-retry</a>: <a href=https://github.com/spring-projects/spring-retry>https://github.com/spring-projects/spring-retry</a>
+<a href=https://spring.io/projects/spring-security>spring-security</a>: <a href=https://spring.io/projects/spring-security>https://spring.io/projects/spring-security</a>
+<a href=https://spring.io/projects/spring-security-oauth>spring-security-oauth</a>: <a href=https://spring.io/projects/spring-security-oauth>https://spring.io/projects/spring-security-oauth</a>
+<a href=https://projects.spring.io/spring-session/>spring-session</a>: <a href=https://projects.spring.io/spring-session/>https://projects.spring.io/spring-session/</a>
+<a href=https://projects.spring.io/spring-statemachine/>spring-statemachine</a>: <a href=https://projects.spring.io/spring-statemachine/>https://projects.spring.io/spring-statemachine/</a>
+<a href=https://spring.io/guides/gs/validating-form-input/>spring-validation</a>: <a href=https://spring.io/guides/gs/validating-form-input/>https://spring.io/guides/gs/validating-form-input/</a>
+<a href=https://projects.spring.io/spring-vault/>spring-vault</a>: <a href=https://projects.spring.io/spring-vault/>https://projects.spring.io/spring-vault/</a>
+<a href=https://code.google.com/p/spock/>spock</a>: <a href=https://code.google.com/p/spock/>https://code.google.com/p/spock/</a>
+<a href=https://www.spotify.com/es/>spotify</a>: <a href=https://www.spotify.com/es/>https://www.spotify.com/es/</a>
+<a href=https://en.wikipedia.org/wiki/SQL>sql</a>: <a href=https://en.wikipedia.org/wiki/SQL>https://en.wikipedia.org/wiki/SQL</a>
+<a href=https://es.wikipedia.org/wiki/Secure_Shell>ssh</a>: <a href=https://es.wikipedia.org/wiki/Secure_Shell>https://es.wikipedia.org/wiki/Secure_Shell</a>
+<a href=https://es.wikipedia.org/wiki/Single_Sign-On>sso</a>: <a href=https://es.wikipedia.org/wiki/Single_Sign-On>https://es.wikipedia.org/wiki/Single_Sign-On</a>
+<a href=https://stackoverflow.com/>stackoverflow</a>: <a href=https://stackoverflow.com/>https://stackoverflow.com/</a>
+<a href=https://store.steampowered.com/>steam</a>: <a href=https://store.steampowered.com/>https://store.steampowered.com/</a>
+<a href=https://stripe.com/es>stripe</a>: <a href=https://stripe.com/es>https://stripe.com/es</a>
+<a href=https://strongpasswordgenerator.com/>strongpasswordgenerator</a>: <a href=https://strongpasswordgenerator.com/>https://strongpasswordgenerator.com/</a>
+<a href=https://struts.apache.org/>struts</a>: <a href=https://struts.apache.org/>https://struts.apache.org/</a>
+<a href=https://www.sublimetext.com/>sublime-text</a>: <a href=https://www.sublimetext.com/>https://www.sublimetext.com/</a>
+<a href=https://es.wikipedia.org/wiki/Sun_Microsystems>sun-microsystems</a>: <a href=https://es.wikipedia.org/wiki/Sun_Microsystems>https://es.wikipedia.org/wiki/Sun_Microsystems</a>
+<a href=https://www.suse.com/es-es/>suse</a>: <a href=https://www.suse.com/es-es/>https://www.suse.com/es-es/</a>
+<a href=https://symfony.com/>symfony</a>: <a href=https://symfony.com/>https://symfony.com/</a>
+<a href=https://www.freedesktop.org/wiki/Software/systemd/>systemd</a>: <a href=https://www.freedesktop.org/wiki/Software/systemd/>https://www.freedesktop.org/wiki/Software/systemd/</a>
+<a href=https://docs.oracle.com/javase/8/docs/api/javax/swing/package-summary.html>swing</a>: <a href=https://docs.oracle.com/javase/8/docs/api/javax/swing/package-summary.html>https://docs.oracle.com/javase/8/docs/api/javax/swing/package-summary.html</a>
+<a href=https://tails.boum.org/>tails</a>: <a href=https://tails.boum.org/>https://tails.boum.org/</a>
+<a href=https://tapestry.apache.org/>tapestry</a>: <a href=https://tapestry.apache.org/>https://tapestry.apache.org/</a>
+<a href=http://jumpstart.doublenegative.com.au/jumpstart/>tapestry-jumpstart</a>: <a href=http://jumpstart.doublenegative.com.au/jumpstart/>http://jumpstart.doublenegative.com.au/jumpstart/</a>
+<a href=https://www.tecnoempleo.com/>tecnoempleo</a>: <a href=https://www.tecnoempleo.com/>https://www.tecnoempleo.com/</a>
+<a href=https://telegram.org/>telegram</a>: <a href=https://telegram.org/>https://telegram.org/</a>
+<a href=https://www.ti.com/>texas-instruments</a>: <a href=https://www.ti.com/>https://www.ti.com/</a>
+<a href=https://www.mozilla.org/es-ES/thunderbird/>thunderbird</a>: <a href=https://www.mozilla.org/es-ES/thunderbird/>https://www.mozilla.org/es-ES/thunderbird/</a>
+<a href=https://www.thymeleaf.org/>thymeleaf</a>: <a href=https://www.thymeleaf.org/>https://www.thymeleaf.org/</a>
+<a href=https://thrift.apache.org/>thrift</a>: <a href=https://thrift.apache.org/>https://thrift.apache.org/</a>
+<a href=http://www.tinycorelinux.net/>tinycorelinux</a>: <a href=http://www.tinycorelinux.net/>http://www.tinycorelinux.net/</a>
+<a href=https://www.tiobe.com/tiobe-index/>tiobe</a>: <a href=https://www.tiobe.com/tiobe-index/>https://www.tiobe.com/tiobe-index/</a>
+<a href=https://es.wikipedia.org/wiki/Transport_Layer_Security>tls</a>: <a href=https://es.wikipedia.org/wiki/Transport_Layer_Security>https://es.wikipedia.org/wiki/Transport_Layer_Security</a>
+<a href=https://github.com/tmux/tmux/wiki>tmux</a>: <a href=https://github.com/tmux/tmux/wiki>https://github.com/tmux/tmux/wiki</a>
+<a href=https://tomcat.apache.org/>tomcat</a>: <a href=https://tomcat.apache.org/>https://tomcat.apache.org/</a>
+<a href=https://tomee.apache.org/>tomee</a>: <a href=https://tomee.apache.org/>https://tomee.apache.org/</a>
+<a href=https://www.trabajos.com/>trabajoscom</a>: <a href=https://www.trabajos.com/>https://www.trabajos.com/</a>
+<a href=https://trac.edgewall.org/>trac</a>: <a href=https://trac.edgewall.org/>https://trac.edgewall.org/</a>
+<a href=https://traefik.io/>traefik</a>: <a href=https://traefik.io/>https://traefik.io/</a>
+<a href=https://transmissionbt.com/>transmissionbt</a>: <a href=https://transmissionbt.com/>https://transmissionbt.com/</a>
+<a href=https://trello.com/>trello</a>: <a href=https://trello.com/>https://trello.com/</a>
+<a href=https://trisquel.info/es>trisquel</a>: <a href=https://trisquel.info/es>https://trisquel.info/es</a>
+<a href=https://www.typescriptlang.org/>typescript</a>: <a href=https://www.typescriptlang.org/>https://www.typescriptlang.org/</a>
+<a href=https://www.twitch.tv/>twitch</a>: <a href=https://www.twitch.tv/>https://www.twitch.tv/</a>
+<a href=https://twitter.com/>twitter</a>: <a href=https://twitter.com/>https://twitter.com/</a>
+<a href=http://twitter4j.org/en/index.html>twitter4j</a>: <a href=http://twitter4j.org/en/index.html>http://twitter4j.org/en/index.html</a>
+<a href=https://www.ubuntu.com/>ubuntu</a>: <a href=https://www.ubuntu.com/>https://www.ubuntu.com/</a>
+<a href=https://www.ubuntu.com/desktop/snappy>ubuntu-snappy</a>: <a href=https://www.ubuntu.com/desktop/snappy>https://www.ubuntu.com/desktop/snappy</a>
+<a href=https://www.npmjs.com/package/uglify-js>uglifyjs</a>: <a href=https://www.npmjs.com/package/uglify-js>https://www.npmjs.com/package/uglify-js</a>
+<a href=https://underscorejs.org/>underscorejs</a>: <a href=https://underscorejs.org/>https://underscorejs.org/</a>
+<a href=http://undertow.io/>undertow</a>: <a href=http://undertow.io/>http://undertow.io/</a>
+<a href=https://www.deusto.es>universidad-de-deusto</a>: <a href=https://www.deusto.es>https://www.deusto.es</a>
+<a href=https://es.wikipedia.org/wiki/Upstart>upstart</a>: <a href=https://es.wikipedia.org/wiki/Upstart>https://es.wikipedia.org/wiki/Upstart</a>
+<a href=https://uptimerobot.com/>uptimerobot</a>: <a href=https://uptimerobot.com/>https://uptimerobot.com/</a>
+<a href=https://www.utorrent.com/intl/es/>utorrent</a>: <a href=https://www.utorrent.com/intl/es/>https://www.utorrent.com/intl/es/</a>
+<a href=https://www.xataka.com/>xataka</a>: <a href=https://www.xataka.com/>https://www.xataka.com/</a>
+<a href=https://xfce.org/>xfce</a>: <a href=https://xfce.org/>https://xfce.org/</a>
+<a href=https://www.yahoo.com/>yahoo</a>: <a href=https://www.yahoo.com/>https://www.yahoo.com/</a>
+<a href=https://www.yaml.org/>yaml</a>: <a href=https://www.yaml.org/>https://www.yaml.org/</a>
+<a href=https://www.yandex.ru/>yandex</a>: <a href=https://www.yandex.ru/>https://www.yandex.ru/</a>
+<a href=http://xip.io/>xipio</a>: <a href=http://xip.io/>http://xip.io/</a>
+<a href=https://www.w3.org/TR/xpath/all/>xpath</a>: <a href=https://www.w3.org/TR/xpath/all/>https://www.w3.org/TR/xpath/all/</a>
+<a href=https://www.youtube.com/>youtube</a>: <a href=https://www.youtube.com/>https://www.youtube.com/</a>
+<a href=https://www.vagrantup.com/>vagrant</a>: <a href=https://www.vagrantup.com/>https://www.vagrantup.com/</a>
+<a href=https://www.valvesoftware.com/es/>valve</a>: <a href=https://www.valvesoftware.com/es/>https://www.valvesoftware.com/es/</a>
+<a href=https://www.vantpc.es/>vant</a>: <a href=https://www.vantpc.es/>https://www.vantpc.es/</a>
+<a href=https://varnish-cache.org/>varnish</a>: <a href=https://varnish-cache.org/>https://varnish-cache.org/</a>
+<a href=https://www.vaultproject.io/>vault</a>: <a href=https://www.vaultproject.io/>https://www.vaultproject.io/</a>
+<a href=https://www.vavr.io/>vavr</a>: <a href=https://www.vavr.io/>https://www.vavr.io/</a>
+<a href=https://vertx.io/>vertx</a>: <a href=https://vertx.io/>https://vertx.io/</a>
+<a href=http://www.v7world.com/es/>videoseven</a>: <a href=http://www.v7world.com/es/>http://www.v7world.com/es/</a>
+<a href=https://www.vim.org/>vim</a>: <a href=https://www.vim.org/>https://www.vim.org/</a>
+<a href=https://vimeo.com/>vimeo</a>: <a href=https://vimeo.com/>https://vimeo.com/</a>
+<a href=https://www.virtualbox.org/>virtualbox</a>: <a href=https://www.virtualbox.org/>https://www.virtualbox.org/</a>
+<a href=https://visualvm.github.io>visualvm</a>: <a href=https://visualvm.github.io>https://visualvm.github.io</a>
+<a href=https://www.videolan.org/vlc/>vlc</a>: <a href=https://www.videolan.org/vlc/>https://www.videolan.org/vlc/</a>
+<a href=https://vuejs.org/>vuejs</a>: <a href=https://vuejs.org/>https://vuejs.org/</a>
+<a href=https://vuex.vuejs.org/>vuex</a>: <a href=https://vuex.vuejs.org/>https://vuex.vuejs.org/</a>
+<a href=https://es.wallapop.com/>wallapop</a>: <a href=https://es.wallapop.com/>https://es.wallapop.com/</a>
+<a href=https://eu.wargaming.net/>wargaming</a>: <a href=https://eu.wargaming.net/>https://eu.wargaming.net/</a>
+<a href=https://worldoftanks.eu/es/>wargaming-worldoftanks</a>: <a href=https://worldoftanks.eu/es/>https://worldoftanks.eu/es/</a>
+<a href=https://worldofwarships.com/>wargaming-worldofwarships</a>: <a href=https://worldofwarships.com/>https://worldofwarships.com/</a>
+<a href=https://es.wikipedia.org/wiki/Wayland_(protocolo)>wayland</a>: <a href=https://es.wikipedia.org/wiki/Wayland_(protocolo)>https://es.wikipedia.org/wiki/Wayland_(protocolo)</a>
+<a href=https://www.webcomponents.org/>web-components</a>: <a href=https://www.webcomponents.org/>https://www.webcomponents.org/</a>
+<a href=https://www.webjars.org/>webjars</a>: <a href=https://www.webjars.org/>https://www.webjars.org/</a>
+<a href=https://en.wikipedia.org/wiki/WebP>webp</a>: <a href=https://en.wikipedia.org/wiki/WebP>https://en.wikipedia.org/wiki/WebP</a>
+<a href=https://webpack.js.org/>webpack</a>: <a href=https://webpack.js.org/>https://webpack.js.org/</a>
+<a href=https://www.oracle.com/middleware/weblogic/>weblogic</a>: <a href=https://www.oracle.com/middleware/weblogic/>https://www.oracle.com/middleware/weblogic/</a>
+<a href=https://www.ibm.com/es-es/marketplace/java-ee-runtime/details>websphere</a>: <a href=https://www.ibm.com/es-es/marketplace/java-ee-runtime/details>https://www.ibm.com/es-es/marketplace/java-ee-runtime/details</a>
+<a href=https://www.whatsapp.com/>whatsapp</a>: <a href=https://www.whatsapp.com/>https://www.whatsapp.com/</a>
+<a href=https://wicket.apache.org/>wicket</a>: <a href=https://wicket.apache.org/>https://wicket.apache.org/</a>
+<a href=https://es.wikipedia.org/wiki/Wikipedia:Portada>wikipedia</a>: <a href=https://es.wikipedia.org/wiki/Wikipedia:Portada>https://es.wikipedia.org/wiki/Wikipedia:Portada</a>
+<a href=https://es.wikipedia.org/wiki/Classless_Inter-Domain_Routing>wikipedia-cidr</a>: <a href=https://es.wikipedia.org/wiki/Classless_Inter-Domain_Routing>https://es.wikipedia.org/wiki/Classless_Inter-Domain_Routing</a>
+<a href=https://es.wikipedia.org/wiki/Carrier_Grade_NAT>wikipedia-cgnat</a>: <a href=https://es.wikipedia.org/wiki/Carrier_Grade_NAT>https://es.wikipedia.org/wiki/Carrier_Grade_NAT</a>
+<a href=https://en.wikipedia.org/wiki/List_of_HTTP_status_codes>wikipedia-http-status-codes</a>: <a href=https://en.wikipedia.org/wiki/List_of_HTTP_status_codes>https://en.wikipedia.org/wiki/List_of_HTTP_status_codes</a>
+<a href=https://en.wikipedia.org/wiki/IPv4>wikipedia-ipv4</a>: <a href=https://en.wikipedia.org/wiki/IPv4>https://en.wikipedia.org/wiki/IPv4</a>
+<a href=https://en.wikipedia.org/wiki/IPv6>wikipedia-ipv6</a>: <a href=https://en.wikipedia.org/wiki/IPv6>https://en.wikipedia.org/wiki/IPv6</a>
+<a href=https://es.wikipedia.org/wiki/Ley_de_Moore>wikipedia-ley-de-moore</a>: <a href=https://es.wikipedia.org/wiki/Ley_de_Moore>https://es.wikipedia.org/wiki/Ley_de_Moore</a>
+<a href=https://en.wikipedia.org/wiki/Secure_Digital>wikipedia-securedigital</a>: <a href=https://en.wikipedia.org/wiki/Secure_Digital>https://en.wikipedia.org/wiki/Secure_Digital</a>
+<a href=https://en.wikipedia.org/wiki/Network_address_translation>wikipedia-nat</a>: <a href=https://en.wikipedia.org/wiki/Network_address_translation>https://en.wikipedia.org/wiki/Network_address_translation</a>
+<a href=https://en.wikipedia.org/wiki/Out-of-order_execution>wikipedia-out-of-order</a>: <a href=https://en.wikipedia.org/wiki/Out-of-order_execution>https://en.wikipedia.org/wiki/Out-of-order_execution</a>
+<a href=https://es.wikipedia.org/wiki/Richard_Stallman>wikipedia-richard-stallman</a>: <a href=https://es.wikipedia.org/wiki/Richard_Stallman>https://es.wikipedia.org/wiki/Richard_Stallman</a>
+<a href=https://en.wikipedia.org/wiki/Speculative_execution>wikipedia-speculative-execution</a>: <a href=https://en.wikipedia.org/wiki/Speculative_execution>https://en.wikipedia.org/wiki/Speculative_execution</a>
+<a href=https://en.wikipedia.org/wiki/Superscalar_processor>wikipedia-superescalar</a>: <a href=https://en.wikipedia.org/wiki/Superscalar_processor>https://en.wikipedia.org/wiki/Superscalar_processor</a>
+<a href=https://wildfly.org/>wildfly</a>: <a href=https://wildfly.org/>https://wildfly.org/</a>
+<a href=https://www.winehq.org/>wine</a>: <a href=https://www.winehq.org/>https://www.winehq.org/</a>
+<a href=https://appdb.winehq.org/>wine-appdb</a>: <a href=https://appdb.winehq.org/>https://appdb.winehq.org/</a>
+<a href=https://www.winepak.org/>winepak</a>: <a href=https://www.winepak.org/>https://www.winepak.org/</a>
+<a href=https://www.winzip.com/win/es/>winzip</a>: <a href=https://www.winzip.com/win/es/>https://www.winzip.com/win/es/</a>
+<a href=https://www.microsoft.com/es-es/windows/>windows</a>: <a href=https://www.microsoft.com/es-es/windows/>https://www.microsoft.com/es-es/windows/</a>
+<a href=http://wiringpi.com/>wiringpi</a>: <a href=http://wiringpi.com/>http://wiringpi.com/</a>
+<a href=https://www.vmware.com/>vmware</a>: <a href=https://www.vmware.com/>https://www.vmware.com/</a>
+<a href=https://www.wps.com/>wps-office</a>: <a href=https://www.wps.com/>https://www.wps.com/</a>
+<a href=https://wordpress.org/>wordpress</a>: <a href=https://wordpress.org/>https://wordpress.org/</a>
+<a href=https://github.com/wro4j/wro4j/>wro4j</a>: <a href=https://github.com/wro4j/wro4j/>https://github.com/wro4j/wro4j/</a>
+<a href=https://www.xbox.com>xbox</a>: <a href=https://www.xbox.com>https://www.xbox.com</a>
+<a href=https://www.x.org/wiki/XServer/>xserver</a>: <a href=https://www.x.org/wiki/XServer/>https://www.x.org/wiki/XServer/</a>
+<a href=https://xubuntu.org/>xubuntu</a>: <a href=https://xubuntu.org/>https://xubuntu.org/</a>
+<a href=https://www.zentyal.org/>zentyal</a>: <a href=https://www.zentyal.org/>https://www.zentyal.org/</a>
+<a href=https://zipkin.io/>zipkin</a>: <a href=https://zipkin.io/>https://zipkin.io/</a>
+<a href=https://www.zotac.com/es/>zotac</a>: <a href=https://www.zotac.com/es/>https://www.zotac.com/es/</a>
+<a href=https://en.wikipedia.org/wiki/ZFS>zfs</a>: <a href=https://en.wikipedia.org/wiki/ZFS>https://en.wikipedia.org/wiki/ZFS</a>
+<a href=http://zsh.sourceforge.net/>zsh</a>: <a href=http://zsh.sourceforge.net/>http://zsh.sourceforge.net/</a></p><div class=reference>Referencia:<br><ul><li><a href=https://easyengine.io/tutorials/nginx/www-non-www-redirection/>Nginx config for www to non-www and non-www to www redirection</a></li><li><a href=http://www.thesitewizard.com/apache/redirect-domain-www-subdomain.shtml>How to Redirect URLs from Your Root Domain to the WWW Subdomain and Vice Versa</a></li></ul></div></div></article><div class="row serie"><div class=col-md-12><h3>Este artículo forma parte de la serie <strong>web</strong>:</h3><ol class=serie-articles><li><a href=https://picodotdev.github.io/blog-bitix/2014/02/generar-y-convertir-claves-y-certificados-con-openssl/>Generar y convertir claves y certificados con OpenSSL</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2014/02/configurar-ssl-en-un-servidor-tomcat-jboss-wildfly-lighttpd-nginx-apache/>Configurar SSL/TLS en un servidor Tomcat, JBoss, WildFly, Lighttpd, Nginx o Apache</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2015/04/certificado-ssl-de-empresa-wildcard-y-de-validacion-extendida/>Certificado SSL, de empresa, «wildcard» y de validación extendida</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/02/introduccion-al-protocolo-http-2/>Introducción al protocolo HTTP/2</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/02/configurar-http-2-en-nginx-apache-httpd-wildfly-o-jetty/>Configurar HTTP/2 en Nginx, Apache HTTPD, WildFly o Jetty</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/06/como-redirigir-peticiones-de-http-a-https-en-nginx-apache-tomcat-jetty-y-wildfly/>Cómo redirigir peticiones de HTTP a HTTPS en Nginx, Apache, Tomcat, Jetty y WildFly</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/como-optimizar-un-sitio-web-con-compresion-gzip-en-nginx-y-apache-httpd/>Cómo optimizar un sitio web con compresión GZIP en Nginx y Apache HTTPD</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/configurar-nginx-como-balanceador-de-carga/>Configurar Nginx como balanceador de carga</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/como-crear-un-proxy-inverso-entre-el-servidor-web-nginx-y-un-servidor-de-aplicaciones-java/>Cómo crear un proxy inverso entre el servidor web Nginx y un servidor de aplicaciones Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/las-cabeceras-de-cache-del-protocolo-http/>Las cabeceras de cache del protocolo HTTP</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/07/configurar-nginx-para-cachear-respuestas-del-servidor-de-aplicaciones/>Configurar Nginx para cachear respuestas del servidor de aplicaciones</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2016/08/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www/>Cómo y por que redirigir tráfico web del dominio raíz al subdominio www (o viceversa)</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/06/autenticacion-mutua-de-cliente-y-servidor-con-certificados/>Autenticación mutua de cliente y servidor con certificados</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/08/instalar-y-renovar-un-certificado-de-lets-encrypt-en-nginx/>Instalar y renovar un certificado de Let's Encrypt en Nginx</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2019/06/pruebas-de-carga-y-rendimiento-de-un-servicio-web-con-apache-bench/>Pruebas de carga y rendimiento de un servicio web con Apache Bench</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2019/06/comprobar-la-seguridad-de-un-sitio-web-que-use-ssl-tls/>Comprobar la seguridad de un sitio web que use SSL/TLS</a></li></ol></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><a id=comments></a><div class=row><div class=col-md-12><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='blog-bitix-166';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2016\/08\/como-y-por-que-redirigir-trafico-web-del-dominio-raiz-al-subdominio-www\/';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=assets/images/rss.png class=icon></a>
 <a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=assets/images/twitter.svg class=icon></a>
 <a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=assets/images/github.svg class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2019 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow rel=license><img alt="Licencia de Creative Commons" title="Licencia de Creative Commons" style=border-width:0 src=https://licensebuttons.net/l/by-sa/4.0/80x15.png class=licencia></a><br><a href=https://twitter.com/blogstackinfo rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/blog-stack.png alt="Blog Stack" title="Blog Stack"></a>
 <a href=https://www.planetacodigo.com/ rel=nofollow><img src=https://picodotdev.github.io/blog-bitix/assets/images/planeta-codigo.png alt="Planeta código" title="Planeta código"></a><br><span xmlns:dct=http://purl.org/dc/terms/ property="dct:title"><a href=https://picodotdev.github.io/blog-bitix/ rel=nofollow>Blog Bitix</a></span> by <a xmlns:cc=https://creativecommons.org/ns# href=https://picodotdev.github.io/blog-bitix/ property="cc:attributionName" rel=cc:attributionurl>pico.dev</a> is licensed under a <a rel=license href=https://creativecommons.org/licenses/by-sa/4.0/>Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class=credit>Powered by <a href=https://gohugo.io/ rel=nofollow title="A fast and modern static website engine">Hugo</a> and <a href=https://pages.github.com/ title="Websites for you and your projects">GitHub Pages</a>.</span>
