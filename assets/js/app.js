@@ -64,8 +64,7 @@ require(['jquery'], function($) {
                     '</div>'
                 ].join('');
                 var dom = $(html);
-                var element = $(ad).after(dom);
-                $(ad).remove();
+                var element = $(ad).before(dom);
             }
         }, 3000);
     }
