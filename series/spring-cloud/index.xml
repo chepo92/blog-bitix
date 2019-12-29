@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?><feed version="2.0" xmlns="http://www.w3.org/2005/Atom"><id>https://picodotdev.github.io/blog-bitix/series/spring-cloud/</id><title type="text">Blog Bitix</title><subtitle>Recent content on Blog Bitix</subtitle><updated>2019-10-12T02:30:00+02:00</updated><author><name>picodotdev</name></author><generator>Hugo</generator><icon>https://picodotdev.github.io/blog-bitix/assets/images/logotipos/hugo.png</icon><logo>https://picodotdev.github.io/blog-bitix/assets/images/logotipos/hugo.png</logo><rights>https://creativecommons.org/licenses/by-sa/4.0/</rights><entry><id>https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/</id><title>Microservicios con Spring Cloud, Consul, Nomad y Traefik</title><updated>2019-10-12T02:30:00+02:00</updated><published>2019-10-12T02:30:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/"/><author><name>picodotdev</name></author><content type="html">
-<![CDATA[<p><strong>Sin entrar a si los microservicios son adecuados o no son adecuados en una aplicación, está claro que si se utilizan estos tienen varias necesidades. Un servicio de registro y descubrimiento, configuración centralizada, tolerancia a fallos, <em>gateway/load balancer/reverse proxy</em>, trazabilidad y métricas, autenticación, orquestación, &hellip; Los microservicios quiza no sean un gran monolito, quizá mas pequeños y con funcinalidad más acotada, pero el hecho de que se comuniquen a través de un medio más complejo y menos fiable como la red en vez de una llamada a un método y sean más numerosos hacen que la complejidad sea incluso mayor. Este artículo propone un ejemplo con Spring Cloud para los servicios, Consul para el registro y descubrimiento, Nomad para la orquestación y Traefik como <em>gateway</em>.</strong></p>]]><![CDATA[<div class="logotypes" style="float: right;">
+<![CDATA[<p><strong>Sin entrar a si los microservicios son adecuados o no son adecuados en una aplicación, está claro que si se utilizan estos tienen varias necesidades. Un servicio de registro y descubrimiento, configuración centralizada, tolerancia a fallos, <em>gateway/load balancer/reverse proxy</em>, trazabilidad y métricas, autenticación, orquestación, &hellip; Los microservicios quiza no sean un gran monolito, quizá mas pequeños y con funcinalidad más acotada, pero el hecho de que se comuniquen a través de un medio más complejo y menos fiable como la red en vez de una llamada a un método y sean más numerosos hacen que la complejidad sea incluso mayor. Este artículo propone un ejemplo con Spring Cloud para los servicios, Consul para el registro y descubrimiento, Nomad para la orquestación y Traefik como <em>gateway</em>.</strong></p>]]><![CDATA[<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/java.svg" class="right " width="200" alt="Java" title="Java"/>
 </div>
-<div class="logotypes" style="float: right; clear: right;">
+<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/spring.svg" class="right " width="200" alt="Spring" title="Spring"/>
 </div>
 <p>En otro artículo mostraba un ejemplo de <a href="https://picodotdev.github.io/blog-bitix/2018/09/registro-y-descubrimiento-de-servicios-con-spring-cloud-netflix/">microservicios con Spring Cloud</a> usando únicamente herramientas de <a href="https://spring.io/">Spring</a>. Cada una de esas herramientas cubren una funcionalidad que necesitan los microservicios. Entre ellas:</p>
@@ -36,8 +36,8 @@
 <p>El esquema de servicios sería el siguiente. Los <em>job</em> son enviados a Nomad desde la linea de comandos que inicia los contenedores en Docker y registra los servicios en Consul, Traefik monitoriza los contenedores que se inician en Docker y se autoconfigura según las propiedades de los <em>labels</em> definidos para los contenedores. Una vez iniciados los servicios desde la terminal con un <em>curl</em> o desde la aplicación cliente que accede a Consul para conocer la ubicación del servicio de Traefik envían una petición a Traefik que haciendo balanceo de carga la reenvía a una de las instancias del servicio, el servicio responde y Traefik envía la respuesta al cliente. Para ser más funcional Traefik debería configurarse a partir de Consul en vez de Docker para posibilitar que los contenedores pudieran estar en varios nodos.</p>
 <div class="media">
 <figure>
-<p><a href="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/esquema-arquitectura_hud9745ca4e3e6c708b4af1c72fc0d4ff7_167252_2560x1440_fit_box_2.png" title="Esquema arquitectura" data-gallery="data-gallery"><img src="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/esquema-arquitectura_hud9745ca4e3e6c708b4af1c72fc0d4ff7_167252_600x450_fit_box_2.png" width="600"/></a></p>
-  <figcaption>Esquema arquitectura</figcaption>
+<a href="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/esquema-arquitectura_hud9745ca4e3e6c708b4af1c72fc0d4ff7_167252_2560x1440_fit_box_2.png" title="Esquema arquitectura" data-gallery="data-gallery"><img src="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/esquema-arquitectura_hud9745ca4e3e6c708b4af1c72fc0d4ff7_167252_600x450_fit_box_2.png" width="600"/></a>
+<figcaption>Esquema arquitectura</figcaption>
 </figure>
 </div>
 <p>La ejecución del ejemplo requiere <a href="https://www.docker.com/">Docker</a> ya que es en este caso el <em>driver</em> empleado en Nomad para ejecutar los servicios del servicio de configuración, el <em>gateway</em>, el servicio y el cliente del servicio. Nomad además se encarga de registrar los servicios en el servicio de registro y descubrimiento de Consul.</p>
@@ -76,14 +76,14 @@
 <p>Tanto Consul, Nomad como Traefik ofrecen una consola para ver su estado ubicadas en las siguientes direcciones respectivamente accesibles con el navegador <em>http://127.0.0.1:8500</em>, <em>http://127.0.0.1:4646</em>, <em>http://127.0.0.1:8092</em>.</p>
 <div class="media">
 <figure>
-<p><a href="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/consul_hudc42d06e92419bb68cedcf920ffbb9e1_66952_2560x1440_fit_box_2.png" title="Consul" data-gallery="data-gallery"><img src="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/consul_hudc42d06e92419bb68cedcf920ffbb9e1_66952_200x150_fit_box_2.png" width="200"/></a></p>
-<p><a href="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/nomad-1_hu236530498253a3dba6bcdeea43b58303_63779_2560x1440_fit_box_2.png" title="Nomad" data-gallery="data-gallery"><img src="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/nomad-1_hu236530498253a3dba6bcdeea43b58303_63779_200x150_fit_box_2.png" width="200"/></a></p>
-<p><a href="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/nomad-2_huf614ca5d87e91f36d0a6f0dc0f7e1da1_112167_2560x1440_fit_box_2.png" title="Nomad" data-gallery="data-gallery"><img src="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/nomad-2_huf614ca5d87e91f36d0a6f0dc0f7e1da1_112167_200x150_fit_box_2.png" width="200"/></a></p>
+<a href="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/consul_hudc42d06e92419bb68cedcf920ffbb9e1_66952_2560x1440_fit_box_2.png" title="Consul" data-gallery="data-gallery"><img src="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/consul_hudc42d06e92419bb68cedcf920ffbb9e1_66952_200x150_fit_box_2.png" width="200"/></a>
+<a href="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/nomad-1_hu236530498253a3dba6bcdeea43b58303_63779_2560x1440_fit_box_2.png" title="Nomad" data-gallery="data-gallery"><img src="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/nomad-1_hu236530498253a3dba6bcdeea43b58303_63779_200x150_fit_box_2.png" width="200"/></a>
+<a href="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/nomad-2_huf614ca5d87e91f36d0a6f0dc0f7e1da1_112167_2560x1440_fit_box_2.png" title="Nomad" data-gallery="data-gallery"><img src="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/nomad-2_huf614ca5d87e91f36d0a6f0dc0f7e1da1_112167_200x150_fit_box_2.png" width="200"/></a>
 </figure>
 <figure>
-<p><a href="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/traefik-1_hu752c6a0b248029866df45cca04eee0f1_104793_2560x1440_fit_box_2.png" title="Traefik" data-gallery="data-gallery"><img src="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/traefik-1_hu752c6a0b248029866df45cca04eee0f1_104793_200x150_fit_box_2.png" width="200"/></a></p>
-<p><a href="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/traefik-2_hu3d23c9c51ffc17299ed33c1319107a0c_130051_2560x1440_fit_box_2.png" title="Traefik" data-gallery="data-gallery"><img src="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/traefik-2_hu3d23c9c51ffc17299ed33c1319107a0c_130051_200x150_fit_box_2.png" width="200"/></a></p>
-  <figcaption>Consolas de administración de Consul, Nomad y Traefik</figcaption>
+<a href="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/traefik-1_hu752c6a0b248029866df45cca04eee0f1_104793_2560x1440_fit_box_2.png" title="Traefik" data-gallery="data-gallery"><img src="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/traefik-1_hu752c6a0b248029866df45cca04eee0f1_104793_200x150_fit_box_2.png" width="200"/></a>
+<a href="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/traefik-2_hu3d23c9c51ffc17299ed33c1319107a0c_130051_2560x1440_fit_box_2.png" title="Traefik" data-gallery="data-gallery"><img src="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/images/traefik-2_hu3d23c9c51ffc17299ed33c1319107a0c_130051_200x150_fit_box_2.png" width="200"/></a>
+<figcaption>Consolas de administración de Consul, Nomad y Traefik</figcaption>
 </figure>
 </div>
 <p>El código del servicio, del cliente implementados con Spring y la salida del cliente son los siguientes.</p>
@@ -130,10 +130,10 @@
 </p>
 ]]></content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/><category term="software"/><category term="software-libre"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/08/utilizar-credenciales-de-conexion-a-la-base-de-datos-generadas-por-vault-en-una-aplicacion-de-spring/</id><title>Utilizar credenciales de conexión a la base de datos generadas por Vault en una aplicación de Spring</title><updated>2019-08-23T09:00:00+02:00</updated><published>2019-08-23T09:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/08/utilizar-credenciales-de-conexion-a-la-base-de-datos-generadas-por-vault-en-una-aplicacion-de-spring/"/><author><name>picodotdev</name></author><content type="html">
 &lt;p>&lt;strong>Spring Cloud Vault facilita la integración con Vault, una de sus usos es utilizarlo para obtener unas credenciales de conexión a la base de datos generadas bajo demanda y con un tiempo de vida limitado en vez de embeberlas en la configuración de la aplicación y con u tiempo de vida indefinido.&lt;/strong>&lt;/p>
-<![CDATA[<div class="logotypes" style="float: right;">
+<![CDATA[<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/spring.svg" class="right " width="200" alt="Spring" title="Spring"/>
 </div>
-<div class="logotypes" style="float: right; clear: right;">
+<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/vault.svg" class="right " width="200" alt="Vault" title="Vault"/>
 </div>
 <p>La herramienta <a href="https://www.vaultproject.io/">Vault</a> de <a href="https://www.hashicorp.com/">HashiCorp</a> permite almacenar secretos, otra de sus funcionalidad es ser capaz de generar credenciales de forma dinámica. Habitualmente una aplicación para conectarse a una base de datos incluye en su configuración las credenciales, usuario y contraseña, para autenticarse y crear las conexiones, estas credenciales tiene un tiempo de vida indefinido y comprometidas proporcionan acceso a la base de datos.</p>
@@ -253,7 +253,7 @@
 </p>
 <div class="reference">
     Referencia:<br>
-    <ul>
+<ul>
 <li><a href="https://www.baeldung.com/spring-cloud-vault">An Intro to Spring Cloud Vault</a></li>
 <li><a href="https://cloud.spring.io/spring-cloud-vault/reference/html/#_approle_authentication">Spring Cloud Vault AppRole authentication</a></li>
 <li><a href="https://cloud.spring.io/spring-cloud-vault/reference/html/#vault.config.backends.database-backends">Spring Cloud Vault Database backends</a></li>
@@ -261,10 +261,10 @@
 </div>
 ]]></content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/08/iniciar-una-aplicacion-de-spring-boot-en-un-puerto-aleatorio/</id><title>Iniciar una aplicación de Spring Boot en un puerto aleatorio</title><updated>2019-08-09T18:00:00+02:00</updated><published>2019-08-09T18:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/08/iniciar-una-aplicacion-de-spring-boot-en-un-puerto-aleatorio/"/><author><name>picodotdev</name></author><content type="html">
 &lt;p>&lt;strong>En una arquitectura basada en microservicios es normal iniciar varias instancias de un mismo servicio, si están en la misma máquina ha de asignarse a cada instancia un puerto diferente. Asignar los puertos manualmente no es recomendable cuando se quieren varias instancias, Spring Boot ofrece la funcionalidad de iniciar la aplicación en un puerto aleatorio.&lt;/strong>&lt;/p>
-<![CDATA[<div class="logotypes" style="float: right;">
+<![CDATA[<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/spring.svg" class="right " width="200" alt="Spring" title="Spring"/>
 </div>
-<div class="logotypes" style="float: right; clear: right;">
+<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/java.svg" class="right " width="200" alt="Java" title="Java"/>
 </div>
 <p>Mediante configuración se puede especificar el puerto en el que se desea iniciar una aplicación de <a href="https://projects.spring.io/spring-boot/">Spring Boot</a> que ofrece un servicio de red. El puerto por convención suele ser el <em>8080</em> y la propiedad de configuración de Spring Boot para modificarlo es <em>server.port</em>.</p>
@@ -305,16 +305,16 @@
 </p>
 <div class="reference">
     Referencia:<br>
-    <ul>
+<ul>
 <li><a href="https://javadeveloperzone.com/spring-boot/spring-boot-random-server-port/">Spring Boot Random Server Port</a></li>
-<li>[Registro y descubrimiento de servicios con Spring Cloud y Consul][blogbitix-206]</li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2017/01/registro-y-descubrimiento-de-servicios-con-spring-cloud-y-consul/">Registro y descubrimiento de servicios con Spring Cloud y Consul</a></li>
 </ul>
 </div>
 ]]></content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/08/implementar-tolerancia-a-fallos-con-resilience4j/</id><title>Implementar tolerancia a fallos con Resilience4j</title><updated>2019-08-02T17:00:00+02:00</updated><published>2019-08-02T17:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/08/implementar-tolerancia-a-fallos-con-resilience4j/"/><author><name>picodotdev</name></author><content type="html">
-<![CDATA[<div class="logotypes" style="float: right;">
+<![CDATA[<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/resilience4j.png" class="right " width="200" alt="Resilience4j" title="Resilience4j"/>
 </div>
-<div class="logotypes" style="float: right; clear: right;">
+<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/java.svg" class="right " width="200" alt="Java" title="Java"/>
 </div>
 <p><a href="https://github.com/Netflix/Hystrix">Hystrix</a> ha sido una de las primeras librerías en Java disponibles para implementar varios patrones de tolerancia a fallos en los microservicios. Desde hace un tiempo ha pasado a modo mantenimiento en el que ya no se incluyen nuevas características, una de las librerías recomendadas como sustituta es <a href="https://github.com/resilience4j/resilience4j">Resilience4j</a>. Resilience4j proporciona las características similares con algunas ventajas adicionales.</p>
@@ -353,7 +353,7 @@
 </p>
 <div class="reference">
     Referencia:<br>
-    <ul>
+<ul>
 <li><a href="https://dzone.com/articles/resilience4j-intro">Achieving Fault Tolerance With Resilience4j</a></li>
 <li><a href="https://www.baeldung.com/resilience4j">Guide to Resilience4j</a></li>
 <li><a href="https://spring.io/blog/2019/01/23/spring-cloud-greenwich-release-is-now-available">Spring Cloud Greenwich.RELEASE</a></li>
@@ -361,10 +361,10 @@
 </div>
 ]]></content><category term="java"/><category term="planeta-codigo"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/</id><title>Trazabilidad en microservicios con Spring Cloud Sleuth</title><updated>2019-04-07T12:45:00+02:00</updated><published>2019-04-07T10:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/04/trazabilidad-en-microservicios-con-spring-cloud-sleuth/"/><author><name>picodotdev</name></author><content type="html">
 &lt;p>&lt;strong>Los microservicios son independientes pero se llaman unos a otros, suele ser muy útil para tareas de depuración y de visibilidad de una petición disponer de la traza completa de una petición a lo largo de las llamadas entre varios microservicios. Spring Cloud Sleuth proporciona la infraestructura para que las peticiones salientes envíen un identificativo de correlación de la petición global y para las peticiones entrantes relacionarlo con la petición global.&lt;/strong>&lt;/p>
-<![CDATA[<div class="logotypes" style="float: right;">
+<![CDATA[<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/spring.svg" class="right " width="200" alt="Spring" title="Spring"/>
 </div>
-<div class="logotypes" style="float: right; clear: right;">
+<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/java.svg" class="right " width="200" alt="Java" title="Java"/>
 </div>
 <p>En una aplicación distribuida con varios microservicios es imprescindible tener la configuración de forma centralizada que cada microservicio obtiene al iniciarse y disponer de registro y descubrimiento para que los servicios al iniciarse, terminarse, actualizarse o por un fallo se registren o desregistren y obtengan la ubicación de las dependencias que necesitan.</p>
@@ -427,16 +427,16 @@
 </p>
 <div class="reference">
     Referencia:<br>
-    <ul>
+<ul>
 <li><a href="https://www.paradigmadigital.com/dev/trazabilidad-distribuida-spring-cloud-sleuth-zipkin/">Trazabilidad Distribuida con Spring Cloud: Sleuth y Zipkin</a></li>
 <li><a href="https://content.pivotal.io/springone-platform-2017/distributed-tracing-latency-analysis-for-your-microservices-grzejszczak-krishna">Distributed Tracing : Latency Analysis for Your Microservices</a></li>
 </ul>
 </div>
 ]]></content><category term="java"/><category term="planeta-codigo"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2019/02/servidor-oauth-gateway-y-servicio-rest-utilizando-tokens-jwt-con-spring/</id><title>Servidor OAuth, gateway y servicio REST utilizando tokens JWT con Spring</title><updated>2019-02-08T20:00:00+01:00</updated><published>2019-02-08T20:00:00+01:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2019/02/servidor-oauth-gateway-y-servicio-rest-utilizando-tokens-jwt-con-spring/"/><author><name>picodotdev</name></author><content type="html">
-<![CDATA[<div class="logotypes" style="float: right;">
+<![CDATA[<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/spring.svg" class="right " width="200" alt="Spring" title="Spring"/>
 </div>
-<div class="logotypes" style="float: right; clear: right;">
+<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/java.svg" class="right " width="200" alt="Java" title="Java"/>
 </div>
 <p>Hace unos días encontré un <a href="https://www.idealista.com/labs/blog/spring-framework/autenticando-el-api-de-idealista-hipotecas-con-spring-oauth2-y-zuul/">articulo del blog técnido de los desarrolladores de Idealista</a>. En él comentaban que tenían una API para realizar simulaciones hipotecarias usando <a href="https://spring.io/">Spring</a> como <em>framework</em>, <a href="https://spring.io/projects/spring-security-oauth">Spring Security OAuth</a> como forma de autenticación y autorización y JWT como forma de codificar el <em>token</em> que otorga el servidor OAuth y contiene la información necesaria para que el servidor de recursos permita o no el acceso al recurso que aloja.</p>
@@ -491,8 +491,8 @@
 </div>
 <div class="media">
 <figure>
-<p><a href="/blog-bitix/2019/02/servidor-oauth-gateway-y-servicio-rest-utilizando-tokens-jwt-con-spring/images/encoded-decoded-jwt_hu1ab378b072a97342bd947994d891fa06_108022_2560x1440_fit_box_2.png" title="Token JWT codificado y decodificado" data-gallery="data-gallery"><img src="/blog-bitix/2019/02/servidor-oauth-gateway-y-servicio-rest-utilizando-tokens-jwt-con-spring/images/encoded-decoded-jwt_hu1ab378b072a97342bd947994d891fa06_108022_600x450_fit_box_2.png" width="494"/></a></p>
-  <figcaption>Token JWT codificado y decodificado</figcaption>
+<a href="/blog-bitix/2019/02/servidor-oauth-gateway-y-servicio-rest-utilizando-tokens-jwt-con-spring/images/encoded-decoded-jwt_hu1ab378b072a97342bd947994d891fa06_108022_2560x1440_fit_box_2.png" title="Token JWT codificado y decodificado" data-gallery="data-gallery"><img src="/blog-bitix/2019/02/servidor-oauth-gateway-y-servicio-rest-utilizando-tokens-jwt-con-spring/images/encoded-decoded-jwt_hu1ab378b072a97342bd947994d891fa06_108022_600x450_fit_box_2.png" width="494"/></a>
+<figcaption>Token JWT codificado y decodificado</figcaption>
 </figure>
 </div>
 <h3 id="servidor-gateway">Servidor Gateway</h3>
@@ -552,7 +552,7 @@
 </p>
 <div class="reference">
     Referencia:<br>
-    <ul>
+<ul>
 <li><a href="https://www.baeldung.com/spring-security-oauth-jwt">Using JWT with Spring Security OAuth</a></li>
 <li><a href="http://websystique.com/spring-security/secure-spring-rest-api-using-oauth2/">Secure Spring REST API using OAuth2</a></li>
 <li><a href="https://www.devglan.com/spring-security/spring-boot-oauth2-jwt-example">Spring Boot Security OAuth2 Jwt Auth Example</a></li>
@@ -563,10 +563,10 @@
 </ul>
 </div>
 ]]></content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/><category term="software"/><category term="spring"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2018/12/exponer-las-metricas-de-hystrix-en-grafana-con-prometheus-de-una-aplicacion-spring-boot/</id><title>Exponer las métricas de Hystrix en Grafana con Prometheus de una aplicación Spring Boot</title><updated>2018-12-21T11:30:00+01:00</updated><published>2018-12-21T11:30:00+01:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/12/exponer-las-metricas-de-hystrix-en-grafana-con-prometheus-de-una-aplicacion-spring-boot/"/><author><name>picodotdev</name></author><content type="html">
-<![CDATA[<div class="logotypes" style="float: right;">
+<![CDATA[<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/java.svg" class="right " width="200" alt="Java" title="Java"/>
 </div>
-<div class="logotypes" style="float: right; clear: right;">
+<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/spring.svg" class="right " width="200" alt="Spring" title="Spring"/>
 </div>
 <p><a href="https://github.com/Netflix/Hystrix">Hystrix</a> es una implementación del patrón <em>circuit breaker</em> para hacer que un servicio sea tolerante fallos cuando aquellos que utiliza fallan. Es conveniente tener una herramienta de monitorización para conocer el estado del sistema y actuar pronto o conocer si el comportamiento del sistema es diferente al hacer algún cambio. Hystrix proporciona varios datos como el número de peticiones realizadas, cuantas han fallado o cual es el estado del patrón <em>circuit breaker</em>. <a href="https://prometheus.io/">Prometheus</a> es una herramienta de monitorización que recoge las métricas de los servicios de forma periódica y las almacena para una consulta posterior, <a href="https://grafana.com/">Grafana</a> es otra herramienta de monitorización que permite visualizar en gráficas las métricas almacenadas en Prometheus y observar los valores a lo largo del tiempo.</p>
@@ -611,8 +611,8 @@
 <p>Con estas métricas recolectadas por Prometheus se pueden visualizar en gráficas por Grafana. Hay algunos <a href="https://grafana.com/dashboards?search=hystrix">paneles de Grafana para Hystrix</a> como el <a href="https://grafana.com/dashboards/7145">7145</a> pero que necesitan ser adaptados según la nomenclatura de las propiedades expuestas por Spring Boot. En este caso se monitoriza el número de peticiones realizadas, el tiempo de latencia, si los circuitos están abiertos, los fallos, éxitos y <em>tiemouts</em> así como el estado de los <em>thread pools</em> que utiliza Hystrix para realizar las peticiones de un cliente a un servicio.</p>
 <div class="media">
 <figure>
-<p><a href="/blog-bitix/2018/12/exponer-las-metricas-de-hystrix-en-grafana-con-prometheus-de-una-aplicacion-spring-boot/images/grafana-hystrix-dashboard_hubb858c136f51315f74d2f101a3e561f6_151082_2560x1440_fit_box_2.png" title="Panel de Grafana pàra métricas de Hystrix" data-gallery="data-gallery"><img src="/blog-bitix/2018/12/exponer-las-metricas-de-hystrix-en-grafana-con-prometheus-de-una-aplicacion-spring-boot/images/grafana-hystrix-dashboard_hubb858c136f51315f74d2f101a3e561f6_151082_600x450_fit_box_2.png" width="600"/></a></p>
-  <figcaption>Panel de Grafana para métricas de Hystrix</figcaption>
+<a href="/blog-bitix/2018/12/exponer-las-metricas-de-hystrix-en-grafana-con-prometheus-de-una-aplicacion-spring-boot/images/grafana-hystrix-dashboard_hubb858c136f51315f74d2f101a3e561f6_151082_2560x1440_fit_box_2.png" title="Panel de Grafana pàra métricas de Hystrix" data-gallery="data-gallery"><img src="/blog-bitix/2018/12/exponer-las-metricas-de-hystrix-en-grafana-con-prometheus-de-una-aplicacion-spring-boot/images/grafana-hystrix-dashboard_hubb858c136f51315f74d2f101a3e561f6_151082_600x450_fit_box_2.png" width="600"/></a>
+<figcaption>Panel de Grafana para métricas de Hystrix</figcaption>
 </figure>
 </div>
 <p>Exponer las métricas en una aplicación de Spring Boot para Prometheus es muy sencillo y con Grafana se puede observar el estado del sistema de forma tan detallada como lo sean las métricas expuestas por la aplicación. Por defecto Spring Boot ya expone una buena cantidad de métricas del estado del servicio como uso de CPU, memoria, hilos o recolector de basura.</p>
@@ -628,18 +628,18 @@
 </p>
 <div class="reference">
     Referencia:<br>
-    <ul>
+<ul>
 <li><a href="https://github.com/spring-cloud/spring-cloud-netflix/issues/3004">Expose Hystrix metrics to Actuator /metrics (and /prometheus)</a></li>
 </ul>
 </div>
 ]]></content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/><category term="software"/><category term="spring"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/</id><title>Monitorizar una aplicación Java de Spring Boot con Micrometer, Prometheus y Grafana</title><updated>2018-12-14T20:00:00+01:00</updated><published>2018-12-14T20:00:00+01:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/"/><author><name>picodotdev</name></author><content type="html">
-<![CDATA[<div class="logotypes" style="float: right;">
+<![CDATA[<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/java.svg" class="right " width="200" alt="Java" title="Java"/>
 </div>
-<div class="logotypes" style="float: right; clear: right;">
+<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/prometheus.svg" class="right " width="200" alt="Promehteus" title="Promehteus"/>
 </div>
-<div class="logotypes" style="float: right; clear: right;">
+<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/grafana.svg" class="right " width="200" alt="Grafana" title="Grafana"/>
 </div>
 <p>Los <a href="https://spring.io/projects">proyectos de Spring</a> no son tan conservadores como Java EE o ahora Jakata EE y se desarrollan a una velocidad mayor cubriendo de forma más temprana las necesidades de los programadores según evolucionan las tecnologías y se adoptan nuevos modelos de arquitectura.</p>
@@ -735,24 +735,24 @@
 <p>Prometheus posee la funcionalidad básica de crear gŕaficas con las métricas recogidas pero no tiene la habilidad de crear paneles que recogen una colección de gráficas relacionadas o un editor de consultas más avanzado como tiene Grafana.</p>
 <div class="media">
 <figure>
-<p><a href="/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/images/prometheus-graph_hudb4fb1b3b4c5fc9bfe9195d2743ad9f9_62771_2560x1440_fit_box_2.png" title="Métrica de la aplicación en Prometheus" data-gallery="data-gallery"><img src="/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/images/prometheus-graph_hudb4fb1b3b4c5fc9bfe9195d2743ad9f9_62771_300x200_fit_box_2.png" width="179"/></a></p>
-<p><a href="/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/images/grafana-graph_hu70e557534c16596229235e47193c737c_53439_2560x1440_fit_box_2.png" title="Métrica de la aplicación en Grafana" data-gallery="data-gallery"><img src="/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/images/grafana-graph_hu70e557534c16596229235e47193c737c_53439_300x200_fit_box_2.png" width="300"/></a></p>
-  <figcaption>Métrica de la aplicación en Prometheus y Grafana</figcaption>
+<a href="/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/images/prometheus-graph_hudb4fb1b3b4c5fc9bfe9195d2743ad9f9_62771_2560x1440_fit_box_2.png" title="Métrica de la aplicación en Prometheus" data-gallery="data-gallery"><img src="/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/images/prometheus-graph_hudb4fb1b3b4c5fc9bfe9195d2743ad9f9_62771_300x200_fit_box_2.png" width="179"/></a>
+<a href="/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/images/grafana-graph_hu70e557534c16596229235e47193c737c_53439_2560x1440_fit_box_2.png" title="Métrica de la aplicación en Grafana" data-gallery="data-gallery"><img src="/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/images/grafana-graph_hu70e557534c16596229235e47193c737c_53439_300x200_fit_box_2.png" width="300"/></a>
+<figcaption>Métrica de la aplicación en Prometheus y Grafana</figcaption>
 </figure>
 </div>
 <p>Una vez que Prometheus recolecta los datos de las métricas al introducir las expresiones se proporciona asistencia de código. Por otro lado, en la sección <em>Status &gt; Targets</em> de
 Prometheus se puede ver el estado de los servicios de los que recolecta métricas.</p>
 <div class="media">
 <figure>
-<p><a href="/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/images/prometheus-targets_hufff0caf060b535c26e9dd0ca59058429_51904_2560x1440_fit_box_2.png" title="Estado de servicios en Prometheus" data-gallery="data-gallery"><img src="/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/images/prometheus-targets_hufff0caf060b535c26e9dd0ca59058429_51904_300x200_fit_box_2.png" width="284"/></a></p>
-  <figcaption>Estado de los servicios rastreados por Prometheus</figcaption>
+<a href="/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/images/prometheus-targets_hufff0caf060b535c26e9dd0ca59058429_51904_2560x1440_fit_box_2.png" title="Estado de servicios en Prometheus" data-gallery="data-gallery"><img src="/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/images/prometheus-targets_hufff0caf060b535c26e9dd0ca59058429_51904_300x200_fit_box_2.png" width="284"/></a>
+<figcaption>Estado de los servicios rastreados por Prometheus</figcaption>
 </figure>
 </div>
 <p>Como Spring Boot Actuator exporta muchas métricas del funcionamiento del servicio Grafana puede crear gráficas de todas ellas. No hace falta crear un <em>dashboard</em> desde cero, se pueden descargar e importar <em>dashboards</em>. Este <a href="https://grafana.com/dashboards/4701">ejemplo para Micrometer</a> recoge la memoria de la JVM (<em>heap</em> y no <em>heap</em>), uso de CPU, carga, hilos, estado de hilos, descriptores de archivos, recolector de basura, <em>classloader</em> y entrada/salida básica.</p>
 <div class="media">
 <figure>
-<p><a href="/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/images/grafana-spring-boot-micrometer-dashboard_hu1e421ff25cd5fbc7f190e3d824bd4790_201078_2560x1440_fit_box_2.png" title="Estado de servicios en Prometheus" data-gallery="data-gallery"><img src="/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/images/grafana-spring-boot-micrometer-dashboard_hu1e421ff25cd5fbc7f190e3d824bd4790_201078_600x450_fit_box_2.png" width="600"/></a></p>
-  <figcaption>Dashboard de una aplicación Spring Boot en Grafana</figcaption>
+<a href="/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/images/grafana-spring-boot-micrometer-dashboard_hu1e421ff25cd5fbc7f190e3d824bd4790_201078_2560x1440_fit_box_2.png" title="Estado de servicios en Prometheus" data-gallery="data-gallery"><img src="/blog-bitix/2018/12/monitorizar-una-aplicacion-java-de-spring-boot-con-micrometer-prometheus-y-grafana/images/grafana-spring-boot-micrometer-dashboard_hu1e421ff25cd5fbc7f190e3d824bd4790_201078_600x450_fit_box_2.png" width="600"/></a>
+<figcaption>Dashboard de una aplicación Spring Boot en Grafana</figcaption>
 </figure>
 </div>
 <p><a href="https://grafana.com/plugins">Grafana tiene <em>plugins</em></a> para añadir como fuentes de datos bases de datos relacionales para extraer mediante sentencias SQL y visualizar datos almacenados en <a href="https://www.mysql.com/">MySQL</a>,  <a href="https://www.postgresql.org/">PostgreSQL</a> u <a href="https://www.oracle.com/">Oracle</a>.</p>
@@ -763,7 +763,7 @@ Prometheus se puede ver el estado de los servicios de los que recolecta métrica
 </p>
 <div class="reference">
     Referencia:<br>
-    <ul>
+<ul>
 <li><a href="https://njalnordmark.wordpress.com/2017/05/08/using-prometheus-with-spring-boot/">Using Prometheus with Spring Boot</a></li>
 <li><a href="https://raymondhlee.wordpress.com/2016/09/24/monitoring-spring-boot-applications-with-prometheus/">Monitoring Spring Boot Applications with Prometheus – Part 1</a></li>
 <li><a href="https://raymondhlee.wordpress.com/2016/10/03/monitoring-spring-boot-applications-with-prometheus-part-2/">Monitoring Spring Boot Applications with Prometheus – Part 2</a></li>
@@ -772,10 +772,10 @@ Prometheus se puede ver el estado de los servicios de los que recolecta métrica
 </ul>
 </div>
 ]]></content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/><category term="software"/><category term="spring"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2018/10/proxy-para-microservicios-con-spring-cloud-netflix-y-zuul/</id><title>Proxy para microservicios con Spring Cloud Netflix y Zuul</title><updated>2018-10-13T23:00:00+02:00</updated><published>2018-10-13T23:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/10/proxy-para-microservicios-con-spring-cloud-netflix-y-zuul/"/><author><name>picodotdev</name></author><content type="html">
-<![CDATA[<div class="logotypes" style="float: right;">
+<![CDATA[<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/spring.svg" class="right " width="200" alt="Spring" title="Spring"/>
 </div>
-<div class="logotypes" style="float: right; clear: right;">
+<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/java.svg" class="right " width="200" alt="Java" title="Java"/>
 </div>
 <p>Teniendo una buen número de microservicios con múltiples instancias ofreciendo cada uno una API y en una ubicación diferente para simplificar la visión de los que actúen clientes de los microservicios se puede utilizar un <em>proxy</em>. Con un <em>proxy</em> es posible centralizar todas las peticiones, que sea éste el encargado de conocer la ubicación de todas las instancias de los microservicios y de hacer la llamada allí donde se encuentre cada una de ellas.</p>
@@ -859,10 +859,10 @@ Prometheus se puede ver el estado de los servicios de los que recolecta métrica
     El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/SpringCloud">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew-run.sh</code>. 
 </p>
 ]]></content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/><category term="spring"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2018/10/balanceo-de-carga-y-resilencia-en-un-microservicio-con-spring-cloud-netflix-y-ribbon/</id><title>Balanceo de carga y resilencia en un microservicio con Spring Cloud Netflix y Ribbon</title><updated>2018-10-12T20:46:00+02:00</updated><published>2018-10-12T11:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/10/balanceo-de-carga-y-resilencia-en-un-microservicio-con-spring-cloud-netflix-y-ribbon/"/><author><name>picodotdev</name></author><content type="html">
-<![CDATA[<div class="logotypes" style="float: right;">
+<![CDATA[<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/spring.svg" class="right " width="200" alt="Spring" title="Spring"/>
 </div>
-<div class="logotypes" style="float: right; clear: right;">
+<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/java.svg" class="right " width="200" alt="Java" title="Java"/>
 </div>
 <p>Un servicio que recibe numerosas peticiones o es crítico para el funcionamiento de una aplicación es necesario escalarlo o crear múltiples instancias de él para atender toda la carga que se demanda o para que en caso de que una instancia falle haya otras disponibles que funcionen correctamente para atender las peticiones.</p>
@@ -921,10 +921,10 @@ Prometheus se puede ver el estado de los servicios de los que recolecta métrica
     El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/SpringCloud">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradle-run.sh</code>. 
 </p>
 ]]></content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/><category term="spring"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/</id><title>Tolerancia a fallos en un cliente de microservicio con Spring Cloud Netflix y Hystrix</title><updated>2019-10-10T19:00:00+01:00</updated><published>2018-10-05T20:30:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/"/><author><name>picodotdev</name></author><content type="html">
-<![CDATA[<div class="logotypes" style="float: right;">
+<![CDATA[<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/spring.svg" class="right " width="200" alt="Spring" title="Spring"/>
 </div>
-<div class="logotypes" style="float: right; clear: right;">
+<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/java.svg" class="right " width="200" alt="Java" title="Java"/>
 </div>
 <p>Los microservicios son independientes unos de otros y se comunican mediante operaciones de red. Dado que las operaciones se realizan a través de un medio no confiable como la red, dada su naturaleza efímera y a que pueden fallar en los microservicios es importante que los clientes estén preparados ante posibles fallos.</p>
@@ -942,10 +942,10 @@ Prometheus se puede ver el estado de los servicios de los que recolecta métrica
 <p>El patrón <em>circuit breaker</em> se denomina así ya que implementa una lógica similar a un circuito eléctrico. El circuito en su estado normal está cerrado y se realizan las llamadas al microservicio servidor. Si el microservicio servidor empieza a fallar se llama a la acción alternativa con su valor, si se supera un umbral de errores el circuito pasa a estado abierto y se dejan de hacer llamadas al microservicio servidor. Cada cierto tiempo definido se realiza una llamada al servicio servidor para comprobar su estado de forma que si responde correctamente el circuito pasa a estado cerrado nuevamente y las siguientes llamadas se realizan al microservicio servidor dejándose de utilizar la acción alternativa.</p>
 <div class="media">
 <figure>
-<p><a href="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/circuit-breaker-diagram_hu4845d342695fc4ba4f8fa8d72c767f7b_90482_2560x1440_fit_box_2.png" title="Diagrama del patrón circuit breaker" data-gallery="data-gallery"><img src="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/circuit-breaker-diagram_hu4845d342695fc4ba4f8fa8d72c767f7b_90482_300x200_fit_box_2.png" width="127"/></a></p>
-<p><a href="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/circuit-breaker-states_hu56e2a01b6636c9453b9193ae50db8c8e_29040_2560x1440_fit_box_2.png" title="Diagrama de estados" data-gallery="data-gallery"><img src="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/circuit-breaker-states_hu56e2a01b6636c9453b9193ae50db8c8e_29040_300x200_fit_box_2.png" width="222"/></a></p>
-<p><a href="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/hystrix-fallback_hu341ff0d18f5e14bb81f44a2d6d1769ba_44880_2560x1440_fit_box_2.png" title="Fallback del patrón circuit breaker" data-gallery="data-gallery"><img src="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/hystrix-fallback_hu341ff0d18f5e14bb81f44a2d6d1769ba_44880_300x200_fit_box_2.png" width="300"/></a></p>
-  <figcaption>Diagrama del patrón circuit breaker, de estados y método fallback</figcaption>
+<a href="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/circuit-breaker-diagram_hu4845d342695fc4ba4f8fa8d72c767f7b_90482_2560x1440_fit_box_2.png" title="Diagrama del patrón circuit breaker" data-gallery="data-gallery"><img src="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/circuit-breaker-diagram_hu4845d342695fc4ba4f8fa8d72c767f7b_90482_300x200_fit_box_2.png" width="127"/></a>
+<a href="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/circuit-breaker-states_hu56e2a01b6636c9453b9193ae50db8c8e_29040_2560x1440_fit_box_2.png" title="Diagrama de estados" data-gallery="data-gallery"><img src="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/circuit-breaker-states_hu56e2a01b6636c9453b9193ae50db8c8e_29040_300x200_fit_box_2.png" width="222"/></a>
+<a href="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/hystrix-fallback_hu341ff0d18f5e14bb81f44a2d6d1769ba_44880_2560x1440_fit_box_2.png" title="Fallback del patrón circuit breaker" data-gallery="data-gallery"><img src="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/hystrix-fallback_hu341ff0d18f5e14bb81f44a2d6d1769ba_44880_300x200_fit_box_2.png" width="300"/></a>
+<figcaption>Diagrama del patrón circuit breaker, de estados y método fallback</figcaption>
 </figure>
 </div>
 <p>Para utilizar Hystrix como implementación del patrón <em>circuit breaker</em> en una aplicación Java con <a href="https://projects.spring.io/spring-boot/">Spring Boot</a> el método que realiza la llamada al microservicio servidor ha de  encapsularse en un método anotado con la anotación <a href="https://netflix.github.io/Hystrix/javadoc/com/netflix/hystrix/HystrixCommand.html">@HystrixCommand</a>, como parámetro se indica un método con la acción alternativa o <em>fallback</em> que obtiene un valor en los fallos. También se puede indicar el <em>tiemout</em> de espera antes de considerar que la llamada ha fallado con la propiedad <em>execution.isolation.thread.timeoutInMilliseconds</em>. Igualmente se pueden indicar los valores para abrir el circuito con <em>circuitBreaker.requestVolumeThreshold</em> y <em>circuitBreaker.errorThresholdPercentage</em>. Esos son los básicos para utilizar este patrón de tolerancia a fallos. Tiene <a href="https://github.com/Netflix/Hystrix/tree/master/hystrix-contrib/hystrix-javanica#configuration">algunos valores adicionales más que se pueden configurar</a> para adaptar el patrón a los valores óptimos de la aplicación.</p>
@@ -990,9 +990,9 @@ Prometheus se puede ver el estado de los servicios de los que recolecta métrica
 <p>Para monitorizar en tiempo real el estado del sistema y de los circuitos se ofrece un <em>dashboard</em> en el que visualizan el número de peticiones que se están realizando, las fallidas, el estado de los circuitos, las que fallan por <em>timeout</em> o las que fallan con error. Para tener acceso a esta página hay que incluir la dependencia <em>org.springframework.cloud:spring-cloud-starter-netflix-hystrix-dashboard</em>. La página <em>dashboard</em> está disponible en la dirección <em>http://localhost:8085/hystrix</em>. Este <em>dahsboard</em> que ofrece Hystrix es muy básico y con un diseño mejorable, se pueden <a href="https://picodotdev.github.io/blog-bitix/2018/12/exponer-las-metricas-de-hystrix-en-grafana-con-prometheus-de-una-aplicacion-spring-boot/">exponer las métricas de Hystrix en Grafana con Prometheus</a> para tener un panel con exactamente la información que se desee en una gráficas muhco más vistosas además de observar los datos exactamente en el periodo de tiempo deseado.</p>
 <div class="media">
 <figure>
-<p><a href="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/circuit-breaker-closed_huce59696db4bb781bd0e709b415bf52e8_382684_2560x1440_fit_box_2.png" title="Circuit breaker cerrado" data-gallery="data-gallery"><img src="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/circuit-breaker-closed_huce59696db4bb781bd0e709b415bf52e8_382684_300x200_fit_box_2.png" width="300"/></a></p>
-<p><a href="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/circuit-breaker-open_huce59696db4bb781bd0e709b415bf52e8_384418_2560x1440_fit_box_2.png" title="Circuit breaker abierto" data-gallery="data-gallery"><img src="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/circuit-breaker-open_huce59696db4bb781bd0e709b415bf52e8_384418_300x200_fit_box_2.png" width="300"/></a></p>
-  <figcaption>Estados del circuit breaker</figcaption>
+<a href="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/circuit-breaker-closed_huce59696db4bb781bd0e709b415bf52e8_382684_2560x1440_fit_box_2.png" title="Circuit breaker cerrado" data-gallery="data-gallery"><img src="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/circuit-breaker-closed_huce59696db4bb781bd0e709b415bf52e8_382684_300x200_fit_box_2.png" width="300"/></a>
+<a href="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/circuit-breaker-open_huce59696db4bb781bd0e709b415bf52e8_384418_2560x1440_fit_box_2.png" title="Circuit breaker abierto" data-gallery="data-gallery"><img src="/blog-bitix/2018/10/tolerancia-a-fallos-en-un-cliente-de-microservicio-con-spring-cloud-netflix-y-hystrix/images/circuit-breaker-open_huce59696db4bb781bd0e709b415bf52e8_384418_300x200_fit_box_2.png" width="300"/></a>
+<figcaption>Estados del circuit breaker</figcaption>
 </figure>
 </div>
 <div class="code">
@@ -1007,7 +1007,7 @@ Prometheus se puede ver el estado de los servicios de los que recolecta métrica
 </p>
 <div class="reference">
     Referencia:<br>
-    <ul>
+<ul>
 <li><a href="https://www.martinfowler.com/bliki/CircuitBreaker.html">CircuitBreaker</a></li>
 <li><a href="http://cloud.spring.io/spring-cloud-static/spring-cloud-netflix/2.0.1.RELEASE/single/spring-cloud-netflix.html#_circuit_breaker_hystrix_clients">Circuit Breaker: Hystrix Clients</a></li>
 <li><a href="https://github.com/Netflix/Hystrix/tree/master/hystrix-contrib/hystrix-javanica#configuration">Hyxtrix Configuration (1)</a></li>
@@ -1016,10 +1016,10 @@ Prometheus se puede ver el estado de los servicios de los que recolecta métrica
 </ul>
 </div>
 ]]></content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/><category term="spring"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2018/09/almacenar-cifrados-los-valores-de-configuracion-sensibles-en-spring-cloud-config/</id><title>Almacenar cifrados los valores de configuración sensibles en Spring Cloud Config</title><updated>2018-09-30T01:40:00+02:00</updated><published>2018-09-30T01:30:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/09/almacenar-cifrados-los-valores-de-configuracion-sensibles-en-spring-cloud-config/"/><author><name>picodotdev</name></author><content type="html">
-<![CDATA[<div class="logotypes" style="float: right;">
+<![CDATA[<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/spring.svg" class="right " width="200" alt="Spring" title="Spring"/>
 </div>
-<div class="logotypes" style="float: right; clear: right;">
+<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/java.svg" class="right " width="200" alt="Java" title="Java"/>
 </div>
 <p>Para no tener que hacer cambios en el código que implica recompilar la aplicación y generar de nuevos los artefactos al cambiar algunos valores de la aplicación se utilizan los archivos de configuración. Los archivos de configuración son archivos de texto plano que pueden seguir algún formato como <em>properties</em>, <em>xml</em> o <em>yaml</em>, externos a la aplicación pero que lee sus propiedades al iniciarse. Algunas propiedades de configuración de ejemplo pueden ser la cadena de conexión a una base de datos, el usuario y contraseña.</p>
@@ -1090,10 +1090,10 @@ Prometheus se puede ver el estado de los servicios de los que recolecta métrica
     El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/SpringCloud">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradle-run.sh, ./curl-1.sh</code>. 
 </p>
 ]]></content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/><category term="spring"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2018/09/recargar-sin-reiniciar-la-configuracion-de-una-aplicacion-spring-boot-con-spring-cloud-config/</id><title>Recargar sin reiniciar la configuración de una aplicación Spring Boot con Spring Cloud Config</title><updated>2018-09-23T00:50:00+02:00</updated><published>2018-09-23T00:15:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/09/recargar-sin-reiniciar-la-configuracion-de-una-aplicacion-spring-boot-con-spring-cloud-config/"/><author><name>picodotdev</name></author><content type="html">
-<![CDATA[<div class="logotypes" style="float: right;">
+<![CDATA[<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/spring.svg" class="right " width="200" alt="Spring" title="Spring"/>
 </div>
-<div class="logotypes" style="float: right; clear: right;">
+<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/java.svg" class="right " width="200" alt="Java" title="Java"/>
 </div>
 <p>No es raro la necesidad de querer cambiar algunos valores de la configuración de una aplicación sin ningún cambio adicional en el código. Normalmente la configuración se externaliza en un archivo de texto en un determinado formato como <em>properties</em> o <em>yaml</em> que se lee al iniciarse la aplicación pero que al querer hacer cambios y hacerlos efectivos requiere reiniciar la aplicación.</p>
@@ -1171,17 +1171,17 @@ Prometheus se puede ver el estado de los servicios de los que recolecta métrica
 </p>
 <div class="reference">
     Referencia:<br>
-    <ul>
+<ul>
 <li><a href="http://cloud.spring.io/spring-cloud-static/spring-cloud-bus/2.0.0.RELEASE/single/spring-cloud-bus.html#_quick_start">Spring Cloud Bus - Quick Start</a></li>
 <li><a href="http://cloud.spring.io/spring-cloud-static/spring-cloud-config/2.0.1.RELEASE/single/spring-cloud-config.html#_push_notifications_and_spring_cloud_bus">Spring CloudBus - Push Notifications and Spring Cloud Bus</a></li>
 <li><a href="https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-configuration-classes.html">Spring Boot - Configuration Classes</a></li>
 </ul>
 </div>
 ]]></content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/><category term="spring"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2018/09/servicio-de-configuracion-para-microservicios-con-spring-cloud-config/</id><title>Servicio de configuración para microservicios con Spring Cloud Config</title><updated>2018-09-15T19:30:00+02:00</updated><published>2018-09-15T16:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/09/servicio-de-configuracion-para-microservicios-con-spring-cloud-config/"/><author><name>picodotdev</name></author><content type="html">
-<![CDATA[<div class="logotypes" style="float: right;">
+<![CDATA[<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/spring.svg" class="right " width="200" alt="Spring" title="Spring"/>
 </div>
-<div class="logotypes" style="float: right; clear: right;">
+<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/java.svg" class="right " width="200" alt="Java" title="Java"/>
 </div>
 <p>Al igual que un servicio de registro y descubrimiento es esencial para los microservicios un servicio de obtención de configuración de donde puedan obtener su configuración es también básico. Dado el gran número de microservicios de los que puede estar compuesta una aplicación, su carácter efímero, los varios entornos de ejecución (desarrollo, pruebas, producción, &hellip;) mantener centralizada la configuración en un único sitio hace las cosas mucho más sencillas cuando hay que cambiar el valor de alguna propiedad, en vez de la alternativa aún externalizada del artefacto del microservicio en el sistema de archivos del entorno de ejecución.</p>
@@ -1196,8 +1196,8 @@ Prometheus se puede ver el estado de los servicios de los que recolecta métrica
 </div>
 <div class="media">
 <figure>
-<p><a href="/blog-bitix/2018/09/servicio-de-configuracion-para-microservicios-con-spring-cloud-config/images/spring-eureka-2_hub1cbfdfec6fa7e0b16e220ff391ac48f_114116_2560x1440_fit_box_2.png" title="Servicios registrados en el servicio de registro y descubrimiento" data-gallery="data-gallery"><img src="/blog-bitix/2018/09/servicio-de-configuracion-para-microservicios-con-spring-cloud-config/images/spring-eureka-2_hub1cbfdfec6fa7e0b16e220ff391ac48f_114116_300x200_fit_box_2.png" width="244"/></a></p>
-  <figcaption>Servicios y su estado registrados en el servicio de registro y descubrimiento</figcaption>
+<a href="/blog-bitix/2018/09/servicio-de-configuracion-para-microservicios-con-spring-cloud-config/images/spring-eureka-2_hub1cbfdfec6fa7e0b16e220ff391ac48f_114116_2560x1440_fit_box_2.png" title="Servicios registrados en el servicio de registro y descubrimiento" data-gallery="data-gallery"><img src="/blog-bitix/2018/09/servicio-de-configuracion-para-microservicios-con-spring-cloud-config/images/spring-eureka-2_hub1cbfdfec6fa7e0b16e220ff391ac48f_114116_300x200_fit_box_2.png" width="244"/></a>
+<figcaption>Servicios y su estado registrados en el servicio de registro y descubrimiento</figcaption>
 </figure>
 </div>
 <p>Dado que los servicios de configuración no pueden confiar en obtener su configuración de una instancia de su servicio de configuración ha de establecerse en el propio microservicio los nombres de <em>host</em> de las instancias de registro y descubrimiento en las que registrarse, en la propiedad <em>eureka.client.serviceUrl.defaultZone</em>.</p>
@@ -1267,7 +1267,7 @@ Prometheus se puede ver el estado de los servicios de los que recolecta métrica
 </p>
 <div class="reference">
     Referencia:<br>
-    <ul>
+<ul>
 <li><a href="http://cloud.spring.io/spring-cloud-static/spring-cloud-config/2.0.1.RELEASE/single/spring-cloud-config.html#_git_backend">Spring Cloud Config, Git</a></li>
 <li><a href="http://cloud.spring.io/spring-cloud-static/spring-cloud-config/2.0.1.RELEASE/single/spring-cloud-config.html#vault-backend">Spring Cloud Config, Vault</a></li>
 <li><a href="http://cloud.spring.io/spring-cloud-static/spring-cloud-config/2.0.1.RELEASE/single/spring-cloud-config.html#_jdbc_backend">Spring Cloud Config, JDBC</a></li>
@@ -1275,10 +1275,10 @@ Prometheus se puede ver el estado de los servicios de los que recolecta métrica
 </ul>
 </div>
 ]]></content><category term="java"/><category term="planeta-codigo"/><category term="programacion"/><category term="spring"/></entry><entry><id>https://picodotdev.github.io/blog-bitix/2018/09/registro-y-descubrimiento-de-servicios-con-spring-cloud-netflix/</id><title>Registro y descubrimiento de servicios con Spring Cloud Netflix</title><updated>2018-09-07T19:00:00+02:00</updated><published>2018-09-07T19:00:00+02:00</published><link rel="alternate" href="https://picodotdev.github.io/blog-bitix/2018/09/registro-y-descubrimiento-de-servicios-con-spring-cloud-netflix/"/><author><name>picodotdev</name></author><content type="html">
-<![CDATA[<div class="logotypes" style="float: right;">
+<![CDATA[<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/spring.svg" class="right " width="200" alt="Spring" title="Spring"/>
 </div>
-<div class="logotypes" style="float: right; clear: right;">
+<div class="logotypes">
     <img src="/blog-bitix/assets/images/logotipos/java.svg" class="right " width="200" alt="Java" title="Java"/>
 </div>
 <p>Los microservicios en una aplicación con una arquitectura de microservicios son efímeros, se crean, se escalan para atender picos de mayor demanda, pueden desaparecer por problemas de la red de comunicaciones que no es fiable y volverse a crear en una ubicación diferente. Por esta naturaleza efímera es necesario un servicio con el cual los clientes de los microservicios puedan encontrarlos y que los microservicios utilizan para registrarse cuando se inician.</p>
@@ -1335,9 +1335,9 @@ Prometheus se puede ver el estado de los servicios de los que recolecta métrica
 <p>Una vez iniciados los servidores de descubrimiento en la página <em>dashboard</em> de cualquiera de ellos cambiando el puerto de la dirección <em>http://ds1.127.0.0.1.xip.io:8761/</em> se observan varias propiedades como la lista de servidores del cluster, las réplicas registradas y disponibles y los servicios registrados con su ubicación y puerto. En este caso hay tres instancias del servicio de registro y descubrimiento, una de servidor de configuración y dos instancias de un servicio.</p>
 <div class="media">
 <figure>
-<p><a href="/blog-bitix/2018/09/registro-y-descubrimiento-de-servicios-con-spring-cloud-netflix/images/spring-eureka-1_hucbae4859ed8e1c01a78ce54eb118f2fc_101099_2560x1440_fit_box_2.png" title="Cluster del servicio de registro y descubrimiento" data-gallery="data-gallery"><img src="/blog-bitix/2018/09/registro-y-descubrimiento-de-servicios-con-spring-cloud-netflix/images/spring-eureka-1_hucbae4859ed8e1c01a78ce54eb118f2fc_101099_300x200_fit_box_2.png" width="258"/></a></p>
-<p><a href="/blog-bitix/2018/09/registro-y-descubrimiento-de-servicios-con-spring-cloud-netflix/images/spring-eureka-2_hub1cbfdfec6fa7e0b16e220ff391ac48f_114116_2560x1440_fit_box_2.png" title="Servicios registrados en el servicio de registro y descubrimiento" data-gallery="data-gallery"><img src="/blog-bitix/2018/09/registro-y-descubrimiento-de-servicios-con-spring-cloud-netflix/images/spring-eureka-2_hub1cbfdfec6fa7e0b16e220ff391ac48f_114116_300x200_fit_box_2.png" width="244"/></a></p>
-  <figcaption>Servicios y su estado registrados en el servicio de registro y descubrimiento</figcaption>
+<a href="/blog-bitix/2018/09/registro-y-descubrimiento-de-servicios-con-spring-cloud-netflix/images/spring-eureka-1_hucbae4859ed8e1c01a78ce54eb118f2fc_101099_2560x1440_fit_box_2.png" title="Cluster del servicio de registro y descubrimiento" data-gallery="data-gallery"><img src="/blog-bitix/2018/09/registro-y-descubrimiento-de-servicios-con-spring-cloud-netflix/images/spring-eureka-1_hucbae4859ed8e1c01a78ce54eb118f2fc_101099_300x200_fit_box_2.png" width="258"/></a>
+<a href="/blog-bitix/2018/09/registro-y-descubrimiento-de-servicios-con-spring-cloud-netflix/images/spring-eureka-2_hub1cbfdfec6fa7e0b16e220ff391ac48f_114116_2560x1440_fit_box_2.png" title="Servicios registrados en el servicio de registro y descubrimiento" data-gallery="data-gallery"><img src="/blog-bitix/2018/09/registro-y-descubrimiento-de-servicios-con-spring-cloud-netflix/images/spring-eureka-2_hub1cbfdfec6fa7e0b16e220ff391ac48f_114116_300x200_fit_box_2.png" width="244"/></a>
+<figcaption>Servicios y su estado registrados en el servicio de registro y descubrimiento</figcaption>
 </figure>
 </div>
 <p>
