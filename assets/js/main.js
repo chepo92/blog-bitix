@@ -1,4 +1,4 @@
-require(['jquery', 'jquery-blueimp-gallery'], function ($, blueimp) {
+require(['jquery', 'lozad', 'jquery-blueimp-gallery'], function ($, lozad, blueimp) {
     function initBackground() {
         // Background
         function random(min, max) {
@@ -57,8 +57,31 @@ require(['jquery', 'jquery-blueimp-gallery'], function ($, blueimp) {
             return false;
         });
     }
+
+    function initLazyload() {
+        var observer = lozad('.lozad', {
+            rootMargin: '50px 0px'
+        });
+
+        var disqusObserver = lozad('#disqus_thread', {
+            rootMargin: '50px 0px',
+            load: function(el) {
+                $.ajax({
+                    url: '//' + disqus_shortname + '.disqus.com/' + disqus_script,
+                    async: true,
+                    cache: true,
+                    dataType: 'script',
+                    success: function() {}
+                });
+            }
+        });
+
+        observer.observe();
+        disqusObserver.observe();
+    }
     
     initBackground();
     initSearch();
+    initLazyload();
 });
 

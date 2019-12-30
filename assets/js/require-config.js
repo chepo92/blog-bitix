@@ -1,9 +1,10 @@
 var require = {
     baseUrl: 'assets',
     paths: {
-        'jquery': 'libs/jquery-3.4.1.slim.min',
+        'jquery': 'libs/jquery-3.4.1.min',
         'bootstrap': 'libs/bootstrap-4.3.1/js/bootstrap.min',
         'bowser': 'libs/bowser-2.3.0',
+        'lozad': 'libs/lozad-1.14.0.min',
         'blueimp-helper': 'libs/Gallery-2.33.0/js/blueimp-helper',
         'blueimp-gallery': 'libs/Gallery-2.33.0/js/blueimp-gallery',
         'blueimp-gallery-indicator': 'libs/Gallery-2.33.0/js/blueimp-gallery-indicator',
@@ -14,7 +15,7 @@ var require = {
     },
     shim: {
         'jquery': {
-            exports: 'jquery'
+            exports: 'jQuery'
         },
         'blueimp-gallery': {
             exports: 'blueimp'
