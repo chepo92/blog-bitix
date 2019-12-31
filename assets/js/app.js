@@ -1,4 +1,4 @@
-require(['jquery'], function($) {
+require(['jquery', 'lozad'], function($, lozad) {
     function initAnalytics() {
         ga('send', 'event', 'client', 'protocol', window.location.protocol.replace(new RegExp(':|/', 'gi'), ''), {'nonInteraction': 1});
       
@@ -33,8 +33,16 @@ require(['jquery'], function($) {
         $('div.share-this-end').on('click', function() {
             ga('send', 'event', 'share-this', 'click', 'end');
         });
+
+        var pageBottomObserver = lozad('#pageBottom', {
+            rootMargin: '50px 0px',
+            load: function(el) {
+                ga('send', 'event', 'page', 'show', 'bottom', {'nonInteraction': 1});
+            }
+        });
+        pageBottomObserver.observe();
     }
-    
+
     function initAdsense() {
         var n = $('body .container ins.adsbygoogle').length;
         for (var i = 0; i < n; ++i) {
