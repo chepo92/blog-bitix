@@ -1,25 +1,523 @@
-<!doctype html><html lang=es><head><meta name=base href=/blog-bitix/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="picodotdev"><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="Una de las tareas más importante que realizan algunas aplicaciones es el manejo de la entrada y salida ya sea al sistema de ficheros o a la red. Desde las versiones iniciales de Java se ha mejorado soporte añadiendo programación asíncrona de E/S, permitir obtener información de atributos propios del sistema de archivos, reconocimiento de enlaces simbólicos y facilitado de algunas operaciones básicas. &mldr;"><title>Introducción a NIO.2, el sistema de entrada/salida de Java</title><link rel="shortcut icon" href=/blog-bitix/assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=/blog-bitix/assets/apple-touch-icon-144-precomposed.png><link rel=canonical type=text/html href=https://picodotdev.github.io/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/><link rel=amphtml type=text/html href=https://picodotdev.github.io/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/index-amp.html><link rel=alternate type=application/rss+xml href=index.xml title="Blog Bitix"><link rel=humans type=text/plain href=/blog-bitix/humans.txt><link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i&display=swap" rel=stylesheet><meta property="og:title" content="Introducción a NIO.2, el sistema de entrada/salida de Java"><meta property="og:url" content="https://picodotdev.github.io/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/"><meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"><meta property="og:site_name" content="Blog Bitix"><meta property="og:description" content="Una de las tareas más importante que realizan algunas aplicaciones es el manejo de la entrada y salida ya sea al sistema de ficheros o a la red. Desde las versiones iniciales de Java se ha mejorado soporte añadiendo programación asíncrona de E/S, permitir obtener información de atributos propios del sistema de archivos, reconocimiento de enlaces simbólicos y facilitado de algunas operaciones básicas. &mldr;"><meta property="og:type" content="article"><meta name=twitter:card content="summary_large_image"><meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"><meta name=twitter:site content="@picodotdev"><meta name=twitter:title content="Introducción a NIO.2, el sistema de entrada/salida de Java"><meta name=twitter:description content="Una de las tareas más importante que realizan algunas aplicaciones es el manejo de la entrada y salida ya sea al sistema de ficheros o a la red. Desde las versiones iniciales de Java se ha mejorado soporte añadiendo programación asíncrona de E/S, permitir obtener información de atributos propios del sistema de archivos, reconocimiento de enlaces simbólicos y facilitado de algunas operaciones básicas. &mldr;"><meta name=twitter:creator content="@picodotdev"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://picodotdev.github.io/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/"},"headline":"Introducción a NIO.2, el sistema de entrada/salida de Java","image":{"@type":"ImageObject","url":"https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"},"datePublished":"2018-04-07T10:00:00+02:00","dateModified":"2018-04-07T14:00:00+02:00","inLanguage":"es","wordCount":"955","license":"https://creativecommons.org/licenses/by-sa/4.0/","author":{"@type":"Person","name":"picodotdev","url":"https://twitter.com/picodotdev/"},"publisher":{"@type":"Organization","name":"Blog Bitix","logo":{"@type":"ImageObject","url":"https://picodotdev.github.io/blog-bitix/assets/images/logotypes/blogbitix.png"}},"description":"Una de las tareas más importante que realizan algunas aplicaciones es el manejo de la entrada y salida ya sea al sistema de ficheros o a la red. Desde las versiones iniciales de Java se ha mejorado soporte añadiendo programación asíncrona de E/S, permitir obtener información de atributos propios del sistema de archivos, reconocimiento de enlaces simbólicos y facilitado de algunas operaciones básicas."}</script><link rel=stylesheet type=text/css href=/blog-bitix/assets/libs/bootstrap-4.4.1-dist/css/bootstrap.min.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/css/syntax.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/css/main.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/css/main-cookieconsent.css><script type=text/javascript src=/blog-bitix/assets/js/require-config.js defer></script><script type=text/javascript src=/blog-bitix/assets/libs/require.js data-main=/blog-bitix/assets/js/main defer></script><script type=text/javascript defer>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js defer></script><script type=text/javascript defer>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript src=/blog-bitix/assets/js/app.js defer></script></head><body><div class=container><div class=row><div class=col-12><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=/blog-bitix/assets/images/rss.png width=50 height=50 class=icon></a>
-<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=/blog-bitix/assets/images/twitter.svg width=50 height=50 class=icon></a>
-<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=/blog-bitix/assets/images/github.svg width=50 height=50 class=icon></a></div></div></div><div class=row><div class=col-12><nav class="nav nav-pills nav-fill"><a href=/blog-bitix/tags/java/ class="nav-item nav-link">Java</a>
-<a href=/blog-bitix/tags/gnu-linux/ class="nav-item nav-link">GNU/Linux</a>
-<a href=/blog-bitix/tags/javascript/ class="nav-item nav-link">JavaScript</a>
-<a href=/blog-bitix/tags/tapestry/ class="nav-item nav-link">Tapestry</a>
-<a href=/blog-bitix/archive/ class="nav-item nav-link">Archivo y hemeroteca</a>
-<a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
-<a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class=adblock-sidebar-container><div class=adblock-sidebar-container-left></div><div class=adblock-sidebar-container-right><ins class="adsbygoogle adblock-sidebar-vertical" data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format=vertical,rectangle data-type=auto></ins></div></div><article><h1>Introducción a NIO.2, el sistema de entrada/salida de Java</h1><p class=information>Escrito por
-<span>picodotdev</span> el <time>07/04/2018</time>, actualizado el <time>07/04/2018</time>.<br><a href=/blog-bitix/tags/blog/>blog</a>
-<a href=/blog-bitix/tags/java/>java</a>
-<a href=/blog-bitix/tags/planeta-codigo/>planeta-codigo</a>
-<a href=/blog-bitix/tags/programacion/>programacion</a><br><a href=/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/>Enlace permanente</a>
-<a href=/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/#comments>Comentarios</a></p><p class=summary>Una de las tareas más importante que realizan algunas aplicaciones es el manejo de la entrada y salida ya sea al sistema de ficheros o a la red. Desde las versiones iniciales de Java se ha mejorado soporte añadiendo programación asíncrona de E/S, permitir obtener información de atributos propios del sistema de archivos, reconocimiento de enlaces simbólicos y facilitado de algunas operaciones básicas.</p><div><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins></div><div class=content><div class=logotypes><img src=/blog-bitix/assets/images/logotypes/java.svg class=right width=200 height layout=responsive alt=Java title=Java></div><p>En las primeras versiones de Java el sistema de entrada/salida proporcionado en el paquete <a href=https://docs.oracle.com/javase/10/docs/api/java/io/package-summary.html><em>java.io</em></a> era básico. En la versión 1.4 de Java se añadió un nuevo sistema de entrada/salida llamado NIO para suplir algunas de sus deficiencias que posteriormente en Java 7 se mejoró aún más con NIO.2. Entre las mejoras se incluyen permitir navegación de directorios sencillo, soporte para reconocer enlaces simbólicos, leer atributos de ficheros como permisos e información como última fecha de modificación, soporte de entrada/salida asíncrona y soporte para operaciones básicas sobre ficheros como copiar y mover ficheros.</p><p>Las clases principales de esta nueva API para el manejo de rutas, ficheros y operaciones de entrada/salida son las siguientes:</p><ul><li><a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html>Path</a>: es una abstracción sobre una ruta de un sistema de ficheros. No tiene porque existir en el sistema de ficheros pero si si cuando se hacen algunas operaciones como la lectura del fichero que representa. Puede usarse como reemplazo completo de <a href=https://docs.oracle.com/javase/10/docs/api/java/io/File.html>java.io.File</a> pero si fuera necesario con los métodos <a href=https://docs.oracle.com/javase/10/docs/api/java/io/File.html#toPath()>File.toPath()</a> y <a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#toFile()>Path.toFile()</a> se ofrece compatibilidad entre ambas representaciones.</li><li><a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html>Files</a>: es una clase de utilidad con operaciones básicas sobre ficheros.</li><li><a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/FileSystems.html>FileSystems</a>: otra clase de utilidad como punto de entrada para obtener referencias a sistemas de archivos.</li></ul><p>Con la clase <em>Path</em> se pueden hacer operaciones sobre rutas como obtener la ruta absoluta de un <em>Path</em> relativo o el <em>Path</em> relativo de una ruta absoluta, de cuanto elementos se compone la ruta, obtener el <em>Path</em> padre o una parte de una ruta. Otros métodos interesantes son <a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#relativize(java.nio.file.Path)>relativize()</a>, <a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#normalize()>normalize()</a>, <a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#toAbsolutePath()>toAbsolutePath()</a>, <a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#resolve(java.nio.file.Path)>resolve()</a>, <a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#startsWith(java.nio.file.Path)>startsWith()</a> y <a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#endsWith(java.nio.file.Path)>endsWith()</a>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1&#10;</span><span class=lnt> 2&#10;</span><span class=lnt> 3&#10;</span><span class=lnt> 4&#10;</span><span class=lnt> 5&#10;</span><span class=lnt> 6&#10;</span><span class=lnt> 7&#10;</span><span class=lnt> 8&#10;</span><span class=lnt> 9&#10;</span><span class=lnt>10&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=c1>// Path&#10;</span><span class=c1></span><span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;# info&#34;</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>Path</span> <span class=n>relative</span> <span class=o>=</span> <span class=n>Paths</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=s>&#34;.&#34;</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>Path</span> <span class=n>absolute</span> <span class=o>=</span> <span class=n>relative</span><span class=o>.</span><span class=na>toAbsolutePath</span><span class=o>(</span><span class=o>)</span><span class=o>.</span><span class=na>normalize</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&#10;<span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;Relative: %s%n&#34;</span><span class=o>,</span> <span class=n>relative</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;Absolute: %s%n&#34;</span><span class=o>,</span> <span class=n>absolute</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;Name count: %d%n&#34;</span><span class=o>,</span> <span class=n>absolute</span><span class=o>.</span><span class=na>getNameCount</span><span class=o>(</span><span class=o>)</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;Parent: %s%n&#34;</span><span class=o>,</span> <span class=n>absolute</span><span class=o>.</span><span class=na>getParent</span><span class=o>(</span><span class=o>)</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;Subpath(0, 2): %s%n&#34;</span><span class=o>,</span> <span class=n>absolute</span><span class=o>.</span><span class=na>subpath</span><span class=o>(</span><span class=n>0</span><span class=o>,</span> <span class=n>2</span><span class=o>)</span><span class=o>)</span><span class=o>;</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span>Main-1.java</span></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span><span class=lnt>2&#10;</span><span class=lnt>3&#10;</span><span class=lnt>4&#10;</span><span class=lnt>5&#10;</span><span class=lnt>6&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext># info&#10;Relative: .&#10;Absolute: /home/picodotdev/Software/personal/blog-ejemplos/JavaNIO&#10;Name count: 6&#10;Parent: /home/picodotdev/Software/personal/blog-ejemplos&#10;Subpath(0, 2): home/picodotdev</code></pre></td></tr></table></div></div><div class=highlight-meta><span>info.out</span></div></div><p>Utilizando estas clases expondré algunos ejemplos siendo el primero recorrer el listado de archivos o también se podría hacer el listado de forma recursiva de un directorio e imprimir la información de cada archivo como nombre, si es un enlace simbólico, permisos propietario, fecha de última modificación y tamaño utilizando los siguiente métodos similar a lo que hace el comando <em>ls</em> de GNU/Linux:</p><ul><li><a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#walkFileTree(java.nio.file.Path,java.nio.file.FileVisitor)>Files.walkFileTree()</a></li><li><a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#isSymbolicLink(java.nio.file.Path)>Files.isSymbolicLink()</a></li><li><a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#readAttributes(java.nio.file.Path,java.lang.String,java.nio.file.LinkOption...)>Files.readAttributes()</a></li><li><a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/attribute/PosixFilePermissions.html>PosixFilePermissions</a></li><li><a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/FileVisitor.html>FileVisitor</a>, <a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/SimpleFileVisitor.html>SimpleFileVisitor</a></li></ul><p>Al igual que es posible leer los permisos también es posible establecerlos con el método <a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#setPosixFilePermissions(java.nio.file.Path,java.util.Set)>Files.setPosixFilePermissions()</a>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1&#10;</span><span class=lnt> 2&#10;</span><span class=lnt> 3&#10;</span><span class=lnt> 4&#10;</span><span class=lnt> 5&#10;</span><span class=lnt> 6&#10;</span><span class=lnt> 7&#10;</span><span class=lnt> 8&#10;</span><span class=lnt> 9&#10;</span><span class=lnt>10&#10;</span><span class=lnt>11&#10;</span><span class=lnt>12&#10;</span><span class=lnt>13&#10;</span><span class=lnt>14&#10;</span><span class=lnt>15&#10;</span><span class=lnt>16&#10;</span><span class=lnt>17&#10;</span><span class=lnt>18&#10;</span><span class=lnt>19&#10;</span><span class=lnt>20&#10;</span><span class=lnt>21&#10;</span><span class=lnt>22&#10;</span><span class=lnt>23&#10;</span><span class=lnt>24&#10;</span><span class=lnt>25&#10;</span><span class=lnt>26&#10;</span><span class=lnt>27&#10;</span><span class=lnt>28&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=c1>// ls -la&#10;</span><span class=c1></span><span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;# ls -la&#34;</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>Files</span><span class=o>.</span><span class=na>walk</span><span class=o>(</span><span class=n>relative</span><span class=o>,</span> <span class=n>1</span><span class=o>)</span><span class=o>.</span><span class=na>sorted</span><span class=o>(</span><span class=o>(</span><span class=n>p1</span><span class=o>,</span> <span class=n>p2</span><span class=o>)</span> <span class=o>-</span><span class=o>&gt;</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>return</span> <span class=n>p1</span><span class=o>.</span><span class=na>getFileName</span><span class=o>(</span><span class=o>)</span><span class=o>.</span><span class=na>toString</span><span class=o>(</span><span class=o>)</span><span class=o>.</span><span class=na>compareTo</span><span class=o>(</span><span class=n>p2</span><span class=o>.</span><span class=na>getFileName</span><span class=o>(</span><span class=o>)</span><span class=o>.</span><span class=na>toString</span><span class=o>(</span><span class=o>)</span><span class=o>)</span><span class=o>;</span>&#10;<span class=o>}</span><span class=o>)</span><span class=o>.</span><span class=na>forEach</span><span class=o>(</span><span class=n>path</span> <span class=o>-</span><span class=o>&gt;</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>try</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>toLine</span><span class=o>(</span><span class=n>path</span><span class=o>)</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>Exception</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>e</span><span class=o>.</span><span class=na>printStackTrace</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;<span class=o>}</span><span class=o>)</span><span class=o>;</span>&#10;&#10;<span class=o>.</span><span class=o>.</span><span class=o>.</span>&#10;&#10;<span class=kd>private</span> <span class=kd>static</span> <span class=n>String</span> <span class=nf>toLine</span><span class=o>(</span><span class=n>Path</span> <span class=n>path</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>IOException</span>  <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>attributtes</span> <span class=o>=</span> <span class=n>Files</span><span class=o>.</span><span class=na>readAttributes</span><span class=o>(</span><span class=n>path</span><span class=o>,</span> <span class=s>&#34;posix:*&#34;</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>PosixFileAttributes</span> <span class=n>posixFileAttributes</span> <span class=o>=</span> <span class=n>Files</span><span class=o>.</span><span class=na>getFileAttributeView</span><span class=o>(</span><span class=n>path</span><span class=o>,</span> <span class=n>PosixFileAttributeView</span><span class=o>.</span><span class=na>class</span><span class=o>)</span><span class=o>.</span><span class=na>readAttributes</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>String</span> <span class=n>type</span> <span class=o>=</span> <span class=o>(</span><span class=n>posixFileAttributes</span><span class=o>.</span><span class=na>isDirectory</span><span class=o>(</span><span class=o>)</span><span class=o>)</span> <span class=o>?</span> <span class=s>&#34;d&#34;</span><span class=o>:</span> <span class=s>&#34;-&#34;</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>String</span> <span class=n>permissions</span> <span class=o>=</span> <span class=n>PosixFilePermissions</span><span class=o>.</span><span class=na>toString</span><span class=o>(</span><span class=n>posixFileAttributes</span><span class=o>.</span><span class=na>permissions</span><span class=o>(</span><span class=o>)</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>String</span> <span class=n>owner</span> <span class=o>=</span> <span class=n>posixFileAttributes</span><span class=o>.</span><span class=na>owner</span><span class=o>(</span><span class=o>)</span><span class=o>.</span><span class=na>getName</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>String</span> <span class=n>group</span> <span class=o>=</span> <span class=n>posixFileAttributes</span><span class=o>.</span><span class=na>group</span><span class=o>(</span><span class=o>)</span><span class=o>.</span><span class=na>getName</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kt>long</span> <span class=n>size</span> <span class=o>=</span> <span class=n>posixFileAttributes</span><span class=o>.</span><span class=na>size</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>ZonedDateTime</span> <span class=n>date</span> <span class=o>=</span> <span class=n>posixFileAttributes</span><span class=o>.</span><span class=na>lastModifiedTime</span><span class=o>(</span><span class=o>)</span><span class=o>.</span><span class=na>toInstant</span><span class=o>(</span><span class=o>)</span><span class=o>.</span><span class=na>atZone</span><span class=o>(</span><span class=n>ZoneId</span><span class=o>.</span><span class=na>of</span><span class=o>(</span><span class=s>&#34;Europe/Madrid&#34;</span><span class=o>)</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>String</span> <span class=n>lasModified</span> <span class=o>=</span> <span class=n>DateTimeFormatter</span><span class=o>.</span><span class=na>ofPattern</span><span class=o>(</span><span class=s>&#34;d MMM HH:mm&#34;</span><span class=o>)</span><span class=o>.</span><span class=na>format</span><span class=o>(</span><span class=n>date</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>String</span> <span class=n>name</span> <span class=o>=</span> <span class=n>path</span><span class=o>.</span><span class=na>getFileName</span><span class=o>(</span><span class=o>)</span><span class=o>.</span><span class=na>toString</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>return</span> <span class=n>String</span><span class=o>.</span><span class=na>format</span><span class=o>(</span><span class=s>&#34;%s%s %16s %10s %5d %12s %s&#34;</span><span class=o>,</span> <span class=n>type</span><span class=o>,</span> <span class=n>permissions</span><span class=o>,</span> <span class=n>owner</span><span class=o>,</span> <span class=n>group</span><span class=o>,</span> <span class=n>size</span><span class=o>,</span> <span class=n>lasModified</span><span class=o>,</span> <span class=n>name</span><span class=o>)</span><span class=o>;</span>&#10;<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span>Main-2.java</span></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1&#10;</span><span class=lnt> 2&#10;</span><span class=lnt> 3&#10;</span><span class=lnt> 4&#10;</span><span class=lnt> 5&#10;</span><span class=lnt> 6&#10;</span><span class=lnt> 7&#10;</span><span class=lnt> 8&#10;</span><span class=lnt> 9&#10;</span><span class=lnt>10&#10;</span><span class=lnt>11&#10;</span><span class=lnt>12&#10;</span><span class=lnt>13&#10;</span><span class=lnt>14&#10;</span><span class=lnt>15&#10;</span><span class=lnt>16&#10;</span><span class=lnt>17&#10;</span><span class=lnt>18&#10;</span><span class=lnt>19&#10;</span><span class=lnt>20&#10;</span><span class=lnt>21&#10;</span><span class=lnt>22&#10;</span><span class=lnt>23&#10;</span><span class=lnt>24&#10;</span><span class=lnt>25&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext>$ ls -la&#10;total 40&#10;drwxr-xr-x  11 picodotdev  110277442   352  7 abr 12:11 .&#10;drwxr-xr-x  78 picodotdev  110277442  2496  7 abr 10:41 ..&#10;drwxr-xr-x   5 picodotdev  110277442   160  7 abr 10:47 .gradle&#10;drwxr-xr-x   6 picodotdev  110277442   192  7 abr 12:23 .idea&#10;drwxr-xr-x   4 picodotdev  110277442   128  7 abr 10:50 build&#10;-rw-r--r--   1 picodotdev  110277442   156  7 abr 10:49 build.gradle&#10;drwxr-xr-x   3 picodotdev  110277442&nbsp;&nbsp;&nbsp;&nbsp;96  7 abr 10:42 gradle&#10;-rwxr-xr-x   1 picodotdev  110277442  5296  7 abr 10:42 gradlew&#10;-rw-r--r--   1 picodotdev  110277442  2260  7 abr 10:42 gradlew.bat&#10;-rw-r--r--   1 picodotdev  110277442   354  7 abr 10:42 settings.gradle&#10;drwxr-xr-x   4 picodotdev  110277442   128  7 abr 10:48 src&#10;&#10;# ls -la (with Java)&#10;drwxr-xr-x  picodotdev  110277442   352  7 abr 12:11 .&#10;drwxr-xr-x  picodotdev  110277442   160  7 abr 10:47 .gradle&#10;drwxr-xr-x  picodotdev  110277442   192  7 abr 12:23 .idea&#10;drwxr-xr-x  picodotdev  110277442   128  7 abr 10:50 build&#10;-rw-r--r--  picodotdev  110277442   156  7 abr 10:49 build.gradle&#10;drwxr-xr-x  picodotdev  110277442&nbsp;&nbsp;&nbsp;&nbsp;96  7 abr 10:42 gradle&#10;-rwxr-xr-x  picodotdev  110277442  5296  7 abr 10:42 gradlew&#10;-rw-r--r--  picodotdev  110277442  2260  7 abr 10:42 gradlew.bat&#10;-rw-r--r--  picodotdev  110277442   354  7 abr 10:42 settings.gradle&#10;drwxr-xr-x  picodotdev  110277442   128  7 abr 10:48 src</code></pre></td></tr></table></div></div><div class=highlight-meta><span>ls.out</span></div></div><p>Las operaciones de crear directorios o archivos, copiar archivos, moverlos y eliminarlos son muy comunes de modo que la clase <em>Files</em> ofrece varios métodos que con una única línea permite hacer estas operaciones de forma sencilla. El siguiente ejemplo crea un archivo, lo copia, lo mueve y finalmente lo elimina.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span><span class=lnt>2&#10;</span><span class=lnt>3&#10;</span><span class=lnt>4&#10;</span><span class=lnt>5&#10;</span><span class=lnt>6&#10;</span><span class=lnt>7&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=c1>// File operations&#10;</span><span class=c1></span><span class=n>Path</span> <span class=n>file</span> <span class=o>=</span> <span class=n>Paths</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=s>&#34;build.gradle&#34;</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>Path</span> <span class=n>backup</span> <span class=o>=</span> <span class=n>Paths</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=s>&#34;build.gradle.backup&#34;</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>Path</span> <span class=n>rename</span> <span class=o>=</span> <span class=n>Paths</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=s>&#34;build.gradle.backup.1&#34;</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>Files</span><span class=o>.</span><span class=na>copy</span><span class=o>(</span><span class=n>file</span><span class=o>,</span> <span class=n>backup</span><span class=o>,</span> <span class=n>StandardCopyOption</span><span class=o>.</span><span class=na>REPLACE_EXISTING</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>Files</span><span class=o>.</span><span class=na>move</span><span class=o>(</span><span class=n>backup</span><span class=o>,</span> <span class=n>rename</span><span class=o>,</span> <span class=n>StandardCopyOption</span><span class=o>.</span><span class=na>REPLACE_EXISTING</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>Files</span><span class=o>.</span><span class=na>delete</span><span class=o>(</span><span class=n>rename</span><span class=o>)</span><span class=o>;</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span>Main-3.java</span></div></div><p>Para leer el contenido de archivos la clase <em>Files</em> ofrece los métodos <a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newBufferedReader(java.nio.file.Path)>newBufferedReader()</a>, <a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newBufferedWriter(java.nio.file.Path,java.nio.charset.Charset,java.nio.file.OpenOption...)>newBufferedWrite()</a>, <a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newInputStream(java.nio.file.Path,java.nio.file.OpenOption...)>newInputStream()</a> y <a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newOutputStream(java.nio.file.Path,java.nio.file.OpenOption...)>newOutputStream()</a> junto con otros como <a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#readAllLines(java.nio.file.Path,java.nio.charset.Charset)>readAllLines()</a> y <a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#readAllBytes(java.nio.file.Path)>readAllBytes()</a>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span><span class=lnt>2&#10;</span><span class=lnt>3&#10;</span><span class=lnt>4&#10;</span><span class=lnt>5&#10;</span><span class=lnt>6&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=c1>// Read&#10;</span><span class=c1></span><span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;&#34;</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;# build.gradle&#34;</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>Files</span><span class=o>.</span><span class=na>readAllLines</span><span class=o>(</span><span class=n>file</span><span class=o>)</span><span class=o>.</span><span class=na>stream</span><span class=o>(</span><span class=o>)</span><span class=o>.</span><span class=na>forEach</span><span class=o>(</span><span class=n>l</span> <span class=o>-</span><span class=o>&gt;</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>l</span><span class=o>)</span><span class=o>;</span>&#10;<span class=o>}</span><span class=o>)</span><span class=o>;</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span>Main-4.java</span></div></div><p>En cuanto a la programación de entrada/salida asíncrona se ofrecen dos paradigmas uno basado en la clase <a href=https://docs.oracle.com/javase/10/docs/api/java/util/concurrent/Future.html>Future</a> y otro en funciones de rellamada o <em>callbacks</em>. La programación asíncrona evita bloquear el hilo que ejecuta el código y aprovecha mejor los procesadores multinúcleo con lo que se mejora el rendimiento de las aplicaciones. Para los ficheros se usa la clase <a href=https://docs.oracle.com/javase/10/docs/api/java/nio/channels/AsynchronousFileChannel.html>AsynchronousFileChannel</a> y para flujos de red <a href=https://docs.oracle.com/javase/10/docs/api/java/nio/channels/AsynchronousSocketChannel.html>AsynchronousSocketChannel</a>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1&#10;</span><span class=lnt> 2&#10;</span><span class=lnt> 3&#10;</span><span class=lnt> 4&#10;</span><span class=lnt> 5&#10;</span><span class=lnt> 6&#10;</span><span class=lnt> 7&#10;</span><span class=lnt> 8&#10;</span><span class=lnt> 9&#10;</span><span class=lnt>10&#10;</span><span class=lnt>11&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=c1>//&#10;</span><span class=c1></span><span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;&#34;</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;# async with Future&#34;</span><span class=o>)</span><span class=o>;</span>&#10;<span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>AsynchronousFileChannel</span> <span class=n>channel</span> <span class=o>=</span> <span class=n>AsynchronousFileChannel</span><span class=o>.</span><span class=na>open</span><span class=o>(</span><span class=n>file</span><span class=o>,</span> <span class=n>StandardOpenOption</span><span class=o>.</span><span class=na>READ</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>ByteBuffer</span> <span class=n>buffer</span> <span class=o>=</span> <span class=n>ByteBuffer</span><span class=o>.</span><span class=na>allocate</span><span class=o>(</span><span class=n>100_000</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>Future</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=n>result</span> <span class=o>=</span> <span class=n>channel</span><span class=o>.</span><span class=na>read</span><span class=o>(</span><span class=n>buffer</span><span class=o>,</span> <span class=n>0</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=c1>// ...&#10;</span><span class=c1></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>Integer</span> <span class=n>bytesRead</span> <span class=o>=</span> <span class=n>result</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=k>new</span> <span class=n>String</span><span class=o>(</span><span class=n>buffer</span><span class=o>.</span><span class=na>array</span><span class=o>(</span><span class=o>)</span><span class=o>,</span> <span class=s>&#34;utf-8&#34;</span><span class=o>)</span><span class=o>)</span><span class=o>;</span>&#10;<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span>Main-5.java</span></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1&#10;</span><span class=lnt> 2&#10;</span><span class=lnt> 3&#10;</span><span class=lnt> 4&#10;</span><span class=lnt> 5&#10;</span><span class=lnt> 6&#10;</span><span class=lnt> 7&#10;</span><span class=lnt> 8&#10;</span><span class=lnt> 9&#10;</span><span class=lnt>10&#10;</span><span class=lnt>11&#10;</span><span class=lnt>12&#10;</span><span class=lnt>13&#10;</span><span class=lnt>14&#10;</span><span class=lnt>15&#10;</span><span class=lnt>16&#10;</span><span class=lnt>17&#10;</span><span class=lnt>18&#10;</span><span class=lnt>19&#10;</span><span class=lnt>20&#10;</span><span class=lnt>21&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;&#34;</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;# async with callback&#34;</span><span class=o>)</span><span class=o>;</span>&#10;<span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>AsynchronousFileChannel</span> <span class=n>channel</span> <span class=o>=</span> <span class=n>AsynchronousFileChannel</span><span class=o>.</span><span class=na>open</span><span class=o>(</span><span class=n>file</span><span class=o>,</span> <span class=n>StandardOpenOption</span><span class=o>.</span><span class=na>READ</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>ByteBuffer</span> <span class=n>buffer</span> <span class=o>=</span> <span class=n>ByteBuffer</span><span class=o>.</span><span class=na>allocate</span><span class=o>(</span><span class=n>100_000</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>channel</span><span class=o>.</span><span class=na>read</span><span class=o>(</span><span class=n>buffer</span><span class=o>,</span> <span class=n>0</span><span class=o>,</span> <span class=n>buffer</span><span class=o>,</span> <span class=k>new</span> <span class=n>CompletionHandler</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>,</span> <span class=n>ByteBuffer</span><span class=o>&gt;</span><span class=o>(</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>public</span> <span class=kt>void</span> <span class=nf>completed</span><span class=o>(</span><span class=n>Integer</span> <span class=n>result</span><span class=o>,</span> <span class=n>ByteBuffer</span> <span class=n>buffer</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>try</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=k>new</span> <span class=n>String</span><span class=o>(</span><span class=n>buffer</span><span class=o>.</span><span class=na>array</span><span class=o>(</span><span class=o>)</span><span class=o>,</span> <span class=s>&#34;utf-8&#34;</span><span class=o>)</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>UnsupportedEncodingException</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>e</span><span class=o>.</span><span class=na>printStackTrace</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>public</span> <span class=kt>void</span> <span class=nf>failed</span><span class=o>(</span><span class=n>Throwable</span> <span class=n>exception</span><span class=o>,</span> <span class=n>ByteBuffer</span> <span class=n>attachment</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>exception</span><span class=o>.</span><span class=na>getMessage</span><span class=o>(</span><span class=o>)</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span><span class=o>)</span><span class=o>;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>Thread</span><span class=o>.</span><span class=na>sleep</span><span class=o>(</span><span class=n>2000</span><span class=o>)</span><span class=o>;</span>&#10;<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span>Main-6.java</span></div></div><p>Si se desea profundizar más en NIO y NIO.2 el libro <a href=https://amzn.to/2JsEIao>The Well-Grounded Java Developer</a> dedica un capítulo introductorio en el que me he basado para realizar este artículo, el libro <a href=https://amzn.to/2q7qMdN>Java I/O, NIO and NIO.2</a> está completamente dedicado al nuevo sistema de entrada/salida de Java y el tutorial <a href=https://docs.oracle.com/javase/tutorial/essential/io/index.html>Java Basic I/O</a> también está muy bien como introducción.</p><div class=media-amazon><iframe style=width:120px;height:240px width=120 height=240 scrolling=no frameborder=0 data-src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=blobit-21&o=30&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=1617290068&linkId=61507308185711a0af4b5ed5ab70b62b" class=lozad></iframe>
-<iframe style=width:120px;height:240px width=120 height=240 scrolling=no frameborder=0 data-src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=blobit-21&o=30&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=1484215664&linkId=d748ea086bd02aa68dd0b27945514558" class=lozad></iframe></div><p>En el artículo <a href=https://picodotdev.github.io/blog-bitix/2014/09/monitorizar-archivos-con-java/>monitorizar archivos con Java</a> muestro como recibir eventos cuando se añade, elimina o modifica algún archivo de los observados usando la clase <a href=https://docs.oracle.com/javase/10/docs/api/java/nio/file/WatchService.html>WatchService</a>.</p><p>El <a href=https://github.com/picodotdev/blog-ejemplos/tree/master/JavaNIO>código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href=https://github.com/>GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew run</code>.</p><div class=reference>Referencia:<br><ul><li><a href=http://www.javamagazine.mozaicreader.com/JulyAug2016/Twitter>Artículo NIO.2, Java Magazine Jul/Ago 2016</a></li></ul></div></div></article><div class="row related"><div class=col-md-12>Artículos relacionados:<ul><li><a href=/blog-bitix/2017/12/hemeroteca-12/>Hemeroteca #12</a></li><li><a href=/blog-bitix/2017/08/37-buenos-libros-sobre-sobre-java-linux-devops-y-desarrollo-que-he-leido/>37 buenos libros sobre sobre Java, Linux, DevOps y desarrollo que he leído</a></li><li><a href=/blog-bitix/2017/06/hemeroteca-11/>Hemeroteca #11</a></li><li><a href=/blog-bitix/2016/12/hemeroteca-10/>Hemeroteca #10</a></li><li><a href=/blog-bitix/2016/07/hemeroteca-9/>Hemeroteca #9</a></li></ul></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class="col-12 text-center"><a id=pageBottom></a><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-md-12><a id=comments></a><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='blog-bitix-310';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2018\/04\/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java\/';var disqus_script='embed.js';</script></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=/blog-bitix/assets/images/rss.png width=50 height=50 class=icon></a>
-<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=/blog-bitix/assets/images/twitter.svg width=50 height=50 class=icon></a>
-<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=/blog-bitix/assets/images/github.svg width=50 height=50 class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2020 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow><img src=https://licensebuttons.net/l/by-sa/4.0/80x15.png width=80 height=15 alt="Creative Commons License" title="Creative Commons License"></a><br><a href=https://www.planetacodigo.com/ rel=nofollow><img src=/blog-bitix/assets/images/planeta-codigo.png width=80 height=15 alt="Planeta código" title="Planeta código"></a><br><a href=https://picodotdev.github.io/blog-bitix/ rel=nofollow>Blog Bitix</a> by <a href=https://picodotdev.github.io/blog-bitix/>pico.dev</a> is licensed under a <a href=https://creativecommons.org/licenses/by-sa/4.0/>Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class=credit>Powered by <a href=https://gohugo.io/ rel=nofollow title="A fast and modern static website engine">Hugo</a> and <a href=https://pages.github.com/ title="Websites for you and your projects">GitHub Pages</a>.</span>
-<span class=credit>Background patterns from <a href=https://www.toptal.com/designers/subtlepatterns/ rel=nofollow>Subtle Patterns</a>.</span></div></div></footer></div><div class=blueimp-gallery-container><div id=blueimp-gallery class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal=false><div class=slides></div><h3 class=title></h3><a class=prev>‹</a>
-<a class=next>›</a>
-<a class=close>×</a>
-<a class=play-pause></a><ol class=indicator></ol><div class="modal fade"><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close aria-hidden=true>&#215;</button><h4 class=modal-title></h4></div><div class="modal-body next"></div><div class=modal-footer><button type=button class="btn btn-default pull-left prev">
-<i class="glyphicon glyphicon-chevron-left"></i>Anterior</button>
-<button type=button class="btn btn-primary next">
-Siguiente
-<i class="glyphicon glyphicon-chevron-right"></i></button></div></div></div></div></div></div><script type=text/javascript>window.cookieconsent_options={"message":"Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.","dismiss":"Aceptar","learnMore":"Más información","link":null,"theme":"dark-bottom"};</script><script type=text/javascript src=//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js async></script></body></html>
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta name="base" href="/blog-bitix/">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="picodotdev">
+  <meta name="keywords" content="java, programacion, software, hardware, tapestry, software libre, gnu, linux, gnu/linux, unix, arch, arch linux, html, css, javascript">
+  <meta name="description" content="Una de las tareas más importante que realizan algunas aplicaciones es el manejo de la entrada y salida ya sea al sistema de ficheros o a la red. Desde las versiones iniciales de Java se ha mejorado soporte añadiendo programación asíncrona de E/S, permitir obtener información de atributos propios del sistema de archivos, reconocimiento de enlaces simbólicos y facilitado de algunas operaciones básicas. &hellip;">
+
+  <title>Introducción a NIO.2, el sistema de entrada/salida de Java</title>
+
+  <link rel="shortcut icon" href="/blog-bitix/assets/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/blog-bitix/assets/apple-touch-icon-144-precomposed.png">
+  <link rel="canonical" type="text/html" href="https://picodotdev.github.io/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/">
+  <link rel="amphtml" type="text/html" href="https://picodotdev.github.io/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/index-amp.html">
+  <link rel="alternate" type="application/rss+xml" href="index.xml" title="Blog Bitix">
+  <link rel="humans" type="text/plain" href="/blog-bitix/humans.txt">
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i&display=swap" rel="stylesheet"> 
+
+  
+
+  
+  <!-- Social -->
+<meta property="og:title" content="Introducción a NIO.2, el sistema de entrada/salida de Java">
+<meta property="og:url" content="https://picodotdev.github.io/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/">
+
+<meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png">
+
+<meta property="og:site_name" content="Blog Bitix">
+<meta property="og:description" content="Una de las tareas más importante que realizan algunas aplicaciones es el manejo de la entrada y salida ya sea al sistema de ficheros o a la red. Desde las versiones iniciales de Java se ha mejorado soporte añadiendo programación asíncrona de E/S, permitir obtener información de atributos propios del sistema de archivos, reconocimiento de enlaces simbólicos y facilitado de algunas operaciones básicas. &hellip;">
+<meta property="og:type" content="article">
+
+<meta name="twitter:card" content="summary_large_image">
+
+<meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png">
+
+<meta name="twitter:site" content="@picodotdev">
+<meta name="twitter:title" content="Introducción a NIO.2, el sistema de entrada/salida de Java">
+<meta name="twitter:description" content="Una de las tareas más importante que realizan algunas aplicaciones es el manejo de la entrada y salida ya sea al sistema de ficheros o a la red. Desde las versiones iniciales de Java se ha mejorado soporte añadiendo programación asíncrona de E/S, permitir obtener información de atributos propios del sistema de archivos, reconocimiento de enlaces simbólicos y facilitado de algunas operaciones básicas. &hellip;">
+<meta name="twitter:creator" content="@picodotdev">
+  
+
+  
+  <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://picodotdev.github.io/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/"
+    },
+    "headline": "Introducción a NIO.2, el sistema de entrada/salida de Java",
+    "image": {
+        
+          "@type": "ImageObject",
+          "url": "https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"
+        
+      },
+    "datePublished": "2018-04-07T10:00:00+02:00",
+    "dateModified": "2018-04-07T14:00:00+02:00",
+    "inLanguage": "es",
+    
+    "wordCount": "955",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "author": {
+        "@type": "Person",
+        "name": "picodotdev",
+        "url": "https://twitter.com/picodotdev/"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Blog Bitix",
+        "logo": {
+        "@type": "ImageObject",
+        "url": "https://picodotdev.github.io/blog-bitix/assets/images/logotypes/blogbitix.png"
+        }
+    },
+    "description": "Una de las tareas más importante que realizan algunas aplicaciones es el manejo de la entrada y salida ya sea al sistema de ficheros o a la red. Desde las versiones iniciales de Java se ha mejorado soporte añadiendo programación asíncrona de E/S, permitir obtener información de atributos propios del sistema de archivos, reconocimiento de enlaces simbólicos y facilitado de algunas operaciones básicas."
+}
+  </script>
+  
+
+  <!-- css -->
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/libs/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css">
+  <!-- theme -->
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/syntax.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/main-cookieconsent.css">
+
+  <!-- javascript -->
+  <script type="text/javascript" src="/blog-bitix/assets/js/require-config.js" defer></script>
+  <script type="text/javascript" src="/blog-bitix/assets/libs/require.js" data-main="/blog-bitix/assets/js/main" defer></script>
+
+  <script type="text/javascript" defer>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-12874075-4', 'picodotdev.github.io');
+    ga('send', 'pageview');
+</script>
+  <script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" defer></script>
+<script type="text/javascript" defer>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: 'ca-pub-3533636310991304',
+    enable_page_level_ads: true
+  });
+</script>
+
+  
+  <script type="text/javascript" src="/blog-bitix/assets/js/app.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        
+
+
+
+
+<header>
+  <div class="row">
+    <div class="col-12 col-lg-4"></div>
+    <div class="col-12 col-lg-4">
+      <h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2>
+      <div class="links">
+        
+          <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+        
+        
+          <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
+        
+        
+          <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="/blog-bitix/assets/images/github.svg" width="50" height="50" class="icon"></a>
+        
+        
+        
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      
+<nav class="nav nav-pills nav-fill">
+  
+    <a href="/blog-bitix/tags/java/" class="nav-item nav-link">Java</a>
+  
+    <a href="/blog-bitix/tags/gnu-linux/" class="nav-item nav-link">GNU/Linux</a>
+  
+    <a href="/blog-bitix/tags/javascript/" class="nav-item nav-link">JavaScript</a>
+  
+    <a href="/blog-bitix/tags/tapestry/" class="nav-item nav-link">Tapestry</a>
+  
+    <a href="/blog-bitix/archive/" class="nav-item nav-link">Archivo y hemeroteca</a>
+  
+    <a href="/blog-bitix/pages/links/" class="nav-item nav-link">Enlaces</a>
+  
+    <a href="/blog-bitix/pages/about/" class="nav-item nav-link">Acerca de...</a>
+  
+</nav>
+
+    </div>
+  </div>
+</header>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 text-center">
+        <ins class="adsbygoogle"
+    style="display: inline-block; width: 970px; height: 250px;"
+    data-ad-client="ca-pub-3533636310991304"
+    data-ad-slot="2975854584"
+    data-type="billboard"></ins>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-12">
+        <div class="adblock-sidebar-container">
+          <div class="adblock-sidebar-container-left"></div>
+          <div class="adblock-sidebar-container-right">
+            <ins class="adsbygoogle adblock-sidebar-vertical"
+    data-ad-client="ca-pub-3533636310991304"
+    data-ad-slot="9933840986"
+    data-ad-format="vertical,rectangle"
+    data-type="auto"></ins>
+          </div>
+        </div>
+        
+<article>
+    <h1>Introducción a NIO.2, el sistema de entrada/salida de Java</h1>
+    <p class="information">
+      
+        Escrito por
+       
+      <span>picodotdev</span> el <time>07/04/2018</time>, actualizado el <time>07/04/2018</time>.
+      
+        <br>
+        
+          
+          <a href="/blog-bitix/tags/blog/">blog</a>
+        
+          
+          <a href="/blog-bitix/tags/java/">java</a>
+        
+          
+          <a href="/blog-bitix/tags/planeta-codigo/">planeta-codigo</a>
+        
+          
+          <a href="/blog-bitix/tags/programacion/">programacion</a>
+        
+      
+      <br>
+      <a href="/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/">Enlace permanente</a>
+      
+        <a href="/blog-bitix/2018/04/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java/#comments">Comentarios</a>
+      
+      
+    </p>
+
+    
+      <p class="summary">Una de las tareas más importante que realizan algunas aplicaciones es el manejo de la entrada y salida ya sea al sistema de ficheros o a la red. Desde las versiones iniciales de Java se ha mejorado soporte añadiendo programación asíncrona de E/S, permitir obtener información de atributos propios del sistema de archivos, reconocimiento de enlaces simbólicos y facilitado de algunas operaciones básicas.</p>
+    
+    
+
+    
+      <div>
+        <ins class="adsbygoogle"
+     style="display: inline-block; width: 728px; height: 90px;"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="5966819782"
+     data-type="leaderboard"></ins>
+      </div>
+    
+
+    <div class="content">
+      
+
+
+      <div class="logotypes">
+   <img src="/blog-bitix/assets/images/logotypes/java.svg" class="right" width="200" height="" layout="responsive" alt="Java" title="Java">
+</div>
+<p>En las primeras versiones de Java el sistema de entrada/salida proporcionado en el paquete <a href="https://docs.oracle.com/javase/10/docs/api/java/io/package-summary.html"><em>java.io</em></a> era básico. En la versión 1.4 de Java se añadió un nuevo sistema de entrada/salida llamado NIO para suplir algunas de sus deficiencias que posteriormente en Java 7 se mejoró aún más con NIO.2. Entre las mejoras se incluyen permitir navegación de directorios sencillo, soporte para reconocer enlaces simbólicos, leer atributos de ficheros como permisos e información como última fecha de modificación, soporte de entrada/salida asíncrona y soporte para operaciones básicas sobre ficheros como copiar y mover ficheros.</p>
+<p>Las clases principales de esta nueva API para el manejo de rutas, ficheros y operaciones de entrada/salida son las siguientes:</p>
+<ul>
+<li><a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html">Path</a>: es una abstracción sobre una ruta de un sistema de ficheros. No tiene porque existir en el sistema de ficheros pero si si cuando se hacen algunas operaciones como la lectura del fichero que representa. Puede usarse como reemplazo completo de <a href="https://docs.oracle.com/javase/10/docs/api/java/io/File.html">java.io.File</a> pero si fuera necesario con los métodos <a href="https://docs.oracle.com/javase/10/docs/api/java/io/File.html#toPath()">File.toPath()</a> y <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#toFile()">Path.toFile()</a> se ofrece compatibilidad entre ambas representaciones.</li>
+<li><a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html">Files</a>: es una clase de utilidad con operaciones básicas sobre ficheros.</li>
+<li><a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/FileSystems.html">FileSystems</a>: otra clase de utilidad como punto de entrada para obtener referencias a sistemas de archivos.</li>
+</ul>
+<p>Con la clase <em>Path</em> se pueden hacer operaciones sobre rutas como obtener la ruta absoluta de un <em>Path</em> relativo o el <em>Path</em> relativo de una ruta absoluta, de cuanto elementos se compone la ruta, obtener el <em>Path</em> padre o una parte de una ruta. Otros métodos interesantes son <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#relativize(java.nio.file.Path)">relativize()</a>, <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#normalize()">normalize()</a>, <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#toAbsolutePath()">toAbsolutePath()</a>, <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#resolve(java.nio.file.Path)">resolve()</a>, <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#startsWith(java.nio.file.Path)">startsWith()</a> y <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#endsWith(java.nio.file.Path)">endsWith()</a>.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// Path&#10;</span><span class="c1"></span><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;# info&#34;</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">Path</span> <span class="n">relative</span> <span class="o">=</span> <span class="n">Paths</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&#34;.&#34;</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">Path</span> <span class="n">absolute</span> <span class="o">=</span> <span class="n">relative</span><span class="o">.</span><span class="na">toAbsolutePath</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">normalize</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&#10;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&#34;Relative: %s%n&#34;</span><span class="o">,</span> <span class="n">relative</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&#34;Absolute: %s%n&#34;</span><span class="o">,</span> <span class="n">absolute</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&#34;Name count: %d%n&#34;</span><span class="o">,</span> <span class="n">absolute</span><span class="o">.</span><span class="na">getNameCount</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&#34;Parent: %s%n&#34;</span><span class="o">,</span> <span class="n">absolute</span><span class="o">.</span><span class="na">getParent</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&#34;Subpath(0, 2): %s%n&#34;</span><span class="o">,</span> <span class="n">absolute</span><span class="o">.</span><span class="na">subpath</span><span class="o">(</span><span class="n">0</span><span class="o">,</span> <span class="n">2</span><span class="o">)</span><span class="o">)</span><span class="o">;</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>Main-1.java</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span><span class="lnt">6&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext"># info&#10;Relative: .&#10;Absolute: /home/picodotdev/Software/personal/blog-ejemplos/JavaNIO&#10;Name count: 6&#10;Parent: /home/picodotdev/Software/personal/blog-ejemplos&#10;Subpath(0, 2): home/picodotdev</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>info.out</span>
+    </div>
+</div>
+<p>Utilizando estas clases expondré algunos ejemplos siendo el primero recorrer el listado de archivos o también se podría hacer el listado de forma recursiva de un directorio e imprimir la información de cada archivo como nombre, si es un enlace simbólico, permisos propietario, fecha de última modificación y tamaño utilizando los siguiente métodos similar a lo que hace el comando <em>ls</em> de GNU/Linux:</p>
+<ul>
+<li><a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#walkFileTree(java.nio.file.Path,java.nio.file.FileVisitor)">Files.walkFileTree()</a></li>
+<li><a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#isSymbolicLink(java.nio.file.Path)">Files.isSymbolicLink()</a></li>
+<li><a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#readAttributes(java.nio.file.Path,java.lang.String,java.nio.file.LinkOption...)">Files.readAttributes()</a></li>
+<li><a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/attribute/PosixFilePermissions.html">PosixFilePermissions</a></li>
+<li><a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/FileVisitor.html">FileVisitor</a>, <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/SimpleFileVisitor.html">SimpleFileVisitor</a></li>
+</ul>
+<p>Al igual que es posible leer los permisos también es posible establecerlos con el método <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#setPosixFilePermissions(java.nio.file.Path,java.util.Set)">Files.setPosixFilePermissions()</a>.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span><span class="lnt">22&#10;</span><span class="lnt">23&#10;</span><span class="lnt">24&#10;</span><span class="lnt">25&#10;</span><span class="lnt">26&#10;</span><span class="lnt">27&#10;</span><span class="lnt">28&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// ls -la&#10;</span><span class="c1"></span><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;# ls -la&#34;</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">Files</span><span class="o">.</span><span class="na">walk</span><span class="o">(</span><span class="n">relative</span><span class="o">,</span> <span class="n">1</span><span class="o">)</span><span class="o">.</span><span class="na">sorted</span><span class="o">(</span><span class="o">(</span><span class="n">p1</span><span class="o">,</span> <span class="n">p2</span><span class="o">)</span> <span class="o">-</span><span class="o">&gt;</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">p1</span><span class="o">.</span><span class="na">getFileName</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">p2</span><span class="o">.</span><span class="na">getFileName</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>&#10;<span class="o">}</span><span class="o">)</span><span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="n">path</span> <span class="o">-</span><span class="o">&gt;</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">try</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">toLine</span><span class="o">(</span><span class="n">path</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;<span class="o">}</span><span class="o">)</span><span class="o">;</span>&#10;&#10;<span class="o">.</span><span class="o">.</span><span class="o">.</span>&#10;&#10;<span class="kd">private</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">toLine</span><span class="o">(</span><span class="n">Path</span> <span class="n">path</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span>  <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">attributtes</span> <span class="o">=</span> <span class="n">Files</span><span class="o">.</span><span class="na">readAttributes</span><span class="o">(</span><span class="n">path</span><span class="o">,</span> <span class="s">&#34;posix:*&#34;</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">PosixFileAttributes</span> <span class="n">posixFileAttributes</span> <span class="o">=</span> <span class="n">Files</span><span class="o">.</span><span class="na">getFileAttributeView</span><span class="o">(</span><span class="n">path</span><span class="o">,</span> <span class="n">PosixFileAttributeView</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">.</span><span class="na">readAttributes</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">String</span> <span class="n">type</span> <span class="o">=</span> <span class="o">(</span><span class="n">posixFileAttributes</span><span class="o">.</span><span class="na">isDirectory</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">?</span> <span class="s">&#34;d&#34;</span><span class="o">:</span> <span class="s">&#34;-&#34;</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">String</span> <span class="n">permissions</span> <span class="o">=</span> <span class="n">PosixFilePermissions</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">posixFileAttributes</span><span class="o">.</span><span class="na">permissions</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">String</span> <span class="n">owner</span> <span class="o">=</span> <span class="n">posixFileAttributes</span><span class="o">.</span><span class="na">owner</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">String</span> <span class="n">group</span> <span class="o">=</span> <span class="n">posixFileAttributes</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">getName</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kt">long</span> <span class="n">size</span> <span class="o">=</span> <span class="n">posixFileAttributes</span><span class="o">.</span><span class="na">size</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">ZonedDateTime</span> <span class="n">date</span> <span class="o">=</span> <span class="n">posixFileAttributes</span><span class="o">.</span><span class="na">lastModifiedTime</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">toInstant</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">atZone</span><span class="o">(</span><span class="n">ZoneId</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">&#34;Europe/Madrid&#34;</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">String</span> <span class="n">lasModified</span> <span class="o">=</span> <span class="n">DateTimeFormatter</span><span class="o">.</span><span class="na">ofPattern</span><span class="o">(</span><span class="s">&#34;d MMM HH:mm&#34;</span><span class="o">)</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="n">date</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="na">getFileName</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&#34;%s%s %16s %10s %5d %12s %s&#34;</span><span class="o">,</span> <span class="n">type</span><span class="o">,</span> <span class="n">permissions</span><span class="o">,</span> <span class="n">owner</span><span class="o">,</span> <span class="n">group</span><span class="o">,</span> <span class="n">size</span><span class="o">,</span> <span class="n">lasModified</span><span class="o">,</span> <span class="n">name</span><span class="o">)</span><span class="o">;</span>&#10;<span class="o">}</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>Main-2.java</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span><span class="lnt">22&#10;</span><span class="lnt">23&#10;</span><span class="lnt">24&#10;</span><span class="lnt">25&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">$ ls -la&#10;total 40&#10;drwxr-xr-x  11 picodotdev  110277442   352  7 abr 12:11 .&#10;drwxr-xr-x  78 picodotdev  110277442  2496  7 abr 10:41 ..&#10;drwxr-xr-x   5 picodotdev  110277442   160  7 abr 10:47 .gradle&#10;drwxr-xr-x   6 picodotdev  110277442   192  7 abr 12:23 .idea&#10;drwxr-xr-x   4 picodotdev  110277442   128  7 abr 10:50 build&#10;-rw-r--r--   1 picodotdev  110277442   156  7 abr 10:49 build.gradle&#10;drwxr-xr-x   3 picodotdev  110277442&nbsp;&nbsp;&nbsp;&nbsp;96  7 abr 10:42 gradle&#10;-rwxr-xr-x   1 picodotdev  110277442  5296  7 abr 10:42 gradlew&#10;-rw-r--r--   1 picodotdev  110277442  2260  7 abr 10:42 gradlew.bat&#10;-rw-r--r--   1 picodotdev  110277442   354  7 abr 10:42 settings.gradle&#10;drwxr-xr-x   4 picodotdev  110277442   128  7 abr 10:48 src&#10;&#10;# ls -la (with Java)&#10;drwxr-xr-x  picodotdev  110277442   352  7 abr 12:11 .&#10;drwxr-xr-x  picodotdev  110277442   160  7 abr 10:47 .gradle&#10;drwxr-xr-x  picodotdev  110277442   192  7 abr 12:23 .idea&#10;drwxr-xr-x  picodotdev  110277442   128  7 abr 10:50 build&#10;-rw-r--r--  picodotdev  110277442   156  7 abr 10:49 build.gradle&#10;drwxr-xr-x  picodotdev  110277442&nbsp;&nbsp;&nbsp;&nbsp;96  7 abr 10:42 gradle&#10;-rwxr-xr-x  picodotdev  110277442  5296  7 abr 10:42 gradlew&#10;-rw-r--r--  picodotdev  110277442  2260  7 abr 10:42 gradlew.bat&#10;-rw-r--r--  picodotdev  110277442   354  7 abr 10:42 settings.gradle&#10;drwxr-xr-x  picodotdev  110277442   128  7 abr 10:48 src</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>ls.out</span>
+    </div>
+</div>
+<p>Las operaciones de crear directorios o archivos, copiar archivos, moverlos y eliminarlos son muy comunes de modo que la clase <em>Files</em> ofrece varios métodos que con una única línea permite hacer estas operaciones de forma sencilla. El siguiente ejemplo crea un archivo, lo copia, lo mueve y finalmente lo elimina.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span><span class="lnt">6&#10;</span><span class="lnt">7&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// File operations&#10;</span><span class="c1"></span><span class="n">Path</span> <span class="n">file</span> <span class="o">=</span> <span class="n">Paths</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&#34;build.gradle&#34;</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">Path</span> <span class="n">backup</span> <span class="o">=</span> <span class="n">Paths</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&#34;build.gradle.backup&#34;</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">Path</span> <span class="n">rename</span> <span class="o">=</span> <span class="n">Paths</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&#34;build.gradle.backup.1&#34;</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">Files</span><span class="o">.</span><span class="na">copy</span><span class="o">(</span><span class="n">file</span><span class="o">,</span> <span class="n">backup</span><span class="o">,</span> <span class="n">StandardCopyOption</span><span class="o">.</span><span class="na">REPLACE_EXISTING</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">Files</span><span class="o">.</span><span class="na">move</span><span class="o">(</span><span class="n">backup</span><span class="o">,</span> <span class="n">rename</span><span class="o">,</span> <span class="n">StandardCopyOption</span><span class="o">.</span><span class="na">REPLACE_EXISTING</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">Files</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">rename</span><span class="o">)</span><span class="o">;</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>Main-3.java</span>
+    </div>
+</div>
+<p>Para leer el contenido de archivos la clase <em>Files</em> ofrece los métodos <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newBufferedReader(java.nio.file.Path)">newBufferedReader()</a>, <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newBufferedWriter(java.nio.file.Path,java.nio.charset.Charset,java.nio.file.OpenOption...)">newBufferedWrite()</a>, <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newInputStream(java.nio.file.Path,java.nio.file.OpenOption...)">newInputStream()</a> y <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#newOutputStream(java.nio.file.Path,java.nio.file.OpenOption...)">newOutputStream()</a> junto con otros como <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#readAllLines(java.nio.file.Path,java.nio.charset.Charset)">readAllLines()</a> y <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html#readAllBytes(java.nio.file.Path)">readAllBytes()</a>.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span><span class="lnt">6&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// Read&#10;</span><span class="c1"></span><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;# build.gradle&#34;</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">Files</span><span class="o">.</span><span class="na">readAllLines</span><span class="o">(</span><span class="n">file</span><span class="o">)</span><span class="o">.</span><span class="na">stream</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="n">l</span> <span class="o">-</span><span class="o">&gt;</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">l</span><span class="o">)</span><span class="o">;</span>&#10;<span class="o">}</span><span class="o">)</span><span class="o">;</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>Main-4.java</span>
+    </div>
+</div>
+<p>En cuanto a la programación de entrada/salida asíncrona se ofrecen dos paradigmas uno basado en la clase <a href="https://docs.oracle.com/javase/10/docs/api/java/util/concurrent/Future.html">Future</a> y otro en funciones de rellamada o <em>callbacks</em>. La programación asíncrona evita bloquear el hilo que ejecuta el código y aprovecha mejor los procesadores multinúcleo con lo que se mejora el rendimiento de las aplicaciones. Para los ficheros se usa la clase <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/channels/AsynchronousFileChannel.html">AsynchronousFileChannel</a> y para flujos de red <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/channels/AsynchronousSocketChannel.html">AsynchronousSocketChannel</a>.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">//&#10;</span><span class="c1"></span><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;# async with Future&#34;</span><span class="o">)</span><span class="o">;</span>&#10;<span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">AsynchronousFileChannel</span> <span class="n">channel</span> <span class="o">=</span> <span class="n">AsynchronousFileChannel</span><span class="o">.</span><span class="na">open</span><span class="o">(</span><span class="n">file</span><span class="o">,</span> <span class="n">StandardOpenOption</span><span class="o">.</span><span class="na">READ</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">ByteBuffer</span> <span class="n">buffer</span> <span class="o">=</span> <span class="n">ByteBuffer</span><span class="o">.</span><span class="na">allocate</span><span class="o">(</span><span class="n">100_000</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Future</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">buffer</span><span class="o">,</span> <span class="n">0</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c1">// ...&#10;</span><span class="c1"></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Integer</span> <span class="n">bytesRead</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="n">buffer</span><span class="o">.</span><span class="na">array</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="s">&#34;utf-8&#34;</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>&#10;<span class="o">}</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>Main-5.java</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;# async with callback&#34;</span><span class="o">)</span><span class="o">;</span>&#10;<span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">AsynchronousFileChannel</span> <span class="n">channel</span> <span class="o">=</span> <span class="n">AsynchronousFileChannel</span><span class="o">.</span><span class="na">open</span><span class="o">(</span><span class="n">file</span><span class="o">,</span> <span class="n">StandardOpenOption</span><span class="o">.</span><span class="na">READ</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">ByteBuffer</span> <span class="n">buffer</span> <span class="o">=</span> <span class="n">ByteBuffer</span><span class="o">.</span><span class="na">allocate</span><span class="o">(</span><span class="n">100_000</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">channel</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">buffer</span><span class="o">,</span> <span class="n">0</span><span class="o">,</span> <span class="n">buffer</span><span class="o">,</span> <span class="k">new</span> <span class="n">CompletionHandler</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">ByteBuffer</span><span class="o">&gt;</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="kt">void</span> <span class="nf">completed</span><span class="o">(</span><span class="n">Integer</span> <span class="n">result</span><span class="o">,</span> <span class="n">ByteBuffer</span> <span class="n">buffer</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">try</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="n">buffer</span><span class="o">.</span><span class="na">array</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="s">&#34;utf-8&#34;</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">UnsupportedEncodingException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="kt">void</span> <span class="nf">failed</span><span class="o">(</span><span class="n">Throwable</span> <span class="n">exception</span><span class="o">,</span> <span class="n">ByteBuffer</span> <span class="n">attachment</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">exception</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span><span class="o">)</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">2000</span><span class="o">)</span><span class="o">;</span>&#10;<span class="o">}</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>Main-6.java</span>
+    </div>
+</div>
+<p>Si se desea profundizar más en NIO y NIO.2 el libro <a href="https://amzn.to/2JsEIao">The Well-Grounded Java Developer</a> dedica un capítulo introductorio en el que me he basado para realizar este artículo, el libro <a href="https://amzn.to/2q7qMdN">Java I/O, NIO and NIO.2</a> está completamente dedicado al nuevo sistema de entrada/salida de Java y el tutorial <a href="https://docs.oracle.com/javase/tutorial/essential/io/index.html">Java Basic I/O</a> también está muy bien como introducción.</p>
+<div class="media-amazon">
+  <iframe style="width:120px;height:240px;" width="120" height="240" scrolling="no" frameborder="0" data-src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1617290068&amp;linkId=61507308185711a0af4b5ed5ab70b62b" class="lozad"></iframe>
+  <iframe style="width:120px;height:240px;" width="120" height="240" scrolling="no" frameborder="0" data-src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1484215664&amp;linkId=d748ea086bd02aa68dd0b27945514558" class="lozad"></iframe>
+</div>
+<p>En el artículo <a href="https://picodotdev.github.io/blog-bitix/2014/09/monitorizar-archivos-con-java/">monitorizar archivos con Java</a> muestro como recibir eventos cuando se añade, elimina o modifica algún archivo de los observados usando la clase <a href="https://docs.oracle.com/javase/10/docs/api/java/nio/file/WatchService.html">WatchService</a>.</p>
+<p>
+    El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/JavaNIO">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew run</code>. 
+</p>
+<div class="reference">
+    Referencia:<br>
+<ul>
+<li><a href="http://www.javamagazine.mozaicreader.com/JulyAug2016/Twitter">Artículo NIO.2, Java Magazine Jul/Ago 2016</a></li>
+</ul>
+</div>
+
+    </div>
+  </article>
+        
+
+        
+	
+	
+	<div class="row related">
+		<div class="col-md-12">
+			Artículos relacionados:
+			<ul>
+				
+				<li><a href="/blog-bitix/2017/12/hemeroteca-12/">Hemeroteca #12</a></li>
+				
+				<li><a href="/blog-bitix/2017/08/37-buenos-libros-sobre-sobre-java-linux-devops-y-desarrollo-que-he-leido/">37 buenos libros sobre sobre Java, Linux, DevOps y desarrollo que he leído</a></li>
+				
+				<li><a href="/blog-bitix/2017/06/hemeroteca-11/">Hemeroteca #11</a></li>
+				
+				<li><a href="/blog-bitix/2016/12/hemeroteca-10/">Hemeroteca #10</a></li>
+				
+				<li><a href="/blog-bitix/2016/07/hemeroteca-9/">Hemeroteca #9</a></li>
+				
+			</ul>
+		</div>
+	</div>
+	
+
+        
+<div class="row">
+  <div class="col-md-12">
+    <div class="sharethis-inline-share-buttons"></div>
+  </div>
+</div>
+
+
+        <div class="row">
+          <div class="col-12 text-center">
+            <a id="pageBottom"></a>
+            <ins class="adsbygoogle"
+    style="display: inline-block; width: 970px; height: 250px;"
+    data-ad-client="ca-pub-3533636310991304"
+    data-ad-slot="2975854584"
+    data-type="billboard"></ins>
+          </div>
+        </div>
+        
+  <div class="row">
+    <div class="col-md-12">
+      <a id="comments"></a>
+      <div id="disqus_thread"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript" async>
+    var disqus_shortname = 'blog-bitix';
+    var disqus_identifier = 'blog-bitix-310';
+    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2018\/04\/introduccion-a-nio-2-el-sistema-de-entrada-salida-de-java\/';
+    var disqus_script = 'embed.js';
+  </script>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <hr>
+      </div>
+    </div>
+    
+
+
+
+
+
+<footer>
+  <div class="row">
+    <div class="col-12 col-sm-4">
+      <p><strong>Blog Bitix</strong></p>
+      <p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p>
+      <p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p>
+    </div>
+    <div class="col-12 col-sm-4 text-center menu">
+      <ul class="list-unstyled">
+        
+          <li><a href="/blog-bitix/tags/java/">Java</a></li>
+        
+          <li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li>
+        
+          <li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li>
+        
+          <li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li>
+        
+          <li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li>
+        
+          <li><a href="/blog-bitix/pages/links/">Enlaces</a></li>
+        
+          <li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li>
+        
+          <li><a href="/blog-bitix/pages/donate/">Donaciones</a></li>
+        
+          <li><a href="/blog-bitix/pages/about/">Acerca de...</a></li>
+        
+      </ul>
+    </div>
+    <div class="col-12 col-sm-4 text-center links">
+      
+        <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+      
+      
+        <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
+      
+      
+      
+        <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="/blog-bitix/assets/images/github.svg" width="50" height="50" class="icon"></a>
+      
+      
+      
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      Copyleft <span class="copyleft">&copy;</span> 2020 - <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="nofollow"><img src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" width="80" height="15" alt="Creative Commons License" title="Creative Commons License"></a><br />
+      <a href="https://www.planetacodigo.com/" rel="nofollow"><img src="/blog-bitix/assets/images/planeta-codigo.png" width="80" height="15" alt="Planeta código" title="Planeta código"></a>
+      <br/>
+      <a href="https://picodotdev.github.io/blog-bitix/" rel="nofollow">Blog Bitix</a> by <a href="https://picodotdev.github.io/blog-bitix/">pico.dev</a> is licensed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.
+      <br/>
+      <span class="credit">Powered by <a href="https://gohugo.io/" rel="nofollow" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a>.</span>
+      <span class="credit">Background patterns from <a href="https://www.toptal.com/designers/subtlepatterns/" rel="nofollow">Subtle Patterns</a>.</span>
+    </div>
+  </div>
+</footer>
+
+  </div>
+  
+<div class="blueimp-gallery-container">
+  <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false">
+    
+    <div class="slides"></div>
+    
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    
+    <div class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body next"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left prev">
+              <i class="glyphicon glyphicon-chevron-left"></i>
+              Anterior
+            </button>
+            <button type="button" class="btn btn-primary next">
+              Siguiente
+              <i class="glyphicon glyphicon-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  <!-- Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+<script type="text/javascript">
+    window.cookieconsent_options = {
+        "message": "Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.",
+        "dismiss": "Aceptar",
+        "learnMore": "Más información",
+        "link": null,
+        "theme": "dark-bottom"
+    };
+</script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script>
+</body>
+</html>

@@ -1,30 +1,527 @@
-<!doctype html><html lang=es><head><meta name=base href=/blog-bitix/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="picodotdev"><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="Un Content Delivery Network (CDN) no es más que un servidor, servidores o servicio dedicado a servir el contenido estático o actuar de cache para los clientes. Alguno de los motivos por los que podríamos querer usar un CDN en una aplicación son:
- Algunos servicios CDN están repartidos geográficamente por el mundo de modo que el contenido sea servido de un lugar más cercano al usuario esto hace que el tiempo que tarda en cargar un página o servirse el contenido sea menor. &mldr;"><title>Servir recursos estáticos desde un CDN en Apache Tapestry</title><link rel="shortcut icon" href=/blog-bitix/assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=/blog-bitix/assets/apple-touch-icon-144-precomposed.png><link rel=canonical type=text/html href=https://picodotdev.github.io/blog-bitix/2014/07/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry/><link rel=amphtml type=text/html href=https://picodotdev.github.io/blog-bitix/2014/07/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry/index-amp.html><link rel=alternate type=application/rss+xml href=index.xml title="Blog Bitix"><link rel=humans type=text/plain href=/blog-bitix/humans.txt><link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i&display=swap" rel=stylesheet><meta property="og:title" content="Servir recursos estáticos desde un CDN en Apache Tapestry"><meta property="og:url" content="https://picodotdev.github.io/blog-bitix/2014/07/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry/"><meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"><meta property="og:site_name" content="Blog Bitix"><meta property="og:description" content="Un Content Delivery Network (CDN) no es más que un servidor, servidores o servicio dedicado a servir el contenido estático o actuar de cache para los clientes. Alguno de los motivos por los que podríamos querer usar un CDN en una aplicación son:
- Algunos servicios CDN están repartidos geográficamente por el mundo de modo que el contenido sea servido de un lugar más cercano al usuario esto hace que el tiempo que tarda en cargar un página o servirse el contenido sea menor. &mldr;"><meta property="og:type" content="article"><meta name=twitter:card content="summary_large_image"><meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"><meta name=twitter:site content="@picodotdev"><meta name=twitter:title content="Servir recursos estáticos desde un CDN en Apache Tapestry"><meta name=twitter:description content="Un Content Delivery Network (CDN) no es más que un servidor, servidores o servicio dedicado a servir el contenido estático o actuar de cache para los clientes. Alguno de los motivos por los que podríamos querer usar un CDN en una aplicación son:
- Algunos servicios CDN están repartidos geográficamente por el mundo de modo que el contenido sea servido de un lugar más cercano al usuario esto hace que el tiempo que tarda en cargar un página o servirse el contenido sea menor. &mldr;"><meta name=twitter:creator content="@picodotdev"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://picodotdev.github.io/blog-bitix/2014/07/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry/"},"headline":"Servir recursos estáticos desde un CDN en Apache Tapestry","image":{"@type":"ImageObject","url":"https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"},"datePublished":"2014-07-26T12:35:50+02:00","dateModified":"2015-10-19T19:00:00+02:00","inLanguage":"","wordCount":"905","license":"https://creativecommons.org/licenses/by-sa/4.0/","author":{"@type":"Person","name":"picodotdev","url":"https://twitter.com/picodotdev/"},"publisher":{"@type":"Organization","name":"Blog Bitix","logo":{"@type":"ImageObject","url":"https://picodotdev.github.io/blog-bitix/assets/images/logotypes/blogbitix.png"}},"description":"Un Content Delivery Network (CDN) no es más que un servidor, servidores o servicio dedicado a servir el contenido estático o actuar de cache para los clientes. Alguno de los motivos por los que podríamos querer usar un CDN en una aplicación son:
- Algunos servicios CDN están repartidos geográficamente por el mundo de modo que el contenido sea servido de un lugar más cercano al usuario esto hace que el tiempo que tarda en cargar un página o servirse el contenido sea menor."}</script><link rel=stylesheet type=text/css href=/blog-bitix/assets/libs/bootstrap-4.4.1-dist/css/bootstrap.min.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/css/syntax.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/css/main.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/css/main-cookieconsent.css><script type=text/javascript src=/blog-bitix/assets/js/require-config.js defer></script><script type=text/javascript src=/blog-bitix/assets/libs/require.js data-main=/blog-bitix/assets/js/main defer></script><script type=text/javascript defer>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js defer></script><script type=text/javascript defer>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript src=/blog-bitix/assets/js/app.js defer></script></head><body><div class=container><div class=row><div class=col-12><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=/blog-bitix/assets/images/rss.png width=50 height=50 class=icon></a>
-<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=/blog-bitix/assets/images/twitter.svg width=50 height=50 class=icon></a>
-<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=/blog-bitix/assets/images/github.svg width=50 height=50 class=icon></a></div></div></div><div class=row><div class=col-12><nav class="nav nav-pills nav-fill"><a href=/blog-bitix/tags/java/ class="nav-item nav-link">Java</a>
-<a href=/blog-bitix/tags/gnu-linux/ class="nav-item nav-link">GNU/Linux</a>
-<a href=/blog-bitix/tags/javascript/ class="nav-item nav-link">JavaScript</a>
-<a href=/blog-bitix/tags/tapestry/ class="nav-item nav-link">Tapestry</a>
-<a href=/blog-bitix/archive/ class="nav-item nav-link">Archivo y hemeroteca</a>
-<a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
-<a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class=adblock-sidebar-container><div class=adblock-sidebar-container-left></div><div class=adblock-sidebar-container-right><ins class="adsbygoogle adblock-sidebar-vertical" data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format=vertical,rectangle data-type=auto></ins></div></div><article><h1>Servir recursos estáticos desde un CDN en Apache Tapestry</h1><p class=information>Escrito por
-<span>picodotdev</span> el <time>26/07/2014</time>, actualizado el <time>19/10/2015</time>.<br><a href=/blog-bitix/tags/software/>software</a>
-<a href=/blog-bitix/tags/java/>java</a>
-<a href=/blog-bitix/tags/programacion/>programacion</a>
-<a href=/blog-bitix/tags/tapestry/>tapestry</a>
-<a href=/blog-bitix/tags/planeta-codigo/>planeta-codigo</a><br><a href=/blog-bitix/2014/07/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry/>Enlace permanente</a>
-<a href=/blog-bitix/2014/07/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry/#comments>Comentarios</a></p><div class=content><div class=logotypes><img src=/blog-bitix/assets/images/logotypes/apache-tapestry-5.svg class=right width=400 height layout=responsive alt="Apache Tapestry" title="Apache Tapestry"></div><p>Un <a href=https://en.wikipedia.org/wiki/Content_delivery_network>Content Delivery Network</a> (CDN) no es más que un servidor, servidores o servicio dedicado a servir el contenido estático o actuar de cache para los clientes. Alguno de los motivos por los que podríamos querer usar un CDN en una aplicación son:</p><ul><li>Algunos servicios CDN están repartidos geográficamente por el mundo de modo que el contenido sea servido de un lugar más cercano al usuario esto hace que el tiempo que tarda en cargar un página o servirse el contenido sea menor.</li><li>Descargar la tarea de servir al menos parte del contenido de la aplicación al CDN hará que no nos tengamos que preocupar de tener la capacidad para servirlo. Cuando se cargar una página se hacen varias peticiones al servidor para obtener el contenido como el html, imágenes, estilos, &mldr; haciendo que los contenidos estáticos sean servidos por el CDN hará que el servidor tenga menos carga, dependiendo del número de usuarios de la aplicación o los picos de tráfico notaremos una mejoría.</li><li>La alta fiabilidad de servicio que ofrecen.</li></ul><p><a href=http://aws.amazon.com/es/cloudfront/>Amazon ClodFront</a> es una de las opciones que podemos usar como CDN. En este artículo voy a comentar como tener un CDN para servir el contenido estático en una aplicación que emplee el <em>framework</em> de desarrollo de aplicaciones web en la plataforma Java <a href=http://tapestry.apache.org/>Apache Tapestry</a>.</p><div class=media><figure><a href=/blog-bitix/2014/07/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry/images/nocdn-cdn_hu4bda5a96fc7e95afc34c0e3629c45f5e_124009_2560x1440_fit_box_2.png title="Arquitectura no CDN (izquierda) contra arquitectura CDN (derecha)" data-gallery=data-gallery><img data-src=/blog-bitix/2014/07/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry/images/nocdn-cdn_hu4bda5a96fc7e95afc34c0e3629c45f5e_124009_450x400_fit_box_2.png width=450 height=193 layout=responsive class=lozad></a></figure></div><p>Para que el contenido estático se sirva del CDN debemos hacer que las URL de las imágenes y hojas de estilo se generen con la URL propia del CDN, al menos, deberemos cambiar el host de esas URL. No hay que hacer mucho más ya que CloudFront creo que se puede configurar para que cuando le lleguen las peticiones del contenido si no las tiene las delegue en la aplicación, una vez que las tiene cacheadas ya no necesita solicitarselas a la aplicación y las sirve él mismo.</p><p>Una de las cosas muy interesantes de Tapestry es que podemos modificar prácticamente cualquier comportamiento del mismo, esto es debido a que la mayor parte de sus funcionalidades son ofrecidas mediante servicios que podemos sobreescribir con los que nosotros proporcionemos, el contenedor de dependencias (IoC) de tapestry lo hace muy fácil. Para modificar las URL de los recursos estáticos que son generados en Tapestry deberemos implementar la clase <a href=http://tapestry.apache.org/5.3/apidocs/org/apache/tapestry5/services/AssetPathConverter.html>AssetPathConverter</a>. Una implementación podría ser la siguiente:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1&#10;</span><span class=lnt> 2&#10;</span><span class=lnt> 3&#10;</span><span class=lnt> 4&#10;</span><span class=lnt> 5&#10;</span><span class=lnt> 6&#10;</span><span class=lnt> 7&#10;</span><span class=lnt> 8&#10;</span><span class=lnt> 9&#10;</span><span class=lnt>10&#10;</span><span class=lnt>11&#10;</span><span class=lnt>12&#10;</span><span class=lnt>13&#10;</span><span class=lnt>14&#10;</span><span class=lnt>15&#10;</span><span class=lnt>16&#10;</span><span class=lnt>17&#10;</span><span class=lnt>18&#10;</span><span class=lnt>19&#10;</span><span class=lnt>20&#10;</span><span class=lnt>21&#10;</span><span class=lnt>22&#10;</span><span class=lnt>23&#10;</span><span class=lnt>24&#10;</span><span class=lnt>25&#10;</span><span class=lnt>26&#10;</span><span class=lnt>27&#10;</span><span class=lnt>28&#10;</span><span class=lnt>29&#10;</span><span class=lnt>30&#10;</span><span class=lnt>31&#10;</span><span class=lnt>32&#10;</span><span class=lnt>33&#10;</span><span class=lnt>34&#10;</span><span class=lnt>35&#10;</span><span class=lnt>36&#10;</span><span class=lnt>37&#10;</span><span class=lnt>38&#10;</span><span class=lnt>39&#10;</span><span class=lnt>40&#10;</span><span class=lnt>41&#10;</span><span class=lnt>42&#10;</span><span class=lnt>43&#10;</span><span class=lnt>44&#10;</span><span class=lnt>45&#10;</span><span class=lnt>46&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kn>package</span> <span class=nn>es.com.blogspot.elblogdepicodev.plugintapestry.misc</span><span class=o>;</span>&#10;&#10;<span class=kn>import</span> <span class=nn>java.util.Map</span><span class=o>;</span>&#10;&#10;<span class=kn>import</span> <span class=nn>org.apache.tapestry5.ioc.annotations.Inject</span><span class=o>;</span>&#10;<span class=kn>import</span> <span class=nn>org.apache.tapestry5.ioc.annotations.Symbol</span><span class=o>;</span>&#10;<span class=kn>import</span> <span class=nn>org.apache.tapestry5.ioc.internal.util.CollectionFactory</span><span class=o>;</span>&#10;<span class=kn>import</span> <span class=nn>org.apache.tapestry5.services.AssetPathConverter</span><span class=o>;</span>&#10;&#10;<span class=kn>import</span> <span class=nn>es.com.blogspot.elblogdepicodev.plugintapestry.services.AppModule</span><span class=o>;</span>&#10;&#10;<span class=kd>public</span> <span class=kd>class</span> <span class=nc>CDNAssetPathConverterImpl</span> <span class=kd>implements</span> <span class=n>AssetPathConverter</span> <span class=o>{</span>&#10;&#10;	<span class=kd>private</span> <span class=n>String</span> <span class=n>protocol</span><span class=o>;</span>&#10;	<span class=kd>private</span> <span class=n>String</span> <span class=n>host</span><span class=o>;</span>&#10;	<span class=kd>private</span> <span class=n>String</span> <span class=n>port</span><span class=o>;</span>&#10;	<span class=kd>private</span> <span class=n>String</span> <span class=n>path</span><span class=o>;</span>&#10;&#10;	<span class=kd>private</span> <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>String</span><span class=o>&gt;</span> <span class=n>resources</span> <span class=o>=</span> <span class=n>CollectionFactory</span><span class=o>.</span><span class=na>newMap</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&#10;	<span class=kd>public</span> <span class=nf>CDNAssetPathConverterImpl</span><span class=o>(</span><span class=nd>@Inject</span> <span class=nd>@Symbol</span><span class=o>(</span><span class=n>AppModule</span><span class=o>.</span><span class=na>CDN_DOMAIN_PROTOCOL</span><span class=o>)</span> <span class=n>String</span> <span class=n>protocol</span><span class=o>,</span>&#10;			<span class=nd>@Inject</span> <span class=nd>@Symbol</span><span class=o>(</span><span class=n>AppModule</span><span class=o>.</span><span class=na>CDN_DOMAIN_HOST</span><span class=o>)</span> <span class=n>String</span> <span class=n>host</span><span class=o>,</span>&#10;			<span class=nd>@Inject</span> <span class=nd>@Symbol</span><span class=o>(</span><span class=n>AppModule</span><span class=o>.</span><span class=na>CDN_DOMAIN_PORT</span><span class=o>)</span> <span class=n>String</span> <span class=n>port</span><span class=o>,</span>&#10;			<span class=nd>@Inject</span> <span class=nd>@Symbol</span><span class=o>(</span><span class=n>AppModule</span><span class=o>.</span><span class=na>CDN_DOMAIN_PATH</span><span class=o>)</span> <span class=n>String</span> <span class=n>path</span><span class=o>)</span> <span class=o>{</span>&#10;&#10;		<span class=k>this</span><span class=o>.</span><span class=na>protocol</span> <span class=o>=</span> <span class=n>protocol</span><span class=o>;</span>&#10;		<span class=k>this</span><span class=o>.</span><span class=na>host</span> <span class=o>=</span> <span class=n>host</span><span class=o>;</span>&#10;		<span class=k>this</span><span class=o>.</span><span class=na>port</span> <span class=o>=</span> <span class=o>(</span><span class=n>port</span> <span class=o>=</span><span class=o>=</span> <span class=kc>null</span> <span class=o>|</span><span class=o>|</span> <span class=n>port</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=s>&#34;&#34;</span><span class=o>)</span><span class=o>)</span> <span class=o>?</span> <span class=s>&#34;&#34;</span> <span class=o>:</span> <span class=s>&#34;:&#34;</span> <span class=o>+</span> <span class=n>port</span><span class=o>;</span>&#10;		<span class=k>this</span><span class=o>.</span><span class=na>path</span> <span class=o>=</span> <span class=o>(</span><span class=n>path</span> <span class=o>=</span><span class=o>=</span> <span class=kc>null</span> <span class=o>|</span><span class=o>|</span> <span class=n>path</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=s>&#34;&#34;</span><span class=o>)</span><span class=o>)</span> <span class=o>?</span> <span class=s>&#34;&#34;</span> <span class=o>:</span> <span class=s>&#34;/&#34;</span> <span class=o>+</span> <span class=n>path</span><span class=o>;</span>&#10;	<span class=o>}</span>&#10;&#10;	<span class=nd>@Override</span>&#10;	<span class=kd>public</span> <span class=n>String</span> <span class=nf>convertAssetPath</span><span class=o>(</span><span class=n>String</span> <span class=n>assetPath</span><span class=o>)</span> <span class=o>{</span>&#10;		<span class=k>if</span> <span class=o>(</span><span class=n>resources</span><span class=o>.</span><span class=na>containsKey</span><span class=o>(</span><span class=n>assetPath</span><span class=o>)</span><span class=o>)</span> <span class=o>{</span>&#10;			<span class=k>return</span> <span class=n>resources</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>assetPath</span><span class=o>)</span><span class=o>;</span>&#10;		<span class=o>}</span>&#10;		<span class=n>String</span> <span class=n>result</span> <span class=o>=</span> <span class=n>String</span><span class=o>.</span><span class=na>format</span><span class=o>(</span><span class=s>&#34;%s://%s%s%s%s&#34;</span><span class=o>,</span> <span class=n>protocol</span><span class=o>,</span> <span class=n>host</span><span class=o>,</span> <span class=n>port</span><span class=o>,</span> <span class=n>path</span><span class=o>,</span> <span class=n>assetPath</span><span class=o>)</span><span class=o>;</span>&#10;		<span class=n>resources</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>assetPath</span><span class=o>,</span> <span class=n>result</span><span class=o>)</span><span class=o>;</span>&#10;		<span class=k>return</span> <span class=n>result</span><span class=o>;</span>&#10;	<span class=o>}</span>&#10;&#10;	<span class=nd>@Override</span>&#10;	<span class=kd>public</span> <span class=kt>boolean</span> <span class=nf>isInvariant</span><span class=o>(</span><span class=o>)</span> <span class=o>{</span>&#10;		<span class=k>return</span> <span class=kc>true</span><span class=o>;</span>&#10;	<span class=o>}</span>&#10;<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span>CDNAssetPathConverterImpl.java</span></div></div><p>También deberemos añadir un poco de configuración al módulo de la aplicación para que se use esta nueva implementación. Esto se hace en el método serviceOverride de la clase AppModule.java, donde también en el método contributeApplicationDefaults configuramos los símbolos que se usarán al generar las URLs entre ellos el dominio del CDN.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1&#10;</span><span class=lnt> 2&#10;</span><span class=lnt> 3&#10;</span><span class=lnt> 4&#10;</span><span class=lnt> 5&#10;</span><span class=lnt> 6&#10;</span><span class=lnt> 7&#10;</span><span class=lnt> 8&#10;</span><span class=lnt> 9&#10;</span><span class=lnt>10&#10;</span><span class=lnt>11&#10;</span><span class=lnt>12&#10;</span><span class=lnt>13&#10;</span><span class=lnt>14&#10;</span><span class=lnt>15&#10;</span><span class=lnt>16&#10;</span><span class=lnt>17&#10;</span><span class=lnt>18&#10;</span><span class=lnt>19&#10;</span><span class=lnt>20&#10;</span><span class=lnt>21&#10;</span><span class=lnt>22&#10;</span><span class=lnt>23&#10;</span><span class=lnt>24&#10;</span><span class=lnt>25&#10;</span><span class=lnt>26&#10;</span><span class=lnt>27&#10;</span><span class=lnt>28&#10;</span><span class=lnt>29&#10;</span><span class=lnt>30&#10;</span><span class=lnt>31&#10;</span><span class=lnt>32&#10;</span><span class=lnt>33&#10;</span><span class=lnt>34&#10;</span><span class=lnt>35&#10;</span><span class=lnt>36&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kn>package</span> <span class=nn>es.com.blogspot.elblogdepicodev.plugintapestry.services</span><span class=o>;</span>&#10;&#10;<span class=o>.</span><span class=o>.</span><span class=o>.</span>&#10;&#10;<span class=kd>public</span> <span class=kd>class</span> <span class=nc>AppModule</span> <span class=o>{</span>&#10;&#10;	<span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>Logger</span> <span class=n>logger</span> <span class=o>=</span> <span class=n>LoggerFactory</span><span class=o>.</span><span class=na>getLogger</span><span class=o>(</span><span class=n>AppModule</span><span class=o>.</span><span class=na>class</span><span class=o>)</span><span class=o>;</span>&#10;&#10;	<span class=kd>public</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>String</span> <span class=n>CDN_DOMAIN_PROTOCOL</span> <span class=o>=</span> <span class=s>&#34;cdn.protocol&#34;</span><span class=o>;</span>&#10;	<span class=kd>public</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>String</span> <span class=n>CDN_DOMAIN_HOST</span> <span class=o>=</span> <span class=s>&#34;cdn.host&#34;</span><span class=o>;</span>&#10;	<span class=kd>public</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>String</span> <span class=n>CDN_DOMAIN_PORT</span> <span class=o>=</span> <span class=s>&#34;cdn.port&#34;</span><span class=o>;</span>&#10;	<span class=kd>public</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>String</span> <span class=n>CDN_DOMAIN_PATH</span> <span class=o>=</span> <span class=s>&#34;cdn.path&#34;</span><span class=o>;</span>&#10;&#10;	<span class=o>.</span><span class=o>.</span><span class=o>.</span>&#10;&#10;	<span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>contributeServiceOverride</span><span class=o>(</span><span class=n>MappedConfiguration</span><span class=o>&lt;</span><span class=n>Class</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>configuration</span><span class=o>,</span> <span class=nd>@Local</span> <span class=n>HibernateSessionSource</span> <span class=n>hibernateSessionSource</span><span class=o>)</span> <span class=o>{</span>&#10;		<span class=n>configuration</span><span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=n>HibernateSessionSource</span><span class=o>.</span><span class=na>class</span><span class=o>,</span> <span class=n>hibernateSessionSource</span><span class=o>)</span><span class=o>;</span>&#10;		<span class=c1>// Servicio para usar un CDN lazy, pe. con Amazon CloudFront&#10;</span><span class=c1></span>		<span class=n>configuration</span><span class=o>.</span><span class=na>addInstance</span><span class=o>(</span><span class=n>AssetPathConverter</span><span class=o>.</span><span class=na>class</span><span class=o>,</span> <span class=n>CDNAssetPathConverterImpl</span><span class=o>.</span><span class=na>class</span><span class=o>)</span><span class=o>;</span>&#10;&#10;		<span class=k>if</span> <span class=o>(</span><span class=n>isServidorJBoss</span><span class=o>(</span><span class=n>ContextListener</span><span class=o>.</span><span class=na>SERVLET_CONTEXT</span><span class=o>)</span><span class=o>)</span> <span class=o>{</span>&#10;			<span class=n>configuration</span><span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=n>ClasspathURLConverter</span><span class=o>.</span><span class=na>class</span><span class=o>,</span> <span class=k>new</span> <span class=n>WildFlyClasspathURLConverter</span><span class=o>(</span><span class=o>)</span><span class=o>)</span><span class=o>;</span>&#10;		<span class=o>}</span>&#10;	<span class=o>}</span>&#10;&#10;	<span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>contributeApplicationDefaults</span><span class=o>(</span><span class=n>MappedConfiguration</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>configuration</span><span class=o>)</span> <span class=o>{</span>&#10;		<span class=o>.</span><span class=o>.</span><span class=o>.</span>&#10;&#10;		<span class=n>configuration</span><span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=n>CDN_DOMAIN_PROTOCOL</span><span class=o>,</span> <span class=s>&#34;http&#34;</span><span class=o>)</span><span class=o>;</span>&#10;		<span class=n>configuration</span><span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=n>CDN_DOMAIN_HOST</span><span class=o>,</span> <span class=s>&#34;s3-eu-west-1.amazonaws.com&#34;</span><span class=o>)</span><span class=o>;</span>&#10;		<span class=n>configuration</span><span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=n>CDN_DOMAIN_PORT</span><span class=o>,</span> <span class=kc>null</span><span class=o>)</span><span class=o>;</span>&#10;		<span class=n>configuration</span><span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=n>CDN_DOMAIN_PATH</span><span class=o>,</span> <span class=kc>null</span><span class=o>)</span><span class=o>;</span>&#10;	<span class=o>}</span>&#10;&#10;	<span class=o>.</span><span class=o>.</span><span class=o>.</span>&#10;<span class=o>}</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span>AppModule.java</span></div></div><p>Estas serían las URLs por defecto:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span><span class=lnt>2&#10;</span><span class=lnt>3&#10;</span><span class=lnt>4&#10;</span><span class=lnt>5&#10;</span><span class=lnt>6&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext>/PlugInTapestry/assets/meta/zbb0257e4/tapestry5/bootstrap/css/bootstrap.css&#10;/PlugInTapestry/assets/ctx/8a53c27b/images/tapestry.png&#10;/PlugInTapestry/assets/meta/z87656c56/tapestry5/require.js&#10;/PlugInTapestry/assets/meta/z58df451c/tapestry5/bootstrap/css/bootstrap.css&#10;/PlugInTapestry/assets/ctx/8a53c27b/images/tapestry.png&#10;/PlugInTapestry/assets/meta/z87656c56/tapestry5/require.js</code></pre></td></tr></table></div></div><div class=highlight-meta><span>urls-sin-cdn.txt</span></div></div><p>Y estas las nuevas nuevas URL haciendo uso de la implementación del <em>AssetPathConverter</em> que como se aprecia incorporan un dominio de Amazon y siendo uno del servicio CloudFront en caso de no tener cacheado el recurso lo pedirá a la aplicación y lo cacheará para posteriores peticiones:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span><span class=lnt>2&#10;</span><span class=lnt>3&#10;</span><span class=lnt>4&#10;</span><span class=lnt>5&#10;</span><span class=lnt>6&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext>http://s3-eu-west-1.amazonaws.com/PlugInTapestry/assets/meta/zbb0257e4/tapestry5/bootstrap/css/bootstrap.css&#10;http://s3-eu-west-1.amazonaws.com/PlugInTapestry/assets/ctx/8a53c27b/images/tapestry.png&#10;http://s3-eu-west-1.amazonaws.com/PlugInTapestry/assets/meta/z87656c56/tapestry5/require.js&#10;http://s3-eu-west-1.amazonaws.com/PlugInTapestry/assets/meta/z58df451c/tapestry5/bootstrap/css/bootstrap.css&#10;http://s3-eu-west-1.amazonaws.com/PlugInTapestry/assets/ctx/8a53c27b/images/tapestry.png&#10;http://s3-eu-west-1.amazonaws.com/PlugInTapestry/assets/meta/z87656c56/tapestry5/require.js</code></pre></td></tr></table></div></div><div class=highlight-meta><span>urls-con-cdn.txt</span></div></div><p>Así de simple podemos cambiar el comportamiento de Tapestry y en este caso emplear un CDN, esta implementación es sencilla y suficiente pero perfectamente pordríamos implementarla con cualquier otra necesidad que tuviesemos. El cambio está localizado en una clase, son poco más que 46 líneas de código pero lo mejor es que es transparente para el código del resto de la aplicación, ¿que más se puede pedir?</p><div class="alert alert-warning"><img data-src=/blog-bitix/assets/images/misc/PugInTapestry.png alt="Portada libro: PlugIn Tapestry" title="Portada libro: PlugIn Tapestry" style=float:left;margin-right:1.5em class=lozad><h3>Libro PlugIn Tapestry</h3><p>Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este <i>framework</i> en el formato que prefieras, <a href=https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/>PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry</a>, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.</p><br style=clear:both><div class=buttons><a href=https://picodotdev.github.io/blog-bitix/assets/custom/PlugInTapestry.pdf class="btn btn-lg btn-success">PDF</a>
-<a href=https://github.com/picodotdev/blog-ejemplos/tree/master/PlugInTapestry class="btn btn-lg btn-success">Código fuente ejemplos</a></div></div><div class=reference>Referencia:<br><ul><li><p><a href=https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/>Libro PlugIn Tapestry</a></p></li><li><p><a href=https://elblogdepicodev.blogspot.com.es/2010/05/documentacion-sobre-apache-tapestry.html>Documentación sobre Apache Tapestry</a></p></li><li><p><a href=http://tapestry.apache.org/current/apidocs/org/apache/tapestry5/services/AssetPathConverter.html>AssetPathConverter</a></p></li><li><p><a href=https://code.google.com/p/corner/source/browse/corner3/trunk/src/main/java/corner/asset/services/impl/CDNAssetPathConverterImpl.java>CDNAssetPathConverterImpl.java</a></p></li><li><p><a href=http://aws.amazon.com/es/cloudfront/dynamic-content/>Amazon CloudFront</a></p></li><li><p><a href=https://stackoverflow.com/questions/16914673/serve-images-outside-web-application>Serve images outside web application</a></p></li><li><p><a href=https://issues.apache.org/jira/browse/TAP5-2201>TAP5-2201</a></p></li><li><p><a href=http://apache-tapestry-mailing-list-archives.1045711.n5.nabble.com/T5-some-automagical-way-to-export-versioned-assets-to-CDN-td2399058.html>T5: some automagical way to export versioned assets to CDN</a></p></li><li><p><a href=http://apache-tapestry-mailing-list-archives.1045711.n5.nabble.com/General-CDN-problem-that-came-up-with-Tree-component-td5671331.html>General CDN problem that came up with Tree component</a></p></li><li><p><a href=http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/DownloadDistS3AndCustomOrigins.html>Using Amazon S3 Origins and Custom Origins for Web Distributions</a></p></li><li><p><a href=http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html>Serving Private Content through CloudFront</a></p></li></ul></div></div></article><div class="row related"><div class=col-md-12>Artículos relacionados:<ul><li><a href=/blog-bitix/2014/07/anotacion-cached-de-apache-tapestry/>Anotación Cached de Apache Tapestry</a></li><li><a href=/blog-bitix/2014/06/hemeroteca-5/>Hemeroteca #5</a></li><li><a href=/blog-bitix/2014/06/ejecutar-apache-tapestry-en-el-servidor-de-aplicaciones-wildfly/>Ejecutar Apache Tapestry en el servidor de aplicaciones WildFly</a></li><li><a href=/blog-bitix/2014/02/presentacion-sobre-apache-tapestry/>Presentación sobre Apache Tapestry</a></li><li><a href=/blog-bitix/2014/07/plantillas-en-apache-tapestry/>Plantillas en Apache Tapestry</a></li></ul></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class="col-12 text-center"><a id=pageBottom></a><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-md-12><a id=comments></a><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='blog-bitix-34';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2014\/07\/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry\/';var disqus_script='embed.js';</script></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=/blog-bitix/assets/images/rss.png width=50 height=50 class=icon></a>
-<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=/blog-bitix/assets/images/twitter.svg width=50 height=50 class=icon></a>
-<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=/blog-bitix/assets/images/github.svg width=50 height=50 class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2020 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow><img src=https://licensebuttons.net/l/by-sa/4.0/80x15.png width=80 height=15 alt="Creative Commons License" title="Creative Commons License"></a><br><a href=https://www.planetacodigo.com/ rel=nofollow><img src=/blog-bitix/assets/images/planeta-codigo.png width=80 height=15 alt="Planeta código" title="Planeta código"></a><br><a href=https://picodotdev.github.io/blog-bitix/ rel=nofollow>Blog Bitix</a> by <a href=https://picodotdev.github.io/blog-bitix/>pico.dev</a> is licensed under a <a href=https://creativecommons.org/licenses/by-sa/4.0/>Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class=credit>Powered by <a href=https://gohugo.io/ rel=nofollow title="A fast and modern static website engine">Hugo</a> and <a href=https://pages.github.com/ title="Websites for you and your projects">GitHub Pages</a>.</span>
-<span class=credit>Background patterns from <a href=https://www.toptal.com/designers/subtlepatterns/ rel=nofollow>Subtle Patterns</a>.</span></div></div></footer></div><div class=blueimp-gallery-container><div id=blueimp-gallery class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal=false><div class=slides></div><h3 class=title></h3><a class=prev>‹</a>
-<a class=next>›</a>
-<a class=close>×</a>
-<a class=play-pause></a><ol class=indicator></ol><div class="modal fade"><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close aria-hidden=true>&#215;</button><h4 class=modal-title></h4></div><div class="modal-body next"></div><div class=modal-footer><button type=button class="btn btn-default pull-left prev">
-<i class="glyphicon glyphicon-chevron-left"></i>Anterior</button>
-<button type=button class="btn btn-primary next">
-Siguiente
-<i class="glyphicon glyphicon-chevron-right"></i></button></div></div></div></div></div></div><script type=text/javascript>window.cookieconsent_options={"message":"Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.","dismiss":"Aceptar","learnMore":"Más información","link":null,"theme":"dark-bottom"};</script><script type=text/javascript src=//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js async></script></body></html>
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta name="base" href="/blog-bitix/">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="picodotdev">
+  <meta name="keywords" content="java, programacion, software, hardware, tapestry, software libre, gnu, linux, gnu/linux, unix, arch, arch linux, html, css, javascript">
+  <meta name="description" content="Un Content Delivery Network (CDN) no es más que un servidor, servidores o servicio dedicado a servir el contenido estático o actuar de cache para los clientes. Alguno de los motivos por los que podríamos querer usar un CDN en una aplicación son:
+ Algunos servicios CDN están repartidos geográficamente por el mundo de modo que el contenido sea servido de un lugar más cercano al usuario esto hace que el tiempo que tarda en cargar un página o servirse el contenido sea menor. &hellip;">
+
+  <title>Servir recursos estáticos desde un CDN en Apache Tapestry</title>
+
+  <link rel="shortcut icon" href="/blog-bitix/assets/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/blog-bitix/assets/apple-touch-icon-144-precomposed.png">
+  <link rel="canonical" type="text/html" href="https://picodotdev.github.io/blog-bitix/2014/07/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry/">
+  <link rel="amphtml" type="text/html" href="https://picodotdev.github.io/blog-bitix/2014/07/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry/index-amp.html">
+  <link rel="alternate" type="application/rss+xml" href="index.xml" title="Blog Bitix">
+  <link rel="humans" type="text/plain" href="/blog-bitix/humans.txt">
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i&display=swap" rel="stylesheet"> 
+
+  
+
+  
+  <!-- Social -->
+<meta property="og:title" content="Servir recursos estáticos desde un CDN en Apache Tapestry">
+<meta property="og:url" content="https://picodotdev.github.io/blog-bitix/2014/07/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry/">
+
+<meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png">
+
+<meta property="og:site_name" content="Blog Bitix">
+<meta property="og:description" content="Un Content Delivery Network (CDN) no es más que un servidor, servidores o servicio dedicado a servir el contenido estático o actuar de cache para los clientes. Alguno de los motivos por los que podríamos querer usar un CDN en una aplicación son:
+ Algunos servicios CDN están repartidos geográficamente por el mundo de modo que el contenido sea servido de un lugar más cercano al usuario esto hace que el tiempo que tarda en cargar un página o servirse el contenido sea menor. &hellip;">
+<meta property="og:type" content="article">
+
+<meta name="twitter:card" content="summary_large_image">
+
+<meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png">
+
+<meta name="twitter:site" content="@picodotdev">
+<meta name="twitter:title" content="Servir recursos estáticos desde un CDN en Apache Tapestry">
+<meta name="twitter:description" content="Un Content Delivery Network (CDN) no es más que un servidor, servidores o servicio dedicado a servir el contenido estático o actuar de cache para los clientes. Alguno de los motivos por los que podríamos querer usar un CDN en una aplicación son:
+ Algunos servicios CDN están repartidos geográficamente por el mundo de modo que el contenido sea servido de un lugar más cercano al usuario esto hace que el tiempo que tarda en cargar un página o servirse el contenido sea menor. &hellip;">
+<meta name="twitter:creator" content="@picodotdev">
+  
+
+  
+  <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://picodotdev.github.io/blog-bitix/2014/07/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry/"
+    },
+    "headline": "Servir recursos estáticos desde un CDN en Apache Tapestry",
+    "image": {
+        
+          "@type": "ImageObject",
+          "url": "https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"
+        
+      },
+    "datePublished": "2014-07-26T12:35:50+02:00",
+    "dateModified": "2015-10-19T19:00:00+02:00",
+    "inLanguage": "",
+    
+    "wordCount": "905",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "author": {
+        "@type": "Person",
+        "name": "picodotdev",
+        "url": "https://twitter.com/picodotdev/"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Blog Bitix",
+        "logo": {
+        "@type": "ImageObject",
+        "url": "https://picodotdev.github.io/blog-bitix/assets/images/logotypes/blogbitix.png"
+        }
+    },
+    "description": "Un Content Delivery Network (CDN) no es más que un servidor, servidores o servicio dedicado a servir el contenido estático o actuar de cache para los clientes. Alguno de los motivos por los que podríamos querer usar un CDN en una aplicación son:
+ Algunos servicios CDN están repartidos geográficamente por el mundo de modo que el contenido sea servido de un lugar más cercano al usuario esto hace que el tiempo que tarda en cargar un página o servirse el contenido sea menor."
+}
+  </script>
+  
+
+  <!-- css -->
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/libs/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css">
+  <!-- theme -->
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/syntax.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/main-cookieconsent.css">
+
+  <!-- javascript -->
+  <script type="text/javascript" src="/blog-bitix/assets/js/require-config.js" defer></script>
+  <script type="text/javascript" src="/blog-bitix/assets/libs/require.js" data-main="/blog-bitix/assets/js/main" defer></script>
+
+  <script type="text/javascript" defer>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-12874075-4', 'picodotdev.github.io');
+    ga('send', 'pageview');
+</script>
+  <script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" defer></script>
+<script type="text/javascript" defer>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: 'ca-pub-3533636310991304',
+    enable_page_level_ads: true
+  });
+</script>
+
+  
+  <script type="text/javascript" src="/blog-bitix/assets/js/app.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        
+
+
+
+
+<header>
+  <div class="row">
+    <div class="col-12 col-lg-4"></div>
+    <div class="col-12 col-lg-4">
+      <h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2>
+      <div class="links">
+        
+          <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+        
+        
+          <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
+        
+        
+          <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="/blog-bitix/assets/images/github.svg" width="50" height="50" class="icon"></a>
+        
+        
+        
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      
+<nav class="nav nav-pills nav-fill">
+  
+    <a href="/blog-bitix/tags/java/" class="nav-item nav-link">Java</a>
+  
+    <a href="/blog-bitix/tags/gnu-linux/" class="nav-item nav-link">GNU/Linux</a>
+  
+    <a href="/blog-bitix/tags/javascript/" class="nav-item nav-link">JavaScript</a>
+  
+    <a href="/blog-bitix/tags/tapestry/" class="nav-item nav-link">Tapestry</a>
+  
+    <a href="/blog-bitix/archive/" class="nav-item nav-link">Archivo y hemeroteca</a>
+  
+    <a href="/blog-bitix/pages/links/" class="nav-item nav-link">Enlaces</a>
+  
+    <a href="/blog-bitix/pages/about/" class="nav-item nav-link">Acerca de...</a>
+  
+</nav>
+
+    </div>
+  </div>
+</header>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 text-center">
+        <ins class="adsbygoogle"
+    style="display: inline-block; width: 970px; height: 250px;"
+    data-ad-client="ca-pub-3533636310991304"
+    data-ad-slot="2975854584"
+    data-type="billboard"></ins>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-12">
+        <div class="adblock-sidebar-container">
+          <div class="adblock-sidebar-container-left"></div>
+          <div class="adblock-sidebar-container-right">
+            <ins class="adsbygoogle adblock-sidebar-vertical"
+    data-ad-client="ca-pub-3533636310991304"
+    data-ad-slot="9933840986"
+    data-ad-format="vertical,rectangle"
+    data-type="auto"></ins>
+          </div>
+        </div>
+        
+<article>
+    <h1>Servir recursos estáticos desde un CDN en Apache Tapestry</h1>
+    <p class="information">
+      
+        Escrito por
+       
+      <span>picodotdev</span> el <time>26/07/2014</time>, actualizado el <time>19/10/2015</time>.
+      
+        <br>
+        
+          
+          <a href="/blog-bitix/tags/software/">software</a>
+        
+          
+          <a href="/blog-bitix/tags/java/">java</a>
+        
+          
+          <a href="/blog-bitix/tags/programacion/">programacion</a>
+        
+          
+          <a href="/blog-bitix/tags/tapestry/">tapestry</a>
+        
+          
+          <a href="/blog-bitix/tags/planeta-codigo/">planeta-codigo</a>
+        
+      
+      <br>
+      <a href="/blog-bitix/2014/07/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry/">Enlace permanente</a>
+      
+        <a href="/blog-bitix/2014/07/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry/#comments">Comentarios</a>
+      
+      
+    </p>
+
+    
+    
+
+    
+
+    <div class="content">
+      
+
+
+      <div class="logotypes">
+   <img src="/blog-bitix/assets/images/logotypes/apache-tapestry-5.svg" class="right" width="400" height="" layout="responsive" alt="Apache Tapestry" title="Apache Tapestry">
+</div>
+<p>Un <a href="https://en.wikipedia.org/wiki/Content_delivery_network">Content Delivery Network</a> (CDN) no es más que un servidor, servidores o servicio dedicado a servir el contenido estático o actuar de cache para los clientes. Alguno de los motivos por los que podríamos querer usar un CDN en una aplicación son:</p>
+<ul>
+<li>Algunos servicios CDN están repartidos geográficamente por el mundo de modo que el contenido sea servido de un lugar más cercano al usuario esto hace que el tiempo que tarda en cargar un página o servirse el contenido sea menor.</li>
+<li>Descargar la tarea de servir al menos parte del contenido de la aplicación al CDN hará que no nos tengamos que preocupar de tener la capacidad para servirlo. Cuando se cargar una página se hacen varias peticiones al servidor para obtener el contenido como el html, imágenes, estilos, &hellip; haciendo que los contenidos estáticos sean servidos por el CDN hará que el servidor tenga menos carga, dependiendo del número de usuarios de la aplicación o los picos de tráfico notaremos una mejoría.</li>
+<li>La alta fiabilidad de servicio que ofrecen.</li>
+</ul>
+<p><a href="http://aws.amazon.com/es/cloudfront/">Amazon ClodFront</a> es una de las opciones que podemos usar como CDN. En este artículo voy a comentar como tener un CDN para servir el contenido estático en una aplicación que emplee el <em>framework</em> de desarrollo de aplicaciones web en la plataforma Java <a href="http://tapestry.apache.org/">Apache Tapestry</a>.</p>
+<div class="media">
+  <figure>
+  <a href="/blog-bitix/2014/07/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry/images/nocdn-cdn_hu4bda5a96fc7e95afc34c0e3629c45f5e_124009_2560x1440_fit_box_2.png" title="Arquitectura no CDN (izquierda) contra arquitectura CDN (derecha)" data-gallery="data-gallery"><img data-src="/blog-bitix/2014/07/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry/images/nocdn-cdn_hu4bda5a96fc7e95afc34c0e3629c45f5e_124009_450x400_fit_box_2.png" width="450" height="193" layout="responsive" class="lozad"></a>
+  </figure>
+</div>
+<p>Para que el contenido estático se sirva del CDN debemos hacer que las URL de las imágenes y hojas de estilo se generen con la URL propia del CDN, al menos, deberemos cambiar el host de esas URL. No hay que hacer mucho más ya que CloudFront creo que se puede configurar para que cuando le lleguen las peticiones del contenido si no las tiene las delegue en la aplicación, una vez que las tiene cacheadas ya no necesita solicitarselas a la aplicación y las sirve él mismo.</p>
+<p>Una de las cosas muy interesantes de Tapestry es que podemos modificar prácticamente cualquier comportamiento del mismo, esto es debido a que la mayor parte de sus funcionalidades son ofrecidas mediante servicios que podemos sobreescribir con los que nosotros proporcionemos, el contenedor de dependencias (IoC) de tapestry lo hace muy fácil. Para modificar las URL de los recursos estáticos que son generados en Tapestry deberemos implementar la clase <a href="http://tapestry.apache.org/5.3/apidocs/org/apache/tapestry5/services/AssetPathConverter.html">AssetPathConverter</a>. Una implementación podría ser la siguiente:</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span><span class="lnt">22&#10;</span><span class="lnt">23&#10;</span><span class="lnt">24&#10;</span><span class="lnt">25&#10;</span><span class="lnt">26&#10;</span><span class="lnt">27&#10;</span><span class="lnt">28&#10;</span><span class="lnt">29&#10;</span><span class="lnt">30&#10;</span><span class="lnt">31&#10;</span><span class="lnt">32&#10;</span><span class="lnt">33&#10;</span><span class="lnt">34&#10;</span><span class="lnt">35&#10;</span><span class="lnt">36&#10;</span><span class="lnt">37&#10;</span><span class="lnt">38&#10;</span><span class="lnt">39&#10;</span><span class="lnt">40&#10;</span><span class="lnt">41&#10;</span><span class="lnt">42&#10;</span><span class="lnt">43&#10;</span><span class="lnt">44&#10;</span><span class="lnt">45&#10;</span><span class="lnt">46&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">es.com.blogspot.elblogdepicodev.plugintapestry.misc</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">org.apache.tapestry5.ioc.annotations.Inject</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">org.apache.tapestry5.ioc.annotations.Symbol</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">org.apache.tapestry5.ioc.internal.util.CollectionFactory</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">org.apache.tapestry5.services.AssetPathConverter</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">es.com.blogspot.elblogdepicodev.plugintapestry.services.AppModule</span><span class="o">;</span>&#10;&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CDNAssetPathConverterImpl</span> <span class="kd">implements</span> <span class="n">AssetPathConverter</span> <span class="o">{</span>&#10;&#10;	<span class="kd">private</span> <span class="n">String</span> <span class="n">protocol</span><span class="o">;</span>&#10;	<span class="kd">private</span> <span class="n">String</span> <span class="n">host</span><span class="o">;</span>&#10;	<span class="kd">private</span> <span class="n">String</span> <span class="n">port</span><span class="o">;</span>&#10;	<span class="kd">private</span> <span class="n">String</span> <span class="n">path</span><span class="o">;</span>&#10;&#10;	<span class="kd">private</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">resources</span> <span class="o">=</span> <span class="n">CollectionFactory</span><span class="o">.</span><span class="na">newMap</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&#10;	<span class="kd">public</span> <span class="nf">CDNAssetPathConverterImpl</span><span class="o">(</span><span class="nd">@Inject</span> <span class="nd">@Symbol</span><span class="o">(</span><span class="n">AppModule</span><span class="o">.</span><span class="na">CDN_DOMAIN_PROTOCOL</span><span class="o">)</span> <span class="n">String</span> <span class="n">protocol</span><span class="o">,</span>&#10;			<span class="nd">@Inject</span> <span class="nd">@Symbol</span><span class="o">(</span><span class="n">AppModule</span><span class="o">.</span><span class="na">CDN_DOMAIN_HOST</span><span class="o">)</span> <span class="n">String</span> <span class="n">host</span><span class="o">,</span>&#10;			<span class="nd">@Inject</span> <span class="nd">@Symbol</span><span class="o">(</span><span class="n">AppModule</span><span class="o">.</span><span class="na">CDN_DOMAIN_PORT</span><span class="o">)</span> <span class="n">String</span> <span class="n">port</span><span class="o">,</span>&#10;			<span class="nd">@Inject</span> <span class="nd">@Symbol</span><span class="o">(</span><span class="n">AppModule</span><span class="o">.</span><span class="na">CDN_DOMAIN_PATH</span><span class="o">)</span> <span class="n">String</span> <span class="n">path</span><span class="o">)</span> <span class="o">{</span>&#10;&#10;		<span class="k">this</span><span class="o">.</span><span class="na">protocol</span> <span class="o">=</span> <span class="n">protocol</span><span class="o">;</span>&#10;		<span class="k">this</span><span class="o">.</span><span class="na">host</span> <span class="o">=</span> <span class="n">host</span><span class="o">;</span>&#10;		<span class="k">this</span><span class="o">.</span><span class="na">port</span> <span class="o">=</span> <span class="o">(</span><span class="n">port</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span> <span class="o">|</span><span class="o">|</span> <span class="n">port</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">)</span><span class="o">)</span> <span class="o">?</span> <span class="s">&#34;&#34;</span> <span class="o">:</span> <span class="s">&#34;:&#34;</span> <span class="o">+</span> <span class="n">port</span><span class="o">;</span>&#10;		<span class="k">this</span><span class="o">.</span><span class="na">path</span> <span class="o">=</span> <span class="o">(</span><span class="n">path</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span> <span class="o">|</span><span class="o">|</span> <span class="n">path</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">)</span><span class="o">)</span> <span class="o">?</span> <span class="s">&#34;&#34;</span> <span class="o">:</span> <span class="s">&#34;/&#34;</span> <span class="o">+</span> <span class="n">path</span><span class="o">;</span>&#10;	<span class="o">}</span>&#10;&#10;	<span class="nd">@Override</span>&#10;	<span class="kd">public</span> <span class="n">String</span> <span class="nf">convertAssetPath</span><span class="o">(</span><span class="n">String</span> <span class="n">assetPath</span><span class="o">)</span> <span class="o">{</span>&#10;		<span class="k">if</span> <span class="o">(</span><span class="n">resources</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">assetPath</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>&#10;			<span class="k">return</span> <span class="n">resources</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">assetPath</span><span class="o">)</span><span class="o">;</span>&#10;		<span class="o">}</span>&#10;		<span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&#34;%s://%s%s%s%s&#34;</span><span class="o">,</span> <span class="n">protocol</span><span class="o">,</span> <span class="n">host</span><span class="o">,</span> <span class="n">port</span><span class="o">,</span> <span class="n">path</span><span class="o">,</span> <span class="n">assetPath</span><span class="o">)</span><span class="o">;</span>&#10;		<span class="n">resources</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">assetPath</span><span class="o">,</span> <span class="n">result</span><span class="o">)</span><span class="o">;</span>&#10;		<span class="k">return</span> <span class="n">result</span><span class="o">;</span>&#10;	<span class="o">}</span>&#10;&#10;	<span class="nd">@Override</span>&#10;	<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isInvariant</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>&#10;		<span class="k">return</span> <span class="kc">true</span><span class="o">;</span>&#10;	<span class="o">}</span>&#10;<span class="o">}</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>CDNAssetPathConverterImpl.java</span>
+    </div>
+</div>
+<p>También deberemos añadir un poco de configuración al módulo de la aplicación para que se use esta nueva implementación. Esto se hace en el método serviceOverride de la clase AppModule.java, donde también en el método contributeApplicationDefaults configuramos los símbolos que se usarán al generar las URLs entre ellos el dominio del CDN.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span><span class="lnt">22&#10;</span><span class="lnt">23&#10;</span><span class="lnt">24&#10;</span><span class="lnt">25&#10;</span><span class="lnt">26&#10;</span><span class="lnt">27&#10;</span><span class="lnt">28&#10;</span><span class="lnt">29&#10;</span><span class="lnt">30&#10;</span><span class="lnt">31&#10;</span><span class="lnt">32&#10;</span><span class="lnt">33&#10;</span><span class="lnt">34&#10;</span><span class="lnt">35&#10;</span><span class="lnt">36&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">es.com.blogspot.elblogdepicodev.plugintapestry.services</span><span class="o">;</span>&#10;&#10;<span class="o">.</span><span class="o">.</span><span class="o">.</span>&#10;&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AppModule</span> <span class="o">{</span>&#10;&#10;	<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="n">AppModule</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">;</span>&#10;&#10;	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">CDN_DOMAIN_PROTOCOL</span> <span class="o">=</span> <span class="s">&#34;cdn.protocol&#34;</span><span class="o">;</span>&#10;	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">CDN_DOMAIN_HOST</span> <span class="o">=</span> <span class="s">&#34;cdn.host&#34;</span><span class="o">;</span>&#10;	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">CDN_DOMAIN_PORT</span> <span class="o">=</span> <span class="s">&#34;cdn.port&#34;</span><span class="o">;</span>&#10;	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">CDN_DOMAIN_PATH</span> <span class="o">=</span> <span class="s">&#34;cdn.path&#34;</span><span class="o">;</span>&#10;&#10;	<span class="o">.</span><span class="o">.</span><span class="o">.</span>&#10;&#10;	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">contributeServiceOverride</span><span class="o">(</span><span class="n">MappedConfiguration</span><span class="o">&lt;</span><span class="n">Class</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">configuration</span><span class="o">,</span> <span class="nd">@Local</span> <span class="n">HibernateSessionSource</span> <span class="n">hibernateSessionSource</span><span class="o">)</span> <span class="o">{</span>&#10;		<span class="n">configuration</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">HibernateSessionSource</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">hibernateSessionSource</span><span class="o">)</span><span class="o">;</span>&#10;		<span class="c1">// Servicio para usar un CDN lazy, pe. con Amazon CloudFront&#10;</span><span class="c1"></span>		<span class="n">configuration</span><span class="o">.</span><span class="na">addInstance</span><span class="o">(</span><span class="n">AssetPathConverter</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">CDNAssetPathConverterImpl</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">;</span>&#10;&#10;		<span class="k">if</span> <span class="o">(</span><span class="n">isServidorJBoss</span><span class="o">(</span><span class="n">ContextListener</span><span class="o">.</span><span class="na">SERVLET_CONTEXT</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>&#10;			<span class="n">configuration</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">ClasspathURLConverter</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="k">new</span> <span class="n">WildFlyClasspathURLConverter</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>&#10;		<span class="o">}</span>&#10;	<span class="o">}</span>&#10;&#10;	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">contributeApplicationDefaults</span><span class="o">(</span><span class="n">MappedConfiguration</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">configuration</span><span class="o">)</span> <span class="o">{</span>&#10;		<span class="o">.</span><span class="o">.</span><span class="o">.</span>&#10;&#10;		<span class="n">configuration</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">CDN_DOMAIN_PROTOCOL</span><span class="o">,</span> <span class="s">&#34;http&#34;</span><span class="o">)</span><span class="o">;</span>&#10;		<span class="n">configuration</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">CDN_DOMAIN_HOST</span><span class="o">,</span> <span class="s">&#34;s3-eu-west-1.amazonaws.com&#34;</span><span class="o">)</span><span class="o">;</span>&#10;		<span class="n">configuration</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">CDN_DOMAIN_PORT</span><span class="o">,</span> <span class="kc">null</span><span class="o">)</span><span class="o">;</span>&#10;		<span class="n">configuration</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">CDN_DOMAIN_PATH</span><span class="o">,</span> <span class="kc">null</span><span class="o">)</span><span class="o">;</span>&#10;	<span class="o">}</span>&#10;&#10;	<span class="o">.</span><span class="o">.</span><span class="o">.</span>&#10;<span class="o">}</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>AppModule.java</span>
+    </div>
+</div>
+<p>Estas serían las URLs por defecto:</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span><span class="lnt">6&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">/PlugInTapestry/assets/meta/zbb0257e4/tapestry5/bootstrap/css/bootstrap.css&#10;/PlugInTapestry/assets/ctx/8a53c27b/images/tapestry.png&#10;/PlugInTapestry/assets/meta/z87656c56/tapestry5/require.js&#10;/PlugInTapestry/assets/meta/z58df451c/tapestry5/bootstrap/css/bootstrap.css&#10;/PlugInTapestry/assets/ctx/8a53c27b/images/tapestry.png&#10;/PlugInTapestry/assets/meta/z87656c56/tapestry5/require.js</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>urls-sin-cdn.txt</span>
+    </div>
+</div>
+<p>Y estas las nuevas nuevas URL haciendo uso de la implementación del <em>AssetPathConverter</em> que como se aprecia incorporan un dominio de Amazon y siendo uno del servicio CloudFront en caso de no tener cacheado el recurso lo pedirá a la aplicación y lo cacheará para posteriores peticiones:</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span><span class="lnt">6&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">http://s3-eu-west-1.amazonaws.com/PlugInTapestry/assets/meta/zbb0257e4/tapestry5/bootstrap/css/bootstrap.css&#10;http://s3-eu-west-1.amazonaws.com/PlugInTapestry/assets/ctx/8a53c27b/images/tapestry.png&#10;http://s3-eu-west-1.amazonaws.com/PlugInTapestry/assets/meta/z87656c56/tapestry5/require.js&#10;http://s3-eu-west-1.amazonaws.com/PlugInTapestry/assets/meta/z58df451c/tapestry5/bootstrap/css/bootstrap.css&#10;http://s3-eu-west-1.amazonaws.com/PlugInTapestry/assets/ctx/8a53c27b/images/tapestry.png&#10;http://s3-eu-west-1.amazonaws.com/PlugInTapestry/assets/meta/z87656c56/tapestry5/require.js</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>urls-con-cdn.txt</span>
+    </div>
+</div>
+<p>Así de simple podemos cambiar el comportamiento de Tapestry y en este caso emplear un CDN, esta implementación es sencilla y suficiente pero perfectamente pordríamos implementarla con cualquier otra necesidad que tuviesemos. El cambio está localizado en una clase, son poco más que 46 líneas de código pero lo mejor es que es transparente para el código del resto de la aplicación, ¿que más se puede pedir?</p>
+<div class="alert alert-warning">
+    <img data-src="/blog-bitix/assets/images/misc/PugInTapestry.png" alt="Portada libro: PlugIn Tapestry" title="Portada libro: PlugIn Tapestry" style="float: left; margin-right: 1.5em;" class="lozad">
+    <h3>Libro PlugIn Tapestry</h3>
+    <p>Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este <i>framework</i> en el formato que prefieras, <a href="https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/">PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry</a>, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.</p>
+    <br style="clear: both;">
+    <div class="buttons">
+        <a href="https://picodotdev.github.io/blog-bitix/assets/custom/PlugInTapestry.pdf" class="btn btn-lg btn-success">PDF</a>
+        <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/PlugInTapestry" class="btn btn-lg btn-success">Código fuente ejemplos</a>
+    </div>
+</div>
+<div class="reference">
+    Referencia:<br>
+<ul>
+<li>
+<p><a href="https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/">Libro PlugIn Tapestry</a></p>
+</li>
+<li>
+<p><a href="https://elblogdepicodev.blogspot.com.es/2010/05/documentacion-sobre-apache-tapestry.html">Documentación sobre Apache Tapestry</a></p>
+</li>
+<li>
+<p><a href="http://tapestry.apache.org/current/apidocs/org/apache/tapestry5/services/AssetPathConverter.html">AssetPathConverter</a></p>
+</li>
+<li>
+<p><a href="https://code.google.com/p/corner/source/browse/corner3/trunk/src/main/java/corner/asset/services/impl/CDNAssetPathConverterImpl.java">CDNAssetPathConverterImpl.java</a></p>
+</li>
+<li>
+<p><a href="http://aws.amazon.com/es/cloudfront/dynamic-content/">Amazon CloudFront</a></p>
+</li>
+<li>
+<p><a href="https://stackoverflow.com/questions/16914673/serve-images-outside-web-application">Serve images outside web application</a></p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TAP5-2201">TAP5-2201</a></p>
+</li>
+<li>
+<p><a href="http://apache-tapestry-mailing-list-archives.1045711.n5.nabble.com/T5-some-automagical-way-to-export-versioned-assets-to-CDN-td2399058.html">T5: some automagical way to export versioned assets to CDN</a></p>
+</li>
+<li>
+<p><a href="http://apache-tapestry-mailing-list-archives.1045711.n5.nabble.com/General-CDN-problem-that-came-up-with-Tree-component-td5671331.html">General CDN problem that came up with Tree component</a></p>
+</li>
+<li>
+<p><a href="http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/DownloadDistS3AndCustomOrigins.html">Using Amazon S3 Origins and Custom Origins for Web Distributions</a></p>
+</li>
+<li>
+<p><a href="http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html">Serving Private Content through CloudFront</a></p>
+</li>
+</ul>
+</div>
+
+    </div>
+  </article>
+        
+
+        
+	
+	
+	<div class="row related">
+		<div class="col-md-12">
+			Artículos relacionados:
+			<ul>
+				
+				<li><a href="/blog-bitix/2014/07/anotacion-cached-de-apache-tapestry/">Anotación Cached de Apache Tapestry</a></li>
+				
+				<li><a href="/blog-bitix/2014/06/hemeroteca-5/">Hemeroteca #5</a></li>
+				
+				<li><a href="/blog-bitix/2014/06/ejecutar-apache-tapestry-en-el-servidor-de-aplicaciones-wildfly/">Ejecutar Apache Tapestry en el servidor de aplicaciones WildFly</a></li>
+				
+				<li><a href="/blog-bitix/2014/02/presentacion-sobre-apache-tapestry/">Presentación sobre Apache Tapestry</a></li>
+				
+				<li><a href="/blog-bitix/2014/07/plantillas-en-apache-tapestry/">Plantillas en Apache Tapestry</a></li>
+				
+			</ul>
+		</div>
+	</div>
+	
+
+        
+<div class="row">
+  <div class="col-md-12">
+    <div class="sharethis-inline-share-buttons"></div>
+  </div>
+</div>
+
+
+        <div class="row">
+          <div class="col-12 text-center">
+            <a id="pageBottom"></a>
+            <ins class="adsbygoogle"
+    style="display: inline-block; width: 970px; height: 250px;"
+    data-ad-client="ca-pub-3533636310991304"
+    data-ad-slot="2975854584"
+    data-type="billboard"></ins>
+          </div>
+        </div>
+        
+  <div class="row">
+    <div class="col-md-12">
+      <a id="comments"></a>
+      <div id="disqus_thread"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript" async>
+    var disqus_shortname = 'blog-bitix';
+    var disqus_identifier = 'blog-bitix-34';
+    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2014\/07\/servir-recursos-estaticos-desde-un-cdn-en-apache-tapestry\/';
+    var disqus_script = 'embed.js';
+  </script>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <hr>
+      </div>
+    </div>
+    
+
+
+
+
+
+<footer>
+  <div class="row">
+    <div class="col-12 col-sm-4">
+      <p><strong>Blog Bitix</strong></p>
+      <p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p>
+      <p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p>
+    </div>
+    <div class="col-12 col-sm-4 text-center menu">
+      <ul class="list-unstyled">
+        
+          <li><a href="/blog-bitix/tags/java/">Java</a></li>
+        
+          <li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li>
+        
+          <li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li>
+        
+          <li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li>
+        
+          <li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li>
+        
+          <li><a href="/blog-bitix/pages/links/">Enlaces</a></li>
+        
+          <li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li>
+        
+          <li><a href="/blog-bitix/pages/donate/">Donaciones</a></li>
+        
+          <li><a href="/blog-bitix/pages/about/">Acerca de...</a></li>
+        
+      </ul>
+    </div>
+    <div class="col-12 col-sm-4 text-center links">
+      
+        <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+      
+      
+        <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
+      
+      
+      
+        <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="/blog-bitix/assets/images/github.svg" width="50" height="50" class="icon"></a>
+      
+      
+      
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      Copyleft <span class="copyleft">&copy;</span> 2020 - <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="nofollow"><img src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" width="80" height="15" alt="Creative Commons License" title="Creative Commons License"></a><br />
+      <a href="https://www.planetacodigo.com/" rel="nofollow"><img src="/blog-bitix/assets/images/planeta-codigo.png" width="80" height="15" alt="Planeta código" title="Planeta código"></a>
+      <br/>
+      <a href="https://picodotdev.github.io/blog-bitix/" rel="nofollow">Blog Bitix</a> by <a href="https://picodotdev.github.io/blog-bitix/">pico.dev</a> is licensed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.
+      <br/>
+      <span class="credit">Powered by <a href="https://gohugo.io/" rel="nofollow" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a>.</span>
+      <span class="credit">Background patterns from <a href="https://www.toptal.com/designers/subtlepatterns/" rel="nofollow">Subtle Patterns</a>.</span>
+    </div>
+  </div>
+</footer>
+
+  </div>
+  
+<div class="blueimp-gallery-container">
+  <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false">
+    
+    <div class="slides"></div>
+    
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    
+    <div class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body next"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left prev">
+              <i class="glyphicon glyphicon-chevron-left"></i>
+              Anterior
+            </button>
+            <button type="button" class="btn btn-primary next">
+              Siguiente
+              <i class="glyphicon glyphicon-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  <!-- Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+<script type="text/javascript">
+    window.cookieconsent_options = {
+        "message": "Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.",
+        "dismiss": "Aceptar",
+        "learnMore": "Más información",
+        "link": null,
+        "theme": "dark-bottom"
+    };
+</script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script>
+</body>
+</html>

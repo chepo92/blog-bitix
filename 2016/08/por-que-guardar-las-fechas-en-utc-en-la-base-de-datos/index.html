@@ -1,23 +1,476 @@
-<!doctype html><html lang=es><head><meta name=base href=/blog-bitix/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="picodotdev"><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="Es rara la aplicación que trabajado con bases de datos no maneje fechas, quizá es menos habitual aplicaciones que trabajan con fechas y diferentes horarias, esto es haciendo alguna conversión entre zonas horarias. Si se nos presenta el caso de trabajar con fechas y diferentes zonas horarias haremos bien en hacer que las fechas que guardemos en la base de datos estén en la misma zona horaria al menos y convertirla posteriormente a la zona horaria que necesite la aplicación. &mldr;"><title>Por qué guardar las fechas en UTC en la base de datos</title><link rel="shortcut icon" href=/blog-bitix/assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=/blog-bitix/assets/apple-touch-icon-144-precomposed.png><link rel=canonical type=text/html href=https://picodotdev.github.io/blog-bitix/2016/08/por-que-guardar-las-fechas-en-utc-en-la-base-de-datos/><link rel=amphtml type=text/html href=https://picodotdev.github.io/blog-bitix/2016/08/por-que-guardar-las-fechas-en-utc-en-la-base-de-datos/index-amp.html><link rel=alternate type=application/rss+xml href=index.xml title="Blog Bitix"><link rel=humans type=text/plain href=/blog-bitix/humans.txt><link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i&display=swap" rel=stylesheet><meta property="og:title" content="Por qué guardar las fechas en UTC en la base de datos"><meta property="og:url" content="https://picodotdev.github.io/blog-bitix/2016/08/por-que-guardar-las-fechas-en-utc-en-la-base-de-datos/"><meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"><meta property="og:site_name" content="Blog Bitix"><meta property="og:description" content="Es rara la aplicación que trabajado con bases de datos no maneje fechas, quizá es menos habitual aplicaciones que trabajan con fechas y diferentes horarias, esto es haciendo alguna conversión entre zonas horarias. Si se nos presenta el caso de trabajar con fechas y diferentes zonas horarias haremos bien en hacer que las fechas que guardemos en la base de datos estén en la misma zona horaria al menos y convertirla posteriormente a la zona horaria que necesite la aplicación. &mldr;"><meta property="og:type" content="article"><meta name=twitter:card content="summary_large_image"><meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"><meta name=twitter:site content="@picodotdev"><meta name=twitter:title content="Por qué guardar las fechas en UTC en la base de datos"><meta name=twitter:description content="Es rara la aplicación que trabajado con bases de datos no maneje fechas, quizá es menos habitual aplicaciones que trabajan con fechas y diferentes horarias, esto es haciendo alguna conversión entre zonas horarias. Si se nos presenta el caso de trabajar con fechas y diferentes zonas horarias haremos bien en hacer que las fechas que guardemos en la base de datos estén en la misma zona horaria al menos y convertirla posteriormente a la zona horaria que necesite la aplicación. &mldr;"><meta name=twitter:creator content="@picodotdev"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://picodotdev.github.io/blog-bitix/2016/08/por-que-guardar-las-fechas-en-utc-en-la-base-de-datos/"},"headline":"Por qué guardar las fechas en UTC en la base de datos","image":{"@type":"ImageObject","url":"https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"},"datePublished":"2016-08-13T01:00:00+02:00","dateModified":"2016-08-14T02:30:00+02:00","inLanguage":"es","wordCount":"820","license":"https://creativecommons.org/licenses/by-sa/4.0/","author":{"@type":"Person","name":"picodotdev","url":"https://twitter.com/picodotdev/"},"publisher":{"@type":"Organization","name":"Blog Bitix","logo":{"@type":"ImageObject","url":"https://picodotdev.github.io/blog-bitix/assets/images/logotypes/blogbitix.png"}},"description":"Es rara la aplicación que trabajado con bases de datos no maneje fechas, quizá es menos habitual aplicaciones que trabajan con fechas y diferentes horarias, esto es haciendo alguna conversión entre zonas horarias. Si se nos presenta el caso de trabajar con fechas y diferentes zonas horarias haremos bien en hacer que las fechas que guardemos en la base de datos estén en la misma zona horaria al menos y convertirla posteriormente a la zona horaria que necesite la aplicación."}</script><link rel=stylesheet type=text/css href=/blog-bitix/assets/libs/bootstrap-4.4.1-dist/css/bootstrap.min.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/css/syntax.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/css/main.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/css/main-cookieconsent.css><script type=text/javascript src=/blog-bitix/assets/js/require-config.js defer></script><script type=text/javascript src=/blog-bitix/assets/libs/require.js data-main=/blog-bitix/assets/js/main defer></script><script type=text/javascript defer>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js defer></script><script type=text/javascript defer>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript src=/blog-bitix/assets/js/app.js defer></script></head><body><div class=container><div class=row><div class=col-12><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=/blog-bitix/assets/images/rss.png width=50 height=50 class=icon></a>
-<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=/blog-bitix/assets/images/twitter.svg width=50 height=50 class=icon></a>
-<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=/blog-bitix/assets/images/github.svg width=50 height=50 class=icon></a></div></div></div><div class=row><div class=col-12><nav class="nav nav-pills nav-fill"><a href=/blog-bitix/tags/java/ class="nav-item nav-link">Java</a>
-<a href=/blog-bitix/tags/gnu-linux/ class="nav-item nav-link">GNU/Linux</a>
-<a href=/blog-bitix/tags/javascript/ class="nav-item nav-link">JavaScript</a>
-<a href=/blog-bitix/tags/tapestry/ class="nav-item nav-link">Tapestry</a>
-<a href=/blog-bitix/archive/ class="nav-item nav-link">Archivo y hemeroteca</a>
-<a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
-<a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class=adblock-sidebar-container><div class=adblock-sidebar-container-left></div><div class=adblock-sidebar-container-right><ins class="adsbygoogle adblock-sidebar-vertical" data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format=vertical,rectangle data-type=auto></ins></div></div><article><h1>Por qué guardar las fechas en UTC en la base de datos</h1><p class=information>Escrito por
-<span>picodotdev</span> el <time>13/08/2016</time>, actualizado el <time>14/08/2016</time>.<br><a href=/blog-bitix/tags/java/>java</a>
-<a href=/blog-bitix/tags/planeta-codigo/>planeta-codigo</a>
-<a href=/blog-bitix/tags/programacion/>programacion</a><br><a href=/blog-bitix/2016/08/por-que-guardar-las-fechas-en-utc-en-la-base-de-datos/>Enlace permanente</a>
-<a href=/blog-bitix/2016/08/por-que-guardar-las-fechas-en-utc-en-la-base-de-datos/#comments>Comentarios</a></p><div class=content><div class=logotypes><img src=/blog-bitix/assets/images/logotypes/java.svg class=right width=200 height layout=responsive alt=Java title=Java></div><div class=logotypes><img src=/blog-bitix/assets/images/logotypes/postgresql.svg class=right width=200 height layout=responsive alt=PostgreSQL title=PostgreSQL></div><p>Es rara la aplicación que trabajado con bases de datos no maneje fechas, quizá es menos habitual aplicaciones que trabajan con fechas y diferentes horarias, esto es haciendo alguna conversión entre zonas horarias. Si se nos presenta el caso de trabajar con fechas y diferentes zonas horarias haremos bien en hacer que las fechas que guardemos en la base de datos estén en la misma zona horaria al menos y convertirla posteriormente a la zona horaria que necesite la aplicación. <abbr title="Coordinated Universal Time">UTC</abbr> además de ser una zona horaria neutra evita el problema de que algunas bases de datos o lenguajes de programación para los campos fecha no guarda las zonas horarias con lo que puede ocurrirnos que guardemos la fecha en una zona horaria y la recuperemos en otra produciendo posiblemente incoherencias en las fechas por una hora.</p><h3 id=por-qu-elegir-utc>¿Por qué elegir UTC?</h3><p>Principalmente porque es una zona horaria neutra, universal y que elimina ambigüedades ya que que no tiene <abbr title="Daily Saving Time">DST</abbr> o horario de verano y podremos guardar las fechas sin temor a que al recuperarlas estén en otra zona horaria si la base de datos o el lenguaje de programación para guardarlas no las soporta.</p><p>Otros motivos que se mencionan en un comentario en inglés <a href=http://ideas.kentico.com/forums/239189-kentico-product-ideas/suggestions/6825844-always-store-dates-times-in-utc-in-the-database>Always store dates/times in UTC (in the database)</a> y algún otro en <a href=http://blog.abodit.com/2010/02/datetime-values-should-always-be-stored-in-utc/>DateTime values should always be stored in UTC</a> son que:</p><ul><li>Calcular duraciones de tiempo es simple. El periodo de tiempo entre la 2:30 AM UTC y las 3:30 AM UTC es siempre una hora cosa que no ocurre en las horas que hay cambio de horario pudiendo ser el periodo entre cero y dos horas.</li><li>No hay fechas inválidas cuando se adelanta la hora por ejemplo de las 2:00 AM a las 3:00 AM, pudiendo ser que las 2:30 AM en esa zona horaria no exista.</li><li>Se evitan problemas al ordenar o agrupar fechas pudiendo ser el caso de que una fecha con tiempo 2:59 AM sea antes que las 2:01 AM por causa del cambio horario.</li><li>Los cambios horarios están sujetos a cambios nada predecibles y varían a lo largo del tiempo con relativa frecuencia con lo para calcular de forma fiable cuantas horas hay entre dos fechas se necesita guardar las variaciones históricas de DST. Ni las fechas de cambios DST son constantes ni las zonas horarias se mantienen fijas para las localizaciones.</li></ul><p>Una vez recuperada la fecha en UTC podemos <a href=https://picodotdev.github.io/blog-bitix/2015/01/convertir-fechas-y-husos-horarios-en-java/>convertir de diferentes formas una fecha de una zona horaria a otra en Java</a> y en cualquier otro lenguaje con las facilidades que proporcione según la zona horaria a visualizar la fecha.</p><h3 id=cal-es-el-caso-que-puede-dar-problemas>¿Cúal es el caso que puede dar problemas?</h3><p>Uno en el que la hora a guardar coincida con un cambio de hora de la zona horaria en la que guardemos las fechas. Por ejemplo, en España el año 2016 el cambio de horario de verano (DST/CEST) a horario de invierno (CET) se hará el 30 de octubre momento en el que a las 3:00 (CEST) volverán a ser las 02:00 pero con diferente zona horaria (CET).</p><h3 id=ejemplo>Ejemplo</h3><p>Supongamos que tenemos la fecha 30 de octubre a las 02:30 CEST y la guardamos en la base de datos pero sin la zona horaria pasando a estar implícita. En esta fecha y hora se produce un cambio horario de horario de verano a horario de invierno en España. Al recuperar la fecha será 30 de octubre a las 02:30 CET, la diferencia está entre el <abbr title="Central European Summer Time">CEST</abbr> y <abbr title="Central European Time">CET</abbr> o la diferencia horaria +02:00 y +01:00. Una hora de diferencia entre la original y la que recuperamos de la base de datos después de hacer la conversión.</p><p>Esto puede probarse con el siguiente ejemplo de código de un programa Java que guarda y recupera de una base de datos <a href=https://www.postgresql.org/>PostgreSQL</a> una fecha que está en el intervalo de cambio horario. En el ejemplo utilizaré <a href=https://picodotdev.github.io/blog-bitix/series/docker/>Docker</a>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1&#10;</span><span class=lnt> 2&#10;</span><span class=lnt> 3&#10;</span><span class=lnt> 4&#10;</span><span class=lnt> 5&#10;</span><span class=lnt> 6&#10;</span><span class=lnt> 7&#10;</span><span class=lnt> 8&#10;</span><span class=lnt> 9&#10;</span><span class=lnt>10&#10;</span><span class=lnt>11&#10;</span><span class=lnt>12&#10;</span><span class=lnt>13&#10;</span><span class=lnt>14&#10;</span><span class=lnt>15&#10;</span><span class=lnt>16&#10;</span><span class=lnt>17&#10;</span><span class=lnt>18&#10;</span><span class=lnt>19&#10;</span><span class=lnt>20&#10;</span><span class=lnt>21&#10;</span><span class=lnt>22&#10;</span><span class=lnt>23&#10;</span><span class=lnt>24&#10;</span><span class=lnt>25&#10;</span><span class=lnt>26&#10;</span><span class=lnt>27&#10;</span><span class=lnt>28&#10;</span><span class=lnt>29&#10;</span><span class=lnt>30&#10;</span><span class=lnt>31&#10;</span><span class=lnt>32&#10;</span><span class=lnt>33&#10;</span><span class=lnt>34&#10;</span><span class=lnt>35&#10;</span><span class=lnt>36&#10;</span><span class=lnt>37&#10;</span><span class=lnt>38&#10;</span><span class=lnt>39&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.datetimedatabase</span><span class=o>;</span>&#10;&#10;<span class=kn>import</span> <span class=nn>java.sql.*</span><span class=o>;</span>&#10;<span class=kn>import</span> <span class=nn>java.time.ZoneId</span><span class=o>;</span>&#10;<span class=kn>import</span> <span class=nn>java.time.ZonedDateTime</span><span class=o>;</span>&#10;<span class=kn>import</span> <span class=nn>java.time.format.DateTimeFormatter</span><span class=o>;</span>&#10;&#10;<span class=kd>public</span> <span class=kd>class</span> <span class=nc>Main</span> <span class=o>{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[</span><span class=o>]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>Class</span><span class=o>.</span><span class=na>forName</span><span class=o>(</span><span class=s>&#34;org.postgresql.Driver&#34;</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>Connection</span> <span class=n>connection</span> <span class=o>=</span> <span class=n>DriverManager</span><span class=o>.</span><span class=na>getConnection</span><span class=o>(</span><span class=s>&#34;jdbc:postgresql://localhost/user&#34;</span><span class=o>,</span> <span class=s>&#34;user&#34;</span><span class=o>,</span> <span class=s>&#34;user&#34;</span><span class=o>)</span><span class=o>;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>PreparedStatement</span> <span class=n>create</span> <span class=o>=</span> <span class=n>connection</span><span class=o>.</span><span class=na>prepareStatement</span><span class=o>(</span><span class=s>&#34;CREATE TABLE IF NOT EXISTS date (id SERIAL, date TIMESTAMP, PRIMARY KEY(id))&#34;</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>create</span><span class=o>.</span><span class=na>execute</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>PreparedStatement</span> <span class=n>delete</span> <span class=o>=</span> <span class=n>connection</span><span class=o>.</span><span class=na>prepareStatement</span><span class=o>(</span><span class=s>&#34;DELETE FROM date&#34;</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>delete</span><span class=o>.</span><span class=na>execute</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>PreparedStatement</span> <span class=n>insert</span> <span class=o>=</span> <span class=n>connection</span><span class=o>.</span><span class=na>prepareStatement</span><span class=o>(</span><span class=s>&#34;INSERT INTO date (date) VALUES (?)&#34;</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>ZonedDateTime</span> <span class=n>date</span> <span class=o>=</span> <span class=n>ZonedDateTime</span><span class=o>.</span><span class=na>of</span><span class=o>(</span><span class=n>2016</span><span class=o>,</span> <span class=n>10</span><span class=o>,</span> <span class=n>30</span><span class=o>,</span> <span class=n>2</span><span class=o>,</span> <span class=n>30</span><span class=o>,</span> <span class=n>0</span><span class=o>,</span> <span class=n>0</span><span class=o>,</span> <span class=n>ZoneId</span><span class=o>.</span><span class=na>of</span><span class=o>(</span><span class=s>&#34;Europe/Madrid&#34;</span><span class=o>)</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;Before database: %s\n&#34;</span><span class=o>,</span> <span class=n>date</span><span class=o>.</span><span class=na>format</span><span class=o>(</span><span class=n>DateTimeFormatter</span><span class=o>.</span><span class=na>ISO_ZONED_DATE_TIME</span><span class=o>)</span><span class=o>)</span><span class=o>;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>insert</span><span class=o>.</span><span class=na>setTimestamp</span><span class=o>(</span><span class=n>1</span><span class=o>,</span> <span class=n>Timestamp</span><span class=o>.</span><span class=na>valueOf</span><span class=o>(</span><span class=n>date</span><span class=o>.</span><span class=na>toLocalDateTime</span><span class=o>(</span><span class=o>)</span><span class=o>)</span><span class=o>)</span><span class=o>;</span> <span class=c1>// !! timezone lost&#10;</span><span class=c1></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>insert</span><span class=o>.</span><span class=na>execute</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>PreparedStatement</span> <span class=n>select</span> <span class=o>=</span> <span class=n>connection</span><span class=o>.</span><span class=na>prepareStatement</span><span class=o>(</span><span class=s>&#34;SELECT date FROM date&#34;</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>ResultSet</span> <span class=n>rs</span> <span class=o>=</span> <span class=n>select</span><span class=o>.</span><span class=na>executeQuery</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>rs</span><span class=o>.</span><span class=na>next</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>ZonedDateTime</span> <span class=n>date</span> <span class=o>=</span> <span class=n>ZonedDateTime</span><span class=o>.</span><span class=na>ofInstant</span><span class=o>(</span><span class=n>rs</span><span class=o>.</span><span class=na>getTimestamp</span><span class=o>(</span><span class=s>&#34;date&#34;</span><span class=o>)</span><span class=o>.</span><span class=na>toInstant</span><span class=o>(</span><span class=o>)</span><span class=o>,</span> <span class=n>ZoneId</span><span class=o>.</span><span class=na>of</span><span class=o>(</span><span class=s>&#34;Europe/Madrid&#34;</span><span class=o>)</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;After database: %s\n&#34;</span><span class=o>,</span> <span class=n>date</span><span class=o>.</span><span class=na>format</span><span class=o>(</span><span class=n>DateTimeFormatter</span><span class=o>.</span><span class=na>ISO_ZONED_DATE_TIME</span><span class=o>)</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;<span class=o>}</span>&#10;</code></pre></td></tr></table></div></div><div class=highlight-meta><span>Main.java</span></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span><span class=lnt>2&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext>Before database: 2016-10-30T02:30:00+02:00[Europe/Madrid]&#10;After database: 2016-10-30T02:30:00+01:00[Europe/Madrid]</code></pre></td></tr></table></div></div><div class=highlight-meta><span>System.out</span></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span><span class=lnt>2&#10;</span><span class=lnt>3&#10;</span><span class=lnt>4&#10;</span><span class=lnt>5&#10;</span><span class=lnt>6&#10;</span><span class=lnt>7&#10;</span><span class=lnt>8&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-YAML data-lang=YAML>postgres<span class=p>:</span><span class=w>&#10;</span><span class=w>&nbsp;&nbsp;&nbsp;&nbsp;</span>image<span class=p>:</span><span class=w> </span>postgres<span class=w>&#10;</span><span class=w>&nbsp;&nbsp;&nbsp;&nbsp;</span>ports<span class=p>:</span><span class=w>&#10;</span><span class=w>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>-<span class=w> </span><span class=s2>&#34;5432:5432&#34;</span><span class=w>&#10;</span><span class=w>&nbsp;&nbsp;&nbsp;&nbsp;</span>environment<span class=p>:</span><span class=w>&#10;</span><span class=w>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>-<span class=w> </span>POSTGRES_USER=user<span class=w>&#10;</span><span class=w>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>-<span class=w> </span>POSTGRES_PASSWORD=user<span class=w>&#10;</span><span class=w>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>-<span class=w> </span>POSTGRES_DB=user</code></pre></td></tr></table></div></div><div class=highlight-meta><span>docker-compose.yml</span></div></div><p>Tabajar con fechas no es simple, es muy curioso y no debemos hacer <a href=http://infiniteundo.com/post/25509354022/more-falsehoods-programmers-believe-about-time>suposiciones sobre las fechas que son incorrectas</a> en las aplicaciones.</p><p>El <a href=https://github.com/picodotdev/blog-ejemplos/tree/master/DateTimeDatabase>código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href=https://github.com/>GitHub</a> y probarlo en tu equipo ejecutando el comando <code>cd misc/docker/postgresql/, docker-compose up, ./gradlew run</code>.</p><div class=reference>Referencia:<br><ul><li><a href=https://picodotdev.github.io/blog-bitix/2015/01/convertir-fechas-y-husos-horarios-en-java/>Convertir fechas y husos horarios en Java</a></li><li><a href=http://ideas.kentico.com/forums/239189-kentico-product-ideas/suggestions/6825844-always-store-dates-times-in-utc-in-the-database>Always store dates/times in UTC (in the database)</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2019/03/varias-consideraciones-importantes-para-trabajar-con-importes-correctamente-tipo-de-datos-precision-y-guardado/>Por qué guardar los importes con al menos un decimal más de la precisión necesaria</a></li></ul></div></div></article><div class="row related"><div class=col-md-12>Artículos relacionados:<ul><li><a href=/blog-bitix/2016/07/no-un-tag-jsp-o-un-tag-de-grails-no-es-equivalente-a-un-componente-de-tapestry/>No, un tag JSP o un tag de Grails no es equivalente a un componente de Tapestry</a></li><li><a href=/blog-bitix/2016/07/hemeroteca-9/>Hemeroteca #9</a></li><li><a href=/blog-bitix/2016/05/ejemplo-sencillo-de-como-crear-un-excel-o-csv-en-java-con-apache-poi-y-opencsv/>Ejemplo sencillo de como crear un Excel o CSV en Java con Apache POI y OpenCSV</a></li><li><a href=/blog-bitix/2016/05/incluir-informacion-de-la-version-en-el-artefacto-distribuible-con-gradle/>Incluir información de la versión en el artefacto distribuible con Gradle</a></li><li><a href=/blog-bitix/2016/05/la-clase-threadlocal-de-java-y-usos-practicos/>La clase ThreadLocal de Java y usos prácticos</a></li></ul></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class="col-12 text-center"><a id=pageBottom></a><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-md-12><a id=comments></a><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='blog-bitix-168';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2016\/08\/por-que-guardar-las-fechas-en-utc-en-la-base-de-datos\/';var disqus_script='embed.js';</script></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=/blog-bitix/assets/images/rss.png width=50 height=50 class=icon></a>
-<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=/blog-bitix/assets/images/twitter.svg width=50 height=50 class=icon></a>
-<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=/blog-bitix/assets/images/github.svg width=50 height=50 class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2020 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow><img src=https://licensebuttons.net/l/by-sa/4.0/80x15.png width=80 height=15 alt="Creative Commons License" title="Creative Commons License"></a><br><a href=https://www.planetacodigo.com/ rel=nofollow><img src=/blog-bitix/assets/images/planeta-codigo.png width=80 height=15 alt="Planeta código" title="Planeta código"></a><br><a href=https://picodotdev.github.io/blog-bitix/ rel=nofollow>Blog Bitix</a> by <a href=https://picodotdev.github.io/blog-bitix/>pico.dev</a> is licensed under a <a href=https://creativecommons.org/licenses/by-sa/4.0/>Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class=credit>Powered by <a href=https://gohugo.io/ rel=nofollow title="A fast and modern static website engine">Hugo</a> and <a href=https://pages.github.com/ title="Websites for you and your projects">GitHub Pages</a>.</span>
-<span class=credit>Background patterns from <a href=https://www.toptal.com/designers/subtlepatterns/ rel=nofollow>Subtle Patterns</a>.</span></div></div></footer></div><div class=blueimp-gallery-container><div id=blueimp-gallery class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal=false><div class=slides></div><h3 class=title></h3><a class=prev>‹</a>
-<a class=next>›</a>
-<a class=close>×</a>
-<a class=play-pause></a><ol class=indicator></ol><div class="modal fade"><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close aria-hidden=true>&#215;</button><h4 class=modal-title></h4></div><div class="modal-body next"></div><div class=modal-footer><button type=button class="btn btn-default pull-left prev">
-<i class="glyphicon glyphicon-chevron-left"></i>Anterior</button>
-<button type=button class="btn btn-primary next">
-Siguiente
-<i class="glyphicon glyphicon-chevron-right"></i></button></div></div></div></div></div></div><script type=text/javascript>window.cookieconsent_options={"message":"Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.","dismiss":"Aceptar","learnMore":"Más información","link":null,"theme":"dark-bottom"};</script><script type=text/javascript src=//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js async></script></body></html>
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta name="base" href="/blog-bitix/">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="picodotdev">
+  <meta name="keywords" content="java, programacion, software, hardware, tapestry, software libre, gnu, linux, gnu/linux, unix, arch, arch linux, html, css, javascript">
+  <meta name="description" content="Es rara la aplicación que trabajado con bases de datos no maneje fechas, quizá es menos habitual aplicaciones que trabajan con fechas y diferentes horarias, esto es haciendo alguna conversión entre zonas horarias. Si se nos presenta el caso de trabajar con fechas y diferentes zonas horarias haremos bien en hacer que las fechas que guardemos en la base de datos estén en la misma zona horaria al menos y convertirla posteriormente a la zona horaria que necesite la aplicación. &hellip;">
+
+  <title>Por qué guardar las fechas en UTC en la base de datos</title>
+
+  <link rel="shortcut icon" href="/blog-bitix/assets/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/blog-bitix/assets/apple-touch-icon-144-precomposed.png">
+  <link rel="canonical" type="text/html" href="https://picodotdev.github.io/blog-bitix/2016/08/por-que-guardar-las-fechas-en-utc-en-la-base-de-datos/">
+  <link rel="amphtml" type="text/html" href="https://picodotdev.github.io/blog-bitix/2016/08/por-que-guardar-las-fechas-en-utc-en-la-base-de-datos/index-amp.html">
+  <link rel="alternate" type="application/rss+xml" href="index.xml" title="Blog Bitix">
+  <link rel="humans" type="text/plain" href="/blog-bitix/humans.txt">
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i&display=swap" rel="stylesheet"> 
+
+  
+
+  
+  <!-- Social -->
+<meta property="og:title" content="Por qué guardar las fechas en UTC en la base de datos">
+<meta property="og:url" content="https://picodotdev.github.io/blog-bitix/2016/08/por-que-guardar-las-fechas-en-utc-en-la-base-de-datos/">
+
+<meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png">
+
+<meta property="og:site_name" content="Blog Bitix">
+<meta property="og:description" content="Es rara la aplicación que trabajado con bases de datos no maneje fechas, quizá es menos habitual aplicaciones que trabajan con fechas y diferentes horarias, esto es haciendo alguna conversión entre zonas horarias. Si se nos presenta el caso de trabajar con fechas y diferentes zonas horarias haremos bien en hacer que las fechas que guardemos en la base de datos estén en la misma zona horaria al menos y convertirla posteriormente a la zona horaria que necesite la aplicación. &hellip;">
+<meta property="og:type" content="article">
+
+<meta name="twitter:card" content="summary_large_image">
+
+<meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png">
+
+<meta name="twitter:site" content="@picodotdev">
+<meta name="twitter:title" content="Por qué guardar las fechas en UTC en la base de datos">
+<meta name="twitter:description" content="Es rara la aplicación que trabajado con bases de datos no maneje fechas, quizá es menos habitual aplicaciones que trabajan con fechas y diferentes horarias, esto es haciendo alguna conversión entre zonas horarias. Si se nos presenta el caso de trabajar con fechas y diferentes zonas horarias haremos bien en hacer que las fechas que guardemos en la base de datos estén en la misma zona horaria al menos y convertirla posteriormente a la zona horaria que necesite la aplicación. &hellip;">
+<meta name="twitter:creator" content="@picodotdev">
+  
+
+  
+  <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://picodotdev.github.io/blog-bitix/2016/08/por-que-guardar-las-fechas-en-utc-en-la-base-de-datos/"
+    },
+    "headline": "Por qué guardar las fechas en UTC en la base de datos",
+    "image": {
+        
+          "@type": "ImageObject",
+          "url": "https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"
+        
+      },
+    "datePublished": "2016-08-13T01:00:00+02:00",
+    "dateModified": "2016-08-14T02:30:00+02:00",
+    "inLanguage": "es",
+    
+    "wordCount": "820",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "author": {
+        "@type": "Person",
+        "name": "picodotdev",
+        "url": "https://twitter.com/picodotdev/"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Blog Bitix",
+        "logo": {
+        "@type": "ImageObject",
+        "url": "https://picodotdev.github.io/blog-bitix/assets/images/logotypes/blogbitix.png"
+        }
+    },
+    "description": "Es rara la aplicación que trabajado con bases de datos no maneje fechas, quizá es menos habitual aplicaciones que trabajan con fechas y diferentes horarias, esto es haciendo alguna conversión entre zonas horarias. Si se nos presenta el caso de trabajar con fechas y diferentes zonas horarias haremos bien en hacer que las fechas que guardemos en la base de datos estén en la misma zona horaria al menos y convertirla posteriormente a la zona horaria que necesite la aplicación."
+}
+  </script>
+  
+
+  <!-- css -->
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/libs/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css">
+  <!-- theme -->
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/syntax.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/main-cookieconsent.css">
+
+  <!-- javascript -->
+  <script type="text/javascript" src="/blog-bitix/assets/js/require-config.js" defer></script>
+  <script type="text/javascript" src="/blog-bitix/assets/libs/require.js" data-main="/blog-bitix/assets/js/main" defer></script>
+
+  <script type="text/javascript" defer>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-12874075-4', 'picodotdev.github.io');
+    ga('send', 'pageview');
+</script>
+  <script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" defer></script>
+<script type="text/javascript" defer>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: 'ca-pub-3533636310991304',
+    enable_page_level_ads: true
+  });
+</script>
+
+  
+  <script type="text/javascript" src="/blog-bitix/assets/js/app.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        
+
+
+
+
+<header>
+  <div class="row">
+    <div class="col-12 col-lg-4"></div>
+    <div class="col-12 col-lg-4">
+      <h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2>
+      <div class="links">
+        
+          <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+        
+        
+          <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
+        
+        
+          <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="/blog-bitix/assets/images/github.svg" width="50" height="50" class="icon"></a>
+        
+        
+        
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      
+<nav class="nav nav-pills nav-fill">
+  
+    <a href="/blog-bitix/tags/java/" class="nav-item nav-link">Java</a>
+  
+    <a href="/blog-bitix/tags/gnu-linux/" class="nav-item nav-link">GNU/Linux</a>
+  
+    <a href="/blog-bitix/tags/javascript/" class="nav-item nav-link">JavaScript</a>
+  
+    <a href="/blog-bitix/tags/tapestry/" class="nav-item nav-link">Tapestry</a>
+  
+    <a href="/blog-bitix/archive/" class="nav-item nav-link">Archivo y hemeroteca</a>
+  
+    <a href="/blog-bitix/pages/links/" class="nav-item nav-link">Enlaces</a>
+  
+    <a href="/blog-bitix/pages/about/" class="nav-item nav-link">Acerca de...</a>
+  
+</nav>
+
+    </div>
+  </div>
+</header>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 text-center">
+        <ins class="adsbygoogle"
+    style="display: inline-block; width: 970px; height: 250px;"
+    data-ad-client="ca-pub-3533636310991304"
+    data-ad-slot="2975854584"
+    data-type="billboard"></ins>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-12">
+        <div class="adblock-sidebar-container">
+          <div class="adblock-sidebar-container-left"></div>
+          <div class="adblock-sidebar-container-right">
+            <ins class="adsbygoogle adblock-sidebar-vertical"
+    data-ad-client="ca-pub-3533636310991304"
+    data-ad-slot="9933840986"
+    data-ad-format="vertical,rectangle"
+    data-type="auto"></ins>
+          </div>
+        </div>
+        
+<article>
+    <h1>Por qué guardar las fechas en UTC en la base de datos</h1>
+    <p class="information">
+      
+        Escrito por
+       
+      <span>picodotdev</span> el <time>13/08/2016</time>, actualizado el <time>14/08/2016</time>.
+      
+        <br>
+        
+          
+          <a href="/blog-bitix/tags/java/">java</a>
+        
+          
+          <a href="/blog-bitix/tags/planeta-codigo/">planeta-codigo</a>
+        
+          
+          <a href="/blog-bitix/tags/programacion/">programacion</a>
+        
+      
+      <br>
+      <a href="/blog-bitix/2016/08/por-que-guardar-las-fechas-en-utc-en-la-base-de-datos/">Enlace permanente</a>
+      
+        <a href="/blog-bitix/2016/08/por-que-guardar-las-fechas-en-utc-en-la-base-de-datos/#comments">Comentarios</a>
+      
+      
+    </p>
+
+    
+    
+
+    
+
+    <div class="content">
+      
+
+
+      <div class="logotypes">
+   <img src="/blog-bitix/assets/images/logotypes/java.svg" class="right" width="200" height="" layout="responsive" alt="Java" title="Java">
+</div>
+<div class="logotypes">
+   <img src="/blog-bitix/assets/images/logotypes/postgresql.svg" class="right" width="200" height="" layout="responsive" alt="PostgreSQL" title="PostgreSQL">
+</div>
+<p>Es rara la aplicación que trabajado con bases de datos no maneje fechas, quizá es menos habitual aplicaciones que trabajan con fechas y diferentes horarias, esto es haciendo alguna conversión entre zonas horarias. Si se nos presenta el caso de trabajar con fechas y diferentes zonas horarias haremos bien en hacer que las fechas que guardemos en la base de datos estén en la misma zona horaria al menos y convertirla posteriormente a la zona horaria que necesite la aplicación. <abbr title="Coordinated Universal Time">UTC</abbr> además de ser una zona horaria neutra evita el problema de que algunas bases de datos o lenguajes de programación para los campos fecha no guarda las zonas horarias con lo que puede ocurrirnos que guardemos la fecha en una zona horaria y la recuperemos en otra produciendo posiblemente incoherencias en las fechas por una hora.</p>
+<h3 id="por-qu-elegir-utc">¿Por qué elegir UTC?</h3>
+<p>Principalmente porque es una zona horaria neutra, universal y que elimina ambigüedades ya que que no tiene <abbr title="Daily Saving Time">DST</abbr> o horario de verano y podremos guardar las fechas sin temor a que al recuperarlas estén en otra zona horaria si la base de datos o el lenguaje de programación para guardarlas no las soporta.</p>
+<p>Otros motivos que se mencionan en un comentario en inglés <a href="http://ideas.kentico.com/forums/239189-kentico-product-ideas/suggestions/6825844-always-store-dates-times-in-utc-in-the-database">Always store dates/times in UTC (in the database)</a> y algún otro en <a href="http://blog.abodit.com/2010/02/datetime-values-should-always-be-stored-in-utc/">DateTime values should always be stored in UTC</a> son que:</p>
+<ul>
+<li>Calcular duraciones de tiempo es simple. El periodo de tiempo entre la 2:30 AM UTC y las 3:30 AM UTC es siempre una hora cosa que no ocurre en las horas que hay cambio de horario pudiendo ser el periodo entre cero y dos horas.</li>
+<li>No hay fechas inválidas cuando se adelanta la hora por ejemplo de las 2:00 AM a las 3:00 AM, pudiendo ser que las 2:30 AM en esa zona horaria no exista.</li>
+<li>Se evitan problemas al ordenar o agrupar fechas pudiendo ser el caso de que una fecha con tiempo 2:59 AM sea antes que las 2:01 AM por causa del cambio horario.</li>
+<li>Los cambios horarios están sujetos a cambios nada predecibles y varían a lo largo del tiempo con relativa frecuencia con lo para calcular de forma fiable cuantas horas hay entre dos fechas se necesita guardar las variaciones históricas de DST. Ni las fechas de cambios DST son constantes ni las zonas horarias se mantienen fijas para las localizaciones.</li>
+</ul>
+<p>Una vez recuperada la fecha en UTC podemos <a href="https://picodotdev.github.io/blog-bitix/2015/01/convertir-fechas-y-husos-horarios-en-java/">convertir de diferentes formas una fecha de una zona horaria a otra en Java</a> y en cualquier otro lenguaje con las facilidades que proporcione según la zona horaria a visualizar la fecha.</p>
+<h3 id="cal-es-el-caso-que-puede-dar-problemas">¿Cúal es el caso que puede dar problemas?</h3>
+<p>Uno en el que la hora a guardar coincida con un cambio de hora de la zona horaria en la que guardemos las fechas. Por ejemplo, en España el año 2016 el cambio de horario de verano (DST/CEST) a horario de invierno (CET) se hará el 30 de octubre momento en el que a las 3:00 (CEST) volverán a ser las 02:00 pero con diferente zona horaria (CET).</p>
+<h3 id="ejemplo">Ejemplo</h3>
+<p>Supongamos que tenemos la fecha 30 de octubre a las 02:30 CEST y la guardamos en la base de datos pero sin la zona horaria pasando a estar implícita. En esta fecha y hora se produce un cambio horario de horario de verano a horario de invierno en España. Al recuperar la fecha será 30 de octubre a las 02:30 CET, la diferencia está entre el <abbr title="Central European Summer Time">CEST</abbr> y <abbr title="Central European Time">CET</abbr> o la diferencia horaria +02:00 y +01:00. Una hora de diferencia entre la original y la que recuperamos de la base de datos después de hacer la conversión.</p>
+<p>Esto puede probarse con el siguiente ejemplo de código de un programa Java que guarda y recupera de una base de datos <a href="https://www.postgresql.org/">PostgreSQL</a> una fecha que está en el intervalo de cambio horario. En el ejemplo utilizaré <a href="https://picodotdev.github.io/blog-bitix/series/docker/">Docker</a>.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span><span class="lnt">22&#10;</span><span class="lnt">23&#10;</span><span class="lnt">24&#10;</span><span class="lnt">25&#10;</span><span class="lnt">26&#10;</span><span class="lnt">27&#10;</span><span class="lnt">28&#10;</span><span class="lnt">29&#10;</span><span class="lnt">30&#10;</span><span class="lnt">31&#10;</span><span class="lnt">32&#10;</span><span class="lnt">33&#10;</span><span class="lnt">34&#10;</span><span class="lnt">35&#10;</span><span class="lnt">36&#10;</span><span class="lnt">37&#10;</span><span class="lnt">38&#10;</span><span class="lnt">39&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix.datetimedatabase</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">java.sql.*</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">java.time.ZoneId</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">java.time.ZonedDateTime</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">java.time.format.DateTimeFormatter</span><span class="o">;</span>&#10;&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">&#34;org.postgresql.Driver&#34;</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Connection</span> <span class="n">connection</span> <span class="o">=</span> <span class="n">DriverManager</span><span class="o">.</span><span class="na">getConnection</span><span class="o">(</span><span class="s">&#34;jdbc:postgresql://localhost/user&#34;</span><span class="o">,</span> <span class="s">&#34;user&#34;</span><span class="o">,</span> <span class="s">&#34;user&#34;</span><span class="o">)</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">PreparedStatement</span> <span class="n">create</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="na">prepareStatement</span><span class="o">(</span><span class="s">&#34;CREATE TABLE IF NOT EXISTS date (id SERIAL, date TIMESTAMP, PRIMARY KEY(id))&#34;</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">create</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">PreparedStatement</span> <span class="n">delete</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="na">prepareStatement</span><span class="o">(</span><span class="s">&#34;DELETE FROM date&#34;</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">delete</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">PreparedStatement</span> <span class="n">insert</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="na">prepareStatement</span><span class="o">(</span><span class="s">&#34;INSERT INTO date (date) VALUES (?)&#34;</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">ZonedDateTime</span> <span class="n">date</span> <span class="o">=</span> <span class="n">ZonedDateTime</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">2016</span><span class="o">,</span> <span class="n">10</span><span class="o">,</span> <span class="n">30</span><span class="o">,</span> <span class="n">2</span><span class="o">,</span> <span class="n">30</span><span class="o">,</span> <span class="n">0</span><span class="o">,</span> <span class="n">0</span><span class="o">,</span> <span class="n">ZoneId</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">&#34;Europe/Madrid&#34;</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&#34;Before database: %s\n&#34;</span><span class="o">,</span> <span class="n">date</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="n">DateTimeFormatter</span><span class="o">.</span><span class="na">ISO_ZONED_DATE_TIME</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">insert</span><span class="o">.</span><span class="na">setTimestamp</span><span class="o">(</span><span class="n">1</span><span class="o">,</span> <span class="n">Timestamp</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">date</span><span class="o">.</span><span class="na">toLocalDateTime</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">)</span><span class="o">;</span> <span class="c1">// !! timezone lost&#10;</span><span class="c1"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">insert</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">PreparedStatement</span> <span class="n">select</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="na">prepareStatement</span><span class="o">(</span><span class="s">&#34;SELECT date FROM date&#34;</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">ResultSet</span> <span class="n">rs</span> <span class="o">=</span> <span class="n">select</span><span class="o">.</span><span class="na">executeQuery</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">rs</span><span class="o">.</span><span class="na">next</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">ZonedDateTime</span> <span class="n">date</span> <span class="o">=</span> <span class="n">ZonedDateTime</span><span class="o">.</span><span class="na">ofInstant</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="na">getTimestamp</span><span class="o">(</span><span class="s">&#34;date&#34;</span><span class="o">)</span><span class="o">.</span><span class="na">toInstant</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">ZoneId</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">&#34;Europe/Madrid&#34;</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&#34;After database: %s\n&#34;</span><span class="o">,</span> <span class="n">date</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="n">DateTimeFormatter</span><span class="o">.</span><span class="na">ISO_ZONED_DATE_TIME</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;<span class="o">}</span>&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>Main.java</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">Before database: 2016-10-30T02:30:00+02:00[Europe/Madrid]&#10;After database: 2016-10-30T02:30:00+01:00[Europe/Madrid]</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>System.out</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span><span class="lnt">6&#10;</span><span class="lnt">7&#10;</span><span class="lnt">8&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-YAML" data-lang="YAML">postgres<span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span>image<span class="p">:</span><span class="w"> </span>postgres<span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span>ports<span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>-<span class="w"> </span><span class="s2">&#34;5432:5432&#34;</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span>environment<span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>-<span class="w"> </span>POSTGRES_USER=user<span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>-<span class="w"> </span>POSTGRES_PASSWORD=user<span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>-<span class="w"> </span>POSTGRES_DB=user</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>docker-compose.yml</span>
+    </div>
+</div>
+<p>Tabajar con fechas no es simple, es muy curioso y no debemos hacer <a href="http://infiniteundo.com/post/25509354022/more-falsehoods-programmers-believe-about-time">suposiciones sobre las fechas que son incorrectas</a> en las aplicaciones.</p>
+<p>
+    El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/DateTimeDatabase">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>cd misc/docker/postgresql/, docker-compose up, ./gradlew run</code>. 
+</p>
+<div class="reference">
+    Referencia:<br>
+<ul>
+<li><a href="https://picodotdev.github.io/blog-bitix/2015/01/convertir-fechas-y-husos-horarios-en-java/">Convertir fechas y husos horarios en Java</a></li>
+<li><a href="http://ideas.kentico.com/forums/239189-kentico-product-ideas/suggestions/6825844-always-store-dates-times-in-utc-in-the-database">Always store dates/times in UTC (in the database)</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2019/03/varias-consideraciones-importantes-para-trabajar-con-importes-correctamente-tipo-de-datos-precision-y-guardado/">Por qué guardar los importes con al menos un decimal más de la precisión necesaria</a></li>
+</ul>
+</div>
+
+    </div>
+  </article>
+        
+
+        
+	
+	
+	<div class="row related">
+		<div class="col-md-12">
+			Artículos relacionados:
+			<ul>
+				
+				<li><a href="/blog-bitix/2016/07/no-un-tag-jsp-o-un-tag-de-grails-no-es-equivalente-a-un-componente-de-tapestry/">No, un tag JSP o un tag de Grails no es equivalente a un componente de Tapestry</a></li>
+				
+				<li><a href="/blog-bitix/2016/07/hemeroteca-9/">Hemeroteca #9</a></li>
+				
+				<li><a href="/blog-bitix/2016/05/ejemplo-sencillo-de-como-crear-un-excel-o-csv-en-java-con-apache-poi-y-opencsv/">Ejemplo sencillo de como crear un Excel o CSV en Java con Apache POI y OpenCSV</a></li>
+				
+				<li><a href="/blog-bitix/2016/05/incluir-informacion-de-la-version-en-el-artefacto-distribuible-con-gradle/">Incluir información de la versión en el artefacto distribuible con Gradle</a></li>
+				
+				<li><a href="/blog-bitix/2016/05/la-clase-threadlocal-de-java-y-usos-practicos/">La clase ThreadLocal de Java y usos prácticos</a></li>
+				
+			</ul>
+		</div>
+	</div>
+	
+
+        
+<div class="row">
+  <div class="col-md-12">
+    <div class="sharethis-inline-share-buttons"></div>
+  </div>
+</div>
+
+
+        <div class="row">
+          <div class="col-12 text-center">
+            <a id="pageBottom"></a>
+            <ins class="adsbygoogle"
+    style="display: inline-block; width: 970px; height: 250px;"
+    data-ad-client="ca-pub-3533636310991304"
+    data-ad-slot="2975854584"
+    data-type="billboard"></ins>
+          </div>
+        </div>
+        
+  <div class="row">
+    <div class="col-md-12">
+      <a id="comments"></a>
+      <div id="disqus_thread"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript" async>
+    var disqus_shortname = 'blog-bitix';
+    var disqus_identifier = 'blog-bitix-168';
+    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2016\/08\/por-que-guardar-las-fechas-en-utc-en-la-base-de-datos\/';
+    var disqus_script = 'embed.js';
+  </script>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <hr>
+      </div>
+    </div>
+    
+
+
+
+
+
+<footer>
+  <div class="row">
+    <div class="col-12 col-sm-4">
+      <p><strong>Blog Bitix</strong></p>
+      <p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p>
+      <p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p>
+    </div>
+    <div class="col-12 col-sm-4 text-center menu">
+      <ul class="list-unstyled">
+        
+          <li><a href="/blog-bitix/tags/java/">Java</a></li>
+        
+          <li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li>
+        
+          <li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li>
+        
+          <li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li>
+        
+          <li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li>
+        
+          <li><a href="/blog-bitix/pages/links/">Enlaces</a></li>
+        
+          <li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li>
+        
+          <li><a href="/blog-bitix/pages/donate/">Donaciones</a></li>
+        
+          <li><a href="/blog-bitix/pages/about/">Acerca de...</a></li>
+        
+      </ul>
+    </div>
+    <div class="col-12 col-sm-4 text-center links">
+      
+        <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+      
+      
+        <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
+      
+      
+      
+        <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="/blog-bitix/assets/images/github.svg" width="50" height="50" class="icon"></a>
+      
+      
+      
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      Copyleft <span class="copyleft">&copy;</span> 2020 - <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="nofollow"><img src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" width="80" height="15" alt="Creative Commons License" title="Creative Commons License"></a><br />
+      <a href="https://www.planetacodigo.com/" rel="nofollow"><img src="/blog-bitix/assets/images/planeta-codigo.png" width="80" height="15" alt="Planeta código" title="Planeta código"></a>
+      <br/>
+      <a href="https://picodotdev.github.io/blog-bitix/" rel="nofollow">Blog Bitix</a> by <a href="https://picodotdev.github.io/blog-bitix/">pico.dev</a> is licensed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.
+      <br/>
+      <span class="credit">Powered by <a href="https://gohugo.io/" rel="nofollow" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a>.</span>
+      <span class="credit">Background patterns from <a href="https://www.toptal.com/designers/subtlepatterns/" rel="nofollow">Subtle Patterns</a>.</span>
+    </div>
+  </div>
+</footer>
+
+  </div>
+  
+<div class="blueimp-gallery-container">
+  <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false">
+    
+    <div class="slides"></div>
+    
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    
+    <div class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body next"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left prev">
+              <i class="glyphicon glyphicon-chevron-left"></i>
+              Anterior
+            </button>
+            <button type="button" class="btn btn-primary next">
+              Siguiente
+              <i class="glyphicon glyphicon-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  <!-- Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+<script type="text/javascript">
+    window.cookieconsent_options = {
+        "message": "Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.",
+        "dismiss": "Aceptar",
+        "learnMore": "Más información",
+        "link": null,
+        "theme": "dark-bottom"
+    };
+</script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script>
+</body>
+</html>

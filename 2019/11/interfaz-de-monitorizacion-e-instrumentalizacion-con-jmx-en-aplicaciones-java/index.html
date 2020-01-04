@@ -1,24 +1,585 @@
-<!doctype html><html lang=es><head><meta name=base href=/blog-bitix/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="picodotdev"><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="JMX es una forma sencilla e integrada en la plataforma Java de monitorizar e instrumentalizar ciertas operaciones de funcionamiento interno de la aplicación que no tenga que ver con el ámbito de negocio que resuelve sino en el aspecto técnico. Unos casos de uso son activar una característica de la aplicación mientras la aplicación está funcionando o limpiar una cache de modo que los datos que almacena se actualicen de nuevo de la fuente origen en tiempo real y sin necesidad de reniciarla, cualquier otro realizable con código Java es posible. &mldr;"><title>Interfaz de monitorización e instrumentalización con JMX en aplicaciones Java</title><link rel="shortcut icon" href=/blog-bitix/assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=/blog-bitix/assets/apple-touch-icon-144-precomposed.png><link rel=canonical type=text/html href=https://picodotdev.github.io/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/><link rel=amphtml type=text/html href=https://picodotdev.github.io/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/index-amp.html><link rel=alternate type=application/rss+xml href=index.xml title="Blog Bitix"><link rel=humans type=text/plain href=/blog-bitix/humans.txt><link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i&display=swap" rel=stylesheet><meta property="og:title" content="Interfaz de monitorización e instrumentalización con JMX en aplicaciones Java"><meta property="og:url" content="https://picodotdev.github.io/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/"><meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"><meta property="og:site_name" content="Blog Bitix"><meta property="og:description" content="JMX es una forma sencilla e integrada en la plataforma Java de monitorizar e instrumentalizar ciertas operaciones de funcionamiento interno de la aplicación que no tenga que ver con el ámbito de negocio que resuelve sino en el aspecto técnico. Unos casos de uso son activar una característica de la aplicación mientras la aplicación está funcionando o limpiar una cache de modo que los datos que almacena se actualicen de nuevo de la fuente origen en tiempo real y sin necesidad de reniciarla, cualquier otro realizable con código Java es posible. &mldr;"><meta property="og:type" content="article"><meta name=twitter:card content="summary_large_image"><meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"><meta name=twitter:site content="@picodotdev"><meta name=twitter:title content="Interfaz de monitorización e instrumentalización con JMX en aplicaciones Java"><meta name=twitter:description content="JMX es una forma sencilla e integrada en la plataforma Java de monitorizar e instrumentalizar ciertas operaciones de funcionamiento interno de la aplicación que no tenga que ver con el ámbito de negocio que resuelve sino en el aspecto técnico. Unos casos de uso son activar una característica de la aplicación mientras la aplicación está funcionando o limpiar una cache de modo que los datos que almacena se actualicen de nuevo de la fuente origen en tiempo real y sin necesidad de reniciarla, cualquier otro realizable con código Java es posible. &mldr;"><meta name=twitter:creator content="@picodotdev"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://picodotdev.github.io/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/"},"headline":"Interfaz de monitorización e instrumentalización con JMX en aplicaciones Java","image":{"@type":"ImageObject","url":"https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"},"datePublished":"2019-11-08T17:00:00+01:00","dateModified":"2019-11-08T17:00:00+01:00","inLanguage":"es","wordCount":"1060","license":"https://creativecommons.org/licenses/by-sa/4.0/","author":{"@type":"Person","name":"picodotdev","url":"https://twitter.com/picodotdev/"},"publisher":{"@type":"Organization","name":"Blog Bitix","logo":{"@type":"ImageObject","url":"https://picodotdev.github.io/blog-bitix/assets/images/logotypes/blogbitix.png"}},"description":"JMX es una forma sencilla e integrada en la plataforma Java de monitorizar e instrumentalizar ciertas operaciones de funcionamiento interno de la aplicación que no tenga que ver con el ámbito de negocio que resuelve sino en el aspecto técnico. Unos casos de uso son activar una característica de la aplicación mientras la aplicación está funcionando o limpiar una cache de modo que los datos que almacena se actualicen de nuevo de la fuente origen en tiempo real y sin necesidad de reniciarla, cualquier otro realizable con código Java es posible."}</script><link rel=stylesheet type=text/css href=/blog-bitix/assets/libs/bootstrap-4.4.1-dist/css/bootstrap.min.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/css/syntax.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/css/main.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/css/main-cookieconsent.css><script type=text/javascript src=/blog-bitix/assets/js/require-config.js defer></script><script type=text/javascript src=/blog-bitix/assets/libs/require.js data-main=/blog-bitix/assets/js/main defer></script><script type=text/javascript defer>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js defer></script><script type=text/javascript defer>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript src=/blog-bitix/assets/js/app.js defer></script></head><body><div class=container><div class=row><div class=col-12><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=/blog-bitix/assets/images/rss.png width=50 height=50 class=icon></a>
-<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=/blog-bitix/assets/images/twitter.svg width=50 height=50 class=icon></a>
-<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=/blog-bitix/assets/images/github.svg width=50 height=50 class=icon></a></div></div></div><div class=row><div class=col-12><nav class="nav nav-pills nav-fill"><a href=/blog-bitix/tags/java/ class="nav-item nav-link">Java</a>
-<a href=/blog-bitix/tags/gnu-linux/ class="nav-item nav-link">GNU/Linux</a>
-<a href=/blog-bitix/tags/javascript/ class="nav-item nav-link">JavaScript</a>
-<a href=/blog-bitix/tags/tapestry/ class="nav-item nav-link">Tapestry</a>
-<a href=/blog-bitix/archive/ class="nav-item nav-link">Archivo y hemeroteca</a>
-<a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
-<a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class=adblock-sidebar-container><div class=adblock-sidebar-container-left></div><div class=adblock-sidebar-container-right><ins class="adsbygoogle adblock-sidebar-vertical" data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format=vertical,rectangle data-type=auto></ins></div></div><article><h1>Interfaz de monitorización e instrumentalización con JMX en aplicaciones Java</h1><p class=information>Escrito por
-<span>picodotdev</span> el <time>08/11/2019</time>.<br><a href=/blog-bitix/tags/java/>java</a>
-<a href=/blog-bitix/tags/planeta-codigo/>planeta-codigo</a>
-<a href=/blog-bitix/tags/programacion/>programacion</a><br><a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/>Enlace permanente</a>
-<a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/#comments>Comentarios</a></p><p class=summary>JMX es una forma sencilla e integrada en la plataforma Java de monitorizar e instrumentalizar ciertas operaciones de funcionamiento interno de la aplicación que no tenga que ver con el ámbito de negocio que resuelve sino en el aspecto técnico. Unos casos de uso son activar una característica de la aplicación mientras la aplicación está funcionando o limpiar una cache de modo que los datos que almacena se actualicen de nuevo de la fuente origen en tiempo real y sin necesidad de reniciarla, cualquier otro realizable con código Java es posible.</p><div><ins class=adsbygoogle style=display:inline-block;width:728px;height:90px data-ad-client=ca-pub-3533636310991304 data-ad-slot=5966819782 data-type=leaderboard></ins></div><div class=content><div class=logotypes><img src=/blog-bitix/assets/images/logotypes/java.svg class=right width=200 height layout=responsive alt=Java title=Java></div><p>Las aplicaciones Java tienen a su disposición integradas en la propia plataforma Java una interfaz para monitorizar su estado y realizar acciones de instrumentalización para modificar algún comportamiento o cambiar alguna configuración en tiempo real mientras la aplicación está funcionando sin necesidad de reiniciarla. La especificación que proporciona esta interfaz es <em>Java Management Extensions</em> (JMX).</p><p>JMX define una serie de recursos a ser administrados, estos ha de instrumentalizarse con el lenguaje Java definiendo unos objetos <em>MBeans</em> que accedan a los recursos. Una vez el recurso ha sido instrumentalizado es gestionado por una agente JMX. El agente JMX controla los recursos y los hace disponibles a las aplicaciones de gestión, el objeto principal del agente es el <em>MBean server</em> donde los <em>MBean</em> son registrados. Los recursos puede ser accedidos a través de diferentes protocolos mediante adaptadores y conectores. Un adaptador HTML muestra un <em>MBean</em> en el navegador y un conector se encarga de la comunicación entre la la aplicación de gestión y el agente JMX.</p><p>La instrumentalización se implementa con los objetos <em>MBean</em> similares a los objetos JavaBean que siguen varios patrones de diseño establecidos por la especificación JMX. Un <em>MBean</em> puede representar un dispositivo, una aplicación o un recurso que necesite ser administrado. Los <em>MBean</em> exponen una interfaz de gestión que consiste en:</p><ul><li>Un conjunto de propiedades de lectura, escritura o ambas.</li><li>Un conjunto de operaciones invocables.</li><li>Una autodescripción.</li></ul><p>Además de propiedades y operaciones los <em>MBean</em> también pueden emitir notificaciones cuando ocurren ciertos eventos.</p><h3 id=ejemplo-de-jmx-en-una-aplicacin-java>Ejemplo de JMX en una aplicación Java</h3><p>Un <em>MBean</em> no es más que una interfaz que una clase Java implementa.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span><span class=lnt>2&#10;</span><span class=lnt>3&#10;</span><span class=lnt>4&#10;</span><span class=lnt>5&#10;</span><span class=lnt>6&#10;</span><span class=lnt>7&#10;</span><span class=lnt>8&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.jmx.mbean</span><span class=o>;</span>&#10;&#10;<span class=kd>public</span> <span class=kd>interface</span> <span class=nc>HelloMBean</span> <span class=o>{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kt>void</span> <span class=nf>sayHello</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kt>int</span> <span class=nf>add</span><span class=o>(</span><span class=kt>int</span> <span class=n>x</span><span class=o>,</span> <span class=kt>int</span> <span class=n>y</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>String</span> <span class=nf>getName</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;<span class=o>}</span>&#10;</code></pre></td></tr></table></div></div><div class=highlight-meta><span>HelloMBean.java</span></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1&#10;</span><span class=lnt> 2&#10;</span><span class=lnt> 3&#10;</span><span class=lnt> 4&#10;</span><span class=lnt> 5&#10;</span><span class=lnt> 6&#10;</span><span class=lnt> 7&#10;</span><span class=lnt> 8&#10;</span><span class=lnt> 9&#10;</span><span class=lnt>10&#10;</span><span class=lnt>11&#10;</span><span class=lnt>12&#10;</span><span class=lnt>13&#10;</span><span class=lnt>14&#10;</span><span class=lnt>15&#10;</span><span class=lnt>16&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.jmx.mbean</span><span class=o>;</span>&#10;&#10;<span class=kd>public</span> <span class=kd>class</span> <span class=nc>Hello</span> <span class=kd>implements</span> <span class=n>HelloMBean</span> <span class=o>{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>public</span> <span class=kt>void</span> <span class=nf>sayHello</span><span class=o>(</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;hello, world&#34;</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>public</span> <span class=kt>int</span> <span class=nf>add</span><span class=o>(</span><span class=kt>int</span> <span class=n>x</span><span class=o>,</span> <span class=kt>int</span> <span class=n>y</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>return</span> <span class=n>x</span> <span class=o>+</span> <span class=n>y</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>public</span> <span class=n>String</span> <span class=nf>getName</span><span class=o>(</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>return</span> <span class=s>&#34;Reginald&#34;</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;<span class=o>}</span>&#10;</code></pre></td></tr></table></div></div><div class=highlight-meta><span>Hello-java.java</span></div></div><p>Creada la interfaz y la implementación del <em>MBean</em> ha de registrarse en el servidor de <em>MBean</em>. Los <em>MBean</em> se registra en un dominio junto con una serie de propiedades clave/valor.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1&#10;</span><span class=lnt> 2&#10;</span><span class=lnt> 3&#10;</span><span class=lnt> 4&#10;</span><span class=lnt> 5&#10;</span><span class=lnt> 6&#10;</span><span class=lnt> 7&#10;</span><span class=lnt> 8&#10;</span><span class=lnt> 9&#10;</span><span class=lnt>10&#10;</span><span class=lnt>11&#10;</span><span class=lnt>12&#10;</span><span class=lnt>13&#10;</span><span class=lnt>14&#10;</span><span class=lnt>15&#10;</span><span class=lnt>16&#10;</span><span class=lnt>17&#10;</span><span class=lnt>18&#10;</span><span class=lnt>19&#10;</span><span class=lnt>20&#10;</span><span class=lnt>21&#10;</span><span class=lnt>22&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.jmx.java</span><span class=o>;</span>&#10;&#10;<span class=kn>import</span> <span class=nn>java.lang.management.ManagementFactory</span><span class=o>;</span>&#10;<span class=kn>import</span> <span class=nn>javax.management.MBeanServer</span><span class=o>;</span>&#10;<span class=kn>import</span> <span class=nn>javax.management.ObjectName</span><span class=o>;</span>&#10;&#10;<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.jmx.mbean.Hello</span><span class=o>;</span>&#10;&#10;<span class=kd>public</span> <span class=kd>class</span> <span class=nc>Main</span> <span class=o>{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[</span><span class=o>]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>MBeanServer</span> <span class=n>mbeanServer</span> <span class=o>=</span> <span class=n>ManagementFactory</span><span class=o>.</span><span class=na>getPlatformMBeanServer</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>Hello</span> <span class=n>mbean</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Hello</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>ObjectName</span> <span class=n>mbeanName</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ObjectName</span><span class=o>(</span><span class=s>&#34;io.github.picodotdev.blogbitix:type=Hello&#34;</span><span class=o>)</span><span class=o>;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>mbeanServer</span><span class=o>.</span><span class=na>registerMBean</span><span class=o>(</span><span class=n>mbean</span><span class=o>,</span> <span class=n>mbeanName</span><span class=o>)</span><span class=o>;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;Waiting for incoming requests...&#34;</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>Thread</span><span class=o>.</span><span class=na>sleep</span><span class=o>(</span><span class=n>Long</span><span class=o>.</span><span class=na>MAX_VALUE</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;<span class=o>}</span>&#10;</code></pre></td></tr></table></div></div><div class=highlight-meta><span>Main-java.java</span></div></div><p>Iniciando la aplicación que registra un <em>MBean</em> en el servidor de <em>MBean</em> la plataforma Java incluye la herramienta <em>JConsole</em> de monitorización y gestión que cumple con la especificación JMX. <a href=https://visualvm.github.io>VisualVM</a> es otra herramienta de monitorización para una máquina virtual de Java, el soporte para visualizar y realizar operaciones sobre <em>MBans</em> hay que añadirlo con un complemento o <em>plugin</em>. Se inician con el siguiente comando y hay que abrir un diálogo para conectarse a uno de los agentes locales iniciados por una máquina virtual.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span><span class=lnt>2&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ jconsole&#10;$ ./visualvm</code></pre></td></tr></table></div></div><div class=highlight-meta><span>jconsole-visualvm.sh</span></div></div><div class=media><figure><a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/images/jconsole_hua2f7781bc9fbb44232be61e6d3ca5723_57481_2560x1440_fit_box_2.png title="Herramienta de monitorización e instrumentalización JConsole" data-gallery=data-gallery><img data-src=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/images/jconsole_hua2f7781bc9fbb44232be61e6d3ca5723_57481_650x450_fit_box_2.png width=564 height=450 layout=responsive class=lozad></a><figcaption>Herramienta de monitorización e instrumentalización JConsole</figcaption></figure></div><p>Realizada la conexión al agente se muestran las propiedades y operaciones de los MBean registrados con la posibilidad de cambiar sus valores, invocar las operaciones y obtener sus resultados. La propia plataforma Java proporciona numerosos <em>MBean</em> como se muestra en el árbol lateral de la imagen.</p><div class=media><figure><a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/images/jconsole-mbean_hu98bab2b545a0fec0dfc1120010f70f98_75381_2560x1440_fit_box_2.png title="Instrumentalización de un MBean en JConsole" data-gallery=data-gallery><img data-src=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/images/jconsole-mbean_hu98bab2b545a0fec0dfc1120010f70f98_75381_300x250_fit_box_2.png width=300 height=239 layout=responsive class=lozad></a>
-<a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/images/visualvm-mbean_hu917ba8c350e83c3d0f19da94ddb8ecfc_74961_2560x1440_fit_box_2.png title="Instrumentalización de un MBean en VisualVM" data-gallery=data-gallery><img data-src=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/images/visualvm-mbean_hu917ba8c350e83c3d0f19da94ddb8ecfc_74961_300x250_fit_box_2.png width=300 height=179 layout=responsive class=lozad></a><figcaption>Instrumentalización de un MBean en JConsole y VisualVM</figcaption></figure></div><p>En el caso de que la aplicación esté contenida dentro de una aplicación web y desplegada en un servidor de aplicaciones como <a href=https://tomcat.apache.org/>Tomcat</a> o <a href=https://wildfly.org/>WildFly</a> registrar un <em>MBean</em> es similar al caso del ejemplo de la aplicación Java y posteriormente administrados con la herramienta JConsole.</p><h3 id=ejemplo-de-jmx-con-spring-boot>Ejemplo de JMX con Spring Boot</h3><p>El ejemplo anterior muestra como usar JMX en una aplicación Java, Spring ofrece soporte para implementar JMX en aplicaciones que usen este <em>framework</em> con las anotaciones <a href=https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jmx/export/annotation/ManagedResource.html>@ManagedResource</a>, <a href=https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jmx/export/metadata/ManagedAttribute.html>@ManagedAttribute</a>, <a href=https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jmx/export/annotation/ManagedOperation.html>@ManagedOperation</a>, <a href=https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jmx/export/annotation/ManagedOperationParameters.html>@ManagedOperationParameters</a>, (<a href=https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jmx/export/annotation/ManagedOperationParameter.html>@ManagedOperationParameter</a>) y <a href=https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/EnableMBeanExport.html>@EnableMBeanExport</a>.</p><p>El mismo <em>MBean</em> de la aplicación Java implementado con spring es el siguiente, lo único que cambia son las anotaciones prporcionadas para que Spring descubra de forma automática los <em>MBean</em> disponibles y los registre sin necesidad de hacerlo de forma explícita.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span><span class=lnt>2&#10;</span><span class=lnt>3&#10;</span><span class=lnt>4&#10;</span><span class=lnt>5&#10;</span><span class=lnt>6&#10;</span><span class=lnt>7&#10;</span><span class=lnt>8&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.jmx.mbean</span><span class=o>;</span>&#10;&#10;<span class=kd>public</span> <span class=kd>interface</span> <span class=nc>HelloMBean</span> <span class=o>{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kt>void</span> <span class=nf>sayHello</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kt>int</span> <span class=nf>add</span><span class=o>(</span><span class=kt>int</span> <span class=n>x</span><span class=o>,</span> <span class=kt>int</span> <span class=n>y</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>String</span> <span class=nf>getName</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;<span class=o>}</span>&#10;</code></pre></td></tr></table></div></div><div class=highlight-meta><span>HelloMBean.java</span></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1&#10;</span><span class=lnt> 2&#10;</span><span class=lnt> 3&#10;</span><span class=lnt> 4&#10;</span><span class=lnt> 5&#10;</span><span class=lnt> 6&#10;</span><span class=lnt> 7&#10;</span><span class=lnt> 8&#10;</span><span class=lnt> 9&#10;</span><span class=lnt>10&#10;</span><span class=lnt>11&#10;</span><span class=lnt>12&#10;</span><span class=lnt>13&#10;</span><span class=lnt>14&#10;</span><span class=lnt>15&#10;</span><span class=lnt>16&#10;</span><span class=lnt>17&#10;</span><span class=lnt>18&#10;</span><span class=lnt>19&#10;</span><span class=lnt>20&#10;</span><span class=lnt>21&#10;</span><span class=lnt>22&#10;</span><span class=lnt>23&#10;</span><span class=lnt>24&#10;</span><span class=lnt>25&#10;</span><span class=lnt>26&#10;</span><span class=lnt>27&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.jmx.mbean</span><span class=o>;</span>&#10;&#10;<span class=kn>import</span> <span class=nn>org.springframework.stereotype.Component</span><span class=o>;</span>&#10;&#10;<span class=kn>import</span> <span class=nn>org.springframework.jmx.export.annotation.ManagedResource</span><span class=o>;</span>&#10;<span class=kn>import</span> <span class=nn>org.springframework.jmx.export.annotation.ManagedOperation</span><span class=o>;</span>&#10;<span class=kn>import</span> <span class=nn>org.springframework.jmx.export.annotation.ManagedAttribute</span><span class=o>;</span>&#10;&#10;<span class=nd>@Component</span>&#10;<span class=nd>@ManagedResource</span><span class=o>(</span><span class=n>objectName</span> <span class=o>=</span> <span class=s>&#34;io.github.picodotdev.blogbitix:type=Hello&#34;</span><span class=o>)</span>&#10;<span class=kd>public</span> <span class=kd>class</span> <span class=nc>Hello</span> <span class=kd>implements</span> <span class=n>HelloMBean</span> <span class=o>{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=nd>@ManagedOperation</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>public</span> <span class=kt>void</span> <span class=nf>sayHello</span><span class=o>(</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;hello, world&#34;</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=nd>@ManagedOperation</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>public</span> <span class=kt>int</span> <span class=nf>add</span><span class=o>(</span><span class=kt>int</span> <span class=n>x</span><span class=o>,</span> <span class=kt>int</span> <span class=n>y</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>return</span> <span class=n>x</span> <span class=o>+</span> <span class=n>y</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=nd>@ManagedAttribute</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>public</span> <span class=n>String</span> <span class=nf>getName</span><span class=o>(</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>return</span> <span class=s>&#34;Reginald&#34;</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;<span class=o>}</span>&#10;</code></pre></td></tr></table></div></div><div class=highlight-meta><span>Hello-spring.java</span></div></div><p>Por autoconfiguración y la anotación <a href=https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/EnableMBeanExport.html>@EnableMBeanExport</a> los <em>MBean</em> se autodescubren y registran en el servidor <em>MBean</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1&#10;</span><span class=lnt> 2&#10;</span><span class=lnt> 3&#10;</span><span class=lnt> 4&#10;</span><span class=lnt> 5&#10;</span><span class=lnt> 6&#10;</span><span class=lnt> 7&#10;</span><span class=lnt> 8&#10;</span><span class=lnt> 9&#10;</span><span class=lnt>10&#10;</span><span class=lnt>11&#10;</span><span class=lnt>12&#10;</span><span class=lnt>13&#10;</span><span class=lnt>14&#10;</span><span class=lnt>15&#10;</span><span class=lnt>16&#10;</span><span class=lnt>17&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.jmx.springboot</span><span class=o>;</span>&#10;&#10;<span class=kn>import</span> <span class=nn>org.springframework.boot.SpringApplication</span><span class=o>;</span>&#10;<span class=kn>import</span> <span class=nn>org.springframework.boot.autoconfigure.SpringBootApplication</span><span class=o>;</span>&#10;&#10;<span class=kn>import</span> <span class=nn>org.springframework.context.annotation.EnableMBeanExport</span><span class=o>;</span>&#10;&#10;<span class=kn>import</span> <span class=nn>io.github.picodotdev.blogbitix.jmx.mbean.Hello</span><span class=o>;</span>&#10;&#10;<span class=nd>@SpringBootApplication</span><span class=o>(</span><span class=n>scanBasePackageClasses</span> <span class=o>=</span> <span class=o>{</span><span class=n>Hello</span><span class=o>.</span><span class=na>class</span><span class=o>}</span><span class=o>)</span>&#10;<span class=nd>@EnableMBeanExport</span>&#10;<span class=kd>public</span> <span class=kd>class</span> <span class=nc>Main</span> <span class=o>{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[</span><span class=o>]</span> <span class=n>args</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>SpringApplication</span><span class=o>.</span><span class=na>run</span><span class=o>(</span><span class=n>Main</span><span class=o>.</span><span class=na>class</span><span class=o>,</span> <span class=n>args</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;<span class=o>}</span>&#10;</code></pre></td></tr></table></div></div><div class=highlight-meta><span>Main-springboot.java</span></div></div><p>Tanto en el ejemplo de <em>MBean</em> con Java como con Spring el puerto RMI para acceder a JMX se configura con varias propiedades de la máquina virtual o con un archivo <em>properties</em> de configuración.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span><span class=lnt>2&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext>com.sun.management.jmxremote=false&#10;com.sun.management.jmxremote.ssl=false</code></pre></td></tr></table></div></div><div class=highlight-meta><span>jmxremote-1.properties</span></div></div><h3 id=cmo-aadir-acceso-remoto-y-aadir-seguridad-securizad-a-jmx>Cómo añadir acceso remoto y añadir seguridad securizad a JMX</h3><p>Por defecto JMX solo es accesible desde la maquina local, esto en producción no es muy útil pero activar el acceso remoto requiere añadir nuevas propiedades de configuración para proporcionar seguridad realizando autenticación y usando una comunicación segura con SSL. Para la comunicación segura se requiere crear un <em>keystore</em>.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span><span class=lnt>2&#10;</span><span class=lnt>3&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ keytool -genkey -keyalg RSA -keystore keystore.jks -keysize <span class=m>8192</span>&#10;$ keytool -export -keystore keystore.jks -file certificate.cer -storepass password&#10;$ keytool -import -file certificate.cer -keystore trustore.jks -storepass password -noprompt</code></pre></td></tr></table></div></div><div class=highlight-meta><span>keystore.sh</span></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span><span class=lnt>2&#10;</span><span class=lnt>3&#10;</span><span class=lnt>4&#10;</span><span class=lnt>5&#10;</span><span class=lnt>6&#10;</span><span class=lnt>7&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext>com.sun.management.jmxremote=true&#10;com.sun.management.jmxremote.port=1419&#10;com.sun.management.jmxremote.rmi.port=31419&#10;com.sun.management.jmxremote.ssl=true&#10;com.sun.management.jmxremote.password.file=jmxremote.password&#10;com.sun.management.jmxremote.access.file=jmxremote.access&#10;com.sun.management.jmxremote.ssl.config.file=jmxremote-ssl.properties&#10;</code></pre></td></tr></table></div></div><div class=highlight-meta><span>jmxremote-2.properties</span></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span><span class=lnt>2&#10;</span><span class=lnt>3&#10;</span><span class=lnt>4&#10;</span><span class=lnt>5&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext>javax.net.ssl.keyStore=keystore.jks&#10;javax.net.ssl.keyStorePassword=password&#10;javax.net.ssl.trustStore=truststore.jks&#10;javax.net.ssl.trustStorePassword=password&#10;&#10;</code></pre></td></tr></table></div></div><div class=highlight-meta><span>jmxremote-ssl.properties</span></div></div><p>Los archivos <em>jmxremote.password</em> y <em>jmxremote.access</em> configuran la autenticación mediante clave y contraseña además de la autorización a las operaciones que el usuario tiene permiso para realizar. Estos archivos han tener restringidos los permisos de lectura para el usuario que inicia la aplicación o se produce una excepción.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span><span class=lnt>2&#10;</span><span class=lnt>3&#10;</span><span class=lnt>4&#10;</span><span class=lnt>5&#10;</span><span class=lnt>6&#10;</span><span class=lnt>7&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext># The passwords in this file are hashed.&#10;# In order to change the password for a role, replace the hashed password entry&#10;# with a clear text password or a new hashed password. If the new password is in clear,&#10;# it will be replaced with its hash when a new login attempt is made.&#10;&#10;admin password&#10;user password&#10;</code></pre></td></tr></table></div></div><div class=highlight-meta><span>jmxremote.password</span></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span><span class=lnt>2&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext>admin readwrite&#10;user  readonly&#10;</code></pre></td></tr></table></div></div><div class=highlight-meta><span>jmxremote.access</span></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span><span class=lnt>2&#10;</span><span class=lnt>3&#10;</span><span class=lnt>4&#10;</span><span class=lnt>5&#10;</span><span class=lnt>6&#10;</span><span class=lnt>7&#10;</span><span class=lnt>8&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext>Error: Se debe restringir el acceso de lectura al archivo de contraseñas: jmxremote.password&#10;jdk.internal.agent.AgentConfigurationError&#10;&nbsp;&nbsp;&nbsp;&nbsp;at jdk.management.agent/sun.management.jmxremote.ConnectorBootstrap.checkPasswordFile(ConnectorBootstrap.java:590)&#10;&nbsp;&nbsp;&nbsp;&nbsp;at jdk.management.agent/sun.management.jmxremote.ConnectorBootstrap.startRemoteConnectorServer(ConnectorBootstrap.java:436)&#10;&nbsp;&nbsp;&nbsp;&nbsp;at jdk.management.agent/jdk.internal.agent.Agent.startAgent(Agent.java:447)&#10;&nbsp;&nbsp;&nbsp;&nbsp;at jdk.management.agent/jdk.internal.agent.Agent.startAgent(Agent.java:599)&#10;&#10;$ chmod 600 jmxremote.password jmxremote.access jmxremote-ssl.properties</code></pre></td></tr></table></div></div><div class=highlight-meta><span>permissions.sh</span></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ jconsole -J-Djavax.net.ssl.trustStore<span class=o>=</span>truststore.jks -J-Djavax.net.ssl.trustStorePassword<span class=o>=</span>password</code></pre></td></tr></table></div></div><div class=highlight-meta><span>jconsole.sh</span></div></div><div class=media><figure><a href=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/images/jconsole-remote_hu6e958f8a814acc8daa16cd8b455e2986_58603_2560x1440_fit_box_2.png title="Acceso remoto a la herramienta de monitorización e instrumentalización JConsole" data-gallery=data-gallery><img data-src=/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/images/jconsole-remote_hu6e958f8a814acc8daa16cd8b455e2986_58603_650x450_fit_box_2.png width=536 height=450 layout=responsive class=lozad></a><figcaption>Acceso remoto a la herramienta de monitorización e instrumentalización JConsole</figcaption></figure></div><p>El acceso remoto también es posible mediante una <a href=https://docs.oracle.com/javase/tutorial/jmx/remote/custom.html>aplicación Java que actúe como cliente del servidor <em>MBean</em></a>.</p><p>El <a href=https://github.com/picodotdev/blog-ejemplos/tree/master/JavaJMX>código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href=https://github.com/>GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew run</code>.</p><div class=reference>Referencia:<br><ul><li><a href=https://docs.oracle.com/javase/7/docs/technotes/guides/management/agent.html>Monitoring and Management Using JMX Technology</a></li><li><a href=https://docs.oracle.com/javase/tutorial/jmx/index.html>Tutorial Java Management Extensions (JMX)</a></li><li><a href=https://gquintana.github.io/2016/09/01/Securing-remote-JMX.html>Securing remote JMX</a></li><li><a href=https://docs.spring.io/spring/docs/5.2.0.RELEASE/spring-framework-reference/integration.html#jmx>Spring JMX</a></li><li><a href=https://docs.spring.io/spring-boot/docs/2.2.0.RELEASE/reference/html/spring-boot-features.html#boot-features-jmx>Spring Boot Monitoring and Management over JMX</a></li><li><a href=https://www.baeldung.com/java-management-extensions>Basic Introduction to JMX</a></li><li><a href=http://actimem.com/java/jmx-spring/>JMX with Spring Framework</a></li></ul></div></div></article><div class="row related"><div class=col-md-12>Artículos relacionados:<ul><li><a href=/blog-bitix/2019/10/cobertura-de-codigo-y-mutation-testing-en-pruebas-unitarias-con-jacoco-y-pit-en-java/>Cobertura de código y mutation testing en pruebas unitarias con JaCoCo y PIT en Java</a></li><li><a href=/blog-bitix/2019/10/ventajas-de-usar-un-tipo-especifico-para-los-identificadores-de-las-entidades-en-vez-de-un-tipo-basico/>Ventajas de usar un tipo específico para los identificadores de las entidades en vez de un tipo básico</a></li><li><a href=/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/>Microservicios con Spring Cloud, Consul, Nomad y Traefik</a></li><li><a href=/blog-bitix/2019/09/novedades-de-java-13/>Novedades de Java 13</a></li><li><a href=/blog-bitix/2019/09/libreria-editor-de-markdown-javascript-y-procesador-de-markdown-para-generar-html-con-java/>Librería editor de markdown JavaScript y procesador de markdown para generar HTML con Java</a></li></ul></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class="col-12 text-center"><a id=pageBottom></a><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-md-12><a id=comments></a><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='blog-bitix-441';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2019\/11\/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java\/';var disqus_script='embed.js';</script></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=/blog-bitix/assets/images/rss.png width=50 height=50 class=icon></a>
-<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=/blog-bitix/assets/images/twitter.svg width=50 height=50 class=icon></a>
-<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=/blog-bitix/assets/images/github.svg width=50 height=50 class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2020 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow><img src=https://licensebuttons.net/l/by-sa/4.0/80x15.png width=80 height=15 alt="Creative Commons License" title="Creative Commons License"></a><br><a href=https://www.planetacodigo.com/ rel=nofollow><img src=/blog-bitix/assets/images/planeta-codigo.png width=80 height=15 alt="Planeta código" title="Planeta código"></a><br><a href=https://picodotdev.github.io/blog-bitix/ rel=nofollow>Blog Bitix</a> by <a href=https://picodotdev.github.io/blog-bitix/>pico.dev</a> is licensed under a <a href=https://creativecommons.org/licenses/by-sa/4.0/>Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class=credit>Powered by <a href=https://gohugo.io/ rel=nofollow title="A fast and modern static website engine">Hugo</a> and <a href=https://pages.github.com/ title="Websites for you and your projects">GitHub Pages</a>.</span>
-<span class=credit>Background patterns from <a href=https://www.toptal.com/designers/subtlepatterns/ rel=nofollow>Subtle Patterns</a>.</span></div></div></footer></div><div class=blueimp-gallery-container><div id=blueimp-gallery class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal=false><div class=slides></div><h3 class=title></h3><a class=prev>‹</a>
-<a class=next>›</a>
-<a class=close>×</a>
-<a class=play-pause></a><ol class=indicator></ol><div class="modal fade"><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close aria-hidden=true>&#215;</button><h4 class=modal-title></h4></div><div class="modal-body next"></div><div class=modal-footer><button type=button class="btn btn-default pull-left prev">
-<i class="glyphicon glyphicon-chevron-left"></i>Anterior</button>
-<button type=button class="btn btn-primary next">
-Siguiente
-<i class="glyphicon glyphicon-chevron-right"></i></button></div></div></div></div></div></div><script type=text/javascript>window.cookieconsent_options={"message":"Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.","dismiss":"Aceptar","learnMore":"Más información","link":null,"theme":"dark-bottom"};</script><script type=text/javascript src=//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js async></script></body></html>
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta name="base" href="/blog-bitix/">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="picodotdev">
+  <meta name="keywords" content="java, programacion, software, hardware, tapestry, software libre, gnu, linux, gnu/linux, unix, arch, arch linux, html, css, javascript">
+  <meta name="description" content="JMX es una forma sencilla e integrada en la plataforma Java de monitorizar e instrumentalizar ciertas operaciones de funcionamiento interno de la aplicación que no tenga que ver con el ámbito de negocio que resuelve sino en el aspecto técnico. Unos casos de uso son activar una característica de la aplicación mientras la aplicación está funcionando o limpiar una cache de modo que los datos que almacena se actualicen de nuevo de la fuente origen en tiempo real y sin necesidad de reniciarla, cualquier otro realizable con código Java es posible. &hellip;">
+
+  <title>Interfaz de monitorización e instrumentalización con JMX en aplicaciones Java</title>
+
+  <link rel="shortcut icon" href="/blog-bitix/assets/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/blog-bitix/assets/apple-touch-icon-144-precomposed.png">
+  <link rel="canonical" type="text/html" href="https://picodotdev.github.io/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/">
+  <link rel="amphtml" type="text/html" href="https://picodotdev.github.io/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/index-amp.html">
+  <link rel="alternate" type="application/rss+xml" href="index.xml" title="Blog Bitix">
+  <link rel="humans" type="text/plain" href="/blog-bitix/humans.txt">
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i&display=swap" rel="stylesheet"> 
+
+  
+
+  
+  <!-- Social -->
+<meta property="og:title" content="Interfaz de monitorización e instrumentalización con JMX en aplicaciones Java">
+<meta property="og:url" content="https://picodotdev.github.io/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/">
+
+<meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png">
+
+<meta property="og:site_name" content="Blog Bitix">
+<meta property="og:description" content="JMX es una forma sencilla e integrada en la plataforma Java de monitorizar e instrumentalizar ciertas operaciones de funcionamiento interno de la aplicación que no tenga que ver con el ámbito de negocio que resuelve sino en el aspecto técnico. Unos casos de uso son activar una característica de la aplicación mientras la aplicación está funcionando o limpiar una cache de modo que los datos que almacena se actualicen de nuevo de la fuente origen en tiempo real y sin necesidad de reniciarla, cualquier otro realizable con código Java es posible. &hellip;">
+<meta property="og:type" content="article">
+
+<meta name="twitter:card" content="summary_large_image">
+
+<meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png">
+
+<meta name="twitter:site" content="@picodotdev">
+<meta name="twitter:title" content="Interfaz de monitorización e instrumentalización con JMX en aplicaciones Java">
+<meta name="twitter:description" content="JMX es una forma sencilla e integrada en la plataforma Java de monitorizar e instrumentalizar ciertas operaciones de funcionamiento interno de la aplicación que no tenga que ver con el ámbito de negocio que resuelve sino en el aspecto técnico. Unos casos de uso son activar una característica de la aplicación mientras la aplicación está funcionando o limpiar una cache de modo que los datos que almacena se actualicen de nuevo de la fuente origen en tiempo real y sin necesidad de reniciarla, cualquier otro realizable con código Java es posible. &hellip;">
+<meta name="twitter:creator" content="@picodotdev">
+  
+
+  
+  <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://picodotdev.github.io/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/"
+    },
+    "headline": "Interfaz de monitorización e instrumentalización con JMX en aplicaciones Java",
+    "image": {
+        
+          "@type": "ImageObject",
+          "url": "https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"
+        
+      },
+    "datePublished": "2019-11-08T17:00:00+01:00",
+    "dateModified": "2019-11-08T17:00:00+01:00",
+    "inLanguage": "es",
+    
+    "wordCount": "1060",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "author": {
+        "@type": "Person",
+        "name": "picodotdev",
+        "url": "https://twitter.com/picodotdev/"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Blog Bitix",
+        "logo": {
+        "@type": "ImageObject",
+        "url": "https://picodotdev.github.io/blog-bitix/assets/images/logotypes/blogbitix.png"
+        }
+    },
+    "description": "JMX es una forma sencilla e integrada en la plataforma Java de monitorizar e instrumentalizar ciertas operaciones de funcionamiento interno de la aplicación que no tenga que ver con el ámbito de negocio que resuelve sino en el aspecto técnico. Unos casos de uso son activar una característica de la aplicación mientras la aplicación está funcionando o limpiar una cache de modo que los datos que almacena se actualicen de nuevo de la fuente origen en tiempo real y sin necesidad de reniciarla, cualquier otro realizable con código Java es posible."
+}
+  </script>
+  
+
+  <!-- css -->
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/libs/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css">
+  <!-- theme -->
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/syntax.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/main-cookieconsent.css">
+
+  <!-- javascript -->
+  <script type="text/javascript" src="/blog-bitix/assets/js/require-config.js" defer></script>
+  <script type="text/javascript" src="/blog-bitix/assets/libs/require.js" data-main="/blog-bitix/assets/js/main" defer></script>
+
+  <script type="text/javascript" defer>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-12874075-4', 'picodotdev.github.io');
+    ga('send', 'pageview');
+</script>
+  <script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" defer></script>
+<script type="text/javascript" defer>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: 'ca-pub-3533636310991304',
+    enable_page_level_ads: true
+  });
+</script>
+
+  
+  <script type="text/javascript" src="/blog-bitix/assets/js/app.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        
+
+
+
+
+<header>
+  <div class="row">
+    <div class="col-12 col-lg-4"></div>
+    <div class="col-12 col-lg-4">
+      <h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2>
+      <div class="links">
+        
+          <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+        
+        
+          <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
+        
+        
+          <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="/blog-bitix/assets/images/github.svg" width="50" height="50" class="icon"></a>
+        
+        
+        
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      
+<nav class="nav nav-pills nav-fill">
+  
+    <a href="/blog-bitix/tags/java/" class="nav-item nav-link">Java</a>
+  
+    <a href="/blog-bitix/tags/gnu-linux/" class="nav-item nav-link">GNU/Linux</a>
+  
+    <a href="/blog-bitix/tags/javascript/" class="nav-item nav-link">JavaScript</a>
+  
+    <a href="/blog-bitix/tags/tapestry/" class="nav-item nav-link">Tapestry</a>
+  
+    <a href="/blog-bitix/archive/" class="nav-item nav-link">Archivo y hemeroteca</a>
+  
+    <a href="/blog-bitix/pages/links/" class="nav-item nav-link">Enlaces</a>
+  
+    <a href="/blog-bitix/pages/about/" class="nav-item nav-link">Acerca de...</a>
+  
+</nav>
+
+    </div>
+  </div>
+</header>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 text-center">
+        <ins class="adsbygoogle"
+    style="display: inline-block; width: 970px; height: 250px;"
+    data-ad-client="ca-pub-3533636310991304"
+    data-ad-slot="2975854584"
+    data-type="billboard"></ins>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-12">
+        <div class="adblock-sidebar-container">
+          <div class="adblock-sidebar-container-left"></div>
+          <div class="adblock-sidebar-container-right">
+            <ins class="adsbygoogle adblock-sidebar-vertical"
+    data-ad-client="ca-pub-3533636310991304"
+    data-ad-slot="9933840986"
+    data-ad-format="vertical,rectangle"
+    data-type="auto"></ins>
+          </div>
+        </div>
+        
+<article>
+    <h1>Interfaz de monitorización e instrumentalización con JMX en aplicaciones Java</h1>
+    <p class="information">
+      
+        Escrito por
+       
+      <span>picodotdev</span> el <time>08/11/2019</time>.
+      
+        <br>
+        
+          
+          <a href="/blog-bitix/tags/java/">java</a>
+        
+          
+          <a href="/blog-bitix/tags/planeta-codigo/">planeta-codigo</a>
+        
+          
+          <a href="/blog-bitix/tags/programacion/">programacion</a>
+        
+      
+      <br>
+      <a href="/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/">Enlace permanente</a>
+      
+        <a href="/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/#comments">Comentarios</a>
+      
+      
+    </p>
+
+    
+      <p class="summary">JMX es una forma sencilla e integrada en la plataforma Java de monitorizar e instrumentalizar ciertas operaciones de funcionamiento interno de la aplicación que no tenga que ver con el ámbito de negocio que resuelve sino en el aspecto técnico. Unos casos de uso son activar una característica de la aplicación mientras la aplicación está funcionando o limpiar una cache de modo que los datos que almacena se actualicen de nuevo de la fuente origen en tiempo real y sin necesidad de reniciarla, cualquier otro realizable con código Java es posible.</p>
+    
+    
+
+    
+      <div>
+        <ins class="adsbygoogle"
+     style="display: inline-block; width: 728px; height: 90px;"
+     data-ad-client="ca-pub-3533636310991304"
+     data-ad-slot="5966819782"
+     data-type="leaderboard"></ins>
+      </div>
+    
+
+    <div class="content">
+      
+
+
+      <div class="logotypes">
+   <img src="/blog-bitix/assets/images/logotypes/java.svg" class="right" width="200" height="" layout="responsive" alt="Java" title="Java">
+</div>
+<p>Las aplicaciones Java tienen a su disposición integradas en la propia plataforma Java una interfaz para monitorizar su estado y realizar acciones de instrumentalización para modificar algún comportamiento o cambiar alguna configuración en tiempo real mientras la aplicación está funcionando sin necesidad de reiniciarla. La especificación que proporciona esta interfaz es <em>Java Management Extensions</em> (JMX).</p>
+<p>JMX define una serie de recursos a ser administrados, estos ha de instrumentalizarse con el lenguaje Java definiendo unos objetos <em>MBeans</em> que accedan a los recursos. Una vez el recurso ha sido instrumentalizado es gestionado por una agente JMX. El agente JMX controla los recursos y los hace disponibles a las aplicaciones de gestión, el objeto principal del agente es el <em>MBean server</em> donde los <em>MBean</em> son registrados. Los recursos puede ser accedidos a través de diferentes protocolos mediante adaptadores y conectores. Un adaptador HTML muestra un <em>MBean</em> en el navegador y un conector se encarga de la comunicación entre la la aplicación de gestión y el agente JMX.</p>
+<p>La instrumentalización se implementa con los objetos <em>MBean</em> similares a los objetos JavaBean que siguen varios patrones de diseño establecidos por la especificación JMX. Un <em>MBean</em> puede representar un dispositivo, una aplicación o un recurso que necesite ser administrado. Los <em>MBean</em> exponen una interfaz de gestión que consiste en:</p>
+<ul>
+<li>Un conjunto de propiedades de lectura, escritura o ambas.</li>
+<li>Un conjunto de operaciones invocables.</li>
+<li>Una autodescripción.</li>
+</ul>
+<p>Además de propiedades y operaciones los <em>MBean</em> también pueden emitir notificaciones cuando ocurren ciertos eventos.</p>
+<h3 id="ejemplo-de-jmx-en-una-aplicacin-java">Ejemplo de JMX en una aplicación Java</h3>
+<p>Un <em>MBean</em> no es más que una interfaz que una clase Java implementa.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span><span class="lnt">6&#10;</span><span class="lnt">7&#10;</span><span class="lnt">8&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix.jmx.mbean</span><span class="o">;</span>&#10;&#10;<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">HelloMBean</span> <span class="o">{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kt">void</span> <span class="nf">sayHello</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kt">int</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">String</span> <span class="nf">getName</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;<span class="o">}</span>&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>HelloMBean.java</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix.jmx.mbean</span><span class="o">;</span>&#10;&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Hello</span> <span class="kd">implements</span> <span class="n">HelloMBean</span> <span class="o">{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="kt">void</span> <span class="nf">sayHello</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;hello, world&#34;</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="kt">int</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="s">&#34;Reginald&#34;</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;<span class="o">}</span>&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>Hello-java.java</span>
+    </div>
+</div>
+<p>Creada la interfaz y la implementación del <em>MBean</em> ha de registrarse en el servidor de <em>MBean</em>. Los <em>MBean</em> se registra en un dominio junto con una serie de propiedades clave/valor.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span><span class="lnt">22&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix.jmx.java</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">java.lang.management.ManagementFactory</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">javax.management.MBeanServer</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">javax.management.ObjectName</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">io.github.picodotdev.blogbitix.jmx.mbean.Hello</span><span class="o">;</span>&#10;&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">MBeanServer</span> <span class="n">mbeanServer</span> <span class="o">=</span> <span class="n">ManagementFactory</span><span class="o">.</span><span class="na">getPlatformMBeanServer</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Hello</span> <span class="n">mbean</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Hello</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">ObjectName</span> <span class="n">mbeanName</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectName</span><span class="o">(</span><span class="s">&#34;io.github.picodotdev.blogbitix:type=Hello&#34;</span><span class="o">)</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">mbeanServer</span><span class="o">.</span><span class="na">registerMBean</span><span class="o">(</span><span class="n">mbean</span><span class="o">,</span> <span class="n">mbeanName</span><span class="o">)</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Waiting for incoming requests...&#34;</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">Long</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;<span class="o">}</span>&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>Main-java.java</span>
+    </div>
+</div>
+<p>Iniciando la aplicación que registra un <em>MBean</em> en el servidor de <em>MBean</em> la plataforma Java incluye la herramienta <em>JConsole</em> de monitorización y gestión que cumple con la especificación JMX. <a href="https://visualvm.github.io">VisualVM</a> es otra herramienta de monitorización para una máquina virtual de Java, el soporte para visualizar y realizar operaciones sobre <em>MBans</em> hay que añadirlo con un complemento o <em>plugin</em>. Se inician con el siguiente comando y hay que abrir un diálogo para conectarse a uno de los agentes locales iniciados por una máquina virtual.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-bash" data-lang="bash">$ jconsole&#10;$ ./visualvm</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>jconsole-visualvm.sh</span>
+    </div>
+</div>
+<div class="media">
+  <figure>
+  <a href="/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/images/jconsole_hua2f7781bc9fbb44232be61e6d3ca5723_57481_2560x1440_fit_box_2.png" title="Herramienta de monitorización e instrumentalización JConsole" data-gallery="data-gallery"><img data-src="/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/images/jconsole_hua2f7781bc9fbb44232be61e6d3ca5723_57481_650x450_fit_box_2.png" width="564" height="450" layout="responsive" class="lozad"></a>
+  <figcaption>Herramienta de monitorización e instrumentalización JConsole</figcaption>
+  </figure>
+</div>
+<p>Realizada la conexión al agente se muestran las propiedades y operaciones de los MBean registrados con la posibilidad de cambiar sus valores, invocar las operaciones y obtener sus resultados. La propia plataforma Java proporciona numerosos <em>MBean</em> como se muestra en el árbol lateral de la imagen.</p>
+<div class="media">
+  <figure>
+  <a href="/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/images/jconsole-mbean_hu98bab2b545a0fec0dfc1120010f70f98_75381_2560x1440_fit_box_2.png" title="Instrumentalización de un MBean en JConsole" data-gallery="data-gallery"><img data-src="/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/images/jconsole-mbean_hu98bab2b545a0fec0dfc1120010f70f98_75381_300x250_fit_box_2.png" width="300" height="239" layout="responsive" class="lozad"></a>
+  <a href="/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/images/visualvm-mbean_hu917ba8c350e83c3d0f19da94ddb8ecfc_74961_2560x1440_fit_box_2.png" title="Instrumentalización de un MBean en VisualVM" data-gallery="data-gallery"><img data-src="/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/images/visualvm-mbean_hu917ba8c350e83c3d0f19da94ddb8ecfc_74961_300x250_fit_box_2.png" width="300" height="179" layout="responsive" class="lozad"></a>
+  <figcaption>Instrumentalización de un MBean en JConsole y VisualVM</figcaption>
+  </figure>
+</div>
+<p>En el caso de que la aplicación esté contenida dentro de una aplicación web y desplegada en un servidor de aplicaciones como <a href="https://tomcat.apache.org/">Tomcat</a> o <a href="https://wildfly.org/">WildFly</a> registrar un <em>MBean</em> es similar al caso del ejemplo de la aplicación Java y posteriormente administrados con la herramienta JConsole.</p>
+<h3 id="ejemplo-de-jmx-con-spring-boot">Ejemplo de JMX con Spring Boot</h3>
+<p>El ejemplo anterior muestra como usar JMX en una aplicación Java, Spring ofrece soporte para implementar JMX en aplicaciones que usen este <em>framework</em> con las anotaciones <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jmx/export/annotation/ManagedResource.html">@ManagedResource</a>, <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jmx/export/metadata/ManagedAttribute.html">@ManagedAttribute</a>, <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jmx/export/annotation/ManagedOperation.html">@ManagedOperation</a>, <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jmx/export/annotation/ManagedOperationParameters.html">@ManagedOperationParameters</a>, (<a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jmx/export/annotation/ManagedOperationParameter.html">@ManagedOperationParameter</a>) y <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/EnableMBeanExport.html">@EnableMBeanExport</a>.</p>
+<p>El mismo <em>MBean</em> de la aplicación Java implementado con spring es el siguiente, lo único que cambia son las anotaciones prporcionadas para que Spring descubra de forma automática los <em>MBean</em> disponibles y los registre sin necesidad de hacerlo de forma explícita.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span><span class="lnt">6&#10;</span><span class="lnt">7&#10;</span><span class="lnt">8&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix.jmx.mbean</span><span class="o">;</span>&#10;&#10;<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">HelloMBean</span> <span class="o">{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kt">void</span> <span class="nf">sayHello</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kt">int</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">String</span> <span class="nf">getName</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;<span class="o">}</span>&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>HelloMBean.java</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span><span class="lnt">22&#10;</span><span class="lnt">23&#10;</span><span class="lnt">24&#10;</span><span class="lnt">25&#10;</span><span class="lnt">26&#10;</span><span class="lnt">27&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix.jmx.mbean</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">org.springframework.stereotype.Component</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">org.springframework.jmx.export.annotation.ManagedResource</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">org.springframework.jmx.export.annotation.ManagedOperation</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">org.springframework.jmx.export.annotation.ManagedAttribute</span><span class="o">;</span>&#10;&#10;<span class="nd">@Component</span>&#10;<span class="nd">@ManagedResource</span><span class="o">(</span><span class="n">objectName</span> <span class="o">=</span> <span class="s">&#34;io.github.picodotdev.blogbitix:type=Hello&#34;</span><span class="o">)</span>&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Hello</span> <span class="kd">implements</span> <span class="n">HelloMBean</span> <span class="o">{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@ManagedOperation</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="kt">void</span> <span class="nf">sayHello</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;hello, world&#34;</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@ManagedOperation</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="kt">int</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@ManagedAttribute</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="s">&#34;Reginald&#34;</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;<span class="o">}</span>&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>Hello-spring.java</span>
+    </div>
+</div>
+<p>Por autoconfiguración y la anotación <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/EnableMBeanExport.html">@EnableMBeanExport</a> los <em>MBean</em> se autodescubren y registran en el servidor <em>MBean</em>.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix.jmx.springboot</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">org.springframework.boot.SpringApplication</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">org.springframework.boot.autoconfigure.SpringBootApplication</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">org.springframework.context.annotation.EnableMBeanExport</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">io.github.picodotdev.blogbitix.jmx.mbean.Hello</span><span class="o">;</span>&#10;&#10;<span class="nd">@SpringBootApplication</span><span class="o">(</span><span class="n">scanBasePackageClasses</span> <span class="o">=</span> <span class="o">{</span><span class="n">Hello</span><span class="o">.</span><span class="na">class</span><span class="o">}</span><span class="o">)</span>&#10;<span class="nd">@EnableMBeanExport</span>&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">SpringApplication</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">Main</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">args</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;<span class="o">}</span>&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>Main-springboot.java</span>
+    </div>
+</div>
+<p>Tanto en el ejemplo de <em>MBean</em> con Java como con Spring el puerto RMI para acceder a JMX se configura con varias propiedades de la máquina virtual o con un archivo <em>properties</em> de configuración.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">com.sun.management.jmxremote=false&#10;com.sun.management.jmxremote.ssl=false</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>jmxremote-1.properties</span>
+    </div>
+</div>
+<h3 id="cmo-aadir-acceso-remoto-y-aadir-seguridad-securizad-a-jmx">Cómo añadir acceso remoto y añadir seguridad securizad a JMX</h3>
+<p>Por defecto JMX solo es accesible desde la maquina local, esto en producción no es muy útil pero activar el acceso remoto requiere añadir nuevas propiedades de configuración para proporcionar seguridad realizando autenticación y usando una comunicación segura con SSL. Para la comunicación segura se requiere crear un <em>keystore</em>.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-bash" data-lang="bash">$ keytool -genkey -keyalg RSA -keystore keystore.jks -keysize <span class="m">8192</span>&#10;$ keytool -export -keystore keystore.jks -file certificate.cer -storepass password&#10;$ keytool -import -file certificate.cer -keystore trustore.jks -storepass password -noprompt</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>keystore.sh</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span><span class="lnt">6&#10;</span><span class="lnt">7&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">com.sun.management.jmxremote=true&#10;com.sun.management.jmxremote.port=1419&#10;com.sun.management.jmxremote.rmi.port=31419&#10;com.sun.management.jmxremote.ssl=true&#10;com.sun.management.jmxremote.password.file=jmxremote.password&#10;com.sun.management.jmxremote.access.file=jmxremote.access&#10;com.sun.management.jmxremote.ssl.config.file=jmxremote-ssl.properties&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>jmxremote-2.properties</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">javax.net.ssl.keyStore=keystore.jks&#10;javax.net.ssl.keyStorePassword=password&#10;javax.net.ssl.trustStore=truststore.jks&#10;javax.net.ssl.trustStorePassword=password&#10;&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>jmxremote-ssl.properties</span>
+    </div>
+</div>
+<p>Los archivos <em>jmxremote.password</em> y <em>jmxremote.access</em> configuran la autenticación mediante clave y contraseña además de la autorización a las operaciones que el usuario tiene permiso para realizar. Estos archivos han tener restringidos los permisos de lectura para el usuario que inicia la aplicación o se produce una excepción.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span><span class="lnt">6&#10;</span><span class="lnt">7&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext"># The passwords in this file are hashed.&#10;# In order to change the password for a role, replace the hashed password entry&#10;# with a clear text password or a new hashed password. If the new password is in clear,&#10;# it will be replaced with its hash when a new login attempt is made.&#10;&#10;admin password&#10;user password&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>jmxremote.password</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">admin readwrite&#10;user  readonly&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>jmxremote.access</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span><span class="lnt">6&#10;</span><span class="lnt">7&#10;</span><span class="lnt">8&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">Error: Se debe restringir el acceso de lectura al archivo de contraseñas: jmxremote.password&#10;jdk.internal.agent.AgentConfigurationError&#10;&nbsp;&nbsp;&nbsp;&nbsp;at jdk.management.agent/sun.management.jmxremote.ConnectorBootstrap.checkPasswordFile(ConnectorBootstrap.java:590)&#10;&nbsp;&nbsp;&nbsp;&nbsp;at jdk.management.agent/sun.management.jmxremote.ConnectorBootstrap.startRemoteConnectorServer(ConnectorBootstrap.java:436)&#10;&nbsp;&nbsp;&nbsp;&nbsp;at jdk.management.agent/jdk.internal.agent.Agent.startAgent(Agent.java:447)&#10;&nbsp;&nbsp;&nbsp;&nbsp;at jdk.management.agent/jdk.internal.agent.Agent.startAgent(Agent.java:599)&#10;&#10;$ chmod 600 jmxremote.password jmxremote.access jmxremote-ssl.properties</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>permissions.sh</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-bash" data-lang="bash">$ jconsole -J-Djavax.net.ssl.trustStore<span class="o">=</span>truststore.jks -J-Djavax.net.ssl.trustStorePassword<span class="o">=</span>password</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>jconsole.sh</span>
+    </div>
+</div>
+<div class="media">
+  <figure>
+  <a href="/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/images/jconsole-remote_hu6e958f8a814acc8daa16cd8b455e2986_58603_2560x1440_fit_box_2.png" title="Acceso remoto a la herramienta de monitorización e instrumentalización JConsole" data-gallery="data-gallery"><img data-src="/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/images/jconsole-remote_hu6e958f8a814acc8daa16cd8b455e2986_58603_650x450_fit_box_2.png" width="536" height="450" layout="responsive" class="lozad"></a>
+  <figcaption>Acceso remoto a la herramienta de monitorización e instrumentalización JConsole</figcaption>
+  </figure>
+</div>
+<p>El acceso remoto también es posible mediante una <a href="https://docs.oracle.com/javase/tutorial/jmx/remote/custom.html">aplicación Java que actúe como cliente del servidor <em>MBean</em></a>.</p>
+<p>
+    El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/JavaJMX">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew run</code>. 
+</p>
+<div class="reference">
+    Referencia:<br>
+<ul>
+<li><a href="https://docs.oracle.com/javase/7/docs/technotes/guides/management/agent.html">Monitoring and Management Using JMX Technology</a></li>
+<li><a href="https://docs.oracle.com/javase/tutorial/jmx/index.html">Tutorial Java Management Extensions (JMX)</a></li>
+<li><a href="https://gquintana.github.io/2016/09/01/Securing-remote-JMX.html">Securing remote JMX</a></li>
+<li><a href="https://docs.spring.io/spring/docs/5.2.0.RELEASE/spring-framework-reference/integration.html#jmx">Spring JMX</a></li>
+<li><a href="https://docs.spring.io/spring-boot/docs/2.2.0.RELEASE/reference/html/spring-boot-features.html#boot-features-jmx">Spring Boot Monitoring and Management over JMX</a></li>
+<li><a href="https://www.baeldung.com/java-management-extensions">Basic Introduction to JMX</a></li>
+<li><a href="http://actimem.com/java/jmx-spring/">JMX with Spring Framework</a></li>
+</ul>
+</div>
+
+    </div>
+  </article>
+        
+
+        
+	
+	
+	<div class="row related">
+		<div class="col-md-12">
+			Artículos relacionados:
+			<ul>
+				
+				<li><a href="/blog-bitix/2019/10/cobertura-de-codigo-y-mutation-testing-en-pruebas-unitarias-con-jacoco-y-pit-en-java/">Cobertura de código y mutation testing en pruebas unitarias con JaCoCo y PIT en Java</a></li>
+				
+				<li><a href="/blog-bitix/2019/10/ventajas-de-usar-un-tipo-especifico-para-los-identificadores-de-las-entidades-en-vez-de-un-tipo-basico/">Ventajas de usar un tipo específico para los identificadores de las entidades en vez de un tipo básico</a></li>
+				
+				<li><a href="/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/">Microservicios con Spring Cloud, Consul, Nomad y Traefik</a></li>
+				
+				<li><a href="/blog-bitix/2019/09/novedades-de-java-13/">Novedades de Java 13</a></li>
+				
+				<li><a href="/blog-bitix/2019/09/libreria-editor-de-markdown-javascript-y-procesador-de-markdown-para-generar-html-con-java/">Librería editor de markdown JavaScript y procesador de markdown para generar HTML con Java</a></li>
+				
+			</ul>
+		</div>
+	</div>
+	
+
+        
+<div class="row">
+  <div class="col-md-12">
+    <div class="sharethis-inline-share-buttons"></div>
+  </div>
+</div>
+
+
+        <div class="row">
+          <div class="col-12 text-center">
+            <a id="pageBottom"></a>
+            <ins class="adsbygoogle"
+    style="display: inline-block; width: 970px; height: 250px;"
+    data-ad-client="ca-pub-3533636310991304"
+    data-ad-slot="2975854584"
+    data-type="billboard"></ins>
+          </div>
+        </div>
+        
+  <div class="row">
+    <div class="col-md-12">
+      <a id="comments"></a>
+      <div id="disqus_thread"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript" async>
+    var disqus_shortname = 'blog-bitix';
+    var disqus_identifier = 'blog-bitix-441';
+    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2019\/11\/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java\/';
+    var disqus_script = 'embed.js';
+  </script>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <hr>
+      </div>
+    </div>
+    
+
+
+
+
+
+<footer>
+  <div class="row">
+    <div class="col-12 col-sm-4">
+      <p><strong>Blog Bitix</strong></p>
+      <p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p>
+      <p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p>
+    </div>
+    <div class="col-12 col-sm-4 text-center menu">
+      <ul class="list-unstyled">
+        
+          <li><a href="/blog-bitix/tags/java/">Java</a></li>
+        
+          <li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li>
+        
+          <li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li>
+        
+          <li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li>
+        
+          <li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li>
+        
+          <li><a href="/blog-bitix/pages/links/">Enlaces</a></li>
+        
+          <li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li>
+        
+          <li><a href="/blog-bitix/pages/donate/">Donaciones</a></li>
+        
+          <li><a href="/blog-bitix/pages/about/">Acerca de...</a></li>
+        
+      </ul>
+    </div>
+    <div class="col-12 col-sm-4 text-center links">
+      
+        <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+      
+      
+        <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
+      
+      
+      
+        <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="/blog-bitix/assets/images/github.svg" width="50" height="50" class="icon"></a>
+      
+      
+      
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      Copyleft <span class="copyleft">&copy;</span> 2020 - <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="nofollow"><img src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" width="80" height="15" alt="Creative Commons License" title="Creative Commons License"></a><br />
+      <a href="https://www.planetacodigo.com/" rel="nofollow"><img src="/blog-bitix/assets/images/planeta-codigo.png" width="80" height="15" alt="Planeta código" title="Planeta código"></a>
+      <br/>
+      <a href="https://picodotdev.github.io/blog-bitix/" rel="nofollow">Blog Bitix</a> by <a href="https://picodotdev.github.io/blog-bitix/">pico.dev</a> is licensed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.
+      <br/>
+      <span class="credit">Powered by <a href="https://gohugo.io/" rel="nofollow" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a>.</span>
+      <span class="credit">Background patterns from <a href="https://www.toptal.com/designers/subtlepatterns/" rel="nofollow">Subtle Patterns</a>.</span>
+    </div>
+  </div>
+</footer>
+
+  </div>
+  
+<div class="blueimp-gallery-container">
+  <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false">
+    
+    <div class="slides"></div>
+    
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    
+    <div class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body next"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left prev">
+              <i class="glyphicon glyphicon-chevron-left"></i>
+              Anterior
+            </button>
+            <button type="button" class="btn btn-primary next">
+              Siguiente
+              <i class="glyphicon glyphicon-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  <!-- Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+<script type="text/javascript">
+    window.cookieconsent_options = {
+        "message": "Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.",
+        "dismiss": "Aceptar",
+        "learnMore": "Más información",
+        "link": null,
+        "theme": "dark-bottom"
+    };
+</script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script>
+</body>
+</html>

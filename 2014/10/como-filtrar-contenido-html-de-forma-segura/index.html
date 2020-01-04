@@ -1,23 +1,453 @@
-<!doctype html><html lang=es><head><meta name=base href=/blog-bitix/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="picodotdev"><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="Algunos sitios y aplicaciones pueden tener la necesidad de «scrapear» el contenido de sitios web para extraer información de ellos y posteriormente usarla de alguna forma. El contenido «scrapeado» o obtenido de una fuente externa debe ser filtrado, si no es filtrado y posteriormente es servido a los usuarios puede enviárseles principalmente scripts con contenido malicioso (provocando un ataque cross-site scripting, XSS) o causar una desmaquetación al visualizar el contenido. &mldr;"><title>Cómo filtrar contenido HTML de forma segura</title><link rel="shortcut icon" href=/blog-bitix/assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=/blog-bitix/assets/apple-touch-icon-144-precomposed.png><link rel=canonical type=text/html href=https://picodotdev.github.io/blog-bitix/2014/10/como-filtrar-contenido-html-de-forma-segura/><link rel=amphtml type=text/html href=https://picodotdev.github.io/blog-bitix/2014/10/como-filtrar-contenido-html-de-forma-segura/index-amp.html><link rel=alternate type=application/rss+xml href=index.xml title="Blog Bitix"><link rel=humans type=text/plain href=/blog-bitix/humans.txt><link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i&display=swap" rel=stylesheet><meta property="og:title" content="Cómo filtrar contenido HTML de forma segura"><meta property="og:url" content="https://picodotdev.github.io/blog-bitix/2014/10/como-filtrar-contenido-html-de-forma-segura/"><meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"><meta property="og:site_name" content="Blog Bitix"><meta property="og:description" content="Algunos sitios y aplicaciones pueden tener la necesidad de «scrapear» el contenido de sitios web para extraer información de ellos y posteriormente usarla de alguna forma. El contenido «scrapeado» o obtenido de una fuente externa debe ser filtrado, si no es filtrado y posteriormente es servido a los usuarios puede enviárseles principalmente scripts con contenido malicioso (provocando un ataque cross-site scripting, XSS) o causar una desmaquetación al visualizar el contenido. &mldr;"><meta property="og:type" content="article"><meta name=twitter:card content="summary_large_image"><meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"><meta name=twitter:site content="@picodotdev"><meta name=twitter:title content="Cómo filtrar contenido HTML de forma segura"><meta name=twitter:description content="Algunos sitios y aplicaciones pueden tener la necesidad de «scrapear» el contenido de sitios web para extraer información de ellos y posteriormente usarla de alguna forma. El contenido «scrapeado» o obtenido de una fuente externa debe ser filtrado, si no es filtrado y posteriormente es servido a los usuarios puede enviárseles principalmente scripts con contenido malicioso (provocando un ataque cross-site scripting, XSS) o causar una desmaquetación al visualizar el contenido. &mldr;"><meta name=twitter:creator content="@picodotdev"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://picodotdev.github.io/blog-bitix/2014/10/como-filtrar-contenido-html-de-forma-segura/"},"headline":"Cómo filtrar contenido HTML de forma segura","image":{"@type":"ImageObject","url":"https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"},"datePublished":"2014-10-17T16:53:25+02:00","dateModified":"2015-01-16T12:00:00+01:00","inLanguage":"","wordCount":"719","license":"https://creativecommons.org/licenses/by-sa/4.0/","author":{"@type":"Person","name":"picodotdev","url":"https://twitter.com/picodotdev/"},"publisher":{"@type":"Organization","name":"Blog Bitix","logo":{"@type":"ImageObject","url":"https://picodotdev.github.io/blog-bitix/assets/images/logotypes/blogbitix.png"}},"description":"Algunos sitios y aplicaciones pueden tener la necesidad de «scrapear» el contenido de sitios web para extraer información de ellos y posteriormente usarla de alguna forma. El contenido «scrapeado» o obtenido de una fuente externa debe ser filtrado, si no es filtrado y posteriormente es servido a los usuarios puede enviárseles principalmente scripts con contenido malicioso (provocando un ataque cross-site scripting, XSS) o causar una desmaquetación al visualizar el contenido."}</script><link rel=stylesheet type=text/css href=/blog-bitix/assets/libs/bootstrap-4.4.1-dist/css/bootstrap.min.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/css/syntax.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/css/main.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/css/main-cookieconsent.css><script type=text/javascript src=/blog-bitix/assets/js/require-config.js defer></script><script type=text/javascript src=/blog-bitix/assets/libs/require.js data-main=/blog-bitix/assets/js/main defer></script><script type=text/javascript defer>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js defer></script><script type=text/javascript defer>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript src=/blog-bitix/assets/js/app.js defer></script></head><body><div class=container><div class=row><div class=col-12><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=/blog-bitix/assets/images/rss.png width=50 height=50 class=icon></a>
-<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=/blog-bitix/assets/images/twitter.svg width=50 height=50 class=icon></a>
-<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=/blog-bitix/assets/images/github.svg width=50 height=50 class=icon></a></div></div></div><div class=row><div class=col-12><nav class="nav nav-pills nav-fill"><a href=/blog-bitix/tags/java/ class="nav-item nav-link">Java</a>
-<a href=/blog-bitix/tags/gnu-linux/ class="nav-item nav-link">GNU/Linux</a>
-<a href=/blog-bitix/tags/javascript/ class="nav-item nav-link">JavaScript</a>
-<a href=/blog-bitix/tags/tapestry/ class="nav-item nav-link">Tapestry</a>
-<a href=/blog-bitix/archive/ class="nav-item nav-link">Archivo y hemeroteca</a>
-<a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
-<a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class=adblock-sidebar-container><div class=adblock-sidebar-container-left></div><div class=adblock-sidebar-container-right><ins class="adsbygoogle adblock-sidebar-vertical" data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format=vertical,rectangle data-type=auto></ins></div></div><article><h1>Cómo filtrar contenido HTML de forma segura</h1><p class=information>Escrito por
-<span>picodotdev</span> el <time>17/10/2014</time>, actualizado el <time>16/01/2015</time>.<br><a href=/blog-bitix/tags/java/>java</a>
-<a href=/blog-bitix/tags/programacion/>programacion</a>
-<a href=/blog-bitix/tags/planeta-codigo/>planeta-codigo</a><br><a href=/blog-bitix/2014/10/como-filtrar-contenido-html-de-forma-segura/>Enlace permanente</a>
-<a href=/blog-bitix/2014/10/como-filtrar-contenido-html-de-forma-segura/#comments>Comentarios</a></p><div class=content><div class=logotypes><img src=/blog-bitix/assets/images/logotypes/java.svg class=right width=200 height layout=responsive alt=Java title=Java></div><p>Algunos sitios y aplicaciones pueden tener la necesidad de <a href=https://picodotdev.github.io/blog-bitix/2014/10/que-es-y-como-hacer-web-scraping-en-java/>«scrapear» el contenido de sitios web</a> para extraer información de ellos y posteriormente usarla de alguna forma. El contenido «scrapeado» o obtenido de una fuente externa debe ser filtrado, si no es filtrado y posteriormente es servido a los usuarios puede enviárseles principalmente scripts con contenido malicioso (provocando un ataque <a href=https://en.wikipedia.org/wiki/Cross-site_scripting>cross-site scripting, XSS</a>) o causar una desmaquetación al visualizar el contenido. A la hora de implementar la agregación de contenido de forma segura en <a href=https://twitter.com/blogstackinfo>Blog Stack</a>, contenido obtenido de una fuente RSS o Atom pero que en esencia es HTML he usado la librería <a href=https://jsoup.org/>jsoup</a>, de tal forma que solo el contenido considerado seguro o confiable de los artículos sea agregado.</p><p>¿Que puede pasar si en una fuente envía elementos &lt;script>, &lt;iframe> u &lt;object>? Los &lt;script> son código que se envía al navegador del usuario y que podrían explotar algún fallo de seguridad del navegador que usen, los &lt;iframe> permiten cargar contenido de una tercera fuente. En definitiva podrían hacer que visitar Blog Stack fuese inseguro. Pero no permitir incluir estos elementos también haría que no se pudiesen mostrar vídeos de <a href=https://www.youtube.com/>YouTube</a>, <a href=https://vimeo.com/>Vimeo</a>, <a href=https://gist.github.com/>Gist</a> de GitHub, presentaciones de <a href=https://speakerdeck.com/>SpeackerDeck</a> y se perdería parte del contenido original. La solución que he aplicado en Blog Stack es permitir el contenido de esos elementos que provienen de una fuente considerada confiable, es decir, si se trata de un iframe cuyo elemento src proviene de YouTube se permite el contenido ya que se supone que YouTube y su contenido es seguro. De esta forma el contenido puede agregarse de forma segura sin perder nada del contenido original.</p><p>Para hacer el filtrado de HTML en java podemos usar jsoup, para ello deberemos usar la clase <a href=http://jsoup.org/apidocs/org/jsoup/safety/Whitelist.html>Whitelist</a> que proporciona jsoup o implementar una clase que la extienda con las etiquetas y sus atributos que consideramos seguros. En Blog Stack he necesitado implementar una clase Whitelist agregándole la funcionalidad que deseaba.</p><p>Esta es la implementación de la clase Whitelist, con el método addTag se indican los tags permitidos, con addAttributes se indican los atributos permitidos para cada etiqueta, addProtocols se indican los protocolos permitidos para cada etiqueta y atributo, finalmente el método addAttribute permite usar una expresión regular para el valor del atributo, esto se comprueba en el método isSafeAttribute:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1&#10;</span><span class=lnt> 2&#10;</span><span class=lnt> 3&#10;</span><span class=lnt> 4&#10;</span><span class=lnt> 5&#10;</span><span class=lnt> 6&#10;</span><span class=lnt> 7&#10;</span><span class=lnt> 8&#10;</span><span class=lnt> 9&#10;</span><span class=lnt>10&#10;</span><span class=lnt>11&#10;</span><span class=lnt>12&#10;</span><span class=lnt>13&#10;</span><span class=lnt>14&#10;</span><span class=lnt>15&#10;</span><span class=lnt>16&#10;</span><span class=lnt>17&#10;</span><span class=lnt>18&#10;</span><span class=lnt>19&#10;</span><span class=lnt>20&#10;</span><span class=lnt>21&#10;</span><span class=lnt>22&#10;</span><span class=lnt>23&#10;</span><span class=lnt>24&#10;</span><span class=lnt>25&#10;</span><span class=lnt>26&#10;</span><span class=lnt>27&#10;</span><span class=lnt>28&#10;</span><span class=lnt>29&#10;</span><span class=lnt>30&#10;</span><span class=lnt>31&#10;</span><span class=lnt>32&#10;</span><span class=lnt>33&#10;</span><span class=lnt>34&#10;</span><span class=lnt>35&#10;</span><span class=lnt>36&#10;</span><span class=lnt>37&#10;</span><span class=lnt>38&#10;</span><span class=lnt>39&#10;</span><span class=lnt>40&#10;</span><span class=lnt>41&#10;</span><span class=lnt>42&#10;</span><span class=lnt>43&#10;</span><span class=lnt>44&#10;</span><span class=lnt>45&#10;</span><span class=lnt>46&#10;</span><span class=lnt>47&#10;</span><span class=lnt>48&#10;</span><span class=lnt>49&#10;</span><span class=lnt>50&#10;</span><span class=lnt>51&#10;</span><span class=lnt>52&#10;</span><span class=lnt>53&#10;</span><span class=lnt>54&#10;</span><span class=lnt>55&#10;</span><span class=lnt>56&#10;</span><span class=lnt>57&#10;</span><span class=lnt>58&#10;</span><span class=lnt>59&#10;</span><span class=lnt>60&#10;</span><span class=lnt>61&#10;</span><span class=lnt>62&#10;</span><span class=lnt>63&#10;</span><span class=lnt>64&#10;</span><span class=lnt>65&#10;</span><span class=lnt>66&#10;</span><span class=lnt>67&#10;</span><span class=lnt>68&#10;</span><span class=lnt>69&#10;</span><span class=lnt>70&#10;</span><span class=lnt>71&#10;</span><span class=lnt>72&#10;</span><span class=lnt>73&#10;</span><span class=lnt>74&#10;</span><span class=lnt>75&#10;</span><span class=lnt>76&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kn>package</span> <span class=nn>info.blogstack.misc</span><span class=o>;</span>&#10;&#10;<span class=kn>import</span> <span class=nn>java.util.ArrayList</span><span class=o>;</span>&#10;<span class=kn>import</span> <span class=nn>java.util.HashMap</span><span class=o>;</span>&#10;<span class=kn>import</span> <span class=nn>java.util.List</span><span class=o>;</span>&#10;<span class=kn>import</span> <span class=nn>java.util.Map</span><span class=o>;</span>&#10;&#10;<span class=kn>import</span> <span class=nn>org.jsoup.nodes.Attribute</span><span class=o>;</span>&#10;<span class=kn>import</span> <span class=nn>org.jsoup.nodes.Element</span><span class=o>;</span>&#10;<span class=kn>import</span> <span class=nn>org.jsoup.safety.Whitelist</span><span class=o>;</span>&#10;&#10;<span class=kd>public</span> <span class=kd>class</span> <span class=nc>AppWhitelist</span> <span class=kd>extends</span> <span class=n>Whitelist</span> <span class=o>{</span>&#10;&#10;	<span class=kd>private</span> <span class=n>List</span><span class=o>&lt;</span><span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>String</span><span class=o>&gt;</span><span class=o>&gt;</span> <span class=n>attributes</span><span class=o>;</span>&#10;&#10;	<span class=kd>private</span> <span class=nf>AppWhitelist</span><span class=o>(</span><span class=o>)</span> <span class=o>{</span>&#10;		<span class=n>attributes</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;</span><span class=o>&gt;</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;	<span class=o>}</span>&#10;&#10;	<span class=kd>public</span> <span class=kd>static</span> <span class=n>Whitelist</span> <span class=nf>relaxed</span><span class=o>(</span><span class=o>)</span> <span class=o>{</span>&#10;		<span class=n>Whitelist</span> <span class=n>wl</span> <span class=o>=</span> <span class=k>new</span> <span class=n>AppWhitelist</span><span class=o>(</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addTags</span><span class=o>(</span><span class=s>&#34;a&#34;</span><span class=o>,</span> <span class=s>&#34;b&#34;</span><span class=o>,</span> <span class=s>&#34;blockquote&#34;</span><span class=o>,</span> <span class=s>&#34;br&#34;</span><span class=o>,</span> <span class=s>&#34;caption&#34;</span><span class=o>,</span> <span class=s>&#34;cite&#34;</span><span class=o>,</span> <span class=s>&#34;code&#34;</span><span class=o>,</span> <span class=s>&#34;col&#34;</span><span class=o>,</span> <span class=s>&#34;colgroup&#34;</span><span class=o>,</span> <span class=s>&#34;dd&#34;</span><span class=o>,</span> <span class=s>&#34;div&#34;</span><span class=o>,</span> <span class=s>&#34;dl&#34;</span><span class=o>,</span> <span class=s>&#34;dt&#34;</span><span class=o>,</span> <span class=s>&#34;em&#34;</span><span class=o>,</span> <span class=s>&#34;h1&#34;</span><span class=o>,</span> <span class=s>&#34;h2&#34;</span><span class=o>,</span> <span class=s>&#34;h3&#34;</span><span class=o>,</span> <span class=s>&#34;h4&#34;</span><span class=o>,</span> <span class=s>&#34;h5&#34;</span><span class=o>,</span> <span class=s>&#34;h6&#34;</span><span class=o>,</span> <span class=s>&#34;i&#34;</span><span class=o>,</span>&#10;						<span class=s>&#34;img&#34;</span><span class=o>,</span> <span class=s>&#34;li&#34;</span><span class=o>,</span> <span class=s>&#34;ol&#34;</span><span class=o>,</span> <span class=s>&#34;p&#34;</span><span class=o>,</span> <span class=s>&#34;pre&#34;</span><span class=o>,</span> <span class=s>&#34;q&#34;</span><span class=o>,</span> <span class=s>&#34;small&#34;</span><span class=o>,</span> <span class=s>&#34;strike&#34;</span><span class=o>,</span> <span class=s>&#34;strong&#34;</span><span class=o>,</span> <span class=s>&#34;sub&#34;</span><span class=o>,</span> <span class=s>&#34;sup&#34;</span><span class=o>,</span> <span class=s>&#34;table&#34;</span><span class=o>,</span> <span class=s>&#34;tbody&#34;</span><span class=o>,</span> <span class=s>&#34;td&#34;</span><span class=o>,</span> <span class=s>&#34;tfoot&#34;</span><span class=o>,</span> <span class=s>&#34;th&#34;</span><span class=o>,</span> <span class=s>&#34;thead&#34;</span><span class=o>,</span> <span class=s>&#34;tr&#34;</span><span class=o>,</span> <span class=s>&#34;u&#34;</span><span class=o>,</span> <span class=s>&#34;ul&#34;</span><span class=o>)</span>&#10;&#10;				<span class=o>.</span><span class=na>addAttributes</span><span class=o>(</span><span class=s>&#34;a&#34;</span><span class=o>,</span> <span class=s>&#34;href&#34;</span><span class=o>,</span> <span class=s>&#34;title&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addAttributes</span><span class=o>(</span><span class=s>&#34;blockquote&#34;</span><span class=o>,</span> <span class=s>&#34;cite&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addAttributes</span><span class=o>(</span><span class=s>&#34;col&#34;</span><span class=o>,</span> <span class=s>&#34;span&#34;</span><span class=o>,</span> <span class=s>&#34;width&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addAttributes</span><span class=o>(</span><span class=s>&#34;colgroup&#34;</span><span class=o>,</span> <span class=s>&#34;span&#34;</span><span class=o>,</span> <span class=s>&#34;width&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addAttributes</span><span class=o>(</span><span class=s>&#34;img&#34;</span><span class=o>,</span> <span class=s>&#34;align&#34;</span><span class=o>,</span> <span class=s>&#34;alt&#34;</span><span class=o>,</span> <span class=s>&#34;height&#34;</span><span class=o>,</span> <span class=s>&#34;src&#34;</span><span class=o>,</span> <span class=s>&#34;title&#34;</span><span class=o>,</span> <span class=s>&#34;width&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addAttributes</span><span class=o>(</span><span class=s>&#34;ol&#34;</span><span class=o>,</span> <span class=s>&#34;start&#34;</span><span class=o>,</span> <span class=s>&#34;type&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addAttributes</span><span class=o>(</span><span class=s>&#34;q&#34;</span><span class=o>,</span> <span class=s>&#34;cite&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addAttributes</span><span class=o>(</span><span class=s>&#34;table&#34;</span><span class=o>,</span> <span class=s>&#34;summary&#34;</span><span class=o>,</span> <span class=s>&#34;width&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addAttributes</span><span class=o>(</span><span class=s>&#34;td&#34;</span><span class=o>,</span> <span class=s>&#34;abbr&#34;</span><span class=o>,</span> <span class=s>&#34;axis&#34;</span><span class=o>,</span> <span class=s>&#34;colspan&#34;</span><span class=o>,</span> <span class=s>&#34;rowspan&#34;</span><span class=o>,</span> <span class=s>&#34;width&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addAttributes</span><span class=o>(</span><span class=s>&#34;th&#34;</span><span class=o>,</span> <span class=s>&#34;abbr&#34;</span><span class=o>,</span> <span class=s>&#34;axis&#34;</span><span class=o>,</span> <span class=s>&#34;colspan&#34;</span><span class=o>,</span> <span class=s>&#34;rowspan&#34;</span><span class=o>,</span> <span class=s>&#34;scope&#34;</span><span class=o>,</span> <span class=s>&#34;width&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addAttributes</span><span class=o>(</span><span class=s>&#34;ul&#34;</span><span class=o>,</span> <span class=s>&#34;type&#34;</span><span class=o>)</span>&#10;&#10;				<span class=o>.</span><span class=na>addProtocols</span><span class=o>(</span><span class=s>&#34;a&#34;</span><span class=o>,</span> <span class=s>&#34;href&#34;</span><span class=o>,</span> <span class=s>&#34;ftp&#34;</span><span class=o>,</span> <span class=s>&#34;http&#34;</span><span class=o>,</span> <span class=s>&#34;https&#34;</span><span class=o>,</span> <span class=s>&#34;mailto&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addProtocols</span><span class=o>(</span><span class=s>&#34;blockquote&#34;</span><span class=o>,</span> <span class=s>&#34;cite&#34;</span><span class=o>,</span> <span class=s>&#34;http&#34;</span><span class=o>,</span> <span class=s>&#34;https&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addProtocols</span><span class=o>(</span><span class=s>&#34;cite&#34;</span><span class=o>,</span> <span class=s>&#34;cite&#34;</span><span class=o>,</span> <span class=s>&#34;http&#34;</span><span class=o>,</span> <span class=s>&#34;https&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addProtocols</span><span class=o>(</span><span class=s>&#34;img&#34;</span><span class=o>,</span> <span class=s>&#34;src&#34;</span><span class=o>,</span> <span class=s>&#34;http&#34;</span><span class=o>,</span> <span class=s>&#34;https&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addProtocols</span><span class=o>(</span><span class=s>&#34;q&#34;</span><span class=o>,</span> <span class=s>&#34;cite&#34;</span><span class=o>,</span> <span class=s>&#34;http&#34;</span><span class=o>,</span> <span class=s>&#34;https&#34;</span><span class=o>)</span>&#10;				&#10;				<span class=c1>//&#10;</span><span class=c1></span>				<span class=o>.</span><span class=na>addTags</span><span class=o>(</span><span class=s>&#34;script&#34;</span><span class=o>,</span> <span class=s>&#34;iframe&#34;</span><span class=o>,</span> <span class=s>&#34;noscript&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addAttributes</span><span class=o>(</span><span class=s>&#34;div&#34;</span><span class=o>,</span> <span class=s>&#34;style&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addAttributes</span><span class=o>(</span><span class=s>&#34;img&#34;</span><span class=o>,</span> <span class=s>&#34;style&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addAttributes</span><span class=o>(</span><span class=s>&#34;script&#34;</span><span class=o>,</span> <span class=s>&#34;src&#34;</span><span class=o>,</span> <span class=s>&#34;data-.*&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addAttributes</span><span class=o>(</span><span class=s>&#34;iframe&#34;</span><span class=o>,</span> <span class=s>&#34;src&#34;</span><span class=o>,</span> <span class=s>&#34;width&#34;</span><span class=o>,</span> <span class=s>&#34;height&#34;</span><span class=o>,</span> <span class=s>&#34;frameborder&#34;</span><span class=o>,</span> <span class=s>&#34;allowfullscreen&#34;</span><span class=o>,</span> <span class=s>&#34;style&#34;</span><span class=o>,</span> <span class=s>&#34;marginwidth&#34;</span><span class=o>,</span> <span class=s>&#34;marginheight&#34;</span><span class=o>,</span> <span class=s>&#34;frameborder&#34;</span><span class=o>,</span> <span class=s>&#34;scrolling&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addAttributes</span><span class=o>(</span><span class=s>&#34;object&#34;</span><span class=o>,</span> <span class=s>&#34;width&#34;</span><span class=o>,</span> <span class=s>&#34;height&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addAttributes</span><span class=o>(</span><span class=s>&#34;param&#34;</span><span class=o>,</span> <span class=s>&#34;name&#34;</span><span class=o>,</span> <span class=s>&#34;value&#34;</span><span class=o>)</span>&#10;				<span class=o>.</span><span class=na>addAttributes</span><span class=o>(</span><span class=s>&#34;embed&#34;</span><span class=o>,</span> <span class=s>&#34;src&#34;</span><span class=o>,</span> <span class=s>&#34;type&#34;</span><span class=o>,</span> <span class=s>&#34;width&#34;</span><span class=o>,</span> <span class=s>&#34;height&#34;</span><span class=o>,</span> <span class=s>&#34;allowscriptaccess&#34;</span><span class=o>,</span> <span class=s>&#34;allowfullscreen&#34;</span><span class=o>)</span><span class=o>;</span>&#10;		<span class=k>return</span> <span class=n>wl</span><span class=o>;</span>&#10;	<span class=o>}</span>&#10;&#10;	<span class=kd>public</span> <span class=n>Whitelist</span> <span class=nf>addAttribute</span><span class=o>(</span><span class=n>String</span> <span class=n>tag</span><span class=o>,</span> <span class=n>String</span> <span class=n>key</span><span class=o>,</span> <span class=n>String</span> <span class=n>regexp</span><span class=o>)</span> <span class=o>{</span>&#10;		<span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>String</span><span class=o>&gt;</span> <span class=n>attribute</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HashMap</span><span class=o>&lt;</span><span class=o>&gt;</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;		<span class=n>attribute</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;tag&#34;</span><span class=o>,</span> <span class=n>tag</span><span class=o>)</span><span class=o>;</span>&#10;		<span class=n>attribute</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;key&#34;</span><span class=o>,</span> <span class=n>key</span><span class=o>)</span><span class=o>;</span>&#10;		<span class=n>attribute</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;regexp&#34;</span><span class=o>,</span> <span class=n>regexp</span><span class=o>)</span><span class=o>;</span>&#10;		<span class=k>return</span> <span class=k>this</span><span class=o>;</span>&#10;	<span class=o>}</span>&#10;&#10;	<span class=nd>@Override</span>&#10;	<span class=kd>protected</span> <span class=kt>boolean</span> <span class=nf>isSafeAttribute</span><span class=o>(</span><span class=n>String</span> <span class=n>tagName</span><span class=o>,</span> <span class=n>Element</span> <span class=n>el</span><span class=o>,</span> <span class=n>Attribute</span> <span class=n>attr</span><span class=o>)</span> <span class=o>{</span>&#10;		<span class=k>for</span> <span class=o>(</span><span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>String</span><span class=o>&gt;</span> <span class=n>attribute</span> <span class=o>:</span> <span class=n>attributes</span><span class=o>)</span> <span class=o>{</span>&#10;			<span class=n>String</span> <span class=n>tag</span> <span class=o>=</span> <span class=n>attribute</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=s>&#34;tag&#34;</span><span class=o>)</span><span class=o>;</span>&#10;			<span class=n>String</span> <span class=n>key</span> <span class=o>=</span> <span class=n>attribute</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=s>&#34;key&#34;</span><span class=o>)</span><span class=o>;</span>&#10;			<span class=n>String</span> <span class=n>regexp</span> <span class=o>=</span> <span class=n>attribute</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=s>&#34;regexp&#34;</span><span class=o>)</span><span class=o>;</span>&#10;&#10;			<span class=k>if</span> <span class=o>(</span><span class=n>tag</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=n>tagName</span><span class=o>)</span> <span class=o>&amp;</span><span class=o>&amp;</span> <span class=n>attr</span><span class=o>.</span><span class=na>getKey</span><span class=o>(</span><span class=o>)</span><span class=o>.</span><span class=na>matches</span><span class=o>(</span><span class=n>key</span><span class=o>)</span> <span class=o>&amp;</span><span class=o>&amp;</span> <span class=n>attr</span><span class=o>.</span><span class=na>getValue</span><span class=o>(</span><span class=o>)</span><span class=o>.</span><span class=na>matches</span><span class=o>(</span><span class=n>regexp</span><span class=o>)</span><span class=o>)</span> <span class=o>{</span>&#10;				<span class=k>return</span> <span class=kc>true</span><span class=o>;</span>&#10;			<span class=o>}</span>&#10;		<span class=o>}</span>&#10;		<span class=k>return</span> <span class=kd>super</span><span class=o>.</span><span class=na>isSafeAttribute</span><span class=o>(</span><span class=n>tagName</span><span class=o>,</span> <span class=n>el</span><span class=o>,</span> <span class=n>attr</span><span class=o>)</span><span class=o>;</span>&#10;	<span class=o>}</span>&#10;<span class=o>}</span>&#10;</code></pre></td></tr></table></div></div><div class=highlight-meta><span>AppWhitelist.java</span></div></div><p>Y esta es la forma de usar la clase a través de <a href=http://jsoup.org/apidocs/org/jsoup/Jsoup.html#clean%28java.lang.String,%20java.lang.String,%20org.jsoup.safety.Whitelist%29>Jsoup.clean</a>:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span><span class=lnt>2&#10;</span><span class=lnt>3&#10;</span><span class=lnt>4&#10;</span><span class=lnt>5&#10;</span><span class=lnt>6&#10;</span><span class=lnt>7&#10;</span><span class=lnt>8&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=n>AppWhitelist</span> <span class=n>whitelist</span> <span class=o>=</span> <span class=o>(</span><span class=n>AppWhitelist</span><span class=o>)</span> <span class=n>AppWhitelist</span><span class=o>.</span><span class=na>relaxed</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>whitelist</span><span class=o>.</span><span class=na>addAttribute</span><span class=o>(</span><span class=s>&#34;script&#34;</span><span class=o>,</span> <span class=s>&#34;src&#34;</span><span class=o>,</span> <span class=s>&#34;^http[s]?://speakerdeck.com/.*$&#34;</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>whitelist</span><span class=o>.</span><span class=na>addAttribute</span><span class=o>(</span><span class=s>&#34;script&#34;</span><span class=o>,</span> <span class=s>&#34;src&#34;</span><span class=o>,</span> <span class=s>&#34;^http[s]?://gist.github.com/.*$&#34;</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>whitelist</span><span class=o>.</span><span class=na>addAttribute</span><span class=o>(</span><span class=s>&#34;iframe&#34;</span><span class=o>,</span> <span class=s>&#34;src&#34;</span><span class=o>,</span> <span class=s>&#34;^http[s]?://www.youtube.com/embed/.*$&#34;</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>whitelist</span><span class=o>.</span><span class=na>addAttribute</span><span class=o>(</span><span class=s>&#34;iframe&#34;</span><span class=o>,</span> <span class=s>&#34;src&#34;</span><span class=o>,</span> <span class=s>&#34;^http[s]?://player.vimeo.com/video/.*$&#34;</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>whitelist</span><span class=o>.</span><span class=na>addAttribute</span><span class=o>(</span><span class=s>&#34;iframe&#34;</span><span class=o>,</span> <span class=s>&#34;src&#34;</span><span class=o>,</span> <span class=s>&#34;^http[s]?://rcm-eu.amazon-adsystem.com/.*$&#34;</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>whitelist</span><span class=o>.</span><span class=na>addAttribute</span><span class=o>(</span><span class=s>&#34;embed&#34;</span><span class=o>,</span> <span class=s>&#34;src&#34;</span><span class=o>,</span> <span class=s>&#34;^http[s]?://www.youtube.com/v/.*$&#34;</span><span class=o>)</span><span class=o>;</span>&#10;<span class=n>String</span> <span class=n>content</span> <span class=o>=</span> <span class=n>Jsoup</span><span class=o>.</span><span class=na>clean</span><span class=o>(</span><span class=n>postContent</span><span class=o>.</span><span class=na>toString</span><span class=o>(</span><span class=o>)</span><span class=o>,</span> <span class=n>source</span><span class=o>.</span><span class=na>getPageUrl</span><span class=o>(</span><span class=o>)</span><span class=o>,</span> <span class=n>whitelist</span><span class=o>)</span><span class=o>;</span></code></pre></td></tr></table></div></div><div class=highlight-meta><span>IndexServiceImpl.java</span></div></div><p>El <a href=https://github.com/picodotdev/blog-stack>código fuente completo de BS</a> junto con el «scrapeado» y el uso de esta clase está disponible en un repositorio de GitHub.</p><div class=reference>Referencia:<br><ul><li><a href=https://picodotdev.github.io/blog-bitix/2014/10/que-es-y-como-hacer-web-scraping-en-java/>Qué es y cómo hacer «web scraping» en Java</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2015/01/como-hacer-un-substring-de-una-cadena-html/>Cómo hacer un substring de una cadena html</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2019/03/codificar-los-datos-para-evitar-ataques-xss-en-una-pagina-web/>Codificar los datos para evitar ataques XSS en una página web</a></li></ul></div></div></article><div class="row related"><div class=col-md-12>Artículos relacionados:<ul><li><a href=/blog-bitix/2014/10/que-es-y-como-hacer-web-scraping-en-java/>Qué es y cómo hacer «web scraping» en Java</a></li><li><a href=/blog-bitix/2014/10/generar-urls-semanticas-y-amigables/>Generar URLs semánticas y amigables</a></li><li><a href=/blog-bitix/2014/09/configuracion-usando-codigo-java/>Configuración usando código Java</a></li><li><a href=/blog-bitix/2014/09/monitorizar-archivos-con-java/>Monitorizar archivos con Java</a></li><li><a href=/blog-bitix/2014/09/compilar-y-cargar-de-forma-dinamica-una-clase-java/>Compilar y cargar de forma dinámica una clase Java</a></li></ul></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class="col-12 text-center"><a id=pageBottom></a><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-md-12><a id=comments></a><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='blog-bitix-48';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2014\/10\/como-filtrar-contenido-html-de-forma-segura\/';var disqus_script='embed.js';</script></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=/blog-bitix/assets/images/rss.png width=50 height=50 class=icon></a>
-<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=/blog-bitix/assets/images/twitter.svg width=50 height=50 class=icon></a>
-<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=/blog-bitix/assets/images/github.svg width=50 height=50 class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2020 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow><img src=https://licensebuttons.net/l/by-sa/4.0/80x15.png width=80 height=15 alt="Creative Commons License" title="Creative Commons License"></a><br><a href=https://www.planetacodigo.com/ rel=nofollow><img src=/blog-bitix/assets/images/planeta-codigo.png width=80 height=15 alt="Planeta código" title="Planeta código"></a><br><a href=https://picodotdev.github.io/blog-bitix/ rel=nofollow>Blog Bitix</a> by <a href=https://picodotdev.github.io/blog-bitix/>pico.dev</a> is licensed under a <a href=https://creativecommons.org/licenses/by-sa/4.0/>Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class=credit>Powered by <a href=https://gohugo.io/ rel=nofollow title="A fast and modern static website engine">Hugo</a> and <a href=https://pages.github.com/ title="Websites for you and your projects">GitHub Pages</a>.</span>
-<span class=credit>Background patterns from <a href=https://www.toptal.com/designers/subtlepatterns/ rel=nofollow>Subtle Patterns</a>.</span></div></div></footer></div><div class=blueimp-gallery-container><div id=blueimp-gallery class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal=false><div class=slides></div><h3 class=title></h3><a class=prev>‹</a>
-<a class=next>›</a>
-<a class=close>×</a>
-<a class=play-pause></a><ol class=indicator></ol><div class="modal fade"><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close aria-hidden=true>&#215;</button><h4 class=modal-title></h4></div><div class="modal-body next"></div><div class=modal-footer><button type=button class="btn btn-default pull-left prev">
-<i class="glyphicon glyphicon-chevron-left"></i>Anterior</button>
-<button type=button class="btn btn-primary next">
-Siguiente
-<i class="glyphicon glyphicon-chevron-right"></i></button></div></div></div></div></div></div><script type=text/javascript>window.cookieconsent_options={"message":"Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.","dismiss":"Aceptar","learnMore":"Más información","link":null,"theme":"dark-bottom"};</script><script type=text/javascript src=//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js async></script></body></html>
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta name="base" href="/blog-bitix/">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="picodotdev">
+  <meta name="keywords" content="java, programacion, software, hardware, tapestry, software libre, gnu, linux, gnu/linux, unix, arch, arch linux, html, css, javascript">
+  <meta name="description" content="Algunos sitios y aplicaciones pueden tener la necesidad de «scrapear» el contenido de sitios web para extraer información de ellos y posteriormente usarla de alguna forma. El contenido «scrapeado» o obtenido de una fuente externa debe ser filtrado, si no es filtrado y posteriormente es servido a los usuarios puede enviárseles principalmente scripts con contenido malicioso (provocando un ataque cross-site scripting, XSS) o causar una desmaquetación al visualizar el contenido. &hellip;">
+
+  <title>Cómo filtrar contenido HTML de forma segura</title>
+
+  <link rel="shortcut icon" href="/blog-bitix/assets/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/blog-bitix/assets/apple-touch-icon-144-precomposed.png">
+  <link rel="canonical" type="text/html" href="https://picodotdev.github.io/blog-bitix/2014/10/como-filtrar-contenido-html-de-forma-segura/">
+  <link rel="amphtml" type="text/html" href="https://picodotdev.github.io/blog-bitix/2014/10/como-filtrar-contenido-html-de-forma-segura/index-amp.html">
+  <link rel="alternate" type="application/rss+xml" href="index.xml" title="Blog Bitix">
+  <link rel="humans" type="text/plain" href="/blog-bitix/humans.txt">
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i&display=swap" rel="stylesheet"> 
+
+  
+
+  
+  <!-- Social -->
+<meta property="og:title" content="Cómo filtrar contenido HTML de forma segura">
+<meta property="og:url" content="https://picodotdev.github.io/blog-bitix/2014/10/como-filtrar-contenido-html-de-forma-segura/">
+
+<meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png">
+
+<meta property="og:site_name" content="Blog Bitix">
+<meta property="og:description" content="Algunos sitios y aplicaciones pueden tener la necesidad de «scrapear» el contenido de sitios web para extraer información de ellos y posteriormente usarla de alguna forma. El contenido «scrapeado» o obtenido de una fuente externa debe ser filtrado, si no es filtrado y posteriormente es servido a los usuarios puede enviárseles principalmente scripts con contenido malicioso (provocando un ataque cross-site scripting, XSS) o causar una desmaquetación al visualizar el contenido. &hellip;">
+<meta property="og:type" content="article">
+
+<meta name="twitter:card" content="summary_large_image">
+
+<meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png">
+
+<meta name="twitter:site" content="@picodotdev">
+<meta name="twitter:title" content="Cómo filtrar contenido HTML de forma segura">
+<meta name="twitter:description" content="Algunos sitios y aplicaciones pueden tener la necesidad de «scrapear» el contenido de sitios web para extraer información de ellos y posteriormente usarla de alguna forma. El contenido «scrapeado» o obtenido de una fuente externa debe ser filtrado, si no es filtrado y posteriormente es servido a los usuarios puede enviárseles principalmente scripts con contenido malicioso (provocando un ataque cross-site scripting, XSS) o causar una desmaquetación al visualizar el contenido. &hellip;">
+<meta name="twitter:creator" content="@picodotdev">
+  
+
+  
+  <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://picodotdev.github.io/blog-bitix/2014/10/como-filtrar-contenido-html-de-forma-segura/"
+    },
+    "headline": "Cómo filtrar contenido HTML de forma segura",
+    "image": {
+        
+          "@type": "ImageObject",
+          "url": "https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"
+        
+      },
+    "datePublished": "2014-10-17T16:53:25+02:00",
+    "dateModified": "2015-01-16T12:00:00+01:00",
+    "inLanguage": "",
+    
+    "wordCount": "719",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "author": {
+        "@type": "Person",
+        "name": "picodotdev",
+        "url": "https://twitter.com/picodotdev/"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Blog Bitix",
+        "logo": {
+        "@type": "ImageObject",
+        "url": "https://picodotdev.github.io/blog-bitix/assets/images/logotypes/blogbitix.png"
+        }
+    },
+    "description": "Algunos sitios y aplicaciones pueden tener la necesidad de «scrapear» el contenido de sitios web para extraer información de ellos y posteriormente usarla de alguna forma. El contenido «scrapeado» o obtenido de una fuente externa debe ser filtrado, si no es filtrado y posteriormente es servido a los usuarios puede enviárseles principalmente scripts con contenido malicioso (provocando un ataque cross-site scripting, XSS) o causar una desmaquetación al visualizar el contenido."
+}
+  </script>
+  
+
+  <!-- css -->
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/libs/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css">
+  <!-- theme -->
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/syntax.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/main-cookieconsent.css">
+
+  <!-- javascript -->
+  <script type="text/javascript" src="/blog-bitix/assets/js/require-config.js" defer></script>
+  <script type="text/javascript" src="/blog-bitix/assets/libs/require.js" data-main="/blog-bitix/assets/js/main" defer></script>
+
+  <script type="text/javascript" defer>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-12874075-4', 'picodotdev.github.io');
+    ga('send', 'pageview');
+</script>
+  <script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" defer></script>
+<script type="text/javascript" defer>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: 'ca-pub-3533636310991304',
+    enable_page_level_ads: true
+  });
+</script>
+
+  
+  <script type="text/javascript" src="/blog-bitix/assets/js/app.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        
+
+
+
+
+<header>
+  <div class="row">
+    <div class="col-12 col-lg-4"></div>
+    <div class="col-12 col-lg-4">
+      <h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2>
+      <div class="links">
+        
+          <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+        
+        
+          <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
+        
+        
+          <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="/blog-bitix/assets/images/github.svg" width="50" height="50" class="icon"></a>
+        
+        
+        
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      
+<nav class="nav nav-pills nav-fill">
+  
+    <a href="/blog-bitix/tags/java/" class="nav-item nav-link">Java</a>
+  
+    <a href="/blog-bitix/tags/gnu-linux/" class="nav-item nav-link">GNU/Linux</a>
+  
+    <a href="/blog-bitix/tags/javascript/" class="nav-item nav-link">JavaScript</a>
+  
+    <a href="/blog-bitix/tags/tapestry/" class="nav-item nav-link">Tapestry</a>
+  
+    <a href="/blog-bitix/archive/" class="nav-item nav-link">Archivo y hemeroteca</a>
+  
+    <a href="/blog-bitix/pages/links/" class="nav-item nav-link">Enlaces</a>
+  
+    <a href="/blog-bitix/pages/about/" class="nav-item nav-link">Acerca de...</a>
+  
+</nav>
+
+    </div>
+  </div>
+</header>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 text-center">
+        <ins class="adsbygoogle"
+    style="display: inline-block; width: 970px; height: 250px;"
+    data-ad-client="ca-pub-3533636310991304"
+    data-ad-slot="2975854584"
+    data-type="billboard"></ins>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-12">
+        <div class="adblock-sidebar-container">
+          <div class="adblock-sidebar-container-left"></div>
+          <div class="adblock-sidebar-container-right">
+            <ins class="adsbygoogle adblock-sidebar-vertical"
+    data-ad-client="ca-pub-3533636310991304"
+    data-ad-slot="9933840986"
+    data-ad-format="vertical,rectangle"
+    data-type="auto"></ins>
+          </div>
+        </div>
+        
+<article>
+    <h1>Cómo filtrar contenido HTML de forma segura</h1>
+    <p class="information">
+      
+        Escrito por
+       
+      <span>picodotdev</span> el <time>17/10/2014</time>, actualizado el <time>16/01/2015</time>.
+      
+        <br>
+        
+          
+          <a href="/blog-bitix/tags/java/">java</a>
+        
+          
+          <a href="/blog-bitix/tags/programacion/">programacion</a>
+        
+          
+          <a href="/blog-bitix/tags/planeta-codigo/">planeta-codigo</a>
+        
+      
+      <br>
+      <a href="/blog-bitix/2014/10/como-filtrar-contenido-html-de-forma-segura/">Enlace permanente</a>
+      
+        <a href="/blog-bitix/2014/10/como-filtrar-contenido-html-de-forma-segura/#comments">Comentarios</a>
+      
+      
+    </p>
+
+    
+    
+
+    
+
+    <div class="content">
+      
+
+
+      <div class="logotypes">
+   <img src="/blog-bitix/assets/images/logotypes/java.svg" class="right" width="200" height="" layout="responsive" alt="Java" title="Java">
+</div>
+<p>Algunos sitios y aplicaciones pueden tener la necesidad de <a href="https://picodotdev.github.io/blog-bitix/2014/10/que-es-y-como-hacer-web-scraping-en-java/">«scrapear» el contenido de sitios web</a> para extraer información de ellos y posteriormente usarla de alguna forma. El contenido «scrapeado» o obtenido de una fuente externa debe ser filtrado, si no es filtrado y posteriormente es servido a los usuarios puede enviárseles principalmente scripts con contenido malicioso (provocando un ataque <a href="https://en.wikipedia.org/wiki/Cross-site_scripting">cross-site scripting, XSS</a>) o causar una desmaquetación al visualizar el contenido. A la hora de implementar la agregación de contenido de forma segura en <a href="https://twitter.com/blogstackinfo">Blog Stack</a>, contenido obtenido de una fuente RSS o Atom pero que en esencia es HTML he usado la librería <a href="https://jsoup.org/">jsoup</a>, de tal forma que solo el contenido considerado seguro o confiable de los artículos sea agregado.</p>
+<p>¿Que puede pasar si en una fuente envía elementos &lt;script&gt;, &lt;iframe&gt; u &lt;object&gt;? Los &lt;script&gt; son código que se envía al navegador del usuario y que podrían explotar algún fallo de seguridad del navegador que usen, los &lt;iframe&gt; permiten cargar contenido de una tercera fuente. En definitiva podrían hacer que visitar Blog Stack fuese inseguro. Pero no permitir incluir estos elementos también haría que no se pudiesen mostrar vídeos de <a href="https://www.youtube.com/">YouTube</a>, <a href="https://vimeo.com/">Vimeo</a>, <a href="https://gist.github.com/">Gist</a> de GitHub, presentaciones de <a href="https://speakerdeck.com/">SpeackerDeck</a> y se perdería parte del contenido original. La solución que he aplicado en Blog Stack es permitir el contenido de esos elementos que provienen de una fuente considerada confiable, es decir, si se trata de un iframe cuyo elemento src proviene de YouTube se permite el contenido ya que se supone que YouTube y su contenido es seguro. De esta forma el contenido puede agregarse de forma segura sin perder nada del contenido original.</p>
+<p>Para hacer el filtrado de HTML en java podemos usar jsoup, para ello deberemos usar la clase <a href="http://jsoup.org/apidocs/org/jsoup/safety/Whitelist.html">Whitelist</a> que proporciona jsoup o implementar una clase que la extienda con las etiquetas y sus atributos que consideramos seguros. En Blog Stack he necesitado implementar una clase Whitelist agregándole la funcionalidad que deseaba.</p>
+<p>Esta es la implementación de la clase Whitelist, con el método addTag se indican los tags permitidos, con addAttributes se indican los atributos permitidos para cada etiqueta, addProtocols se indican los protocolos permitidos para cada etiqueta y atributo, finalmente el método addAttribute permite usar una expresión regular para el valor del atributo, esto se comprueba en el método isSafeAttribute:</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span><span class="lnt">22&#10;</span><span class="lnt">23&#10;</span><span class="lnt">24&#10;</span><span class="lnt">25&#10;</span><span class="lnt">26&#10;</span><span class="lnt">27&#10;</span><span class="lnt">28&#10;</span><span class="lnt">29&#10;</span><span class="lnt">30&#10;</span><span class="lnt">31&#10;</span><span class="lnt">32&#10;</span><span class="lnt">33&#10;</span><span class="lnt">34&#10;</span><span class="lnt">35&#10;</span><span class="lnt">36&#10;</span><span class="lnt">37&#10;</span><span class="lnt">38&#10;</span><span class="lnt">39&#10;</span><span class="lnt">40&#10;</span><span class="lnt">41&#10;</span><span class="lnt">42&#10;</span><span class="lnt">43&#10;</span><span class="lnt">44&#10;</span><span class="lnt">45&#10;</span><span class="lnt">46&#10;</span><span class="lnt">47&#10;</span><span class="lnt">48&#10;</span><span class="lnt">49&#10;</span><span class="lnt">50&#10;</span><span class="lnt">51&#10;</span><span class="lnt">52&#10;</span><span class="lnt">53&#10;</span><span class="lnt">54&#10;</span><span class="lnt">55&#10;</span><span class="lnt">56&#10;</span><span class="lnt">57&#10;</span><span class="lnt">58&#10;</span><span class="lnt">59&#10;</span><span class="lnt">60&#10;</span><span class="lnt">61&#10;</span><span class="lnt">62&#10;</span><span class="lnt">63&#10;</span><span class="lnt">64&#10;</span><span class="lnt">65&#10;</span><span class="lnt">66&#10;</span><span class="lnt">67&#10;</span><span class="lnt">68&#10;</span><span class="lnt">69&#10;</span><span class="lnt">70&#10;</span><span class="lnt">71&#10;</span><span class="lnt">72&#10;</span><span class="lnt">73&#10;</span><span class="lnt">74&#10;</span><span class="lnt">75&#10;</span><span class="lnt">76&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">info.blogstack.misc</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">org.jsoup.nodes.Attribute</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">org.jsoup.nodes.Element</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">org.jsoup.safety.Whitelist</span><span class="o">;</span>&#10;&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AppWhitelist</span> <span class="kd">extends</span> <span class="n">Whitelist</span> <span class="o">{</span>&#10;&#10;	<span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">attributes</span><span class="o">;</span>&#10;&#10;	<span class="kd">private</span> <span class="nf">AppWhitelist</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>&#10;		<span class="n">attributes</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;	<span class="o">}</span>&#10;&#10;	<span class="kd">public</span> <span class="kd">static</span> <span class="n">Whitelist</span> <span class="nf">relaxed</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>&#10;		<span class="n">Whitelist</span> <span class="n">wl</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AppWhitelist</span><span class="o">(</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addTags</span><span class="o">(</span><span class="s">&#34;a&#34;</span><span class="o">,</span> <span class="s">&#34;b&#34;</span><span class="o">,</span> <span class="s">&#34;blockquote&#34;</span><span class="o">,</span> <span class="s">&#34;br&#34;</span><span class="o">,</span> <span class="s">&#34;caption&#34;</span><span class="o">,</span> <span class="s">&#34;cite&#34;</span><span class="o">,</span> <span class="s">&#34;code&#34;</span><span class="o">,</span> <span class="s">&#34;col&#34;</span><span class="o">,</span> <span class="s">&#34;colgroup&#34;</span><span class="o">,</span> <span class="s">&#34;dd&#34;</span><span class="o">,</span> <span class="s">&#34;div&#34;</span><span class="o">,</span> <span class="s">&#34;dl&#34;</span><span class="o">,</span> <span class="s">&#34;dt&#34;</span><span class="o">,</span> <span class="s">&#34;em&#34;</span><span class="o">,</span> <span class="s">&#34;h1&#34;</span><span class="o">,</span> <span class="s">&#34;h2&#34;</span><span class="o">,</span> <span class="s">&#34;h3&#34;</span><span class="o">,</span> <span class="s">&#34;h4&#34;</span><span class="o">,</span> <span class="s">&#34;h5&#34;</span><span class="o">,</span> <span class="s">&#34;h6&#34;</span><span class="o">,</span> <span class="s">&#34;i&#34;</span><span class="o">,</span>&#10;						<span class="s">&#34;img&#34;</span><span class="o">,</span> <span class="s">&#34;li&#34;</span><span class="o">,</span> <span class="s">&#34;ol&#34;</span><span class="o">,</span> <span class="s">&#34;p&#34;</span><span class="o">,</span> <span class="s">&#34;pre&#34;</span><span class="o">,</span> <span class="s">&#34;q&#34;</span><span class="o">,</span> <span class="s">&#34;small&#34;</span><span class="o">,</span> <span class="s">&#34;strike&#34;</span><span class="o">,</span> <span class="s">&#34;strong&#34;</span><span class="o">,</span> <span class="s">&#34;sub&#34;</span><span class="o">,</span> <span class="s">&#34;sup&#34;</span><span class="o">,</span> <span class="s">&#34;table&#34;</span><span class="o">,</span> <span class="s">&#34;tbody&#34;</span><span class="o">,</span> <span class="s">&#34;td&#34;</span><span class="o">,</span> <span class="s">&#34;tfoot&#34;</span><span class="o">,</span> <span class="s">&#34;th&#34;</span><span class="o">,</span> <span class="s">&#34;thead&#34;</span><span class="o">,</span> <span class="s">&#34;tr&#34;</span><span class="o">,</span> <span class="s">&#34;u&#34;</span><span class="o">,</span> <span class="s">&#34;ul&#34;</span><span class="o">)</span>&#10;&#10;				<span class="o">.</span><span class="na">addAttributes</span><span class="o">(</span><span class="s">&#34;a&#34;</span><span class="o">,</span> <span class="s">&#34;href&#34;</span><span class="o">,</span> <span class="s">&#34;title&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addAttributes</span><span class="o">(</span><span class="s">&#34;blockquote&#34;</span><span class="o">,</span> <span class="s">&#34;cite&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addAttributes</span><span class="o">(</span><span class="s">&#34;col&#34;</span><span class="o">,</span> <span class="s">&#34;span&#34;</span><span class="o">,</span> <span class="s">&#34;width&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addAttributes</span><span class="o">(</span><span class="s">&#34;colgroup&#34;</span><span class="o">,</span> <span class="s">&#34;span&#34;</span><span class="o">,</span> <span class="s">&#34;width&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addAttributes</span><span class="o">(</span><span class="s">&#34;img&#34;</span><span class="o">,</span> <span class="s">&#34;align&#34;</span><span class="o">,</span> <span class="s">&#34;alt&#34;</span><span class="o">,</span> <span class="s">&#34;height&#34;</span><span class="o">,</span> <span class="s">&#34;src&#34;</span><span class="o">,</span> <span class="s">&#34;title&#34;</span><span class="o">,</span> <span class="s">&#34;width&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addAttributes</span><span class="o">(</span><span class="s">&#34;ol&#34;</span><span class="o">,</span> <span class="s">&#34;start&#34;</span><span class="o">,</span> <span class="s">&#34;type&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addAttributes</span><span class="o">(</span><span class="s">&#34;q&#34;</span><span class="o">,</span> <span class="s">&#34;cite&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addAttributes</span><span class="o">(</span><span class="s">&#34;table&#34;</span><span class="o">,</span> <span class="s">&#34;summary&#34;</span><span class="o">,</span> <span class="s">&#34;width&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addAttributes</span><span class="o">(</span><span class="s">&#34;td&#34;</span><span class="o">,</span> <span class="s">&#34;abbr&#34;</span><span class="o">,</span> <span class="s">&#34;axis&#34;</span><span class="o">,</span> <span class="s">&#34;colspan&#34;</span><span class="o">,</span> <span class="s">&#34;rowspan&#34;</span><span class="o">,</span> <span class="s">&#34;width&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addAttributes</span><span class="o">(</span><span class="s">&#34;th&#34;</span><span class="o">,</span> <span class="s">&#34;abbr&#34;</span><span class="o">,</span> <span class="s">&#34;axis&#34;</span><span class="o">,</span> <span class="s">&#34;colspan&#34;</span><span class="o">,</span> <span class="s">&#34;rowspan&#34;</span><span class="o">,</span> <span class="s">&#34;scope&#34;</span><span class="o">,</span> <span class="s">&#34;width&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addAttributes</span><span class="o">(</span><span class="s">&#34;ul&#34;</span><span class="o">,</span> <span class="s">&#34;type&#34;</span><span class="o">)</span>&#10;&#10;				<span class="o">.</span><span class="na">addProtocols</span><span class="o">(</span><span class="s">&#34;a&#34;</span><span class="o">,</span> <span class="s">&#34;href&#34;</span><span class="o">,</span> <span class="s">&#34;ftp&#34;</span><span class="o">,</span> <span class="s">&#34;http&#34;</span><span class="o">,</span> <span class="s">&#34;https&#34;</span><span class="o">,</span> <span class="s">&#34;mailto&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addProtocols</span><span class="o">(</span><span class="s">&#34;blockquote&#34;</span><span class="o">,</span> <span class="s">&#34;cite&#34;</span><span class="o">,</span> <span class="s">&#34;http&#34;</span><span class="o">,</span> <span class="s">&#34;https&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addProtocols</span><span class="o">(</span><span class="s">&#34;cite&#34;</span><span class="o">,</span> <span class="s">&#34;cite&#34;</span><span class="o">,</span> <span class="s">&#34;http&#34;</span><span class="o">,</span> <span class="s">&#34;https&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addProtocols</span><span class="o">(</span><span class="s">&#34;img&#34;</span><span class="o">,</span> <span class="s">&#34;src&#34;</span><span class="o">,</span> <span class="s">&#34;http&#34;</span><span class="o">,</span> <span class="s">&#34;https&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addProtocols</span><span class="o">(</span><span class="s">&#34;q&#34;</span><span class="o">,</span> <span class="s">&#34;cite&#34;</span><span class="o">,</span> <span class="s">&#34;http&#34;</span><span class="o">,</span> <span class="s">&#34;https&#34;</span><span class="o">)</span>&#10;				&#10;				<span class="c1">//&#10;</span><span class="c1"></span>				<span class="o">.</span><span class="na">addTags</span><span class="o">(</span><span class="s">&#34;script&#34;</span><span class="o">,</span> <span class="s">&#34;iframe&#34;</span><span class="o">,</span> <span class="s">&#34;noscript&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addAttributes</span><span class="o">(</span><span class="s">&#34;div&#34;</span><span class="o">,</span> <span class="s">&#34;style&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addAttributes</span><span class="o">(</span><span class="s">&#34;img&#34;</span><span class="o">,</span> <span class="s">&#34;style&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addAttributes</span><span class="o">(</span><span class="s">&#34;script&#34;</span><span class="o">,</span> <span class="s">&#34;src&#34;</span><span class="o">,</span> <span class="s">&#34;data-.*&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addAttributes</span><span class="o">(</span><span class="s">&#34;iframe&#34;</span><span class="o">,</span> <span class="s">&#34;src&#34;</span><span class="o">,</span> <span class="s">&#34;width&#34;</span><span class="o">,</span> <span class="s">&#34;height&#34;</span><span class="o">,</span> <span class="s">&#34;frameborder&#34;</span><span class="o">,</span> <span class="s">&#34;allowfullscreen&#34;</span><span class="o">,</span> <span class="s">&#34;style&#34;</span><span class="o">,</span> <span class="s">&#34;marginwidth&#34;</span><span class="o">,</span> <span class="s">&#34;marginheight&#34;</span><span class="o">,</span> <span class="s">&#34;frameborder&#34;</span><span class="o">,</span> <span class="s">&#34;scrolling&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addAttributes</span><span class="o">(</span><span class="s">&#34;object&#34;</span><span class="o">,</span> <span class="s">&#34;width&#34;</span><span class="o">,</span> <span class="s">&#34;height&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addAttributes</span><span class="o">(</span><span class="s">&#34;param&#34;</span><span class="o">,</span> <span class="s">&#34;name&#34;</span><span class="o">,</span> <span class="s">&#34;value&#34;</span><span class="o">)</span>&#10;				<span class="o">.</span><span class="na">addAttributes</span><span class="o">(</span><span class="s">&#34;embed&#34;</span><span class="o">,</span> <span class="s">&#34;src&#34;</span><span class="o">,</span> <span class="s">&#34;type&#34;</span><span class="o">,</span> <span class="s">&#34;width&#34;</span><span class="o">,</span> <span class="s">&#34;height&#34;</span><span class="o">,</span> <span class="s">&#34;allowscriptaccess&#34;</span><span class="o">,</span> <span class="s">&#34;allowfullscreen&#34;</span><span class="o">)</span><span class="o">;</span>&#10;		<span class="k">return</span> <span class="n">wl</span><span class="o">;</span>&#10;	<span class="o">}</span>&#10;&#10;	<span class="kd">public</span> <span class="n">Whitelist</span> <span class="nf">addAttribute</span><span class="o">(</span><span class="n">String</span> <span class="n">tag</span><span class="o">,</span> <span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="n">String</span> <span class="n">regexp</span><span class="o">)</span> <span class="o">{</span>&#10;		<span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">attribute</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;		<span class="n">attribute</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&#34;tag&#34;</span><span class="o">,</span> <span class="n">tag</span><span class="o">)</span><span class="o">;</span>&#10;		<span class="n">attribute</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&#34;key&#34;</span><span class="o">,</span> <span class="n">key</span><span class="o">)</span><span class="o">;</span>&#10;		<span class="n">attribute</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&#34;regexp&#34;</span><span class="o">,</span> <span class="n">regexp</span><span class="o">)</span><span class="o">;</span>&#10;		<span class="k">return</span> <span class="k">this</span><span class="o">;</span>&#10;	<span class="o">}</span>&#10;&#10;	<span class="nd">@Override</span>&#10;	<span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">isSafeAttribute</span><span class="o">(</span><span class="n">String</span> <span class="n">tagName</span><span class="o">,</span> <span class="n">Element</span> <span class="n">el</span><span class="o">,</span> <span class="n">Attribute</span> <span class="n">attr</span><span class="o">)</span> <span class="o">{</span>&#10;		<span class="k">for</span> <span class="o">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">attribute</span> <span class="o">:</span> <span class="n">attributes</span><span class="o">)</span> <span class="o">{</span>&#10;			<span class="n">String</span> <span class="n">tag</span> <span class="o">=</span> <span class="n">attribute</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&#34;tag&#34;</span><span class="o">)</span><span class="o">;</span>&#10;			<span class="n">String</span> <span class="n">key</span> <span class="o">=</span> <span class="n">attribute</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&#34;key&#34;</span><span class="o">)</span><span class="o">;</span>&#10;			<span class="n">String</span> <span class="n">regexp</span> <span class="o">=</span> <span class="n">attribute</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&#34;regexp&#34;</span><span class="o">)</span><span class="o">;</span>&#10;&#10;			<span class="k">if</span> <span class="o">(</span><span class="n">tag</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">tagName</span><span class="o">)</span> <span class="o">&amp;</span><span class="o">&amp;</span> <span class="n">attr</span><span class="o">.</span><span class="na">getKey</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">matches</span><span class="o">(</span><span class="n">key</span><span class="o">)</span> <span class="o">&amp;</span><span class="o">&amp;</span> <span class="n">attr</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">matches</span><span class="o">(</span><span class="n">regexp</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>&#10;				<span class="k">return</span> <span class="kc">true</span><span class="o">;</span>&#10;			<span class="o">}</span>&#10;		<span class="o">}</span>&#10;		<span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">isSafeAttribute</span><span class="o">(</span><span class="n">tagName</span><span class="o">,</span> <span class="n">el</span><span class="o">,</span> <span class="n">attr</span><span class="o">)</span><span class="o">;</span>&#10;	<span class="o">}</span>&#10;<span class="o">}</span>&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>AppWhitelist.java</span>
+    </div>
+</div>
+<p>Y esta es la forma de usar la clase a través de <a href="http://jsoup.org/apidocs/org/jsoup/Jsoup.html#clean%28java.lang.String,%20java.lang.String,%20org.jsoup.safety.Whitelist%29">Jsoup.clean</a>:</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span><span class="lnt">6&#10;</span><span class="lnt">7&#10;</span><span class="lnt">8&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">AppWhitelist</span> <span class="n">whitelist</span> <span class="o">=</span> <span class="o">(</span><span class="n">AppWhitelist</span><span class="o">)</span> <span class="n">AppWhitelist</span><span class="o">.</span><span class="na">relaxed</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">whitelist</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&#34;script&#34;</span><span class="o">,</span> <span class="s">&#34;src&#34;</span><span class="o">,</span> <span class="s">&#34;^http[s]?://speakerdeck.com/.*$&#34;</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">whitelist</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&#34;script&#34;</span><span class="o">,</span> <span class="s">&#34;src&#34;</span><span class="o">,</span> <span class="s">&#34;^http[s]?://gist.github.com/.*$&#34;</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">whitelist</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&#34;iframe&#34;</span><span class="o">,</span> <span class="s">&#34;src&#34;</span><span class="o">,</span> <span class="s">&#34;^http[s]?://www.youtube.com/embed/.*$&#34;</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">whitelist</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&#34;iframe&#34;</span><span class="o">,</span> <span class="s">&#34;src&#34;</span><span class="o">,</span> <span class="s">&#34;^http[s]?://player.vimeo.com/video/.*$&#34;</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">whitelist</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&#34;iframe&#34;</span><span class="o">,</span> <span class="s">&#34;src&#34;</span><span class="o">,</span> <span class="s">&#34;^http[s]?://rcm-eu.amazon-adsystem.com/.*$&#34;</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">whitelist</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&#34;embed&#34;</span><span class="o">,</span> <span class="s">&#34;src&#34;</span><span class="o">,</span> <span class="s">&#34;^http[s]?://www.youtube.com/v/.*$&#34;</span><span class="o">)</span><span class="o">;</span>&#10;<span class="n">String</span> <span class="n">content</span> <span class="o">=</span> <span class="n">Jsoup</span><span class="o">.</span><span class="na">clean</span><span class="o">(</span><span class="n">postContent</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">source</span><span class="o">.</span><span class="na">getPageUrl</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">whitelist</span><span class="o">)</span><span class="o">;</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>IndexServiceImpl.java</span>
+    </div>
+</div>
+<p>El <a href="https://github.com/picodotdev/blog-stack">código fuente completo de BS</a> junto con el «scrapeado» y el uso de esta clase está disponible en un repositorio de GitHub.</p>
+<div class="reference">
+    Referencia:<br>
+<ul>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/10/que-es-y-como-hacer-web-scraping-en-java/">Qué es y cómo hacer «web scraping» en Java</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2015/01/como-hacer-un-substring-de-una-cadena-html/">Cómo hacer un substring de una cadena html</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2019/03/codificar-los-datos-para-evitar-ataques-xss-en-una-pagina-web/">Codificar los datos para evitar ataques XSS en una página web</a></li>
+</ul>
+</div>
+
+    </div>
+  </article>
+        
+
+        
+	
+	
+	<div class="row related">
+		<div class="col-md-12">
+			Artículos relacionados:
+			<ul>
+				
+				<li><a href="/blog-bitix/2014/10/que-es-y-como-hacer-web-scraping-en-java/">Qué es y cómo hacer «web scraping» en Java</a></li>
+				
+				<li><a href="/blog-bitix/2014/10/generar-urls-semanticas-y-amigables/">Generar URLs semánticas y amigables</a></li>
+				
+				<li><a href="/blog-bitix/2014/09/configuracion-usando-codigo-java/">Configuración usando código Java</a></li>
+				
+				<li><a href="/blog-bitix/2014/09/monitorizar-archivos-con-java/">Monitorizar archivos con Java</a></li>
+				
+				<li><a href="/blog-bitix/2014/09/compilar-y-cargar-de-forma-dinamica-una-clase-java/">Compilar y cargar de forma dinámica una clase Java</a></li>
+				
+			</ul>
+		</div>
+	</div>
+	
+
+        
+<div class="row">
+  <div class="col-md-12">
+    <div class="sharethis-inline-share-buttons"></div>
+  </div>
+</div>
+
+
+        <div class="row">
+          <div class="col-12 text-center">
+            <a id="pageBottom"></a>
+            <ins class="adsbygoogle"
+    style="display: inline-block; width: 970px; height: 250px;"
+    data-ad-client="ca-pub-3533636310991304"
+    data-ad-slot="2975854584"
+    data-type="billboard"></ins>
+          </div>
+        </div>
+        
+  <div class="row">
+    <div class="col-md-12">
+      <a id="comments"></a>
+      <div id="disqus_thread"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript" async>
+    var disqus_shortname = 'blog-bitix';
+    var disqus_identifier = 'blog-bitix-48';
+    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2014\/10\/como-filtrar-contenido-html-de-forma-segura\/';
+    var disqus_script = 'embed.js';
+  </script>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <hr>
+      </div>
+    </div>
+    
+
+
+
+
+
+<footer>
+  <div class="row">
+    <div class="col-12 col-sm-4">
+      <p><strong>Blog Bitix</strong></p>
+      <p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p>
+      <p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p>
+    </div>
+    <div class="col-12 col-sm-4 text-center menu">
+      <ul class="list-unstyled">
+        
+          <li><a href="/blog-bitix/tags/java/">Java</a></li>
+        
+          <li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li>
+        
+          <li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li>
+        
+          <li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li>
+        
+          <li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li>
+        
+          <li><a href="/blog-bitix/pages/links/">Enlaces</a></li>
+        
+          <li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li>
+        
+          <li><a href="/blog-bitix/pages/donate/">Donaciones</a></li>
+        
+          <li><a href="/blog-bitix/pages/about/">Acerca de...</a></li>
+        
+      </ul>
+    </div>
+    <div class="col-12 col-sm-4 text-center links">
+      
+        <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+      
+      
+        <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
+      
+      
+      
+        <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="/blog-bitix/assets/images/github.svg" width="50" height="50" class="icon"></a>
+      
+      
+      
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      Copyleft <span class="copyleft">&copy;</span> 2020 - <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="nofollow"><img src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" width="80" height="15" alt="Creative Commons License" title="Creative Commons License"></a><br />
+      <a href="https://www.planetacodigo.com/" rel="nofollow"><img src="/blog-bitix/assets/images/planeta-codigo.png" width="80" height="15" alt="Planeta código" title="Planeta código"></a>
+      <br/>
+      <a href="https://picodotdev.github.io/blog-bitix/" rel="nofollow">Blog Bitix</a> by <a href="https://picodotdev.github.io/blog-bitix/">pico.dev</a> is licensed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.
+      <br/>
+      <span class="credit">Powered by <a href="https://gohugo.io/" rel="nofollow" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a>.</span>
+      <span class="credit">Background patterns from <a href="https://www.toptal.com/designers/subtlepatterns/" rel="nofollow">Subtle Patterns</a>.</span>
+    </div>
+  </div>
+</footer>
+
+  </div>
+  
+<div class="blueimp-gallery-container">
+  <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false">
+    
+    <div class="slides"></div>
+    
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    
+    <div class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body next"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left prev">
+              <i class="glyphicon glyphicon-chevron-left"></i>
+              Anterior
+            </button>
+            <button type="button" class="btn btn-primary next">
+              Siguiente
+              <i class="glyphicon glyphicon-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  <!-- Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+<script type="text/javascript">
+    window.cookieconsent_options = {
+        "message": "Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.",
+        "dismiss": "Aceptar",
+        "learnMore": "Más información",
+        "link": null,
+        "theme": "dark-bottom"
+    };
+</script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script>
+</body>
+</html>

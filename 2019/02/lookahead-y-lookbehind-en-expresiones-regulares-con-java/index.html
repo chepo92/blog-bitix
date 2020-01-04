@@ -1,27 +1,472 @@
-<!doctype html><html lang=es><head><meta name=base href=/blog-bitix/><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="picodotdev"><meta name=keywords content="java,programacion,software,hardware,tapestry,software libre,gnu,linux,gnu/linux,unix,arch,arch linux,html,css,javascript"><meta name=description content="Las expresiones regulares son un gran invento y muy útil para comprobar que una cadena cumple el patrón definido en la expresión regular, hay coincidencias en partes de la cadena y para reemplazar coincidencias. Son muy potentes para realizar estas tareas pero al mismo tiempo pueden volverse en cierta medida complicadas.
-Una de las funcionalidades que soportan las cadenas es búsqueda hacia delante o lookahead y búsqueda hacia atrás o lookbehind. &mldr;"><title>Lookahead y lookbehind en expresiones regulares con Java</title><link rel="shortcut icon" href=/blog-bitix/assets/favicon.ico><link rel=apple-touch-icon-precomposed sizes=144x144 href=/blog-bitix/assets/apple-touch-icon-144-precomposed.png><link rel=canonical type=text/html href=https://picodotdev.github.io/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/><link rel=amphtml type=text/html href=https://picodotdev.github.io/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/index-amp.html><link rel=alternate type=application/rss+xml href=index.xml title="Blog Bitix"><link rel=humans type=text/plain href=/blog-bitix/humans.txt><link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i&display=swap" rel=stylesheet><meta property="og:title" content="Lookahead y lookbehind en expresiones regulares con Java"><meta property="og:url" content="https://picodotdev.github.io/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/"><meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"><meta property="og:site_name" content="Blog Bitix"><meta property="og:description" content="Las expresiones regulares son un gran invento y muy útil para comprobar que una cadena cumple el patrón definido en la expresión regular, hay coincidencias en partes de la cadena y para reemplazar coincidencias. Son muy potentes para realizar estas tareas pero al mismo tiempo pueden volverse en cierta medida complicadas.
-Una de las funcionalidades que soportan las cadenas es búsqueda hacia delante o lookahead y búsqueda hacia atrás o lookbehind. &mldr;"><meta property="og:type" content="article"><meta name=twitter:card content="summary_large_image"><meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"><meta name=twitter:site content="@picodotdev"><meta name=twitter:title content="Lookahead y lookbehind en expresiones regulares con Java"><meta name=twitter:description content="Las expresiones regulares son un gran invento y muy útil para comprobar que una cadena cumple el patrón definido en la expresión regular, hay coincidencias en partes de la cadena y para reemplazar coincidencias. Son muy potentes para realizar estas tareas pero al mismo tiempo pueden volverse en cierta medida complicadas.
-Una de las funcionalidades que soportan las cadenas es búsqueda hacia delante o lookahead y búsqueda hacia atrás o lookbehind. &mldr;"><meta name=twitter:creator content="@picodotdev"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://picodotdev.github.io/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/"},"headline":"Lookahead y lookbehind en expresiones regulares con Java","image":{"@type":"ImageObject","url":"https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"},"datePublished":"2019-02-17T10:00:00+01:00","dateModified":"2019-02-17T10:00:00+01:00","inLanguage":"es","wordCount":"592","license":"https://creativecommons.org/licenses/by-sa/4.0/","author":{"@type":"Person","name":"picodotdev","url":"https://twitter.com/picodotdev/"},"publisher":{"@type":"Organization","name":"Blog Bitix","logo":{"@type":"ImageObject","url":"https://picodotdev.github.io/blog-bitix/assets/images/logotypes/blogbitix.png"}},"description":"Las expresiones regulares son un gran invento y muy útil para comprobar que una cadena cumple el patrón definido en la expresión regular, hay coincidencias en partes de la cadena y para reemplazar coincidencias. Son muy potentes para realizar estas tareas pero al mismo tiempo pueden volverse en cierta medida complicadas.
-Una de las funcionalidades que soportan las cadenas es búsqueda hacia delante o lookahead y búsqueda hacia atrás o lookbehind."}</script><link rel=stylesheet type=text/css href=/blog-bitix/assets/libs/bootstrap-4.4.1-dist/css/bootstrap.min.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/css/syntax.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/css/main.css><link rel=stylesheet type=text/css href=/blog-bitix/assets/css/main-cookieconsent.css><script type=text/javascript src=/blog-bitix/assets/js/require-config.js defer></script><script type=text/javascript src=/blog-bitix/assets/libs/require.js data-main=/blog-bitix/assets/js/main defer></script><script type=text/javascript defer>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-12874075-4','picodotdev.github.io');ga('send','pageview');</script><script src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js defer></script><script type=text/javascript defer>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:'ca-pub-3533636310991304',enable_page_level_ads:true});</script><script type=text/javascript src=/blog-bitix/assets/js/app.js defer></script></head><body><div class=container><div class=row><div class=col-12><header><div class=row><div class="col-12 col-lg-4"></div><div class="col-12 col-lg-4"><h2 class=title><a href=https://picodotdev.github.io/blog-bitix/>Blog Bitix</a></h2><div class=links><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=/blog-bitix/assets/images/rss.png width=50 height=50 class=icon></a>
-<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=/blog-bitix/assets/images/twitter.svg width=50 height=50 class=icon></a>
-<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=/blog-bitix/assets/images/github.svg width=50 height=50 class=icon></a></div></div></div><div class=row><div class=col-12><nav class="nav nav-pills nav-fill"><a href=/blog-bitix/tags/java/ class="nav-item nav-link">Java</a>
-<a href=/blog-bitix/tags/gnu-linux/ class="nav-item nav-link">GNU/Linux</a>
-<a href=/blog-bitix/tags/javascript/ class="nav-item nav-link">JavaScript</a>
-<a href=/blog-bitix/tags/tapestry/ class="nav-item nav-link">Tapestry</a>
-<a href=/blog-bitix/archive/ class="nav-item nav-link">Archivo y hemeroteca</a>
-<a href=/blog-bitix/pages/links/ class="nav-item nav-link">Enlaces</a>
-<a href=/blog-bitix/pages/about/ class="nav-item nav-link">Acerca de...</a></nav></div></div></header></div></div><div class=row><div class="col-12 text-center"><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-12><div class=adblock-sidebar-container><div class=adblock-sidebar-container-left></div><div class=adblock-sidebar-container-right><ins class="adsbygoogle adblock-sidebar-vertical" data-ad-client=ca-pub-3533636310991304 data-ad-slot=9933840986 data-ad-format=vertical,rectangle data-type=auto></ins></div></div><article><h1>Lookahead y lookbehind en expresiones regulares con Java</h1><p class=information>Escrito por
-<span>picodotdev</span> el <time>17/02/2019</time>.<br><a href=/blog-bitix/tags/java/>java</a>
-<a href=/blog-bitix/tags/planeta-codigo/>planeta-codigo</a>
-<a href=/blog-bitix/tags/programacion/>programacion</a><br><a href=/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/>Enlace permanente</a>
-<a href=/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/#comments>Comentarios</a></p><div class=content><div class=logotypes><img src=/blog-bitix/assets/images/logotypes/java.svg class=right width=200 height layout=responsive alt=Java title=Java></div><p>Las expresiones regulares son un gran invento y muy útil para comprobar que una cadena cumple el patrón definido en la expresión regular, hay coincidencias en partes de la cadena y para reemplazar coincidencias. Son muy potentes para realizar estas tareas pero al mismo tiempo pueden volverse en cierta medida complicadas.</p><p>Una de las funcionalidades que soportan las cadenas es búsqueda hacia delante o <em>lookahead</em> y búsqueda hacia atrás o <em>lookbehind</em>. La primera permite examinar los siguientes caracteres de la cadena analizada y la segunda los caracteres pasados.</p><p>Hay diferentes formas de <em>lookahead</em>, en Java la construcción que permite hacer <em>lookahead</em> es <em>(?=X)</em> donde <em>X</em> es la expresión siguiente, se puede negar la expresión en el caso de querer que no se cumpla <em>X</em> con <em>(?!X)</em>. También existe <em>lookbehind</em> con la construcción <em>(?&lt;=X)</em> para negar que no se cumpla <em>X</em> se ha de emplear <em>(?&lt;!X)</em>, como su nombre sugiere en vez de mirar hacia adelante mira hacia atrás en los caracteres ya analizados.</p><p>Una aplicación práctica en la que usar <em>lookahead</em> es para ocultar los números de una tarjeta de crédito, una cuenta bancaria o un <em>bearer token</em> de un API REST excepto los cuatro últimos caracteres, este podría ser el caso de que esta información sea incluida en los archivos de <em>log</em> de una aplicación que por seguridad es recomendable ocultar. En el artículo <a href=https://picodotdev.github.io/blog-bitix/2019/02/ofuscar-datos-sensibles-en-las-trazas-con-log4j/>Ofuscar datos sensibles en las trazas con Log4j</a> comento varias formas de hacerlo.</p><p>Una tarjeta de crédito está formada por 4 grupos de 4 dígitos separados por espacios cumpliendo la expresión regular <em>\d{4} \d{4} \d{4} \d{4}</em> y un <em>bearer token</em> puede seguir la expresión regular <em>Bearer \w+</em>. Para ocultar la información de estas cadenas excepto los cuatro últimos caracteres hay que comprobar que los primeros complen el patrón añadiéndolos en un grupo de captura para su reemplazo posterior y mirar los cuatro siguientes si también lo cumplen fuera del grupo de captura. En el caso de la tarjeta de crédito se mira que la expresión cumple los primeros números de una tarjeta de crédito y le siguen los restantes, la primera parte se incluye en un grupo de captura con los paréntesis.</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1&#10;</span><span class=lnt> 2&#10;</span><span class=lnt> 3&#10;</span><span class=lnt> 4&#10;</span><span class=lnt> 5&#10;</span><span class=lnt> 6&#10;</span><span class=lnt> 7&#10;</span><span class=lnt> 8&#10;</span><span class=lnt> 9&#10;</span><span class=lnt>10&#10;</span><span class=lnt>11&#10;</span><span class=lnt>12&#10;</span><span class=lnt>13&#10;</span><span class=lnt>14&#10;</span><span class=lnt>15&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.log4j</span><span class=o>;</span>&#10;&#10;<span class=o>.</span><span class=o>.</span><span class=o>.</span>&#10;&#10;<span class=kd>public</span> <span class=kd>class</span> <span class=nc>Main</span> <span class=o>{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>Logger</span> <span class=n>logger</span> <span class=o>=</span> <span class=n>LogManager</span><span class=o>.</span><span class=na>getLogger</span><span class=o>(</span><span class=n>Main</span><span class=o>.</span><span class=na>class</span><span class=o>)</span><span class=o>;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[</span><span class=o>]</span> <span class=n>args</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>.</span><span class=o>.</span><span class=o>.</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>logger</span><span class=o>.</span><span class=na>info</span><span class=o>(</span><span class=k>new</span> <span class=n>SecuredMessage</span><span class=o>(</span><span class=s>&#34;Tarjeta de crédito: 1111 1111 1111 1111, DNI: 11111111A&#34;</span><span class=o>,</span> <span class=n>Arrays</span><span class=o>.</span><span class=na>asList</span><span class=o>(</span><span class=s>&#34;(\\d{4} \\d{4} \\d{4} \\d{1})(?=\\d{3})&#34;</span><span class=o>,</span> <span class=s>&#34;(\\d{6})(?=\\d{2}[A-Z])&#34;</span><span class=o>)</span><span class=o>)</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>logger</span><span class=o>.</span><span class=na>info</span><span class=o>(</span><span class=s>&#34;Tarjeta de crédito: 1111 1111 1111 1111, DNI: 11111111A&#34;</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;<span class=o>}</span>&#10;</code></pre></td></tr></table></div></div><div class=highlight-meta><span>Main.java</span></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1&#10;</span><span class=lnt> 2&#10;</span><span class=lnt> 3&#10;</span><span class=lnt> 4&#10;</span><span class=lnt> 5&#10;</span><span class=lnt> 6&#10;</span><span class=lnt> 7&#10;</span><span class=lnt> 8&#10;</span><span class=lnt> 9&#10;</span><span class=lnt>10&#10;</span><span class=lnt>11&#10;</span><span class=lnt>12&#10;</span><span class=lnt>13&#10;</span><span class=lnt>14&#10;</span><span class=lnt>15&#10;</span><span class=lnt>16&#10;</span><span class=lnt>17&#10;</span><span class=lnt>18&#10;</span><span class=lnt>19&#10;</span><span class=lnt>20&#10;</span><span class=lnt>21&#10;</span><span class=lnt>22&#10;</span><span class=lnt>23&#10;</span><span class=lnt>24&#10;</span><span class=lnt>25&#10;</span><span class=lnt>26&#10;</span><span class=lnt>27&#10;</span><span class=lnt>28&#10;</span><span class=lnt>29&#10;</span><span class=lnt>30&#10;</span><span class=lnt>31&#10;</span><span class=lnt>32&#10;</span><span class=lnt>33&#10;</span><span class=lnt>34&#10;</span><span class=lnt>35&#10;</span><span class=lnt>36&#10;</span><span class=lnt>37&#10;</span><span class=lnt>38&#10;</span><span class=lnt>39&#10;</span><span class=lnt>40&#10;</span><span class=lnt>41&#10;</span><span class=lnt>42&#10;</span><span class=lnt>43&#10;</span><span class=lnt>44&#10;</span><span class=lnt>45&#10;</span><span class=lnt>46&#10;</span><span class=lnt>47&#10;</span><span class=lnt>48&#10;</span><span class=lnt>49&#10;</span><span class=lnt>50&#10;</span><span class=lnt>51&#10;</span><span class=lnt>52&#10;</span><span class=lnt>53&#10;</span><span class=lnt>54&#10;</span><span class=lnt>55&#10;</span><span class=lnt>56&#10;</span><span class=lnt>57&#10;</span><span class=lnt>58&#10;</span><span class=lnt>59&#10;</span><span class=lnt>60&#10;</span><span class=lnt>61&#10;</span><span class=lnt>62&#10;</span><span class=lnt>63&#10;</span><span class=lnt>64&#10;</span><span class=lnt>65&#10;</span><span class=lnt>66&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kn>package</span> <span class=nn>io.github.picodotdev.blogbitix.log4j</span><span class=o>;</span>&#10;&#10;<span class=kn>import</span> <span class=nn>org.apache.logging.log4j.message.Message</span><span class=o>;</span>&#10;&#10;<span class=kn>import</span> <span class=nn>java.util.Collection</span><span class=o>;</span>&#10;<span class=kn>import</span> <span class=nn>java.util.regex.Matcher</span><span class=o>;</span>&#10;<span class=kn>import</span> <span class=nn>java.util.regex.Pattern</span><span class=o>;</span>&#10;<span class=kn>import</span> <span class=nn>java.util.stream.Collectors</span><span class=o>;</span>&#10;&#10;<span class=kd>public</span> <span class=kd>class</span> <span class=nc>SecuredMessage</span> <span class=kd>implements</span> <span class=n>Message</span> <span class=o>{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=kt>int</span> <span class=n>UNMASKED_CHARACTERS</span> <span class=o>=</span> <span class=n>3</span><span class=o>;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>private</span> <span class=n>Message</span> <span class=n>message</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>private</span> <span class=n>String</span> <span class=n>string</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>private</span> <span class=n>Pattern</span> <span class=n>pattern</span><span class=o>;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>public</span> <span class=nf>SecuredMessage</span><span class=o>(</span><span class=n>Message</span> <span class=n>message</span><span class=o>,</span> <span class=n>Collection</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=n>patterns</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>this</span><span class=o>.</span><span class=na>message</span> <span class=o>=</span> <span class=n>message</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>this</span><span class=o>.</span><span class=na>pattern</span> <span class=o>=</span> <span class=n>compilePatterns</span><span class=o>(</span><span class=n>patterns</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>public</span> <span class=nf>SecuredMessage</span><span class=o>(</span><span class=n>String</span> <span class=n>string</span><span class=o>,</span> <span class=n>Collection</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=n>patterns</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>this</span><span class=o>.</span><span class=na>string</span> <span class=o>=</span> <span class=n>string</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>this</span><span class=o>.</span><span class=na>pattern</span> <span class=o>=</span> <span class=n>compilePatterns</span><span class=o>(</span><span class=n>patterns</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>.</span><span class=o>.</span><span class=o>.</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=nd>@Override</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>public</span> <span class=n>String</span> <span class=nf>getFormattedMessage</span><span class=o>(</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>return</span> <span class=n>securedMessage</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>private</span> <span class=n>String</span> <span class=nf>securedMessage</span><span class=o>(</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>if</span> <span class=o>(</span><span class=n>message</span> <span class=o>!</span><span class=o>=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>return</span> <span class=n>securedMessage</span><span class=o>(</span><span class=n>message</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span> <span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=n>string</span> <span class=o>!</span><span class=o>=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>return</span> <span class=n>securedString</span><span class=o>(</span><span class=n>string</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>return</span> <span class=s>&#34;&#34;</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>private</span> <span class=n>Pattern</span> <span class=nf>compilePatterns</span><span class=o>(</span><span class=n>Collection</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=n>patterns</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>return</span> <span class=n>Pattern</span><span class=o>.</span><span class=na>compile</span><span class=o>(</span><span class=n>patterns</span><span class=o>.</span><span class=na>stream</span><span class=o>(</span><span class=o>)</span><span class=o>.</span><span class=na>map</span><span class=o>(</span><span class=n>it</span> <span class=o>-</span><span class=o>&gt;</span> <span class=s>&#34;(&#34;</span> <span class=o>+</span> <span class=n>it</span> <span class=o>+</span> <span class=s>&#34;)&#34;</span><span class=o>)</span><span class=o>.</span><span class=na>collect</span><span class=o>(</span><span class=n>Collectors</span><span class=o>.</span><span class=na>joining</span><span class=o>(</span><span class=s>&#34;|&#34;</span><span class=o>)</span><span class=o>)</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>private</span> <span class=n>String</span> <span class=nf>securedMessage</span><span class=o>(</span><span class=n>Message</span> <span class=n>message</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>return</span> <span class=n>securedString</span><span class=o>(</span><span class=n>message</span><span class=o>.</span><span class=na>getFormattedMessage</span><span class=o>(</span><span class=o>)</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>private</span> <span class=n>String</span> <span class=nf>securedString</span><span class=o>(</span><span class=n>String</span> <span class=n>string</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>String</span> <span class=n>result</span> <span class=o>=</span> <span class=n>string</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>Matcher</span> <span class=n>matcher</span> <span class=o>=</span> <span class=n>pattern</span><span class=o>.</span><span class=na>matcher</span><span class=o>(</span><span class=n>string</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>while</span> <span class=o>(</span><span class=n>matcher</span><span class=o>.</span><span class=na>find</span><span class=o>(</span><span class=o>)</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>String</span> <span class=n>match</span> <span class=o>=</span> <span class=n>matcher</span><span class=o>.</span><span class=na>group</span><span class=o>(</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>String</span> <span class=n>mask</span> <span class=o>=</span> <span class=n>mask</span><span class=o>(</span><span class=n>match</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=n>result</span> <span class=o>=</span> <span class=n>result</span><span class=o>.</span><span class=na>replaceFirst</span><span class=o>(</span><span class=n>match</span><span class=o>,</span> <span class=n>mask</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>return</span> <span class=n>result</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=kd>private</span> <span class=n>String</span> <span class=nf>mask</span><span class=o>(</span><span class=n>String</span> <span class=n>string</span><span class=o>)</span> <span class=o>{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=k>return</span> <span class=n>string</span><span class=o>.</span><span class=na>replaceAll</span><span class=o>(</span><span class=s>&#34;.&#34;</span><span class=o>,</span> <span class=s>&#34;*&#34;</span><span class=o>)</span><span class=o>;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class=o>}</span>&#10;<span class=o>}</span>&#10;</code></pre></td></tr></table></div></div><div class=highlight-meta><span>SecuredMessage.java</span></div></div><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1&#10;</span><span class=lnt> 2&#10;</span><span class=lnt> 3&#10;</span><span class=lnt> 4&#10;</span><span class=lnt> 5&#10;</span><span class=lnt> 6&#10;</span><span class=lnt> 7&#10;</span><span class=lnt> 8&#10;</span><span class=lnt> 9&#10;</span><span class=lnt>10&#10;</span><span class=lnt>11&#10;</span><span class=lnt>12&#10;</span><span class=lnt>13&#10;</span><span class=lnt>14&#10;</span><span class=lnt>15&#10;</span><span class=lnt>16&#10;</span><span class=lnt>17&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Yaml data-lang=Yaml>configuration<span class=p>:</span><span class=w>&#10;</span><span class=w>  </span>status<span class=p>:</span><span class=w> </span>warn<span class=w>&#10;</span><span class=w>&#10;</span><span class=w>  </span>appenders<span class=p>:</span><span class=w>&#10;</span><span class=w>&nbsp;&nbsp;&nbsp;&nbsp;</span>console<span class=p>:</span><span class=w>&#10;</span><span class=w>&nbsp;&nbsp;&nbsp;&nbsp;  </span>name<span class=p>:</span><span class=w> </span>STDOUT<span class=w>&#10;</span><span class=w>&nbsp;&nbsp;&nbsp;&nbsp;  </span>patternLayout<span class=p>:</span><span class=w>&#10;</span><span class=w>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>pattern<span class=p>:</span><span class=w> </span><span class=s2>&#34;%d{DEFAULT} %X{uuid} %-5level %60.60logger %msg%n&#34;</span><span class=w>&#10;</span><span class=w>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>replace<span class=p>:</span><span class=w> &#10;</span><span class=w>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </span>regex<span class=p>:</span><span class=w> </span><span class=s2>&#34;(\\d{4} \\d{4} \\d{4} \\d{1})(?=\\d{3})|(\\d{6})(?=\\d{2}[A-Z])&#34;</span><span class=w>&#10;</span><span class=w>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </span>replacement<span class=p>:</span><span class=w> </span><span class=s2>&#34;**********&#34;</span><span class=w>&#10;</span><span class=w>&#10;</span><span class=w>  </span>loggers<span class=p>:</span><span class=w>&#10;</span><span class=w>&nbsp;&nbsp;&nbsp;&nbsp;</span>root<span class=p>:</span><span class=w>&#10;</span><span class=w>&nbsp;&nbsp;&nbsp;&nbsp;  </span>level<span class=p>:</span><span class=w> </span>info<span class=w>&#10;</span><span class=w>&nbsp;&nbsp;&nbsp;&nbsp;  </span>appenderRef<span class=p>:</span><span class=w>&#10;</span><span class=w>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>ref<span class=p>:</span><span class=w> </span>STDOUT</code></pre></td></tr></table></div></div><div class=highlight-meta><span>log4j2.yaml</span></div></div><p>El resultado es el siguiente:</p><div class=code><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1&#10;</span><span class=lnt>2&#10;</span><span class=lnt>3&#10;</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-plaintext data-lang=plaintext>...&#10;2019-02-10 11:22:47,652  INFO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; io.github.picodotdev.blogbitix.log4j.Main Tarjeta de crédito: ****************111, DNI: ******11A&#10;2019-02-10 11:22:47,653  INFO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; io.github.picodotdev.blogbitix.log4j.Main Tarjeta de crédito: **********111, DNI: **********11A</code></pre></td></tr></table></div></div><div class=highlight-meta><span>System.out</span></div></div><p>El <a href=https://github.com/picodotdev/blog-ejemplos/tree/master/JavaLog4j>código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href=https://github.com/>GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew run</code>.</p><div class=reference>Referencia:<br><ul><li><a href=https://picodotdev.github.io/blog-bitix/2018/02/referencias-a-grupos-de-captura-en-expresiones-regulares-y-reemplazos/>Referencias a grupos de captura en expresiones regulares y reemplazos</a></li><li><a href=https://picodotdev.github.io/blog-bitix/2017/09/los-cuantificadores-greedy-reluctant-y-possessive-en-expresiones-regulares/>Los cuantificadores greedy, reluctant y possessive en expresiones regulares</a></li><li><a href=https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/regex/Pattern.html>Pattern</a></li></ul></div></div></article><div class="row related"><div class=col-md-12>Artículos relacionados:<ul><li><a href=/blog-bitix/2019/02/las-clases-anidadas-inner-anonimas-y-locales-en-java/>Las clases anidadas inner, anónimas y locales en Java</a></li><li><a href=/blog-bitix/2019/02/ofuscar-datos-sensibles-en-las-trazas-con-log4j/>Ofuscar datos sensibles en las trazas con Log4j</a></li><li><a href=/blog-bitix/2019/02/servidor-oauth-gateway-y-servicio-rest-utilizando-tokens-jwt-con-spring/>Servidor OAuth, gateway y servicio REST utilizando tokens JWT con Spring</a></li><li><a href=/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/>Convertir un JSON a objetos y objetos a JSON con JSON-B, Gson y Jackson en Java</a></li><li><a href=/blog-bitix/2019/01/usar-expresiones-jsonpath-para-extraer-datos-de-un-json-en-java/>Usar expresiones JSONPath para extraer datos de un JSON en Java</a></li></ul></div></div><div class=row><div class=col-md-12><div class=sharethis-inline-share-buttons></div></div></div><div class=row><div class="col-12 text-center"><a id=pageBottom></a><ins class=adsbygoogle style=display:inline-block;width:970px;height:250px data-ad-client=ca-pub-3533636310991304 data-ad-slot=2975854584 data-type=billboard></ins></div></div><div class=row><div class=col-md-12><a id=comments></a><div id=disqus_thread></div></div></div><script type=text/javascript async>var disqus_shortname='blog-bitix';var disqus_identifier='blog-bitix-385';var disqus_url='https:\/\/picodotdev.github.io\/blog-bitix\/2019\/02\/lookahead-y-lookbehind-en-expresiones-regulares-con-java\/';var disqus_script='embed.js';</script></div></div><div class=row><div class=col-12><hr></div></div><footer><div class=row><div class="col-12 col-sm-4"><p><strong>Blog Bitix</strong></p><p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p><p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p></div><div class="col-12 col-sm-4 text-center menu"><ul class=list-unstyled><li><a href=/blog-bitix/tags/java/>Java</a></li><li><a href=/blog-bitix/tags/gnu-linux/>GNU/Linux</a></li><li><a href=/blog-bitix/tags/javascript/>JavaScript</a></li><li><a href=/blog-bitix/tags/tapestry/>Tapestry</a></li><li><a href=/blog-bitix/archive/>Archivo y hemeroteca</a></li><li><a href=/blog-bitix/pages/links/>Enlaces</a></li><li><a href=/blog-bitix/pages/advertising/>Publicidad</a></li><li><a href=/blog-bitix/pages/donate/>Donaciones</a></li><li><a href=/blog-bitix/pages/about/>Acerca de...</a></li></ul></div><div class="col-12 col-sm-4 text-center links"><a href=index.xml title="¡Suscríbete a Blog Bitix!"><img src=/blog-bitix/assets/images/rss.png width=50 height=50 class=icon></a>
-<a href=https://twitter.com/picodotdev/ title="¡Sígueme en twitter!"><img src=/blog-bitix/assets/images/twitter.svg width=50 height=50 class=icon></a>
-<a href=https://github.com/picodotdev/blog-ejemplos/ title="¡Obtén el código fuente de los ejemplos!"><img src=/blog-bitix/assets/images/github.svg width=50 height=50 class=icon></a></div></div><div class=row><div class=col-12>Copyleft <span class=copyleft>&copy;</span> 2020 - <a href=https://creativecommons.org/licenses/by-sa/4.0/ rel=nofollow><img src=https://licensebuttons.net/l/by-sa/4.0/80x15.png width=80 height=15 alt="Creative Commons License" title="Creative Commons License"></a><br><a href=https://www.planetacodigo.com/ rel=nofollow><img src=/blog-bitix/assets/images/planeta-codigo.png width=80 height=15 alt="Planeta código" title="Planeta código"></a><br><a href=https://picodotdev.github.io/blog-bitix/ rel=nofollow>Blog Bitix</a> by <a href=https://picodotdev.github.io/blog-bitix/>pico.dev</a> is licensed under a <a href=https://creativecommons.org/licenses/by-sa/4.0/>Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br><span class=credit>Powered by <a href=https://gohugo.io/ rel=nofollow title="A fast and modern static website engine">Hugo</a> and <a href=https://pages.github.com/ title="Websites for you and your projects">GitHub Pages</a>.</span>
-<span class=credit>Background patterns from <a href=https://www.toptal.com/designers/subtlepatterns/ rel=nofollow>Subtle Patterns</a>.</span></div></div></footer></div><div class=blueimp-gallery-container><div id=blueimp-gallery class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal=false><div class=slides></div><h3 class=title></h3><a class=prev>‹</a>
-<a class=next>›</a>
-<a class=close>×</a>
-<a class=play-pause></a><ol class=indicator></ol><div class="modal fade"><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close aria-hidden=true>&#215;</button><h4 class=modal-title></h4></div><div class="modal-body next"></div><div class=modal-footer><button type=button class="btn btn-default pull-left prev">
-<i class="glyphicon glyphicon-chevron-left"></i>Anterior</button>
-<button type=button class="btn btn-primary next">
-Siguiente
-<i class="glyphicon glyphicon-chevron-right"></i></button></div></div></div></div></div></div><script type=text/javascript>window.cookieconsent_options={"message":"Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.","dismiss":"Aceptar","learnMore":"Más información","link":null,"theme":"dark-bottom"};</script><script type=text/javascript src=//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js async></script></body></html>
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta name="base" href="/blog-bitix/">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="picodotdev">
+  <meta name="keywords" content="java, programacion, software, hardware, tapestry, software libre, gnu, linux, gnu/linux, unix, arch, arch linux, html, css, javascript">
+  <meta name="description" content="Las expresiones regulares son un gran invento y muy útil para comprobar que una cadena cumple el patrón definido en la expresión regular, hay coincidencias en partes de la cadena y para reemplazar coincidencias. Son muy potentes para realizar estas tareas pero al mismo tiempo pueden volverse en cierta medida complicadas.
+Una de las funcionalidades que soportan las cadenas es búsqueda hacia delante o lookahead y búsqueda hacia atrás o lookbehind. &hellip;">
+
+  <title>Lookahead y lookbehind en expresiones regulares con Java</title>
+
+  <link rel="shortcut icon" href="/blog-bitix/assets/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/blog-bitix/assets/apple-touch-icon-144-precomposed.png">
+  <link rel="canonical" type="text/html" href="https://picodotdev.github.io/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/">
+  <link rel="amphtml" type="text/html" href="https://picodotdev.github.io/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/index-amp.html">
+  <link rel="alternate" type="application/rss+xml" href="index.xml" title="Blog Bitix">
+  <link rel="humans" type="text/plain" href="/blog-bitix/humans.txt">
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i&display=swap" rel="stylesheet"> 
+
+  
+
+  
+  <!-- Social -->
+<meta property="og:title" content="Lookahead y lookbehind en expresiones regulares con Java">
+<meta property="og:url" content="https://picodotdev.github.io/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/">
+
+<meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png">
+
+<meta property="og:site_name" content="Blog Bitix">
+<meta property="og:description" content="Las expresiones regulares son un gran invento y muy útil para comprobar que una cadena cumple el patrón definido en la expresión regular, hay coincidencias en partes de la cadena y para reemplazar coincidencias. Son muy potentes para realizar estas tareas pero al mismo tiempo pueden volverse en cierta medida complicadas.
+Una de las funcionalidades que soportan las cadenas es búsqueda hacia delante o lookahead y búsqueda hacia atrás o lookbehind. &hellip;">
+<meta property="og:type" content="article">
+
+<meta name="twitter:card" content="summary_large_image">
+
+<meta property="og:image" content="https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png">
+
+<meta name="twitter:site" content="@picodotdev">
+<meta name="twitter:title" content="Lookahead y lookbehind en expresiones regulares con Java">
+<meta name="twitter:description" content="Las expresiones regulares son un gran invento y muy útil para comprobar que una cadena cumple el patrón definido en la expresión regular, hay coincidencias en partes de la cadena y para reemplazar coincidencias. Son muy potentes para realizar estas tareas pero al mismo tiempo pueden volverse en cierta medida complicadas.
+Una de las funcionalidades que soportan las cadenas es búsqueda hacia delante o lookahead y búsqueda hacia atrás o lookbehind. &hellip;">
+<meta name="twitter:creator" content="@picodotdev">
+  
+
+  
+  <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://picodotdev.github.io/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/"
+    },
+    "headline": "Lookahead y lookbehind en expresiones regulares con Java",
+    "image": {
+        
+          "@type": "ImageObject",
+          "url": "https://picodotdev.github.io/blog-bitix//blog-bitix/static/assets/images/structured-data/blogbitix-1200.png"
+        
+      },
+    "datePublished": "2019-02-17T10:00:00+01:00",
+    "dateModified": "2019-02-17T10:00:00+01:00",
+    "inLanguage": "es",
+    
+    "wordCount": "592",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "author": {
+        "@type": "Person",
+        "name": "picodotdev",
+        "url": "https://twitter.com/picodotdev/"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Blog Bitix",
+        "logo": {
+        "@type": "ImageObject",
+        "url": "https://picodotdev.github.io/blog-bitix/assets/images/logotypes/blogbitix.png"
+        }
+    },
+    "description": "Las expresiones regulares son un gran invento y muy útil para comprobar que una cadena cumple el patrón definido en la expresión regular, hay coincidencias en partes de la cadena y para reemplazar coincidencias. Son muy potentes para realizar estas tareas pero al mismo tiempo pueden volverse en cierta medida complicadas.
+Una de las funcionalidades que soportan las cadenas es búsqueda hacia delante o lookahead y búsqueda hacia atrás o lookbehind."
+}
+  </script>
+  
+
+  <!-- css -->
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/libs/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/libs/Gallery-2.33.0/css/blueimp-gallery.min.css">
+  <!-- theme -->
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/syntax.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/main-cookieconsent.css">
+
+  <!-- javascript -->
+  <script type="text/javascript" src="/blog-bitix/assets/js/require-config.js" defer></script>
+  <script type="text/javascript" src="/blog-bitix/assets/libs/require.js" data-main="/blog-bitix/assets/js/main" defer></script>
+
+  <script type="text/javascript" defer>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-12874075-4', 'picodotdev.github.io');
+    ga('send', 'pageview');
+</script>
+  <script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" defer></script>
+<script type="text/javascript" defer>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: 'ca-pub-3533636310991304',
+    enable_page_level_ads: true
+  });
+</script>
+
+  
+  <script type="text/javascript" src="/blog-bitix/assets/js/app.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        
+
+
+
+
+<header>
+  <div class="row">
+    <div class="col-12 col-lg-4"></div>
+    <div class="col-12 col-lg-4">
+      <h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2>
+      <div class="links">
+        
+          <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+        
+        
+          <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
+        
+        
+          <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="/blog-bitix/assets/images/github.svg" width="50" height="50" class="icon"></a>
+        
+        
+        
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      
+<nav class="nav nav-pills nav-fill">
+  
+    <a href="/blog-bitix/tags/java/" class="nav-item nav-link">Java</a>
+  
+    <a href="/blog-bitix/tags/gnu-linux/" class="nav-item nav-link">GNU/Linux</a>
+  
+    <a href="/blog-bitix/tags/javascript/" class="nav-item nav-link">JavaScript</a>
+  
+    <a href="/blog-bitix/tags/tapestry/" class="nav-item nav-link">Tapestry</a>
+  
+    <a href="/blog-bitix/archive/" class="nav-item nav-link">Archivo y hemeroteca</a>
+  
+    <a href="/blog-bitix/pages/links/" class="nav-item nav-link">Enlaces</a>
+  
+    <a href="/blog-bitix/pages/about/" class="nav-item nav-link">Acerca de...</a>
+  
+</nav>
+
+    </div>
+  </div>
+</header>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 text-center">
+        <ins class="adsbygoogle"
+    style="display: inline-block; width: 970px; height: 250px;"
+    data-ad-client="ca-pub-3533636310991304"
+    data-ad-slot="2975854584"
+    data-type="billboard"></ins>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-12">
+        <div class="adblock-sidebar-container">
+          <div class="adblock-sidebar-container-left"></div>
+          <div class="adblock-sidebar-container-right">
+            <ins class="adsbygoogle adblock-sidebar-vertical"
+    data-ad-client="ca-pub-3533636310991304"
+    data-ad-slot="9933840986"
+    data-ad-format="vertical,rectangle"
+    data-type="auto"></ins>
+          </div>
+        </div>
+        
+<article>
+    <h1>Lookahead y lookbehind en expresiones regulares con Java</h1>
+    <p class="information">
+      
+        Escrito por
+       
+      <span>picodotdev</span> el <time>17/02/2019</time>.
+      
+        <br>
+        
+          
+          <a href="/blog-bitix/tags/java/">java</a>
+        
+          
+          <a href="/blog-bitix/tags/planeta-codigo/">planeta-codigo</a>
+        
+          
+          <a href="/blog-bitix/tags/programacion/">programacion</a>
+        
+      
+      <br>
+      <a href="/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/">Enlace permanente</a>
+      
+        <a href="/blog-bitix/2019/02/lookahead-y-lookbehind-en-expresiones-regulares-con-java/#comments">Comentarios</a>
+      
+      
+    </p>
+
+    
+    
+
+    
+
+    <div class="content">
+      
+
+
+      <div class="logotypes">
+   <img src="/blog-bitix/assets/images/logotypes/java.svg" class="right" width="200" height="" layout="responsive" alt="Java" title="Java">
+</div>
+<p>Las expresiones regulares son un gran invento y muy útil para comprobar que una cadena cumple el patrón definido en la expresión regular, hay coincidencias en partes de la cadena y para reemplazar coincidencias. Son muy potentes para realizar estas tareas pero al mismo tiempo pueden volverse en cierta medida complicadas.</p>
+<p>Una de las funcionalidades que soportan las cadenas es búsqueda hacia delante o <em>lookahead</em> y búsqueda hacia atrás o <em>lookbehind</em>. La primera permite examinar los siguientes caracteres de la cadena analizada y la segunda los caracteres pasados.</p>
+<p>Hay diferentes formas de <em>lookahead</em>, en Java la construcción que permite hacer <em>lookahead</em> es <em>(?=X)</em> donde <em>X</em> es la expresión siguiente, se puede negar la expresión en el caso de querer que no se cumpla <em>X</em> con <em>(?!X)</em>. También existe <em>lookbehind</em> con la construcción <em>(?&lt;=X)</em> para negar que no se cumpla <em>X</em> se ha de emplear <em>(?&lt;!X)</em>, como su nombre sugiere en vez de mirar hacia adelante mira hacia atrás en los caracteres ya analizados.</p>
+<p>Una aplicación práctica en la que usar <em>lookahead</em> es para ocultar los números de una tarjeta de crédito, una cuenta bancaria o un <em>bearer token</em> de un API REST excepto los cuatro últimos caracteres, este podría ser el caso de que esta información sea incluida en los archivos de <em>log</em> de una aplicación que por seguridad es recomendable ocultar. En el artículo <a href="https://picodotdev.github.io/blog-bitix/2019/02/ofuscar-datos-sensibles-en-las-trazas-con-log4j/">Ofuscar datos sensibles en las trazas con Log4j</a> comento varias formas de hacerlo.</p>
+<p>Una tarjeta de crédito está formada por 4 grupos de 4 dígitos separados por espacios cumpliendo la expresión regular <em>\d{4} \d{4} \d{4} \d{4}</em> y un <em>bearer token</em> puede seguir la expresión regular <em>Bearer \w+</em>. Para ocultar la información de estas cadenas excepto los cuatro últimos caracteres hay que comprobar que los primeros complen el patrón añadiéndolos en un grupo de captura para su reemplazo posterior y mirar los cuatro siguientes si también lo cumplen fuera del grupo de captura. En el caso de la tarjeta de crédito se mira que la expresión cumple los primeros números de una tarjeta de crédito y le siguen los restantes, la primera parte se incluye en un grupo de captura con los paréntesis.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix.log4j</span><span class="o">;</span>&#10;&#10;<span class="o">.</span><span class="o">.</span><span class="o">.</span>&#10;&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">LogManager</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="n">Main</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">.</span><span class="o">.</span><span class="o">.</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="k">new</span> <span class="n">SecuredMessage</span><span class="o">(</span><span class="s">&#34;Tarjeta de crédito: 1111 1111 1111 1111, DNI: 11111111A&#34;</span><span class="o">,</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="s">&#34;(\\d{4} \\d{4} \\d{4} \\d{1})(?=\\d{3})&#34;</span><span class="o">,</span> <span class="s">&#34;(\\d{6})(?=\\d{2}[A-Z])&#34;</span><span class="o">)</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&#34;Tarjeta de crédito: 1111 1111 1111 1111, DNI: 11111111A&#34;</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;<span class="o">}</span>&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>Main.java</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span><span class="lnt">22&#10;</span><span class="lnt">23&#10;</span><span class="lnt">24&#10;</span><span class="lnt">25&#10;</span><span class="lnt">26&#10;</span><span class="lnt">27&#10;</span><span class="lnt">28&#10;</span><span class="lnt">29&#10;</span><span class="lnt">30&#10;</span><span class="lnt">31&#10;</span><span class="lnt">32&#10;</span><span class="lnt">33&#10;</span><span class="lnt">34&#10;</span><span class="lnt">35&#10;</span><span class="lnt">36&#10;</span><span class="lnt">37&#10;</span><span class="lnt">38&#10;</span><span class="lnt">39&#10;</span><span class="lnt">40&#10;</span><span class="lnt">41&#10;</span><span class="lnt">42&#10;</span><span class="lnt">43&#10;</span><span class="lnt">44&#10;</span><span class="lnt">45&#10;</span><span class="lnt">46&#10;</span><span class="lnt">47&#10;</span><span class="lnt">48&#10;</span><span class="lnt">49&#10;</span><span class="lnt">50&#10;</span><span class="lnt">51&#10;</span><span class="lnt">52&#10;</span><span class="lnt">53&#10;</span><span class="lnt">54&#10;</span><span class="lnt">55&#10;</span><span class="lnt">56&#10;</span><span class="lnt">57&#10;</span><span class="lnt">58&#10;</span><span class="lnt">59&#10;</span><span class="lnt">60&#10;</span><span class="lnt">61&#10;</span><span class="lnt">62&#10;</span><span class="lnt">63&#10;</span><span class="lnt">64&#10;</span><span class="lnt">65&#10;</span><span class="lnt">66&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix.log4j</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">org.apache.logging.log4j.message.Message</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">java.util.Collection</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">java.util.regex.Matcher</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">java.util.regex.Pattern</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">java.util.stream.Collectors</span><span class="o">;</span>&#10;&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SecuredMessage</span> <span class="kd">implements</span> <span class="n">Message</span> <span class="o">{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">UNMASKED_CHARACTERS</span> <span class="o">=</span> <span class="n">3</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">Message</span> <span class="n">message</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">String</span> <span class="n">string</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">Pattern</span> <span class="n">pattern</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="nf">SecuredMessage</span><span class="o">(</span><span class="n">Message</span> <span class="n">message</span><span class="o">,</span> <span class="n">Collection</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">patterns</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">this</span><span class="o">.</span><span class="na">message</span> <span class="o">=</span> <span class="n">message</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">this</span><span class="o">.</span><span class="na">pattern</span> <span class="o">=</span> <span class="n">compilePatterns</span><span class="o">(</span><span class="n">patterns</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="nf">SecuredMessage</span><span class="o">(</span><span class="n">String</span> <span class="n">string</span><span class="o">,</span> <span class="n">Collection</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">patterns</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">this</span><span class="o">.</span><span class="na">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">this</span><span class="o">.</span><span class="na">pattern</span> <span class="o">=</span> <span class="n">compilePatterns</span><span class="o">(</span><span class="n">patterns</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">.</span><span class="o">.</span><span class="o">.</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@Override</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="n">String</span> <span class="nf">getFormattedMessage</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">securedMessage</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">String</span> <span class="nf">securedMessage</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">if</span> <span class="o">(</span><span class="n">message</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">securedMessage</span><span class="o">(</span><span class="n">message</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">string</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">securedString</span><span class="o">(</span><span class="n">string</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="s">&#34;&#34;</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">Pattern</span> <span class="nf">compilePatterns</span><span class="o">(</span><span class="n">Collection</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">patterns</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="n">patterns</span><span class="o">.</span><span class="na">stream</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">it</span> <span class="o">-</span><span class="o">&gt;</span> <span class="s">&#34;(&#34;</span> <span class="o">+</span> <span class="n">it</span> <span class="o">+</span> <span class="s">&#34;)&#34;</span><span class="o">)</span><span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="n">Collectors</span><span class="o">.</span><span class="na">joining</span><span class="o">(</span><span class="s">&#34;|&#34;</span><span class="o">)</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">String</span> <span class="nf">securedMessage</span><span class="o">(</span><span class="n">Message</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">securedString</span><span class="o">(</span><span class="n">message</span><span class="o">.</span><span class="na">getFormattedMessage</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">String</span> <span class="nf">securedString</span><span class="o">(</span><span class="n">String</span> <span class="n">string</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="n">string</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Matcher</span> <span class="n">matcher</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="na">matcher</span><span class="o">(</span><span class="n">string</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">while</span> <span class="o">(</span><span class="n">matcher</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">String</span> <span class="n">match</span> <span class="o">=</span> <span class="n">matcher</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">String</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">(</span><span class="n">match</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="na">replaceFirst</span><span class="o">(</span><span class="n">match</span><span class="o">,</span> <span class="n">mask</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">result</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">String</span> <span class="nf">mask</span><span class="o">(</span><span class="n">String</span> <span class="n">string</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">string</span><span class="o">.</span><span class="na">replaceAll</span><span class="o">(</span><span class="s">&#34;.&#34;</span><span class="o">,</span> <span class="s">&#34;*&#34;</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;<span class="o">}</span>&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>SecuredMessage.java</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-Yaml" data-lang="Yaml">configuration<span class="p">:</span><span class="w">&#10;</span><span class="w">  </span>status<span class="p">:</span><span class="w"> </span>warn<span class="w">&#10;</span><span class="w">&#10;</span><span class="w">  </span>appenders<span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span>console<span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span>name<span class="p">:</span><span class="w"> </span>STDOUT<span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span>patternLayout<span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>pattern<span class="p">:</span><span class="w"> </span><span class="s2">&#34;%d{DEFAULT} %X{uuid} %-5level %60.60logger %msg%n&#34;</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>replace<span class="p">:</span><span class="w"> &#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </span>regex<span class="p">:</span><span class="w"> </span><span class="s2">&#34;(\\d{4} \\d{4} \\d{4} \\d{1})(?=\\d{3})|(\\d{6})(?=\\d{2}[A-Z])&#34;</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </span>replacement<span class="p">:</span><span class="w"> </span><span class="s2">&#34;**********&#34;</span><span class="w">&#10;</span><span class="w">&#10;</span><span class="w">  </span>loggers<span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span>root<span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span>level<span class="p">:</span><span class="w"> </span>info<span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span>appenderRef<span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>ref<span class="p">:</span><span class="w"> </span>STDOUT</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>log4j2.yaml</span>
+    </div>
+</div>
+<p>El resultado es el siguiente:</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">...&#10;2019-02-10 11:22:47,652  INFO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; io.github.picodotdev.blogbitix.log4j.Main Tarjeta de crédito: ****************111, DNI: ******11A&#10;2019-02-10 11:22:47,653  INFO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; io.github.picodotdev.blogbitix.log4j.Main Tarjeta de crédito: **********111, DNI: **********11A</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>System.out</span>
+    </div>
+</div>
+<p>
+    El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/JavaLog4j">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a> y probarlo en tu equipo ejecutando el comando <code>./gradlew run</code>. 
+</p>
+<div class="reference">
+    Referencia:<br>
+<ul>
+<li><a href="https://picodotdev.github.io/blog-bitix/2018/02/referencias-a-grupos-de-captura-en-expresiones-regulares-y-reemplazos/">Referencias a grupos de captura en expresiones regulares y reemplazos</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2017/09/los-cuantificadores-greedy-reluctant-y-possessive-en-expresiones-regulares/">Los cuantificadores greedy, reluctant y possessive en expresiones regulares</a></li>
+<li><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/regex/Pattern.html">Pattern</a></li>
+</ul>
+</div>
+
+    </div>
+  </article>
+        
+
+        
+	
+	
+	<div class="row related">
+		<div class="col-md-12">
+			Artículos relacionados:
+			<ul>
+				
+				<li><a href="/blog-bitix/2019/02/las-clases-anidadas-inner-anonimas-y-locales-en-java/">Las clases anidadas inner, anónimas y locales en Java</a></li>
+				
+				<li><a href="/blog-bitix/2019/02/ofuscar-datos-sensibles-en-las-trazas-con-log4j/">Ofuscar datos sensibles en las trazas con Log4j</a></li>
+				
+				<li><a href="/blog-bitix/2019/02/servidor-oauth-gateway-y-servicio-rest-utilizando-tokens-jwt-con-spring/">Servidor OAuth, gateway y servicio REST utilizando tokens JWT con Spring</a></li>
+				
+				<li><a href="/blog-bitix/2019/02/convertir-un-json-a-objetos-y-objetos-a-json-con-json-b-gson-y-jackson-en-java/">Convertir un JSON a objetos y objetos a JSON con JSON-B, Gson y Jackson en Java</a></li>
+				
+				<li><a href="/blog-bitix/2019/01/usar-expresiones-jsonpath-para-extraer-datos-de-un-json-en-java/">Usar expresiones JSONPath para extraer datos de un JSON en Java</a></li>
+				
+			</ul>
+		</div>
+	</div>
+	
+
+        
+<div class="row">
+  <div class="col-md-12">
+    <div class="sharethis-inline-share-buttons"></div>
+  </div>
+</div>
+
+
+        <div class="row">
+          <div class="col-12 text-center">
+            <a id="pageBottom"></a>
+            <ins class="adsbygoogle"
+    style="display: inline-block; width: 970px; height: 250px;"
+    data-ad-client="ca-pub-3533636310991304"
+    data-ad-slot="2975854584"
+    data-type="billboard"></ins>
+          </div>
+        </div>
+        
+  <div class="row">
+    <div class="col-md-12">
+      <a id="comments"></a>
+      <div id="disqus_thread"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript" async>
+    var disqus_shortname = 'blog-bitix';
+    var disqus_identifier = 'blog-bitix-385';
+    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2019\/02\/lookahead-y-lookbehind-en-expresiones-regulares-con-java\/';
+    var disqus_script = 'embed.js';
+  </script>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <hr>
+      </div>
+    </div>
+    
+
+
+
+
+
+<footer>
+  <div class="row">
+    <div class="col-12 col-sm-4">
+      <p><strong>Blog Bitix</strong></p>
+      <p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática.</p>
+      <p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p>
+    </div>
+    <div class="col-12 col-sm-4 text-center menu">
+      <ul class="list-unstyled">
+        
+          <li><a href="/blog-bitix/tags/java/">Java</a></li>
+        
+          <li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li>
+        
+          <li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li>
+        
+          <li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li>
+        
+          <li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li>
+        
+          <li><a href="/blog-bitix/pages/links/">Enlaces</a></li>
+        
+          <li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li>
+        
+          <li><a href="/blog-bitix/pages/donate/">Donaciones</a></li>
+        
+          <li><a href="/blog-bitix/pages/about/">Acerca de...</a></li>
+        
+      </ul>
+    </div>
+    <div class="col-12 col-sm-4 text-center links">
+      
+        <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+      
+      
+        <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
+      
+      
+      
+        <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="/blog-bitix/assets/images/github.svg" width="50" height="50" class="icon"></a>
+      
+      
+      
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      Copyleft <span class="copyleft">&copy;</span> 2020 - <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="nofollow"><img src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" width="80" height="15" alt="Creative Commons License" title="Creative Commons License"></a><br />
+      <a href="https://www.planetacodigo.com/" rel="nofollow"><img src="/blog-bitix/assets/images/planeta-codigo.png" width="80" height="15" alt="Planeta código" title="Planeta código"></a>
+      <br/>
+      <a href="https://picodotdev.github.io/blog-bitix/" rel="nofollow">Blog Bitix</a> by <a href="https://picodotdev.github.io/blog-bitix/">pico.dev</a> is licensed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.
+      <br/>
+      <span class="credit">Powered by <a href="https://gohugo.io/" rel="nofollow" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a>.</span>
+      <span class="credit">Background patterns from <a href="https://www.toptal.com/designers/subtlepatterns/" rel="nofollow">Subtle Patterns</a>.</span>
+    </div>
+  </div>
+</footer>
+
+  </div>
+  
+<div class="blueimp-gallery-container">
+  <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false">
+    
+    <div class="slides"></div>
+    
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    
+    <div class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body next"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left prev">
+              <i class="glyphicon glyphicon-chevron-left"></i>
+              Anterior
+            </button>
+            <button type="button" class="btn btn-primary next">
+              Siguiente
+              <i class="glyphicon glyphicon-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  <!-- Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+<script type="text/javascript">
+    window.cookieconsent_options = {
+        "message": "Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.",
+        "dismiss": "Aceptar",
+        "learnMore": "Más información",
+        "link": null,
+        "theme": "dark-bottom"
+    };
+</script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script>
+</body>
+</html>
