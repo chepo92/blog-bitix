@@ -1,4 +1,8 @@
 require(['jquery', 'lozad', 'jquery-blueimp-gallery'], function ($, lozad, blueimp) {
+    function relUrl(path) {
+        return $('meta[name="base"]').attr('href') + path;
+    }
+
     function initBackground() {
         // Background
         function random(min, max) {
@@ -45,7 +49,7 @@ require(['jquery', 'lozad', 'jquery-blueimp-gallery'], function ($, lozad, bluei
     
         var i = random(0, spec.backgrounds.length - 1);
         var b = spec.backgrounds[i];
-        $('body').css('background-image', 'url("assets/images/backgrounds/' + b + '")');
+        $('body').css('background-image', 'url("' + relUrl('assets/images/backgrounds/' + b) + '")');
     }
     
     function initSearch() {
@@ -76,8 +80,22 @@ require(['jquery', 'lozad', 'jquery-blueimp-gallery'], function ($, lozad, bluei
             }
         });
 
+        var shareThisObserver = lozad('div.sharethis-inline-share-buttons', {
+            rootMargin: '50px 0px',
+            load: function(el) {
+                $.ajax({
+                    url: '//platform-api.sharethis.com/js/sharethis.js#property=5920c4ce1bd0670011e06acd&product=inline-share-buttons',
+                    async: true,
+                    cache: true,
+                    dataType: 'script',
+                    success: function() {}
+                });
+            }
+        });
+
         observer.observe();
         disqusObserver.observe();
+        shareThisObserver.observe();
     }
     
     initBackground();
