@@ -31,7 +31,7 @@
 <p>La funcionalidad de registro y descubrimiento consiste en dos partes, por un lado cuando se inicia una instancia de un servicio se registra su ubicación en el servicio de registro y descubrimiento y por otro lado los clientes cuando requieren una instancia de un servicio la buscan en el servicio de descubrimiento.</p>
 <p>El registro en el servicio de descubrimiento puede hacerse de dos formas, que sea el propio servicio el que se registra en el servicio de descubrimiento o que se sea otro servicio el que lo registra. Para el primer caso escribí un artículo con <a href="https://www.consul.io/">Consul</a> como servicio de descubrimiento en una aplicación de <a href="https://projects.spring.io/spring-boot/">Spring Boot</a> que se registra al iniciarse. La ventaja es que es autosuficiente pero adquiere la tarea de autoregistrarse. Por el contrario delegar la trea de registro permite extraerla de los servicios y ofrecer esa funcionalidad por un servicio con esa misión específicamente.</p>
 <ul>
-<li><a href="https://picodotdev.github.io/blog-bitix/2017/01/registro-y-descubrimiento-de-servicios-con-spring-cloud-y-consul/index-amp.html">Registro y descubrimiento de servicios con Spring Cloud y Consul</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2017/01/registro-y-descubrimiento-de-servicios-con-spring-cloud-y-consul/">Registro y descubrimiento de servicios con Spring Cloud y Consul</a></li>
 </ul>
 <p>En este artículo se usa <a href="https://github.com/gliderlabs/registrator">GliderLabs Registrator</a> como servicio que se encarga de registrar en un servicio de descubrimiento como Consul los servicios que se inicien en <a href="https://www.docker.com/">Docker</a>, aunque soporta otros como <a href="https://etcd.io/">etcd</a>.</p>
 <p>Registrator es un contenedor de Docker, su funcionamiento es escuchar los eventos del demonio de Docker y monitorizar cuando se inician nuevos contenedores o cuando se paran. La monitorización la hace a través del <em>socket</em> del servicio de Docker, para lo que hay que montar un volumen en este contenedor con el archivo <em>/var/run/docker.sock</em> del <em>host</em>.</p>
@@ -129,7 +129,7 @@
     <img src="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/alpinelinux.svg" class="right" width="350" height="262" layout="responsive" alt="Alpine Linux" title="Alpine Linux">
 </div>
 <p>En el repositorio de imágenes <a href="https://registry.hub.docker.com/">Docker Hub</a> de <a href="https://www.docker.com/">Docker</a> hay múltiples versiones de cada software <em>contenirizado</em>, alguna de las versiones están etiquetadas con la palabra <em>alpine</em>. Las imágenes de Docker etiquetadas con <em>alpine</em> hacen referencia a que usan como base la distribución <a href="https://www.alpinelinux.org/">Alpine Linux</a> y la razón de usar Alpine Linux es que al ser una distribución minimalista basada en <a href="https://www.busybox.net/">busybox</a> y <a href="https://www.musl-libc.org/">musl-libc</a> hace que las imágenes ocupen bastante menos que una imagen equivalente por ejemplo basada en <a href="https://www.ubuntu.com/">Ubuntu</a> o <a href="https://www.debian.org/">Debian</a>, seguramente porque no contienen una buena cantidad de cosas innecesarias.</p>
-<p>Por ejemplo, la <a href="https://hub.docker.com/_/openjdk/">imagen de Docker que contiene en JDK</a> de Java basada en Debian ocupa 643 MiB y la imagen de Java basada en Alpine Linux ocupa 101 MiB, una diferencia significativa de casi 500 MiB. Con la capacidad de los discos duros actuales no es tanto por lo que ocupan en disco sino por el tiempo que las imágenes tardan en descargarse desde el repositorio e iniciarse los contenedores como es el caso en un <a href="https://picodotdev.github.io/blog-bitix/2017/03/introduccion-y-ejemplo-de-cluster-de-contenedores-con-docker-swarm/index-amp.html">cluster de contenedores Docker</a>.</p>
+<p>Por ejemplo, la <a href="https://hub.docker.com/_/openjdk/">imagen de Docker que contiene en JDK</a> de Java basada en Debian ocupa 643 MiB y la imagen de Java basada en Alpine Linux ocupa 101 MiB, una diferencia significativa de casi 500 MiB. Con la capacidad de los discos duros actuales no es tanto por lo que ocupan en disco sino por el tiempo que las imágenes tardan en descargarse desde el repositorio e iniciarse los contenedores como es el caso en un <a href="https://picodotdev.github.io/blog-bitix/2017/03/introduccion-y-ejemplo-de-cluster-de-contenedores-con-docker-swarm/">cluster de contenedores Docker</a>.</p>
 <div class="media">
   <figure>
   <a href="https://picodotdev.github.io/blog-bitix/2017/04/imagenes-de-docker-con-alpine-linux/images/imagenes-docker_hu253efe971b278639688e2ea3de182c9f_81827_2560x1440_fit_box_2.png" title="Imágenes de Docker con su tamaño. Ver imágenes openjdk, Ubuntu y Alpine. Linux" data-gallery="data-gallery"><img data-src="https://picodotdev.github.io/blog-bitix/2017/04/imagenes-de-docker-con-alpine-linux/images/imagenes-docker_hu253efe971b278639688e2ea3de182c9f_81827_450x400_fit_box_2.png" width="450" height="247" layout="responsive" class="lozad"></a>
@@ -137,7 +137,7 @@
   </figure>
 </div>
 <p>El tiempo de descarga solo se emplea la primera vez que se hace uso de una imagen pero como las imágenes se van actualizando hay que tener en cuenta que en cada nueva versión que se use hay que descargar una nueva imagen, cuanto más pequeñas sean las imágenes menos tiempo se emplea en descargarlas y más rápidamente se iniciarán los contenedores.</p>
-<p>La <a href="https://hub.docker.com/_/ubuntu/">imagen base de Ubuntu</a> con la que crear nuevas ocupa 117 MiB y la <a href="https://hub.docker.com/_/alpine/">imagen base de Alpine Linux</a> únicamente 3.98 MiB. Si creamos imágenes propias basadas en Alpine Linux deberemos saber que esta distribución usa su propio gestor de paquetes <em>apk</em> y su propio <a href="https://pkgs.alpinelinux.org/packages">repositorio de paquetes</a>. Para <a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/index-amp.html">crear una imagen de Docker</a> hay que usar los archivos <em>Dockerfile</em> que contienen las instrucciones para construir la imagen del contenedor.</p>
+<p>La <a href="https://hub.docker.com/_/ubuntu/">imagen base de Ubuntu</a> con la que crear nuevas ocupa 117 MiB y la <a href="https://hub.docker.com/_/alpine/">imagen base de Alpine Linux</a> únicamente 3.98 MiB. Si creamos imágenes propias basadas en Alpine Linux deberemos saber que esta distribución usa su propio gestor de paquetes <em>apk</em> y su propio <a href="https://pkgs.alpinelinux.org/packages">repositorio de paquetes</a>. Para <a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/">crear una imagen de Docker</a> hay que usar los archivos <em>Dockerfile</em> que contienen las instrucciones para construir la imagen del contenedor.</p>
 ]]>
         </content>
         
@@ -145,8 +145,6 @@
                 <category term="blog"/>
             
                 <category term="planeta-codigo"/>
-            
-                <category term="planeta-linux"/>
             
         
     </entry>
@@ -233,8 +231,6 @@
             
                 <category term="planeta-codigo"/>
             
-                <category term="planeta-linux"/>
-            
         
     </entry>
     
@@ -254,7 +250,7 @@
 </div>
 <p>Los contenedores de datos son efímeros, se crean y se destruyen y con ellos los datos que tuviesen en su sistema de archivos de modo que cualquier dato que queramos que sobreviva a la vida del contenedor ha de almacenarse de forma externa, este es el caso de los datos de una base de datos como <a href="https://www.postgresql.org/">PostgreSQL</a> o <a href="https://www.mongodb.com/">MongoDB</a>. Además usando <a href="https://docs.docker.com/swarm/">Docker Swarm</a> se plantea el problema de que hay varios nodos formando un <em>cluster</em> por lo que los datos han de estar accesibles independientemente del nodo en el que sea iniciado el contenedor que los utilice y significa que los datos no pueden estar almacenados en el nodo ya que un contenedor podría ser iniciado en cualquiera de ellos.</p>
 <p>Así que los contenedores iniciados en un <em>cluster</em> de Docker Swarm que usen datos persistentes necesitan un sistema de almacenamiento en red externo a los contenedores y nodos. Una de las opciones disponibles es <a href="https://rexray.codedellemc.com/">REX-Ray</a> que ofrece una configuración sencilla y múltiples proveedores de computación entre las que están las más populares como <a href="https://aws.amazon.com/es/ec2/">Amazon EC2</a>, <a href="https://www.digitalocean.com/">Digital Ocean</a>, <a href="https://cloud.google.com/compute/">Google Compute Engine</a>, <a href="https://azure.microsoft.com/es-es/">microsoft-azure</a> e incluso <a href="https://www.virtualbox.org/">VirtualBox</a>.</p>
-<p>En el siguiente ejemplo uso un <em>cluster</em> de nodos Docker, VirtualBox y REX-Ray para proporcionar volúmenes de datos persistentes para un contenedor que tiene una base de datos postgres basándome en el artículo previo <a href="https://picodotdev.github.io/blog-bitix/2017/03/introduccion-y-ejemplo-de-cluster-de-contenedores-con-docker-swarm/index-amp.html">Crear un <em>cluster</em> de contenedores Docker</a> donde explicaba como crear un <em>cluster</em> de nodos con Docker Swarm.</p>
+<p>En el siguiente ejemplo uso un <em>cluster</em> de nodos Docker, VirtualBox y REX-Ray para proporcionar volúmenes de datos persistentes para un contenedor que tiene una base de datos postgres basándome en el artículo previo <a href="https://picodotdev.github.io/blog-bitix/2017/03/introduccion-y-ejemplo-de-cluster-de-contenedores-con-docker-swarm/">Crear un <em>cluster</em> de contenedores Docker</a> donde explicaba como crear un <em>cluster</em> de nodos con Docker Swarm.</p>
 <p>Para la integración entre VirtualBox y REX-Ray hay que iniciar primero un servidor en el <em>host</em> que permite a REX-Ray hacer llamadas remotas a VirtualBox para que gestione los volúmenes de datos.</p>
 <div class="code">
     <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/usr/bin/env bash&#10;</span><span class="cp"></span>&#10;VBoxManage setproperty websrvauthlibrary null&#10;vboxwebsrv -H 0.0.0.0 -v</code></pre></td></tr></table>&#10;</div>&#10;</div>
@@ -282,7 +278,7 @@
   <figcaption>Instalación de REX-Ray en nodos de Docker Swarm con VirtualBox</figcaption>
   </figure>
 </div>
-<p>Para probar la persistencia de datos usaré un <em>stack</em> iniciado de la misma forma que en artículo <a href="https://picodotdev.github.io/blog-bitix/2017/04/iniciar-un-stack-de-servicios-en-un-cluster-de-docker-swarm/index-amp.html">Iniciar un stack de servicios en un cluster de Docker Swarm</a> pero con un contenedor de postgres que guarda los datos en un volumen de REX-Ray en <em>/var/lib/postgresql/data</em>. Para iniciar el <em>stack</em> el <em>custer</em> de Docker Swarm uso un archivo de <a href="https://docs.docker.com/compose/">Docker Compose</a> con la definición del <em>stack</em> en formato YAML.</p>
+<p>Para probar la persistencia de datos usaré un <em>stack</em> iniciado de la misma forma que en artículo <a href="https://picodotdev.github.io/blog-bitix/2017/04/iniciar-un-stack-de-servicios-en-un-cluster-de-docker-swarm/">Iniciar un stack de servicios en un cluster de Docker Swarm</a> pero con un contenedor de postgres que guarda los datos en un volumen de REX-Ray en <em>/var/lib/postgresql/data</em>. Para iniciar el <em>stack</em> el <em>custer</em> de Docker Swarm uso un archivo de <a href="https://docs.docker.com/compose/">Docker Compose</a> con la definición del <em>stack</em> en formato YAML.</p>
 <div class="code">
     <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-YAML" data-lang="YAML">version<span class="p">:</span><span class="w"> </span><span class="s2">&#34;3.1&#34;</span><span class="w">&#10;</span><span class="w">&#10;</span><span class="w"></span>services<span class="p">:</span><span class="w">&#10;</span><span class="w">  </span>postgres<span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span>image<span class="p">:</span><span class="w"> </span>postgres<span class="p">:</span>latest<span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span>ports<span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span>-<span class="w"> </span><span class="s2">&#34;5432:5432&#34;</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span>volumes<span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span>-<span class="w"> </span>postgres<span class="p">:</span>/var/lib/postgresql/data<span class="w">&#10;</span><span class="w"></span>volumes<span class="p">:</span><span class="w">&#10;</span><span class="w">  </span>postgres<span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span>external<span class="p">:</span><span class="w"> </span><span class="kc">true</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
     <div class="highlight-meta">
@@ -350,8 +346,6 @@
             
                 <category term="planeta-codigo"/>
             
-                <category term="planeta-linux"/>
-            
         
     </entry>
     
@@ -369,7 +363,7 @@
         <![CDATA[<div class="logotypes">
     <img src="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/docker.svg" class="right" width="200" height="150" layout="responsive" alt="Docker" title="Docker">
 </div>
-<p>Una vez que ya hemos <a href="https://picodotdev.github.io/blog-bitix/2017/03/introduccion-y-ejemplo-de-cluster-de-contenedores-con-docker-swarm/index-amp.html">creado un <em>cluster</em> de nodos con Docker Swarm</a> y hemos desplegado algunos servicios ya sea directamente mediante comandos para crear servicios o mediante un <a href="https://picodotdev.github.io/blog-bitix/2017/04/iniciar-un-stack-de-servicios-en-un-cluster-de-docker-swarm/index-amp.html"><em>stack</em> con un archivo similar a un Docker Compose</a> al cabo de un tiempo necesitaremos hacer otras operaciones. Dos de esas operaciónes básicas son escalar hacia arriba o hacia abajo un servicio cambiando el número de instancias de contenedores desplegadas o actualizar la imagen que utilizan los servicios por otra diferente posiblemente más nueva.</p>
+<p>Una vez que ya hemos <a href="https://picodotdev.github.io/blog-bitix/2017/03/introduccion-y-ejemplo-de-cluster-de-contenedores-con-docker-swarm/">creado un <em>cluster</em> de nodos con Docker Swarm</a> y hemos desplegado algunos servicios ya sea directamente mediante comandos para crear servicios o mediante un <a href="https://picodotdev.github.io/blog-bitix/2017/04/iniciar-un-stack-de-servicios-en-un-cluster-de-docker-swarm/"><em>stack</em> con un archivo similar a un Docker Compose</a> al cabo de un tiempo necesitaremos hacer otras operaciones. Dos de esas operaciónes básicas son escalar hacia arriba o hacia abajo un servicio cambiando el número de instancias de contenedores desplegadas o actualizar la imagen que utilizan los servicios por otra diferente posiblemente más nueva.</p>
 <p>En la documentación de <a href="https://www.docker.com/">Docker</a> están detallados y comentados los <a href="https://docs.docker.com/engine/swarm/swarm-tutorial/scale-service/">comandos para escalar un servicio</a>. Por ejemplo, en el <em>cluster</em> de ejemplo formado por tres nodos, uno con el rol de <em>manager</em> y otros dos como <em>worker</em>, ejecutándose en <a href="https://www.virtualbox.org/">VirtualBox</a> y desplegando un servicio para el servidor <a href="https://nginx.org/">nginx</a> con inicialmente una réplica o instancia podemos escalar el servicio para que se cree alguna instancia o contenedor más del servicio con el siguiente comando <code>docker service scale</code>.</p>
 <div class="code">
     <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/usr/bin/env bash&#10;</span><span class="cp"></span>&#10;<span class="c1">#export MACHINE_STORAGE_PATH=&#34;/run/media/picodotdev/BMOVE ROJO/docker-machine/&#34;</span>&#10;<span class="nb">eval</span> <span class="k">$(</span>docker-machine env node-01<span class="k">)</span>&#10;&#10;<span class="nb">echo</span> -e <span class="s2">&#34;\n# Nginx service tasks&#34;</span>&#10;docker service ps nginx&#10;&#10;<span class="nb">echo</span> -e <span class="s2">&#34;\n# Nginx service inspect&#34;</span>&#10;docker service inspect --pretty nginx&#10;&#10;docker service scale <span class="nv">nginx</span><span class="o">=</span><span class="m">4</span>&#10;&#10;sleep 1m&#10;&#10;<span class="nb">echo</span> -e <span class="s2">&#34;\n# Nginx service tasks&#34;</span>&#10;docker service ps nginx&#10;&#10;<span class="nb">echo</span> -e <span class="s2">&#34;\n# Nginx service inspect&#34;</span>&#10;docker service inspect --pretty nginx&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
@@ -432,8 +426,6 @@
             
                 <category term="planeta-codigo"/>
             
-                <category term="planeta-linux"/>
-            
         
     </entry>
     
@@ -451,8 +443,8 @@
         <![CDATA[<div class="logotypes">
     <img src="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/docker.svg" class="right" width="200" height="150" layout="responsive" alt="Docker" title="Docker">
 </div>
-<p>Con <a href="https://docs.docker.com/compose/">Docker Compose</a> se pueden <a href="https://picodotdev.github.io/blog-bitix/2015/07/aplicaciones-multicontenedor-con-docker-compose/index-amp.html">definir en un único archivo un conjunto de contenedores</a> que forma un servicio o aplicación y que se lanzan como una unidad. En vez de ejecutar los comandos individuales que inician cada contenedor el archivo en formato <a href="https://www.yaml.org/">yaml</a> de Docker Compose define varios contenedores y al ser un archivo de texto es añadible a un sistema de control de versiones para registrar los cambios. La información del archivo de Docker Compose es la misma que se indicaría en el comando para iniciar un contenedor individual.</p>
-<p>En versiones más recientes se ha modificado ligeramente el formato del archivo de Docker Compose para añadirle las características necesarias que necesita <a href="https://docs.docker.com/swarm/">Docker Swarm</a>, la <a href="https://picodotdev.github.io/blog-bitix/2017/03/introduccion-y-ejemplo-de-cluster-de-contenedores-con-docker-swarm/index-amp.html">herramienta integrada en Docker que permite crear <em>clusters</em> de nodos</a> que ejecuten contenedores <a href="https://www.docker.com/">Docker</a>. A estos archivos ahora se les denomina como <em>stacks</em>. Así hay nuevas secciones como <em>services</em>, <em>networks</em>, <em>volumes</em> y <em>secrets</em> entre otras para soportar algunas funcionalidades adicionales. La sección <em>services</em> es similar a la que usábamos en Docker Compose y define los contenedores. Por ejemplo, para definir que el servicio se componga de un contenedor con un servidor web <a href="https://nginx.org/">nginx</a> usaríamos el siguiente archivo. El parámetro <em>version</em> es muy importante ya que indica las opciones soportadas en el archivo.</p>
+<p>Con <a href="https://docs.docker.com/compose/">Docker Compose</a> se pueden <a href="https://picodotdev.github.io/blog-bitix/2015/07/aplicaciones-multicontenedor-con-docker-compose/">definir en un único archivo un conjunto de contenedores</a> que forma un servicio o aplicación y que se lanzan como una unidad. En vez de ejecutar los comandos individuales que inician cada contenedor el archivo en formato <a href="https://www.yaml.org/">yaml</a> de Docker Compose define varios contenedores y al ser un archivo de texto es añadible a un sistema de control de versiones para registrar los cambios. La información del archivo de Docker Compose es la misma que se indicaría en el comando para iniciar un contenedor individual.</p>
+<p>En versiones más recientes se ha modificado ligeramente el formato del archivo de Docker Compose para añadirle las características necesarias que necesita <a href="https://docs.docker.com/swarm/">Docker Swarm</a>, la <a href="https://picodotdev.github.io/blog-bitix/2017/03/introduccion-y-ejemplo-de-cluster-de-contenedores-con-docker-swarm/">herramienta integrada en Docker que permite crear <em>clusters</em> de nodos</a> que ejecuten contenedores <a href="https://www.docker.com/">Docker</a>. A estos archivos ahora se les denomina como <em>stacks</em>. Así hay nuevas secciones como <em>services</em>, <em>networks</em>, <em>volumes</em> y <em>secrets</em> entre otras para soportar algunas funcionalidades adicionales. La sección <em>services</em> es similar a la que usábamos en Docker Compose y define los contenedores. Por ejemplo, para definir que el servicio se componga de un contenedor con un servidor web <a href="https://nginx.org/">nginx</a> usaríamos el siguiente archivo. El parámetro <em>version</em> es muy importante ya que indica las opciones soportadas en el archivo.</p>
 <div class="code">
     <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-YAML" data-lang="YAML">version<span class="p">:</span><span class="w"> </span><span class="s2">&#34;3.1&#34;</span><span class="w">&#10;</span><span class="w">&#10;</span><span class="w"></span>services<span class="p">:</span><span class="w">&#10;</span><span class="w">  </span>nginx<span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span>image<span class="p">:</span><span class="w"> </span>nginx<span class="p">:</span>stable-alpine<span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span>ports<span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span>-<span class="w"> </span><span class="s2">&#34;80:80&#34;</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span>-<span class="w"> </span><span class="s2">&#34;443:443&#34;</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span>deploy<span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span>replicas<span class="p">:</span><span class="w"> </span><span class="m">2</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
     <div class="highlight-meta">
@@ -490,7 +482,14 @@
     </div>
 </div>
 <p>Un libro que me ha gustado mucho y que recomiendo leer sobre Docker Swarm es <a href="https://amzn.to/2mIirti">The Devops 2.1 Toolkit</a> que lo explica detalladamente y todo el libro está orientado a como usarlo en un entorno de producción. Un libro más introductorio que también he leído y que está bastante bien es <a href="https://amzn.to/2mF3Xtj">Docker in Action</a>.</p>
-<p>Docker Swarm es una opción simple y que está integrada en Docker pero no ofrece todas las funcionalidades de algunas otras opciones que el algunos casos de uso algo más avanzados son necesarias o convenientes. <a href="https://www.nomadproject.io/">Nomad</a> es otra opción simple para gestionar un conjunto de aplicaciones o servicios pero con algunas funcionalidades adicionales que no posee Docker Swarm como escribo en <a href="https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/index-amp.html">Introducción a Nomad para gestionar aplicaciones y microservicios</a>.</p>
+<div class="media-amazon">
+  <iframe style="width:120px;height:240px;" width="120" height="240" scrolling="no" frameborder="0" data-src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1633430235&amp;linkId=a6c4acab72c208d29232f2e0a8edb8ee" class="lozad"></iframe>
+  <iframe style="width:120px;height:240px;" width="120" height="240" scrolling="no" frameborder="0" data-src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1542468914&amp;linkId=2101ae950cfcfe9e69b6cc1210e4bf2c" class="lozad"></iframe>
+</div>
+<div class="media-amazon">
+  <iframe style="width:120px;height:240px;" width="120" height="240" scrolling="no" frameborder="0" data-src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;language=es_ES&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=&amp;linkId=" class="lozad"></iframe>
+</div>
+<p>Docker Swarm es una opción simple y que está integrada en Docker pero no ofrece todas las funcionalidades de algunas otras opciones que el algunos casos de uso algo más avanzados son necesarias o convenientes. <a href="https://www.nomadproject.io/">Nomad</a> es otra opción simple para gestionar un conjunto de aplicaciones o servicios pero con algunas funcionalidades adicionales que no posee Docker Swarm como escribo en <a href="https://picodotdev.github.io/blog-bitix/2019/04/introduccion-a-nomad-para-gestionar-aplicaciones-y-microservicios/">Introducción a Nomad para gestionar aplicaciones y microservicios</a>.</p>
 <p>
     El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/DockerSwarm">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en <a href="https://github.com/">GitHub</a>. 
 </p>
@@ -508,8 +507,6 @@
                 <category term="blog"/>
             
                 <category term="planeta-codigo"/>
-            
-                <category term="planeta-linux"/>
             
         
     </entry>
@@ -574,6 +571,13 @@
     </div>
 </div>
 <p>Un libro que me ha gustado mucho y que recomiendo leer sobre Docker Swarm es <a href="https://amzn.to/2mIirti">The Devops 2.1 Toolkit</a> que lo explica detalladamente y todo el libro está orientado a como usarlo en un entorno de producción. Un libro más introductorio que también he leído y que está bastante bien es <a href="https://amzn.to/2mF3Xtj">Docker in Action</a>.</p>
+<div class="media-amazon">
+  <iframe style="width:120px;height:240px;" width="120" height="240" scrolling="no" frameborder="0" data-src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1633430235&amp;linkId=a6c4acab72c208d29232f2e0a8edb8ee" class="lozad"></iframe>
+  <iframe style="width:120px;height:240px;" width="120" height="240" scrolling="no" frameborder="0" data-src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1542468914&amp;linkId=2101ae950cfcfe9e69b6cc1210e4bf2c" class="lozad"></iframe>
+</div>
+<div class="media-amazon">
+  <iframe style="width:120px;height:240px;" width="120" height="240" scrolling="no" frameborder="0" data-src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;language=es_ES&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=&amp;linkId=" class="lozad"></iframe>
+</div>
 <p>Finalmente, quizás si estás usando GNU/Linux y VirtualBox como yo al crear los nodos con el comando <code>docker-machine</code> te produzca el siguiente error (quizá se corrija en futuras versiones de Docker o VirtualBox).</p>
 <div class="code">
     <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">Setting Docker configuration on the remote daemon...&#10;&#10;This machine has been allocated an IP address, but Docker Machine could not&#10;reach it successfully.&#10;&#10;SSH for the machine should still work, but connecting to exposed ports, such as&#10;the Docker daemon port (usually &lt;ip&gt;:2376), may not work properly.&#10;&#10;You may need to add the route manually, or use another related workaround.&#10;&#10;This could be due to a VPN, proxy, or host file configuration issue.&#10;&#10;You also might want to clear any VirtualBox host only interfaces you are not using.&#10;Checking connection to Docker...&#10;Error creating machine: Error checking the host: Error checking and/or regenerating the certs: There was an error validating certificates for host &#34;192.168.99.100:2376&#34;: dial tcp 192.168.99.100:2376: i/o timeout&#10;You can attempt to regenerate them using &#39;docker-machine regenerate-certs [name]&#39;.&#10;Be advised that this will trigger a Docker daemon restart which might stop running containers.</code></pre></td></tr></table>&#10;</div>&#10;</div>
@@ -600,8 +604,6 @@
             
                 <category term="planeta-codigo"/>
             
-                <category term="planeta-linux"/>
-            
         
     </entry>
     
@@ -619,7 +621,7 @@
         <![CDATA[<div class="logotypes">
     <img src="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/docker.svg" class="right" width="200" height="150" layout="responsive" alt="Docker" title="Docker">
 </div>
-<p>Por defecto el directorio donde se guardan las imágenes y los contenedores junto con otros metadatos de <a href="https://www.docker.com/">Docker</a> es <em>/var/lib/docker</em>. En mi caso hace un tiempo me compre un <a href="https://picodotdev.github.io/blog-bitix/2014/03/desempaquetado-y-analisis-samsung-840-evo-ssd-250-gb/index-amp.html">disco de estado sólido Samsung 840 EVO de 250 GiB</a> y comenté en el artículo del anterior enlace. Aunque probablemente un disco SSD sea suficientemente fiable como para que antes de que falle cambiémos de ordenador porque ya es antiguo, yo trato de evitar hacer muchas escrituras al disco. Al trabajar con Docker ya sea descargando imágenes, <a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/index-amp.html">construyendo imágenes propias con archivos Dockerfile</a> y al arrancar contenedores cuyos procesos escriben en disco prefiero externalizar esas escrituras en una unidad USB ya sea un pendrive o un disco duro. En este artículo comentaré como modificar Docker para que las imágenes y los contenedores estén almacenados en una memoria USB o en otra localización de la por defecto.</p>
+<p>Por defecto el directorio donde se guardan las imágenes y los contenedores junto con otros metadatos de <a href="https://www.docker.com/">Docker</a> es <em>/var/lib/docker</em>. En mi caso hace un tiempo me compre un <a href="https://picodotdev.github.io/blog-bitix/2014/03/desempaquetado-y-analisis-samsung-840-evo-ssd-250-gb/">disco de estado sólido Samsung 840 EVO de 250 GiB</a> y comenté en el artículo del anterior enlace. Aunque probablemente un disco SSD sea suficientemente fiable como para que antes de que falle cambiémos de ordenador porque ya es antiguo, yo trato de evitar hacer muchas escrituras al disco. Al trabajar con Docker ya sea descargando imágenes, <a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/">construyendo imágenes propias con archivos Dockerfile</a> y al arrancar contenedores cuyos procesos escriben en disco prefiero externalizar esas escrituras en una unidad USB ya sea un pendrive o un disco duro. En este artículo comentaré como modificar Docker para que las imágenes y los contenedores estén almacenados en una memoria USB o en otra localización de la por defecto.</p>
 <p>En Arch Linux el proceso de docker se arranca con un servicio de systemd:</p>
 <div class="code">
     <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-bash" data-lang="bash">$ sudo systemctl start docker.service&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
@@ -660,8 +662,6 @@
             
                 <category term="planeta-codigo"/>
             
-                <category term="planeta-linux"/>
-            
         
     </entry>
     
@@ -679,7 +679,7 @@
         <![CDATA[<div class="logotypes">
     <img src="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/docker.svg" class="right" width="200" height="150" layout="responsive" alt="Docker" title="Docker">
 </div>
-<p><a href="https://www.docker.com/">Docker</a> ha dejado de ser únicamente una tecnología de contenedores formando un ecosistema alrededor de docker más completo, <a href="https://docs.docker.com/compose/">Docker Compose</a> que permite <a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/index-amp.html">definir un grupo de contenedores en un archivo</a>, por supuesto parte importante de este ecosistema es <a href="https://registry.hub.docker.com/">Docker Hub</a> para <a href="https://picodotdev.github.io/blog-bitix/2015/07/crear-y-usar-un-repositorio-en-docker-hub/index-amp.html">compartir imágenes de contenedores</a> y <a href="https://docs.docker.com/swarm/">Docker Swarm</a> que permite formar un <em>cluster</em> de máquinas. En este artículo comentaré cómo usar <a href="https://docs.docker.com/machine/">Docker Machine</a> y dejaré para un futuro <a href="https://docs.docker.com/swarm/">Docker Swarm</a> (ya que por el momento las pruebas que he hecho no han sido exitosas).</p>
+<p><a href="https://www.docker.com/">Docker</a> ha dejado de ser únicamente una tecnología de contenedores formando un ecosistema alrededor de docker más completo, <a href="https://docs.docker.com/compose/">Docker Compose</a> que permite <a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/">definir un grupo de contenedores en un archivo</a>, por supuesto parte importante de este ecosistema es <a href="https://registry.hub.docker.com/">Docker Hub</a> para <a href="https://picodotdev.github.io/blog-bitix/2015/07/crear-y-usar-un-repositorio-en-docker-hub/">compartir imágenes de contenedores</a> y <a href="https://docs.docker.com/swarm/">Docker Swarm</a> que permite formar un <em>cluster</em> de máquinas. En este artículo comentaré cómo usar <a href="https://docs.docker.com/machine/">Docker Machine</a> y dejaré para un futuro <a href="https://docs.docker.com/swarm/">Docker Swarm</a> (ya que por el momento las pruebas que he hecho no han sido exitosas).</p>
 <p>Antes de nada decir que tanto Docker Machine en el momento de escribir este artículo están en las fases iniciales de desarrollo y pueden cambiar significativamente antes de lanzar una versión 1.0, ahora Docker Machine está en las version 0.3.0. La combinación de Docker Machine y Docker Swarm en algunos puntos son parecidos a los que se ofrecen en <a href="https://coreos.com/">CoreOS</a>.</p>
 <p>Si has usado <a href="https://www.vagrantup.com/">Vagrant</a> te resultará Docker Machine muy similar ya que permite crear máquinas virtuales en diferentes proveedores en una máquina anfitrión con <a href="https://www.virtualbox.org/">VirtualBox</a> hasta <a href="https://aws.amazon.com/es/ec2/">Amazon EC2</a> o <a href="https://www.digitalocean.com/">Digital Ocean</a>, la <a href="https://docs.docker.com/machine/#drivers">lista de controladores soportados</a> es bastante amplia. Estas máquinas que creamos con Docker Machine están destinadas como único objetivo a albergar contenedores docker usando el sistema operativo <a href="http://boot2docker.io/">boot2docker</a>.</p>
 <p>Para usar Docker Machine debemos <a href="https://github.com/docker/machine/releases">descargar el binario</a>, darle permisos de ejecución y si queremos añadirlo a la variable <em>PATH</em> del sistema.</p>
@@ -747,8 +747,6 @@
             
                 <category term="planeta-codigo"/>
             
-                <category term="planeta-linux"/>
-            
         
     </entry>
     
@@ -767,9 +765,9 @@
     <img src="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/docker.svg" class="right" width="200" height="150" layout="responsive" alt="Docker" title="Docker">
 </div>
 <p>Probablemente uno de los éxitos de Docker más que la propia tecnología de contenedores sea <a href="https://registry.hub.docker.com/">Docker Hub</a> que permite a los usuarios compartir las imágenes construidas, se podría decir que es el <a href="https://github.com/">GitHub</a> de los contenedores docker y quizá por ello el paralelismo en el nombre entre ambos. Docker Hub permite subir imágenes o usar las imágenes oficiales de <a href="https://www.postgresql.org/">postgresql</a>, <a href="https://redis.io/">redis</a>, <a href="https://www.mysql.com/">mysql</a>, <a href="https://www.ubuntu.com/">ubuntu</a>, <a href="https://www.rabbitmq.com/">rabbitmq</a>, &hellip; y otra <a href="https://registry.hub.docker.com/">multitud de proyectos</a>.</p>
-<p>El <a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/index-amp.html">archivo Dockerfile con el que construimos una imagen</a> podemos hospedarlo en un repositorio de GitHub y que Docker Hub lo obtenga para construir la imagen. Docker Hub ofrece repositorios públicos en los que colocar las imágenes que cualquier otro usuario puede acceder y usar o repositorios privados con cierto coste según el número de repositorios privados, el primer repositorio privado es gratuito.</p>
+<p>El <a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/">archivo Dockerfile con el que construimos una imagen</a> podemos hospedarlo en un repositorio de GitHub y que Docker Hub lo obtenga para construir la imagen. Docker Hub ofrece repositorios públicos en los que colocar las imágenes que cualquier otro usuario puede acceder y usar o repositorios privados con cierto coste según el número de repositorios privados, el primer repositorio privado es gratuito.</p>
 <h3 id="otros-artculos-sobre-docker">Otros artículos sobre Docker</h3>
-<p>Este artículo forma parte de otros artículos sobre Docker que ya he escrito si quieres empezar por el principio puedes leer primero la <a href="https://picodotdev.github.io/blog-bitix/2014/10/introduccion-y-caracteristicas-de-docker/index-amp.html">Introducción y características sobre Docker</a>, el <a href="https://picodotdev.github.io/blog-bitix/2014/11/inicio-basico-de-docker/index-amp.html">Inicio básico de Docker</a>, <a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/index-amp.html">Como crear una imagen con un Dockerfile</a> o <a href="https://picodotdev.github.io/blog-bitix/2015/07/aplicaciones-multicontenedor-con-docker-compose/index-amp.html">Como usar docker con Docker Compose</a>. En siguientes artículos hablaré de otras herramientas como Docker Machine y Docker Swarm.</p>
+<p>Este artículo forma parte de otros artículos sobre Docker que ya he escrito si quieres empezar por el principio puedes leer primero la <a href="https://picodotdev.github.io/blog-bitix/2014/10/introduccion-y-caracteristicas-de-docker/">Introducción y características sobre Docker</a>, el <a href="https://picodotdev.github.io/blog-bitix/2014/11/inicio-basico-de-docker/">Inicio básico de Docker</a>, <a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/">Como crear una imagen con un Dockerfile</a> o <a href="https://picodotdev.github.io/blog-bitix/2015/07/aplicaciones-multicontenedor-con-docker-compose/">Como usar docker con Docker Compose</a>. En siguientes artículos hablaré de otras herramientas como Docker Machine y Docker Swarm.</p>
 <p>A continuación explicaré como crear un repositorio en Docker Hub que obtenga los Dockerfile de un repositorio de GitHub y construya las imágenes de los Dockerfile de forma automática cuando haya cambios en los archivos dockerfile de GitHub.</p>
 <h3 id="crear-una-cuenta-en-docker-hub">Crear una cuenta en Docker Hub</h3>
 <p>Primero necesitaremos crear una cuenta en Docker Hub. El nombre de usuario determinará el nombre de las imágenes, siendo mi nombre de usuario <em>picodotdev</em> al usar las imágenes debería usar:</p>
@@ -812,8 +810,6 @@
             
                 <category term="planeta-codigo"/>
             
-                <category term="planeta-linux"/>
-            
         
     </entry>
     
@@ -831,7 +827,7 @@
         <![CDATA[<div class="logotypes">
     <img src="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/docker.svg" class="right" width="200" height="150" layout="responsive" alt="Docker" title="Docker">
 </div>
-<p>Una vez que ya sabemos que nos puede proporcionar una de las herramientas de la que más se está hablando con la <a href="https://picodotdev.github.io/blog-bitix/2014/10/introduccion-y-caracteristicas-de-docker/index-amp.html">introducción a docker</a>, conocemos <a href="https://picodotdev.github.io/blog-bitix/2014/11/inicio-basico-de-docker/index-amp.html">como empezar a usar docker</a> y sabemos <a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/index-amp.html">cómo crear nuestras propias imágenes de docker</a> para los propósitos específicos que necesitemos nos resultará interesante algunas de las nuevas herramientas que proporciona docker. El ecosistema de docker ya no solo se compone del entorno de ejecución de los contenedores, explicadas de forma básica son:</p>
+<p>Una vez que ya sabemos que nos puede proporcionar una de las herramientas de la que más se está hablando con la <a href="https://picodotdev.github.io/blog-bitix/2014/10/introduccion-y-caracteristicas-de-docker/">introducción a docker</a>, conocemos <a href="https://picodotdev.github.io/blog-bitix/2014/11/inicio-basico-de-docker/">como empezar a usar docker</a> y sabemos <a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/">cómo crear nuestras propias imágenes de docker</a> para los propósitos específicos que necesitemos nos resultará interesante algunas de las nuevas herramientas que proporciona docker. El ecosistema de docker ya no solo se compone del entorno de ejecución de los contenedores, explicadas de forma básica son:</p>
 <ul>
 <li><a href="https://www.docker.com/">Docker</a>: el sistema de contenedores (<em>runtime</em>, imágenes, &hellip;).</li>
 <li><a href="https://registry.hub.docker.com/">Docker Hub</a>: el repositorio de imágenes que las diferentes herramientas de forma oficial o a través de usuarios construyen y comparten imágenes que cualquiera puede usar.</li>
@@ -896,11 +892,17 @@
         <figcaption>Comandos básicos de Docker Compose</figcaption>
     </figure>
 </div>
+<div class="media-amazon">
+  <iframe style="width:120px;height:240px;" width="120" height="240" scrolling="no" frameborder="0" data-src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1633430235&amp;linkId=9d344246cd59cd65a952305379c2556a" class="lozad"></iframe>
+</div>
+<div class="media-amazon">
+  <iframe style="width:120px;height:240px;" width="120" height="240" scrolling="no" frameborder="0" data-src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;language=es_ES&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=&amp;linkId=" class="lozad"></iframe>
+</div>
 <p>En las siguientes semanas publicaré más artículos sobre esta serie de Docker comentando <a href="https://registry.hub.docker.com/">Docker Hub</a>, <a href="https://docs.docker.com/machine/">Docker Machine</a> y explicaré de qué forma nos pueden ser útiles estas otras herramientas.</p>
 <div class="reference">
     Referencia:<br>
 <ul>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/04/introduccion-a-elasticsearch/index-amp.html">Introducción a elasticsearch</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/04/introduccion-a-elasticsearch/">Introducción a elasticsearch</a></li>
 </ul>
 </div>
 ]]>
@@ -910,8 +912,6 @@
                 <category term="gnu-linux"/>
             
                 <category term="planeta-codigo"/>
-            
-                <category term="planeta-linux"/>
             
         
     </entry>
@@ -931,7 +931,7 @@
 <div class="logotypes">
     <img src="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/docker.svg" class="right" width="200" height="150" layout="responsive" alt="Docker" title="Docker">
 </div>
-<p>En la <a href="https://picodotdev.github.io/blog-bitix/2014/10/introduccion-y-caracteristicas-de-docker/index-amp.html">introducción de Docker</a> y <a href="https://picodotdev.github.io/blog-bitix/2014/11/inicio-basico-de-docker/index-amp.html">inicio básico de docker</a> explicaba como usar Docker y en la <a href="https://picodotdev.github.io/blog-bitix/2014/11/introduccion-a-ansible/index-amp.html">introducción a Ansible</a> explicaba las características de Ansible y como usarlo. Podemos usar <a href="https://www.docker.com/">Docker</a> y <a href="https://www.ansible.com/">Ansible</a> de forma separada pero también podemos combinarlas para beneficiarnos de las propiedades de cada una. En Ansible disponemos de dos módulos que nos permite manejar las imágenes y los contenedores de Docker, estos son <a href="http://docs.ansible.com/docker_module.html">docker</a> y <a href="http://docs.ansible.com/docker_image_module.html">docker_image</a>.</p>
+<p>En la <a href="https://picodotdev.github.io/blog-bitix/2014/10/introduccion-y-caracteristicas-de-docker/">introducción de Docker</a> y <a href="https://picodotdev.github.io/blog-bitix/2014/11/inicio-basico-de-docker/">inicio básico de docker</a> explicaba como usar Docker y en la <a href="https://picodotdev.github.io/blog-bitix/2014/11/introduccion-a-ansible/">introducción a Ansible</a> explicaba las características de Ansible y como usarlo. Podemos usar <a href="https://www.docker.com/">Docker</a> y <a href="https://www.ansible.com/">Ansible</a> de forma separada pero también podemos combinarlas para beneficiarnos de las propiedades de cada una. En Ansible disponemos de dos módulos que nos permite manejar las imágenes y los contenedores de Docker, estos son <a href="http://docs.ansible.com/docker_module.html">docker</a> y <a href="http://docs.ansible.com/docker_image_module.html">docker_image</a>.</p>
 <p>Usando tareas de ansible podemos automatizar el arranque del servicio de docker, la construcción de las imágenes con los Dokerfile y el inicio o parada de los contenedores de docker. En el ejemplo se construye una imagen base en la que se basarán el resto de imágenes, se crea una imagen con mysql, otra de redis y finalmente la imagen apps donde se ejecutarán las aplicaciones que usarán los servicios de mysql y redis.</p>
 <div class="code">
     <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-YAML" data-lang="YAML">---<span class="w">&#10;</span><span class="w"></span>-<span class="w"> </span>hosts<span class="p">:</span><span class="w"> </span>devbox<span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>start<span class="w"> </span>docker<span class="w"> </span>service<span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span>service<span class="p">:</span><span class="w"> </span>name=docker<span class="w"> </span>state=started<span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span>sudo<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">&#10;</span><span class="w">   &#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>build<span class="w"> </span>docker<span class="w"> </span>images<span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span>docker_image<span class="p">:</span><span class="w"> </span>name=<span class="s2">&#34;{{ item.name }}&#34;</span><span class="w"> </span>tag=<span class="s2">&#34;{{ item.tag }}&#34;</span><span class="w"> </span>state=<span class="s2">&#34;present&#34;</span><span class="w"> </span>path={{<span class="w"> </span>item.path<span class="w"> </span>}}<span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span>with_items<span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span>-<span class="w"> </span>{<span class="w"> </span>name<span class="p">:</span><span class="w"> </span><span class="s2">&#34;picodotdev/base&#34;</span><span class="p">,</span><span class="w"> </span>tag<span class="p">:</span><span class="w"> </span><span class="s2">&#34;1.0&#34;</span><span class="p">,</span><span class="w"> </span>path<span class="p">:</span><span class="w"> </span><span class="s2">&#34;../docker/base&#34;</span><span class="w"> </span>}<span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span>-<span class="w"> </span>{<span class="w"> </span>name<span class="p">:</span><span class="w"> </span><span class="s2">&#34;picodotdev/mysql&#34;</span><span class="p">,</span><span class="w"> </span>tag<span class="p">:</span><span class="w"> </span><span class="s2">&#34;1.0&#34;</span><span class="p">,</span><span class="w"> </span>path<span class="p">:</span><span class="w"> </span><span class="s2">&#34;../docker/mysql&#34;</span><span class="w"> </span>}<span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span>-<span class="w"> </span>{<span class="w"> </span>name<span class="p">:</span><span class="w"> </span><span class="s2">&#34;picodotdev/redis&#34;</span><span class="p">,</span><span class="w"> </span>tag<span class="p">:</span><span class="w"> </span><span class="s2">&#34;1.0&#34;</span><span class="p">,</span><span class="w"> </span>path<span class="p">:</span><span class="w"> </span><span class="s2">&#34;../docker/redis&#34;</span><span class="w"> </span>}<span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span>-<span class="w"> </span>{<span class="w"> </span>name<span class="p">:</span><span class="w"> </span><span class="s2">&#34;picodotdev/apps&#34;</span><span class="p">,</span><span class="w"> </span>tag<span class="p">:</span><span class="w"> </span><span class="s2">&#34;1.0&#34;</span><span class="p">,</span><span class="w"> </span>path<span class="p">:</span><span class="w"> </span><span class="s2">&#34;../docker/apps&#34;</span><span class="w"> </span>}</code></pre></td></tr></table>&#10;</div>&#10;</div>
@@ -959,11 +959,11 @@
 <div class="reference">
     Referencia:<br>
 <ul>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/10/introduccion-y-caracteristicas-de-docker/index-amp.html">Introducción a Docker</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/inicio-basico-de-docker/index-amp.html">Guía de inicio básico de Docker</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/index-amp.html">Cómo crear una imagen para Docker usando un Dockerfile</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/introduccion-a-ansible/index-amp.html">Introducción a Ansible</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/introduccion-a-bitnami/index-amp.html">Introducción a Bitnami</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/10/introduccion-y-caracteristicas-de-docker/">Introducción a Docker</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/inicio-basico-de-docker/">Guía de inicio básico de Docker</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/">Cómo crear una imagen para Docker usando un Dockerfile</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/introduccion-a-ansible/">Introducción a Ansible</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/introduccion-a-bitnami/">Introducción a Bitnami</a></li>
 <li><a href="http://docs.ansible.com/docker_module.html%3Cbr%3E">http://docs.ansible.com/docker_module.html&lt;br&gt;</a></li>
 <li><a href="http://docs.ansible.com/docker_image_module.html">http://docs.ansible.com/docker_image_module.html</a></li>
 </ul>
@@ -973,8 +973,6 @@
         
             
                 <category term="gnu-linux"/>
-            
-                <category term="planeta-linux"/>
             
                 <category term="planeta-codigo"/>
             
@@ -995,7 +993,7 @@
         <![CDATA[<div class="logotypes">
     <img src="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/docker.svg" class="right" width="200" height="150" layout="responsive" alt="Docker" title="Docker">
 </div>
-<p>Las imágenes de <a href="https://www.docker.com/">docker</a> son el sistema de archivos que usa el proceso o procesos que se arrancan en los contenedores. Si nos convencen las <a href="https://picodotdev.github.io/blog-bitix/2014/10/introduccion-y-caracteristicas-de-docker/index-amp.html">características de docker</a> y estamos decididos a usarlo y ya sabemos <a href="https://picodotdev.github.io/blog-bitix/2014/11/inicio-basico-de-docker/index-amp.html">como administrar de forma básica los contendores</a> si queremos disponer de una imagen adaptada a los servicios que necesitamos para iniciar contenedores tendremos que crearla, en este artículo explicaré cómo crear una imagen para docker personalizada.</p>
+<p>Las imágenes de <a href="https://www.docker.com/">docker</a> son el sistema de archivos que usa el proceso o procesos que se arrancan en los contenedores. Si nos convencen las <a href="https://picodotdev.github.io/blog-bitix/2014/10/introduccion-y-caracteristicas-de-docker/">características de docker</a> y estamos decididos a usarlo y ya sabemos <a href="https://picodotdev.github.io/blog-bitix/2014/11/inicio-basico-de-docker/">como administrar de forma básica los contendores</a> si queremos disponer de una imagen adaptada a los servicios que necesitamos para iniciar contenedores tendremos que crearla, en este artículo explicaré cómo crear una imagen para docker personalizada.</p>
 <p>Antes de crear una imagen para docker podemos buscar en el <a href="https://registry.hub.docker.com/">registro de imágenes de docker</a> que han creado otros usuarios y los han compartido por si hay alguna que ya se adapte a nuestras necesidades, si nos sirve alguna y es algo popular nos evitaremos tener que modificarla nosotros mismos según salgan nuevas versiones de los servicios que use. El registro de imágenes de docker es un servicio en el que los usuarios comparten y colaboran en la creación de las imágenes. Para los servicios más conocidos dispondremos ya de las imágenes como podrían ser: <a href="https://registry.hub.docker.com/_/mysql/">mysql</a>, <a href="https://registry.hub.docker.com/_/redis/">redis</a>, <a href="https://registry.hub.docker.com/_/postgres/">postgresql</a>, <a href="https://registry.hub.docker.com/_/ubuntu/">ubuntu</a>, <a href="https://registry.hub.docker.com/_/wordpress/">wordpress</a>, <a href="https://registry.hub.docker.com/_/nginx/">nginx</a>, <a href="https://registry.hub.docker.com/_/mongo/">mongodb</a>, &hellip;</p>
 <p>Si no hay ninguna que se adapte totalmente a nuestras necesidades, no nos gusta como están construidas las existes o no confiamos en el mantenimiento que puedan tener esas imágenes podemos crear las nuestras propias. Para crear una imagen de docker se necesita una receta en forma de <a href="http://docs.docker.com/reference/builder/">archivo Dockerfile</a> que contiene la descripción e instrucciones para construir la imagen. Para crear un dockerfile podemos basarnos en los de las imágenes del registro de docker.</p>
 <p>Este podría ser el contenido y la receta de un dockerfile si quisiésemos crear una imagen de docker para mysql, lo paso a explicar después.</p>
@@ -1052,15 +1050,21 @@
     </div>
 </div>
 <p>En los siguientes artículos comentaré la herramienta de automatización <a href="https://www.ansible.com/">ansible</a> y como sacarle provecho para iniciar los contenedores en una máquina de desarrollo (devbox). También en algún otro artículo comentaré la opción de <a href="https://bitnami.com/">bitnami</a> que dentro de poco ofrecerá soporte para docker y como con esta opción podemos usar un servicio «out-of-the-box» si tener que crear ni siquiera un Dockerfile o tener que documentarnos para instalar un servicio (que en algunos casos pueden tener cierta complejidad) aunque sea usando virtualización con <a href="https://www.virtualbox.org/">virtualbox</a> o computación en la nube.</p>
+<div class="media-amazon">
+  <iframe style="width:120px;height:240px;" width="120" height="240" scrolling="no" frameborder="0" data-src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1633430235&amp;linkId=9d344246cd59cd65a952305379c2556a" class="lozad"></iframe>
+</div>
+<div class="media-amazon">
+  <iframe style="width:120px;height:240px;" width="120" height="240" scrolling="no" frameborder="0" data-src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;language=es_ES&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=&amp;linkId=" class="lozad"></iframe>
+</div>
 <div class="reference">
     Referencia:<br>
 <ul>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/10/introduccion-y-caracteristicas-de-docker/index-amp.html">Introducción a Docker</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/inicio-basico-de-docker/index-amp.html">Guía de inicio básico de Docker</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/10/introduccion-y-caracteristicas-de-docker/">Introducción a Docker</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/inicio-basico-de-docker/">Guía de inicio básico de Docker</a></li>
 <li><a href="http://www.nkode.io/2014/08/24/valuable-docker-links.html">Lista de enlaces sobre Docker</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/introduccion-a-ansible/index-amp.html">Introducción a Ansible</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/integracion-entre-ansible-y-docker/index-amp.html">Integración entre Ansible y Docker</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/introduccion-a-bitnami/index-amp.html">Introducción a Bitnami</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/introduccion-a-ansible/">Introducción a Ansible</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/integracion-entre-ansible-y-docker/">Integración entre Ansible y Docker</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/introduccion-a-bitnami/">Introducción a Bitnami</a></li>
 </ul>
 </div>
 ]]>
@@ -1068,8 +1072,6 @@
         
             
                 <category term="gnu-linux"/>
-            
-                <category term="planeta-linux"/>
             
                 <category term="planeta-codigo"/>
             
@@ -1090,7 +1092,7 @@
         <![CDATA[<div class="logotypes">
     <img src="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/docker.svg" class="right" width="200" height="150" layout="responsive" alt="Docker" title="Docker">
 </div>
-<p>En el <a href="https://picodotdev.github.io/blog-bitix/2014/10/introduccion-y-caracteristicas-de-docker/index-amp.html">artículo anterior introductorio sobre Docker</a> comentaba cuales son sus principales características, que diferencias tiene con la virtualización y algunos casos y motivos por los que nos puede interesar usarlo. El objetivo de este artículo será a modo de guía rápida como empezar a usar <a href="https://www.docker.com/">docker</a>. Comentaré cuales son los comandos básicos para manejar docker, las imágenes y los contenedores.</p>
+<p>En el <a href="https://picodotdev.github.io/blog-bitix/2014/10/introduccion-y-caracteristicas-de-docker/">artículo anterior introductorio sobre Docker</a> comentaba cuales son sus principales características, que diferencias tiene con la virtualización y algunos casos y motivos por los que nos puede interesar usarlo. El objetivo de este artículo será a modo de guía rápida como empezar a usar <a href="https://www.docker.com/">docker</a>. Comentaré cuales son los comandos básicos para manejar docker, las imágenes y los contenedores.</p>
 <p>Antes de empezar con la guía propiamente hay que tener en cuenta que otra de las características de docker es que únicamente se inicia un solo proceso, cuando este finaliza finaliza la instancia del contenedor. Aunque en principio un contenedor solo tiene un proceso, podemos usar como proceso inicial uno que arranque otros, la <a href="https://registry.hub.docker.com/u/phusion/baseimage/">imagen pushion</a> tiene un sistema de inicio adaptado al funcionamiento de docker (no siendo así upstart de las imágenes de ubuntu o systemd usado por otras distribuciones) con el que podemos iniciar otros procesos, en cualquier caso es recomendable que un contenedor sino tiene un solo proceso tenga unos pocos procesos relacionados con el servicio que proporciona la imagen, la recomendación es no proporcionar una imagen con un montón de servicios/procesos sino varias pequeñas cuyos servicios colaboren. Una imagen de un contenedor es básicamente el sistema de archivos que usará el proceso que iniciamos en el contenedor, necesitamos obtener o construir una imagen para iniciar los contenedores y trabajar con docker.</p>
 <p>Primeramente deberemos instalar el paquete de docker, en el caso de <a href="https://www.archlinux.org/">Arch Linux</a> con el siguiente comando:</p>
 <div class="code">
@@ -1126,7 +1128,7 @@
   </figure>
 </div>
 <p>Con los comandos <em>docker rm [contenedor]</em> y <em>docker rmi [imagen]</em> podemos eliminar las instancias de contenedores y las imágenes que no estén siendo usadas por ningún contenedor, si están siendo usadas deberemos eliminar primero el contenedor.</p>
-<p>Una vez conocemos los comandos básicos para gestionar las imágenes y contenedores aún nos quedan conocer los comandos para obtener las imágenes y como iniciarlas. No hace falta que las imágenes las construyamos nosotros desde cero sino que podemos utilizar las que otras personas han construido. Docker dispone de un <a href="https://registry.hub.docker.com/">registro o repositorio de imágenes</a> en el que la comunidad (otras personas) publica las que ellos han construido, en este registro podemos encontrar imágenes para cualquier servicio de los más utilizados ya sea <a href="https://www.mysql.com/">MySQL</a>, <a href="https://nginx.org/">Nginx</a>, <a href="https://redis.io/">Redis</a>, <a href="https://wordpress.org/">WordPress</a>, <a href="https://www.postgresql.org/">PostgreSQL</a>, <a href="https://www.ubuntu.com/">Ubuntu</a>, <a href="https://www.centos.org/">CentOS</a>, &hellip; Este repositorio de imágenes hace que podamos disponer de estos servicios muy fácilmente, sin embargo, hay que tener en cuenta que algunas imágenes no son construidas por alguien &ldquo;oficial&rdquo; de ese servicio, cualquier persona puede <a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/index-amp.html">construir una imagen de un servicio</a> y hacerlo disponible en el repositorio esto hace que algunas imágenes puedan no ser de la máxima calidad o que estén apropiadamente mantenidas. Por ello, es recomendable utilizar las imágenes más descargadas y usadas, a pesar de todo con docker si una imagen no nos gusta podemos basarnos en ella para construir una que se adapte totalmente a nuestras necesidades y con la que nos sintamos cómodos.</p>
+<p>Una vez conocemos los comandos básicos para gestionar las imágenes y contenedores aún nos quedan conocer los comandos para obtener las imágenes y como iniciarlas. No hace falta que las imágenes las construyamos nosotros desde cero sino que podemos utilizar las que otras personas han construido. Docker dispone de un <a href="https://registry.hub.docker.com/">registro o repositorio de imágenes</a> en el que la comunidad (otras personas) publica las que ellos han construido, en este registro podemos encontrar imágenes para cualquier servicio de los más utilizados ya sea <a href="https://www.mysql.com/">MySQL</a>, <a href="https://nginx.org/">Nginx</a>, <a href="https://redis.io/">Redis</a>, <a href="https://wordpress.org/">WordPress</a>, <a href="https://www.postgresql.org/">PostgreSQL</a>, <a href="https://www.ubuntu.com/">Ubuntu</a>, <a href="https://www.centos.org/">CentOS</a>, &hellip; Este repositorio de imágenes hace que podamos disponer de estos servicios muy fácilmente, sin embargo, hay que tener en cuenta que algunas imágenes no son construidas por alguien &ldquo;oficial&rdquo; de ese servicio, cualquier persona puede <a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/">construir una imagen de un servicio</a> y hacerlo disponible en el repositorio esto hace que algunas imágenes puedan no ser de la máxima calidad o que estén apropiadamente mantenidas. Por ello, es recomendable utilizar las imágenes más descargadas y usadas, a pesar de todo con docker si una imagen no nos gusta podemos basarnos en ella para construir una que se adapte totalmente a nuestras necesidades y con la que nos sintamos cómodos.</p>
 <p>Para obtener una imagen usamos el comando «docker pull [imagen]» indicando el usuario que creó la imagen, el nombre de la imagen y el tag. En el siguiente enlace en la pestaña tags podemos ver las <a href="https://registry.hub.docker.com/_/debian/">imágenes para docker de Debian y sus tag</a>:</p>
 <div class="code">
     <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-bash" data-lang="bash">$ docker pull debian:7.7&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
@@ -1155,14 +1157,20 @@
   </figure>
 </div>
 <p>Continuando esta serie de artículos sobre docker explicaré como construir una imagen mediante los Dockerfiles con la que podamos usar una base de datos mysql y explicaré en más detalle como podemos conseguir la persistencia que necesitaremos para almacenar los datos de la base de datos usando otro contenedor con este propósito.</p>
+<div class="media-amazon">
+  <iframe style="width:120px;height:240px;" width="120" height="240" scrolling="no" frameborder="0" data-src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1633430235&amp;linkId=9d344246cd59cd65a952305379c2556a" class="lozad"></iframe>
+</div>
+<div class="media-amazon">
+  <iframe style="width:120px;height:240px;" width="120" height="240" scrolling="no" frameborder="0" data-src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;language=es_ES&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=&amp;linkId=" class="lozad"></iframe>
+</div>
 <div class="reference">
     Referencia:<br>
 <ul>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/10/introduccion-y-caracteristicas-de-docker/index-amp.html">Introducción y características de Docker</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/index-amp.html">Cómo crear una imagen para Docker usando un Dockerfile</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/introduccion-a-ansible/index-amp.html">Introducción a Ansible</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/integracion-entre-ansible-y-docker/index-amp.html">Integración entre Ansible y Docker</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/introduccion-a-bitnami/index-amp.html">Introducción a Bitnami</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/10/introduccion-y-caracteristicas-de-docker/">Introducción y características de Docker</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/">Cómo crear una imagen para Docker usando un Dockerfile</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/introduccion-a-ansible/">Introducción a Ansible</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/integracion-entre-ansible-y-docker/">Integración entre Ansible y Docker</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/introduccion-a-bitnami/">Introducción a Bitnami</a></li>
 <li><a href="https://registry.hub.docker.com/">Docker Hub Registry</a></li>
 <li><a href="http://phusion.github.io/baseimage-docker/">http://phusion.github.io/baseimage-docker/</a></li>
 </ul>
@@ -1172,8 +1180,6 @@
         
             
                 <category term="gnu-linux"/>
-            
-                <category term="planeta-linux"/>
             
                 <category term="planeta-codigo"/>
             
@@ -1219,16 +1225,22 @@
 </ul>
 <p>En la siguiente presentación muy completa están ampliados muchas de sus posibilidades y funcionalidades.</p>
 <p>{&lt; speakerdeck id=&quot;c02e6030ee52013165c72a37516b560d&rdquo; &gt;}}</p>
-<p>Una vez conocidos los aspectos básicos y en que se diferencia docker de la virtualización así como el caso de uso de por ejemplo un devbox o disponer de entornos similares a los de producción de una aplicación, en el siguiente artículo comentaré <a href="https://picodotdev.github.io/blog-bitix/2014/11/inicio-basico-de-docker/index-amp.html">cómo instalar docker, cómo empezar a usarlo, cómo obtener imágenes de servicios y pararlos y administrarlos</a>. En la siguiente <a href="http://www.nkode.io/2014/08/24/valuable-docker-links.html">lista de enlaces sobre Docker</a> se puede encontrar mucha información reunida dispersa en la red, desde introducciones, opiniones, como usarlo, como empaquetar las aplicaciones, como monitorizar o como usarlo en microservicios.</p>
+<p>Una vez conocidos los aspectos básicos y en que se diferencia docker de la virtualización así como el caso de uso de por ejemplo un devbox o disponer de entornos similares a los de producción de una aplicación, en el siguiente artículo comentaré <a href="https://picodotdev.github.io/blog-bitix/2014/11/inicio-basico-de-docker/">cómo instalar docker, cómo empezar a usarlo, cómo obtener imágenes de servicios y pararlos y administrarlos</a>. En la siguiente <a href="http://www.nkode.io/2014/08/24/valuable-docker-links.html">lista de enlaces sobre Docker</a> se puede encontrar mucha información reunida dispersa en la red, desde introducciones, opiniones, como usarlo, como empaquetar las aplicaciones, como monitorizar o como usarlo en microservicios.</p>
+<div class="media-amazon">
+  <iframe style="width:120px;height:240px;" width="120" height="240" scrolling="no" frameborder="0" data-src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=1633430235&amp;linkId=9d344246cd59cd65a952305379c2556a" class="lozad"></iframe>
+</div>
+<div class="media-amazon">
+  <iframe style="width:120px;height:240px;" width="120" height="240" scrolling="no" frameborder="0" data-src="https://rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=blobit-21&amp;language=es_ES&amp;o=30&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=&amp;linkId=" class="lozad"></iframe>
+</div>
 <div class="reference">
     Referencia:<br>
 <ul>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/inicio-basico-de-docker/index-amp.html">Inicio básico de Docker</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/index-amp.html">Cómo crear una imagen para Docker usando un Dockerfile</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/inicio-basico-de-docker/">Inicio básico de Docker</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/como-crear-una-imagen-para-docker-usando-un-dockerfile/">Cómo crear una imagen para Docker usando un Dockerfile</a></li>
 <li><a href="https://www.docker.com/">Docker</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/introduccion-a-ansible/index-amp.html">Introducción a Ansible</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/integracion-entre-ansible-y-docker/index-amp.html">Integración entre Ansible y Docker</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/introduccion-a-bitnami/index-amp.html">Introducción a Bitnami</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/introduccion-a-ansible/">Introducción a Ansible</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/integracion-entre-ansible-y-docker/">Integración entre Ansible y Docker</a></li>
+<li><a href="https://picodotdev.github.io/blog-bitix/2014/11/introduccion-a-bitnami/">Introducción a Bitnami</a></li>
 <li><a href="https://docs.docker.com/articles/security/">Seguridad Docker</a></li>
 <li><a href="https://www.javaworld.com/article/2685223/java-app-dev/four-ways-docker-fundamentally-changes-application-development.html">Four ways Docker fundamentally changes application development</a></li>
 <li><a href="https://openwebinars.net/docker-que-es-sus-principales-caracteristicas/">Docker, qué es y sus principales características</a></li>
@@ -1239,8 +1251,6 @@
         
             
                 <category term="gnu-linux"/>
-            
-                <category term="planeta-linux"/>
             
                 <category term="planeta-codigo"/>
             
