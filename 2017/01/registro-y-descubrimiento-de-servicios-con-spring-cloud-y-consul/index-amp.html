@@ -395,7 +395,8 @@ article div.media amp-iframe {
   box-sizing: content-box;
   max-width: 100%;
   max-height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  vertical-align: middle;
 }
 article div.media figure {
   clear: both;
@@ -735,9 +736,7 @@ ins.adblock-sidebar-vertical {
 </ul>
 <p>Consul además de descubrimiento de servicios proporciona otras funcionalidades como detección de fallos o caídas para prevenir enviar peticiones a máquinas fuera de servicio y almacenamiento básico clave/valor para configuración dinámica o activación de características. Dispone de una aplicación web en la que podemos ver el estado de los servicios, una <a href="https://www.consul.io/api/index.html">API REST</a> con la que comunicarse con Consul en una aplicación o en cada microservicio y un servidor de nombres <abbr>DNS</abbr>, podemos usar cualquiera de las dos interfaces de consulta, la basada en la <abbr>API</abbr> <abbr>REST</abbr> o la basada en DNS para obtener las direcciones IP con la ubicación de los servicios.</p>
 <div class="media">
-<figure>
-<p><amp-img src="/blog-bitix/2017/01/registro-y-descubrimiento-de-servicios-con-spring-cloud-y-consul/images/consul_hu5e35c35c046c258a2599a40c947fcc52_11502_300x250_fit_box_2.png" width="200" height="199" class="lozad " alt="" title="Consul"></amp-img></p>
-</figure>
+<amp-img src="/blog-bitix/2017/01/registro-y-descubrimiento-de-servicios-con-spring-cloud-y-consul/images/consul_hu5e35c35c046c258a2599a40c947fcc52_11502_300x250_fit_box_2.png" width="200" height="199" class="lozad " alt="Consul" title="Consul"></amp-img>
 </div>
 <p>Instalar Consul es muy sencillo basta con <a href="https://www.consul.io/downloads.html">descargar un binario</a> y descargar la interfaz web si queremos tener el <em>dashboard</em> con la información del servicio. Descargados y descomprimidos Consul se inicia con el siguiente comando. Podemos acceder al panel <em>dashboard</em> con la dirección <em>http://localhost:8500</em> con un navegador web. Inicialmente en el panel de servicios solo se encuentra el propio de Consul cuando aún no se ha registrado ningún servicio, aplicación o microservicio.</p>
 <div class="code">
@@ -760,12 +759,9 @@ ins.adblock-sidebar-vertical {
     </div>
 </div>
 <p>Spring Cloud proporciona además un servicio que podemos usar para conocer los servicios registrados en Consul, con la clase <em>DiscoveryClient</em> podemos conocer los nombres de los servicios, su nombre de máquina y puerto desde una aplicación Java. En el método <em>run</em> de la clase <em>Main</em> se usa en este ejemplo para imprimir en la salida el listado de servicios registrados en Consul. Uno de esos servicios esta aplicación de ejemplo, ya que se registra en Consul cuando se inicia.</p>
-<div class="media">
-  <figure>
-  <a href="/blog-bitix/2017/01/registro-y-descubrimiento-de-servicios-con-spring-cloud-y-consul/images/consul-services_hu7b6922ae49f41ee0813233022d6adc1c_56113_2560x1440_fit_box_2.png" title="Servicios registrados en Consul" data-gallery="data-gallery"><amp-img src="/blog-bitix/2017/01/registro-y-descubrimiento-de-servicios-con-spring-cloud-y-consul/images/consul-services_hu7b6922ae49f41ee0813233022d6adc1c_56113_450x400_fit_box_2.png" width="450" height="217" class="lozad"></amp-img></a>
-  <figcaption>Servicios registrados en Consul</figcaption>
-  </figure>
-</div>
+<div class="media"><figure>
+<a href="/blog-bitix/2017/01/registro-y-descubrimiento-de-servicios-con-spring-cloud-y-consul/images/consul-services_hu7b6922ae49f41ee0813233022d6adc1c_56113_2560x1440_fit_box_2.png" title="Servicios registrados en Consul" data-gallery="data-gallery"><amp-img src="/blog-bitix/2017/01/registro-y-descubrimiento-de-servicios-con-spring-cloud-y-consul/images/consul-services_hu7b6922ae49f41ee0813233022d6adc1c_56113_300x200_fit_box_2.png" width="300" height="145" class="lozad " alt="Servicios registrados en Consul" title="Servicios registrados en Consul"></amp-img></a>
+<figcaption>Servicios registrados en Consul</figcaption></figure></div>
 <p>Consul para conocer que los servicios siguen en funcionamiento hace una petición <abbr>HTTP</abbr> cada ciertos segundos a una ruta de la aplicación, Spring Boot proporciona una dependencia, <em>spring-boot-starter-actuator</em>, que usada provee del <em>endpoint /health</em> para que Consul monitorice el estado del servicio.</p>
 <div class="code">
     <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="n">plugins</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">id</span> <span class="s1">&#39;application&#39;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">id</span> <span class="s1">&#39;org.springframework.boot&#39;</span> <span class="n">version</span> <span class="s1">&#39;1.4.4.RELEASE&#39;</span>&#10;<span class="o">}</span>&#10;&#10;<span class="n">mainClassName</span> <span class="o">=</span> <span class="s1">&#39;io.github.picodotdev.blogbitix.springcloud.client.Main&#39;</span>&#10;&#10;<span class="n">dependencies</span> <span class="o">{</span>&#10;	<span class="n">compile</span> <span class="s1">&#39;org.springframework:spring-context:4.3.6.RELEASE&#39;</span>&#10;	<span class="n">compile</span><span class="o">(</span><span class="s1">&#39;org.springframework.boot:spring-boot-starter:1.4.4.RELEASE&#39;</span><span class="o">)</span> <span class="o">{</span> <span class="n">exclude</span><span class="o">(</span><span class="nl">group:</span> <span class="s1">&#39;ch.qos.logback&#39;</span><span class="o">)</span> <span class="o">}</span>&#10;	<span class="n">compile</span><span class="o">(</span><span class="s1">&#39;org.springframework.boot:spring-boot-starter-web:1.4.4.RELEASE&#39;</span><span class="o">)</span> <span class="o">{</span> <span class="n">exclude</span><span class="o">(</span><span class="nl">group:</span> <span class="s1">&#39;ch.qos.logback&#39;</span><span class="o">)</span> <span class="o">}</span>&#10;	<span class="n">compile</span><span class="o">(</span><span class="s1">&#39;org.springframework.boot:spring-boot-starter-actuator:1.4.4.RELEASE&#39;</span><span class="o">)</span> <span class="o">{</span> <span class="n">exclude</span><span class="o">(</span><span class="nl">group:</span> <span class="s1">&#39;ch.qos.logback&#39;</span><span class="o">)</span> <span class="o">}</span>&#10;	<span class="n">compile</span><span class="o">(</span><span class="s1">&#39;org.springframework.cloud:spring-cloud-starter-consul-all:1.1.2.RELEASE&#39;</span><span class="o">)</span> <span class="o">{</span> <span class="n">exclude</span><span class="o">(</span><span class="nl">group:</span> <span class="s1">&#39;ch.qos.logback&#39;</span><span class="o">)</span> <span class="o">}</span>&#10;<span class="o">}</span>&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
@@ -773,12 +769,9 @@ ins.adblock-sidebar-vertical {
         <span>build.gradle</span>
     </div>
 </div>
-<div class="media">
-  <figure>
-  <a href="/blog-bitix/2017/01/registro-y-descubrimiento-de-servicios-con-spring-cloud-y-consul/images/service-health_hu2c85a088e3fa0b2999e15f12aba27016_73001_2560x1440_fit_box_2.png" title="Endpoint de estado de servicio" data-gallery="data-gallery"><amp-img src="/blog-bitix/2017/01/registro-y-descubrimiento-de-servicios-con-spring-cloud-y-consul/images/service-health_hu2c85a088e3fa0b2999e15f12aba27016_73001_450x400_fit_box_2.png" width="270" height="400" class="lozad"></amp-img></a>
-  <figcaption>Endpoint de estado de servicio</figcaption>
-  </figure>
-</div>
+<div class="media"><figure>
+<a href="/blog-bitix/2017/01/registro-y-descubrimiento-de-servicios-con-spring-cloud-y-consul/images/service-health_hu2c85a088e3fa0b2999e15f12aba27016_73001_2560x1440_fit_box_2.png" title="Endpoint de estado de servicio" data-gallery="data-gallery"><amp-img src="/blog-bitix/2017/01/registro-y-descubrimiento-de-servicios-con-spring-cloud-y-consul/images/service-health_hu2c85a088e3fa0b2999e15f12aba27016_73001_300x200_fit_box_2.png" width="135" height="200" class="lozad " alt="Endpoint de estado de servicio" title="Endpoint de estado de servicio"></amp-img></a>
+<figcaption>Endpoint de estado de servicio</figcaption></figure></div>
 <p>Esta es la salida en la consola listando los servicios disponibles, siendo uno de ellos esta aplicación.</p>
 <div class="code">
     <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">Valor de propiedad de configuración (config.key): prod&#10;Servicios:&#10;consul (1): 192.168.1.2:8300 http://192.168.1.2:8300&#10;springcloudclient (1): 192.168.1.2:8080 http://192.168.1.2:8080</code></pre></td></tr></table>&#10;</div>&#10;</div>

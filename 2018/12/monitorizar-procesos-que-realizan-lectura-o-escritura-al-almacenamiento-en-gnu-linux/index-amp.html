@@ -395,7 +395,8 @@ article div.media amp-iframe {
   box-sizing: content-box;
   max-width: 100%;
   max-height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  vertical-align: middle;
 }
 article div.media figure {
   clear: both;
@@ -722,12 +723,9 @@ ins.adblock-sidebar-vertical {
     </div>
 </div>
 <p>En este caso se han escrito 326 MB en el dispositivo <em>nvme0n1p2</em> que corresponde a la partición <em>root</em> en una hora de actividad del sistema realizando tareas ofimáticas y de navegación.</p>
-<div class="media">
-  <figure>
-  <a href="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/awk_hu2f9598549ed102025232bc79089abe44_40142_2560x1440_fit_box_2.png" title="Datos escritos al almacenamiento desde el inicio del sistema" data-gallery="data-gallery"><amp-img src="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/awk_hu2f9598549ed102025232bc79089abe44_40142_300x200_fit_box_2.png" width="300" height="108" class="lozad"></amp-img></a>
-  <figcaption>Datos escritos al almacenamiento desde el inicio del sistema</figcaption>
-  </figure>
-</div>
+<div class="media"><figure>
+<a href="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/awk_hu2f9598549ed102025232bc79089abe44_40142_2560x1440_fit_box_2.png" title="Datos escritos al almacenamiento desde el inicio del sistema" data-gallery="data-gallery"><amp-img src="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/awk_hu2f9598549ed102025232bc79089abe44_40142_300x200_fit_box_2.png" width="300" height="108" class="lozad " alt="Datos escritos al almacenamiento desde el inicio del sistema" title="Datos escritos al almacenamiento desde el inicio del sistema"></amp-img></a>
+<figcaption>Datos escritos al almacenamiento desde el inicio del sistema</figcaption></figure></div>
 <p>También es interesante conocer los datos escritos en la unidad en total desde su instalación, en realidad lo siguiente nos dará los GiB escritos desde la creación de la partición, si se han hecho varios particionados no será el total del tiempo de vida de la unidad. Al usar LVM on LUKS el nombre que Linux le a la unidad en mi caso es <em>dm-1</em>, según la configuración del sistema otro nombre que se le asigna es <em>sda2</em>. En esta captura de 129 GB.</p>
 <div class="code">
     <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-bash" data-lang="bash">$ awk <span class="s1">&#39;// {print $0 / (1024 * 1024)}&#39;</span> /sys/fs/ext4/dm-1/lifetime_write_kbytes&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
@@ -735,12 +733,9 @@ ins.adblock-sidebar-vertical {
         <span>awk-lifetime-writes.sh</span>
     </div>
 </div>
-<div class="media">
-  <figure>
-  <a href="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/awk-lifetime_hu39bef0aba530b0a41102a26d1d2db139_20509_2560x1440_fit_box_2.png" title="Datos escritos a una partición" data-gallery="data-gallery"><amp-img src="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/awk-lifetime_hu39bef0aba530b0a41102a26d1d2db139_20509_300x200_fit_box_2.png" width="300" height="136" class="lozad"></amp-img></a>
-  <figcaption>Datos escritos a una partición</figcaption>
-  </figure>
-</div>
+<div class="media"><figure>
+<a href="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/awk-lifetime_hu39bef0aba530b0a41102a26d1d2db139_20509_2560x1440_fit_box_2.png" title="Datos escritos a una partición" data-gallery="data-gallery"><amp-img src="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/awk-lifetime_hu39bef0aba530b0a41102a26d1d2db139_20509_300x200_fit_box_2.png" width="300" height="136" class="lozad " alt="Datos escritos a una partición" title="Datos escritos a una partición"></amp-img></a>
+<figcaption>Datos escritos a una partición</figcaption></figure></div>
 <p>Después de <a href="https://picodotdev.github.io/blog-bitix/2018/11/desempaquetado-intel-nuc-nuc8i5bek-bean-canyon-hyperx-impact-ram-y-samsung-970-evo-nvme-ssd/index-amp.html">comprar un Intel NUC junto con SSD</a> e instalarle <a href="https://www.archlinux.org/">Arch Linux</a> me he dado cuenta que de forma periódica, cada 5 o 10 segundos, parpadea la luz de actividad del disco duro (o simplemente almacenamiento al tener un SSD) sin hacer ninguna actividad salvo tener algunas aplicaciones abietas. He instalado <em>iotop</em> para descubrir el origen de esta actividad y he encontrado dos. Por un lado <a href="https://www.mozilla.org/es-ES/firefox/new/">Firefox</a>, varios procesos de él, y otro proceso del sistema <em>jdb2-dm-1-8</em> que corresponde al <em>journaling</em> del sistema de archivos. La opción <em>-a</em> de iotop muestra la cantidad de E/S en la sesión por proceso y la opción <em>&ndash;only</em> solo aquellos que han realizado E/S.</p>
 <div class="code">
     <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-bash" data-lang="bash">$ iotop -a --only&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
@@ -748,12 +743,9 @@ ins.adblock-sidebar-vertical {
         <span>iotop.sh</span>
     </div>
 </div>
-<div class="media">
-  <figure>
-  <a href="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/iotop_hue4687c96ed1462b9a490f6bf88d00c3d_167006_2560x1440_fit_box_2.png" title="Datos escritos por procesos del sistema" data-gallery="data-gallery"><amp-img src="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/iotop_hue4687c96ed1462b9a490f6bf88d00c3d_167006_300x200_fit_box_2.png" width="300" height="198" class="lozad"></amp-img></a>
-  <figcaption>Datos escritos por procesos del sistema</figcaption>
-  </figure>
-</div>
+<div class="media"><figure>
+<a href="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/iotop_hue4687c96ed1462b9a490f6bf88d00c3d_167006_2560x1440_fit_box_2.png" title="Datos escritos por procesos del sistema" data-gallery="data-gallery"><amp-img src="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/iotop_hue4687c96ed1462b9a490f6bf88d00c3d_167006_300x200_fit_box_2.png" width="300" height="198" class="lozad " alt="Datos escritos por procesos del sistema" title="Datos escritos por procesos del sistema"></amp-img></a>
+<figcaption>Datos escritos por procesos del sistema</figcaption></figure></div>
 <p>Investigando sobre los motivos de escritura de Firefox he encotrado algunos artículos y tres recomendaciones a cambiar en la configuración de Firefox para optimizar su uso en unidades SSD.</p>
 <ul>
 <li><a href="https://superuser.com/questions/399473/firefox-writes-megabytes-of-data-per-minute-to-disk-why">Firefox writes megabytes of data per minute to disk, why?</a></li>
@@ -766,37 +758,25 @@ ins.adblock-sidebar-vertical {
 <li><em>browser.cache.memory.capacity</em>: para no perder la funcionalidad de la cache al menos en una sesión si se dispone de memoria RAM suficiente se puede activar una cache en memoria. Esta opción indica en KiB el espacio reservado para esa caché. Un valor de 307200 (300 * 1024) corresponde a 300 MiB de caché en memoria. Aún teniendo una cache de sesión y en memoria no he notado diferencia velocidad de carga en las páginas al navegar aún usando ADSL. Esa opción se ha de crear de tipo entero.</li>
 </ul>
 <p>Estas opciones se cambian el la sección de configuración de Firefox introduciendo <em>about:config</em> en la barra de direcciones.</p>
-<div class="media">
-  <figure>
-  <a href="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/firefox-config-1_huac92489a70fe30a83fa2fed454815d3b_38903_2560x1440_fit_box_2.png" title="Configuración de Firefox optimizado para SSD" data-gallery="data-gallery"><amp-img src="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/firefox-config-1_huac92489a70fe30a83fa2fed454815d3b_38903_300x200_fit_box_2.png" width="286" height="200" class="lozad"></amp-img></a>
-  <a href="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/firefox-config-2_hu1ede719cd1c8042fc711c3800df7e9b2_102209_2560x1440_fit_box_2.png" title="Configuración de Firefox optimizado para SSD" data-gallery="data-gallery"><amp-img src="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/firefox-config-2_hu1ede719cd1c8042fc711c3800df7e9b2_102209_300x200_fit_box_2.png" width="286" height="200" class="lozad"></amp-img></a>
-  <figcaption>Configuración de Firefox optimizado para SSD</figcaption>
-  </figure>
-</div>
+<div class="media"><figure>
+<a href="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/firefox-config-1_huac92489a70fe30a83fa2fed454815d3b_38903_2560x1440_fit_box_2.png" title="Configuración de Firefox optimizado para SSD" data-gallery="data-gallery"><amp-img src="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/firefox-config-1_huac92489a70fe30a83fa2fed454815d3b_38903_300x200_fit_box_2.png" width="286" height="200" class="lozad " alt="Configuración de Firefox optimizado para SSD" title="Configuración de Firefox optimizado para SSD"></amp-img></a>
+<a href="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/firefox-config-2_hu1ede719cd1c8042fc711c3800df7e9b2_102209_2560x1440_fit_box_2.png" title="Configuración de Firefox optimizado para SSD" data-gallery="data-gallery"><amp-img src="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/firefox-config-2_hu1ede719cd1c8042fc711c3800df7e9b2_102209_300x200_fit_box_2.png" width="286" height="200" class="lozad " alt="Configuración de Firefox optimizado para SSD" title="Configuración de Firefox optimizado para SSD"></amp-img></a>
+<figcaption>Configuración de Firefox optimizado para SSD</figcaption></figure></div>
 <p>Con la configuración por defecto y cambiando estas opciones esta es la diferencia de los procesos de Firefox que causan E/S después de un tiempo de uso. Por defecto se observa que hay un proceso relacionado que debe estar relacionado con la caché a raíz de su nombre que escribe en el almacenamiento y cambiadas las opciones solo los procesos <em>mozStorage</em> escriben, estos procesos están relacionados con las <em>cookies</em> y almacenamiento local o bases de datos que los navegadores ofrecen a las páginas web pero los procesos relacionados con la caché han desaparecido. La cantidad de datos escritos con las opciones por defecto y cambiadas son significativamente menores en el mismo periodo de tiempo.</p>
 <p>Dado que la caché ocasiona escrituras en el almacenamiento el proceso de <em>journaling</em> del sistema también realiza escrituras amplificando el problema. Con Firefox optimizado para SSD el proceso <em>firefox [Cache2 I/O]</em> desaparece y al escribir la sesión no cada 15 segundos Firefox deja de escribir de forma regular. <a href="https://www.google.es/chrome/browser/desktop/">Google Chrome</a> no ofrece estas opciones de personalización.</p>
-<div class="media">
-  <figure>
-  <a href="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/firefox-default_hu13ad6d682ee4ae6ce7313a7569e91b43_134475_2560x1440_fit_box_2.png" title="Entrada y salida con las opciones de Firefox por defecto" data-gallery="data-gallery"><amp-img src="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/firefox-default_hu13ad6d682ee4ae6ce7313a7569e91b43_134475_300x200_fit_box_2.png" width="300" height="198" class="lozad"></amp-img></a>
-  <a href="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/firefox-ssd_hue958cb401399bf1e0ea7184de54b2473_92599_2560x1440_fit_box_2.png" title="Entrada y salida con opciones de Firefox optimizadas para SSD" data-gallery="data-gallery"><amp-img src="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/firefox-ssd_hue958cb401399bf1e0ea7184de54b2473_92599_300x200_fit_box_2.png" width="300" height="198" class="lozad"></amp-img></a>
-  <figcaption>Entrada y salida de Firefox por defecto y optimizado para SSD</figcaption>
-  </figure>
-</div>
+<div class="media"><figure>
+<a href="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/firefox-default_hu13ad6d682ee4ae6ce7313a7569e91b43_134475_2560x1440_fit_box_2.png" title="Entrada y salida con las opciones de Firefox por defecto" data-gallery="data-gallery"><amp-img src="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/firefox-default_hu13ad6d682ee4ae6ce7313a7569e91b43_134475_300x200_fit_box_2.png" width="300" height="198" class="lozad " alt="Entrada y salida con las opciones de Firefox por defecto" title="Entrada y salida con las opciones de Firefox por defecto"></amp-img></a>
+<a href="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/firefox-ssd_hue958cb401399bf1e0ea7184de54b2473_92599_2560x1440_fit_box_2.png" title="Entrada y salida con opciones de Firefox optimizadas para SSD" data-gallery="data-gallery"><amp-img src="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/firefox-ssd_hue958cb401399bf1e0ea7184de54b2473_92599_300x200_fit_box_2.png" width="300" height="198" class="lozad " alt="Entrada y salida con opciones de Firefox optimizadas para SSD" title="Entrada y salida con opciones de Firefox optimizadas para SSD"></amp-img></a>
+<figcaption>Entrada y salida de Firefox por defecto y optimizado para SSD</figcaption></figure></div>
 <p>En el entorno de escritorio <a href="https://www.gnome.org/">GNOME</a> con la aplicación <em>Monitor del sistema</em> es posible ver la cantidad de datos escritos por un proceso en total y en tiempo real.</p>
-<div class="media">
-  <figure>
-  <a href="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/gnome-monitor-del-sistema_hudc54858e148c80688588348a42ecafd9_174051_2560x1440_fit_box_2.png" title="Monitor del sistema de GNOME" data-gallery="data-gallery"><amp-img src="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/gnome-monitor-del-sistema_hudc54858e148c80688588348a42ecafd9_174051_300x200_fit_box_2.png" width="300" height="173" class="lozad"></amp-img></a>
-  <figcaption>Monitor del sistema de GNOME</figcaption>
-  </figure>
-</div>
+<div class="media"><figure>
+<a href="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/gnome-monitor-del-sistema_hudc54858e148c80688588348a42ecafd9_174051_2560x1440_fit_box_2.png" title="Monitor del sistema de GNOME" data-gallery="data-gallery"><amp-img src="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/gnome-monitor-del-sistema_hudc54858e148c80688588348a42ecafd9_174051_300x200_fit_box_2.png" width="300" height="173" class="lozad " alt="Monitor del sistema de GNOME" title="Monitor del sistema de GNOME"></amp-img></a>
+<figcaption>Monitor del sistema de GNOME</figcaption></figure></div>
 <p>Dado que los SSD no hacen ruido no se ha pedido la alerta sonora del «rascar» del disco cuando algún programa está escribiendo o leyendo de forma intensiva y por ello quizá no nos demos cuenta de que algún programa está teniendo un mal comportamiento y esté escribiendo muchos datos al SSD, peor aún si el sistema ni siquiera dispone de este LED de actividad.</p>
 <p>Para visualizar el uso del disco de forma constante <a href="https://extensions.gnome.org/extension/120/system-monitor/">en GNOME hay una extensión que hace de monitor del sistema</a> que agregará en la barra superior un área de estado visible en todo momento en la que se puede ver la información del estado del sistema, entre esa información se puede visualizar la cantidad de lectura y escritura que está realizando al almacenamiento.</p>
-<div class="media">
-  <figure>
-  <a href="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/gnome-extension-system-monitor_hu9cf33cffc4fcae05a240cdf19afd64b7_165112_2560x1440_fit_box_2.png" title="Extensión de GNOME de monitor del sistema" data-gallery="data-gallery"><amp-img src="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/gnome-extension-system-monitor_hu9cf33cffc4fcae05a240cdf19afd64b7_165112_300x200_fit_box_2.png" width="209" height="200" class="lozad"></amp-img></a>
-  <figcaption>Extensión de GNOME de monitor del sistema</figcaption>
-  </figure>
-</div>
+<div class="media"><figure>
+<a href="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/gnome-extension-system-monitor_hu9cf33cffc4fcae05a240cdf19afd64b7_165112_2560x1440_fit_box_2.png" title="Extensión de GNOME de monitor del sistema" data-gallery="data-gallery"><amp-img src="/blog-bitix/2018/12/monitorizar-procesos-que-realizan-lectura-o-escritura-al-almacenamiento-en-gnu-linux/images/gnome-extension-system-monitor_hu9cf33cffc4fcae05a240cdf19afd64b7_165112_300x200_fit_box_2.png" width="209" height="200" class="lozad " alt="Extensión de GNOME de monitor del sistema" title="Extensión de GNOME de monitor del sistema"></amp-img></a>
+<figcaption>Extensión de GNOME de monitor del sistema</figcaption></figure></div>
 
     </div>
   </article>
