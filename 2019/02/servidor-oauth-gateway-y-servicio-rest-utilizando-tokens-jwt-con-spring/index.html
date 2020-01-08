@@ -241,10 +241,10 @@
 
 
       <div class="logotypes">
-  <img src="/blog-bitix/assets/images/logotypes/spring.svg" class="right" width="200" height="" layout="responsive" alt="Spring" title="Spring">
+<p><img data-src="/blog-bitix/assets/images/logotypes/spring.svg" width="200" alt="Spring" title="Spring" class="lozad"></p>
 </div>
 <div class="logotypes">
-   <img src="/blog-bitix/assets/images/logotypes/java.svg" class="right" width="200" height="" layout="responsive" alt="Java" title="Java">
+<p><img data-src="/blog-bitix/assets/images/logotypes/java.svg" width="200" class="lozad"></p>
 </div>
 <p>Hace unos días encontré un <a href="https://www.idealista.com/labs/blog/spring-framework/autenticando-el-api-de-idealista-hipotecas-con-spring-oauth2-y-zuul/">articulo del blog técnido de los desarrolladores de Idealista</a>. En él comentaban que tenían una API para realizar simulaciones hipotecarias usando <a href="https://spring.io/">Spring</a> como <em>framework</em>, <a href="https://spring.io/projects/spring-security-oauth">Spring Security OAuth</a> como forma de autenticación y autorización y JWT como forma de codificar el <em>token</em> que otorga el servidor OAuth y contiene la información necesaria para que el servidor de recursos permita o no el acceso al recurso que aloja.</p>
 <p>Ya había oído mencionar JWT pero este artículo me ha permitido conocer su utilidad, y no es poca. Como se menciona en el artículo JWT tiene la ventaja de que que no es necesario persistirlo en una base de datos y contiene toda la información que el servidor de recursos necesita para realizar la autorización ya que es capaz de cargar con información arbitraria que el servicio desee en el momento de la emisión, la autenticación y comprobación de que ha sido emitido por el servidor OAuth la realiza sabiendo que el <em>token</em> está firmado.</p>
@@ -259,8 +259,10 @@
 <p>Spring ha creado su propio proyecto de <em>gateway</em> para sustituir a Zuul, <a href="https://spring.io/projects/spring-cloud-gateway">Spring Cloud Gateway</a> y será el que use en este artículo. Soporta <a href="https://projects.spring.io/spring-boot/">Spring Boot</a> 2, <a href="https://projects.spring.io/spring-framework/">Spring Framework</a> 5, coincidencia por cualquier parámetro de la petición, filtros y transformaciones o predicados, el patrón <em>circuit breaker</em>, limitación de peticiones y reescritura de rutas.</p>
 <p>Los servicios los mantengo separados ya que al combinarlos pueden surgir problemas de integración al usar diferentes versiones de librerías de Spring aún cuando todos los proyectos son de Spring. Por ejemplo, Spring Cloud Gateway utiliza Spring WebFlux que puede ser diferente del lo que utilice Spring Security OAuth y la integración puede no estar exenta de problemas.</p>
 <div class="media">
-<img data-src="/blog-bitix/assets/images/logotypes/oauth.svg" width="200" height="200" class="lozad " alt="OAuth" title="OAuth">
-<img data-src="/blog-bitix/assets/images/logotypes/jwt.svg" width="318" height="168" class="lozad " alt="JWT" title="JWT">
+<figure>
+<p><a href="/blog-bitix/assets/images/logotypes/oauth.svg" data-gallery="data-gallery"><img data-src="/blog-bitix/" width="200" height="200" alt="OAuth" title="OAuth" class="lozad"></a>
+<a href="/blog-bitix/assets/images/logotypes/jwt.svg" data-gallery="data-gallery"><img data-src="/blog-bitix/" width="318" height="168" alt="JWT" title="JWT" class="lozad"></a></p>
+</figure>
 </div>
 <h3 id="servidor-oauth">Servidor OAuth</h3>
 <p>Empezando por el servidor OAuth y las dependencias que necesita, son <em>spring-security-oauth2</em> y para generar <em>tokens</em> JWT <em>spring-security-jwt</em>, el resto son dependencias necesarias de Spring Boot</p>
@@ -292,9 +294,12 @@
         <span>oauth/curl.sh</span>
     </div>
 </div>
-<div class="media"><figure>
-<a href="/blog-bitix/2019/02/servidor-oauth-gateway-y-servicio-rest-utilizando-tokens-jwt-con-spring/images/encoded-decoded-jwt_hu1ab378b072a97342bd947994d891fa06_108022_2560x1440_fit_box_2.png" title="Token JWT codificado y decodificado" data-gallery="data-gallery"><img data-src="/blog-bitix/2019/02/servidor-oauth-gateway-y-servicio-rest-utilizando-tokens-jwt-con-spring/images/encoded-decoded-jwt_hu1ab378b072a97342bd947994d891fa06_108022_600x450_fit_box_2.png" width="494" height="450" class="lozad " alt="Token JWT codificado y decodificado" title="Token JWT codificado y decodificado"></a>
-<figcaption>Token JWT codificado y decodificado</figcaption></figure></div>
+<div class="media">
+<figure>
+<p><a href="/blog-bitix/2019/02/servidor-oauth-gateway-y-servicio-rest-utilizando-tokens-jwt-con-spring/images/encoded-decoded-jwt_hu1ab378b072a97342bd947994d891fa06_108022_2560x1440_fit_box_2.png" data-gallery="data-gallery"><img data-src="/blog-bitix/2019/02/servidor-oauth-gateway-y-servicio-rest-utilizando-tokens-jwt-con-spring/images/encoded-decoded-jwt_hu1ab378b072a97342bd947994d891fa06_108022_600x450_fit_box_2.png" width="494" height="450" alt="Token JWT codificado y decodificado" title="Token JWT codificado y decodificado" class="lozad"></a></p>
+<figcaption>Token JWT codificado y decodificado</figcaption>
+</figure>
+</div>
 <h3 id="servidor-gateway">Servidor Gateway</h3>
 <p>El servidor <em>gateway</em> en realidad no interviene en la lógica de OAuth porque la autorización se delega en cada servicio que contiene el recurso. Como se indicaba en Idealista estaría bien que el <em>gateway</em> librase de la responsabilidad de autorización a los servicios de los recursos para hacerlos más sencillos, creo que Spring Security en el momento del artículo no está soportado en Spring WebFlux que utiliza el <em>gateway</em>.</p>
 <p>Lo único necesario par definir el <em>gateway</em> son las dependencias del proyecto, poco más que <em>spring-cloud-starter-gateway</em>, y la configuración de enrutado que <em>matchea</em> peticiones según el parámetro <em>predicates</em>, reescribe la URL hacia el servicio  según el filtro <em>RewritePath</em> y finalmente redirige la petición a la ubicación del servicio indicada en <em>uri</em>. Se inicia con <em>./gradlew gateway:run</em>.</p>
