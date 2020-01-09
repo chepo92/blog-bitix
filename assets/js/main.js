@@ -93,9 +93,23 @@ require(['jquery', 'lozad', 'jquery-blueimp-gallery'], function ($, lozad, bluei
             }
         });
 
+        var twitterObserver = lozad('blockquote.twitter-tweet', {
+            rootMargin: '50px 0px',
+            load: function(el) {
+                $.ajax({
+                    url: '//platform.twitter.com/widgets.js',
+                    async: true,
+                    cache: true,
+                    dataType: 'script',
+                    success: function() {}
+                });
+            }
+        });
+
         observer.observe();
         disqusObserver.observe();
         shareThisObserver.observe();
+        twitterObserver.observe();
     }
     
     initBackground();
