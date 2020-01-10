@@ -1,0 +1,1 @@
+$ firefox -P headless -headless --screenshot duckduckgo.png https://duckduckgo.com/
