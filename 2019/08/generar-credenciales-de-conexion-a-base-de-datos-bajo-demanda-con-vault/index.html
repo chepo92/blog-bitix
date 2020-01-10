@@ -148,7 +148,7 @@
       <h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2>
       <div class="links">
         
-          <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+          <a href="https://picodotdev.github.io/blog-bitix/index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
         
         
           <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
@@ -255,9 +255,9 @@
 </div>
 <p>Las base de datos para proteger los datos realizan autenticación del usuario que se conecta. Normalmente utilizando un usuario y contraseña, una vez autenticado el usuario mediante permisos se realiza la autorización de las operaciones que puede realizar, a que bases de datos se puede conectar, que tablas puede acceder y que operaciones puede realizar.</p>
 <p>Este modelo de autenticación tiene algunos inconvenientes. Uno de los inconvenientes es que los usuarios y contraseñas para mayor seguridad han de cambiarse con cierta frecuencia para evitar que si las credenciales quedan comprometidas no puedan utilizarse indefinidamente. Otro problema es que cada aplicación ha de conocer las credenciales de la base de datos, esto hace que haya múltiples posibilidades de que las credenciales queden comprometidas. Por otro lado el uso de las credenciales no queda registrado de forma centralizada que es necesario para saber ante una brecha de seguridad qué datos han sido accedidos y por quien.</p>
-<p>La herramienta <a href="https://www.vaultproject.io/">Vault</a> de <a href="https://www.hashicorp.com/">HashiCorp</a> da solución a estos problemas generando credenciales de acceso a las bases de datos de forma dinámica, bajo demanda y con un tiempo de concesión limitado. Las credenciales tiene un tiempo de vida limitado si no se renueva su concesión y la generación de las credenciales queda registrado. La forma que tiene Vault de generar credenciales de forma dinámica en una base de datos relacional como <a href="https://www.postgresql.org/">postgres</a> es conectarse a la base de datos con un usuario con permisos para generarlas y ejecutar una sentencia SQL que crea las credenciales.</p>
-<p>Para permitir a Vault generar credenciales de conexión hay que activar el <em>backend</em> de bases de datos, configurarlo con la sentencia SQL que se utilizará para generar las credenciales y crear el rol de Vault que genera las credenciales cuando se le solicite. En este ejemplo se muestra para la base de datos postgres pero Vault también soporta otras bases de datos como <a href="https://www.mysql.com/">MySQL</a>. En el ejemplo la base de datos postgres se ejecuta en un contenedor de <a href="https://www.docker.com/">Docker</a> en el que se asignan el usuario y contraseña del usuario <em>root</em> que utiliza Vault para generar las credenciales de forma dinámica.</p>
-<p>Con las siguientes comandos se inicia <a href="https://www.consul.io/">Consul</a> y Vault.</p>
+<p>La herramienta cccc<a href="https://www.vaultproject.io/">Vault</a> de cccc<a href="https://www.hashicorp.com/">HashiCorp</a> da solución a estos problemas generando credenciales de acceso a las bases de datos de forma dinámica, bajo demanda y con un tiempo de concesión limitado. Las credenciales tiene un tiempo de vida limitado si no se renueva su concesión y la generación de las credenciales queda registrado. La forma que tiene Vault de generar credenciales de forma dinámica en una base de datos relacional como cccc<a href="https://www.postgresql.org/">postgres</a> es conectarse a la base de datos con un usuario con permisos para generarlas y ejecutar una sentencia SQL que crea las credenciales.</p>
+<p>Para permitir a Vault generar credenciales de conexión hay que activar el <em>backend</em> de bases de datos, configurarlo con la sentencia SQL que se utilizará para generar las credenciales y crear el rol de Vault que genera las credenciales cuando se le solicite. En este ejemplo se muestra para la base de datos postgres pero Vault también soporta otras bases de datos como cccc<a href="https://www.mysql.com/">MySQL</a>. En el ejemplo la base de datos postgres se ejecuta en un contenedor de cccc<a href="https://www.docker.com/">Docker</a> en el que se asignan el usuario y contraseña del usuario <em>root</em> que utiliza Vault para generar las credenciales de forma dinámica.</p>
+<p>Con las siguientes comandos se inicia cccc<a href="https://www.consul.io/">Consul</a> y Vault.</p>
 <div class="code">
     <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-bash" data-lang="bash">$ consul agent -dev&#10;<span class="o">=</span><span class="o">=</span>&gt; Starting Consul agent...&#10;<span class="o">=</span><span class="o">=</span>&gt; Consul agent running!&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   Version: <span class="s1">&#39;v1.5.0&#39;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   Node ID: <span class="s1">&#39;38d4f541-0958-6d7d-d49e-a31a15987286&#39;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Node name: <span class="s1">&#39;archlinux&#39;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Datacenter: <span class="s1">&#39;dc1&#39;</span> <span class="o">(</span>Segment: <span class="s1">&#39;&lt;all&gt;&#39;</span><span class="o">)</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Server: <span class="nb">true</span> <span class="o">(</span>Bootstrap: <span class="nb">false</span><span class="o">)</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;   Client Addr: <span class="o">[</span>127.0.0.1<span class="o">]</span> <span class="o">(</span>HTTP: 8500, HTTPS: -1, gRPC: 8502, DNS: 8600<span class="o">)</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;  Cluster Addr: 127.0.0.1 <span class="o">(</span>LAN: 8301, WAN: 8302<span class="o">)</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   Encrypt: Gossip: false, TLS-Outgoing: false, TLS-Incoming: false</code></pre></td></tr></table>&#10;</div>&#10;</div>
     <div class="highlight-meta">
@@ -317,13 +317,13 @@
         <span>postgres-connect-fail.sh</span>
     </div>
 </div>
-<p>En las aplicaciones Java que utilizan <a href="https://spring.io/">Spring</a> el proyecto <a href="https://cloud.spring.io/spring-cloud-vault/">Spring Cloud Vault</a> proporciona las utilidades para simplificar en gran medida la obtención de las credenciales a la base de datos utilizando Vault.</p>
+<p>En las aplicaciones Java que utilizan cccc<a href="https://spring.io/">Spring</a> el proyecto cccc<a href="https://cloud.spring.io/spring-cloud-vault/">Spring Cloud Vault</a> proporciona las utilidades para simplificar en gran medida la obtención de las credenciales a la base de datos utilizando Vault.</p>
 <p>Esto permite que únicamente Vault conozca la cuenta <em>root</em> de la base de datos o una con suficientes permisos para crear credenciales, las aplicaciones no almacenan en su configuración las credenciales para conectarse la base de datos solo las de Vault que le permiten obtener unas credenciales para la base de datos con un tiempo de vida limitado y que pueden revocarse desde Vault en caso de un problema de seguridad para cuales quiera bases de datos que se utilicen.</p>
 <div class="reference">
     Referencia:<br>
 <ul>
-<li><a href="https://picodotdev.github.io/blog-bitix/series/docker/">Serie de artículos sobre Docker</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2017/05/introduccion-a-la-base-de-datos-relacional-postgresql/">Introducción a la base de datos relacional PostgreSQL</a></li>
+<li>cccc<a href="https://picodotdev.github.io/blog-bitix/series/docker/">Serie de artículos sobre Docker</a></li>
+<li>cccc<a href="https://picodotdev.github.io/blog-bitix/2017/05/introduccion-a-la-base-de-datos-relacional-postgresql/">Introducción a la base de datos relacional PostgreSQL</a></li>
 </ul>
 </div>
 
@@ -439,7 +439,7 @@
     </div>
     <div class="col-12 col-sm-4 text-center links">
       
-        <a href="index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+        <a href="https://picodotdev.github.io/blog-bitix/index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
       
       
         <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
