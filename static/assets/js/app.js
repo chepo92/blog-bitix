@@ -47,7 +47,7 @@ require(['jquery', 'lozad'], function($, lozad) {
         var n = $('body .container ins.adsbygoogle').length;
         for (var i = 0; i < n; ++i) {
             try {
-                (adsbygoogle = window.adsbygoogle || []).push({});   
+                (adsbygoogle = window.adsbygoogle || []).push({});
             } catch (e) {}
         }
 

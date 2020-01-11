@@ -4,6 +4,7 @@ type: "post"
 title: "Tomar capturas de pantalla de páginas web desde la línea de comandos o desde la interfaz gráfica con Firefox"
 url: "/2020/01/tomar-capturas-de-pantalla-de-paginas-web-desde-la-linea-de-comandos-o-desde-la-interfaz-grafica-con-firefox/"
 date: 2020-01-10T17:00:00+01:00
+updated: 2020-01-11T16:00:00+01:00
 language: "es"
 rss: true
 sharing: true
