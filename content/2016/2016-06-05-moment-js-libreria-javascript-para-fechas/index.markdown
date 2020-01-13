@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:javascript.svg"
 tags: ["javascript", "planeta-codigo", "programacion"]
 ---
 

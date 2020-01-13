@@ -8,6 +8,7 @@ updated: 2015-05-27T23:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:apache-tapestry-5.svg"
 tags: ["java", "programacion", "tapestry", "planeta-codigo"]
 ---
 
@@ -21,7 +22,7 @@ En este artículo voy a explicar como crear un componente que nos de a todas las
 
 {{< image
     gallery="true"
-    image1="resource:plantilla-blog-stack.png" optionsthumb1="300x200" title1="Plantilla de Blog Stack" >}}
+    image1="image:plantilla-blog-stack.png" optionsthumb1="300x200" title1="Plantilla de Blog Stack" >}}
 
 El esquema de la plantilla será una cabecera, una barra de navegación con enlaces a diferentes secciones de la web, un menú lateral con contenido variable según la página, el contenido que variará según la página y un pie de página. Como todo componente de [Apache Tapestry](http://tapestry.apache.org/) está formado de una clase Java y una plantilla. El componente puede tener diferentes parámetros, y en el caso del de la plantilla muchos para poder variar el contenido por defecto de las diferentes secciones de la página, estos son aside1, aside2, aside3, aside4.
 

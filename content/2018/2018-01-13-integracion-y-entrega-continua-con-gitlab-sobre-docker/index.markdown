@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:gitlab.svg"
 tags: ["planeta-codigo", "software", "software-libre"]
 series: ["gitlab"]
 ---
@@ -31,7 +32,7 @@ Añadido el archivo del _pipeline_ al código fuente del proyecto hay que defini
 
 {{< image
     gallery="true"
-    image1="resource:gitlab-runners.png" optionsthumb1="300x200" title1="Runners"
+    image1="image:gitlab-runners.png" optionsthumb1="300x200" title1="Runners"
     caption="GitLab Runners" >}}
 
 Al registrarlo hay que especificar el tipo de _runner_, hay varios tipos, en este caso se usa el de _docker_ para ejecutar el _pipeline_ dentro de un contenedor de [Docker][docker]. En en archivo de [Docker Compose][docker-compose] es necesario que el _runner_ pueda comunicarse con el servicio de Docker, para ello como punto de montaje del contenedor de _gitlab-runner_ se especificar el archivo _docker.sock_.
@@ -42,8 +43,8 @@ En este ejemplo y con este _pipeline_ el artefacto distribuible de la aplicació
 
 {{< image
     gallery="true"
-    image1="resource:pipelines.png" optionsthumb1="300x200" title1="Pipelines"
-    image2="resource:pipeline.png" optionsthumb2="300x200" title2="Pipeline"
+    image1="image:pipelines.png" optionsthumb1="300x200" title1="Pipelines"
+    image2="image:pipeline.png" optionsthumb2="300x200" title2="Pipeline"
     caption="Pipeline" >}}
 
 El descriptor usando [Docker Compose][docker-compose] que define el servicio de GitLab y otro para GitLab Runner es el siguiente. El nombre de dominio que he utilizado para el servidor es _gitlab_ y ha de añadirse al archivo _/etc/hosts_ para que sea resuelto localmente.

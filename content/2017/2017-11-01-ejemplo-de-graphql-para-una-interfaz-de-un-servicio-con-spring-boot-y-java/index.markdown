@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:graphql.svg"
 tags: ["java", "planeta-codigo", "programacion", "spring"]
 series: ["graphql"]
 summary: "GraphQL es una alternativa a una interfaz REST con las ventajas de poder realizar varias consultas en una misma petición y devolviendo únicamente los datos que requiera el cliente. Es una especificación y hay una implementación para los lenguajes de programación más populares entre ellos Java. Este artículo es una introducción con un ejemplo completo que muestra cómo se hacen consultas y modificaciones en los datos."

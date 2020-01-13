@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:keycloak.png"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Keycloak es un proveedor de OAuth que podemos usar en nuestras aplicaciones y servicios para proporcionar autenticación, autorización, SSO y también añadir seguridad a los servicios REST que desarrollemos como muestro en este artículo. OAuth tiene varias ventajas sobre usar autenticación _Basic_."
 ---
@@ -30,17 +31,17 @@ Iniciado Keycloak con [Docker][docker] y [Docker Compose][docker-compose] accede
 
 {{< image
     gallery="true"
-    image1="resource:keycloak-login.png" optionsthumb1="300x200" title1="Inicio de sesión de Keycloak" >}}
+    image1="image:keycloak-login.png" optionsthumb1="300x200" title1="Inicio de sesión de Keycloak" >}}
 
 Creamos un _realm_, en el ejemplo llamado _springbootjaxrs_ y un cliente con id _client_, además crearemos un rol _api_ y se lo asignaremos al cliente.
 
 {{< image
     gallery="true"
-    image1="resource:keycloak-add-client.png" optionsthumb1="300x200" title1="Registro del cliente"
-    image2="resource:keycloak-add-role.png" optionsthumb2="300x200" title2="Creación de rol" >}}
+    image1="image:keycloak-add-client.png" optionsthumb1="300x200" title1="Registro del cliente"
+    image2="image:keycloak-add-role.png" optionsthumb2="300x200" title2="Creación de rol" >}}
 {{< image
     gallery="true"
-    image1="resource:keycloak-service-account-roles.png" optionsthumb1="300x200" title1="Asignación de roles al cliente" >}}
+    image1="image:keycloak-service-account-roles.png" optionsthumb1="300x200" title1="Asignación de roles al cliente" >}}
 
 Una vez realizada la configuración en el servidor de OAuth/Keycloak obtendremos la configuración para el adaptador de Keycloak para el servicio REST desde la pestaña _Installation_ que añadiremos en el fichero de configuración de Spring Boot _application.yml_. Además, indicaremos que el cliente solo aceptará _access tokens_ mediante la opción _bearer-only_ de modo que no hará redirecciones para autenticar.
 
@@ -55,7 +56,7 @@ Iniciado Keycloak y el servicio REST con el comando <code>gradlew run</code> pod
 
 {{< image
     gallery="true"
-    image1="resource:keycloak-access-token.png" optionsthumb1="300x200" title1="Obtención de un token" >}}
+    image1="image:keycloak-access-token.png" optionsthumb1="300x200" title1="Obtención de un token" >}}
 
 Obtenido el _access token_ si no lo proporcionamos en la llamada al servicio REST observaremos que la respuesta que obtenemos es un [código de estado HTTP 401][wikipedia-http-status-codes] indicando que se necesitan proporcionar las credenciales que con OAuth es un _token_.
 
@@ -63,7 +64,7 @@ Obtenido el _access token_ si no lo proporcionamos en la llamada al servicio RES
 
 {{< image
     gallery="true"
-    image1="resource:client-no-token.png" optionsthumb1="300x200" title1="Llamada al servicio REST sin token" >}}
+    image1="image:client-no-token.png" optionsthumb1="300x200" title1="Llamada al servicio REST sin token" >}}
 
 Proporcionando el token mediante una cabecera de la petición el servicio nos devolverá los datos que proporciona. Si el _token_ no es válido obtendremos un error HTTP 401.
 
@@ -71,8 +72,8 @@ Proporcionando el token mediante una cabecera de la petición el servicio nos de
 
 {{< image
     gallery="true"
-    image1="resource:client-ouath.png" optionsthumb1="300x200" title1="Llamada al servicio REST con token"
-    image2="resource:client-token-tampered.png" optionsthumb2="300x200" title2="Llamada al servicio REST con token inválido" >}}
+    image1="image:client-ouath.png" optionsthumb1="300x200" title1="Llamada al servicio REST con token"
+    image2="image:client-token-tampered.png" optionsthumb2="300x200" title2="Llamada al servicio REST con token inválido" >}}
 
 Para usar Keycloak en una aplicación Java con Spring Boot deberemos añadir algunas dependencias al proyecto que usando [Gradle][gradle] como herramienta de construcción serían las siguientes.
 

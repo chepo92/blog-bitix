@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "resource:images/jconsole.png"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "JMX es una forma sencilla e integrada en la plataforma Java de monitorizar e instrumentalizar ciertas operaciones de funcionamiento interno de la aplicación que no tenga que ver con el ámbito de negocio que resuelve sino en el aspecto técnico. Unos casos de uso son activar una característica de la aplicación mientras la aplicación está funcionando o limpiar una cache de modo que los datos que almacena se actualicen de nuevo de la fuente origen en tiempo real y sin necesidad de reniciarla, cualquier otro realizable con código Java es posible."
 ---
@@ -46,15 +47,15 @@ Iniciando la aplicación que registra un _MBean_ en el servidor de _MBean_ la pl
 
 {{< image
     gallery="true"
-    image1="resource:jconsole.png" optionsthumb1="650x450" title1="Herramienta de monitorización e instrumentalización JConsole"
+    image1="image:jconsole.png" optionsthumb1="650x450" title1="Herramienta de monitorización e instrumentalización JConsole"
     caption="Herramienta de monitorización e instrumentalización JConsole" >}}
 
 Realizada la conexión al agente se muestran las propiedades y operaciones de los MBean registrados con la posibilidad de cambiar sus valores, invocar las operaciones y obtener sus resultados. La propia plataforma Java proporciona numerosos _MBean_ como se muestra en el árbol lateral de la imagen.
 
 {{< image
     gallery="true"
-    image1="resource:jconsole-mbean.png" optionsthumb1="300x250" title1="Instrumentalización de un MBean en JConsole"
-    image2="resource:visualvm-mbean.png" optionsthumb2="300x250" title2="Instrumentalización de un MBean en VisualVM"
+    image1="image:jconsole-mbean.png" optionsthumb1="300x250" title1="Instrumentalización de un MBean en JConsole"
+    image2="image:visualvm-mbean.png" optionsthumb2="300x250" title2="Instrumentalización de un MBean en VisualVM"
     caption="Instrumentalización de un MBean en JConsole y VisualVM" >}}
 
 En el caso de que la aplicación esté contenida dentro de una aplicación web y desplegada en un servidor de aplicaciones como [Tomcat][tomcat] o [WildFly][wildfly] registrar un _MBean_ es similar al caso del ejemplo de la aplicación Java y posteriormente administrados con la herramienta JConsole.
@@ -95,7 +96,7 @@ Los archivos _jmxremote.password_ y _jmxremote.access_ configuran la autenticaci
 
 {{< image
     gallery="true"
-    image1="resource:jconsole-remote.png" optionsthumb1="650x450" title1="Acceso remoto a la herramienta de monitorización e instrumentalización JConsole"
+    image1="image:jconsole-remote.png" optionsthumb1="650x450" title1="Acceso remoto a la herramienta de monitorización e instrumentalización JConsole"
     caption="Acceso remoto a la herramienta de monitorización e instrumentalización JConsole" >}}
 
 El acceso remoto también es posible mediante una [aplicación Java que actúe como cliente del servidor _MBean_](https://docs.oracle.com/javase/tutorial/jmx/remote/custom.html).

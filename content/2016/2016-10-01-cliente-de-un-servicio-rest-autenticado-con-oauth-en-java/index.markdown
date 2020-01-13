@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Teniendo un servicio REST securizado con OAuth2 al invocarlo deberemos realizar el flujo necesario para obtener un _access token_ y posteriormente enviarlo al servicio REST como forma de autenticación y autorización. Usando un cliente programado en el lenguaje Java y usando la librería HttpClient podemos hacer las peticiones HTTP necesarias para la invocación del servicio."
 ---

@@ -8,6 +8,7 @@ updated: 2015-12-11T22:30:00+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:apache-tapestry-5.svg"
 tags: ["java", "planeta-codigo", "programacion", "tapestry"]
 ---
 
@@ -25,20 +26,20 @@ Con Java y un IDE podremos detectar los errores de compilación que en un lengua
 
 {{< image
     gallery="true"
-    image1="resource:producto.png" optionsthumb1="300x200" title1="Edición de un producto" >}}
+    image1="image:producto.png" optionsthumb1="300x200" title1="Edición de un producto" >}}
 
 {{< code file="ProductoAdmin.tml" language="html" options="" >}}
 
 {{< image
     gallery="true"
-    image1="resource:error.png" optionsthumb1="300x200" title1="Error de compilación al acceder a la página" >}}
+    image1="image:error.png" optionsthumb1="300x200" title1="Error de compilación al acceder a la página" >}}
 
 Entrando a la [página Dashboard][blogbitix-28] y pulsando el botón _Load all pages_ detectaremos el error sin necesidad de crear un producto. El error es el siguiente que nos indicará claramente en que página o componente se ha producido el error y una descripción bastante clara de la causa del problema.
 
 {{< image
     gallery="true"
-    image1="resource:dashboard.png" optionsthumb1="300x200" title1="Página dashboard"
-    image2="resource:error-dashboard.png" optionsthumb2="300x200" title2="Página dashboard" >}}
+    image1="image:dashboard.png" optionsthumb1="300x200" title1="Página dashboard"
+    image2="image:error-dashboard.png" optionsthumb2="300x200" title2="Página dashboard" >}}
 
 En la imagen con el mensaje del error se puede ver de forma muy detallada cual es la causa, nos indica que el error está en la página _admin/Producto_ y que la clase _es.com.blogspot.elblogdepicodev.plugintapestry.Producto_ no tiene una propiedad llamada _nombra_, con este mensaje rápidamente nos damos cuenta del error de escritura que hemos cometido, corregirlo basta con sustituir _nombra_ por _nombre_ y pulsando de nuevo el botón _Load all pages_ comprobamos que no hay más errores en esa misma página o ninguna otra de la aplicación.
 

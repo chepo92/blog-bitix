@@ -9,6 +9,7 @@ updated: 2014-12-24T18:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:octopress.png"
 tags: ["gnu-linux", "planeta-codigo", "software", "software-libre"]
 series: ["hemeroteca"]
 library: "true"
@@ -61,7 +62,7 @@ Y para finalizar quiero agradecer a [Fran Mosteiro](https://twitter.com/fran_mos
 
 {{< image
     gallery="true"
-    image1="resource:christmas-tux-2014.jpg" optionsthumb1="600x450" title1="Christmastux 2014"
+    image1="image:christmas-tux-2014.jpg" optionsthumb1="600x450" title1="Christmastux 2014"
     caption="¡Buen 2015!" source="klowner.com" >}}
 
 {{% /post %}}

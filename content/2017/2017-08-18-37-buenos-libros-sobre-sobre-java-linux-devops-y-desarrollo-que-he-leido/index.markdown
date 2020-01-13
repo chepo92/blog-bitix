@@ -32,7 +32,7 @@ En la biblioteca digital [OpenLibra][openlibra] encontramos una gran cantidad de
 
 {{< image
     gallery="true"
-    image1="resource:openlibra.png" optionsthumb1="300x200" title1="OpenLibra"
+    image1="image:openlibra.png" optionsthumb1="300x200" title1="OpenLibra"
     caption="Web de OpenLibra" >}}
 
 Podemos leer libros cuya información no está relacionada con un determinado herramienta técnica sino que su conocimiento es más generalista e independiente de la tecnología, en el artículo [8+ libros para mejorar como programadores][blogbitix-55] recogía varios de los más mencionados y recomendados por mucha gente todavía válidos a pesar del tiempo transcurrido desde que fueron escritos, son atemporales. En la época que estaba en la universidad hace unos 15-20 años para mi internet aún estaba llegando, lo más parecido que tenía era la biblioteca en la que pedía prestados libros pero lógicamente con mayor limitación de material disponible. Hoy en día los alumnos, de universidad o bachillerato y gente con interés que quiera formarse mediante internet tiene acceso a material del que aprender mucho mejor en cantidad, facilidad y seguramente en calidad. A la gente que ahora está en la universidad le recomendaría que no se limiten a aprender lo que les enseñan en clases magistrales sus profesores sino que tomen parte activa en su formación aprovechándose de los recursos que pueden encontrar en internet.

@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:docker.svg"
 tags: ["gnu-linux", "planeta-codigo"]
 series: ["docker"]
 summary: "Aunque no usemos Linux podemos hacer uso de docker a través de una máquina virtual de VirtualBox y con Docker Machine. Docker Machine permite crear un sistema con la misión de albergar contenedores de docker, puede ser en VirtualBox pero también en Amazon EC2 o Digital Ocean además de otras muchas opciones."
@@ -49,7 +50,7 @@ En el administrador de VirtualBox veremos que se ha creado la máquina virtual _
 
 {{< image
     gallery="true"
-    image1="resource:virtualbox.png" optionsthumb1="300x200" title1="Máquina de Docker Machine ne VirtualBox"
+    image1="image:virtualbox.png" optionsthumb1="300x200" title1="Máquina de Docker Machine ne VirtualBox"
     caption="Máquina de Docker Machine en VirtualBox" >}}
 
 Dado que los contenedores se ejecutan en una máquina virtual de VirtualBox y VirtualBox está disponible en Windows y Mac OS además del binario de Docker Machine para estas plataformas podemos usar docker en cualquiera de estos. Aunque no sea de forma nativa como en Linux para un entorno de desarrollo donde las personas trabajan con cualquiera de estos sistemas operativos puede sernos de utilidad.

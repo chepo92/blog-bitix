@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:archlinux.svg"
 tags: ["gnu-linux"]
 summary: "Arch Linux al ser una distribución de GNU/Linux _rolling release_ las actualizaciones de los paquetes del sistema son tan frecuentes como deseemos, una vez a la semana, una vez al mes, una vez al día, ... Si solo queremos descargar los paquetes y actualizarlos en el momento que deseemos podemos hacerlo con un opción del gestor de paquetes de Arch."
 ---

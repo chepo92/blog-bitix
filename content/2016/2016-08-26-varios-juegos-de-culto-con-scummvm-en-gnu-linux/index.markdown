@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:scummvm.png"
 tags: ["gnu-linux"]
 series: ["juegos"]
 summary: "Un juego puede gustar por sus gráficos espectaculares, sin embargo, no será venerado si no proporciona gran cantidad de diversión. Hay algunos juegos en que gran parte de la diversión es proporcionada por la historia o guión. Este son los casos de varios juegos de apuntar y pinchar de hace algunos lustros que quedaron en el recuerdo de muchos de sus jugadores que hoy en día son jugables con ScummVM."
@@ -24,20 +25,20 @@ Con ScummVM podemos jugar a esos juegos del estilo _point-and-click_ en los que 
 
 {{< image
     gallery="true"
-    image1="resource:the-secret-of-monkey-island.jpg" optionsthumb1="300x200" title1="The Secret of Monkey Island"
-    image2="resource:lechuck-revenge.jpg" optionsthumb2="300x200" title2="LeChuck's Revenge" >}}
+    image1="image:the-secret-of-monkey-island.jpg" optionsthumb1="300x200" title1="The Secret of Monkey Island"
+    image2="image:lechuck-revenge.jpg" optionsthumb2="300x200" title2="LeChuck's Revenge" >}}
 {{< image
     gallery="true"
-    image1="resource:the-curse-of-monkey-island.jpg" optionsthumb1="300x200" title1="The Curse of Monkey Island"
-    image2="resource:escape-from-monkey-island.jpg" optionsthumb2="300x200" title2="Escape from Monkey Island" >}}
+    image1="image:the-curse-of-monkey-island.jpg" optionsthumb1="300x200" title1="The Curse of Monkey Island"
+    image2="image:escape-from-monkey-island.jpg" optionsthumb2="300x200" title2="Escape from Monkey Island" >}}
 {{< image
     gallery="true"
-    image1="resource:tales-of-monkey-island.jpg" optionsthumb1="300x200" title1="Tales of Monkey Island"
-    image2="resource:indiana-jones-fate-of-atlantis.jpg" optionsthumb2="300x200" title2="Indiana Jones and the Fate of Atlantis" >}}
+    image1="image:tales-of-monkey-island.jpg" optionsthumb1="300x200" title1="Tales of Monkey Island"
+    image2="image:indiana-jones-fate-of-atlantis.jpg" optionsthumb2="300x200" title2="Indiana Jones and the Fate of Atlantis" >}}
 {{< image
     gallery="true"
-    image1="resource:maniac-mansion.jpg" optionsthumb1="300x200" title1="Maniac Mansion"
-    image2="resource:day-of-the-tentacle.jpg" optionsthumb2="300x200" title2="Maniac Mansion 2: Day of the Tentacle" >}}
+    image1="image:maniac-mansion.jpg" optionsthumb1="300x200" title1="Maniac Mansion"
+    image2="image:day-of-the-tentacle.jpg" optionsthumb2="300x200" title2="Maniac Mansion 2: Day of the Tentacle" >}}
 
 En GNU/Linux podemos seguir jugando a estos juegos, para ello debemos instalar el emulador ScummVM y descargar la ROM de los mismos. En [Arch Linux][archlinux] instalamos el emulador con el [paquete scummvm](https://www.archlinux.org/packages/community/x86_64/scummvm/) y el siguiente comando:
 
@@ -45,7 +46,7 @@ En GNU/Linux podemos seguir jugando a estos juegos, para ello debemos instalar e
 
 {{< image
     gallery="true"
-    image1="resource:scummvm.png" optionsthumb1="300x200" title1="ScummVM" >}}
+    image1="image:scummvm.png" optionsthumb1="300x200" title1="ScummVM" >}}
 
 Son juegos en los que se desarrollan diálogos y hay que leer texto por lo que si no dominamos el inglés deberemos descargarlos en su versión en español. Descargar las ROMs en algunos casos es igual de ilegal que piratear un juego, en otros casos al ser juegos muy antiguos y que se consideran software abandonado o _abandonware_ no es ilegal y se considera una forma de conservación del software, en cualquier caso dejo esta decisión al lector. Algunos juegos han sido reeditados para nuevas plataformas como tabletas o móviles. Hay varios sitios web dedicados a almacenar las ROMs de los juegos. La que he utilizado y en la que he encontrado los juegos de los que hablo en este artículo es [EMUPARADISE](http://www.emuparadise.me), en esta página hay listados unos [500 juegos para ScummVM](https://www.emuparadise.me/ScummVM_Games/21).
 
@@ -53,16 +54,16 @@ Instalado ScummVM y con las ROMs descomprimidas iniciamos el emulador, seleccion
 
 {{< image
     gallery="true"
-    image1="resource:the-secret-of-monkey-island-game.jpg" optionsthumb1="300x200" title1="The Secret of Monkey Island"
-    image2="resource:lechuck-revenge-game.jpg" optionsthumb2="300x200" title2="LeChuck's Revenge" >}}
+    image1="image:the-secret-of-monkey-island-game.jpg" optionsthumb1="300x200" title1="The Secret of Monkey Island"
+    image2="image:lechuck-revenge-game.jpg" optionsthumb2="300x200" title2="LeChuck's Revenge" >}}
 {{< image
     gallery="true"
-    image1="resource:the-curse-of-monkey-island-game.jpg" optionsthumb1="300x200" title1="The Curse of Monkey Island"
-    image2="resource:indiana-jones-fate-of-atlantis-game.jpg" optionsthumb2="300x200" title2="Indiana Jones and the Fate of Atlantis" >}}
+    image1="image:the-curse-of-monkey-island-game.jpg" optionsthumb1="300x200" title1="The Curse of Monkey Island"
+    image2="image:indiana-jones-fate-of-atlantis-game.jpg" optionsthumb2="300x200" title2="Indiana Jones and the Fate of Atlantis" >}}
 {{< image
     gallery="true"
-    image1="resource:maniac-mansion-game.jpg" optionsthumb1="300x200" title1="Maniac Mansion"
-    image2="resource:day-of-the-tentacle-game.jpg" optionsthumb2="300x200" title2="Maniac Mansion 2: Day of the Tentacle" >}}
+    image1="image:maniac-mansion-game.jpg" optionsthumb1="300x200" title1="Maniac Mansion"
+    image2="image:day-of-the-tentacle-game.jpg" optionsthumb2="300x200" title2="Maniac Mansion 2: Day of the Tentacle" >}}
 
 ¡A disfrutar! Lamentablemente ya no tengo el tiempo que tenía antes para jugar a juegos y a veces tampoco las ganas de dedicar ese tiempo a los juegos pero estoy seguro que a aquellos sigan disfrutando de los juegos les será interesante.
 

@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:duckduckgo.svg"
 tags: ["planeta-codigo"]
 ---
 
@@ -23,30 +24,30 @@ Uno de los buscadores que está ganando popularidad es [DuckDuckGo][duckduckgo] 
 
 {{< image
     gallery="true"
-    image1="resource:duckduckgo.png" optionsthumb1="300x200" title1="DuckDuckGo"
+    image1="image:duckduckgo.png" optionsthumb1="300x200" title1="DuckDuckGo"
     caption="DuckDuckGo" >}}
 {{< image
     gallery="true"
-    image1="resource:duckduckgo-1.png" optionsthumb1="300x200" title1="No guardamos tu información personal"
-    image2="resource:duckduckgo-2.png" optionsthumb2="300x200" title2="Nosotros no te perseguimos con anuncios" >}}
+    image1="image:duckduckgo-1.png" optionsthumb1="300x200" title1="No guardamos tu información personal"
+    image2="image:duckduckgo-2.png" optionsthumb2="300x200" title2="Nosotros no te perseguimos con anuncios" >}}
 {{< image
     gallery="true"
-    image1="resource:duckduckgo-3.png" optionsthumb1="300x200" title1="No rastreamos tu información"
-    image2="resource:duckduckgo-4.png" optionsthumb2="300x200" title2="Cámbiate a DuckDuckGo"
+    image1="image:duckduckgo-3.png" optionsthumb1="300x200" title1="No rastreamos tu información"
+    image2="image:duckduckgo-4.png" optionsthumb2="300x200" title2="Cámbiate a DuckDuckGo"
     caption="Privacidad de DuckDuckGo" >}}
 {{< image
     gallery="true"
-    image1="resource:resultados.png" optionsthumb1="300x200" title1="Resultados"
-    image2="resource:resultados-imagenes.png" optionsthumb2="300x200" title2="Resultados de imágenes"
+    image1="image:resultados.png" optionsthumb1="300x200" title1="Resultados"
+    image2="image:resultados-imagenes.png" optionsthumb2="300x200" title2="Resultados de imágenes"
     caption="Resultados de DuckDuckGo" >}}
 {{< image
     gallery="true"
-    image1="resource:opciones-general.png" optionsthumb1="300x200" title1="Opciones general"
-    image2="resource:opciones-diseno.png" optionsthumb2="300x200" title2="Opciones diseño" >}}
+    image1="image:opciones-general.png" optionsthumb1="300x200" title1="Opciones general"
+    image2="image:opciones-diseno.png" optionsthumb2="300x200" title2="Opciones diseño" >}}
 {{< image
     gallery="true"
-    image1="resource:opciones-apariencia.png" optionsthumb1="300x200" title1="Opciones apariencia"
-    image2="resource:opciones-privacidad.png" optionsthumb2="300x200" title2="Opciones privacidad"
+    image1="image:opciones-apariencia.png" optionsthumb1="300x200" title1="Opciones apariencia"
+    image2="image:opciones-privacidad.png" optionsthumb2="300x200" title2="Opciones privacidad"
     caption="Opciones de DuckDuckGo" >}}
 
 DuckDuckGo es una empresa con ánimo de lucro pero lo hace respetando la privacidad de sus usuarios. Usa varias formas para ganar dinero, una de ellas es mediante enlaces de afiliación de páginas como [Amazon][amazon] o [eBay][ebay] con los que si el hace una compra DuckDuckGo obtiene una pequeña comisión, también mostrando en la página de resultados algunos enlaces de publicidad relevantes según la búsqueda realizada.
@@ -59,7 +60,7 @@ Firefox tiene la opción de convertir DuckDuckGo en el buscador predeterminado e
 
 {{< image
     gallery="true"
-    image1="resource:firefox-duckduckgo.png" optionsthumb1="300x200" title1="Preferencias de buscadores en Firefox"
+    image1="image:firefox-duckduckgo.png" optionsthumb1="300x200" title1="Preferencias de buscadores en Firefox"
     caption="Preferencias de buscadores en Firefox" >}}
 
 También se pueden hacer búsquedas de imágenes, vídeos o noticias. Los resultados que ofrece DuckDuckGo son bastante buenos, sino mejores que los de Google, y en los casos que no acierte se puede buscar con _!g_ en Google. Desde hace mucho tiempo DuckDuckGo es el único buscador que uso, #ComeToTheDuckSide.

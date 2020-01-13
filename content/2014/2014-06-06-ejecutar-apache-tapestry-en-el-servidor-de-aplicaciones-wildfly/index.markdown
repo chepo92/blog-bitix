@@ -8,6 +8,7 @@ updated: 2015-05-27T23:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:apache-tapestry-5.svg"
 tags: ["software", "java", "programacion", "tapestry", "planeta-codigo"]
 ---
 

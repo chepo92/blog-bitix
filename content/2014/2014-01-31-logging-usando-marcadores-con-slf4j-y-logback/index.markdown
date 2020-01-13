@@ -7,6 +7,7 @@ date: 2014-01-31T17:10:17+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 ---
 
@@ -32,13 +33,13 @@ Este sería el resultado:
 
 {{< image
     gallery="true"
-    image1="resource:sin-filtro.png" optionsthumb1="300x200" >}}
+    image1="image:sin-filtro.png" optionsthumb1="300x200" >}}
 
 Para conseguir solo las trazas de una funcionalidad se pueden utilizar los marcadores («markers») de forma que además de por el nivel del mensaje de traza y el logger podamos filtrar por el marcador asociado a la traza. El marcador de una traza es una etiqueta por la que posteriormente podemos filtrar. Si una funcionalidad estuviese repartida por varias clases podríamos usar el mismo marcador en todas esas trazas de forma que podamos filtrar luego por él. El resultado del ejemplo completo sería el siguiente:
 
 {{< image
     gallery="true"
-    image1="resource:con-filtro.png" optionsthumb1="300x200" >}}
+    image1="image:con-filtro.png" optionsthumb1="300x200" >}}
 
 En ambos resultados puede verse el nombre del marcador (IMP de importación, PER de persistencia, UTL de utilidad) asociado a la traza, en el segundo solo se muestran las trazas con el marcador IMP de la funcionalidad de importación.
 

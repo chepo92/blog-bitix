@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:hugo.svg"
 tags: ["blog", "java", "planeta-codigo", "programacion", "software", "software-libre", "tapestry", "gnu-linux"]
 series: ["hemeroteca"]
 library: "true"
@@ -27,8 +28,8 @@ Más del 90% del tráfico que recibo proviene del buscador Google y el resto de 
 
 {{< image
     gallery="true"
-    image1="resource:analytics.png" optionsthumb1="300x200" title1="Analytics"
-    image2="resource:gadsense.png" optionsthumb2="300x200" title2="AdSense"
+    image1="image:analytics.png" optionsthumb1="300x200" title1="Analytics"
+    image2="image:gadsense.png" optionsthumb2="300x200" title2="AdSense"
     caption="Evolución visitas e ingresos" >}}
 
 Analizando los ingresos y visitas de mi blog y divagando cual sería el tráfico que debería generar para vivir únicamente blog si con 60K páginas vistas obtengo 50€ en ingresos al mes, debería multiplicar por ¿30, 40? el tráfico de este momento para vivir del blog, pero siendo más modesto multiplicar por 5 o 10 ya serían unos ingresos muy notables y algo que parece alcanzable aunque no sea fácilmente, ¿cuantas visitas mensuales son esas para una web? ¿3,6M de páginas vistas al mes? ¿300K o 600K siendo más modesto?. Quizá si publicase en inglés la audiencia sería mayor, aún no se cual es el tráfico que poseen otras páginas hispanas personales de temática tecnológica, software libre o programación más conocidos para saber cual es el límite de visitas alcanzable en este nicho de temática ya que los blogs que sigo en pocos he visto esta misma exhivición impúdica de datos que incluyo aquí (si como blogger te sientes aludido ya tienes tema para un artículo ;). Medios como [Xataka](https://www.xataka.com/) o [Genbeta](https://www.genbeta.com/) por citar algunos tecnológicos muy conocidos profesionales, empresariales o de grupos editoriales con las vistas que tienen deben generar suficiente tráfico para que sus ingresos solo en publicidad costeen los gastos de los redactores, servidores, viajes, paguen algunos sueldos, etc.

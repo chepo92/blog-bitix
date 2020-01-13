@@ -9,6 +9,7 @@ updated: 2014-12-24T17:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:octopress.png"
 tags: ["java", "planeta-codigo", "programacion", "software", "software-libre", "tapestry", "gnu-linux"]
 series: ["hemeroteca"]
 library: "true"

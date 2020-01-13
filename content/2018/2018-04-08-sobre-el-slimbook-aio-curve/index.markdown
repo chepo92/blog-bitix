@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:slimbook.jpg"
 tags: ["hardware", "opinion"]
 ---
 
@@ -29,15 +30,15 @@ Varios medios se hacía eco de la presentación:
 
 {{< image
     gallery="true"
-    image1="resource:slimbook-curve-1.jpg" optionsthumb1="650x450" title1="Slimbook AIO Curve" >}}
+    image1="image:slimbook-curve-1.jpg" optionsthumb1="650x450" title1="Slimbook AIO Curve" >}}
 {{< image
     gallery="true"
-    image2="resource:slimbook-curve-2.jpg" optionsthumb2="300x200" title2="Slimbook AIO Curve"
-    image3="resource:slimbook-curve-3.jpg" optionsthumb3="300x200" title3="Slimbook AIO Curve" >}}
+    image2="image:slimbook-curve-2.jpg" optionsthumb2="300x200" title2="Slimbook AIO Curve"
+    image3="image:slimbook-curve-3.jpg" optionsthumb3="300x200" title3="Slimbook AIO Curve" >}}
 {{< image
     gallery="true"
-    image1="resource:slimbook-curve-4.jpg" optionsthumb1="300x200" title1="Slimbook AIO Curve"
-    image2="resource:slimbook-curve-5.jpg" optionsthumb2="300x200" title2="Slimbook AIO Curve"
+    image1="image:slimbook-curve-4.jpg" optionsthumb1="300x200" title1="Slimbook AIO Curve"
+    image2="image:slimbook-curve-5.jpg" optionsthumb2="300x200" title2="Slimbook AIO Curve"
     caption="Slimbook AIO Curve" >}}
 
 Hasta aquí los hechos. Siendo usuario de GNU/Linux y estando [intentando buscar un nuevo equipo pequeño y silencioso][blogbitix-309] y siendo Slimbook una de las marcas que estoy siguiendo como candidata para comprar uno de sus equipos me voy a permitir el lujo como posible cliente de dar mi opinión de por que el Slimbook AIO Curve no me lo planteo como una opción que evaluar.

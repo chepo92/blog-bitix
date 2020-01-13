@@ -23,7 +23,7 @@ Para conectarse a internet es necesario disponer de un identificador público (u
 
 {{< image
     gallery="false"
-    image1="resource:direccion.jpg" optionsthumb1="600x450" title1="Dirección" >}}
+    image1="image:direccion.jpg" optionsthumb1="600x450" title1="Dirección" >}}
 
 Para racionalizar y dirigir la asignación de direcciones se crearon organismos que gestionan las direcciones en cada uno de los continentes, esto genera una primera división de las direcciones IP en función del organismo que gestione la dirección IP que estamos utilizando.
 
@@ -37,7 +37,7 @@ Además, algunos canales de televisión ofrecen a sus suscriptores un servicio d
 
 {{< image
     gallery="false"
-    image1="resource:pagina-bloqueada.jpg" optionsthumb1="600x450" title1="Página bloqueada" >}}
+    image1="image:pagina-bloqueada.jpg" optionsthumb1="600x450" title1="Página bloqueada" >}}
 
 ### Evitando las limitaciones geográficas
 

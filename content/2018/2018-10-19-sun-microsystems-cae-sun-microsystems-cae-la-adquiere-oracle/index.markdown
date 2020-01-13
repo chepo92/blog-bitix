@@ -11,6 +11,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:sun-microsystems.svg"
 tags: ["opinion", "planeta-codigo"]
 ---
 
@@ -24,9 +25,9 @@ Otras tecnologías de Sun relevantes eran el sistema operativo [Solaris][solaris
 
 {{< image
     gallery="true"
-    image1="resource:sun-microsystems-headquarters.jpg" optionsthumb1="200x150" title1="Sun Microsystems Headquarters"
-    image2="resource:sun-microsystems-workstation.jpg" optionsthumb2="200x150" title2="Sun Microsystems Workstation"
-    image3="resource:sun-ultrasparc.jpg" optionsthumb3="200x150" title3="Sun Microsystems sparc" >}}
+    image1="image:sun-microsystems-headquarters.jpg" optionsthumb1="200x150" title1="Sun Microsystems Headquarters"
+    image2="image:sun-microsystems-workstation.jpg" optionsthumb2="200x150" title2="Sun Microsystems Workstation"
+    image3="image:sun-ultrasparc.jpg" optionsthumb3="200x150" title3="Sun Microsystems sparc" >}}
 
 La adquisición de Oracle generó dudas por la cultura de empresa más cerrada que la que tenía Sun que contribuyó e influenció notablemente en el mundo tecnológico aún a día de hoy. Después de unos meses de la adquisición varias personas salieron de la compañía como [James Gosling][james-gosling] creador de Java, [Tim Bray](https://en.wikipedia.org/wiki/Tim_Bray) creador de formato XML, [Kohsuke Kawaguchi](https://en.wikipedia.org/wiki/Kohsuke_Kawaguchi) desarrollador principal de Hudson o [Bryan Cantrill](https://en.wikipedia.org/wiki/Bryan_Cantrill) creador de DTrace.
 

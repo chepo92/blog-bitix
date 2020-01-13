@@ -8,6 +8,7 @@ updated: 2015-04-10T20:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:apache-tapestry-5.svg"
 tags: ["java", "planeta-codigo", "programacion", "tapestry"]
 ---
 
@@ -23,7 +24,7 @@ Apache Tapestry es un _framework_ orientado a componentes para crear aplicacione
 
 {{< image
     gallery="true"
-    image1="resource:portada-plugintapestry.png" optionsthumb1="300x200" title1="" >}}
+    image1="image:portada-plugintapestry.png" optionsthumb1="300x200" title1="" >}}
 
 Incluyendo la descripción de las características del _framework_ el libro trata la mayoría de aspectos que puede necesitar una aplicación o página web, entre ellos:
 

@@ -28,7 +28,7 @@
 {{- $gallery := eq "true" (index $attributes "gallery") -}}
 {{- $layout := index $attributes "layout" -}}
 
-{{- if or (hasPrefix $url "logotype:") (hasPrefix $url "resource:") (hasPrefix $url "asset:") -}}
+{{- if or (hasPrefix $url "logotype:") (hasPrefix $url "resource:") (hasPrefix $url "image:") (hasPrefix $url "asset:") -}}
   {{- $binding := index (split $url ":") 0 -}}
   {{- $image := index (split $url ":") 1 -}}
   {{- $imagethumb := index (split $url ":") 2 -}}
@@ -36,13 +36,15 @@
   {{- if eq $binding "logotype" -}}
     {{- $src = print "assets/images/logotypes/" $image | relURL -}}
     {{- $srcthumb = cond (eq $imagethumb nil) $src (print "assets/images/logotypes/" $imagethumb | relURL) -}}
-  {{- else if eq $binding "resource" -}}
+  {{- else if or (eq $binding "resource") (eq $binding "image") -}}
+    {{ $path := cond (eq $binding "image") "images/" "" }}
+
     {{- if (findRE "\\.svg$|\\.webp$" $image) -}}
-      {{- $src = print "images/" $image -}}
-      {{- $srcthumb = cond (eq $imagethumb nil) $image (print "images/" $imagethumb) -}}
+      {{- $src = print $path $image -}}
+      {{- $srcthumb = cond (eq $imagethumb nil) $image (print $path $imagethumb) -}}
     {{- else -}}
-      {{- $resource := .Page.Resources.GetMatch (print "images/" $image) -}}
-      {{- $resourcethumb := .Page.Resources.GetMatch (print "images/" $image) -}}
+      {{- $resource := .Page.Resources.GetMatch (print $path $image) -}}
+      {{- $resourcethumb := .Page.Resources.GetMatch (print $path $image) -}}
       {{- $scaled := $nil -}}
       {{- $scaledhumb := $nil -}}
 

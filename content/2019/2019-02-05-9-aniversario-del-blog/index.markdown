@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:hugo.svg"
 tags: ["blog", "opinion", "planeta-codigo"]
 series: ["aniversario"]
 ---

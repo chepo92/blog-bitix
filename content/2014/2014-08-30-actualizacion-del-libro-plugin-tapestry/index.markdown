@@ -8,6 +8,7 @@ updated: 2015-10-04T17:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:apache-tapestry-5.svg"
 tags: ["java", "programacion", "tapestry", "planeta-codigo"]
 ---
 
@@ -19,7 +20,7 @@ Hace un poco más de una año publiqué el [libro PlugIn Tapestry][blogbitix-12]
 
 {{< image
     gallery="true"
-    image1="resource:PugInTapestry (Portada).png" optionsthumb1="300x200" title1="" >}}
+    image1="image:PugInTapestry (Portada).png" optionsthumb1="300x200" title1="" >}}
 
 En esta actualización he revisado capítulos como el Inicio rápido para empezar a desarrollar en unos pocos minutos, la sección que trata sobre Plantillas para dar a las páginas un aspecto común, la sección que trata sobre unas Convenciones para los archivos de literales, ampliada la sección de Principios en la que se detalla cuales son las ideas y objetivos por los que se rige el _framework_, también reescrita la sección de Integración con Spring, una de las librerías más usadas y que facilita el desarrollo enormemente.
 

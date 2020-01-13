@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "resource:images/consul.png"
 tags: ["java", "planeta-codigo", "programacion", "software", "software-libre"]
 series: ["hashicorp", "spring-cloud"]
 summary: "Sin entrar a si los microservicios son adecuados o no son adecuados en una aplicación, está claro que si se utilizan estos tienen varias necesidades. Un servicio de registro y descubrimiento, configuración centralizada, tolerancia a fallos, _gateway/load balancer/reverse proxy_, trazabilidad y métricas, autenticación, orquestación, ... Los microservicios quiza no sean un gran monolito, quizá mas pequeños y con funcinalidad más acotada, pero el hecho de que se comuniquen a través de un medio más complejo y menos fiable como la red en vez de una llamada a un método y sean más numerosos hacen que la complejidad sea incluso mayor. Este artículo propone un ejemplo con Spring Cloud para los servicios, Consul para el registro y descubrimiento, Nomad para la orquestación y Traefik como _gateway_."
@@ -53,7 +54,7 @@ El esquema de servicios sería el siguiente. Los _job_ son enviados a Nomad desd
 
 {{< image
     gallery="true"
-    image1="resource:esquema-arquitectura.png" optionsthumb1="600x450" title1="Esquema arquitectura"
+    image1="image:esquema-arquitectura.png" optionsthumb1="600x450" title1="Esquema arquitectura"
     caption="Esquema arquitectura" >}}
 
 La ejecución del ejemplo requiere [Docker][docker] ya que es en este caso el _driver_ empleado en Nomad para ejecutar los servicios del servicio de configuración, el _gateway_, el servicio y el cliente del servicio. Nomad además se encarga de registrar los servicios en el servicio de registro y descubrimiento de Consul.
@@ -78,13 +79,13 @@ Tanto Consul, Nomad como Traefik ofrecen una consola para ver su estado ubicadas
 
 {{< image
     gallery="true"
-    image1="resource:consul.png" optionsthumb1="200x150" title1="Consul"
-    image2="resource:nomad-1.png" optionsthumb2="200x150" title2="Nomad"
-    image3="resource:nomad-2.png" optionsthumb3="200x150" title3="Nomad" >}}
+    image1="image:consul.png" optionsthumb1="200x150" title1="Consul"
+    image2="image:nomad-1.png" optionsthumb2="200x150" title2="Nomad"
+    image3="image:nomad-2.png" optionsthumb3="200x150" title3="Nomad" >}}
 {{< image
     gallery="true"
-    image1="resource:traefik-1.png" optionsthumb1="200x150" title1="Traefik"
-    image2="resource:traefik-2.png" optionsthumb2="200x150" title2="Traefik"
+    image1="image:traefik-1.png" optionsthumb1="200x150" title1="Traefik"
+    image2="image:traefik-2.png" optionsthumb2="200x150" title2="Traefik"
     caption="Consolas de administración de Consul, Nomad y Traefik" >}}
 
 El código del servicio, del cliente implementados con Spring y la salida del cliente son los siguientes.

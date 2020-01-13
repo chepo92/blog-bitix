@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "resource:images/tmux.png"
 tags: ["gnu-linux", "planeta-codigo", "software"]
 summary: "Las personas que usan de forma intensiva la terminal seguramente usando un mutiplexador de terminales como tmux su trabajo es facilitado. Tmux permite dividir una terminal en paneles, ventanas independiente y sesiones. Usando sus múltiples combinaciones de teclas se divide una terminal o una ventana de forma horizontal y vertical en paneles del tamaño que se desee pudiendo de esta forma visualizar al mismo tiempo varias terminales ubicadas en cada panel. También se puede crear una configuración para iniciar tmux con la misma disposición de paneles, ventanas y sesiones."
 ---
@@ -23,7 +24,7 @@ Las terminales gráficas como [GNOME][gnome] Terminal y [KDE][kde] Konsole sopor
 
 {{< image
     gallery="true"
-    image1="resource:tmux.png" optionsthumb1="300x200" title1="Sesión de tmux en la terminal de GNOME"
+    image1="image:tmux.png" optionsthumb1="300x200" title1="Sesión de tmux en la terminal de GNOME"
     caption="Sesión de tmux en la terminal de GNOME" >}}
 
 Tmux al ser un programa de la terminal todas sus opciones se realizan con el teclado, y no son pocas [las combinaciones de teclas de su _cheatsheet_ o chuleta](https://tmuxcheatsheet.com/). Algunas opciones básicas necesario conocer con son:

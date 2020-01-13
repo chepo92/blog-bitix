@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:raspberrypi.svg"
 tags: ["gnu-linux", "planeta-codigo", "programacion"]
 series: ["electronica", "desempaquetado-tecnologia"]
 ---
@@ -34,8 +35,8 @@ Después de unos años se han lanzado versiones notablemente mejoradas, hasta la
 
 {{< image
     gallery="true"
-    image1="resource:raspberrypi1b.jpg" optionsthumb1="300x200" title1="Raspberry Pi 1 B"
-    image2="resource:raspberrypi3b.jpg" optionsthumb2="300x200" title2="Raspberry Pi 3 B"
+    image1="image:raspberrypi1b.jpg" optionsthumb1="300x200" title1="Raspberry Pi 1 B"
+    image2="image:raspberrypi3b.jpg" optionsthumb2="300x200" title2="Raspberry Pi 3 B"
     caption="Placas modelos Raspberry Pi 1 B y 3 B" >}}
 
 {{< amazon
@@ -69,23 +70,23 @@ El contenido del _kit_ es el siguiente que viene en una estupenda caja de plást
 
 {{< image
     gallery="true"
-    image1="resource:caja.jpg" optionsthumb1="300x200" title1="Caja"
-    image2="resource:componentes-1.jpg" optionsthumb2="300x200" title2="Componentes"
+    image1="image:caja.jpg" optionsthumb1="300x200" title1="Caja"
+    image2="image:componentes-1.jpg" optionsthumb2="300x200" title2="Componentes"
     caption="Caja, componentes y sensores" >}}
 {{< image
     gallery="true"
-    image1="resource:display-1.jpg" optionsthumb1="300x200" title1="Display 16x02"
-    image2="resource:display-2.jpg" optionsthumb2="300x200" title2="Display 16x02 con adaptador I2C"
+    image1="image:display-1.jpg" optionsthumb1="300x200" title1="Display 16x02"
+    image2="image:display-2.jpg" optionsthumb2="300x200" title2="Display 16x02 con adaptador I2C"
     caption="Display 16x02 y adaptador I2C" >}}
 {{< image
     gallery="true"
-    image1="resource:breadboard-1.jpg" optionsthumb1="300x200" title1="Breadboard"
-    image2="resource:breadboard-2.jpg" optionsthumb2="300x200" title2="Breadboard y adaptador"
+    image1="image:breadboard-1.jpg" optionsthumb1="300x200" title1="Breadboard"
+    image2="image:breadboard-2.jpg" optionsthumb2="300x200" title2="Breadboard y adaptador"
     caption="Breadboard y adaptador" >}}
 {{< image
     gallery="true"
-    image1="resource:adaptador-breadboard.jpg" optionsthumb1="300x200" title1="Breadboard"
-    image2="resource:diodos-resistencias.jpg" optionsthumb2="300x200" title2="Diodos, botones, resistencias y fotoresistores"
+    image1="image:adaptador-breadboard.jpg" optionsthumb1="300x200" title1="Breadboard"
+    image2="image:diodos-resistencias.jpg" optionsthumb2="300x200" title2="Diodos, botones, resistencias y fotoresistores"
     caption="Adaptador breadboard, diodos, botones, resistencias y fotoresistores" >}}
 
 {{< amazon
@@ -100,32 +101,32 @@ En la página del fabricante o distribuidor mayorista [Osoyoo](http://osoyoo.com
 
 {{< image
     gallery="true"
-    image1="resource:raspberrypi1b-header-rev1.png" optionsthumb1="300x200" title1="Header de _pines_ Raspberry Pi 1 B"
-    image2="resource:raspberrypi3b-header.png" optionsthumb2="300x200" title2="Header de _pines_ Raspberry Pi 3 B"
+    image1="image:raspberrypi1b-header-rev1.png" optionsthumb1="300x200" title1="Header de _pines_ Raspberry Pi 1 B"
+    image2="image:raspberrypi3b-header.png" optionsthumb2="300x200" title2="Header de _pines_ Raspberry Pi 3 B"
     caption="Header de _pines_ Raspberry Pi 1 B y Raspberry Pi 3 B, nomenclatura wiringPi" >}}
 {{< image
     gallery="true"
-    image1="resource:raspberrypi1b-header-rev1-broadcom.png" optionsthumb1="300x200" title1="Header de _pines_ Raspberry Pi 1 B"
-    image2="resource:raspberrypi3b-header-broadcom.png" optionsthumb2="300x200" title2="Header de _pines_ Raspberry Pi 3 B"
+    image1="image:raspberrypi1b-header-rev1-broadcom.png" optionsthumb1="300x200" title1="Header de _pines_ Raspberry Pi 1 B"
+    image2="image:raspberrypi3b-header-broadcom.png" optionsthumb2="300x200" title2="Header de _pines_ Raspberry Pi 3 B"
     caption="Headers de _pines_ Raspberry Pi 1 B y Raspberry Pi 3 B, nomenclatura Broadcom" >}}
 {{< image
     gallery="true"
-    image1="resource:codigo-colores-resistencias.jpg" optionsthumb1="300x200" title1="Código de colores de las resistencias"
+    image1="image:codigo-colores-resistencias.jpg" optionsthumb1="300x200" title1="Código de colores de las resistencias"
     caption="Código de colores de las resistencias" >}}
 
 Un ejemplo básico sin necesidad de programar nada es encender un diodo LED. Los elementos a usar son el diodo LED, una resistencia, los cables macho-macho, el cable de extensión y la matriz de puntos. Para ello conectamos el cable de extensión a la matriz de puntos donde con los cables macho-macho haremos las conexiones en los agujeros de la matriz de puntos. Usaremos la conexión de voltaje de 3.3V y una resistencia de 200 ohmios para que el LED no reciba demasiada intensidad. Los diodos LED tienen dos patitas, una más corta que la otra que indican la polaridad, la corta es el polo negativo y se conecta a tierra, la larga es el polo positivo que se conecta a uno de los extremos de la resistencia y el otro extremo de esta la voltaje de 3.3V.
 
 {{< image
     gallery="true"
-    image1="resource:hola-mundo-led.jpg" optionsthumb1="300x200" title1="Ejemplo conexión LEDs"
-    image2="resource:raspberrypi.jpg" optionsthumb2="300x200" title2="Raspberry Pi"
+    image1="image:hola-mundo-led.jpg" optionsthumb1="300x200" title1="Ejemplo conexión LEDs"
+    image2="image:raspberrypi.jpg" optionsthumb2="300x200" title2="Raspberry Pi"
     caption="Ejemplo conexión LEDs y Raspberry Pi" >}}
 
 Con el programa [Fritzing](http://fritzing.org/home/) podremos prototipar y documentar el esquema de  conexiones que realicemos de los proyectos. Posee numerosos modelos, elementos electrónicos y dispositivos de entrada y salida aunque no he encontrado el correspondiente la placa de extensión de wiringPi.
 
 {{< image
     gallery="true"
-    image1="resource:fritzing.png" optionsthumb1="300x200" title1="Fritzing"
+    image1="image:fritzing.png" optionsthumb1="300x200" title1="Fritzing"
     caption="Fritzing" >}}
 
 En el siguiente artículo explicaré como crear un programa Java para encender y apagar varias veces un diodo LED con la librería Doizero. Además explicaré como con [Gradle][gradle], [SSH][ssh] y [Ansible][ansible] hacerlo de forma cómoda desde nuestra máquina de desarrollo y no directamente desde la más lenta Raspberry Pi.

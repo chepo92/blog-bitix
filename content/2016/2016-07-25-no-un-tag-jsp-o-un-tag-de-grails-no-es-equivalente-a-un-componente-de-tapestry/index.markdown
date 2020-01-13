@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:apache-tapestry-5.svg"
 tags: ["java", "opinion", "planeta-codigo", "tapestry", "programacion"]
 summary: "Alguna vez que he dado una presentación sobre Apache Tapestry después de la misma me comentaron que eso mismo que explicaba se podía hacer con el _framework_ que esa persona usaba. En un proyecto la tecnología no es es lo más importante pero es una herramienta que puede facilitar en gran medida el desarrollo. Respecto a los componentes de Tapestry alguien puede pensar que son iguales a los _tag_ que existen en las tecnologías de presentación como JSP o Grails. En este artículo comentaré algunas diferencias importantes que los hace más y muy interesantes junto con otras características de _framework_."
 ---
@@ -28,8 +29,8 @@ Esta sería una imagen del prototipo de los botones para hacer acciones múltipl
 
 {{< image
     gallery="true"
-    image1="resource:listado.png" optionsthumb1="300x200" title1="Listado de productos"
-    image2="resource:modal.png" optionsthumb2="300x200" title2="Modal solicitando información adicional"
+    image1="image:listado.png" optionsthumb1="300x200" title1="Listado de productos"
+    image2="image:modal.png" optionsthumb2="300x200" title2="Modal solicitando información adicional"
     caption="Listado y modal de la necesidad expuesta" >}}
 
 En la necesidad real las filas son compras pero en el ejemplo usaré la entidad _Product_. Las acciones en el ejemplo serán habilitar para la que no será necesaria información adicional, la otra acción será deshabilitar para la que se necesitará introducir una razón con un modal.
@@ -79,7 +80,7 @@ Para volver a la misma página en [Spring MVC][spring], [Struts][struts] o [Grai
 
 {{< image
     gallery="true"
-    image1="resource:dialogo-recargar.png" optionsthumb1="300x200" title1="Diálogo recargar después de petición POST en Firefox"
+    image1="image:dialogo-recargar.png" optionsthumb1="300x200" title1="Diálogo recargar después de petición POST en Firefox"
     caption="Diálogo recargar después de petición POST en Firefox" >}}
 
 [React][react] y [Polymer][polymer] son tecnologías de cliente en algunos aspectos similares a los componentes de Apache Tapestry pero con la diferencia de que unos son para el navegador del cliente y otros para el servidor, nada nos impide en la misma aplicación usar en el cliente React y Polymer y en el servidor Apache Tapestry. Nótese en el código del caso anterior que Tapestry ofrece integración con JavaScript de un modo que no existe ni en Spring MVC, Struts o Grails e incorpora de serie [RequireJS][requirejs], Undercore y jQuery, un componente de Tapestry puede requerir la cargar de un recurso de JavaScript y desde el componente es posible pasar datos al JavaScript usando el servicio [JavaScriptSupport](http://tapestry.apache.org/5.4/apidocs/org/apache/tapestry5/services/javascript/JavaScriptSupport.html).

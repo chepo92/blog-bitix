@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:gnu.svg"
 tags: ["gnu-linux", "planeta-codigo", "seguridad", "software-libre"]
 summary: "¿Has perdido alguna vez una memoria USB? ¿sí, aún no? ¿qué datos contenía? Muy posiblemente son varias las memorias USB que tenemos, por su poco tamaño y cada vez mayor capacidad incluso llevaremos alguna en la cartera siempre con nosotros. Si quieres mantener a salvo los datos en caso de pérdida hay varias opciones, una para esta necesidad es cifrar completamente la unidad con dm-crypt junto con LUKS+Ext4 en GNU/Linux. Suena muy técnico pero es muy sencillo usando la aplicación Discos de GNOME y la seguridad de nuestra información aumentará notablemente."
 ---
@@ -28,18 +29,18 @@ Iniciada la aplicación Discos e identificada y seleccionada la unidad USB que q
 
 {{< image
     gallery="true"
-    image1="resource:discos.png" optionsthumb1="300x200" title1="Aplicación Discos de GNOME"
-    image2="resource:opciones-formato.png" optionsthumb2="300x200" title2="Opciones formateo unidad" >}}
+    image1="image:discos.png" optionsthumb1="300x200" title1="Aplicación Discos de GNOME"
+    image2="image:opciones-formato.png" optionsthumb2="300x200" title2="Opciones formateo unidad" >}}
 
 Formateada la unidad con LUKS+Ext4 al conectarla al equipo o montarla el entorno de escritorio nos preguntará por la contraseña con un diálogo.
 
 {{< image
     gallery="true"
-    image1="resource:contrasena.png" optionsthumb1="300x200" title1="Diálogo solicitud contraseña" >}}
+    image1="image:contrasena.png" optionsthumb1="300x200" title1="Diálogo solicitud contraseña" >}}
 {{< image
     gallery="true"
-    image1="resource:unidad-cifrada.png" optionsthumb1="300x200" title1="Unidad cifrada en Nautilus"
-    image2="resource:unidad-descifrada.png" optionsthumb2="300x200" title2="Unidad BMOVE ROJO descifrada en Nautilus" >}}
+    image1="image:unidad-cifrada.png" optionsthumb1="300x200" title1="Unidad cifrada en Nautilus"
+    image2="image:unidad-descifrada.png" optionsthumb2="300x200" title2="Unidad BMOVE ROJO descifrada en Nautilus" >}}
 
 Introducida la contraseña veremos los archivos originales y podremos trabajar con ellos con normalidad como si no estuviesen cifrados. En la [wiki de Arch Linux][archlinux-wiki] hay varios artículos explicando en que consiste dm-crypt y los comandos que deberíamos usar desde la terminal, los artículos en el apartado de referencia del final de este artículo. Cifrar la unidad completamente con cm-crypt y LUKS+Ext4 es perfectamente compatible con usar EncFS, es decir, podemos usar dm-crypt en la unidad y en ella que ya está cifrada [almacenar un sistema de archivos también cifrado con EncFS][blogbitix-126].
 

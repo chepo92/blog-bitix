@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:docker.svg"
 tags: ["blog", "planeta-codigo"]
 series: ["docker"]
 summary: "Parte de la información que usan los contenedores de Docker se debe proteger de accesos no deseados. Anteriormente en algunos casos se usaban variables de entorno para lanzar los contenedores lo que no es seguro si se listan los procesos del sistema con sus parámetros, incluir archivos en las imágenes de los contenedores tampoco es recomendable. Docker Secrets permite proporcionar y mantener segura la información sensible que usen los contenedores."
@@ -52,7 +53,7 @@ Por otra parte la aplicación Java con [Spring Boot][spring-boot] lista el conte
 
 {{< image
     gallery="true"
-    image1="resource:message.png" optionsthumb1="300x200" title1="Contenido del archivo message.txt"
+    image1="image:message.png" optionsthumb1="300x200" title1="Contenido del archivo message.txt"
     caption="Contenido del archivo message.txt" >}}
 
 Para probar el ejemplo hay que ejecutar varios comandos, la secuencia completa es la siguiente:

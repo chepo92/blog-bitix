@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Guava EventBus es una solución simple para la publicación y suscripción de eventos en una misma aplicación y como tal no posee muchas de las capacidades que si tiene JMS o RabbitMQ, sin embargo, en algunos casos puede ser muy útil, una solución sencilla y sin requerimientos adicionales de infraesrtuctura."
 ---

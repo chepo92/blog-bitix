@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:uptime-robot.png"
 tags: ["planeta-codigo", "programacion"]
 ---
 
@@ -20,7 +21,7 @@ Los sitios web que ofrecen su servicio de forma ininterrumpida por diferentes ca
 
 {{< image
     gallery="true"
-    image1="resource:uptime-robot.png" optionsthumb1="300x200" title1="Uptime Robot"
+    image1="image:uptime-robot.png" optionsthumb1="300x200" title1="Uptime Robot"
     caption="Uptime Robot" >}}
 
 Una vez registrados y con acceso al panel de control podemos crear un _monitor_. Tenemos la posibilidad de crear diferentes tipos:
@@ -32,18 +33,18 @@ Una vez registrados y con acceso al panel de control podemos crear un _monitor_.
 
 {{< image
     gallery="true"
-    image1="resource:nuevo-monitor.png" optionsthumb1="300x200" title1="Nuevo monitor HTTP"
+    image1="image:nuevo-monitor.png" optionsthumb1="300x200" title1="Nuevo monitor HTTP"
     caption="Nuevo monitor HTTP" >}}
 
 En el momento que un monitor detecte una caída de servicio podemos establecer que nos notifique por correo electrónico, [Twitter][twitter], _web-hook_, [Slack][slack], <abbr title="Short Message Service">SMS</abbr> o alguna más de forma que nos enteremos de la circunstancia inmediatamente. También podemos establecer el intervalo de tiempo de la monitorización desde como mínimo cada 5 minutos. En el panel de control podemos ver algunas estadísticas de cada monitor y de la cuenta, también se pueden reiniciar las estadísticas de cada monitor.
 
 {{< image
     gallery="true"
-    image1="resource:dashboard.png" optionsthumb1="300x200" title1="Dashboard"
+    image1="image:dashboard.png" optionsthumb1="300x200" title1="Dashboard"
     caption="Dashboard" >}}
 {{< image
     gallery="true"
-    image1="resource:blogstack.png" optionsthumb1="300x200" title1="Monitor Blog Stack"
+    image1="image:blogstack.png" optionsthumb1="300x200" title1="Monitor Blog Stack"
     caption="Monitor Blog Stack" >}}
 
 En el plan gratuito de Uptime Robot podemos crear 50 monitores, en el [plan de pago](http://uptimerobot.com/pricing) se pueden establecer tiempos de monitorización a partir de 1 minuto en vez de 5 y crear más monitores.

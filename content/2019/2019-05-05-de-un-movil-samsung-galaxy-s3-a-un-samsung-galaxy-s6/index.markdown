@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:samsung.svg"
 tags: ["hardware", "planeta-codigo", "opinion"]
 series: ["desempaquetado-tecnologia"]
 summary: "He estado muy contento con un Samsung Galaxy S3 durante unos 3 o 4 años más al instalarle LineageOS 7.1 y en ningún momento no ha habido nada de lo que he necesitado hacer que no puediera por no tener capacidad, aún teniendo solo 1GB de memoria. Al abrir aplicaciones o alguna opción era un poco lento pero aceptable según mi criterio. Ahora he pasado a un Samsung Galaxy S6 que hoy día es un móvil ya viejo pero para mi suficiente. En los días que llevo usándolo estoy más que satisfecho, la mejora de rendmiento es apreciable respecto al S3. Si con el S3 ya estaba contento y tenía suficiente, con el S6 creo que será otro móvil del que guardaré un grato recuerdo."
@@ -29,13 +30,13 @@ He tenido varios móviles empezando por un [Motorola C350](https://www.gsmarena.
 
 {{< image
     gallery="true"
-    image1="resource:motorola-c350.jpg" optionsthumb1="200x150" title1="Motorola C350"
-    image2="resource:nokia-6630.jpg" optionsthumb2="200x150" title2="Nokia 6630"
-    image3="resource:htc-wildfire-cdma.jpg" optionsthumb3="200x150" title3="HTC Wildfire" >}}
+    image1="image:motorola-c350.jpg" optionsthumb1="200x150" title1="Motorola C350"
+    image2="image:nokia-6630.jpg" optionsthumb2="200x150" title2="Nokia 6630"
+    image3="image:htc-wildfire-cdma.jpg" optionsthumb3="200x150" title3="HTC Wildfire" >}}
 {{< image
     gallery="true"
-    image1="resource:motorola-defy.jpg" optionsthumb1="300x200" title1="Motorola Defy"
-    image2="resource:samsung-galaxy-s3.jpg" optionsthumb2="300x200" title2="Samsung Galaxy S3"
+    image1="image:motorola-defy.jpg" optionsthumb1="300x200" title1="Motorola Defy"
+    image2="image:samsung-galaxy-s3.jpg" optionsthumb2="300x200" title2="Samsung Galaxy S3"
     caption="Móviles que he tenido" >}}
 
 Pero el Galaxy S3 también ya me estaba dando algunos síntomas de agotamiento, en modo espera me aguanta un día pero con un uso algo más intensivo la batería baja rápidamente y requiere alguna carga más de una carga al día. Algunas aplicaciones como GMail y Twitter se nota que el procesador Exynos 4412 quad-core que tiene cumple pero no va sobrado para la época actual. En total el S3 habrá tenido 7 años de vida, menos lo que no sería mucho si no lo hubiese dado un segundo uso y un tercero con LineageOS.
@@ -64,8 +65,8 @@ Sin embargo, en vez de comprar uno de estos anteriores nuevos como en ocasiones 
 
 {{< image
     gallery="true"
-    image1="resource:samsung-galaxy-s6-1.jpg" optionsthumb1="300x200" title1="Samsung Galaxy S6"
-    image2="resource:samsung-galaxy-s6-2.jpg" optionsthumb2="300x200" title2="Samsung Galaxy S6"
+    image1="image:samsung-galaxy-s6-1.jpg" optionsthumb1="300x200" title1="Samsung Galaxy S6"
+    image2="image:samsung-galaxy-s6-2.jpg" optionsthumb2="300x200" title2="Samsung Galaxy S6"
     caption="Nuevo móvil, Samsung Galaxy S6" >}}
 
 Tiene marcos grandes, no tiene un sensor de huellas integrado en la pantalla, sin triple cámara con gran angular, ni zoom óptico y efecto desenfoque como están incorporando los móviles nuevos como los anteriores y echo de menos una tarjeta microSD para ampliarle la capacidad de almacenamiento sobre todo para añadirle mi colección de música. Pero suficiente para mi.

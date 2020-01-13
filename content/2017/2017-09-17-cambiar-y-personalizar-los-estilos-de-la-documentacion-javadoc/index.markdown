@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 ---
 
@@ -40,14 +41,14 @@ La [tarea de Gradle para generar la documentación Javadoc](https://docs.gradle.
 
 {{< image
     gallery="true"
-    image1="resource:javadoc-1.png" optionsthumb1="300x200" title1="Estilos personalizados de la documentación Javadoc"
-    image2="resource:javadoc-2.png" optionsthumb2="300x200" title2="Estilos personalizados de la documentación Javadoc"
-    image3="resource:javadoc-3.png" optionsthumb3="300x200" title3="Estilos personalizados de la documentación Javadoc"
+    image1="image:javadoc-1.png" optionsthumb1="300x200" title1="Estilos personalizados de la documentación Javadoc"
+    image2="image:javadoc-2.png" optionsthumb2="300x200" title2="Estilos personalizados de la documentación Javadoc"
+    image3="image:javadoc-3.png" optionsthumb3="300x200" title3="Estilos personalizados de la documentación Javadoc"
     caption="Estilos personalizados de la documentación Javadoc" >}}
 {{< image
     gallery="true"
-    image1="resource:javadoc-jdk-1.png" optionsthumb1="300x200" title1="Estilos por defecto de la documentación Javadoc"
-    image2="resource:javadoc-jdk-2.png" optionsthumb2="300x200" title2="Estilos por defecto de la documentación Javadoc"
+    image1="image:javadoc-jdk-1.png" optionsthumb1="300x200" title1="Estilos por defecto de la documentación Javadoc"
+    image2="image:javadoc-jdk-2.png" optionsthumb2="300x200" title2="Estilos por defecto de la documentación Javadoc"
     caption="Estilos por defecto de la documentación Javadoc" >}}
 
 El comando _javadoc_ tiene una buena cantidad de opciones, con la opción _-help_ se obtiene una listado y descripción de cada una de ellas. Dependiendo del destinatario de la documentación, se pueden limitar las clases que son incluidas en el Javadoc si por ejemplo solo se quiere ofrecer la documentación de la parte pública.

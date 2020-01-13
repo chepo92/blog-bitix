@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:microsoft.svg"
 tags: ["gnu-linux", "microsoft", "planeta-codigo", "software", "software-libre"]
 summary: "Office es la suite ofimática de Microsoft con un margen de diferencia en la cuota de uso muy amplio sobre la siguiente opción en los sistemas con Windows. Es muy completa que incluye más funciones incluso que la mayoría de usuarios conoce o necesita pero también es una opción más cara que otras alternativas que incluso llegan a ser gratuitas sin tener nada que envidiarle para la mayoría de usuarios y casos de uso."
 ---
@@ -37,9 +38,9 @@ Microsoft Office incluye Word como procesador de textos, Powerpoint para present
 
 {{< image
     gallery="true"
-    image1="resource:microsoft-office-word.png" optionsthumb1="200x150" title1="Microsoft Office Word"
-    image2="resource:microsoft-office-excel.png" optionsthumb2="200x150" title2="Microsoft Office Excel"
-    image3="resource:microsoft-office-powerpoint.png" optionsthumb3="200x150" title3="Microsoft Office Powerpoint"
+    image1="image:microsoft-office-word.png" optionsthumb1="200x150" title1="Microsoft Office Word"
+    image2="image:microsoft-office-excel.png" optionsthumb2="200x150" title2="Microsoft Office Excel"
+    image3="image:microsoft-office-powerpoint.png" optionsthumb3="200x150" title3="Microsoft Office Powerpoint"
     caption="Microsoft Office" >}}
 
 ### LibreOffice
@@ -48,9 +49,9 @@ La alternativa libre y gratuita equivalente de Office es [LibreOffice](https://e
 
 {{< image
     gallery="true"
-    image1="resource:libreoffice-writer.png" optionsthumb1="200x150" title1="LibreOffice Writer"
-    image2="resource:libreoffice-calc.png" optionsthumb2="200x150" title2="LibreOffice Calc"
-    image3="resource:libreoffice-impress.png" optionsthumb3="200x150" title3="LibreOffice Impress"
+    image1="image:libreoffice-writer.png" optionsthumb1="200x150" title1="LibreOffice Writer"
+    image2="image:libreoffice-calc.png" optionsthumb2="200x150" title2="LibreOffice Calc"
+    image3="image:libreoffice-impress.png" optionsthumb3="200x150" title3="LibreOffice Impress"
     caption="LibreOffice" >}}
 
 ### WPS Office
@@ -63,9 +64,9 @@ Está disponible para Windows (XP, Vista, 7, 8, 10) incluso en versiones para lo
 
 {{< image
     gallery="true"
-    image1="resource:wpsoffice-writer.png" optionsthumb1="200x150" title1="WPS Office"
-    image2="resource:wpsoffice-spreadsheets.png" optionsthumb2="200x150" title2="WPS Office"
-    image3="resource:wpsoffice-presentation.png" optionsthumb3="200x150" title3="WPS Office"
+    image1="image:wpsoffice-writer.png" optionsthumb1="200x150" title1="WPS Office"
+    image2="image:wpsoffice-spreadsheets.png" optionsthumb2="200x150" title2="WPS Office"
+    image3="image:wpsoffice-presentation.png" optionsthumb3="200x150" title3="WPS Office"
     caption="WPS Office" >}}
 
 ### Google Docs
@@ -76,9 +77,9 @@ Para las empresas se ofrece al precio de 4€ por usuario al mes que incluye el 
 
 {{< image
     gallery="true"
-    image1="resource:googledocs-documento.png" optionsthumb1="200x150" title1="Google Docs"
-    image2="resource:googledocs-hoja-de-calculo.png" optionsthumb2="200x150" title2="Google Docs"
-    image3="resource:googledocs-presentacion.png" optionsthumb3="200x150" title3="Google Docs"
+    image1="image:googledocs-documento.png" optionsthumb1="200x150" title1="Google Docs"
+    image2="image:googledocs-hoja-de-calculo.png" optionsthumb2="200x150" title2="Google Docs"
+    image3="image:googledocs-presentacion.png" optionsthumb3="200x150" title3="Google Docs"
     caption="Google Docs" >}}
 
 ### OnlyOffice
@@ -87,9 +88,9 @@ Para las empresas se ofrece al precio de 4€ por usuario al mes que incluye el 
 
 {{< image
     gallery="true"
-    image1="resource:onlyoffice-documentos.png" optionsthumb1="200x150" title1="OnlyOffice Documentos"
-    image2="resource:onlyoffice-hojas-de-calculo.png" optionsthumb2="200x150" title2="OnlyOffice Hojas de cálculo"
-    image3="resource:onlyoffice-presentaciones.png" optionsthumb3="200x150" title3="OnlyOffice Presentaciones"
+    image1="image:onlyoffice-documentos.png" optionsthumb1="200x150" title1="OnlyOffice Documentos"
+    image2="image:onlyoffice-hojas-de-calculo.png" optionsthumb2="200x150" title2="OnlyOffice Hojas de cálculo"
+    image3="image:onlyoffice-presentaciones.png" optionsthumb3="200x150" title3="OnlyOffice Presentaciones"
     caption="OnlyOffice" >}}
 
 Alguna otra opción que merece ser comentada es [Calligra][calligra] la _suite_ del [entorno de escritorio KDE][kde], [Abiword][abiword], [Lyx][lyx] o [Gnumeric][gnumeric].

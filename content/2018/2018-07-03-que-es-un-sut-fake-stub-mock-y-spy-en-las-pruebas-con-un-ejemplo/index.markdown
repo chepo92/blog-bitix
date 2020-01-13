@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Las pruebas unitarias y de integración tratan de probar que el comportamiento del sujeto bajo prueba es el esperado. Este sujeto bajo prueba usará colaboradores que en las pruebas deben ser reemplazados por _fakes_ para probar las condiciones deseadas del de sujeto bajo prueba. Depdendiendo del comportamiento asignado al colaborador tenemos varios tipos: _Stub_, _Mock_ o _Spy_."
 ---
@@ -31,7 +32,7 @@ En el ejemplo se quiere probar un sistema de alarma que cuando detecte en tres m
 
 {{< image
     gallery="true"
-    image1="resource:monitor.png" optionsthumb1="650x450" title1="Sistema simulado"
+    image1="image:monitor.png" optionsthumb1="650x450" title1="Sistema simulado"
     caption="Sistema de control de temperatura simulado" >}}
 
 {{< code file="Sensor.java" language="java" options="" >}}

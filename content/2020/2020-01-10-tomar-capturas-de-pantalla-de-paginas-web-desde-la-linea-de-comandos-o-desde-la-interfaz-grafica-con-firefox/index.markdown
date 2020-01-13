@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "resource:images/duckduckgo.png"
 tags: ["planeta-codigo", "programacion"]
 summary: "El navegador web Firefox tiene una opción con la que poder tomar una captura de pantalla de una página web desde la línea de comandos, que es útil como parte de un proceso automatizado. Firefox también permite tomar capturas de pantalla de una página web desde su interfaz gráfica o desde la consola web."
 ---
@@ -36,8 +37,8 @@ El parámetro _-P_ indica el perfil a usar y hay que crear uno para tomar captur
 
 {{< image
     gallery="true"
-    image1="resource:firefox-about-profiles.png" optionsthumb1="300x200" title1="Perfiles de usuario en Firefox"
-    image2="resource:firefox-gestor-perfiles.png" optionsthumb2="300x200" title2="Gestor de perfiles de Firefox"
+    image1="image:firefox-about-profiles.png" optionsthumb1="300x200" title1="Perfiles de usuario en Firefox"
+    image2="image:firefox-gestor-perfiles.png" optionsthumb2="300x200" title2="Gestor de perfiles de Firefox"
     caption="Perfiles de usuario y gestor de perfiles de Firefox" >}}
 
 {{< code file="firefox-gestor-perfiles.sh" language="bash" options="" >}}
@@ -52,14 +53,14 @@ El resultado son las siguientes capturas de pantalla.
 
 {{< image
     gallery="true"
-    image1="resource:google.png" optionsthumb1="300x200" title1="Google"
-    image2="resource:duckduckgo.png" optionsthumb2="300x200" title2="DuckDuckGo"
-    image3="resource:ubuntu.png" optionsthumb3="300x200" title3="Ubuntu" >}}
+    image1="image:google.png" optionsthumb1="300x200" title1="Google"
+    image2="image:duckduckgo.png" optionsthumb2="300x200" title2="DuckDuckGo"
+    image3="image:ubuntu.png" optionsthumb3="300x200" title3="Ubuntu" >}}
 
 {{< image
     gallery="true"
-    image1="resource:redhat.png" optionsthumb1="300x200" title1="RedHat"
-    image2="resource:archlinux.png" optionsthumb2="300x200" title2="Arch Linux"
+    image1="image:redhat.png" optionsthumb1="300x200" title1="RedHat"
+    image2="image:archlinux.png" optionsthumb2="300x200" title2="Arch Linux"
     caption="Capturas de pantalla realizadas con Firefox en modo headless" >}}
 
 Con un gran número de páginas validar visualmente cada una de las páginas mediante una imagen aun con la automatización de tomar la captura consume una buena cantidad de tiempo, para reducir el número de capturas a validar el archivo puede limitarse a unas representativas de la aplicación o unas aleatorias de todo el conjunto, con los comandos _sort -R_ y _head -3_ se toman las 3 primeras líneas aleatorias del archivo, el comando _sort_ las ordena de forma aleatoria y el comando _head_ toma el número de líneas indicado.
@@ -72,7 +73,7 @@ Firefox también permite tomar capturas de pantalla desde la interfaz gráfica, 
 
 {{< image
     gallery="true"
-    image1="resource:firefox-ajustes-inspector.png" optionsthumb1="300x200" title1="Ajustes para mostrar botón de captura en las herramientas del inspector"
+    image1="image:firefox-ajustes-inspector.png" optionsthumb1="300x200" title1="Ajustes para mostrar botón de captura en las herramientas del inspector"
     caption="Ajustes para mostrar botón de captura en las herramientas del inspector" >}}
 
 La consola web de Firefox también permite tomar capturas de pantalla escribiendo el comando _:screenshot_.

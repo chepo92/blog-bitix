@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Es raro pero no he encontrado una librería adecuada en Java con una implementación de una máquina de estados. Stateless4j puede ser una candidata pero también tiene algunas deficiencias que pueden hacer que no nos sirva. Basándome en Stateless4j y usando Java 8 he creado una implementación de FSM con una funcionalidad similar y más ligera donde una única instancia de la máquina de estados es independiente del número de instancias de objetos en las que se use."
 note: "<strong>Nota</strong>: Cuando busqué no encontré pero resulta que entre uno de los numerosos subproyectos de Spring está uno que sirve como implementación de máquina de estados, [Spring Statemachine](http://projects.spring.io/spring-statemachine/). Por supuesto, Spring Statemachine es mucho más avanzado que este ejemplo que muestro en el artículo y lo recomiendo también por su mejor soporte en futuras actualizaciones. Finalmente, he escrito un [artículo específico sobre Spring Statemachine](https://picodotdev.github.io/blog-bitix/2019/03/ejemplo-de-maquina-de-estados-con-spring-statemachine/)."

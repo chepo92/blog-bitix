@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:apache-tapestry-5.svg"
 tags: ["java", "planeta-codigo", "programacion", "tapestry"]
 summary: "Un proyecto grande contendrá muchos archivos de código fuente, poseer gran cantidad de archivos puede ser una molestia al trabajar con ellos al tener que buscarlos o abrilos. En el caso de las aplicaciones web puede darse el caso de que un mismo dato tenga un archivo diferente por cada forma de visualizarlo, para reducir el número de archivos en estos casos uso el siguiente patrón cuando trabajo con Apache Tapestry con el soporte que ofrece pero que puede ser igualmente aplicado de forma similar a otros _frameworks_."
 ---

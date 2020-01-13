@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:spring.svg"
 tags: ["java", "planeta-codigo", "programacion", "spring"]
 series: ["spring-cloud"]
 ---

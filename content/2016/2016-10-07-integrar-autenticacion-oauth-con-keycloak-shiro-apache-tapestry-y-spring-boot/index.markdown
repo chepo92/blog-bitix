@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:keycloak.png"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "OAuth es un protocolo usado para permitir a una aplicación acceder a los recursos de un usuario sin que este proporcione a la aplicación cliente sus credenciales y manteniendo el control de revocar los permisos concedidos. Es ampliamente usado por los servicios de redes sociales de las empresas más conocidas, también lo podemos usar en nuestras aplicaciones. En el ejemplo usaré Keycloak y una aplicación Java con Spring Boot, Apache Shiro y Apache Tapestry."
 ---
@@ -44,16 +45,16 @@ Para el ejemplo crearé un nuevo _realm_ que contendrá los usuarios y en el que
 
 {{< image
     gallery="true"
-    image1="resource:keycloak-realm.png" optionsthumb1="300x200" title1="Keycloak realm"
-    image2="resource:keycloak-client.png" optionsthumb2="300x200" title2="Keycloak client" >}}
+    image1="image:keycloak-realm.png" optionsthumb1="300x200" title1="Keycloak realm"
+    image2="image:keycloak-client.png" optionsthumb2="300x200" title2="Keycloak client" >}}
 {{< image
     gallery="true"
-    image1="resource:keycloak-client-roles.png" optionsthumb1="300x200" title1="Keycloak client roles"
-    image2="resource:keycloak-roles.png" optionsthumb2="300x200" title2="Keycloak roles" >}}
+    image1="image:keycloak-client-roles.png" optionsthumb1="300x200" title1="Keycloak client roles"
+    image2="image:keycloak-roles.png" optionsthumb2="300x200" title2="Keycloak roles" >}}
 {{< image
     gallery="true"
-    image1="resource:keycloak-users.png" optionsthumb1="300x200" title1="Keycloak users"
-    image2="resource:keycloak-users-role-mappings.png" optionsthumb2="300x200" title2="Keycloak users role mappings" >}}
+    image1="image:keycloak-users.png" optionsthumb1="300x200" title1="Keycloak users"
+    image2="image:keycloak-users-role-mappings.png" optionsthumb2="300x200" title2="Keycloak users role mappings" >}}
 
 Usando uno de los [adaptadores proporcionados por Keycloak](https://keycloak.gitbooks.io/securing-client-applications-guide/content/v/2.2/topics/overview/supported-platforms.html) para la integración en servidores y aplicaciones su uso no es complicado, en este caso usaré el adaptador para Spring Boot. Usándolo básicamente deberemos proporcionar en la configuración las credenciales de la aplicación cliente que hemos registrado previamente en Keycloak. Además indicaremos que URLs de la aplicación requiere autenticación y que roles han de poseer los usuarios autenticados. Al acceder a estas URLs el adaptador de Keycloak redirigirá al servidor para que el usuario se autentique, una vez autenticado se redirigirá a la aplicación de nuevo.
 
@@ -77,17 +78,17 @@ Como la página de inicio no requiere autenticación es accesible por cualquier 
 
 {{< image
     gallery="true"
-    image1="resource:tapestry-index.png" optionsthumb1="300x200" title1="Index"
-    image2="resource:tapestry-keycloak-login.png" optionsthumb2="300x200" title2="Login" >}}
+    image1="image:tapestry-index.png" optionsthumb1="300x200" title1="Index"
+    image2="image:tapestry-keycloak-login.png" optionsthumb2="300x200" title2="Login" >}}
 {{< image
     gallery="true"
-    image1="resource:tapestry-user.png" optionsthumb1="300x200" title1="User" >}}
+    image1="image:tapestry-user.png" optionsthumb1="300x200" title1="User" >}}
 
 Si intentamos acceder a la página de usuario o administrador sin estar autenticados se nos mostrará la página de error 403 y al acceder a la página de administración con un usuario sin rol _admin_ se nos mostrará la página de error 401.
 
 {{< image
     gallery="true"
-    image1="resource:tapestry-error403.png" optionsthumb1="300x200" title1="Error 403" >}}
+    image1="image:tapestry-error403.png" optionsthumb1="300x200" title1="Error 403" >}}
 
 Un buen libro sobre OAuth que he leído es [Mastering OAuth 2.0](https://amzn.to/2cUkF9d) que explica detalladamente el protocolo OAuth junto con el resto de formas de obtener un _token_ además del mostrado en este artículo usando las credenciales del cliente.
 

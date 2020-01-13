@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:ffmpeg.svg"
 tags: ["gnu-linux", "software-libre"]
 ---
 
@@ -46,11 +47,11 @@ Si preferimos realizar la conversión mediante una interfaz gráfica podemos usa
 
 {{< image
     gallery="true"
-    image1="resource:vlc-input.png" optionsthumb1="300x200" title1="Conversión audio de MP3 a OGG"
-    image2="resource:vlc-codec.png" optionsthumb2="300x200" title2="Selección de códec" >}}
+    image1="image:vlc-input.png" optionsthumb1="300x200" title1="Conversión audio de MP3 a OGG"
+    image2="image:vlc-codec.png" optionsthumb2="300x200" title2="Selección de códec" >}}
 {{< image
     gallery="true"
-    image1="resource:vlc-output.png" optionsthumb1="300x200" title1="Salida de conversión" >}}
+    image1="image:vlc-output.png" optionsthumb1="300x200" title1="Salida de conversión" >}}
 
 {{< reference >}}
 * [Documentación de FFmpeg](https://trac.ffmpeg.org/wiki)

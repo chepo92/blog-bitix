@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:hugo.svg"
 tags: ["planeta-codigo", "software-libre"]
 series: ["donacion"]
 ---
@@ -43,8 +44,8 @@ Se ofrece de forma gratuita pero los servidores que son necesarios para el desar
 
 {{< image
     gallery="true"
-    image1="resource:cyanogenmod-10.2.jpg" optionsthumb1="300x200" title1="CynogenMod 10.2"
-    image2="resource:lineageos-14.1.jpg" optionsthumb2="300x200" title2="LineageOS 14.1"
+    image1="image:cyanogenmod-10.2.jpg" optionsthumb1="300x200" title1="CynogenMod 10.2"
+    image2="image:lineageos-14.1.jpg" optionsthumb2="300x200" title2="LineageOS 14.1"
     caption="CynogenMod 10.2 y LineageOS 14.1" >}}
 
 ### Replicant
@@ -60,7 +61,7 @@ Está basado en LineageOS 13 y Android 6 quitándole los componentes que no mant
 
 {{< image
     gallery="true"
-    image1="resource:replicant-6.png" optionsthumb1="300x200" title1="Replicant 6"
+    image1="image:replicant-6.png" optionsthumb1="300x200" title1="Replicant 6"
     caption="Replicant 6" >}}
 
 ### Comprobantes de las donaciones
@@ -69,11 +70,11 @@ En ambos casos las donaciones que he hecho han sido de 15€.
 
 {{< image
     gallery="true"
-    image1="resource:donacion-lineageos.png" optionsthumb1="650x450" title1="Donación LineageOS"
+    image1="image:donacion-lineageos.png" optionsthumb1="650x450" title1="Donación LineageOS"
     caption="Donación LineageOS" >}}
 {{< image
     gallery="true"
-    image1="resource:donacion-replicant.png" optionsthumb1="650x450" title1="Donación Replicant"
+    image1="image:donacion-replicant.png" optionsthumb1="650x450" title1="Donación Replicant"
     caption="Donación Replicant" >}}
 
 {{< donations >}}

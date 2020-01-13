@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["blog", "java", "planeta-codigo", "programacion"]
 series: ["java-platform"]
 summary: "Java 11 es la primera versión de soporte extendido publicada o LTS bajo el nuevo ciclo de publicaciones que adoptó Java en la versión 9. Añade varias novedades importantes en cuanto a seguridad y elimina otras que en versiones anteriores ya fueron marcadas como desaconsejadas."
@@ -91,7 +92,7 @@ Esta funcionalidad es compatible con los _shebang_ de los sistemas Unix.
 
 {{< image
     gallery="true"
-    image1="resource:java-helloworld.png" optionsthumb1="6500x450" title1="Java 11 HelloWorld!"
+    image1="image:java-helloworld.png" optionsthumb1="6500x450" title1="Java 11 HelloWorld!"
     caption="Java 11 HelloWorld!" >}}
 
 ### Unicode 10

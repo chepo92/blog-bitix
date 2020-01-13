@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Hace ya más de una década que en Java 5 se introdujeron los _generics_ para dotar al lenguaje de una mejor comprobación de tipos en tiempo de compilación y al mismo tiempo eliminar los _cast_ que hasta entonces eran necesarios al usar las colecciones. Dada la lentitud de adopción que suele haber en la plataforma Java en los grandes entornos empresariales puede que aún no los hayamos usado extensamente o tengamos alguna duda en su uso. Hay unos cuantos conceptos sobre los _generics_ que son convenientes conocer."
 ---
@@ -76,19 +77,19 @@ Sin embargo, en el caso de los _generics_, ¿una referencia de _Box\<Number\>_ p
 
 {{< image
     gallery="true"
-    image1="resource:generics-subtypeRelationship.gif" optionsthumb1="300x200" >}}
+    image1="image:generics-subtypeRelationship.gif" optionsthumb1="300x200" >}}
 
 Los tipos genéricos pueden extenderse o implementarse y mientras no se cambie el tipo del argumento la «relación es un» se preserva. De modo que _ArrayList\<String\>_ es un subtipo de _List\<String\>_ que a su vez es un subtipo de _Collection\<String\>_.
 
 {{< image
     gallery="true"
-    image1="resource:generics-sampleHierarchy.gif" optionsthumb1="300x200" >}}
+    image1="image:generics-sampleHierarchy.gif" optionsthumb1="300x200" >}}
 
 {{< code file="PayloadList.java" language="java" options="" >}}
 
 {{< image
     gallery="true"
-    image1="resource:generics-payloadListHierarchy.gif" optionsthumb1="300x200" >}}
+    image1="image:generics-payloadListHierarchy.gif" optionsthumb1="300x200" >}}
 
 En los _generics_ un parámetro para un tipo _?_ se denomina _wildcard_ siendo este un tipo desconocido. Son usados para reducir las restricciones de un tipo de modo que un método pueda funcionar con una lista de _List\<Integer\>_, _List\<Double\>_ y _List\<Number\>_. El término _List\<Number\>_ es más restrictivo que _List\<? extends Number\>_ porque el primero solo acepta una lista de _Number_ y el segundo una lista de _Number_ o de sus subtipos. _List\<? extends Number\>_ es un _upper bounded wildcard_.
 
@@ -107,8 +108,8 @@ Las clases genéricas no tienen relación alguna aunque sus tipos los tengan, pe
 
 {{< image
     gallery="true"
-    image1="resource:generics-listParent.gif" optionsthumb1="300x200"
-    image2="resource:generics-wildcardSubtyping.gif" optionsthumb2="300x200" >}}
+    image1="image:generics-listParent.gif" optionsthumb1="300x200"
+    image2="image:generics-wildcardSubtyping.gif" optionsthumb2="300x200" >}}
 
 Uno de las mayores confusiones al usar generics es cuando usar _upper bounded wildcards_ o cuando usar _lower bounded wildcards_. Podemos usar las siguientes reglas:
 

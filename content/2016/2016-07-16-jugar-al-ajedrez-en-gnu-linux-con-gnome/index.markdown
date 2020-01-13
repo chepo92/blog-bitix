@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:gnome.svg"
 tags: ["gnu-linux", "software-libre"]
 series: ["juegos"]
 ---
@@ -20,7 +21,7 @@ series: ["juegos"]
 
 {{< image
     gallery="true"
-    image1="resource:gnome-chess.png" optionsthumb1="300x200" title1="Icono del juego de ajedrez de GNOME"
+    image1="image:gnome-chess.png" optionsthumb1="300x200" title1="Icono del juego de ajedrez de GNOME"
     caption="Icono del juego de ajedrez de GNOME" >}}
 
 Un juego clásico es el ajedrez y en GNU/Linux y con el entorno de escritorio [GNOME][gnome] podemos jugar contra un oponente humano o la propia computadora que en el nivel fácil ya nos pondrá en muchas dificultades si es que conseguimos ganarla. Para instalar el juego de ajedrez deberemos instalar el [paquete gnome-chess](https://www.archlinux.org/packages/extra/x86_64/gnome-chess/) y si queremos que el oponente sea la computadora instalar el [paquete gnuchess](https://www.archlinux.org/packages/community/x86_64/gnuchess/). Usando [Arch Linux][archlinux] y su gestor de paquetes los instalamos de la siguiente forma:
@@ -31,15 +32,15 @@ Iniciado el juego veremos el tablero de 8 por 8 casillas con las fichas posicion
 
 {{< image
     gallery="true"
-    image1="resource:gnome-chess-tablero.png" optionsthumb1="300x200" title1="Juego de ajedrez de GNOME"
+    image1="image:gnome-chess-tablero.png" optionsthumb1="300x200" title1="Juego de ajedrez de GNOME"
     caption="Juego de ajedrez de GNOME" >}}
 
 En la sección de preferencias del juego configuramos si el oponente es otro humano o la computadora, en caso de ser la computadora su nivel de inteligencia o dificultad, si queremos jugar con las fichas blancas o negras si queremos establecer un tiempo límite para la partida para cada jugador y el tipo de reloj para el tiempo límite. En el apartado del aspecto podemos cambiar la apariencia de las fichas, el formato de la última jugada, la orientación del tablero, si queremos numeración y si queremos sugerencias.
 
 {{< image
     gallery="true"
-    image1="resource:gnome-chess-preferencias-juego.png" optionsthumb1="300x200" title1="Preferencias de juego de ajedrez de GNOME"
-    image2="resource:gnome-chess-preferencias-aspecto.png" optionsthumb2="300x200" title2="Preferencias de aspecto de ajedrez de GNOME"
+    image1="image:gnome-chess-preferencias-juego.png" optionsthumb1="300x200" title1="Preferencias de juego de ajedrez de GNOME"
+    image2="image:gnome-chess-preferencias-aspecto.png" optionsthumb2="300x200" title2="Preferencias de aspecto de ajedrez de GNOME"
     caption="Preferencias del juego" >}}
 
 También podemos guardar la partida para continuarla con posterioridad. Solo nos queda practicar la diferentes aperturas que forman una parte esencial de juego seguir alguna estrategia para el juego medio y como finalizar la partida con las piezas que no hayan sido eliminadas por el oponente. En la wikipedia hay algún [buen artículo introductorio al ajedrez](https://es.wikipedia.org/wiki/Ajedrez) y [algunos artículos sobre las aperturas](https://es.wikipedia.org/wiki/Apertura_(ajedrez)) donde encontratremos las más conocidas y seguro que otras muchas que no conocíamos e incluso si estamos aprendiendo la [reglas del juego](https://es.wikipedia.org/wiki/Leyes_del_ajedrez).

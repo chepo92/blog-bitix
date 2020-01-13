@@ -8,6 +8,7 @@ updated: 2014-09-30T21:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:blogstack.png"
 tags: ["planeta-codigo"]
 ---
 
@@ -21,7 +22,7 @@ En este tiempo que he podido dedicarle he mejorado el diseño y aspecto visual d
 
 {{< image
     gallery="true"
-    image1="resource:blogstack.jpg" optionsthumb1="300x200" title1="Blog Stack" >}}
+    image1="image:blogstack.jpg" optionsthumb1="300x200" title1="Blog Stack" >}}
 
 Si tienes una bitácora de la temática de BS con pocos "offtopics" y quisieras agregarla en un [apartado de las preguntas frecuentes](http://www.blogstack.info/faq#aggregate) tienes las instrucciones, basta con un correo electrónico o una petición en GitHub y una información básica sobre tu bitácora. Blog Stack tiene algunas características que otros agregadores o planetas carecen para los editores, por ejemplo, agregar de forma segura los gist de GitHub, vídeos de youtube o vimeo, presentaciones de SpeakerDeck o publicidad de Amazon de modo que el contenido agregado se presente de forma muy parecida que en la bitácora original. Además, BS es capaz de mostrar publicidad de la bitácora agregada si usa [AdSense](https://www.google.com/adsense/) o los comentarios de las entradas si usa [Disqus](https://disqus.com/). En el caso de los  lectores pueden suscribirse únicamente a determinadas etiquetas de Blog Stack si solo están interesados en determinados temas.
 

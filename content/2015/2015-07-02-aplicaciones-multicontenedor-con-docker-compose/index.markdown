@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:docker.svg"
 tags: ["gnu-linux", "planeta-codigo"]
 series: ["docker"]
 summary: "Continuando la serie de artículos sobre Docker, otra de las herramientas disponibles en el ecosistema y que nos facilitará enormemente el administrar aplicaciones compuestas por varios contenedores relacionados entre sí es Docker Compose. Definiendo en un archivo los contenedores que forman parte de una aplicación podemos iniciarlos, pararlos, eliminarlos o ver su estado como si de una unidad se tratara."
@@ -63,7 +64,7 @@ Escrito el archivo de los contenedores y llamándolo _docker-compose.yml_ podemo
 
 {{< image
     gallery="true"
-    image1="resource:docker-compose.png" optionsthumb1="300x200" title1="Docker Compose"
+    image1="image:docker-compose.png" optionsthumb1="300x200" title1="Docker Compose"
     caption="Docker Compose" >}}
 
 docker-compose inicia los contenedores en el orden que hemos indicado en el archivo de definición, las trazas emitidas de los servicios de los contenedores aparecerán en la terminal si iniciamos los contenedores en primer plano y con _Ctrl+C_ se pararán los contenedores. Indicando la opción _-d_ los contenedores se iniciarán en segundo plano, con _docker-compose stop_ podremos pararlos, con _docker-compose restart_ reiniciarlos, _docker-compose rm_ para eliminar completamente los contenedores y con _docker-compose logs_ veremos las trazas emitidas por los servicios que nos serán de utilizar si iniciamos los contenedores en segundo plano.

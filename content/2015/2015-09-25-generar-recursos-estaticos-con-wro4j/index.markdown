@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Con nuevas tecnologías como less, Sass o CoffeeScript el desarrollo y mantenimiento de una página web medianamente compleja mejora notablemente. Con la librería wro4j en una aplicación Java podemos procesar este tipo de recursos y convertirlos a los equivalentes que saben interpretar los navegadores de forma nativa CSS y JavaScript además de optimizar su tamaño u ofuscarlos."
 ---

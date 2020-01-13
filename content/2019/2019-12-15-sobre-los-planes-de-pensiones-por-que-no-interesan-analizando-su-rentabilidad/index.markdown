@@ -11,6 +11,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+iamgePost: "resource:images/santander.svg"
 tags: ["fuera-de-tema", "opinion"]
 summary: "En los últimos años un producto financiero que se ha puesto de moda son los denominados planes de pensiones. Dada la nula o escasa rentabilidad de productos más tradicionales como los depósitos a plazo, la incertidumbre de cómo se van a financiar las pensiones en unas décadas con la baja tasa de natalidad o dependiendo de los que gobiernen los futuros pensionistas de la seguridad social pierdan poder adquisitivo, los planes de pensiones puede parecer un producto más atractivo por las ventajas fiscales que poseen ¿realmente son interesantes?."
 ---
@@ -25,14 +26,14 @@ También hay que decir que los gestores personales que las entidades bancarias a
 
 {{< image
     gallery="false"
-    image1="resource:santander.svg" optionsthumb1="200x150" title1="Santander"
-    image2="resource:bbva.svg" optionsthumb2="200x150" title2="BBVA"
-    image3="resource:caixabank.svg" optionsthumb3="200x150" title3="Caixabank" >}}
+    image1="image:santander.svg" optionsthumb1="200x150" title1="Santander"
+    image2="image:bbva.svg" optionsthumb2="200x150" title2="BBVA"
+    image3="image:caixabank.svg" optionsthumb3="200x150" title3="Caixabank" >}}
 {{< image
     gallery="false"
-    image1="resource:sabadell.svg" optionsthumb1="200x150" title1="Sabadell"
-    image2="resource:bankia.svg" optionsthumb2="200x150" title2="Bankia"
-    image3="resource:kutxabank.svg" optionsthumb3="200x150" title3="Kutxabank" >}}
+    image1="image:sabadell.svg" optionsthumb1="200x150" title1="Sabadell"
+    image2="image:bankia.svg" optionsthumb2="200x150" title2="Bankia"
+    image3="image:kutxabank.svg" optionsthumb3="200x150" title3="Kutxabank" >}}
 
 ### Características de los planes de pensiones
 

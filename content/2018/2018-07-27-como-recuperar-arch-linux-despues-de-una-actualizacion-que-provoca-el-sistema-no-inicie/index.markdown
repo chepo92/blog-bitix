@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:archlinux.svg"
 tags: ["gnu-linux", "planeta-codigo", "software-libre"]
 summary: "Instalar un sistema GNU/Linux es sencillo y está muy bien, también es importante saber como intentar recuperarlo cuando una actualización de software provoca que el sistema no se inicie con normalidad hasta el entorno de escritorio gráfico, el motivo puede ser incluso un _kernel panic_. El objetivo de la recuperación es corregir el problema del inicio, si no es posible, recuperar los valiosos documentos, imágenes, vídeos u otros archivos antes de finalmente llegar al punto de reinstalar el sistema para devolverlo a un estado correcto aunque quizá perdiendo los datos que tuviese."
 ---

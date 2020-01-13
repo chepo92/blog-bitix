@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:jooq.png"
 tags: ["java", "planeta-codigo", "programacion"]
 series: ["jooq"]
 summary: "Algunas de las causas del bajo rendimiento de una aplicación que utiliza una base de datos son el número de sentencias que se realizan junto con las sentencias lentas por su coste de ejecución. Cada ejecución de una sentencia significa una comunicación por la red y ejecutar muchas de ellas significa un considerable y perceptible tiempo para el usuario. Por ello es conveniente saber que sentencias se ejecutan, si hay algún problema de 1+N o sentencias innecesarias que se repiten. Un _log_ de las sentencias que se ejecutan es muy útil para detectar ineficiencias en la aplicación y corregirlas."
@@ -37,7 +38,7 @@ Estas sentencias se ejecutan en unos pocos milisegundos, en una aplicación con 
 {{< code file="System.out" language="plaintext" options="" >}}
 {{< image
     gallery="true"
-    image1="resource:pagina-listado.png" optionsthumb1="650x450" title1="Listado de elementos"
+    image1="image:pagina-listado.png" optionsthumb1="650x450" title1="Listado de elementos"
     caption="Listado de elementos" >}}
 
 La clase [ExecuteContext](https://www.jooq.org/javadoc/latest/org/jooq/ExecuteContext.html) proporciona numerosa información sobre la ejecución de la sentencia como número de filas afectadas, si se ha producido una excepción, el tipo de sentencia (_READ_, _WRITE_, _DDL_, _BATCH_, _ROUTINE_ u _OTHER_), sentencias _batch_ u obtener los parámetros a través del objeto [Query](https://www.jooq.org/javadoc/latest/org/jooq/Query.html).

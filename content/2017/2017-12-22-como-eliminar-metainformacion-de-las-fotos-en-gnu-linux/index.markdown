@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:gnu.svg"
 tags: ["gnu-linux", "planeta-codigo", "software-libre"]
 ---
 
@@ -24,8 +25,8 @@ Podemos obtener la metainformación guardada en la foto de diferentes formas. Un
 
 {{< image
     gallery="true"
-    image1="resource:visor-imagenes.png" optionsthumb1="300x200" title1="Visor de imágenes de GNOME"
-    image2="resource:propiedades-imagen.png" optionsthumb2="300x200" title2="Propiedades de imagen con metadatos"
+    image1="image:visor-imagenes.png" optionsthumb1="300x200" title1="Visor de imágenes de GNOME"
+    image2="image:propiedades-imagen.png" optionsthumb2="300x200" title2="Propiedades de imagen con metadatos"
     caption="Imagen y propiedades con metadatos" >}}
 
 Instalado el paquete [ImageMagick][imagemagick] de nuestra distribución [GNU][gnu]/[Linux][linux], en este caso con [Arch Linux][archlinux] la metainformación de una foto se obtiene con el comando:
@@ -40,8 +41,8 @@ Si la foto incluye personas algunas redes sociales como [Facebook][facebook] per
 
 {{< image
     gallery="true"
-    image1="resource:planton-roble.jpg" optionsthumb1="300x200" title1="Imagen con datos EXIF"
-    image2="resource:planton-roble-noexif.jpg" optionsthumb2="300x200" title2="Imagen sin datos EXIF"
+    image1="image:planton-roble.jpg" optionsthumb1="300x200" title1="Imagen con datos EXIF"
+    image2="image:planton-roble-noexif.jpg" optionsthumb2="300x200" title2="Imagen sin datos EXIF"
     caption="Imagen izquierda con datos EXIF, imagen derecha sin datos EXIF" >}}
 
 ¿Puedes averiguar el dispositivo, la fecha en la que hizo la foto y con que software fotográfico se editó?

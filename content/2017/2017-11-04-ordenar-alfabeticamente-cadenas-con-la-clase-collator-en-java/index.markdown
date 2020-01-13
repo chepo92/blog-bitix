@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Sin usar la clase _Collator_ incluida en el JDK al ordenar alfabéticamente una lista de palabras obtendremos en algún caso un resultado que nos extrañará y seguramente no sea lo que esperamos. La clase _String_ implementa la interfaz Comprable pero esta ordenación es en base al valor del código _unicode_ sin tener en cuenta los diferentes niveles de diferencias que se pueden usar según el _Locale_ y la clase _Collator_."
 ---

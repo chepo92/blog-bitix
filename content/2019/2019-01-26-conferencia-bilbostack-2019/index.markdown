@@ -11,6 +11,7 @@ sharing: true
 comments: true
 promoted: false
 imageHead: "images/bilbostack-logo-1.jpg"
+imagePost: "resource:images/euskalduna-1.jpg"
 tags: ["planeta-codigo", "programacion"]
 series: ["bilbostack"]
 ---
@@ -23,22 +24,22 @@ La novedad más relevante de este año es que por primera vez las entradas han t
 
 {{< image
     gallery="true"
-    image1="resource:euskalduna-1.jpg" optionsthumb1="200x150" title1="Palacio Euskalduna"
-    image2="resource:euskalduna-2.jpg" optionsthumb2="200x150" title2="Palacio Euskalduna"
-    image3="resource:bilbostack-logo-2.jpg" optionsthumb3="300x200" title3="Palacio Euskalduna"
+    image1="image:euskalduna-1.jpg" optionsthumb1="200x150" title1="Palacio Euskalduna"
+    image2="image:euskalduna-2.jpg" optionsthumb2="200x150" title2="Palacio Euskalduna"
+    image3="image:bilbostack-logo-2.jpg" optionsthumb3="300x200" title3="Palacio Euskalduna"
     caption="Palacio Euskalduna" source="@BilboStack">}}
 {{< image
     gallery="true"
-    image1="resource:patrocinadores.png" optionsthumb1="200x150" title1="Patrocinadores"
-    image2="resource:localizacion.png" optionsthumb2="200x150" title2="Ubicación"
-    image3="resource:paquete-bienvenida.jpg" optionsthumb3="200x150" title3="Paquete de bienvenida"
+    image1="image:patrocinadores.png" optionsthumb1="200x150" title1="Patrocinadores"
+    image2="image:localizacion.png" optionsthumb2="200x150" title2="Ubicación"
+    image3="image:paquete-bienvenida.jpg" optionsthumb3="200x150" title3="Paquete de bienvenida"
     caption="Patrocinadores, ubicación y paquete de bienvenida" >}}
 
 La conferencia comienza con la presentación y la bienvenida de los organizadores junto con unas palabras de Xabier Otxandiano concejal de desarrollo económico del ayuntamiento de Bilbao comentando la transformación que ha realizado la ciudad en las últimas décadas, urbanística siendo representante el propio palacio Euskalduna de un entorno más industrial a otro más de servicios y la importancia de la tecnología con el potencial para convertirse en la nueva industria de la ciudad. Por este motivo la conferencia BilboStack es importante y lo apoyan de forma institucional haciendo hincapié que no es fácil organizar una conferencia con el poder de convocatoria de casi 700 personas un sábado a la mañana y a la que muchos acuden haciendo muchos kilómetros de viaje.
 
 {{< image
     gallery="true"
-    image1="resource:presentacion.jpg" optionsthumb1="200x150" title1="Presentación"
+    image1="image:presentacion.jpg" optionsthumb1="200x150" title1="Presentación"
     caption="Presentación">}}
 
 La agenda comienza a las 9:00 de la mañana del sábado con una presentación y terminaba a las 14:00 aunque por el control de acceso de este año ha sido recomendable llegar un poco antes para evitar alguna pequeña aglomeración en los últimos minutos y encontrar y entrar en las salas con suficiente antelación. Llega el momento de decidir a qué presentación de los dos _tracks_ asistir, dependiendo de los intereses de cada uno a veces no es fácil y uno quisiera haber asistido a las dos.
@@ -137,8 +138,8 @@ Tenía claro que quería acudir a esta presentación, era una en la que no tení
 
 {{< image
     gallery="true"
-    image1="resource:webcomponents-1.jpg" optionsthumb1="300x200" title1="Web Components API"
-    image2="resource:webcomponents-2.jpg" optionsthumb2="300x200" title2="Web Components API"
+    image1="image:webcomponents-1.jpg" optionsthumb1="300x200" title1="Web Components API"
+    image2="image:webcomponents-2.jpg" optionsthumb2="300x200" title2="Web Components API"
     caption="Web Components API" >}}
 
 ### Agile JavaScript por _Ricardo Borillo_
@@ -151,8 +152,8 @@ Esta presentación junto con la anterior forman la representación de JavaScript
 
 {{< image
     gallery="true"
-    image1="resource:agilejavascript-1.jpg" optionsthumb1="300x200" title1="Agile JavaScript"
-    image2="resource:agilejavascript-2.jpg" optionsthumb2="300x200" title2="Agile JavaScript"
+    image1="image:agilejavascript-1.jpg" optionsthumb1="300x200" title1="Agile JavaScript"
+    image2="image:agilejavascript-2.jpg" optionsthumb2="300x200" title2="Agile JavaScript"
     caption="Agile JavaScript" >}}
 
 ### Descanso
@@ -161,9 +162,9 @@ No saque fotos pero algunos patrocinadores dispusieron _stands_ en los que hacer
 
 {{< image
     gallery="true"
-    image1="resource:bilbostack-networking.jpg" optionsthumb1="300x200" title1="Networking + Café"
-    image2="resource:bilbostack-photocall.jpg" optionsthumb2="300x200" title2="Photocall"
-    image3="resource:bilbostack-hashtag.jpg" optionsthumb3="300x200" title3="Hashtag"
+    image1="image:bilbostack-networking.jpg" optionsthumb1="300x200" title1="Networking + Café"
+    image2="image:bilbostack-photocall.jpg" optionsthumb2="300x200" title2="Photocall"
+    image3="image:bilbostack-hashtag.jpg" optionsthumb3="300x200" title3="Hashtag"
     caption="Networking + Café, photocall y hashtag" >}}
 
 ### UX para desarrolladores front y back por _Virginia Aguirre_
@@ -178,7 +179,7 @@ De las que he asistido esta y la del otro _track_ era la presentación que podr�
 
 {{< image
     gallery="true"
-    image1="resource:ux.jpg" optionsthumb1="300x200" title1="UX para desarrolladores front y back"
+    image1="image:ux.jpg" optionsthumb1="300x200" title1="UX para desarrolladores front y back"
     caption="UX para desarrolladores front y back" >}}
 
 ### Viaje desde Arquitectura Hexagonal al Event Sourcing por _Carlos Buenosvinos_
@@ -198,7 +199,7 @@ Hay funcionalidades que no forman parte del núcleo del negocio. Estas funcional
 
 {{< image
     gallery="true"
-    image1="resource:hexagonal-eventsourcing.jpg" optionsthumb1="300x200" title1="Viaje desde Arquitectura Hexagonal al Event Sourcing"
+    image1="image:hexagonal-eventsourcing.jpg" optionsthumb1="300x200" title1="Viaje desde Arquitectura Hexagonal al Event Sourcing"
     caption="Viaje desde Arquitectura Hexagonal al Event Sourcing" >}}
 
 {{< reference >}}

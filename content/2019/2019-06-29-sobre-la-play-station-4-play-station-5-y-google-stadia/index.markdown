@@ -10,6 +10,7 @@ sharing: true
 comments: true
 promoted: false
 imageHead: "images/ps4.jpg"
+imagePost: "logotype:playstation.svg"
 tags: ["juegos", "opinion", "planeta-codigo"]
 summary: "El Intel NUC que adquirí hace unos meses no es el ideal para jugar sobre todo por su pequeño tamaño y temperaturas, en mi caso como jugador ocasional es suficiente pero unido a que soy usuario de GNU/Linux hace que deba usar Wine o Steam para los juegos con lo que hay algunos juegos que me llaman la atención que no tengo disponibles. La PlayStation 4 está ya al final de su ciclo de vida, ya hay noticias de la PlayStation 5 y Google Stadia ofrecerá una nueva experiencia de juego ¿comprar una PlayStation 4? ¿o seguir con Diablo 3 mientras se lanzan la PlayStation 5 o a Stadia?."
 ---

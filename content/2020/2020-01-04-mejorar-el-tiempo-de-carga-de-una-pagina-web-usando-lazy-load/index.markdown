@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "resource:images/metricas-pagespeed-playstation-despues.png"
 tags: ["planeta-codigo", "programacion", "web"]
 summary: "Las páginas grandes y con muchos recursos como imágenes e _iframes_ implementar la carga vaga o _lazy load_ obtienen un gran beneficio, necesitando realizar menos peticiones en la carga inicial, con menos tamaño y cargándose en menos tiempo. Los navegadores han añadido soporte para desde JavaScript proporciona este soporte."
 ---
@@ -26,26 +27,26 @@ Los artículos de mi blog como [Desempaquetado de PlayStation 4 Slim de 1 TB][bl
 
 {{< image
     gallery="true"
-    image1="resource:playstation-1.png" optionsthumb1="300x200" title1="Página PlayStation"
-    image2="resource:playstation-2.png" optionsthumb2="300x200" title2="Página PlayStation" >}}
+    image1="image:playstation-1.png" optionsthumb1="300x200" title1="Página PlayStation"
+    image2="image:playstation-2.png" optionsthumb2="300x200" title2="Página PlayStation" >}}
 
 {{< image
     gallery="true"
-    image1="resource:intel-nuc-1.png" optionsthumb1="300x200" title1="Página Intel NUC"
-    image2="resource:intel-nuc-2.png" optionsthumb2="300x200" title2="Página Intel NUC"
+    image1="image:intel-nuc-1.png" optionsthumb1="300x200" title1="Página Intel NUC"
+    image2="image:intel-nuc-2.png" optionsthumb2="300x200" title2="Página Intel NUC"
     caption="Páginas representativas de Blog Bitix" >}}
 
 Analizando el número de peticiones, tamaño y tiempo de carga en la página de la PlayStation realizaban 343 peticiones inicialmente, con un tamaño de descarga de 5 MiB en un tiempo de carga según Firefox de 15 segundos. Evaluando esta página con [PageSpeed][google-pagespeed] un aspecto importante que indica a mejora reducir el número de elementos descargados, además de reducir peticiones y tamaño de la página se descarguen inicialmente los elementos importantes y omitiendo recursos de JavaScript hace que el desempeño sea mejor. El resultado es un menor tiempo de carga.
 
 {{< image
     gallery="true"
-    image1="resource:metricas-pagespeed-playstation-antes.png" optionsthumb1="300x200" title1="Métricas de carga en PageSpeed página PlayStation antes"
-    image2="resource:metricas-pagespeed-intel-nuc-antes.png" optionsthumb2="300x200" title2="Métricas de carga de PageSpeed página Intel NUC antes"
+    image1="image:metricas-pagespeed-playstation-antes.png" optionsthumb1="300x200" title1="Métricas de carga en PageSpeed página PlayStation antes"
+    image2="image:metricas-pagespeed-intel-nuc-antes.png" optionsthumb2="300x200" title2="Métricas de carga de PageSpeed página Intel NUC antes"
     caption="Métricas de carga en PageSpeed antes" >}}
 
 {{< image
     gallery="true"
-    image1="resource:metricas-firefox-antes.png" optionsthumb1="300x200" title1="Métricas de carga de Firefox página PlayStation antes"
+    image1="image:metricas-firefox-antes.png" optionsthumb1="300x200" title1="Métricas de carga de Firefox página PlayStation antes"
     caption="Métricas de carga en Firefox" >}}
 
 La solución es cargar los elementos imágenes, _iframes_, vídeos y comentarios de Disqus cuando se vayan a visualizar al desplazarse el usuario hasta ellos. Esto reduce notablemente el número de peticiones realizadas inicialmente, el tamaño de descarga y el tiempo de carga. Una librería de JavaScript que permite realizar esta funcionalidad es [Lozad][lozad], no tiene dependencias, es muy pequeña, es soprendentemente fácil de utilizar en relación con el beneficio que aporta. Aprovecha el soporte de la interfaz [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver) precisamente proporcionada por los navegadores para realizar la carga vaga o _lazy load_ de forma eficiente.
@@ -94,13 +95,13 @@ La métrica de PageSpeed mejoran notablemente, es una cifra sobre 100 que aún d
 
 {{< image
     gallery="true"
-    image1="resource:metricas-pagespeed-playstation-despues.png" optionsthumb1="300x200" title1="Métricas de carga en PageSpeed página PlayStation después"
-    image2="resource:metricas-pagespeed-intel-nuc-despues.png" optionsthumb2="300x200" title2="Métricas de carga de PageSpeed página Intel NUC después"
+    image1="image:metricas-pagespeed-playstation-despues.png" optionsthumb1="300x200" title1="Métricas de carga en PageSpeed página PlayStation después"
+    image2="image:metricas-pagespeed-intel-nuc-despues.png" optionsthumb2="300x200" title2="Métricas de carga de PageSpeed página Intel NUC después"
     caption="Métricas de carga en PageSpeed después" >}}
 
 {{< image
     gallery="true"
-    image1="resource:metricas-firefox-despues.png" optionsthumb1="300x200" title1="Métricas de carga de Firefox página PlayStation después"
+    image1="image:metricas-firefox-despues.png" optionsthumb1="300x200" title1="Métricas de carga de Firefox página PlayStation después"
     caption="Métricas de carga en Firefox" >}}
 
 Los navegadores van a añadir el soporte de carga vaga directamente en las imágenes e _iframes_ con un el [atributo loading](https://developer.mozilla.org/en-US/docs/Web/Performance/Lazy_loading) mediante el cual el JavaScript anterior será innecesario para estos elementos.

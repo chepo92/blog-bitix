@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:apple.svg"
 tags: ["apple", "gnu-linux", "planeta-codigo"]
 summary: "¿Queres comprar un Mac, tienes dudas o deseas probar su sistema operativo antes? Aunque el rendimiento será menor que una máquina real y la experiencia de usuario será peor, usando un _hackintosh_ mediante VirtuaBox ya sea con Windows o GNU/Linux podremos probarlo en detalle y hacernos una idea de su funcionamiento."
 ---
@@ -25,8 +26,8 @@ Los pasos para instalar macOS en una máquina virtual con VirtualBox son los sig
 
 {{< image
     gallery="true"
-    image1="resource:configuracion-virtualbox-macos-vm.png" optionsthumb1="300x200" title1="Configuración máquina virtual macOS"
-    image2="resource:configuracion-virtualbox-macos-pantalla.png" optionsthumb2="300x200" title2="Configuración pantalla VirtualBox"
+    image1="image:configuracion-virtualbox-macos-vm.png" optionsthumb1="300x200" title1="Configuración máquina virtual macOS"
+    image2="image:configuracion-virtualbox-macos-pantalla.png" optionsthumb2="300x200" title2="Configuración pantalla VirtualBox"
     caption="Configuración de la máquina virtual" >}}
 
 Si usamos Windows deberemos ejecutar los siguientes comandos en modo administrador, sustituyendo _macOS Sierra 10.12_ por el nombre que le hayamos dado a la máquina virtual al crearla:
@@ -41,43 +42,43 @@ Hecho estos dos pasos podemos proceder a iniciar la máquina virtual, veremos qu
 
 {{< image
     gallery="true"
-    image1="resource:1-instalacion-inicio.png" optionsthumb1="300x200" title1="Inicio instalación macOS"
-    image2="resource:2-instalacion-welcome.png" optionsthumb2="300x200" title2="Asistente instalación macOS" >}}
+    image1="image:1-instalacion-inicio.png" optionsthumb1="300x200" title1="Inicio instalación macOS"
+    image2="image:2-instalacion-welcome.png" optionsthumb2="300x200" title2="Asistente instalación macOS" >}}
 {{< image
     gallery="true"
-    image1="resource:3-instalacion-keyboard.png" optionsthumb1="300x200" title1="Teclado"
-    image2="resource:4-instalacion-location.png" optionsthumb2="300x200" title2="Localización" >}}
+    image1="image:3-instalacion-keyboard.png" optionsthumb1="300x200" title1="Teclado"
+    image2="image:4-instalacion-location.png" optionsthumb2="300x200" title2="Localización" >}}
 {{< image
     gallery="true"
-    image1="resource:5-instalacion-transfer.png" optionsthumb1="300x200" title1="Transferencia"
-    image2="resource:6-instalacion-apple-id.png" optionsthumb2="300x200" title2="Apple ID" >}}
+    image1="image:5-instalacion-transfer.png" optionsthumb1="300x200" title1="Transferencia"
+    image2="image:6-instalacion-apple-id.png" optionsthumb2="300x200" title2="Apple ID" >}}
 {{< image
     gallery="true"
-    image1="resource:7-instalacion-terms-conditions.png" optionsthumb1="300x200" title1="Términos y condiciones"
-    image2="resource:8-instalacion-account.png" optionsthumb2="300x200" title2="Cuenta" >}}
+    image1="image:7-instalacion-terms-conditions.png" optionsthumb1="300x200" title1="Términos y condiciones"
+    image2="image:8-instalacion-account.png" optionsthumb2="300x200" title2="Cuenta" >}}
 {{< image
     gallery="true"
-    image1="resource:9-instacion-timezone.png" optionsthumb1="300x200" title1="Zona horaria"
-    image2="resource:10-instalacion-diagnostics.png" optionsthumb2="300x200" title2="Diagnósticos" >}}
+    image1="image:9-instacion-timezone.png" optionsthumb1="300x200" title1="Zona horaria"
+    image2="image:10-instalacion-diagnostics.png" optionsthumb2="300x200" title2="Diagnósticos" >}}
 {{< image
     gallery="true"
-    image1="resource:11-instalacion-siri.png" optionsthumb1="300x200" title1="Siri"
-    image2="resource:12-instalacion-setting-up.png" optionsthumb2="300x200" title2="Configurando" >}}
+    image1="image:11-instalacion-siri.png" optionsthumb1="300x200" title1="Siri"
+    image2="image:12-instalacion-setting-up.png" optionsthumb2="300x200" title2="Configurando" >}}
 
 Terminada la instalación entramos en el escritorio con el aspecto clásico y fondo de pantalla de macOS y las aplicaciones incorporadas en el propio sistema por defecto.
 
 {{< image
     gallery="true"
-    image1="resource:13-macos-start.png" optionsthumb1="300x200" title1="Inicio"
-    image2="resource:14-macos-help.png" optionsthumb2="300x200" title2="Ayuda" >}}
+    image1="image:13-macos-start.png" optionsthumb1="300x200" title1="Inicio"
+    image2="image:14-macos-help.png" optionsthumb2="300x200" title2="Ayuda" >}}
 {{< image
     gallery="true"
-    image1="resource:15-macos-overview.png" optionsthumb1="300x200" title1="Resumen"
-    image2="resource:16-macos-finder.png" optionsthumb2="300x200" title2="Finder" >}}
+    image1="image:15-macos-overview.png" optionsthumb1="300x200" title1="Resumen"
+    image2="image:16-macos-finder.png" optionsthumb2="300x200" title2="Finder" >}}
 {{< image
     gallery="true"
-    image1="resource:17-macos-photos.png" optionsthumb1="300x200" title1="Fotos"
-    image2="resource:18-macos-preferences.png" optionsthumb2="300x200" title2="Preferencias" >}}
+    image1="image:17-macos-photos.png" optionsthumb1="300x200" title1="Fotos"
+    image2="image:18-macos-preferences.png" optionsthumb2="300x200" title2="Preferencias" >}}
 
 Como partidario del software libre y la privacidad además de [los ínfimos impuestos que paga Apple][blogbitix-175] usando reprobable ingeniería fiscal y su software privativo no recomiendo usar un Mac pero si alguien quiere probar este sistema operativo antes de decidirse a hacer una compra usarlo de forma virtualizado es una buena ayuda para tomar una decisión y ver si nos gusta su sistema operativo aparte del propio equipo junto con su precio que podemos ver en las tiendas. Si no nos convence ni su software ni su abultado precio podemos optar por un portátil de [Slimbook](https://slimbook.es/) mucho más económico y con características notables con los que no tendremos que pagar tampoco el [impuesto Windows][elblogdepicodev-57] ya que podemos elegir entre varias la distribución GNU/Linux preinstalada que deseamos.
 

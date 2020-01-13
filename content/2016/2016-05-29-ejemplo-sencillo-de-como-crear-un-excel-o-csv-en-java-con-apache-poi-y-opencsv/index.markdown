@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Los archivos Excel y separados por comas o CSV son muy utilizados como formato para intercambiar datos entre aplicaciones o como formato para exportar cantidades grandes de datos de una aplicación. Por su utilidad es probable que tarde o temprano surja en una aplicación la necesidad de crear archivos o exportar datos a estos formatos. Con la librería Apache POI se pueden crear Excel desde Java y con la librería OpenCSV exportar datos a archivos CSV con el formato correcto."
 ---
@@ -33,7 +34,7 @@ El siguiente ejemplo crea documento excel con varios datos, aplicando estilos a 
 
 {{< image
     gallery="true"
-    image1="resource:libreoffice.png" optionsthumb1="300x200" title1="Excel generado con Apache POI abierto con LibreOffice"
+    image1="image:libreoffice.png" optionsthumb1="300x200" title1="Excel generado con Apache POI abierto con LibreOffice"
     caption="Excel generado con Apache POI abierto con LibreOffice" >}}
 
 Otro formato de datos muy utilizado es el de columnas separadas por comas o CSV. Con la librería [OpenCSV][opencsv] se pueden escribir archivos bien formados en este formato teniendo en cuenta el caracter separador de las columnas y el entrecomillado de los datos.

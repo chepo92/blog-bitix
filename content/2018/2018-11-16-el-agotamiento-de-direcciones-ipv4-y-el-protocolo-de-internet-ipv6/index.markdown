@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "image:nat.png"
 tags: ["planeta-codigo"]
 summary: "Las direcciones IP de IPv4 que identifican a las computadoras de forma uniquivoca para comunicarse entre si son limitadas y ya se han agotado. Aún siendo casi 4300 millones con el auge de internet en la última década y la que se espera en los próximos años con los dispositivos móviles y los elementos conectados del internet de las cosas la presión sobre el número de direcciones IP será aún mayor. Hasta ahora varias medidas paliativas han permitido mitigar la presión y extender la disponibilidad de direcciones IP. Uno de los principales motivos del desarrollo del protocolo IPv6 es aumentar en varios órdenes de magnitud el número de las direcciones IP disponibles, siendo en este protocolo direcciones de 128 bits en vez de 32 como IPv4. Sin embargo, hay varios motivos por los que aún IPv6 no se está usando ya de forma masiva."
 ---
@@ -25,7 +26,7 @@ El problema de agotamiento de direcciones IPv4 no es nuevo y ya desde hace algun
 
 {{< image
     gallery="true"
-    image1="resource:nat.png" optionsthumb1="300x200" title1="Panel de un router para hacer NAT"
+    image1="image:nat.png" optionsthumb1="300x200" title1="Panel de un router para hacer NAT"
     caption="Panel de un router para hacer NAT" >}}
 
 La solución a largo plazo para la escasez de direcciones IP del protocolo IPv4 es usar una nueva versión de protocolo conocida como [IPv6][wikipedia-ipv6]. En IPv6 las direcciones IP son números de 128 bits dando lugar a 2<sup>128</sup>, aproximadamente 3.4×10<sup>38</sup> o 340.282.366.920.938.463.463.374.607.431.768.211.456 combinaciones teóricas posibles, esto son unas 7.9×10<sup>28</sup> veces más direcciones IP posibles que en IPv4. Las direcciones IPv6 se escriben en ocho grupos de cuatro números hexadecimales, pudiéndose hacer una contracción omitiendo grupos de ceros contiguos con _::_. El enorme número de direcciones de IPv6 hace innecesaria el NAT y CG-NAT y los problemas que estos ocasionan. Estas son unas comparaciones:

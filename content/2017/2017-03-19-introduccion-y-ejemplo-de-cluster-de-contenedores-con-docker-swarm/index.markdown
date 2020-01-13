@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:docker.svg"
 tags: ["gnu-linux", "planeta-codigo"]
 series: ["docker"]
 summary: "Las funcionalidades de Docker Swarm están incorporadas en Docker para gestionar _clusters_ de nodos con contenedores de los servicios que deseemos. En artículo comentaré algunas de las propiedades de _networkning_ distribuido incorporado en Docker, como crear un _cluster_ de nodos Docker usando VirtualBox con máquinas virtuales para simular múltiples máquinas junto con como lanzar un servicio en el _cluster_ que en este caso consistirá en un servidor web nginx."
@@ -40,7 +41,7 @@ En este vídeo de [asciinema][asciinema] se ve en funcionamiento todos los anter
 
 {{< image
     gallery="true"
-    image1="resource:maquinas-virtuales-cluster.png" optionsthumb1="300x200" title1="Máquinas virtuales de los nodos del _cluster_ de Docker Swarm"
+    image1="image:maquinas-virtuales-cluster.png" optionsthumb1="300x200" title1="Máquinas virtuales de los nodos del _cluster_ de Docker Swarm"
     caption="Máquinas virtuales de los nodos del cluster de Docker Swarm" >}}
 
 Los comandos para eliminar un servicio del _cluster_ y eliminar completamente el _cluster_ son los siguientes.

@@ -9,6 +9,7 @@ language: "es"
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:archlinux.svg"
 tags: ["gnu-linux", "planeta-codigo", "software-libre"]
 summary: "Arch Linux es una de las distribuciones más personalizables de GNU/Linux pero cuya instalación requiere leer una buena cantidad de documentación para saber que comandos ejecutar en el _prompt_ del sistema en el que te deja se medio de instalación. Algunos usuarios eligen una distribución como Antergos, KaOS o Manjaro con un instalalador gráfico y guiado simplemente por el hecho de no enfrentarse al instalador de Arch Linux. Ejecutar un comando y esperar a que termine para introducir otro es lento y requiere de atención. "
 ---
@@ -21,8 +22,8 @@ Hace tiempo que instalar una distribución [GNU][gnu]/[Linux][linux] no tiene m�
 
 {{< image
     gallery="true"
-    image1="resource:debian-installer-text.png" optionsthumb1="300x200" title1="Instalador de Debian en modo texto"
-    image2="resource:debian-installer-graphics.png" optionsthumb2="300x200" title2="Instalador de Debian en modo gráfico"
+    image1="image:debian-installer-text.png" optionsthumb1="300x200" title1="Instalador de Debian en modo texto"
+    image2="image:debian-installer-graphics.png" optionsthumb2="300x200" title2="Instalador de Debian en modo gráfico"
     caption="Instalación guíada de Debian basada en texto y gráfica" >}}
 
 Otras distribuciones basadas en principios diferentes y usuarios a los que está destinadas con otras necesidades o preferencias puede que requieran algo más de conocimientos a cambio de realizar configuraciones más avanzadas como el particionado del disco, cifrado del disco o software que se instala. Algunas distribuciones como [Arch Linux][archlinux] incluso no proporcionan ningún instalador.
@@ -73,22 +74,22 @@ Estas son algunas capturas de pantalla con diferentes entornos de escritorio que
 
 {{< image
     gallery="true"
-    image1="resource:archlinux-gnome.jpg" optionsthumb1="300x200" title1="GNOME"
-    image2="resource:archlinux-kde.jpg" optionsthumb2="300x200" title2="KDE"
+    image1="image:archlinux-gnome.jpg" optionsthumb1="300x200" title1="GNOME"
+    image2="image:archlinux-kde.jpg" optionsthumb2="300x200" title2="KDE"
     caption="Entornos de escritorio GNOME y KDE" >}}
 {{< image
     gallery="true"
-    image1="resource:archlinux-xfce.jpg" optionsthumb1="300x200" title1="XFCE"
-    image2="resource:archlinux-cinnamon.jpg" optionsthumb2="300x200" title2="Cinnamon"
+    image1="image:archlinux-xfce.jpg" optionsthumb1="300x200" title1="XFCE"
+    image2="image:archlinux-cinnamon.jpg" optionsthumb2="300x200" title2="Cinnamon"
     caption="Entornos de escritorio Xfce y Cinnamon" >}}
 {{< image
     gallery="true"
-    image1="resource:archlinux-lxde.jpg" optionsthumb1="300x200" title1="LXDE"
-    image2="resource:archlinux-mate.jpg" optionsthumb2="300x200" title2="Mate"
+    image1="image:archlinux-lxde.jpg" optionsthumb1="300x200" title1="LXDE"
+    image2="image:archlinux-mate.jpg" optionsthumb2="300x200" title2="Mate"
     caption="Entornos de escritorio LXDE y Mate" >}}
 {{< image
     gallery="true"
-    image1="resource:archlinux-root-password.png" optionsthumb1="300x200" title1="Solicitud de contraseña para descifrar partición root"
+    image1="image:archlinux-root-password.png" optionsthumb1="300x200" title1="Solicitud de contraseña para descifrar partición root"
     caption="Solicitud de contraseña para descifrar partición root" >}}
 
 {{< asciinema id="192880" caption="Instalación de sistema base de Arch Linux con alis" >}}

@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:gnu.svg"
 tags: ["gnu-linux", "planeta-codigo", "seguridad", "software-libre"]
 summary: "Hacer copias de seguridad es una buena práctica para evitar perder información en caso de que por ejemplo un disco duro se nos estropee. Cifrar la información o al menos parte de ella como las contraseñas (si las guardamos en un archivo de texto) también es una buena práctica por si perdemos una memoria USB, nos roban en un lugar público o en nuestro domicilio un disco duro o un portátil o los extraviamos en algún viaje. Una forma sencilla para proteger su contenido cifrando múltiples archivos es EncFS."
 ---
@@ -37,7 +38,7 @@ Montado el sistema de archivos veremos que en el explorador de archivos se ha mo
 
 {{< image
     gallery="true"
-    image1="resource:sistema-archivos-descifrados.png" optionsthumb1="300x200" title1="Sistema de archivos montado y descifrado" >}}
+    image1="image:sistema-archivos-descifrados.png" optionsthumb1="300x200" title1="Sistema de archivos montado y descifrado" >}}
 
 La opción _-f_ sirve para usar EncFS en primer plano, si lo usamos de esta forma se quedará esperando hasta que lo finalicemos con _Ctrl-C_ momento en el que desmontará automáticamente la unidad. Cuando queramos desmontar el sistema de archivos otra opción es el siguiente comando:
 
@@ -47,14 +48,14 @@ Montado el sistema de archivos en primer o segundo plano podremos trabajar con l
 
 {{< image
     gallery="true"
-    image1="resource:sistema-archivos-cifrados.png" optionsthumb1="300x200" title1="Sistema de archivos cifrado" >}}
+    image1="image:sistema-archivos-cifrados.png" optionsthumb1="300x200" title1="Sistema de archivos cifrado" >}}
 
 Por supuesto, el contenido de un archivo cifrado será completamente ininteligible consiguiendo nuestro objetivo de que nuestros datos estén a salvo y protegidos.
 
 {{< image
     gallery="true"
-    image1="resource:contenido-archivo-descifrado.png" optionsthumb1="300x200" title1="Contenido de un archivo de texto"
-    image2="resource:contenido-archivo-cifrado.png" optionsthumb2="300x200" title2="Contenido del archivo de texto cifrado" >}}
+    image1="image:contenido-archivo-descifrado.png" optionsthumb1="300x200" title1="Contenido de un archivo de texto"
+    image2="image:contenido-archivo-cifrado.png" optionsthumb2="300x200" title2="Contenido del archivo de texto cifrado" >}}
 
 En el [artículo de EncFS de la wiki de Arch Linux](https://wiki.archlinux.org/index.php/EncFS) está muy bien explicado con alguna información más sobre esta forma de proteger la preciada información personal que poseemos en diversas formas de documentos, imágenes, fotos, vídeos, música y otros formatos.
 

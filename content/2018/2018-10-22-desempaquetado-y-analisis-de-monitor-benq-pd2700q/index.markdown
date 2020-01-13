@@ -11,6 +11,7 @@ sharing: true
 comments: true
 promoted: false
 imageHead: "images/image.jpg"
+imagePost: "logotype:benq.svg"
 tags: ["hardware", "planeta-codigo"]
 series: ["desempaquetado-tecnologia"]
 summary: "La siguiente pieza que he adquirido para completar lo que será mi ordenador personal en casa es el monitor que usaré en mayor medida para tareas ofimáticas, navegar por internet, quizá ver alguna película y en menor medida quizá también algún juego. De entre las opciones que buscaba inicialmente era que fuese IPS por los colores, de 27 pulgadas y con ese tamaño de pantalla con al menos resolución QHD. Hay muchos modelos entre los que elegir y con variaciones de precios notables en aparentemente las mismas características, de 32 pulgadas, ultrapanorámicos, UHD, orientados más a _gaming_, ..."
@@ -77,7 +78,7 @@ En [PcComponentes][pccomponentes] los precios no varían tanto pero en Amazon en
 
 {{< image
     gallery="true"
-    image1="resource:camelcamelcamel-benq-pd2700q.png" optionsthumb1="300x200" title1="Evolución del precio del monitor Benq PD2700Q"
+    image1="image:camelcamelcamel-benq-pd2700q.png" optionsthumb1="300x200" title1="Evolución del precio del monitor Benq PD2700Q"
     caption="Evolución del precio del monitor Benq PD2700Q" >}}
 
 ### Benq PD2700Q
@@ -142,88 +143,88 @@ El monitor está perfectamente embalado en una caja impresa con las principales 
 
 {{< image
     gallery="true"
-    image1="resource:benq-pd2700q-unboxing-1.jpg" optionsthumb1="200x150" title1="Desempaquetado"
-    image2="resource:benq-pd2700q-unboxing-2.jpg" optionsthumb2="200x150" title2="Desempaquetado"
-    image3="resource:benq-pd2700q-unboxing-3.jpg" optionsthumb3="200x150" title3="Desempaquetado" >}}
+    image1="image:benq-pd2700q-unboxing-1.jpg" optionsthumb1="200x150" title1="Desempaquetado"
+    image2="image:benq-pd2700q-unboxing-2.jpg" optionsthumb2="200x150" title2="Desempaquetado"
+    image3="image:benq-pd2700q-unboxing-3.jpg" optionsthumb3="200x150" title3="Desempaquetado" >}}
 {{< image
     gallery="true"
-    image1="resource:benq-pd2700q-unboxing-4.jpg" optionsthumb1="200x150" title1="Desempaquetado"
-    image2="resource:benq-pd2700q-unboxing-5.jpg" optionsthumb2="200x150" title2="Desempaquetado"
-    image3="resource:benq-pd2700q-unboxing-6.jpg" optionsthumb3="200x150" title3="Desempaquetado" >}}
+    image1="image:benq-pd2700q-unboxing-4.jpg" optionsthumb1="200x150" title1="Desempaquetado"
+    image2="image:benq-pd2700q-unboxing-5.jpg" optionsthumb2="200x150" title2="Desempaquetado"
+    image3="image:benq-pd2700q-unboxing-6.jpg" optionsthumb3="200x150" title3="Desempaquetado" >}}
 {{< image
     gallery="true"
-    image1="resource:benq-pd2700q-unboxing-7.jpg" optionsthumb1="200x150" title1="Desempaquetado"
-    image2="resource:benq-pd2700q-unboxing-8.jpg" optionsthumb2="200x150" title2="Desempaquetado"
+    image1="image:benq-pd2700q-unboxing-7.jpg" optionsthumb1="200x150" title1="Desempaquetado"
+    image2="image:benq-pd2700q-unboxing-8.jpg" optionsthumb2="200x150" title2="Desempaquetado"
     caption="Desempaquetado" >}}
 
 {{< image
     gallery="true"
-    image1="resource:benq-pd2700q-unboxing-9.jpg" optionsthumb1="200x150" title1="Desempaquetado"
-    image2="resource:benq-pd2700q-unboxing-10.jpg" optionsthumb2="200x150" title2="Desempaquetado"
-    image3="resource:benq-pd2700q-unboxing-11.jpg" optionsthumb3="200x150" title3="Desempaquetado" >}}
+    image1="image:benq-pd2700q-unboxing-9.jpg" optionsthumb1="200x150" title1="Desempaquetado"
+    image2="image:benq-pd2700q-unboxing-10.jpg" optionsthumb2="200x150" title2="Desempaquetado"
+    image3="image:benq-pd2700q-unboxing-11.jpg" optionsthumb3="200x150" title3="Desempaquetado" >}}
 {{< image
     gallery="true"
-    image1="resource:benq-pd2700q-unboxing-12.jpg" optionsthumb1="200x150" title1="Desempaquetado"
+    image1="image:benq-pd2700q-unboxing-12.jpg" optionsthumb1="200x150" title1="Desempaquetado"
     caption="Contenido de la caja" >}}
 
 El monitor posee unos biseles bastante amplios de 2 cm sin embargo al ser el marco negro con acabado mate no distraen mucho ni son molestos estéticamente. Aún así la tendencia es que estos biseles sean reducidos pero este modelo de monitor ya tiene algunos años.
 
 {{< image
     gallery="true"
-    image1="resource:benq-pd2700q-review-1.jpg" optionsthumb1="200x150" title1="Pantalla"
-    image2="resource:benq-pd2700q-review-17.jpg" optionsthumb2="200x150" title2="Pantalla"
-    image3="resource:benq-pd2700q-review-2.jpg" optionsthumb3="200x150" title3="Pantalla" >}}
+    image1="image:benq-pd2700q-review-1.jpg" optionsthumb1="200x150" title1="Pantalla"
+    image2="image:benq-pd2700q-review-17.jpg" optionsthumb2="200x150" title2="Pantalla"
+    image3="image:benq-pd2700q-review-2.jpg" optionsthumb3="200x150" title3="Pantalla" >}}
 {{< image
     gallery="true"
-    image1="resource:benq-pd2700q-review-3.jpg" optionsthumb1="200x150" title1="Pantalla"
-    image2="resource:benq-pd2700q-review-4.jpg" optionsthumb2="200x150" title2="Pantalla"
-    image3="resource:benq-pd2700q-review-5.jpg" optionsthumb3="200x150" title3="Pantalla" >}}
+    image1="image:benq-pd2700q-review-3.jpg" optionsthumb1="200x150" title1="Pantalla"
+    image2="image:benq-pd2700q-review-4.jpg" optionsthumb2="200x150" title2="Pantalla"
+    image3="image:benq-pd2700q-review-5.jpg" optionsthumb3="200x150" title3="Pantalla" >}}
 {{< image
     gallery="true"
-    image1="resource:benq-pd2700q-review-6.jpg" optionsthumb1="200x150" title1="Pantalla"
-    image2="resource:benq-pd2700q-review-7.jpg" optionsthumb2="200x150" title2="Pantalla"
+    image1="image:benq-pd2700q-review-6.jpg" optionsthumb1="200x150" title1="Pantalla"
+    image2="image:benq-pd2700q-review-7.jpg" optionsthumb2="200x150" title2="Pantalla"
     caption="Pantalla" >}}
 {{< image
     gallery="true"
-    image1="resource:benq-pd2700q-review-8.jpg" optionsthumb1="200x150" title1="Pantalla parte trasera"
-    image2="resource:benq-pd2700q-review-9.jpg" optionsthumb2="200x150" title2="Pantalla parte trasera"
-    image3="resource:benq-pd2700q-review-14.jpg" optionsthumb3="200x150" title3="Pantalla parte trasera" >}}
+    image1="image:benq-pd2700q-review-8.jpg" optionsthumb1="200x150" title1="Pantalla parte trasera"
+    image2="image:benq-pd2700q-review-9.jpg" optionsthumb2="200x150" title2="Pantalla parte trasera"
+    image3="image:benq-pd2700q-review-14.jpg" optionsthumb3="200x150" title3="Pantalla parte trasera" >}}
 {{< image
     gallery="true"
-    image1="resource:benq-pd2700q-review-15.jpg" optionsthumb1="200x150" title1="Pantalla parte trasera"
-    image2="resource:benq-pd2700q-review-16.jpg" optionsthumb2="200x150" title2="Pantalla parte trasera"
+    image1="image:benq-pd2700q-review-15.jpg" optionsthumb1="200x150" title1="Pantalla parte trasera"
+    image2="image:benq-pd2700q-review-16.jpg" optionsthumb2="200x150" title2="Pantalla parte trasera"
     caption="Pantalla parte trasera" >}}
 
 Este modelo de monitor incluye dos puertos USB 2.0 en la parte trasera, tiene utilidad en un ordenador de escritorio que esté debajo de la mesa para tener unos puertos USB más cerca del escritorio con un concentrador USB.
 
 {{< image
     gallery="true"
-    image1="resource:benq-pd2700q-review-10.jpg" optionsthumb1="200x150" title1="Conexiones"
-    image2="resource:benq-pd2700q-review-11.jpg" optionsthumb2="200x150" title2="Conexiones"
-    image3="resource:benq-pd2700q-review-12.jpg" optionsthumb3="200x150" title3="Conexiones" >}}
+    image1="image:benq-pd2700q-review-10.jpg" optionsthumb1="200x150" title1="Conexiones"
+    image2="image:benq-pd2700q-review-11.jpg" optionsthumb2="200x150" title2="Conexiones"
+    image3="image:benq-pd2700q-review-12.jpg" optionsthumb3="200x150" title3="Conexiones" >}}
 {{< image
     gallery="true"
-    image1="resource:benq-pd2700q-review-13.jpg" optionsthumb1="200x150" title1="Conexiones"
+    image1="image:benq-pd2700q-review-13.jpg" optionsthumb1="200x150" title1="Conexiones"
     caption="Conexiones" >}}
 
 Los botones para ajustar los parámetros del monitor y OSD están detrás del monitor y el piloto indicador de encendido en un lateral de modo que en un ambiente de luz oscuro no molesta.
 
 {{< image
     gallery="true"
-    image1="resource:benq-pd2700q-osd-1.jpg" optionsthumb1="200x150" title1="OSD"
-    image2="resource:benq-pd2700q-osd-2.jpg" optionsthumb2="200x150" title2="OSD"
-    image3="resource:benq-pd2700q-osd-3.jpg" optionsthumb3="200x150" title3="OSD"
+    image1="image:benq-pd2700q-osd-1.jpg" optionsthumb1="200x150" title1="OSD"
+    image2="image:benq-pd2700q-osd-2.jpg" optionsthumb2="200x150" title2="OSD"
+    image3="image:benq-pd2700q-osd-3.jpg" optionsthumb3="200x150" title3="OSD"
     caption="" >}}
 {{< image
     gallery="true"
-    image1="resource:benq-pd2700q-osd-4.jpg" optionsthumb1="200x150" title1="OSD"
-    image2="resource:benq-pd2700q-osd-5.jpg" optionsthumb2="200x150" title2="OSD"
-    image3="resource:benq-pd2700q-osd-6.jpg" optionsthumb3="200x150" title3="OSD"
+    image1="image:benq-pd2700q-osd-4.jpg" optionsthumb1="200x150" title1="OSD"
+    image2="image:benq-pd2700q-osd-5.jpg" optionsthumb2="200x150" title2="OSD"
+    image3="image:benq-pd2700q-osd-6.jpg" optionsthumb3="200x150" title3="OSD"
     caption="" >}}
 {{< image
     gallery="true"
-    image1="resource:benq-pd2700q-osd-7.jpg" optionsthumb1="200x150" title1="OSD"
-    image2="resource:benq-pd2700q-osd-8.jpg" optionsthumb2="200x150" title2="OSD"
+    image1="image:benq-pd2700q-osd-7.jpg" optionsthumb1="200x150" title1="OSD"
+    image2="image:benq-pd2700q-osd-8.jpg" optionsthumb2="200x150" title2="OSD"
     caption="Configuración en pantalla (OSD)" >}}
 
 Habitualmente estoy trabajando con un portátil MacBook Pro con pantalla retina y anteriormente he usado un Sony VAIO E 14P con panel TN de resolución 1600x900 y un monitor [LG 2351](https://www.lg.com/hk_en/monitor/lg-E2351VR-home) también TN de resolución 1920x1080. Con respecto a los dos paneles TN que he usado hasta el momento la mejora es apreciable en sus ángulos de visión, colores más intensos, este es el motivo de requerir un panel tipo IPS. Si tengo que destacar algo del MacBook es la pantalla, la pantalla del Benq cumple pero al no ser retina la diferencia es clara, aún conservando buena vista la definición del texto no es mala pero no llega a la calidad de la pantalla del MacBook, eso si en cuanto a colores no tiene nada que envidiar a la pantalla del Mac.
@@ -238,9 +239,9 @@ La primera impresión es que un monitor de 27" es grande pero ya me han comentad
 
 {{< image
     gallery="true"
-    image1="resource:benq-pd2700q-screen-1.jpg" optionsthumb1="200x150" title1="Imagen en la pantalla"
-    image2="resource:benq-pd2700q-screen-2.jpg" optionsthumb2="200x150" title2="Imagen en la pantalla"
-    image3="resource:benq-pd2700q-screen-3.jpg" optionsthumb3="200x150" title3="Imagen en la pantalla"
+    image1="image:benq-pd2700q-screen-1.jpg" optionsthumb1="200x150" title1="Imagen en la pantalla"
+    image2="image:benq-pd2700q-screen-2.jpg" optionsthumb2="200x150" title2="Imagen en la pantalla"
+    image3="image:benq-pd2700q-screen-3.jpg" optionsthumb3="200x150" title3="Imagen en la pantalla"
     caption="Imagen en la pantalla" >}}
 
 Este monitor tiene los botones de ajustes detrás del monitor marcados con unos indicadores en el frontal para encontrar su posición, en algún sitio se comenta que esto es algo incómodo para acertar a pulsar el botón adecuado. En lo que probado no me ha resultado nada incómodo y los botones me han parecido perfectos. Dado que el monitor tiene altavoces se le puede enviar sonido por el mismo cable HDMI que envía la señal de vídeo y luego con un jack de 3.5mm desde el monitor enviarlo a unos altavoces que den mejor calidad de sonido, esto me permite conectar un cable menos al ordenador y que la mesa no quede cubierta de cables. Aunque con esta opción al menos un Mac no permite ajustar el volumen hay que hacerlo desde los altavoces, por fortuna tengo unos altavoces con regulador de volumen.
@@ -249,16 +250,16 @@ Las fugas de luz o _bleeding_ es otro de los posibles problemas de un monitor, p
 
 {{< image
     gallery="true"
-    image1="resource:benq-pd2700q-screen-4.jpg" optionsthumb1="200x150" title1="Bleeding en ambiente oscuro"
+    image1="image:benq-pd2700q-screen-4.jpg" optionsthumb1="200x150" title1="Bleeding en ambiente oscuro"
     caption="Bleeding en ambiente oscuro" >}}
 
 Con una resolución QHD hay más espacio que en una Full HD que agradecen los programadores, diseñadores y gente que pasa mucho tiempo delante de una pantalla trabajando en tareas relacionadas con múltiples documentos o aplicaciones. Por ejemplo, con un IDE es posible visualizar el código fuente de dos archivos o visualizar en primer plano el IDE, navegador y terminal al mismo tiempo. Las personas que trabajan con gráficos pueden visualizar imágenes más grandes ya sea en [Photoshop][adobe-photoshop], [GIMP][gimp], [Inkscape][inkscape], [OpenShot][openshot] y herramientas similares.
 
 {{< image
     gallery="true"
-    image1="resource:benq-pd2700q-screen-5.jpg" optionsthumb1="200x150" title1="Espacio en resolución QHD"
-    image2="resource:benq-pd2700q-screen-6.png" optionsthumb2="200x150" title2="Espacio en resolución QHD"
-    image3="resource:benq-pd2700q-screen-7.png" optionsthumb3="200x150" title3="Espacio en resolución QHD"
+    image1="image:benq-pd2700q-screen-5.jpg" optionsthumb1="200x150" title1="Espacio en resolución QHD"
+    image2="image:benq-pd2700q-screen-6.png" optionsthumb2="200x150" title2="Espacio en resolución QHD"
+    image3="image:benq-pd2700q-screen-7.png" optionsthumb3="200x150" title3="Espacio en resolución QHD"
     caption="Espacio en resolución QHD" >}}
 
 En un futuro probablemente aparezcan nuevos monitores que soporten HDR y con resolución retina que supondrá otro salto en la calidad de la imagen. Me va a quedar la duda de si un monitor con resolución UHD de 27 pulgadas bajando la resolución sería una buena opción en cuanto a definición de texto, se suele comentar que no, usar una resolución escalada del panel no es lo mismo que en la resolución nativa pero me gustaría experimentarlo. Al menos en el Mac de resolución nativa 2560x1440 cambiar a 1600x900 se sigue viendo perfectamente el texto y en este Benq de 27" bajando la resolución no aprecio que el texto se vea peor. En cualquier caso los monitores UHD por el momento tienen un precio mayor, más del doble o al menos unos cientos de euros más según el modelo comparado, y este Benq PD2700Q es de buena calidad acorde a su precio mayor que algunos otros QHD y que muchos Full HD pero de todas formas asequible para alguien que le da buen uso.

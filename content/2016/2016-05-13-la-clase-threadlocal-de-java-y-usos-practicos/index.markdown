@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "En Java existe una clase con la que podemos asociar un dato al hilo o _thread_ que ejecuta el código. Podemos usar esta clase para evitar incluir en cada método el parámetro de ese dato si es usado en multitud de métodos simplificando en gran medida el código. En las aplicaciones web este dato puede ser el usuario que se ha autenticado, el dominio por el que se ha accedido a la aplicación, el dispositivo móvil, el idioma del usuario o cualquier otra información que queramos esté disponible de forma global en el hilo de ejecución."
 ---

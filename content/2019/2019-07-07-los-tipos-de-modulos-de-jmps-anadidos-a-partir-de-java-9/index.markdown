@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Los módulos de Java dotan a la plataforma de nuevas características. Para garantiza la compatibilidad con las librerías existentes y permitir una transición progresiva de una versión sin módulos a una con módulos la plataforma de módulos de Java define varios tipos de módulos."
 ---

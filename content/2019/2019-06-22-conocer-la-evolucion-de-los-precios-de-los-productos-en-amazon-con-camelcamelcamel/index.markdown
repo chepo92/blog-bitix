@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:amazon.svg"
 tags: ["desempaquetado"]
 summary: "Haciendo un seguimiento de los precios en Amazon los de algunos productos se mantienen estables a lo largo del tiempo pero en la mayoría varían significativamente. Con la página CamelCamelCamel es posible conocer la evolución del precios en Amazon y su disponibilidad  y saber si están en un periodo de precio alto o en su mínimo histórico."
 ---
@@ -28,9 +29,9 @@ Como ejemplo se puede mostrar el precio de un SDD [Samsung 970 EVO en formato M.
 
 {{< image
     gallery="true"
-    image1="resource:precios-amazon-1.png" optionsthumb1="200x150" title1="Precio SSD 500 GB"
-    image2="resource:precios-amazon-2.png" optionsthumb2="200x150" title2="Precio SSD 1 TB"
-    image3="resource:precios-amazon-3.png" optionsthumb3="200x150" title3="Precio 32 GB de memoria"
+    image1="image:precios-amazon-1.png" optionsthumb1="200x150" title1="Precio SSD 500 GB"
+    image2="image:precios-amazon-2.png" optionsthumb2="200x150" title2="Precio SSD 1 TB"
+    image3="image:precios-amazon-3.png" optionsthumb3="200x150" title3="Precio 32 GB de memoria"
     caption="Evolución de precios en Amazon" >}}
 
 Los precios en Amazon varían sensiblemente en el caso de las memorias he visto momentos que están a 300€, otros a 380€ y en los últimos meses han bajado de precio casi a la mitad. Con CamelCamelCmel se puede saber si el producto está en uno de esos picos altos o en uno de los bajos, conociendo si el momento de compra es bueno. Conocer la evolución de los precios y algunas de las fechas de los lanzamientos de productos como procesadores, gráficas o cambios de tecnología como pasará de DDR4 a DDR5 permite hacer una compra más informada. Pero tampoco es recomendable esperar indefinidamente ya comentaba en [sobre el rápido avance de la tecnología][blogbitix-186] es una constante y siempre hay a unos meses o un año vista un nuevo producto que mejore el pasado.

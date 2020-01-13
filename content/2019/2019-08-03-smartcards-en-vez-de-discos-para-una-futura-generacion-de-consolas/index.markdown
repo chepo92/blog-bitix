@@ -33,7 +33,7 @@ El concepto de una _smartcard_ es un objeto tangible como una tarjeta de crédit
 
 {{< image
     gallery="false"
-    image1="resource:smartcard-contactless.png" optionsthumb1="300x250" title1="Smartcard contactless" >}}
+    image1="image:smartcard-contactless.png" optionsthumb1="300x250" title1="Smartcard contactless" >}}
 
 Quedada resuelta la posesión física de los juegos con la _smarcard_, queda como descargarlos y en este modelo que planteo la descarga se realizaría a través de internet tal como ocurre en los juegos digitales. Una vez descargado el juego ya no sería necesaria la conexión a internet y solo introducir la _smartcard_ en cada inicio del juego, en cada 3 inicios o cada 3 días para evitar la incomodidad de tener que usar la _smartcard_ en cada inicio.
 

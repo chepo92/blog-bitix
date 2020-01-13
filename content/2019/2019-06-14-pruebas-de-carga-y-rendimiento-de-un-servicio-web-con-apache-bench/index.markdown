@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:apache.svg"
 tags: ["planeta-codigo", "software", "web"]
 summary: "En algunos que un servicio devuelva los datos esperados no es suficiente, otros requisitos no funcionales o de términos de servicio son que sus tiempos de respuesta sean menores al especificado en sus requisitos, que sea capaz de soportar cierto número de peticiones concurrentes o de atender un número de peticiones por minuto. Para asegurar que el servicio es capaz de cumplir estos requisitos funcionales hay que utilizar herramientas que permitan evaluar su desempeño, una de ellas muy fácil de utilizar y que proporciona valiosa información es Apache Bench."
 ---

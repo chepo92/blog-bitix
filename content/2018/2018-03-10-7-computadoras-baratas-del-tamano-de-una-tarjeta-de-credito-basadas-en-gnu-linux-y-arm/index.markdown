@@ -11,6 +11,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:linux.svg"
 tags: ["gnu-linux", "hardware", "planeta-codigo"]
 ---
 
@@ -36,7 +37,7 @@ El uso que se les puede dar a estas computadores es muy diverso quizá no como p
 
 {{< image
     gallery="false"
-    image1="resource:arm-powered.png" command1="Fit" optionsthumb1="300x250" title1="ARM Powered" >}}
+    image1="image:arm-powered.png" command1="Fit" optionsthumb1="300x250" title1="ARM Powered" >}}
 
 ### Raspberry Pi
 
@@ -72,8 +73,8 @@ El precio del modelo de 1 GiB de memoria se mantiene en $35 y el de 4 GiB llega 
 
 {{< image
     gallery="true"
-    image1="resource:raspberrypi3b.jpg" optionsthumb1="300x200" title1="Raspberry Pi 3"
-    image2="resource:raspberrypi4b.jpg" optionsthumb2="300x200" title2="Raspberry Pi 4"
+    image1="image:raspberrypi3b.jpg" optionsthumb1="300x200" title1="Raspberry Pi 3"
+    image2="image:raspberrypi4b.jpg" optionsthumb2="300x200" title2="Raspberry Pi 4"
     caption="Raspberry Pi 3 y 4" >}}
 
 {{< amazon
@@ -102,7 +103,7 @@ El segundo modelo que destacaré es este de [PINE64][pine64] porque posee versio
 
 {{< image
     gallery="true"
-    image1="resource:rock64.jpg" optionsthumb1="300x200" title1="Rock64"
+    image1="image:rock64.jpg" optionsthumb1="300x200" title1="Rock64"
     caption="Rock64" >}}
 
 Para suplir la carencia de WiFi en su tienda hay disponible un accesorio conectable a un puerto USB, también tienen la posibilidad de comprar el alimentador de corriente, mando a distancia, caja acrílica y un _splitter_ con _Power Over Ethernet_ o _PoE_ que hace innecesario el alimentador de corriente si poseemos o adquirimos un _switch_ con esa función, tarjetas eMMC de 16, 32 y 64 GiB. Su precio de unos $45 para el modelo de 4 GiB.
@@ -113,7 +114,7 @@ En el momento de escribir el artículo están preparando el lanzamiento de la pl
 
 {{< image
     gallery="true"
-    image1="resource:rock64pro.jpg" optionsthumb1="300x200" title1="Rock64Pro"
+    image1="image:rock64pro.jpg" optionsthumb1="300x200" title1="Rock64Pro"
     caption="Rock64Pro" >}}
 
 Estas placas de PINE64 son de lo mejor en la relación características hardware y precio, donde adolecen es en el software y es que aún con un tiempo relativamente corto de un año de vida es en el software donde pueden presentar algún problema. Conforme pase el tiempo mejorarán pero quizá no sea el modelo más adecuado para aquellos usuarios que no deseen encontrase problemas en su uso y no estén dispuestos buscar información o a resolver los que se presenten.
@@ -122,7 +123,7 @@ Aunque no es como los modelos anteriores de placas base este es destacable por s
 
 {{< image
     gallery="true"
-    image1="resource:pinebook-11-inch.jpg" optionsthumb1="300x200" title1="PineBook (11 pulgadas)"
+    image1="image:pinebook-11-inch.jpg" optionsthumb1="300x200" title1="PineBook (11 pulgadas)"
     caption="PineBook (11 pulgadas)" >}}
 
 ### Rock Pi 4B
@@ -162,7 +163,7 @@ Su precio es algo más elevado que la Rock64 y tiene menos memoria pero más que
 
 {{< image
     gallery="true"
-    image1="resource:asus-tinker-board.jpg" optionsthumb1="300x200" title1="ASUS Tinker Board"
+    image1="image:asus-tinker-board.jpg" optionsthumb1="300x200" title1="ASUS Tinker Board"
     caption="ASUS Tinker Board" >}}
 
 ### Cubox
@@ -184,8 +185,8 @@ El modelo mas reciente [Cubox Pulse](https://www.solid-run.com/nxp-family/cubox-
 
 {{< image
     gallery="true"
-    image1="resource:cubox.jpg" optionsthumb1="300x200" title1="Cubox"
-    image2="resource:cubox-pulse.jpg" optionsthumb2="300x200" title2="Cubox Pulse"
+    image1="image:cubox.jpg" optionsthumb1="300x200" title1="Cubox"
+    image2="image:cubox-pulse.jpg" optionsthumb2="300x200" title2="Cubox Pulse"
     caption="Cubox y Cubox Pulse" >}}
 
 ### ODROID
@@ -196,7 +197,7 @@ Están preparando el modelo [ODROID N1](https://forum.armbian.com/topic/6496-odr
 
 {{< image
     gallery="true"
-    image1="resource:odroid-c2.jpg" optionsthumb1="300x200" title1="ODROID C2"
+    image1="image:odroid-c2.jpg" optionsthumb1="300x200" title1="ODROID C2"
     caption="ODROID C2" >}}
 
 ### NanoPi, OrangePi y BananaPi

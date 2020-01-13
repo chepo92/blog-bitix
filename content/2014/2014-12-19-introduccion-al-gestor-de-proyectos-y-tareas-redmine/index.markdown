@@ -8,6 +8,7 @@ updated: 2015-01-10T12:00:00+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:redmine.png"
 tags: ["gnu-linux", "planeta-codigo", "software", "software-libre"]
 ---
 
@@ -23,26 +24,26 @@ Si queremos evaluar Redmine una forma sencilla podemos hacerlo mediante una imag
 
 {{< image
     gallery="true"
-    image1="resource:proyecto.png" optionsthumb1="300x200" title1="Proyecto"
-    image2="resource:peticion.png" optionsthumb2="300x200" title2="Petición" >}}
+    image1="image:proyecto.png" optionsthumb1="300x200" title1="Proyecto"
+    image2="image:peticion.png" optionsthumb2="300x200" title2="Petición" >}}
 
 Con Redmine podemos adaptar el flujo de las tareas a la forma de organización que empleemos, podemos personalizar el grafo de estados que siguen las tareas y que personas tiene permisos para hacer cada uno de los cambios de estado. También podemos añadir campos personalizados que queremos recoger para cada petición, por ejemplo, podemos querer dar un tamaño a las tareas en función de si estimamos que es grande, media o pequeña. También podemos crear filtros y guardarlos para encontrar fácilmente tareas.
 
 {{< image
     gallery="true"
-    image1="resource:estados.png" optionsthumb1="300x200" title1="Estados"
-    image2="resource:propiedades.png" optionsthumb2="300x200" title2="Propiedades" >}}
+    image1="image:estados.png" optionsthumb1="300x200" title1="Estados"
+    image2="image:propiedades.png" optionsthumb2="300x200" title2="Propiedades" >}}
 {{< image
     gallery="true"
-    image1="resource:consulta.png" optionsthumb1="300x200" title1="Filtros"
-    image2="resource:flujo-estados.png" optionsthumb2="300x200" title2="Flujo estados" >}}
+    image1="image:consulta.png" optionsthumb1="300x200" title1="Filtros"
+    image2="image:flujo-estados.png" optionsthumb2="300x200" title2="Flujo estados" >}}
 
 Además de gestionar las tareas Redmine dispone de herramientas que nos pueden ser útiles en el proyecto como una wiki para recoger documentación del proyecto y un repositorio de documentos para aquellos que no queremos incluir en la herramienta de control de versiones por su tamaño pero que queremos que estén disponibles para cualquiera que trabaje con el proyecto.
 
 {{< image
     gallery="true"
-    image1="resource:wiki.png" optionsthumb1="300x200" title1="Wiki"
-    image2="resource:archivos.png" optionsthumb2="300x200" title2="Archivos" >}}
+    image1="image:wiki.png" optionsthumb1="300x200" title1="Wiki"
+    image2="image:archivos.png" optionsthumb2="300x200" title2="Archivos" >}}
 
 Pero Redmine es más que una herramienta de gestión de tareas, los complementos pueden añadirle funcionalidad adicional que permite [convertirla en un CRM para gestionar las comunicaciones con clientes](http://www.redminecrm.com/projects/crm/pages/1) o en un [helpdesk para atender las tareas de clientes](http://www.redminecrm.com/projects/helpdesk/pages/1). Además de otros como [personalizar los usuarios de Redmine](http://www.redminecrm.com/projects/people/pages/1) o crear [pequeñas listas de tareas](http://www.redminecrm.com/projects/checklist/pages/1) que nos evitará crear subtareas.
 

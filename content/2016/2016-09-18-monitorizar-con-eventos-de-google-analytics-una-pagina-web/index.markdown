@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:google-analytics.svg"
 tags: ["planeta-codigo", "programacion"]
 summary: "Conociendo cómo usar los eventos de Analytics podemos conocer información interesante acerca de qué forma los usuarios interactúan con nuestra propia página web. Cualquier cosa que podamos realizar con JavaScript o ante cualquier evento que podamos reaccionar podemos medirla con Analytics."
 ---

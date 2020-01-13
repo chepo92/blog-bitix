@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:spring.svg"
 tags: ["java", "planeta-codigo", "spring"]
 ---
 
@@ -29,7 +30,7 @@ En el ejemplo he definido el siguente grafo de estados y transiciones que contie
 
 {{< image
     gallery="true"
-    image1="resource:graph.png" optionsthumb1="600x450" title1="Grafo de la máquina de estados"
+    image1="image:graph.png" optionsthumb1="600x450" title1="Grafo de la máquina de estados"
     caption="Grafo de la máquina de estados" >}}
 
 El uso de _Spring Statemachine_ es relativamente sencillo. En el ejemplo se define en un enumerado la lista de estados, también la lista de eventos o transiciones. Una de las formas de definir el grafo dela máquina de estados es mediante código Java y utilizando Spring definiendo un _bean_. La clase [StateMachineBuilder](https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/StateMachineBuilder.html) facilita la construcción de la definición de la máquina de estados, por una parte está la configuración general o de infraestructura con el método [configureConfiguration()](https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/StateMachineBuilder.Builder.html#configureConfiguration--). Con el método [configureStates()](https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/StateMachineBuilder.Builder.html#configureStates--) se define los estados de la máquina y su tipo (inicial, final, normal, _choice_, _fork_, _join_,) así como las acciones que se deseen ejecutar al entrar, en el estado y al salir del estado con los métodos _stateEntry()_, _stateDo()_ y _stateExit()_. Con el método _withStates()()_ se pueden definir submáquinas o una jerarquía de estados como en el caso del estado _Tasks_. Finalmente hay que definir cuales son las posibles transiciones de los estados y que eventos las disparan. Normalmente las transiciones se definen con el método [withExternal()](https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/builders/StateMachineTransitionConfigurer.html#withExternal--) pero en los casos de los estados de tipo _choice_, _fork_ y _join_ se define con los métodos [withChoice()](https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/builders/StateMachineTransitionConfigurer.html#withChoice--), [withFork()](https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/builders/StateMachineTransitionConfigurer.html#withFork--) y [withJoin()](https://docs.spring.io/spring-statemachine/docs/current/api/org/springframework/statemachine/config/builders/StateMachineTransitionConfigurer.html#withJoin--).

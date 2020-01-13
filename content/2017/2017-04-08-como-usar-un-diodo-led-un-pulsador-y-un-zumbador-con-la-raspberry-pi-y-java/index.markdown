@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:raspberrypi.svg"
 tags: ["gnu-linux", "java", "planeta-codigo", "programacion"]
 series: ["electronica"]
 summary: "El _kit_ de electrónica para la Raspberry Pi incluye varios dispositivos controlables con lo _pines_ GPIO. En el caso de este ejemplo usaré un diodo LED, un zumbador y un pulsador para crear un ejemplo en el que el diodo LED se enciendan y el zumbador emita un sonido cuando el pulsador se active."
@@ -28,21 +29,21 @@ Para el pulsador usaré el método _PULL UP_ (el otro es _PULL DOWN_) donde cone
 
 {{< image
     gallery="true"
-    image1="resource:cableado.jpg" optionsthumb1="300x200" title1="cableado en la breadboard"
-    image2="resource:esquema-cableado.png" optionsthumb2="300x200" title2="Esquema del cableado"
+    image1="image:cableado.jpg" optionsthumb1="300x200" title1="cableado en la breadboard"
+    image2="image:esquema-cableado.png" optionsthumb2="300x200" title2="Esquema del cableado"
     caption="Esquema del cableado" >}}
 
 La librería diozeo para identificar los _pines_ usa la nomenclatura de Broadcom, otras son las nomenclaturas del _header_ o de wiringPi. Hay que tener en cuenta la nomenclatura que se use ya que el número del _pin_ variará en cada una de ellas, también hay que tener en cuenta la versión de la Raspberry Pi ya que hay pequeñas variaciones según la versión. Por ejemplo, según la tabla de referencia siguiente, para la Raspberry Pi 1 y según la nomenclatura de Brodacom el _pin_ GPIO 18 corresponde al número 12 de _header_, el GPIO 21 al número 13 y el GPIO 22 al número 15. Según la nomenclatura de wiringPi el GPIO 1 corresponde al número 1, el GPIO 2 al número 2 y el GPIO 3 al número 3.
 
 {{< image
     gallery="true"
-    image1="resource:raspberrypi1b-header-rev1.png" optionsthumb1="300x200" title1="Header de pines Raspberry Pi 1 B"
-    image2="resource:raspberrypi3b-header.png" optionsthumb2="300x200" title2="Header de pines Raspberry Pi 3 B"
+    image1="image:raspberrypi1b-header-rev1.png" optionsthumb1="300x200" title1="Header de pines Raspberry Pi 1 B"
+    image2="image:raspberrypi3b-header.png" optionsthumb2="300x200" title2="Header de pines Raspberry Pi 3 B"
     caption="Header de _pines_ Raspberry Pi 1 B y Raspberry Pi 3 B, nomenclatura wiringPi" >}}
 {{< image
     gallery="true"
-    image1="resource:raspberrypi1b-header-rev1-broadcom.png" optionsthumb1="300x200" title1="Header de pines Raspberry Pi 1 B"
-    image2="resource:raspberrypi3b-header-broadcom.png" optionsthumb2="300x200" title2="Header de pines Raspberry Pi 3 B"
+    image1="image:raspberrypi1b-header-rev1-broadcom.png" optionsthumb1="300x200" title1="Header de pines Raspberry Pi 1 B"
+    image2="image:raspberrypi3b-header-broadcom.png" optionsthumb2="300x200" title2="Header de pines Raspberry Pi 3 B"
     caption="Headers de _pines_ Raspberry Pi 1 B y Raspberry Pi 3 B, nomenclatura Broadcom" >}}
 
 Usando la librería diozero el código Java para realizar el ejemplo no necesita excesiva explicación. Es posible hacer uso de las [funciones lambdas que incorporó el lenguaje Java en la versión de Java 8][blogbitix-17] y con la sentencia _try-with-resources_ del lenguaje los elementos se finalizará correctamente en caso de producirse alguna excepción, por ejemplo apagando el diodo en caso de que estuviese encendido o apagando el zumbador en su caso.

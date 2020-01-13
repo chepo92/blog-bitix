@@ -12,6 +12,7 @@ sharing: true
 comments: true
 promoted: false
 imageHead: "images/redhat.jpg"
+imagePost: "logotype:redhat.svg"
 tags: ["opinion", "planeta-codigo"]
 ---
 
@@ -29,7 +30,7 @@ Sin embargo, también hay diferencias en la adquisición de Sun y Red Hat. Una d
 
 {{< image
     gallery="true"
-    image1="resource:redhat-homepage.png" optionsthumb1="650x450" title1="Anuncio en la página de Red Hat"
+    image1="image:redhat-homepage.png" optionsthumb1="650x450" title1="Anuncio en la página de Red Hat"
     caption="Anuncio en la página de Red Hat" >}}
 
 Conocida la operación en la página de Red Hat se publican varias notas de prensa.
@@ -44,7 +45,7 @@ Red Hat se fundó en 1993 liberando en 1994 la primera versión de Red Hat Linux
 
 {{< image
     gallery="true"
-    image1="resource:redhat-history.jpg" optionsthumb1="650x450" title1="Historia de Red Hat"
+    image1="image:redhat-history.jpg" optionsthumb1="650x450" title1="Historia de Red Hat"
     caption="Historia de Red Hat" >}}
 
 IBM es una compañía mucho más grande que Red Hat y tiene importantes valores como los [servidores _mainframe_ IBM Z][ibm-z], los [procesadores POWER][ibm-power], además de [su propia nube][ibm-cloud], software de analítica, internet de las cosas y [soluciones para varios sectores de la industria y gubernamentales](https://www.ibm.com/solutions/es/es/). El [proyecto Eclipse][eclipse] surgió de IBM y ha estado ampliamente relacionada con Java con los [servidores WebSphere][websphere] u [OpenLiberty][openliberty]. Ambas son dos de las [empresas que más contribuyen al _kernel_ de Linux](https://www.linuxfoundation.org/2017-linux-kernel-report-landing-page/).

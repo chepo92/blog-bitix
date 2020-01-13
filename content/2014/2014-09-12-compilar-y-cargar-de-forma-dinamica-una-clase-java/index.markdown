@@ -8,6 +8,7 @@ updated: 2015-05-30T00:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:java.svg"
 tags: ["programacion", "java", "planeta-codigo"]
 ---
 
@@ -41,7 +42,7 @@ Con este ejemplo puede intuirse el ejemplo práctico que comentaré que no es m�
 
 {{< image
     gallery="true"
-    image1="resource:main1.png" optionsthumb1="300x200" title1="Salida programa Main1.java" >}}
+    image1="image:main1.png" optionsthumb1="300x200" title1="Salida programa Main1.java" >}}
 
 Casi para terminar las clases de utilidad:
 

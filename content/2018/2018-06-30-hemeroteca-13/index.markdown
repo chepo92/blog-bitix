@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:hugo.svg"
 tags: ["blog", "java", "planeta-codigo", "programacion", "software", "software-libre", "tapestry", "gnu-linux"]
 series: ["hemeroteca"]
 library: "true"
@@ -22,10 +23,10 @@ Dado que desde hace unos cuantos meses no tengo ordenador propio y solo dispongo
 
 {{< image
     gallery="true"
-    image1="resource:analytics.png" optionsthumb1="650x450" title1="Evolución Analytics" >}}
+    image1="image:analytics.png" optionsthumb1="650x450" title1="Evolución Analytics" >}}
 {{< image
     gallery="true"
-    image1="resource:adsense.png" optionsthumb1="650x450" title1="Evolución AdSense"
+    image1="image:adsense.png" optionsthumb1="650x450" title1="Evolución AdSense"
     caption="Evolución Analytics y AdSense" >}}
 
 Entre los artículos sobre programación han estado los habituales sobre Java, destacando las novedades de Java 10, un par sobre [Apache Tapestry][tapestry]. Como resolver varios de los problemas clásicos de sincronización, programación concurrente en Java, [Webjars][webjars], ...

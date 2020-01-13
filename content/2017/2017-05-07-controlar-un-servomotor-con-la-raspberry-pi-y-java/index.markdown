@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:raspberrypi.svg"
 tags: ["gnu-linux", "java", "planeta-codigo", "programacion"]
 series: ["electronica"]
 ---
@@ -24,8 +25,8 @@ Un servomotor es un elemento distinto de un motor, un motor usa dos cables uno p
 
 {{< image
     gallery="true"
-    image1="resource:servomotor.jpg" optionsthumb1="300x200" title1="Servomotor"
-    image2="resource:cableado.jpg" optionsthumb2="300x200" title2="Cableado en la breadboard"
+    image1="image:servomotor.jpg" optionsthumb1="300x200" title1="Servomotor"
+    image2="image:cableado.jpg" optionsthumb2="300x200" title2="Cableado en la breadboard"
     caption="Servomotor y cableado" >}}
 
 La función del servomotor es recibir la señal de control y aplicar corriente al motor hasta que que esté en la posición indicada por la señal. Un servomotor no rota libremente sino que como he comentado en el caso del SG90 tiene un ángulo de funcionamiento de entre 0º y 180º. La señal de control es un pulso de anchura modulada o PWM.

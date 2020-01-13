@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Java tiene una fuerte presencia en el ámbito de desarrollo para aplicaciones web, más recientemente ha sido empleado por la plataforma Android. En la misma medida que han crecido las aplicaciones web y móviles nativas las aplicaciones de escritorio han perdido presencia, sin embargo, para ciertos casos son la opción adecuada. Con la aparición de JavaFX aportando varias mejoras sobre Swing o AWT en la plataforma Java se pueden desarrollar aplicaciones de escritorio multiplataforma «ricas». Podemos empezar por el ejemplo Hola Mundo de JavaFX de este artículo."
 ---
@@ -48,7 +49,7 @@ Esta es la captura de pantalla de la aplicación y el mensaje emitido en la cons
 
 {{< image
     gallery="true"
-    image1="resource:helloworld.png" optionsthumb1="300x200" title1="Aplicación ¡Hola Mundo!"
+    image1="image:helloworld.png" optionsthumb1="300x200" title1="Aplicación ¡Hola Mundo!"
     caption="Aplicación ¡Hola Mundo! con JavaFX" >}}
 
 {{< code file="System.out" language="plaintext" options="" >}}
@@ -59,11 +60,11 @@ En las [demostraciones y ejemplos de Java 8](https://www.oracle.com/technetwork/
 
 {{< image
     gallery="true"
-    image1="resource:ensemble.png" optionsthumb1="300x200" title1="Aplicación Ensemble"
+    image1="image:ensemble.png" optionsthumb1="300x200" title1="Aplicación Ensemble"
     caption="Aplicación Ensemble" >}}
 {{< image
     gallery="true"
-    image1="resource:modena.png" optionsthumb1="300x200" title1="Aplicación Modena"
+    image1="image:modena.png" optionsthumb1="300x200" title1="Aplicación Modena"
     caption="Aplicación Modena" >}}
 
 El ejemplo de este artículo es muy sencillo y solo sirve para disponer de un entorno de desarrollo. Aunque no lo leído en el libro [JavaFX For Dummies](https://amzn.to/2SWtXnM) explican bastante detalladamente y de forma didáctica muchas posibilidades de JavaFX y como en el resto de libros de la serie _for dummies_ paso a paso y de forma simple sin suponer mucho conocimiento del lector.

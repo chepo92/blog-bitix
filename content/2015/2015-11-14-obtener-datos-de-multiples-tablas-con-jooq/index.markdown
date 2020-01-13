@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 series: ["jooq"]
 summary: "jOOQ no proporciona la misma transparencia de acceso a una base de datos relacional que un ORM. Para validar los datos podemos usar Spring Validation y para obtener datos de múltiples tablas lo que comento en este artículo. Usando jOOQ podemos exprimir todo el potencial del lenguaje SQL, comprobación de tipos por el compilador de argumentos y resultados, usar la base de datos como única fuente de la verdad, diferentes formas de acceso a la base de datos usando el patrón Active Record, directamente SQL, ..."

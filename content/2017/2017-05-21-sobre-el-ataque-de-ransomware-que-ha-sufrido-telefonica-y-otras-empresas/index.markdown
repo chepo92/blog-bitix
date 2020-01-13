@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:microsoft.svg"
 tags: ["gnu-linux", "microsoft", "opinion", "planeta-codigo"]
 ---
 
@@ -23,7 +24,7 @@ La peligrosidad de este ransomware radica en que cifra los datos que es una de l
 
 {{< image
     gallery="true"
-    image1="resource:wannacry.png" optionsthumb1="300x200" title1="Captura del ransomware WannaCry en un sistema infectado"
+    image1="image:wannacry.png" optionsthumb1="300x200" title1="Captura del ransomware WannaCry en un sistema infectado"
     caption="Captura del ransomware WannaCry en un sistema infectado" >}}
 
 El programa ransomware se introduce en los los sistemas aún vulnerables conectados a internet o porque un usuario lo activa por ejemplo mediante un clic en un correo electrónico en un sistema interno no conectado directamente a internet. Una vez un sistema es infectado se transmite al resto de equipos vulnerables a los que tenga acceso de la red local, multiplicando el problema.

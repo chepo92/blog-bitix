@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:apache-tapestry-5.svg"
 tags: ["java", "planeta-codigo", "programacion", "tapestry"]
 summary: "Apache Tapestry es uno de los mejores _frameworks_ web para Java que he usado, sin embargo, también tiene algún incordio o curiosidad. Una de ellas es que las plantillas han de ser XML bien formado y en este caso que comento en el que necesitaríamos una plantilla con etiquetas desbalanceadas nos obliga a buscar una solución, esta es la que uso."
 ---

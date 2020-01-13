@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:fleck.jpg"
 tags: []
 series: ["desempaquetado-otros"]
 summary: "Tener una caldera es cara, bien por el coste fijo del gas tanto por el alquiler del contador como por el precio de la disponibilidad pero también por las revisiones obligatorias que hay que hacerles por motivos de seguridad. Con motivo de que me tocaba hacer la revisión de la caldera me he decidido a hacer la sustitución por un termo eléctrico, finalmente elegí un Fleck Duo 7 de 50 litros."
@@ -36,9 +37,9 @@ El sustituir la caldera de gas por un termo me evitará los costes de las revisi
 
 {{< image
     gallery="true"
-    image1="resource:caldera-01.jpg" optionsthumb1="300x200" title1="Caldera de gas"
-    image2="resource:caldera-02.jpg" optionsthumb2="300x200" title2="Caldera de gas"
-    image3="resource:caldera-03.jpg" optionsthumb3="300x200" titl3="Caldera de gas"
+    image1="image:caldera-01.jpg" optionsthumb1="300x200" title1="Caldera de gas"
+    image2="image:caldera-02.jpg" optionsthumb2="300x200" title2="Caldera de gas"
+    image3="image:caldera-03.jpg" optionsthumb3="300x200" titl3="Caldera de gas"
     caption="Caldera de gas" >}}
 
 ### Termo eléctrico
@@ -51,7 +52,7 @@ También hay que elegir la capacidad del depósito del termo, los hay de 15 litr
 
 {{< image
     gallery="true"
-    image1="resource:mapa-dureza-agua.jpg" optionsthumb1="300x200" title1="Mapa de dureza del agua"
+    image1="image:mapa-dureza-agua.jpg" optionsthumb1="300x200" title1="Mapa de dureza del agua"
     caption="Mapa de dureza del agua" >}}
 
 ### Fleck Duo 7 50
@@ -77,19 +78,19 @@ El termo Fleck Duo 7 50 consume como máximo 1500W, yo tengo una potencia contra
 
 {{< image
     gallery="true"
-    image1="resource:caja-01.jpg" optionsthumb1="300x200" title1="Caja Fleck Duo 7 50"
-    image2="resource:caja-02.jpg" optionsthumb2="300x200" title2="Caja Fleck Duo 7 50"
-    image3="resource:caja-03.jpg" optionsthumb3="300x200" title3="Caja Fleck Duo 7 50" >}}
+    image1="image:caja-01.jpg" optionsthumb1="300x200" title1="Caja Fleck Duo 7 50"
+    image2="image:caja-02.jpg" optionsthumb2="300x200" title2="Caja Fleck Duo 7 50"
+    image3="image:caja-03.jpg" optionsthumb3="300x200" title3="Caja Fleck Duo 7 50" >}}
 {{< image
     gallery="true"
-    image1="resource:caja-04.jpg" optionsthumb1="300x200" title1="Caja Fleck Duo 7 50"
-    image2="resource:caja-05.jpg" optionsthumb2="300x200" title2="Caja Fleck Duo 7 50"
-    image3="resource:caja-06.jpg" optionsthumb3="300x200" title3="Caja Fleck Duo 7 50" >}}
+    image1="image:caja-04.jpg" optionsthumb1="300x200" title1="Caja Fleck Duo 7 50"
+    image2="image:caja-05.jpg" optionsthumb2="300x200" title2="Caja Fleck Duo 7 50"
+    image3="image:caja-06.jpg" optionsthumb3="300x200" title3="Caja Fleck Duo 7 50" >}}
 {{< image
     gallery="true"
-    image1="resource:caja-07.jpg" optionsthumb1="300x200" title1="Caja Fleck Duo 7 50"
-    image2="resource:caja-08.jpg" optionsthumb2="300x200" title2="Caja Fleck Duo 7 50"
-    image3="resource:caja-09.jpg" optionsthumb3="300x200" title3="Caja Fleck Duo 7 50"
+    image1="image:caja-07.jpg" optionsthumb1="300x200" title1="Caja Fleck Duo 7 50"
+    image2="image:caja-08.jpg" optionsthumb2="300x200" title2="Caja Fleck Duo 7 50"
+    image3="image:caja-09.jpg" optionsthumb3="300x200" title3="Caja Fleck Duo 7 50"
     caption="Caja Fleck Duo 7 50" >}}
 
 En el manual de Fleck Duo 7 50 se explican mejor las funciones que posee, una de ellas es que aprende los hábitos de consumo y se adecua a ellos para ahorrar energía. También posee una configuración manual con la que se establece la temperatura deseada y el termo la mantiene a esa temperatura. El termo es bastante eficiente por sus dos depósitos independientes y a lo largo del día manteniendo el agua a una temperatura de unos 45º el termo se enciende no más de tres veces al día y solo durante unos minutos.
@@ -98,20 +99,20 @@ Incluye dos tacos y tornillos de unos 8 centímetros de largo y 8 milímetros de
 
 {{< image
     gallery="true"
-    image1="resource:tacos-casquillo-electroliticos.jpg" optionsthumb1="300x200" title1="Válvula de seguridad por presión, tacos, tornillos y  casquillos electrolíticos"
-    image2="resource:plantilla-montaje.jpg" optionsthumb2="300x200" title2="Plantilla montaje"
-    image3="resource:etiqueta-calificacion-energetica.jpg" optionsthumb3="300x200" title3="Etiqueta de calificación energética"
+    image1="image:tacos-casquillo-electroliticos.jpg" optionsthumb1="300x200" title1="Válvula de seguridad por presión, tacos, tornillos y  casquillos electrolíticos"
+    image2="image:plantilla-montaje.jpg" optionsthumb2="300x200" title2="Plantilla montaje"
+    image3="image:etiqueta-calificacion-energetica.jpg" optionsthumb3="300x200" title3="Etiqueta de calificación energética"
     caption="Válvula de seguridad por presión, tacos, tornillos, casquillos electrolíticos, plantilla montaje y etiqueta de calificación energética" >}}
 
 {{< image
     gallery="true"
-    image1="resource:soportes-01.jpg" optionsthumb1="300x200" title1="Soportes incluidos en la caja"
-    image2="resource:soportes-02.jpg" optionsthumb2="300x200" title2="Soportes incluidos en la caja"
+    image1="image:soportes-01.jpg" optionsthumb1="300x200" title1="Soportes incluidos en la caja"
+    image2="image:soportes-02.jpg" optionsthumb2="300x200" title2="Soportes incluidos en la caja"
     caption="Soportes incluidos en la caja, el soporte queda en diagonal" >}}
 {{< image
     gallery="true"
-    image1="resource:soportes-03.jpg" optionsthumb1="300x200" title1="Soportes con taco químico y varilla roscada"
-    image2="resource:soportes-04.jpg" optionsthumb2="300x200" title2="Soportes con taco químico y varilla roscada"
+    image1="image:soportes-03.jpg" optionsthumb1="300x200" title1="Soportes con taco químico y varilla roscada"
+    image2="image:soportes-04.jpg" optionsthumb2="300x200" title2="Soportes con taco químico y varilla roscada"
     caption="Soportes con taco químico y varilla roscada" >}}
 
 ### Instalación termo eléctrico
@@ -122,19 +123,19 @@ También he tenido que adaptar la conexión eléctrica ya que de construción a 
 
 {{< image
     gallery="true"
-    image1="resource:instalacion-termo-01.jpg" optionsthumb1="300x200" title1="Instalación termo eléctrico"
-    image2="resource:instalacion-termo-02.jpg" optionsthumb2="300x200" title2="Instalación termo eléctrico"
-    image3="resource:instalacion-termo-03.jpg" optionsthumb3="300x200" title3="Instalación termo eléctrico" >}}
+    image1="image:instalacion-termo-01.jpg" optionsthumb1="300x200" title1="Instalación termo eléctrico"
+    image2="image:instalacion-termo-02.jpg" optionsthumb2="300x200" title2="Instalación termo eléctrico"
+    image3="image:instalacion-termo-03.jpg" optionsthumb3="300x200" title3="Instalación termo eléctrico" >}}
 {{< image
     gallery="true"
-    image1="resource:instalacion-termo-04.jpg" optionsthumb1="300x200" title1="Instalación termo eléctrico"
-    image2="resource:instalacion-termo-05.jpg" optionsthumb2="300x200" title2="Instalación termo eléctrico"
-    image3="resource:instalacion-termo-06.jpg" optionsthumb3="300x200" title3="Instalación termo eléctrico"
+    image1="image:instalacion-termo-04.jpg" optionsthumb1="300x200" title1="Instalación termo eléctrico"
+    image2="image:instalacion-termo-05.jpg" optionsthumb2="300x200" title2="Instalación termo eléctrico"
+    image3="image:instalacion-termo-06.jpg" optionsthumb3="300x200" title3="Instalación termo eléctrico"
     caption="Instalación termo eléctrico" >}}
 {{< image
     gallery="true"
-    image1="resource:instalacion-termo-07.jpg" optionsthumb1="300x200" title1="Instalación termo eléctrico"
-    image2="resource:instalacion-termo-08.jpg" optionsthumb2="300x200" title2="Instalación termo eléctrico"
+    image1="image:instalacion-termo-07.jpg" optionsthumb1="300x200" title1="Instalación termo eléctrico"
+    image2="image:instalacion-termo-08.jpg" optionsthumb2="300x200" title2="Instalación termo eléctrico"
     caption="Pantalla táctil y digital en modo mantenimiento de temperatura y calentando agua" >}}
 
 El termo Fleck me costó 315€ comprándolo en [Bricomart](https://www.bricomart.es/), si lo hubiese comprador en internet ya sea en [Amazon][amazon] o en la tienda de [Droitek](https://www.droitek.com/) me podría haber salido por unos 50€ más barato, unos 265€ con gastos de envío incluido. Desde luego no lo compraría en [El Corte Inglés][elcorteingles] ya que el modelo Fleck en concreto costaba unos 400€ lo que es significativamente superior. Al final por no tener que esperar a que llegase y estar presente en casa para recogerlo lo compré en Bricomart. En [Amazon][amazon] algunos vendedores ofrecen algo mejor precio.
@@ -143,7 +144,7 @@ Con el grifo monomando que tengo la temperatura del agua caliente se puede regul
 
 {{< image
     gallery="true"
-    image1="resource:grifo-01.jpg" optionsthumb1="300x200" title1="Grifo monomando"
+    image1="image:grifo-01.jpg" optionsthumb1="300x200" title1="Grifo monomando"
     caption="Grifo monomando" >}}
 
 {{< amazon

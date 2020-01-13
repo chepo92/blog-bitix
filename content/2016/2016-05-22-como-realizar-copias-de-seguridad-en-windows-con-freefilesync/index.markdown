@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:freefilesync.png"
 tags: ["microsoft", "software", "software-libre"]
 summary: "Realizar copias de seguridad cada cierta frecuencia nos salvará de perder los datos en algún momento, no sabemos cuando pero tarde o temprano algo del equipo que usemos fallará ya sea a causa de software o hardware. A nivel de usuario mantener una copia sincronizada en otro dispositivo de nuestros archivos seguramente sea suficiente para no perderlos a causa de un desastre, para ello podemos usar FreeFileSync."
 ---
@@ -22,7 +23,7 @@ Nuestros datos en forma de documentos, fotos, música o vídeos son más importa
 
 {{< image
     gallery="true"
-    image1="resource:freefilesync.png" optionsthumb1="300x200" title1="FreeFileSync" >}}
+    image1="image:freefilesync.png" optionsthumb1="300x200" title1="FreeFileSync" >}}
 
 FreeFileSync tiene una licencia de software libre y está disponible tanto para [Windows][windows], [GNU][gnu]/[Linux][linux] y [Mac OS X][macos]. Ofrece una interfaz gráfica y su uso no es complicado. Primero deberemos seleccionar los directorios de los que hacer copia de seguridad y para cada uno de ellos el directorio destino en el que se guardará la copia de seguridad, FreeFileSync llama al origen y destino izquierdo y derecho ya que los presenta así en la interfaz y con la característica que cualquiera de ellos puede actuar como origen y destino. Habitualmente el directorio origen será uno del disco duro del sistema y el directorio destino un directorio de un disco duro o memoria USB externa. La copia de seguridad debería guardase en un dispositivo diferente al origen.
 
@@ -59,11 +60,11 @@ Las opciones que ofrece son bastantes y seguro que cubren la mayoría de casos d
 
 {{< image
     gallery="true"
-    image1="resource:freefilesync-comparacion.png" optionsthumb1="300x200" title1="Opciones de comparación de FreeFileSync"
-    image2="resource:freefilesync-filtro.png" optionsthumb2="300x200" title2="Opciones de filtrado de FreeFileSync" >}}
+    image1="image:freefilesync-comparacion.png" optionsthumb1="300x200" title1="Opciones de comparación de FreeFileSync"
+    image2="image:freefilesync-filtro.png" optionsthumb2="300x200" title2="Opciones de filtrado de FreeFileSync" >}}
 {{< image
     gallery="true"
-    image1="resource:freefilesync-sincronizacion.png" optionsthumb1="300x200" title1="Opciones de sincronización de FreeFileSync" >}}
+    image1="image:freefilesync-sincronizacion.png" optionsthumb1="300x200" title1="Opciones de sincronización de FreeFileSync" >}}
 
 La ventaja realizar un copia de los archivos directamente sin comprimir o cifrar es que no necesitaremos ningún programa adicional para acceder a ellos en caso de necesidad. Otros programas de copias de seguridad son capaces de guardar los datos cifrados y comprimidos pero para recuperar los datos necesitaremos esos programas. Dependiendo de los requerimientos para la copia de seguridad podemos [cifrar la unidad USB externa con BitLocker en Windows](http://windows.microsoft.com/es-es/windows/protect-files-bitlocker-drive-encryption#1TC=windows-8) y [cifrar la unidad USB externa con dm-crypt y LUKS en GNU/Linux][blogbitix-128].
 

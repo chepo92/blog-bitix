@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:hugo.svg"
 tags: ["blog", "planeta-codigo"]
 series: ["aniversario"]
 summary: "Muchas bitácoras perecen y son abandonadas al cabo de un par de años, quizá sus autores desmotivados por las pocas visitas que reciben o por el tiempo que se dan cuenta que les requiere dedicar a escribir en una bitácora y más aún editar los artículos. En mi caso aún no he perdido las ganas por seguir escribiendo y son incluso mayores. La experiencia acumulada durante este tiempo también se nota en la redacción de los artículos."
@@ -27,8 +28,8 @@ Lentamente cada mes recibo alguna visita más y aumenta algo los ingresos por la
 
 {{< image
     gallery="true"
-    image1="resource:paginas-vistas-el-blog-de-pico-dev.png" optionsthumb1="300x200" title1="Páginas vistas El blog de pico.dev"
-    image2="resource:paginas-vistas-blog-bitix.png" optionsthumb2="300x200" title2="Páginas vistas Blog Bitix" >}}
+    image1="image:paginas-vistas-el-blog-de-pico-dev.png" optionsthumb1="300x200" title1="Páginas vistas El blog de pico.dev"
+    image2="image:paginas-vistas-blog-bitix.png" optionsthumb2="300x200" title2="Páginas vistas Blog Bitix" >}}
 
 Aún así cuando escribo pienso poco en las visitas, únicamente comparto aquello que me interesa y voy aprendiendo. Pero me satisface que por ejemplo el último artículo sobre la [Conferencia BilboStack 2016][blogbitix-123] celebrada el último fin de semana de enero lo pueda considerar ya un éxito, ha sido el más veces marcado como favorito y retuiteado con diferencia de los que he escrito, muy visitado en estos pocos días y a raíz de él varias personas de mi entorno cercano me han empezado a seguir. Uno de mis objetivos de este blog como comentaba en [Mi experiencia y consejos para un blog][blogbitix-7].
 

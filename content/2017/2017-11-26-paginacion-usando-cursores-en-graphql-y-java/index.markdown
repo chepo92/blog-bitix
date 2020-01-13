@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:graphql.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 series: ["graphql"]
 ---

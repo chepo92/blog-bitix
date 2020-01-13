@@ -8,6 +8,7 @@ updated: 2017-01-31T22:00:00+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:samsung.svg"
 tags: ["hardware", "planeta-codigo"]
 series: ["desempaquetado-tecnologia"]
 ---
@@ -28,12 +29,12 @@ El disco Samsung 840 EVO SSD de 250 GB lo compré en [Amazon](https://amzn.to/2k
 
 {{< image
     gallery="true"
-    image1="resource:samsung-840-evo-ssd-1.jpg" optionsthumb1="300x200" title1="Samsung SSD 840 EVO 250 GB"
-    image2="resource:samsung-840-evo-ssd-2.jpg" optionsthumb2="300x200" title2="Samsung SSD 840 EVO 250 GB" >}}
+    image1="image:samsung-840-evo-ssd-1.jpg" optionsthumb1="300x200" title1="Samsung SSD 840 EVO 250 GB"
+    image2="image:samsung-840-evo-ssd-2.jpg" optionsthumb2="300x200" title2="Samsung SSD 840 EVO 250 GB" >}}
 {{< image
     gallery="true"
-    image1="resource:samsung-840-evo-ssd-3.jpg" optionsthumb1="300x200" title1="Samsung SSD 840 EVO 250 GB"
-    image2="resource:samsung-840-evo-ssd-4.jpg" optionsthumb2="300x200" title2="Samsung SSD 840 EVO 250 GB" >}}
+    image1="image:samsung-840-evo-ssd-3.jpg" optionsthumb1="300x200" title1="Samsung SSD 840 EVO 250 GB"
+    image2="image:samsung-840-evo-ssd-4.jpg" optionsthumb2="300x200" title2="Samsung SSD 840 EVO 250 GB" >}}
 
 Como se aprecia en las imágenes de desempaquetado el disco viene en una caja del tamaño de un CD conteniendo:
 
@@ -53,8 +54,8 @@ El disco es muy ligero pesando solo unos pocos gramos, tiene un tamaño de 7 mil
 
 {{< image
     gallery="true"
-    image1="resource:samsung-840-evo-ssd-5.jpg" optionsthumb1="300x200"
-    image2="resource:samsung-840-evo-ssd-6.jpg" optionsthumb2="300x200" >}}
+    image1="image:samsung-840-evo-ssd-5.jpg" optionsthumb1="300x200"
+    image2="image:samsung-840-evo-ssd-6.jpg" optionsthumb2="300x200" >}}
 
 Los SSD aún tienen margen de mejora, seguirán bajando de precio, aumentarán de capacidad y no tardarán mucho en masificarse para dejar de ser un producto a comprar para los que buscan una mejora de rendimiento. Como muestra no hace ni una semana de que lo compre y ya ha bajado de 125 € a 120 €. Un punto donde todavía puede haber dudas es cuanto a la durabilidad, si realizamos tareas que escriban muchos datos en el disco puede que prefiramos usarlo junto con un disco mecánico. En teoría los discos TLC como el [Samsung 850 EVO de 250 GB](https://amzn.to/2kdQsRO) tiene una esperanza de vida de 1000 escrituras por celda, a unos 10 GiB de datos escritos por día la esperanza de vida estimada es de 11.7 años para el modelo de 120 GB y 23.4 para el modelo de 250 GB. Los 10 GiB de escritura por día me parece una estimación escasa para un día de trabajo, en mi trabajo suelo estar entre 20 GiB y 40 GiB de escritura, principalmente porque uso una base de datos MySql que por cada importación escribe al disco unos 14 GiB. También es cierto que los 1000 ciclos de escritura quizá sean algo bajos y las celdas aguanten algo más, probablemente y salvo que le demos mucho uso al disco antes de que falle cambiaremos de equipo.
 

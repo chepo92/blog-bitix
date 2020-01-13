@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:apache-tapestry-5.svg"
 tags: ["java", "planeta-codigo", "programacion", "tapestry"]
 ---
 
@@ -28,8 +29,8 @@ Estas pocas líneas de código bastan para redefinir las versiones de las librer
 
 {{< image
     gallery="true"
-    image1="resource:tapestry-jquery-1.12.1.png" optionsthumb1="300x200" title1="Antes de actualizar las librerías JavaScript"
-    image2="resource:tapestry-jquery-3.3.1.png" optionsthumb2="300x200" title2="Después de actualizar las librerías JavaScript"
+    image1="image:tapestry-jquery-1.12.1.png" optionsthumb1="300x200" title1="Antes de actualizar las librerías JavaScript"
+    image2="image:tapestry-jquery-3.3.1.png" optionsthumb2="300x200" title2="Después de actualizar las librerías JavaScript"
     caption="Antes y después de actualizar las librerías JavaScript" >}}
 
 Además, en este caso las nuevas versiones las he proporcionado [gestionando las dependencias de lado del cliente con _webjars_][blogbitix-325] que se incluyen como cualquier otra dependencia Java del proyecto. Esto permite saber qué dependencias de lado de cliente tiene el proyecto, obtener las dependencias de forma automática y actualizarlas de forma sencilla con la herramienta de construcción del proyecto como [Gradle][gradle].

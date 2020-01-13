@@ -11,6 +11,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:intel.svg"
 tags: ["hardware", "planeta-codigo", "opinion"]
 ---
 

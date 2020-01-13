@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:junit.png"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Hay múltiples lenguajes y librerías donde cada una publica nuevas versiones. Una vez elegida una esa decisión no tiene que ser para siempre si las circunstancias de un proyecto cambian o una nueva versión incorpora las funcionalidades por las que se eligió otra. Si se reconsideran de nuevo el conjunto de todos los parámetros la decisión puede ser distinta. Esto me ha ocurrido al evaluar de nuevo JUnit comparándolo con Spock, teniendo en cuenta que en JUnit 5 han incorporado los teses parametrizados y el lenguaje que utiliza cada una de ellas."
 ---

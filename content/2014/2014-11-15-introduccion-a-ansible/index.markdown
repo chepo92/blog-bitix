@@ -8,6 +8,7 @@ updated: 2015-11-10T19:00:00+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:ansible.svg"
 tags: ["gnu-linux", "planeta-codigo"]
 ---
 
@@ -35,7 +36,7 @@ En el inventario descrito como un archivo en formato INI se asignan los nombres 
 
 {{< image
     gallery="true"
-    image1="resource:ansible.png" optionsthumb1="300x200" title1="Ansible" >}}
+    image1="image:ansible.png" optionsthumb1="300x200" title1="Ansible" >}}
 
 El parámetro -m indica el módulo de Ansible que usamos y a continuación indicamos los parámetros. Ansible dispone de una amplia [colección de módulos](http://docs.ansible.com/list_of_all_modules.html) que nos permiten hacer cantidad de tareas.
 

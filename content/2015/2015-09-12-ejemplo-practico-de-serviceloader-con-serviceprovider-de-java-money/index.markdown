@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Una aplicación que trabaje con importes y diferentes divisas necesitará ratios de conversión, estos ratios de conversión deberemos obtenerlos de algún servicio. Con la API de Java Money que aun en Java 8 no está incorporada en el JDK aunque si como una librería podremos trabajar de forma cómoda con importes, divisas y ratios. En este artículo explicaré un ejemplo de uso práctico de la clase ServiceLoader y como obtener ratios del servicio Open Exchange Rates."
 ---

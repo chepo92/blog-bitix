@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:graphql.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 series: ["graphql"]
 summary: "Al diferencia de una API REST donde cada recurso posee un _endpoint_ propio en GraphQL los recursos están relacionados y forman un grafo. Por otro lado las propiedades devueltas en una consulta de GraphQL son las que se indiquen en la consulta en vez de prefijadas como en una API REST. Hay que tener en cuenta que GraphQL para recuperar las propiedades de las entidades usa un _resolver_ y las recupera una a una, si se devuelve una lista de elementos y de cada uno de esos elementos otra propiedad para la que hay que generar una consulta adicional a la base de datos el rendimiento no será bueno. Los _data loaders_ permiten recuperar las propiedades relacionadas de una colección de entidades eficientemente evitando el problema 1+N."

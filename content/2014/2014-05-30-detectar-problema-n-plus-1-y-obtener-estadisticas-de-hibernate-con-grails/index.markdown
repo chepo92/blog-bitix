@@ -8,6 +8,7 @@ updated: 2014-06-13T16:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:grails.svg"
 tags: ["java", "programacion", "planeta-codigo"]
 ---
 
@@ -51,7 +52,7 @@ El resultado es el siguiente:
 
 {{< image
     gallery="true"
-    image1="resource:grails-hibernate-statistics.png" optionsthumb1="300x200" title1="Estadísticas de Hibernate en Grails" >}}
+    image1="image:grails-hibernate-statistics.png" optionsthumb1="300x200" title1="Estadísticas de Hibernate en Grails" >}}
 
 En la imagen se puede apreciar las consultas lanzadas y que parámetros se han empleado. El método doTest del controlador HibernateController cada vez que es ejecutado persiste una entidad de dominio Autor y posteriormente la borra lanzando una sentencia insert y otra delete, cada vez que es ejecutado las estadísticas cambian acordemente.
 

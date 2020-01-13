@@ -9,6 +9,7 @@ updated: 2015-05-30T00:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:octopress.png"
 tags: ["blog", "planeta-codigo"]
 series: ["hemeroteca"]
 library: "true"
@@ -62,7 +63,7 @@ El 2014 continuaré en la misma linea que he seguido hasta ahora con el blog, te
 
 {{< image
     gallery="true"
-    image1="resource:christmas-tux-2013.jpg" optionsthumb1="600x450" title1="Christmas Tux 2013"
+    image1="image:christmas-tux-2013.jpg" optionsthumb1="600x450" title1="Christmas Tux 2013"
     caption="¡Buen 2014!" source="klowner.com" >}}
 
 {{% /post %}}

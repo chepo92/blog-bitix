@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:redis.svg"
 tags: ["gnu-linux", "planeta-codigo", "programacion"]
 summary: "Redis es una de las bases de datos NoSQL en este caso de tipo clave-valor. Los valores pueden ser de diferentes tipos y tiene una amplia colección de operaciones disponibles para usar según el tipo de datos asociado a la clave."
 ---

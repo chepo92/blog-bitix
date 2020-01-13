@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:nomad.svg"
 tags: ["planeta-codigo", "programacion", "software"]
 series: ["hashicorp"]
 summary: "Ciertos servicios requieren que al hacer un despliegue el servicio continue funcionando. Para esto no es posible parar todas las instancias de un servicio a la vez, actualizarlar y volverlas a iniciar porque durante este proceso se dejaría de prestar el servicio durante un corto periodo de tiempo en el mejor de los casos. Hay que hacer el despliegue de forma progresiva en las instancias. Algunas estrategias son _Rolling Update_, _Blue/Green_ y _Canary_, el orquestador de servicios Nomad soporta y realiza de forma automatizada los despliegues usando una de estas estrategias."
@@ -56,9 +57,9 @@ El proceso de despliegue también se puede monitorizar desde la interfaz web que
 
 {{< image
     gallery="true"
-    image1="resource:nomad-rolling-update-before.png" optionsthumb1="300x200" title1="Antes del proceso de despliegue rolling update en Nomad"
-    image2="resource:nomad-rolling-update-while.png" optionsthumb2="300x200" title2="Durante el proceso de despliegue rolling update en Nomad"
-    image3="resource:nomad-rolling-update-after.png" optionsthumb3="300x200" title3="Después del proceso de despliegue rolling update en Nomad"
+    image1="image:nomad-rolling-update-before.png" optionsthumb1="300x200" title1="Antes del proceso de despliegue rolling update en Nomad"
+    image2="image:nomad-rolling-update-while.png" optionsthumb2="300x200" title2="Durante el proceso de despliegue rolling update en Nomad"
+    image3="image:nomad-rolling-update-after.png" optionsthumb3="300x200" title3="Después del proceso de despliegue rolling update en Nomad"
     caption="Progreso del despliegue rolling update en Nomad" >}}
 
 En este ejemplo los servicios están en contenedores docker, también se observa que la versión de los contenedores en ejecución pasan de la versión _stable-alpine_ a _alpine_.

@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:spring.svg"
 tags: ["java", "planeta-codigo", "programacion", "spring"]
 series: ["spring-cloud"]
 summary: "Desarrollar una aplicación no solo implica implementar su funcionalidad, esa aplicación ha de mantenerse funcionando en su entorno de producción. Monitorizar y disponer de información sobre el estado ayuda a mantenerla funcionando sin ninguna caída de servicio u obtener métricas para mejorar su funcionamiento. Entre las numerosas funcionalidades ofrecidas por Spring para las aplicaciones Java está Spring Boot Actuator que precisamente nos proporcionará métricas e información interesantes de serie pudiendo implementar nueva según la necesidades."
@@ -46,9 +47,9 @@ En la aplicación Spring Boot incluyendo la dependencia de Spring Boot Actuator 
 
 {{< image
     gallery="true"
-    image1="resource:spring-boot-actuator-health.png" optionsthumb1="300x200" title1="Spring Boot Actuator endpoint Health"
-    image2="resource:spring-boot-actuator-env.png" optionsthumb2="300x200" title2="Spring Boot Actuator endpoint Env"
-    image3="resource:spring-boot-actuator-metrics.png" optionsthumb3="300x200" title3="Spring Boot Actuator endpoint Metrics"
+    image1="image:spring-boot-actuator-health.png" optionsthumb1="300x200" title1="Spring Boot Actuator endpoint Health"
+    image2="image:spring-boot-actuator-env.png" optionsthumb2="300x200" title2="Spring Boot Actuator endpoint Env"
+    image3="image:spring-boot-actuator-metrics.png" optionsthumb3="300x200" title3="Spring Boot Actuator endpoint Metrics"
     caption="Spring Boot Actuator endpoints health, env y metrics " >}}
 
 Spring Boot Actuator es otro de los varios módulos disponibles en Spring Boot. Para conocer más en detalle cuales son sus posibilidades el libro [Spring Boot in Action](https://amzn.to/2SVtJNU) lo explica bastante bien.

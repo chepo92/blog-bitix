@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:lets-encrypt.svg"
 tags: ["planeta-codigo", "seguridad", "software", "software-libre", "web"]
 summary: "Let's Encrypt es una entidad que emite certificados TLS/SSL que son reconocidos como de confianza por los navegadores web. Usando esta entidad de certificación es posible obtener y renovar un certificado TLS/SSL de forma automatizada, rápida y sin coste alguno."
 ---
@@ -61,8 +62,8 @@ Y este es el resultado al acceder con el navegador al sitio web que tengo instal
 
 {{< image
     gallery="true"
-    image1="resource:smaug-1.png" optionsthumb1="300x200" title1="Sitio web con certificado de Let's Encrypt"
-    image2="resource:smaug-2.png" optionsthumb2="300x200" title2="Sitio web con certificado de Let's Encrypt"
+    image1="image:smaug-1.png" optionsthumb1="300x200" title1="Sitio web con certificado de Let's Encrypt"
+    image2="image:smaug-2.png" optionsthumb2="300x200" title2="Sitio web con certificado de Let's Encrypt"
     caption="Sitio web con certificado de Let's Encrypt" >}}
 
 En la documentación del proyecto de Let's Encrypt hay explicaciones más detalladas sobre [como funciona](https://letsencrypt.org/how-it-works/), [límites de uso](https://letsencrypt.org/docs/rate-limits/), [como usarlo](https://certbot.eff.org/docs/using.html) y [varias guías según el servidor web y distribución GNU/Linux](https://certbot.eff.org/).

@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:ubuntu.svg"
 tags: ["gnu-linux", "planeta-codigo", "software", "software-libre"]
 summary: "Pasar de usar Windows a usar una distribución GNU/Linux es un paso difícil para muchos usuarios, algunos usuarios desconocen incluso que tienen la posibilidad de usar un sistema operativo alternativo a Windows. O si lo conocen pueden creer erróneamente que instalar una distribución GNU/Linux es muy complicado... sabiendo algunas casas por lo demás es tan sencillo instalar como el sistema operativo Windows ya que muchas distribuciones incluyen una interfaz gráfica en su instalador y el proceso consiste en responder unas pocas preguntas, introducir algunos datos y pulsar varios botones siguiente."
 ---
@@ -62,7 +63,7 @@ Hay que conectar una memoria USB, seleccionarla, seleccionar el archivo de la im
 
 {{< image
     gallery="true"
-    image1="resource:rufus.png" optionsthumb1="300x200" title1="Creación de medio de instalación en memoria USB desde Windows"
+    image1="image:rufus.png" optionsthumb1="300x200" title1="Creación de medio de instalación en memoria USB desde Windows"
     caption="Creación de medio de instalación en memoria USB dese Windows" >}}
 
 ### Iniciar el sistema con el medio de instalación
@@ -103,38 +104,38 @@ Los asistentes de instalación utilizan el entorno de escritorio del sabor que s
 
 {{< image
     gallery="true"
-    image1="resource:instalacion-ubuntu-01.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
-    image2="resource:instalacion-ubuntu-02.png" optionsthumb2="300x200" title2="Instalación de Ubuntu"
-    image3="resource:instalacion-ubuntu-03.png" optionsthumb3="300x200" title3="Instalación de Ubuntu" >}}
+    image1="image:instalacion-ubuntu-01.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
+    image2="image:instalacion-ubuntu-02.png" optionsthumb2="300x200" title2="Instalación de Ubuntu"
+    image3="image:instalacion-ubuntu-03.png" optionsthumb3="300x200" title3="Instalación de Ubuntu" >}}
 {{< image
     gallery="true"
-    image1="resource:instalacion-ubuntu-04.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
-    image2="resource:instalacion-ubuntu-05.png" optionsthumb2="300x200" title2="Instalación de Ubuntu"
-    image3="resource:instalacion-ubuntu-06.png" optionsthumb3="300x200" title3="Instalación de Ubuntu" >}}
+    image1="image:instalacion-ubuntu-04.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
+    image2="image:instalacion-ubuntu-05.png" optionsthumb2="300x200" title2="Instalación de Ubuntu"
+    image3="image:instalacion-ubuntu-06.png" optionsthumb3="300x200" title3="Instalación de Ubuntu" >}}
 {{< image
     gallery="true"
-    image1="resource:instalacion-ubuntu-07.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
-    image2="resource:instalacion-ubuntu-08.png" optionsthumb2="300x200" title2="Instalación de Ubuntu"
-    image3="resource:instalacion-ubuntu-09.png" optionsthumb3="300x200" title3="Instalación de Ubuntu" >}}
+    image1="image:instalacion-ubuntu-07.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
+    image2="image:instalacion-ubuntu-08.png" optionsthumb2="300x200" title2="Instalación de Ubuntu"
+    image3="image:instalacion-ubuntu-09.png" optionsthumb3="300x200" title3="Instalación de Ubuntu" >}}
 {{< image
     gallery="true"
-    image1="resource:instalacion-ubuntu-10.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
-    image2="resource:instalacion-ubuntu-11.png" optionsthumb2="300x200" title2="Instalación de Ubuntu"
-    image3="resource:instalacion-ubuntu-12.png" optionsthumb3="300x200" title3="Instalación de Ubuntu" >}}
+    image1="image:instalacion-ubuntu-10.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
+    image2="image:instalacion-ubuntu-11.png" optionsthumb2="300x200" title2="Instalación de Ubuntu"
+    image3="image:instalacion-ubuntu-12.png" optionsthumb3="300x200" title3="Instalación de Ubuntu" >}}
 {{< image
     gallery="true"
-    image1="resource:instalacion-ubuntu-13.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
-    image2="resource:instalacion-ubuntu-14.png" optionsthumb2="300x200" title2="Instalación de Ubuntu"
-    image3="resource:instalacion-ubuntu-15.png" optionsthumb3="300x200" title3="Instalación de Ubuntu" >}}
+    image1="image:instalacion-ubuntu-13.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
+    image2="image:instalacion-ubuntu-14.png" optionsthumb2="300x200" title2="Instalación de Ubuntu"
+    image3="image:instalacion-ubuntu-15.png" optionsthumb3="300x200" title3="Instalación de Ubuntu" >}}
 {{< image
     gallery="true"
-    image1="resource:instalacion-ubuntu-16.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
-    image2="resource:instalacion-ubuntu-17.png" optionsthumb2="300x200" title2="Instalación de Ubuntu"
-    image3="resource:instalacion-ubuntu-18.png" optionsthumb3="300x200" title3="Instalación de Ubuntu" >}}
+    image1="image:instalacion-ubuntu-16.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
+    image2="image:instalacion-ubuntu-17.png" optionsthumb2="300x200" title2="Instalación de Ubuntu"
+    image3="image:instalacion-ubuntu-18.png" optionsthumb3="300x200" title3="Instalación de Ubuntu" >}}
 {{< image
     gallery="true"
-    image1="resource:instalacion-ubuntu-19.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
-    image2="resource:instalacion-ubuntu-20.png" optionsthumb2="300x200" title1="Instalación de Ubuntu"
+    image1="image:instalacion-ubuntu-19.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
+    image2="image:instalacion-ubuntu-20.png" optionsthumb2="300x200" title1="Instalación de Ubuntu"
     caption="Instalación de Ubuntu" >}}
 
 ### Usando Ubuntu
@@ -143,20 +144,20 @@ Si se ha elegido cifrar el contenido del dispositivo de almacenamiento al realiz
 
 {{< image
     gallery="true"
-    image1="resource:ubuntu-01.png" optionsthumb1="300x200" title1="Ubuntu 16.04"
-    image2="resource:ubuntu-02.png" optionsthumb2="300x200" title1="Ubuntu 16.04"
-    image3="resource:ubuntu-03.png" optionsthumb3="300x200" title3="Ubuntu 16.04 con entorno de escritorio Unity"
+    image1="image:ubuntu-01.png" optionsthumb1="300x200" title1="Ubuntu 16.04"
+    image2="image:ubuntu-02.png" optionsthumb2="300x200" title1="Ubuntu 16.04"
+    image3="image:ubuntu-03.png" optionsthumb3="300x200" title3="Ubuntu 16.04 con entorno de escritorio Unity"
     caption="Ubuntu 16.04 con entorno de escritorio Unity" >}}
 {{< image
     gallery="true"
-    image1="resource:ubuntu-04.png" optionsthumb1="300x200" title1="Ubuntu 16.04 con entorno de escritorio GNOME"
-    image2="resource:ubuntu-05.png" optionsthumb2="300x200" title2="Ubuntu 16.04 con entorno de escritorio GNOME"
-    image3="resource:ubuntu-06.png" optionsthumb3="300x200" title3="Ubuntu 16.04 con entorno de escritorio GNOME"
+    image1="image:ubuntu-04.png" optionsthumb1="300x200" title1="Ubuntu 16.04 con entorno de escritorio GNOME"
+    image2="image:ubuntu-05.png" optionsthumb2="300x200" title2="Ubuntu 16.04 con entorno de escritorio GNOME"
+    image3="image:ubuntu-06.png" optionsthumb3="300x200" title3="Ubuntu 16.04 con entorno de escritorio GNOME"
     caption="Ubuntu 16.04 con entorno de escritorio GNOME" >}}
 {{< image
     gallery="true"
-    image1="resource:ubuntu-07.png" optionsthumb1="300x200" title1="Ubuntu 16.04 con entorno de escritorio KDE"
-    image2="resource:ubuntu-08.png" optionsthumb2="300x200" title2="Ubuntu 16.04 con entorno de escritorio KDE"
+    image1="image:ubuntu-07.png" optionsthumb1="300x200" title1="Ubuntu 16.04 con entorno de escritorio KDE"
+    image2="image:ubuntu-08.png" optionsthumb2="300x200" title2="Ubuntu 16.04 con entorno de escritorio KDE"
     caption="Ubuntu 16.04 con entorno de escritorio KDE" >}}
 
 ### Centro de software y actualizaciones
@@ -167,8 +168,8 @@ Al cabo de un tiempo de haber instalado Ubuntu se publicarán actualizaciones de
 
 {{< image
     gallery="true"
-    image1="resource:ubuntu-software.png" optionsthumb1="300x200" title1="Instalar y desinstalar software"
-    image2="resource:ubuntu-actualizaciones.png" optionsthumb2="300x200" title2="Instalar actualizaciones de seguridad y software"
+    image1="image:ubuntu-software.png" optionsthumb1="300x200" title1="Instalar y desinstalar software"
+    image2="image:ubuntu-actualizaciones.png" optionsthumb2="300x200" title2="Instalar actualizaciones de seguridad y software"
     caption="Instalar actualizaciones de seguridad y software" >}}
 
 ### Ayuda

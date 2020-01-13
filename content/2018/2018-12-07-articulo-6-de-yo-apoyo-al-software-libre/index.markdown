@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:wine.svg"
 tags: ["planeta-codigo", "software-libre"]
 series: ["donacion"]
 ---
@@ -35,26 +36,26 @@ Wine es una implementación de la API de Windows con la que los programas de Win
 
 {{< image
     gallery="true"
-    image1="resource:battle-net-1.png" optionsthumb1="200x150" title1="Cliente de Battle.net"
-    image2="resource:battle-net-2.png" optionsthumb2="200x150" title2="Cliente de Battle.net"
-    image3="resource:battle-net-3.jpg" optionsthumb3="200x150" title3="Cliente de Battle.net"
+    image1="image:battle-net-1.png" optionsthumb1="200x150" title1="Cliente de Battle.net"
+    image2="image:battle-net-2.png" optionsthumb2="200x150" title2="Cliente de Battle.net"
+    image3="image:battle-net-3.jpg" optionsthumb3="200x150" title3="Cliente de Battle.net"
     caption="Cliente de Battle.net" >}}
 {{< image
     gallery="true"
-    image1="resource:battle-net-4.jpg" optionsthumb1="200x150" title1="Instalación de Diablo 3"
-    image2="resource:battle-net-5.jpg" optionsthumb2="200x150" title2="Instalación de Diablo 3"
-    image3="resource:battle-net-6.jpg" optionsthumb3="200x150" title3="Instalación de Diablo 3"
+    image1="image:battle-net-4.jpg" optionsthumb1="200x150" title1="Instalación de Diablo 3"
+    image2="image:battle-net-5.jpg" optionsthumb2="200x150" title2="Instalación de Diablo 3"
+    image3="image:battle-net-6.jpg" optionsthumb3="200x150" title3="Instalación de Diablo 3"
     caption="Instalación de Diablo 3" >}}
 
 {{< image
     gallery="true"
-    image1="resource:diablo-3-1.jpg" optionsthumb1="300x200" title1="Personaje de clase monje"
-    image2="resource:diablo-3-2.jpg" optionsthumb2="300x200" title2="Caminio hacia Nueva Tristán" >}}
+    image1="image:diablo-3-1.jpg" optionsthumb1="300x200" title1="Personaje de clase monje"
+    image2="image:diablo-3-2.jpg" optionsthumb2="300x200" title2="Caminio hacia Nueva Tristán" >}}
 {{< image
     gallery="true"
-    image1="resource:diablo-3-3.jpg" optionsthumb1="200x150" title1="Jugando a Diablo 3"
-    image2="resource:diablo-3-4.jpg" optionsthumb2="200x150" title2="Jugando a Diablo 3"
-    image3="resource:diablo-3-5.jpg" optionsthumb3="200x150" title3="Jugando a Diablo 3"
+    image1="image:diablo-3-3.jpg" optionsthumb1="200x150" title1="Jugando a Diablo 3"
+    image2="image:diablo-3-4.jpg" optionsthumb2="200x150" title2="Jugando a Diablo 3"
+    image3="image:diablo-3-5.jpg" optionsthumb3="200x150" title3="Jugando a Diablo 3"
     caption="Juego de Diablo 3" >}}
 
 ### Donación
@@ -63,7 +64,7 @@ La donación no es muy grande pero espero que ayude para cubrir los costes que t
 
 {{< image
     gallery="true"
-    image1="resource:donacion-wine.png" optionsthumb1="650x450" title1="Donación Wine"
+    image1="image:donacion-wine.png" optionsthumb1="650x450" title1="Donación Wine"
     caption="Donación Wine" >}}
 
 Este es el sexto artículo de esta serie de donaciones con Yo apoyo el software libre ya son unas cuantas donaciones las que he hecho, gracias también a los visitantes que llegan principalmente como resultado de una búsqueda en un buscador, en menor medida también de alguno de los que están suscritos a la [fuente de artículos][blogbitix-feed] que en el momento que publico uno nuevo si les interesa lo visitan.

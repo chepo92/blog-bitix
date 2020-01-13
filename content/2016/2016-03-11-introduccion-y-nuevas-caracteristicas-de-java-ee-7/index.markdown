@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java-ee.png"
 tags: ["java", "planeta-codigo", "programacion"]
 series: ["java-platform"]
 summary: "Java sigue siendo uno de los lenguajes más usado para desarrollar aplicaciones empresariales en entidades públicas o empresas privadas. Proporciona un conjunto de especificaciones que cubren las necesidades funcionales de la mayoría de las aplicaciones y sigue evolucionando, adaptándose a las nuevas tendencias actuales y agregando nuevas funcionalidades de forma estandarizada en la plataforma. Aún así muchas entidades siguen y seguirán usando versiones anteriores a la última tanto de Java EE como de Java."
@@ -31,7 +32,7 @@ El modelo clásico de capas en la arquitectura de las aplicaciones Java EE se di
 
 {{< image
     gallery="true"
-    image1="resource:aplicaciones-multicapa-javaee.png" optionsthumb1="300x200" title1="Aplicaciones multicapa Java EE"
+    image1="image:aplicaciones-multicapa-javaee.png" optionsthumb1="300x200" title1="Aplicaciones multicapa Java EE"
     caption="Aplicaciones multicapa Java EE" >}}
 
 En el [listado de especificaciones](https://www.oracle.com/technetwork/java/javaee/tech/index.html) encontramos algunas dedicadas a persistencia en base de datos (JDBC, JPA), transaccionalidad (JTA), procesamiento de peticiones HTTP (Servlets, JSF, REST), generación de HTML (Servlets, JSP, JSF), servicios web basados en REST y SOAP (JAX-RS, JAX-WS), soporte para websockets en el lado del servidor y cliente, [generar, procesar y modificar documentos JSON][blogbitix-374], validación de objetos, comunicación entre aplicaciones desacoplada con mensajes (JMS), concurrencia, servicios de nombres y descubrimiento o trabajos en lotes entre otras. Las especificaciones y versiones que componen Java EE 7 son:

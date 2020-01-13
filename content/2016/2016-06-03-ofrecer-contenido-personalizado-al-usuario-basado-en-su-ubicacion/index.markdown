@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:linux.svg"
 tags: ["planeta-codigo", "programacion", "software", "software-libre"]
 summary: "Cuando navegamos por internet el navegador envía mútiple información sobre nosotros y algunas páginas web recopilan esa información y la procesan para ofrecer contenido personalizado que creen nos resultaría de interés. Contenido con mayor relevancia para el usuario mejora la experiencia de usuario y la páginas web mejorarán su ratio de conversión y facturación. La información que proporcionamos sin ser conscientes son las _cookies_, la dirección IP, el navegador que usamos, el sistema operativo, nuestra resolución de pantalla, la hora a la que accedemos a la página, ... en base a ella y aunque la información está impersonalizada sirve para identificarnos como inequivocamente usuarios. Con la dirección IP y usando una base de datos es posible obtener al menos el país desde el que se accede a una web y muy posiblemente la ciudad."
 ---
@@ -29,7 +30,7 @@ Instalados los paquetes con las bases de datos de geoposicionamiento en la distr
 
 {{< image
     gallery="true"
-    image1="resource:geoiplookup.png" optionsthumb1="300x200" title1="Comando para obtener información de geoposicionamiento en base a la dirección IP"
+    image1="image:geoiplookup.png" optionsthumb1="300x200" title1="Comando para obtener información de geoposicionamiento en base a la dirección IP"
     caption="Comando para obtener información de geoposicionamiento en base a la dirección IP" >}}
 
 Otra opción es usar otra base de datos de geolocalización para direcciones IP, en vez de instalar un paquete en el sistema y usar el comando <code>geoiplookup</code> y procesar su salida con las bases de datos de [MaxMind GeoLite2 para paises](http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz) y [ciudades](http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz) dispondremos de una API accessible desde el lenguaje de programación que prefiramos. En este ejemplo usaré Java pero hay _bindings_ para los lenguajes más populares.
@@ -43,7 +44,7 @@ En el siguiente ejemplo no incluyo la base de datos en el código fuente del pro
 
 {{< image
     gallery="true"
-    image1="resource:geolite2.png" optionsthumb1="300x200" title1="Información de geoposicionamiento en base a la dirección IP con GeoLite2"
+    image1="image:geolite2.png" optionsthumb1="300x200" title1="Información de geoposicionamiento en base a la dirección IP con GeoLite2"
     caption="Información de geoposicionamiento en base a la dirección IP con GeoLite2" >}}
 
 GeoLite2 tiene una [licencia Creative Commons Attribution-ShareAlike](https://creativecommons.org/licenses/by-sa/4.0/) y no tiene coste, MaxMind proporciona además otras bases de datos más completas pero con un coste, 50$ para la base de datos de paises más 24$ para las actualizaciones y 370$ para la base de datos de ciudades más 100$ para las actualizaciones.

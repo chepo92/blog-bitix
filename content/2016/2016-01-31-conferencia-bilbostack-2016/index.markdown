@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:bilbostack.png"
 tags: ["planeta-codigo"]
 series: ["bilbostack"]
 ---
@@ -21,8 +22,8 @@ Esta ha sido la quinta [BilboStack][bilbostack] celebrada de forma anual en Bilb
 
 {{< image
     gallery="true"
-    image1="resource:universidad-de-deusto-1.jpg" optionsthumb1="300x200" title1="Universidad de Deusto"
-    image2="resource:universidad-de-deusto-2.jpg" optionsthumb2="300x200" title2="Universidad de Deusto" >}}
+    image1="image:universidad-de-deusto-1.jpg" optionsthumb1="300x200" title1="Universidad de Deusto"
+    image2="image:universidad-de-deusto-2.jpg" optionsthumb2="300x200" title2="Universidad de Deusto" >}}
 
 Al igual que en anteriores entregas las presentaciones se han dividido en dos _tracks_ con duración de 45 minutos ofrecidas en una única mañana. Este año estando el _track_ 1 orientado a temas de programación o código y el _track_ 2 con una temática más diversa desde equipos a productos y servicios.
 
@@ -94,8 +95,8 @@ Al igual que en anteriores entregas las presentaciones se han dividido en dos _t
 
 {{< image
     gallery="true"
-    image1="resource:track1.jpg" optionsthumb1="300x200" title1="Sala track 1"
-    image2="resource:track2.jpg" optionsthumb2="300x200" title2="Sala track 2" >}}
+    image1="image:track1.jpg" optionsthumb1="300x200" title1="Sala track 1"
+    image2="image:track2.jpg" optionsthumb2="300x200" title2="Sala track 2" >}}
 
 No podía faltar la cuota para el popular lenguaje [JavaScript][javascript] este año con las dos primeras presentaciones del _track_ 1 y si el año pasado comentaba que no había habido ninguna de [Java][java] en ya cuatro entregas, este finalmente ha tenido presencia. Aún siendo solo dos _tracks_ me ha costado algo decidirme por la presentaciones a las que asistir. En resumen, he preferido ir salvo a la de Java a las presentaciones del _track_ 2. [React][react] ya lo conozco al escribir el artículo [Ejemplo lista de tareas con Backbone y React][blogbitix-20], en [Angular][angular] 2 habrán mejorado las cosas pero se me hace redundante. En general creo que me podría enriquecer más del _track_ 2 que del 1 ya que en mayor o menor medida las del primero ya me iban ser bastante familiares siendo programador.
 
@@ -152,7 +153,7 @@ Es importante tener datos para evaluar pero hay que tener cuidado con las métri
 
 {{< image
     gallery="true"
-    image1="resource:crime-scene.jpg" optionsthumb1="300x200" title1="Your code as a crime scene" >}}
+    image1="image:crime-scene.jpg" optionsthumb1="300x200" title1="Your code as a crime scene" >}}
 
 {{< iframe src="https://player.vimeo.com/video/154470784?title=0&byline=0&portrait=0" size="500x281" >}}
 
@@ -179,7 +180,7 @@ En realidad Java nunca dejó de molar y ha evolucionado, esto me es parecido a l
 
 {{< image
     gallery="true"
-    image1="resource:java-moderno.jpg" optionsthumb1="300x200" title1="Java ha muerto! Larga vida a Java (moderno)" >}}
+    image1="image:java-moderno.jpg" optionsthumb1="300x200" title1="Java ha muerto! Larga vida a Java (moderno)" >}}
 
 La presentación ha expuesto que Java sigue siendo una de los mejores lenguajes, plataforma y ecosistema con el que desarrollar aplicaciones, han sido todo argumentos. Si alguien lo quiere ver en la práctica puede revisar varios de los artículos que he escrito en esta bitácora:
 

@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:graphql.svg"
 tags: ["java", "planeta-codigo"]
 series: ["graphql"]
 summary: "Una API REST no ofrece introspección y por tanto hay que recurrir a un sistema de documentación que puede estar desactualizado y hay que mantener para conocer como usar la API y cuales son sus tipos y parámetros. Por el contrario GraphQL incorpora un sistema de introspección que permite conocer sus tipos y campos, a través del editor GrapiQL o si fuese necesario de forma automtizada con código."

@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:vault.svg"
 tags: ["planeta-codigo", "programacion", "software"]
 series: ["hashicorp"]
 summary: "Herramientas de aprovisionamiento como Chef, Puppet y Ansible solucionan el problema de la seguridad de los secretos de forma similar, utilizando una única clave de cifrado. Los datos cifrados están siempre a un secreto (contraseña, clave, ...) de ser descifrados y generalmente no está bien protegidos dado que en un entorno elástico cada servidor necesita disponer de este secreto para descifrar los datos. Adicionalmente el acceso a los datos cifrados no está registrado de modo que si hay una intrusión no está claro que dato ha sido accedido y por quien. Utilizar variables de entorno para proporcionar secretos tampoco es seguro, y en entornos Docker suele usarse."
@@ -82,8 +83,8 @@ Vault al igual que otras de las herramientas de [HashiCorp][hashicorp] como Cons
 
 {{< image
     gallery="true"
-    image1="resource:vault-ui-1.png" optionsthumb1="300x200" title1="Interfaz gráfica de Vault"
-    image2="resource:vault-ui-2.png" optionsthumb2="300x200" title2=""
+    image1="image:vault-ui-1.png" optionsthumb1="300x200" title1="Interfaz gráfica de Vault"
+    image2="image:vault-ui-2.png" optionsthumb2="300x200" title2=""
     caption="Interfaz gráfica de Vault" >}}
 
 Vault a igual que otras de las herramientas de HashiCorp tiene una muy buena documentación en formato de [guía](https://learn.hashicorp.com/vault) y en formato de [documentación](https://www.vaultproject.io/docs/). En una aplicación Java el proyecto [Spring][spring] facilita su uso con [Spring Vault][spring-vault] y [Spring Cloud Vault][spring-cloud-vault].

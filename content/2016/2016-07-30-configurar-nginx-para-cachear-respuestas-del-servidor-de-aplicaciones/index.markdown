@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:nginx.svg"
 tags: ["planeta-codigo", "software", "software-libre", "web"]
 summary: "Las caches son un recurso utilizado para aumentar el rendimiento y evitar malgastar recursos. Si una petición es muy costosa pero que no cambia muy a menudo o no se necesitan que los datos estén totalmente actualizados cachear el resultado de esa petición evitará tener que recalcularla para cada petición, si se realizan muchas peticiones el aumento de rendimiento será drásticamente mejor usando además un menor número de recursos de los sistemas. Hay soluciones específicas para cacheo pero si nuestra necesidades no son extremadamente avanzadas el cacheo ofrecido por Nginx probablemente sea suficiente."
 ---
@@ -34,12 +35,12 @@ La primera petición que se realiza al recurso _cache_ devuelve un [código de e
 
 {{< image
     gallery="true"
-    image1="resource:nginx-cache-peticion-miss.png" optionsthumb1="300x200" title1="Fallo en la cache de Nginx"
-    image2="resource:nginx-cache-peticion-hit.png" optionsthumb2="300x200" title2="Acierto en la cache de Nginx" >}}
+    image1="image:nginx-cache-peticion-miss.png" optionsthumb1="300x200" title1="Fallo en la cache de Nginx"
+    image2="image:nginx-cache-peticion-hit.png" optionsthumb2="300x200" title2="Acierto en la cache de Nginx" >}}
 {{< image
     gallery="true"
-    image1="resource:nginx-cache-peticion-expired.png" optionsthumb1="300x200" title1="Expiración en la cache de Nginx"
-    image2="resource:curl-cache-miss-hit-expired.png" optionsthumb2="300x200" title2="Fallo, acierto y expiración en la cache de Nginx con curl"
+    image1="image:nginx-cache-peticion-expired.png" optionsthumb1="300x200" title1="Expiración en la cache de Nginx"
+    image2="image:curl-cache-miss-hit-expired.png" optionsthumb2="300x200" title2="Fallo, acierto y expiración en la cache de Nginx con curl"
     caption="Fallo, acierto y expiración que produce en la cache de Nginx al realizar peticiones" >}}
 
 {{< code file="nginx.out" language="plaintext" options="" >}}

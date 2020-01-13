@@ -8,6 +8,7 @@ updated: 2016-03-05T12:00:00+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:openssl.svg"
 tags: ["seguridad", "software", "software-libre", "planeta-codigo", "web"]
 summary: "Tanto en un servidor web como de aplicaciones podemos hacer que la comunicación entre el cliente y el servidor esté cifrada usando un protocolo seguro. La configuración para usar un protocolo seguro en cada servidor es diferente pero todos se basan en lo mismo, usar un certificado y un clave. En este artículo muestro la configuración necesaria en los servidores web y de aplicaciones más populares."
 ---

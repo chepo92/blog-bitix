@@ -8,6 +8,7 @@ updated: 2015-11-10T19:00:00+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:blogstack.png"
 tags: ["software", "software-libre", "java", "programacion", "planeta-codigo"]
 ---
 
@@ -29,13 +30,13 @@ Con todo la arquitectura de despliegue y hospedaje de Blog Stack es la siguiente
 
 {{< image
     gallery="true"
-    image1="resource:arquitectura-blogstack.png" optionsthumb1="300x200" >}}
+    image1="image:arquitectura-blogstack.png" optionsthumb1="300x200" >}}
 
 En cuanto a la aplicación y el código Java en si las partes importantes están en un [servicio que se encarga de la indexación](https://github.com/picodotdev/blog-stack/blob/master/src/main/java/info/blogstack/services/IndexerServiceImpl.java) extrayendo el contenido de las fuentes y guardalo en una base de datos, otro [servicio para la generación del contenido](https://github.com/picodotdev/blog-stack/blob/master/src/main/java/info/blogstack/services/GeneratorServiceImpl.java) del sitio de forma estática (html, css, js, imgs, ...) y finalmente el [programa Java principal](https://github.com/picodotdev/blog-stack/blob/master/src/main/java/info/blogstack/cli/Main.java) que sirve para lanzarlo desde la linea de comandos, el resto son las [clases del modelo de datos](https://github.com/picodotdev/blog-stack/tree/master/src/main/java/info/blogstack/entities)  y los [DAO de persistencia y acceso a dataos](https://github.com/picodotdev/blog-stack/tree/master/src/main/java/info/blogstack/services/dao). La aplicación sigue el esquema tradicional de 3 capas, la de presentación (páginas y componentes de tapestry), la de lógica de negocio formada por los servicios de indexación, generación y los DAOs (formada por el contenedor de servicios de tapestry y spring) y finalmente la capa de datos formada por una base de datos H2 (donde hibernate interviene). En realidad en BS no hay un servidor de aplicaciones sino que se usa Tapestry en una aplicación «standalone».
 
 {{< image
     gallery="true"
-    image1="resource:arquitectura-aplicacion-blogstack.png" optionsthumb1="300x200" title="Arquitectura de la aplicación Blog Stack" >}}
+    image1="image:arquitectura-aplicacion-blogstack.png" optionsthumb1="300x200" title="Arquitectura de la aplicación Blog Stack" >}}
 
 La raíz del proyecto fue que quería usar [Apache Tapestry](http://tapestry.apache.org/) de alguna forma en algún proyecto que fuese de utilidad para otras personas, al mismo tiempo que meditaba la idea [Planeta Linux](http://planetalinux.org/) dejó de funcionar durante unas semanas y tampoco estaba contento del todo con los otros planetas en los que tenía mi bitácora agregada. Con [Planeta Arch Linux](http://planeta.archlinux-es.org/) porque después de unos meses seguía sin ni siquiera respuesta a la solicitud de agregación y [Planeta Código](http://www.planetacodigo.com/) ya que creía que podría ofrecer mejor funcionalidad, por ejemplo, los gist no se importaban bien (utilizan javascript y por seguridad deben estar excluidos). Ya que empezaba el proyecto creía que podría proporcionar alguna idea que permitiese descubrir contenido a los usuarios a través de como hace [stackoverflow](https://stackoverflow.com/) con las etiquetas de modo que una persona se pueda suscribir (mediante rss/atom) a una etiqueta para recibir el contenido de solo el tema que le interese de cualquier bitácora agregada, descubrir nuevas bitácoras con contenido interesante a veces no es fácil. La opción más parecida y mejor que he encontrado es [bitacoras.com](http://bitacoras.com/), salvo las votaciones, el ranking y que tiene un ámbito más amplio al poder incluir bitácoras de más temáticas y que la agregación de bitácoras no está automatizada, BS en lo importante ofrece lo mismo de forma más simple y está más especializado tanto en la temática de las bitácoras como en la suscripción por etiquetas.
 

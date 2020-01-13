@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo"]
 summary: "La librería log4j 2 es configurable para que si se guardan las trazas en un archivo estos se roten en una fecha indicada en una expresión _cron_, cuando lleguen a un cierto tamaño o cuando se inicie la aplicación. El rotado además de para archivar las trazas de la aplicación y clasificarlas por fecha sirve para evitar que lleguen a consumir todo el espacio de almacenamiento disponible."
 ---

@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 ---
 
@@ -44,17 +45,17 @@ Laa API _key_ se crean en la página de [Credenciales](https://console.developer
 
 {{< image
     gallery="true"
-    image1="resource:google-credentials.png" optionsthumb1="300x200" title1="Google Credentials"
-    image2="resource:google-api-key.png" optionsthumb2="300x200" title2="Google API Key"
-    image3="resource:google-document-share.png" optionsthumb3="300x200" title3="Compartir documento en Google Drive"
+    image1="image:google-credentials.png" optionsthumb1="300x200" title1="Google Credentials"
+    image2="image:google-api-key.png" optionsthumb2="300x200" title2="Google API Key"
+    image3="image:google-document-share.png" optionsthumb3="300x200" title3="Compartir documento en Google Drive"
     caption="Google Credentials, API Key y compartir documento" >}}
 
 El enlace al compartir el documento o al editarlo contiene el identificativo de documento. Con la API _key_ o cuenta de servicio, el identificativo del documento y el documento compartido al menos para cualquiera que tenga el enlace la información del documento está accesible para una aplicación mediante una API REST o de forma programática con una implementación de la API con Java, este programa Java imprime el contenido de las celdas de la hoja de cálculo en la terminal. Se necesita una expresión que identifique la hoja y el contenido de las celdas de las que se quieren datos con un [rango en notación A1](https://developers.google.com/sheets/api/guides/concepts#a1_notation).
 
 {{< image
     gallery="true"
-    image1="resource:google-spreadsheet.png" optionsthumb1="300x200" title1="Hoja de cálculo de Google"
-    image2="resource:google-document.png" optionsthumb2="300x200" title2="Documento de Google"
+    image1="image:google-spreadsheet.png" optionsthumb1="300x200" title1="Hoja de cálculo de Google"
+    image2="image:google-document.png" optionsthumb2="300x200" title2="Documento de Google"
     caption="Hoja de cálculo y documento de Google" >}}
 
 {{< code file="Main-3.java" language="java" options="" >}}
@@ -64,7 +65,7 @@ El método de API _key_ obliga a hacer público el documento lo que no es deseab
 
 {{< image
     gallery="true"
-    image1="resource:google-service-account.png" optionsthumb1="300x200" title1="Cuenta de servicio de Google"
+    image1="image:google-service-account.png" optionsthumb1="300x200" title1="Cuenta de servicio de Google"
     caption="Cuenta de servicio de Google" >}}
 
 Al crear una cuenta de servicio y una clave se genera un archivo en formato JSON con las credenciales que hay que guardar y utilizar en una aplicación para acceder a los documentos compartidos con esta cuenta de servicio.
@@ -75,7 +76,7 @@ En vez de compartir el documento con cualquiera que tenga en enlace, con una cue
 
 {{< image
     gallery="true"
-    image1="resource:google-document-share-service-account.png" optionsthumb1="300x200" title1="Documento compartido con cuenta de servicio"
+    image1="image:google-document-share-service-account.png" optionsthumb1="300x200" title1="Documento compartido con cuenta de servicio"
     caption="Documento compartido con cuenta de servicio" >}}
 
 El siguiente código Java accede a un documento utilizando las credenciales de una cuenta de servicio.

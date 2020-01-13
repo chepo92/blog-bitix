@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:gnu.svg"
 tags: ["gnu-linux", "software-libre"]
 series: ["juegos"]
 summary: "En esta serie de artículos sobre juegos vamos a ver que en GNU/Linux también hay juegos a los que podemos jugar en nuestra plataforma preferida. Otro de ellos es el clásico de estrategia Go."
@@ -29,8 +30,8 @@ En el juego de computadora el siguiente movimiento se hace introduciendo la coor
 
 {{< image
     gallery="true"
-    image1="resource:tablero-go.jpg" optionsthumb1="300x200" title1="Tablero tradicional de Go"
-    image2="resource:tablero-gnugo.png" optionsthumb2="300x200" title2="Tablero de Gnugo"
+    image1="image:tablero-go.jpg" optionsthumb1="300x200" title1="Tablero tradicional de Go"
+    image2="image:tablero-gnugo.png" optionsthumb2="300x200" title2="Tablero de Gnugo"
     caption="Tablero tradicional de juego y tablero de Gnugo" >}}
 
 En la wikipedia está documentado de forma bastante extensa las [reglas del juego Go](https://es.wikipedia.org/wiki/Go#Reglas_del_go), las diferentes formas de [calcular el marcador al final del juego](https://es.wikipedia.org/wiki/Go#Puntuaci.C3.B3n) y las [tácticas](https://es.wikipedia.org/wiki/Go#T.C3.A1ctica) y [estrategias](https://es.wikipedia.org/wiki/Go#Estrategia_b.C3.A1sica) para jugar de la forma más efectiva que podamos.

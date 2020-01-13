@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:resilience4j.png"
 tags: ["java", "planeta-codigo"]
 series: ["spring-cloud"]
 ---

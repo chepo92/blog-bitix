@@ -9,6 +9,7 @@ language: "es"
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:apple.svg"
 tags: ["apple", "planeta-codigo"]
 summary: "Para no tener que descargar binarios e instalarlos manualmente y estar pendiente de nuevas versiones que se publiquen en un futuro en macOS está Homebrew. Homebrew es un gestor de paquetes similar a los existentes en las distribuciones GNU/Linux con el que podremos buscar software, instalar, actualizar, ver que hemos instalado, cuales están desactualizados, iniciar y parar servicios y desinstalar los paquetes o programas. Esta es una guía básica sobre como instalar software en macOS con Homebrew y como instalar iTerm2 que es una mejor terminal que la propia del sistema con iterm."
 ---
@@ -23,7 +24,7 @@ En macOS existe un gestor de paquetes similar a los existentes en GNU/Linux, [Ho
 
 {{< image
     gallery="true"
-    image1="resource:homebrew.png" optionsthumb1="300x200" title1="Homebrew" >}}
+    image1="image:homebrew.png" optionsthumb1="300x200" title1="Homebrew" >}}
 
 Para instalar Hombrew ejecutamos el siguiente comando en la terminal:
 
@@ -79,7 +80,7 @@ La terminal incluida de serie en macOS es muy básica por ello mucha gente suele
 
 {{< image
     gallery="true"
-    image1="resource:iterm2.png" optionsthumb1="300x200" title1="iTerm2"
+    image1="image:iterm2.png" optionsthumb1="300x200" title1="iTerm2"
     caption="Terminal iTerm2" >}}
 
 {{% /post %}}

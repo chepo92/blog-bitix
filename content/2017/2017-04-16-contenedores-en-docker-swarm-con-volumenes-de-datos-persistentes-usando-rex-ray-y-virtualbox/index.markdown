@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:docker.svg"
 tags: ["blog", "planeta-codigo"]
 series: ["docker"]
 summary: "Salvo que un servicio sea sin estado o _stateless_ los contenedores de Docker necesitan persistir datos y que estos sobrevivan a su terminación, como es el caso de un contenedor de una base de datos. Además en un _cluster_ de nodos Docker hay que tener en cuenta que los datos deben estar accesibles para todos los nodos ya que un contenedor que usase los datos podría ser lanzado en cualquiera de ellos. REX-Ray es un sistema de almacenamiento en red que cubre estas necesidades, es simple de instalar, configurar y de iniciar. En el artículo muestro un ejemplo usando REX-Ray junto con Docker Swarm y VirtualBox."
@@ -39,7 +40,7 @@ Con el _cluster_ creado debemos instalar y configurar REX-Ray en cada uno de los
 
 {{< image
     gallery="true"
-    image1="resource:instalacion-rex-ray.png" optionsthumb1="300x200" title1="Instalación de REX-Ray en nodos de Docker Swarm con VirtualBox"
+    image1="image:instalacion-rex-ray.png" optionsthumb1="300x200" title1="Instalación de REX-Ray en nodos de Docker Swarm con VirtualBox"
     caption="Instalación de REX-Ray en nodos de Docker Swarm con VirtualBox" >}}
 
 Para probar la persistencia de datos usaré un _stack_ iniciado de la misma forma que en artículo [Iniciar un stack de servicios en un cluster de Docker Swarm][blogbitix-220] pero con un contenedor de postgres que guarda los datos en un volumen de REX-Ray en _/var/lib/postgresql/data_. Para iniciar el _stack_ el _custer_ de Docker Swarm uso un archivo de [Docker Compose][docker-compose] con la definición del _stack_ en formato YAML.
@@ -51,7 +52,7 @@ En la siguiente captura de pantalla se observa en que nodo ha sido iniciado el c
 
 {{< image
     gallery="true"
-    image1="resource:stack-deploy-postgres.png" optionsthumb1="300x200" title1="Deploy del stack de postgres"
+    image1="image:stack-deploy-postgres.png" optionsthumb1="300x200" title1="Deploy del stack de postgres"
     caption="Deploy del stack de postgres" >}}
 
 En el _stack_ el volumen de datos postgres está declarado y creado de forma externa. Usando VirtualBox con REX-Ray en el _host_ o anfitrión se crea un archivo que contiene los datos del volumen. Al listar los volúmenes de datos además de los creados _postgres_ y _app_ están los de los discos duros de cada uno de los nodos identificados como _disk.vmdk_. El parámetro _opt=size=5_ indica que el volumen de datos es de una tamaño de 5GiB.
@@ -60,8 +61,8 @@ En el _stack_ el volumen de datos postgres está declarado y creado de forma ext
 
 {{< image
     gallery="true"
-    image1="resource:volumes.png" optionsthumb1="300x200" title1="Volúmenes de datos"
-    image2="resource:volumes-nautilus.png" optionsthumb2="300x200" title2="Archivos de volúmenes en el sistema de archivos del host"
+    image1="image:volumes.png" optionsthumb1="300x200" title1="Volúmenes de datos"
+    image2="image:volumes-nautilus.png" optionsthumb2="300x200" title2="Archivos de volúmenes en el sistema de archivos del host"
     caption="Volúmenes de datos" >}}
 
 Para crear algunos datos en la base de datos hay que conectarse al contenedor y lanzar algunas sentencias SQL. Hay que obtener el identificativo del contenedor de postgres, iniciar un proceso _bash_, realizar la conexión a la base de datos con el cliente _psql_ y lanzar las sentencias SQL.

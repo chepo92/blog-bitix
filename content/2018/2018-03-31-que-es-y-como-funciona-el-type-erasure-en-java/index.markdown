@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Los tipos genéricos en Java se implementaron usando _type erasure_ por simplicidad en la implementación, no incurrir en penalizaciones de rendimiento o memoria y por mantener la compatibilidad con versiones anteriores de Java. Son varios los conceptos que están asociados a la implementación de los tipos genéricos en Java que es recomendable conocer como _type erasure_  y métodos _bridge_ de este artículo pero también _heap pollution_, _non-reifiable_, _wildcards_ y _bound type parameters_."
 ---

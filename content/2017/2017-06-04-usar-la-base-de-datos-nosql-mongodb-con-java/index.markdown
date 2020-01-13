@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:mongodb.svg"
 tags: ["gnu-linux", "planeta-codigo", "programacion"]
 ---
 

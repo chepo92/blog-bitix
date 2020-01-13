@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 series: ["jooq"]
 summary: "Aún en las aplicaciones monolíticas que comparten una única base de datos tratamos de dividirla en varios servicios que manejen cierto nicho de información con la intención de que un cambio en una parte sea transparente para las otras partes. Cada servicio de la aplicación monolítica podría potencialmente convertirse en un microservicio y en este caso para que cada micoservicio tenga un ciclo de vida independiente compartir la base de datos es algo a evitar. Incluso en las aplicaciones monolíticas podemos querer guardar cada nicho de información en su propio esquema para evitar acoplamiento entre las diferentes partes o también como forma de tener varios servidores de bases de datos y escalar la aplicación en cierta forma. En estos casos necesitaremos que la aplicación acceda a varios esquemas o bases de datos simultáneamente, con jOOQ y Spring es bastante sencillo."
@@ -49,7 +50,7 @@ Podemos crear la base de datos y los dos esquemas con una tarea de [Gradle][grad
 
 {{< image
     gallery="true"
-    image1="resource:basededatos.png" optionsthumb1="300x200" title1="Base de datos con varios esquemas"
+    image1="image:basededatos.png" optionsthumb1="300x200" title1="Base de datos con varios esquemas"
     caption="Base de datos con varios esquemas, inventory y purchases" >}}
 
 Como en jOOQ la fuente de la verdad es la base de datos los modelos se generan a partir de ella usando otra tarea de Gradle, generará las clases con las que trabajaremos en la aplicación con el comando <code>./gradlew generateModels</code>. Las clases son las del paquete [io.github.picodotdev.blogbitix.multidatabase.jooq](https://github.com/picodotdev/blog-ejemplos/tree/master/Multidatabase/src/main/java/io/github/picodotdev/blogbitix/multidatabase/jooq).

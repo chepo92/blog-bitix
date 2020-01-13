@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:gnu.svg"
 tags: ["gnu-linux", "planeta-codigo", "seguridad"]
 ---
 
@@ -26,7 +27,7 @@ Con [OpenSSH][openssh] también se puede iniciar sesión de línea de comandos e
 
 {{< image
     gallery="false"
-    image1="resource:openssh.png" optionsthumb1="600x450" title1="OpenSSH" >}}
+    image1="image:openssh.png" optionsthumb1="600x450" title1="OpenSSH" >}}
 
 Usar SSH es más seguro y más cómodo que usar contraseñas para realizar la autenticación, es más seguro ya que una clave pública y privada son más largas y es más cómodo ya que no se solicita contraseña constantemente que de otra manera al cabo de un tiempo se convierte en un paso tedioso y molesto. Lo primero que hay que hacer es [generar una clave SSH pública y privada][blogbitix-13] propia. Una clave de 2048 bits ya se considera segura pero como cuesta lo mismo generar una de más bits se puede generar una de 8192 bits para más seguridad.
 

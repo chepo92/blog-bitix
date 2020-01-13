@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 ---
 
@@ -23,9 +24,9 @@ Estas son las portadas de la revista de los tres últimos años y medio, desde e
 
 {{< image
     gallery="true"
-    image1="resource:java-magazine-2018-may-jun.jpg" optionsthumb1="200x150" title1="Java Magazine 2018 Mayo/Junio"
-    image2="resource:java-magazine-2018-mar-apr.jpg" optionsthumb2="200x150" title2="Java Magazine 2018 Marzo/Abril"
-    image3="resource:java-magazine-2018-jan-feb.jpg" optionsthumb3="200x150" title3="Java Magazine 2018 Enero/Febrero"
+    image1="image:java-magazine-2018-may-jun.jpg" optionsthumb1="200x150" title1="Java Magazine 2018 Mayo/Junio"
+    image2="image:java-magazine-2018-mar-apr.jpg" optionsthumb2="200x150" title2="Java Magazine 2018 Marzo/Abril"
+    image3="image:java-magazine-2018-jan-feb.jpg" optionsthumb3="200x150" title3="Java Magazine 2018 Enero/Febrero"
     caption="Java Magazine 2018" >}}
 
 * [Mayo/Junio 2018](http://www.javamagazine.mozaicreader.com/MayJun2018/Twitter)
@@ -34,14 +35,14 @@ Estas son las portadas de la revista de los tres últimos años y medio, desde e
 
 {{< image
     gallery="true"
-    image1="resource:java-magazine-2017-nov-dec.jpg" optionsthumb1="200x150" title1="Java Magazine 2017 Noviembre/Diciembre"
-    image2="resource:java-magazine-2017-sep-oct.jpg" optionsthumb2="200x150" title2="Java Magazine 2017 Sepiembre/Octubre"
-    image3="resource:java-magazine-2017-jul-aug.jpg" optionsthumb3="200x150" title3="Java Magazine 2017" >}}
+    image1="image:java-magazine-2017-nov-dec.jpg" optionsthumb1="200x150" title1="Java Magazine 2017 Noviembre/Diciembre"
+    image2="image:java-magazine-2017-sep-oct.jpg" optionsthumb2="200x150" title2="Java Magazine 2017 Sepiembre/Octubre"
+    image3="image:java-magazine-2017-jul-aug.jpg" optionsthumb3="200x150" title3="Java Magazine 2017" >}}
 {{< image
     gallery="true"
-    image1="resource:java-magazine-2017-may-jun.jpg" optionsthumb1="200x150" title1="Java Magazine 2017 Mayo/Junio"
-    image2="resource:java-magazine-2017-mar-apr.jpg" optionsthumb2="200x150" title2="Java Magazine 2017 Marzo/Abril"
-    image3="resource:java-magazine-2018-jan-feb.jpg" optionsthumb3="200x150" title3="Java Magazine 2017 Enero/Febrero"
+    image1="image:java-magazine-2017-may-jun.jpg" optionsthumb1="200x150" title1="Java Magazine 2017 Mayo/Junio"
+    image2="image:java-magazine-2017-mar-apr.jpg" optionsthumb2="200x150" title2="Java Magazine 2017 Marzo/Abril"
+    image3="image:java-magazine-2018-jan-feb.jpg" optionsthumb3="200x150" title3="Java Magazine 2017 Enero/Febrero"
     caption="Java Magazine 2017" >}}
 
 * [Noviembre/Diciembre 2017](http://www.javamagazine.mozaicreader.com/NovDec2017/Twitter)
@@ -53,14 +54,14 @@ Estas son las portadas de la revista de los tres últimos años y medio, desde e
 
 {{< image
     gallery="true"
-    image1="resource:java-magazine-2016-nov-dec.jpg" optionsthumb1="200x150" title1="Java Magazine 2016 Noviembre/Diciembre"
-    image2="resource:java-magazine-2016-sep-oct.jpg" optionsthumb2="200x150" title2="Java Magazine 2016 Sepiembre/Octubre"
-    image3="resource:java-magazine-2016-jul-aug.jpg" optionsthumb3="200x150" title3="Java Magazine 2016" >}}
+    image1="image:java-magazine-2016-nov-dec.jpg" optionsthumb1="200x150" title1="Java Magazine 2016 Noviembre/Diciembre"
+    image2="image:java-magazine-2016-sep-oct.jpg" optionsthumb2="200x150" title2="Java Magazine 2016 Sepiembre/Octubre"
+    image3="image:java-magazine-2016-jul-aug.jpg" optionsthumb3="200x150" title3="Java Magazine 2016" >}}
 {{< image
     gallery="true"
-    image1="resource:java-magazine-2016-may-jun.jpg" optionsthumb1="200x150" title1="Java Magazine 2016 Mayo/Junio"
-    image2="resource:java-magazine-2016-mar-apr.jpg" optionsthumb2="200x150" title2="Java Magazine 2016 Marzo/Abril"
-    image3="resource:java-magazine-2016-jan-feb.jpg" optionsthumb3="200x150" title3="Java Magazine 2016 Enero/Febrero"
+    image1="image:java-magazine-2016-may-jun.jpg" optionsthumb1="200x150" title1="Java Magazine 2016 Mayo/Junio"
+    image2="image:java-magazine-2016-mar-apr.jpg" optionsthumb2="200x150" title2="Java Magazine 2016 Marzo/Abril"
+    image3="image:java-magazine-2016-jan-feb.jpg" optionsthumb3="200x150" title3="Java Magazine 2016 Enero/Febrero"
     caption="Java Magazine 2016" >}}
 
 * [Noviembre/Diciembre 2016](http://www.javamagazine.mozaicreader.com/NovDec2016/Twitter)
@@ -72,14 +73,14 @@ Estas son las portadas de la revista de los tres últimos años y medio, desde e
 
 {{< image
     gallery="true"
-    image1="resource:java-magazine-2015-nov-dec.jpg" optionsthumb1="200x150" title1="Java Magazine 2015 Noviembre/Diciembre"
-    image2="resource:java-magazine-2015-sep-oct.jpg" optionsthumb2="200x150" title2="Java Magazine 2015 Sepiembre/Octubre"
-    image3="resource:java-magazine-2015-jul-aug.jpg" optionsthumb3="200x150" title3="Java Magazine 2015" >}}
+    image1="image:java-magazine-2015-nov-dec.jpg" optionsthumb1="200x150" title1="Java Magazine 2015 Noviembre/Diciembre"
+    image2="image:java-magazine-2015-sep-oct.jpg" optionsthumb2="200x150" title2="Java Magazine 2015 Sepiembre/Octubre"
+    image3="image:java-magazine-2015-jul-aug.jpg" optionsthumb3="200x150" title3="Java Magazine 2015" >}}
 {{< image
     gallery="true"
-    image1="resource:java-magazine-2015-may-jun.jpg" optionsthumb1="200x150" title1="Java Magazine 2015 Mayo/Junio"
-    image2="resource:java-magazine-2015-mar-apr.jpg" optionsthumb2="200x150" title2="Java Magazine 2015 Marzo/Abril"
-    image3="resource:java-magazine-2015-jan-feb.jpg" optionsthumb3="200x150" title3="Java Magazine 2015 Enero/Febrero"
+    image1="image:java-magazine-2015-may-jun.jpg" optionsthumb1="200x150" title1="Java Magazine 2015 Mayo/Junio"
+    image2="image:java-magazine-2015-mar-apr.jpg" optionsthumb2="200x150" title2="Java Magazine 2015 Marzo/Abril"
+    image3="image:java-magazine-2015-jan-feb.jpg" optionsthumb3="200x150" title3="Java Magazine 2015 Enero/Febrero"
     caption="Java Magazine 2015" >}}
 
 * [Noviembre/Diciembre 2015](http://www.javamagazine.mozaicreader.com/NovDec2015/Twitter)

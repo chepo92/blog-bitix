@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:pepephone.svg"
 tags: ["opinion", "planeta-codigo"]
 ---
 
@@ -22,7 +23,7 @@ Este es el correo que Pepephone envió para informar a los clientes del ADSL y f
 
 {{< image
     gallery="true"
-    image1="resource:incidencia-pepephone.png" optionsthumb1="300x200" title1="Correo informativo incidencia Pepephone"
+    image1="image:incidencia-pepephone.png" optionsthumb1="300x200" title1="Correo informativo incidencia Pepephone"
     caption="Correo informativo incidencia Pepephone" >}}
 
 Informaban de la caída del servicio junto con una breve disculpa pero también a modo de compensación y sin tener que solicitarlo un descuento en la siguiente factura por valor de un día entero del servicio aunque la incidencia solo fue durante unas horas y yo no había sido afectado, es más según explicaban en el correo posiblemente no todos los clientes habían sido afectados pero la compensación con el descuento la aplicarían a todos los clientes. Un aplauso para Pepephone por tratar así a sus clientes, lo que corresponde según la ley y algo más ya que creo que las condiciones para la compensación deben superar un importe y una duración mínima de la incidnecia. Muchas veces solo hablamos para quejarnos cuando algo no nos gusta algo pero no alabamos las cosas positivas. Aunque sería mejor que no hubiese habido caída de servicio, como se produjo la respuesta de Pepephone fue compensar a sus cliente sin que éstos lo pidan lo que es de muy agradecer.
@@ -31,7 +32,7 @@ Y la compensación no ha sido varios meses después sino en la siguiente factura
 
 {{< image
     gallery="true"
-    image1="resource:descuento-pepephone.png" optionsthumb1="300x200" title1="Descuento en la factura con la compensación"
+    image1="image:descuento-pepephone.png" optionsthumb1="300x200" title1="Descuento en la factura con la compensación"
     caption="Descuento en la factura con la compensación" >}}
 
 Esto forma de trato es una diferencia destacable de esta compañía con respecto a muchos de los otros proveedores de internet. Varias otras compañías lo que suelen hacer es sin que tu lo pidas subirte el importe de la factura ofreciendo más megas de bajada o subida, o más megas mensuales que puede que no te interesen y prefieras seguir con los mismos megas y con el mismo importe de la factura.

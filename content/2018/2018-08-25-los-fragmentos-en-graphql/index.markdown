@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:graphql.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 series: ["graphql"]
 ---
@@ -31,8 +32,8 @@ Con un fragmento se definen esos campos comunes a recuperar en las consultas una
 
 {{< image
     gallery="true"
-    image1="resource:query-1.png" optionsthumb1="300x200" title1="Consultas sin utilizar un fragmento"
-    image2="resource:query-1-fragment.png" optionsthumb2="300x200" title2="Consultas con un fragmento"
+    image1="image:query-1.png" optionsthumb1="300x200" title1="Consultas sin utilizar un fragmento"
+    image2="image:query-1-fragment.png" optionsthumb2="300x200" title2="Consultas con un fragmento"
     caption="Consultas sin y con un fragmento" >}}
 
 Los fragmentos en línea o _inline_ permiten por otra parte una funcionalidad adicional y es recuperar diferentes datos según el tipo de la entidad. En el ejemplo he añadido una nueva entidad _Magazine_ además de la ya existente _Book_, en el código Java ambas heredan de _Publication_. Las entidades _Book_ y _Magazine_ no comparten las mismas propiedades dado que son entidades diferentes por lo que en la consulta es necesario tener un mecanismo con el cual poder recuperar los datos en función del tipo.
@@ -47,7 +48,7 @@ Para las publicaciones del tipo _Book_ en este ejemplo se recuperan los campos _
 
 {{< image
     gallery="true"
-    image1="resource:fragment-inline.png" optionsthumb1="300x200" title1="Consulta con fragmentos en linea"
+    image1="image:fragment-inline.png" optionsthumb1="300x200" title1="Consulta con fragmentos en linea"
     caption="Consulta con fragmentos en linea" >}}
 
 Si es necesario hay que añadir la clases Java que representan a los tipos de GraphQL a la lista de clases del diccionario en la definición del esquema.

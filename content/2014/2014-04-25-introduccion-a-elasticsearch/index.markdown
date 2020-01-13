@@ -8,6 +8,7 @@ updated: 2015-11-10T19:00:00+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:elasticsearch.svg"
 tags: ["software", "programacion", "planeta-codigo"]
 summary: "Elasticsearch es una potente herramienta que nos permite indexar una gran volumen de datos y posteriormente hacer consultas sobre ellos soportando entre otras muchas cosas búsquedas aproximadas, facetas y resaltado. Un uso puede ser hacer consultas de texto completo, al estar los datos indexados los resultados se obtienen de forma muy rápida."
 ---
@@ -28,7 +29,7 @@ Después de unos segundos deberemos ver algo como lo siguiente.
 
 {{< image
     gallery="true"
-    image1="resource:elasticsearch.png" optionsthumb1="300x200" >}}
+    image1="image:elasticsearch.png" optionsthumb1="300x200" >}}
 
 Elasticsearch usa sus propios conceptos y aunque no es una base de datos relacional algunos pueden ser similares. Lo que en en una base de datos relacional es un esquema en ES es un índice, lo que en la primera es una tabla en ES es un tipo, continuando una fila en ES es un documento y finalmente una columna es una propiedad en ES.
 
@@ -68,7 +69,7 @@ Además de búsquedas ES puede ofrecernos más funcionalidades como las facetas 
 
 {{< image
     gallery="true"
-    image1="resource:categorias-amazon.png" optionsthumb1="300x200" title1="Categorías de productos (facets) en Amazon" >}}
+    image1="image:categorias-amazon.png" optionsthumb1="300x200" title1="Categorías de productos (facets) en Amazon" >}}
 
 Otra de las funcionalizades que nos puede interesar es que ES nos ofrezca sugerencias para determinados términos, en el siguiente ejemplo solicitamos además de la búsqueda sugerencias para algunas palablas que tienen fallos de escritura.
 

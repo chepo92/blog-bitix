@@ -19,16 +19,16 @@ Los navegadores suelen indicar que se está usando una comunicación segura cuan
 
 {{< image
     gallery="true"
-    image1="resource:certificado-validacion-dominio.png" optionsthumb1="300x200" title1="Certificado SSL con validación de dominio" >}}
+    image1="image:certificado-validacion-dominio.png" optionsthumb1="300x200" title1="Certificado SSL con validación de dominio" >}}
 {{< image
     gallery="true"
-    image1="resource:certificado.png" optionsthumb1="300x200" title1="Datos de certificado de GitHub" >}}
+    image1="image:certificado.png" optionsthumb1="300x200" title1="Datos de certificado de GitHub" >}}
 
 Sin embargo, para proporcionar más seguridad y garantía de que como usuarios nos estamos comunicando con el servidor que creemos sin examinar el certificado algunos certificados permiten mostrar también en la barra de direcciones un recuadro verde con el nombre de la entidad, el recuadro verde que solemos ver también en la barra de direcciones al acceder a algunos dominios y que es proporcionado por certificados de validación extendida.
 
 {{< image
     gallery="true"
-    image1="resource:certificado-validacion-extendida.png" optionsthumb1="300x200" title1="Certificado SSL con validación extendida" >}}
+    image1="image:certificado-validacion-extendida.png" optionsthumb1="300x200" title1="Certificado SSL con validación extendida" >}}
 
 Por otra parte los certificados SSL se generan para un dominio en concreto con lo que en principio se debería comprar un certificado por cada dominio en el que deseemos usar una comunicación segura. Sin embargo, para evitar comprar múltiples certificados para los diferentes dominios o subdominios podemos comprar un certificado _wildcard_ que nos servirá para los subdominios (*.ejemplo.com) o un certificado multidominio (ejemplo.com, ejemplo.net, ...) para como su nombre indica varios dominios. En los certificados de empresa se solicitan datos datos adicionales al adquirirlo y en los detalles del certificado aparece el nombre de la empresa (campo Organización (O) como en el caso de GitHub).
 
@@ -38,7 +38,7 @@ Los certificados _wildcard_ y que muestran el recuadro verde son más caros pero
 
 {{< image
     gallery="true"
-    image1="resource:certificados-dondominio.png" optionsthumb1="300x200" title1="Certificados DonDominio" >}}
+    image1="image:certificados-dondominio.png" optionsthumb1="300x200" title1="Certificados DonDominio" >}}
 
 En el caso de DonDominio dependiendo de la entidad emisora del certficado que deseemos variará el precio, también si queremos que tenga validación extendida o sea _wildcard_. En el caso de un certificado SSL simple que valide solo el dominio es de unos 5 €, de validación de empresa unos 28 €, un certificado de validación extendida con recuadro verde desde unos 126 € y un _certificado wildcard_ de desde unos 75 €. Estos son precios desde, diferentes opciones pueden salir bastante más caras y hay que tener en cuenta que son para una validez de una año, al igual que los dominios hay que renovar su uso.
 

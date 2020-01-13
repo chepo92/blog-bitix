@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:gnu.svg"
 tags: ["gnu-linux", "planeta-codigo", "seguridad", "software-libre"]
 summary: "Muchos archivos y su contenido son recuperables aún después de eliminados y liberado su espacio ocupado del sistema de archivos. Herramientas como Foremost son capaces de recuperar el contenido de un archivo si no ha sido sobreescrito accediendo a bajo nivel a los datos de la unidad, ya esté corrupta y de algún error al montarla o funcione perfectamente. Pudiendo extraer una imagen de la unidad seremos capaces de recuperar gran cantidad de archivos motivo por el cual al deshacernos de una unidad de almacenamiento es recomendable hacer un borrado seguro para evitar que información personal o confidencial sea obtenida con cualquier propósito."
 ---

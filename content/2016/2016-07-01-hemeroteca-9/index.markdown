@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:hugo.svg"
 tags: ["blog", "java", "planeta-codigo", "programacion", "software", "software-libre", "tapestry", "gnu-linux"]
 series: ["hemeroteca"]
 library: "true"
@@ -76,7 +77,7 @@ En cuanto a como han evolucionado las visitas siempre es motivante ver que con e
 
 {{< image
     gallery="true"
-    image1="resource:analytics.png" optionsthumb1="300x200" title1="Evolución de sesiones mensuales en Blog Bitix"
+    image1="image:analytics.png" optionsthumb1="300x200" title1="Evolución de sesiones mensuales en Blog Bitix"
     caption="Evolución de sesiones mensuales en Blog Bitix" >}}
 
 Durante este tiempo en la bitácora he realizado algunos cambios haciendo el tamaño de letra más pequeña de las secciones de referencia y series de artículos así como en las series de artículos numerar los artículos. He añadido publicidad a nivel de página para los dispositivos móviles soportados que desde no hace mucho ofrece Google AdSense. He añadido un buscador con la tecnología de Google para buscar contenido en Blog Bitix y he minimizado el HTML con la intención de que la cantidad de datos descargados al acceder al _blog_ sean unos cuantos kilobytes menos. También he añadido un mensaje para aquellos usuarios que usen AdBlock y lo tengan activado instándolos a considerar que lo desactiven en Blog Bitix ya que la publicidad que incluyo en el _blog_ es amable y poco intrusiva.

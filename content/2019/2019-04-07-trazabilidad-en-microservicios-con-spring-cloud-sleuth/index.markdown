@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:spring.svg"
 tags: ["java", "planeta-codigo"]
 series: ["spring-cloud"]
 summary: "Los microservicios son independientes pero se llaman unos a otros, suele ser muy útil para tareas de depuración y de visibilidad de una petición disponer de la traza completa de una petición a lo largo de las llamadas entre varios microservicios. Spring Cloud Sleuth proporciona la infraestructura para que las peticiones salientes envíen un identificativo de correlación de la petición global y para las peticiones entrantes relacionarlo con la petición global."

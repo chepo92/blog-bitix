@@ -8,6 +8,7 @@ updated: 2015-05-26T20:00:00+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:docker.svg"
 tags: ["gnu-linux", "planeta-codigo"]
 series: ["docker"]
 summary: "Podemos usar los contenedores disponibles en Docker Hub, donde están disponibles las aplicaciones de bases de datos, servidores de aplicaciones de mútiples lenguages, servidores web más populares y entre otras muchas. Pero también podemos definir nuestras propias imágenes personalizadas con las necesidades que tengamos. Lo que necesitamos es escribir un archivo que contenga la receta para construir la imagen del contenedor, este archivo es el Dockerfile."
@@ -51,7 +52,7 @@ Una vez tenemos el Dockerfile y los archivos de configuración a incluir con los
 
 {{< image
     gallery="true"
-    image1="resource:docker-mysql.png" optionsthumb1="300x200" title1="docker-mysql" >}}
+    image1="image:docker-mysql.png" optionsthumb1="300x200" title1="docker-mysql" >}}
 
 Para proporcionar la persistencia a la imagen de mysql podemos crear un contenedor específico que contenga los datos. Con el siguiente comando creamos un contenedor de datos, uso la imagen busybox ya que es una de las más pequeñas:
 

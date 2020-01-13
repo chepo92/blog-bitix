@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:jooq.png"
 tags: ["java", "planeta-codigo", "programacion"]
 series: ["jooq"]
 summary: Las aplicaciones que muestran listados probablemente necesiten mostrarlos paginados. Sin embargo, implementar la paginación correctamente para que sea eficiente no pasa por emplear las clausulas _limit_ ni _offset_ que habitualmente se utilizan sino con _seek_. Además de que _limit_ y _offset_ da lugar a resultados no deseados si entre obtención de página y página se insertan filas en páginas anteriores.

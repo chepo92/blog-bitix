@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:microsoft.svg"
 tags: ["microsoft", "opinion", "planeta-codigo", "software-libre"]
 summary: "If Microsoft wished there would be no Windows users using it without the corresponding license. But they consents, they does not care that for a personal use it pirated. A few days after July 29, Windows 10 will appear on the file sharing networks and download pages, also a few days later a program will appear that avoids the validation system as has happened with previous versions."
 ---
@@ -23,13 +24,13 @@ There are few but a few options to purchase a laptop without Windows or with som
 
 {{< image
     gallery="true"
-    image1="resource:windows-10.png" optionsthumb1="300x200" title1="Windows 10" >}}
+    image1="image:windows-10.png" optionsthumb1="300x200" title1="Windows 10" >}}
 
 Why do I say that they do not mind not paying the license? Because version after version the measures included in Windows or Office to protect them from an unlicensed use are avoided without apparently many difficulties and after a very short time appear in the pages of downloads the images along with the instructions to follow to install it without any type of problem. And in Windows 10 it will be the same. Why do not the included validation measures prevent unlicensed use? Because it suits Microsoft not to be too restrictive. If they were, some would pay the license, but many would say, what? Does the license cost 119 € (or 199, or 50 depending on what is returned with a new computer)? A third (aprox.) of what the computer cost me?, and that only Windows, if we add Office and other programs the cost of the licenses could far exceed the price of the equipment. Worse still, amount to be disbursed every few years due to obsolescence and new versions. And what would those who could not use Windows or Office do? Find alternatives and ... what do you think they would choose? The expensive competition of [Apple][apple] with its [Macs][mac] or some distribution GNU/Linux like [Ubuntu][ubuntu], [Linux Mint][linuxmint], [Debian][debian], [Fedora][fedora], [openSUSE][opensuse], etc ... That people knew and paid the cost of the software licenses would probably be one of the best ways to encourage the use of free software and GNU/Linux.
 
 {{< image
     gallery="true"
-    image1="resource:linux-gnu-ditributions.png" optionsthumb1="300x200" title1="Linux, GNU, distribuciones" >}}
+    image1="image:linux-gnu-ditributions.png" optionsthumb1="300x200" title1="Linux, GNU, distribuciones" >}}
 
 Does anyone believe that a company like Microsoft with the resources and capacity it possesses could not implement a validation that would prevent its misuse, more now where the internet connection is common? No, the answer is that he does not want to and the time has had to prove otherwise. Losing many users in favor of their alternatives would make them able to use those same alternatives at work (including schools and training companies), the business world where Microsoft is easier for them to claim their right legally rather than individually and from where they will get higher income. Doing so would cause Windows usage quota to drop at current monopoly levels and possibly in the long run a risk of their income.
 
@@ -37,7 +38,7 @@ One only has to see the obscene millionades that are adjudicated in contracts fo
 
 {{< image
     gallery="true"
-    image1="resource:windows-genuine.jpg" optionsthumb1="300x200" title1="Windows Genuine" >}}
+    image1="image:windows-genuine.jpg" optionsthumb1="300x200" title1="Windows Genuine" >}}
 
 Microsoft knows that you are using your software without the corresponding license and tells you to show you a message from time to time or you remove the wallpaper, a bit annoying but not prevent its use. Voluntary or negligent validation systems built into Windows or Office allow many users to use the Pirated Edition, users who are not willing to pay the considerable cost of the license. Although it will prefer that users buy the license Microsoft allows to a certain extent the use of its software without it, the alternative would be to lose the possibility of convincing some to use the software legally apart from losing use quota in favor of other alternatives, perhaps they prefer a situation where their software is used illegally rather than an alternative is more helpful. Microsoft also commits the injustices that the law leaves or no one demands, pre-installed its undesirable system by some who do not want it at the same time as it does not provide clear information and the process is simple to get its return together with the reimbursement of its cost and in taxes that using tax engineering along with other companies are taken to where they pay least.
 

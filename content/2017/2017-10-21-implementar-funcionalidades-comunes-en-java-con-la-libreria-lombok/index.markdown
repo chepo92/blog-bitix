@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 ---
 
@@ -49,8 +50,8 @@ Usando un IDE, su complemento para Lombok y añadida la dependencia los métodos
 
 {{< image
     gallery="true"
-    image1="resource:lombok-intellij.png" optionsthumb1="300x200" title1="Soporte de Lombok en IntelliJ"
-    image2="resource:lombok.png" optionsthumb2="300x200" title2="Ejecución del ejemplo"
+    image1="image:lombok-intellij.png" optionsthumb1="300x200" title1="Soporte de Lombok en IntelliJ"
+    image2="image:lombok.png" optionsthumb2="300x200" title2="Ejecución del ejemplo"
     caption="Soporte de Lombok en IntelliJ y ejecución del ejemplo" >}}
 
 Las anotaciones de Lombok permiten escribir menos código repetitivo en _beans_ o objetos de transferencia de datos o DTO pero conviene conocer lo que hacen esas anotaciones. Una de las características por las que algunas personas usan otros lenguajes más recientes como [Groovy][groovy] es que en estos requieren menos líneas código para hacer lo mismo que en Java como el caso de los métodos _get_ y _set_ de las propiedades que en Groovy se proporcionan de forma implícita y en Java de forma explícita, con Lombok en Java estos métodos también se pueden proporcionar con anotaciones sin tener que codificarlos.

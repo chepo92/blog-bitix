@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "La forma habitual en Java de hacer un bucle es con una sentecia _for_ o _while_ pero con el añadido de los iteradores en Java 5 no hace falta tener una variable para conservar el índice del bucle. Ya en Java 8 se han añadido los _streams_ que ofrecen otras nuevas formas de iterar sobre los elementos de una colección en este último caso con técnicas propias de lenguajes funcionales."
 ---
@@ -44,7 +45,7 @@ El siguiente programa muestra las cuatro opciones, su salida en la consola serí
 
 {{< image
     gallery="true"
-    image1="resource:bucles-java.png" optionsthumb1="300x200" title1="4 formas de hacer un bucle en Java"
+    image1="image:bucles-java.png" optionsthumb1="300x200" title1="4 formas de hacer un bucle en Java"
     caption="4 formas de hacer un bucle en Java" >}}
 
 {{< sourcecode git="blog-ejemplos/tree/master/JavaForeach" command="./gradlew run" >}}

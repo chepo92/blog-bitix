@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Ciertos datos son sensibles y hay que protegerlos al guardarlos en una base de datos, pero no sirve de nada si estos datos son emitidos en texto plano en las trazas de la aplicación invalidando cualesquiera otras medidas implementadas por muy correctas que sean en la aplicación. Los archivos de _log_ también necesitan tener en cuenta ciertas medidas de seguridad para los datos que se emiten. Una de las medidas es no emitir en los _logs_ los datos sensibles y otra ofuscarlos para que estén incompletos."
 ---

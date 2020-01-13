@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:gnu.svg"
 tags: ["gnu-linux", "planeta-codigo", "software-libre"]
 series: ["terminal"]
 summary: "Conociendo los comandos y sus opciones podemos realizar una tarea que nos ahorre una gran cantidad de tiempo si lo hubiésemos hecho manualmente o con una interfaz gráfica. La parte GNU de las mayoría distribuciones Linux proporcionan una buena cantidad de comandos útiles interesantes de conocer que están a nuestra disposición para cuando los necesitemos."
@@ -72,8 +73,8 @@ En sus respectivas páginas de manual, <code>man [comando]</code>, podemos conoc
 
 {{< image
     gallery="true"
-    image1="resource:comandos-gnu-linux.png" optionsthumb1="300x200" title1="Uso de comandos GNU/Linux"
-    image2="resource:man-grep.png" optionsthumb2="300x200" title2="Página de manual de grep"
+    image1="image:comandos-gnu-linux.png" optionsthumb1="300x200" title1="Uso de comandos GNU/Linux"
+    image2="image:man-grep.png" optionsthumb2="300x200" title2="Página de manual de grep"
     caption="Uso de comandos GNU/Linux y página del manual de grep" >}}
 
 {{< reference >}}

@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java","planeta-codigo", "programacion"]
 series: ["java-platform"]
 summary: "Si en Java 8 la característica más destacada fue la incorporación al lenguaje de las _lambdas_ y los _streams_ en Java 9 la característica que más destaca es la definición de los módulos que proporciona varios importantes beneficios."
@@ -31,18 +32,18 @@ La incorporación de los módulos a la plataforma con Java 9 es una de las modif
 
 {{< image
     gallery="true"
-    image1="resource:tabla-novedades-java-9.jpg" optionsthumb1="300x200" title1="Tabla de novedades de Java 9"
+    image1="image:tabla-novedades-java-9.jpg" optionsthumb1="300x200" title1="Tabla de novedades de Java 9"
     caption="Tabla de novedades de Java 9" >}}
 {{< image
     gallery="false"
-    image1="resource:duke-java-9.png" optionsthumb1="300x250" title1="Duke Java 9" >}}
+    image1="image:duke-java-9.png" optionsthumb1="300x250" title1="Duke Java 9" >}}
 
 Los módulos van a mejorar una de las deficiencias existentes en la visibilidad de las clases entre paquetes. Los módulos de Java proporcionan una mayor encapsulación de las clases contenidas en un paquete y las librerías. Esta encapsulación evita que una aplicación u otra librería haga uso y dependa de clases y paquetes de los que no debería lo que mejora la compatibilidad con versiones futuras. Los desarrolladores de una librería con los módulos ahora tienen un mayor control de los paquetes que expone una librería y que forma parte de su API pública. Con lo que se evita casos que se han dado hasta ahora como que librerías y programas dependan de clases internas en la API de Java como _sun.misc.BASE64Encoder_ o la famosa _sun.misc.Unsafe_, para la primera en Java se añadió un reemplazo con [java.util.Base64](https://docs.oracle.com/javase/9/docs/api/java/util/Base64.html), para la segunda con Java 9 para parte de su funcionalidad se ha añadido algunas nuevas clases.
 
 {{< image
     gallery="true"
-    image1="resource:java-version.png" optionsthumb1="300x200" title1="Java 9"
-    image2="resource:jshell.png" optionsthumb2="300x200" title2="JShell"
+    image1="image:java-version.png" optionsthumb1="300x200" title1="Java 9"
+    image2="image:jshell.png" optionsthumb2="300x200" title2="JShell"
     caption="Java 9 y JShell" >}}
 
 Los módulos proporcionan:
@@ -77,8 +78,8 @@ Con el tiempo las dependencias entre los propios paquetes y clases de la API de 
 
 {{< image
     gallery="true"
-    image1="resource:java-8-modules.jpg" optionsthumb1="300x200" title1="Módulos de Java 8"
-    image2="resource:java-9-modules.jpg" optionsthumb2="300x200" title2="Módulos de Java 9"
+    image1="image:java-8-modules.jpg" optionsthumb1="300x200" title1="Módulos de Java 8"
+    image2="image:java-9-modules.jpg" optionsthumb2="300x200" title2="Módulos de Java 9"
     caption="Módulos de Java 8 y Java 9" >}}
 
 
@@ -100,15 +101,15 @@ Este es el típico ejemplo _Hola Mundo_ con Java 9 en que que muestro como compi
 
 {{< image
     gallery="true"
-    image1="resource:java-9-helloworld.png" optionsthumb1="300x200" title1="Hola Mundo con Java 9"
+    image1="image:java-9-helloworld.png" optionsthumb1="300x200" title1="Hola Mundo con Java 9"
     caption="Hola Mundo con Java 9" >}}
 
 El comando _jdeps_ muestra las dependencias de los módulos muy útil para tareas de análisis o depuración.
 
 {{< image
     gallery="true"
-    image1="resource:jdeps.png" optionsthumb1="300x200" title1="Dependencias del ejemplo Hola Mundo con Java 9"
-    image2="resource:jdeps-java-sql.png" optionsthumb2="300x200" title2="Dependencias del módulo java.sql"
+    image1="image:jdeps.png" optionsthumb1="300x200" title1="Dependencias del ejemplo Hola Mundo con Java 9"
+    image2="image:jdeps-java-sql.png" optionsthumb2="300x200" title2="Dependencias del módulo java.sql"
     caption="Análisis de dependencais con jdeps" >}}
 
 Con el objetivo de mantener la compatibilidad en la mayor medida posible con las librerías existentes y una transición progresiva de un sistema sin módulos a uno con módulos [la platforma de módulos de Java define varios tipos de módulos][blogbitix-420], los módulos con nombre, los automáticos y el módulo anónimo. Para profundizar más en los detalles de la modularidad y el resto de novedades de Java 9 están los libros [Java 9 Revealed](http://amzn.to/2g0qu6t) y [Java 9 Modularity Revealed](http://amzn.to/2fY3wwT).

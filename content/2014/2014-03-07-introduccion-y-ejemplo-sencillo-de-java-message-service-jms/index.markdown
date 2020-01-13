@@ -8,6 +8,7 @@ updated: 2015-11-10T19:00:00+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:java.svg"
 tags: ["java", "programacion", "planeta-codigo"]
 summary: "JMS es una especificación de Java que define en esta plataforma una forma comunicación entre aplicaciones basada en el intercambio de mensajes. Los mensajes permiten a las aplicaciones no conocerse entre sí y comunicarse de forma asíncrona pudiendo hacer que los mensajes de una cola solo sean consumidos por un único receptor o por varios suscriptores interesados en un determinado tema. En el código de ejemplo muestro tanto la comunicación con colas (queues) como con temas (topics)"
 ---
@@ -42,7 +43,7 @@ Primero el código de un modelo Pub/Sub. Como es propio de este modelo los mensa
 
 {{< image
     gallery="true"
-    image1="resource:topic.png" optionsthumb1="300x200" title1="Resultado de Topic.java" >}}
+    image1="image:topic.png" optionsthumb1="300x200" title1="Resultado de Topic.java" >}}
 
 A continuación el código de utilizando un modelo punto a punto en el que vuelve a haber un emisor y dos receptores. En el resultado de la ejecución puede observarse que a pesar de haber dos receptores solo uno de los dos recibe cada mensaje:
 
@@ -50,7 +51,7 @@ A continuación el código de utilizando un modelo punto a punto en el que vuelv
 
 {{< image
     gallery="true"
-    image1="resource:queue.png" optionsthumb1="300x200" title1="Resultado de Queue.java" >}}
+    image1="image:queue.png" optionsthumb1="300x200" title1="Resultado de Queue.java" >}}
 
 Comentar que los mensajes se procesan en serie por cada MessageListener, esto es, hasta que no termina el consumo de uno no se consume el siguiente. Esto se aplica por MensajeListener y sesión.
 

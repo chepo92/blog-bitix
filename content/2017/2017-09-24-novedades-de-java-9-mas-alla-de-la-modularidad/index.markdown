@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 series: ["java-platform"]
 summary: "La modularidad introducida en Java 9 no es la única novedad incorporada en esta nueva versión. Aunque haya llegado a eclipsar al resto hay otra buena colección de mejoras que sin duda facilitarán la programación con uno de los lenguajes más empleados por los programadores aún después de más de 20 años."
@@ -33,11 +34,11 @@ Pero Java 9 además de los módulos incorpora en la plataforma otros cambios des
 
 {{< image
     gallery="true"
-    image1="resource:tabla-novedades-java-9.jpg" optionsthumb1="300x200" title1="Tabla de novedades de Java 9"
+    image1="image:tabla-novedades-java-9.jpg" optionsthumb1="300x200" title1="Tabla de novedades de Java 9"
     caption="Tabla de novedades de Java 9" >}}
 {{< image
     gallery="false"
-    image1="resource:duke-java-9.png" optionsthumb1="300x250" title1="Duke Java 9" >}}
+    image1="image:duke-java-9.png" optionsthumb1="300x250" title1="Duke Java 9" >}}
 
 ### Métodos factoría para colecciones
 
@@ -71,7 +72,7 @@ Se pueden introducir expresiones que son evaluadas y comandos precedidos por el 
 
 {{< image
     gallery="true"
-    image1="resource:jshell.png" optionsthumb1="300x200" title1="jshell"
+    image1="image:jshell.png" optionsthumb1="300x200" title1="jshell"
     caption="jshell" >}}
 
 {{< iframe src="https://players.brightcove.net/1460825906/VkKNQZg6x_default/index.html?videoId=5582429016001" size="640x360" >}}
@@ -149,7 +150,7 @@ Ahora la documentación Javadoc se genera con marcado de HTML 5 e incluye un cua
 
 {{< image
     gallery="true"
-    image1="resource:javadoc.png" optionsthumb1="300x200" title1="Javadoc"
+    image1="image:javadoc.png" optionsthumb1="300x200" title1="Javadoc"
     caption="Javadoc" >}}
 
 ### Archivos Jar multiversión

@@ -8,6 +8,7 @@ updated: 2014-05-30T20:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:grails.svg"
 tags: ["java", "programacion", "planeta-codigo"]
 ---
 
@@ -31,8 +32,8 @@ El resultado se puede ver en la siguiente captura de pantalla.
 
 {{< image
     gallery="true"
-    image1="resource:pagina-excepcion-grails-por-defecto.png" optionsthumb1="300x200" title1="Página de error por defecto de Grails"
-    image2="resource:pagina-excepcion-grails-personalizada.png" optionsthumb2="300x200" title2="Página de error personalizada de Grails" >}}
+    image1="image:pagina-excepcion-grails-por-defecto.png" optionsthumb1="300x200" title1="Página de error por defecto de Grails"
+    image2="image:pagina-excepcion-grails-personalizada.png" optionsthumb2="300x200" title2="Página de error personalizada de Grails" >}}
 
 Los estilos mostrados en las capturas de pantalla podrían ser mejores pero la esencia está en la información que se muestra. En otro artículo publicaré como [obtener estadísticas de Hibernate para detectar problemas de N+1 u obtener las consultas sql que se están realizando en cada página de una aplicación Grails][blogbitix-26], esta información nos puede ayudar bastante y no es excesivamente complicado hacerla. Con ambas conseguiremos que las aplicaciones que desarrollemos con Grails sean un poco más informativas.
 

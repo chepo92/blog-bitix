@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:gnu.svg"
 tags: ["gnu-linux", "planeta-codigo", "seguridad", "software-libre"]
 summary: "Eliminar archivos del sistema de ficheros no basta para destruir la información que contuvieran. Con herramientas como _Foremost_ su contenido puede ser recuperado, por ello cuando desechamos una unidad de almacenamiento (disco duro, memoria USB, targeta SD, SSD) conviene hacer un borrado seguro de la unidad, si trabajamos con información sensible quizá queramos hacer un borrado seguro de los archivos que eliminemos. Con el comando <code>wipe</code> podemos borrar archivos individuales y con el comando <code>dd</code> una unidad completa."
 ---

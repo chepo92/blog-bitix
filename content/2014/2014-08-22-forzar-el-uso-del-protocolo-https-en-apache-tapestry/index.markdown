@@ -8,6 +8,7 @@ updated: 2015-05-27T23:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:apache-tapestry-5.svg"
 tags: ["java", "programacion", "tapestry", "planeta-codigo"]
 ---
 
@@ -39,7 +40,7 @@ En cualquiera de los dos casos mostrados en este ejemplo se obliga a usar https 
 
 {{< image
     gallery="true"
-    image1="resource:plugin-tapestry-https.png" optionsthumb1="300x200" title1="PlugIn Tapestry con https" >}}
+    image1="image:plugin-tapestry-https.png" optionsthumb1="300x200" title1="PlugIn Tapestry con https" >}}
 
 {{< plugintapestry >}}
 

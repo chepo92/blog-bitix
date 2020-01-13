@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java-ee.png"
 tags: ["java", "planeta-codigo", "programacion"]
 series: ["java-platform"]
 summary: "Más lentamente que otras tecnologías Java EE en cada nueva versión sigue adaptándose a las nuevas tendencias en el desarrollo y facilitando la programación de aplicaciones de entidad empresarial. Java EE está formado por un conjunto de especificaciones que resuelven en gran medida muchas de las necesidades funcionales de las aplicaciones ya sean de persistencia, seguridad, mensajería, lógica de negocio, transaccionalidad, inyección de dependencias, presentación HTML, JSON, WebSockets, conexión a base de datos, envío de correos electrónicos o concurrencia. En este artículo mostraré un ejemplo usando varias de estas especificaciones y proporcionaré el código fuente completo."
@@ -28,7 +29,7 @@ Para facilitar el desarrollo de la aplicación en el lado cliente usaré algunas
 
 {{< image
     gallery="true"
-    image1="resource:supermarket-java-ee-7.png" optionsthumb1="300x200" title1="Supermarket con Java EE 7"
+    image1="image:supermarket-java-ee-7.png" optionsthumb1="300x200" title1="Supermarket con Java EE 7"
     caption="Supermarket con Java EE 7" >}}
 
 Veamos primero la página inicial índice con el listado de productos generada con JSF. Obtiene el listado de productos y genera el HTML del mismo, además carga los JavaScripts necesarios para que la aplicación funcione en el navegador del cliente.
@@ -63,7 +64,7 @@ La aplicación está dividida en varios módulos construidos con la [herramienta
 
 {{< image
     gallery="true"
-    image1="resource:aplicacion-cliente.png" optionsthumb1="300x200" title1="Aplicación cliente Supermarket"
+    image1="image:aplicacion-cliente.png" optionsthumb1="300x200" title1="Aplicación cliente Supermarket"
     caption="Aplicación cliente Supermarket" >}}
 
 El conjunto de especificaciones de Java EE proporciona una solución para la mayoría de funcionalidades que necesita una aplicación pero también podemos sustituir alguna y combinarlas con otras de las muchas librerías o _frameworks_ disponibles en la plataforma Java. Por ejemplo, como _framework_ en vez de usar Servlet y JSP o JSF podemos usar [Apache Tapestry][blogbitix-12], [Vert.x][blogbitix-120], [Spark][blogbitix-121], [Struts][struts], [Grails][grails], ... dependiendo de las necesidades de la aplicación, su complejidad y nuestras preferencias. Como [alternativa al ORM de JPA o JDBC se puede usar jOOQ][blogbitix-82]. [RabbitMQ][rabbitmq] en vez de JMS o [Spring][spring] en vez de CDI, EJB y JTA.

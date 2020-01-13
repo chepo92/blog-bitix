@@ -8,6 +8,7 @@ updated: 2014-12-29T19:00:00+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:ansible.svg"
 tags: ["gnu-linux", "planeta-codigo"]
 series: ["docker"]
 ---

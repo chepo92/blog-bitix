@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:gnu.svg"
 tags: ["gnu-linux", "planeta-codigo"]
 ---
 
@@ -22,8 +23,8 @@ El intérprete [Zsh][zsh] y [Oh-My-Zsh](https://ohmyz.sh/) ofrece mediante sus t
 
 {{< image
     gallery="true"
-    image1="resource:terminal.png" optionsthumb1="300x200" title1="Prompt de la terminal por defecto"
-    image2="resource:git-bash.png" optionsthumb2="300x200" title2="Prompt de la terminal en carpeta git"        
+    image1="image:terminal.png" optionsthumb1="300x200" title1="Prompt de la terminal por defecto"
+    image2="image:git-bash.png" optionsthumb2="300x200" title2="Prompt de la terminal en carpeta git"        
     caption="Prompt de la terminal por defecto y en carpeta de git" >}}
 
 * \* la presencia de este caracter indica que hay cambios en alguno de los archivos bajo el control de versiones.

@@ -11,6 +11,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:raspberrypi.svg"
 tags: ["gnu-linux", "java", "planeta-codigo", "programacion"]
 series: ["electronica"]
 ---
@@ -33,17 +34,17 @@ Una de las primeras cosas a conocer es como se numeran los _pines_ en la Raspber
 
 {{< image
     gallery="true"
-    image1="resource:raspberrypi1b.jpg" optionsthumb1="300x200" title1="Raspberry Pi 1 B"
-    image2="resource:raspberrypi3b.jpg" optionsthumb2="300x200" title2="Raspberry Pi 3 B"
+    image1="image:raspberrypi1b.jpg" optionsthumb1="300x200" title1="Raspberry Pi 1 B"
+    image2="image:raspberrypi3b.jpg" optionsthumb2="300x200" title2="Raspberry Pi 3 B"
     caption="Placas modelos Raspberry Pi 1 B y 3 B" >}}
 {{< image
     gallery="true"
-    image1="resource:breadboard-cableado.jpg" optionsthumb1="300x200" title1="Breadboard y placa extesión GPIO wiringPi de 26 pines"
-    image2="resource:gpio-extension-40-pines-board.jpg" optionsthumb2="300x200" title2="Placa extesión GPIO de 40 pines"
+    image1="image:breadboard-cableado.jpg" optionsthumb1="300x200" title1="Breadboard y placa extesión GPIO wiringPi de 26 pines"
+    image2="image:gpio-extension-40-pines-board.jpg" optionsthumb2="300x200" title2="Placa extesión GPIO de 40 pines"
     caption="Breadboard y placa extesión GPIO wiringPi de 26 _pines_ y 40 pines" >}}
 {{< image
     gallery="true"
-    image1="resource:esquema-cableado.png" optionsthumb1="300x200" title1="Esquema del cableado"
+    image1="image:esquema-cableado.png" optionsthumb1="300x200" title1="Esquema del cableado"
     caption="Esquema del cableado" >}}
 
 Como uso la placa de extensión wiringPi para conectar los _pines_ de la Raspberry Pi a otra placa para hacer pruebas sin soldadura también conocidas como _breadboard_  resultará que en el programa Java al usar Diozero uso la nomenclatura Broadcom para identificar los _pines_ pero al conectar los cables en la placa de pruebas uso la nomenclatura de wiringPi.
@@ -53,14 +54,14 @@ Para el ejemplo utilizaré la placa de extensión sin soldadura, una resistencia
 
 {{< image
     gallery="true"
-    image1="resource:diodo-resistencia.jpg" optionsthumb1="300x200" title1="Diodo blanco y resistencia de 200 ohmios"
+    image1="image:diodo-resistencia.jpg" optionsthumb1="300x200" title1="Diodo blanco y resistencia de 200 ohmios"
     caption="Diodo blanco y resistencia de 200 ohmios" >}}
 
 Las resistencias poseen cuatro bandas de colores que indican el valor en ohmios de esa resistencia, la tabla de colores es el siguiente:
 
 {{< image
     gallery="true"
-    image1="resource:codigo-colores-resistencias.jpg" optionsthumb1="300x200" title1="Código de colores de las resistencias"
+    image1="image:codigo-colores-resistencias.jpg" optionsthumb1="300x200" title1="Código de colores de las resistencias"
     caption="Código de colores de las resistencias" >}}
 
 El programa Java para hacer parpadear el diodo LED con la librería Diozero con el proveedor [pigpio](http://abyz.co.uk/rpi/pigpio/). El ejemplo consiste en activar y apagar el _pin_ sucesivamente en un bucle y usar el método [Thread.sleep](javadoc8:java/lang/Thread.html#sleep-long-) para que pase unos segundos entre uno y otro y nos de tiempo a ver el encendido y apagado. El nada complejo programa Java para controlar el diodo y un vídeo de su funcionamiento están a continuación.

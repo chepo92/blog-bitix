@@ -9,6 +9,7 @@ language: "es"
 rss: true
 sharing: true
 comments: true
+imagePost: "image:1.jpg"
 tags: ["blog", "planeta-codigo"]
 summary: "Los artículos y log blogs personales no se escriben solos, cada artículo está fabricado artesanalmente letra a letra por alguna persona en algún lugar. Hace unos meses Victorhck inició una cadena de artículos que algunos blogueros han continuado donde compartían el lugar donde crean sus artículos."
 ---
@@ -21,8 +22,8 @@ Aunque en buena parte mi blog no es solo de software libre y GNU/Linux de vez en
 
 {{< image
     gallery="true"
-    image1="resource:1.jpg" optionsthumb1="300x200" title1="Escritorio"
-    image2="resource:2.jpg" optionsthumb2="300x200" title2="Escritorio" >}}
+    image1="image:1.jpg" optionsthumb1="300x200" title1="Escritorio"
+    image2="image:2.jpg" optionsthumb2="300x200" title2="Escritorio" >}}
 
 El lugar donde escribo los borradores de artículo, edito, publico los artículos y programo los ejemplos así como lee libros técnicos no es muy sofisticado. Aunque no solo se hace en esa mesa, muchas ideas me surgen en el trabajo o de vuelta a casa que voy recopilando y escribiendo sobre ellas cuando les llega su turno. A la derecha de la mesa tengo una ventana por la que dispongo de luz natural que siempre se agradece aunque la mayor parte las paso a las noches.
 
@@ -36,18 +37,18 @@ Por otro lado se ve una [Raspberry Pi][raspberrypi] de los primeros modelos, la 
 
 {{< image
     gallery="true"
-    image1="resource:3.jpg" optionsthumb1="300x200" title1="Regleta enchufes y router ADSL"
-    image2="resource:4.jpg" optionsthumb2="300x200" title2="Altavoces, Raspberry Pi, Tux y amigos de papel" >}}
+    image1="image:3.jpg" optionsthumb1="300x200" title1="Regleta enchufes y router ADSL"
+    image2="image:4.jpg" optionsthumb2="300x200" title2="Altavoces, Raspberry Pi, Tux y amigos de papel" >}}
 
 También se ven ahí unos altavoces con _subwoofer_ que utilizo para escuchar mi propia música o alguna radio de [Jamendo][jamendo], los tengo arrinconados en una esquina para que ocupen muy poco espacio en la mesa sobre todo los cables. Junto a los altavoces tengo a [Tux hecho con papel](assets/custom/tux.pdf) al igual que un [cubo cheatsheet](assets/custom/arch-linux-cheat-cube.zip) y un dodecaedro con el [calendario del año 2012](assets/custom/arch-linux-calendar-2012.zip) que no he ido actualizando, muy _archeros_ ellos que decoran un poco la mesa. Y unos bidones de agua que a veces utilizo.
 
 {{< image
     gallery="true"
-    image1="resource:tux.png" optionsthumb1="300x200" title1="Tux"
-    image2="resource:arch-linux-calendar-2012.png" optionsthumb2="300x200" title1="Arch Linux calendar" >}}
+    image1="image:tux.png" optionsthumb1="300x200" title1="Tux"
+    image2="image:arch-linux-calendar-2012.png" optionsthumb2="300x200" title1="Arch Linux calendar" >}}
 {{< image
     gallery="true"
-    image1="resource:arch-linux-cheat-cube.png" optionsthumb1="300x200" title1="Arch Linux cheat cube" >}}
+    image1="image:arch-linux-cheat-cube.png" optionsthumb1="300x200" title1="Arch Linux cheat cube" >}}
 
 Tengo un par de discos duros externos USB que utilizo para hacer copias de seguridad [cifrados con LUKS y dm-crypt][blogbitix-128], uno de ellos era el original de 500 GiB del portátil que sustituí por el SSD.
 

@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:vavr.png"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Ciertas propiedades de la programación funcional fueron una de las características más destacadas añadidas a Java 8. La librería Javaslang y más tarde renombrada a Vavr basándose en estas nueva características añade algunas otras que no están incluidas en el propio JDK y están presentes en otros lenguajes más recientes y con programación funcional desde sus inicios. En esta breve introducción a la librería Vavr comentaré cuales son las propiedades que proporciona para simplificar algunas aspectos de la tarea de programación."
 ---
@@ -27,7 +28,7 @@ Java 8 no las incorpora todo lo que podría en el JDK por decisión de los desar
 
 {{< image
     gallery="true"
-    image1="resource:vavr-overview.png" optionsthumb1="300x200" title1="Jerarquía de clases de Vavr"
+    image1="image:vavr-overview.png" optionsthumb1="300x200" title1="Jerarquía de clases de Vavr"
     caption="Jerarquía de clases de Vavr" >}}
 
 Los principios que sigue la librería Vavr y que forman la tendencia en la programación y la programación funcional son:
@@ -48,8 +49,8 @@ Vavr proporciona una representación bien diseñada de algunos de los tipos más
 
 {{< image
     gallery="true"
-    image1="resource:collections-seq.png" optionsthumb1="300x200" title1="Jerarquía de clases de Seq"
-    image2="resource:collections-set-map.png" optionsthumb2="300x200" title2="Jerarquía de clases de Set y Map"
+    image1="image:collections-seq.png" optionsthumb1="300x200" title1="Jerarquía de clases de Seq"
+    image2="image:collections-set-map.png" optionsthumb2="300x200" title2="Jerarquía de clases de Set y Map"
     caption="Jerarquía de clases de Seq, Set y Map" >}}
 
 * _Pattern matching_: son una especie de sentencia _switch_ que son evaluadas como una expresión y que retornan un valor.

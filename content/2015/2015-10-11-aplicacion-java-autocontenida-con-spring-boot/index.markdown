@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:spring.svg"
 tags: ["java", "planeta-codigo", "programacion", "spring"]
 series: ["spring-cloud"]
 summary: "Si queremos una aplicación Java autocontenida ya sea una aplicación de linea de comandos, de escritorio o aplicación web que use el contenedor de dependencias de Spring podemos usar Spring Boot. Además de inicializar el contenedor IoC de Spring, Spring Boot proporciona en una aplicación web elegir el servidor de aplicaciones de entre el por defecto Tomcat y los seleccionables Jetty y Undertow junto con algunas funcionalidades más."

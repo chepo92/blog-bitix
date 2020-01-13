@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion", "tapestry"]
 summary: "En un proyecto grande podemos tener necesidad de dividir el monolito al menos en varios módulos y yendo un paso más lejos en microservicios. La herramienta de construcción que usemos deberá de facilitarnos automatizar la tarea de construcción del código fuente de cada módulo individual, de todos a la vez o de los microservicios si tienen alguna dependencia compartida. En el artículo y ejemplo explicaré cómo usando Gradle podemos dividir el proyecto en varios módulos. No deja de ser un ejemplo pero es bastante completo y está formado por dos aplicaciones web, una librería de componentes y otra librería con el modelo de persistencia, usa Spring, jOOQ, Tapestry, PostgreSQL, Docker, Liquibase, ..."
 ---
@@ -63,7 +64,7 @@ Creando un producto desde la consola de PostgreSQL y refrescando la página en e
 
 {{< image
     gallery="true"
-    image1="resource:back.png" optionsthumb1="300x200" title1="Backoffice"
+    image1="image:back.png" optionsthumb1="300x200" title1="Backoffice"
     caption="Aplicación backoffice" >}}
 
 El [código fuente completo del ejemplo](https://github.com/picodotdev/blog-ejemplos/tree/master/MultiprojectGradle) puedes verlo y descargarlo desde su repositorio de GitHub.

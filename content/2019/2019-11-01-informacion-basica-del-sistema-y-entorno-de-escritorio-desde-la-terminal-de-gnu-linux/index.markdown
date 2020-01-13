@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "resource:images/neofetch-1.png"
 tags: ["gnu-linux", "planeta-codigo"]
 ---
 
@@ -28,8 +29,8 @@ En las imágenes se aprecia que mi distribución es [Arch Linux][archlinux], [mi
 
 {{< image
     gallery="true"
-    image1="resource:neofetch-1.png" optionsthumb1="300x250" title1="Información del sistema proporcionada por neofetch"
-    image2="resource:neofetch-2.png" optionsthumb2="300x250" title2="Información del sistema proporcionada por neofetch"
+    image1="image:neofetch-1.png" optionsthumb1="300x250" title1="Información del sistema proporcionada por neofetch"
+    image2="image:neofetch-2.png" optionsthumb2="300x250" title2="Información del sistema proporcionada por neofetch"
     caption="Información del sistema proporcionada por neofetch" >}}
 
 Ambos comandos están disponibles en los repositorios de paquetes de la distribución que se esté usando.

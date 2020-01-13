@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:gnu.svg"
 tags: ["gnu-linux", "planeta-codigo", "software-libre"]
 summary: "En GNU/Linux hay multitud de distribuciones, no existe la mejor distribución sino aquella que mejor se adapta según el usuario o sus preferencias. En muchas distribuciones hay posibilidad de elegir diferentes _sabores_ según el entorno de escritorio. Para usuarios nuevos, intermedios, avanzados, para servidor, que requieren pocos recursos o con menor cantidad de software no libre."
 ---
@@ -49,28 +50,28 @@ Esta categorización que he hecho es general y muchos usuarios avanzados usan di
 
 {{< image
     gallery="true"
-    image1="resource:ubuntu-installer.png" optionsthumb1="300x200" title1="Instalador de Ubuntu"
-    image2="resource:ubuntu.png" optionsthumb2="300x200" title2="Ubuntu"
+    image1="image:ubuntu-installer.png" optionsthumb1="300x200" title1="Instalador de Ubuntu"
+    image2="image:ubuntu.png" optionsthumb2="300x200" title2="Ubuntu"
     caption="Ubuntu con Unity" >}}
 {{< image
     gallery="true"
-    image1="resource:elementary-os-installer.png" optionsthumb1="300x200" title1="Instalador de elementary OS"
-    image2="resource:elementary-os.png" optionsthumb2="300x200" title2="Elementary OS"
+    image1="image:elementary-os-installer.png" optionsthumb1="300x200" title1="Instalador de elementary OS"
+    image2="image:elementary-os.png" optionsthumb2="300x200" title2="Elementary OS"
     caption="Elementary OS" >}}
 {{< image
     gallery="true"
-    image1="resource:linux-mint-installer.png" optionsthumb1="300x200" title1="Instalador de Linux Mint"
-    image2="resource:linux-mint.png" optionsthumb2="300x200" title2="Linux Mint con Cinnamon"
+    image1="image:linux-mint-installer.png" optionsthumb1="300x200" title1="Instalador de Linux Mint"
+    image2="image:linux-mint.png" optionsthumb2="300x200" title2="Linux Mint con Cinnamon"
     caption="Linux Mint con Cinnamon" >}}
 {{< image
     gallery="true"
-    image1="resource:opensuse-installer.png" optionsthumb1="300x200" title1="Instalador de openSUSE"
-    image2="resource:opensuse.png" optionsthumb2="300x200" title2="openSUSE con KDE"
+    image1="image:opensuse-installer.png" optionsthumb1="300x200" title1="Instalador de openSUSE"
+    image2="image:opensuse.png" optionsthumb2="300x200" title2="openSUSE con KDE"
     caption="openSUSE con KDE" >}}
 {{< image
     gallery="true"
-    image1="resource:debian-installer-1.png" optionsthumb1="300x200" title1="Instalador de Debian (1)"
-    image2="resource:debian-installer-2.png" optionsthumb2="300x200" title2="Instalador de Debian (2)"
+    image1="image:debian-installer-1.png" optionsthumb1="300x200" title1="Instalador de Debian (1)"
+    image2="image:debian-installer-2.png" optionsthumb2="300x200" title2="Instalador de Debian (2)"
     caption="Instalador de Debian" >}}
 
 * Para usuario intermedio:
@@ -79,22 +80,22 @@ Esta categorización que he hecho es general y muchos usuarios avanzados usan di
 
 {{< image
     gallery="true"
-    image1="resource:archlinux-installer-1.png" optionsthumb1="300x200" title1="Instalador de Arch Linux (1)"
-    image2="resource:archlinux-installer-2.png" optionsthumb2="300x200" title2="Instalador de Arch Linux (2)"
+    image1="image:archlinux-installer-1.png" optionsthumb1="300x200" title1="Instalador de Arch Linux (1)"
+    image2="image:archlinux-installer-2.png" optionsthumb2="300x200" title2="Instalador de Arch Linux (2)"
     caption="Instalador de Arch Linux" >}}
 {{< image
     gallery="true"
-    image1="resource:archlinux.jpg" optionsthumb1="300x200" title1="Arch Linux con GNOME"
+    image1="image:archlinux.jpg" optionsthumb1="300x200" title1="Arch Linux con GNOME"
     caption="Arch Linux con GNOME" >}}
 {{< image
     gallery="true"
-    image1="resource:arch-anywhere-installer-1.png" optionsthumb1="300x200" title1="Instalador de arch-anywhere (1)"
-    image2="resource:arch-anywhere-installer-2.png" optionsthumb2="300x200" title2="Instalador de arch-anywhere (2)"
+    image1="image:arch-anywhere-installer-1.png" optionsthumb1="300x200" title1="Instalador de arch-anywhere (1)"
+    image2="image:arch-anywhere-installer-2.png" optionsthumb2="300x200" title2="Instalador de arch-anywhere (2)"
     caption="Instalador de arch-anywhere" >}}
 {{< image
     gallery="true"
-    image1="resource:fedora-installer.png" optionsthumb1="300x200" title1="Instalador de Fedora"
-    image2="resource:fedora.png" optionsthumb2="300x200" title2="Fedora con GNOME"
+    image1="image:fedora-installer.png" optionsthumb1="300x200" title1="Instalador de Fedora"
+    image2="image:fedora.png" optionsthumb2="300x200" title2="Fedora con GNOME"
     caption="Fedora con GNOME" >}}
 
 * Para usuario avanzado:
@@ -111,8 +112,8 @@ Esta categorización que he hecho es general y muchos usuarios avanzados usan di
 
 {{< image
     gallery="true"
-    image1="resource:xubuntu-installer.png" optionsthumb1="300x200" title1="Instalador de Xubuntu"
-    image2="resource:xubuntu.png" optionsthumb2="300x200" title2="Xubuntu con XFCE"
+    image1="image:xubuntu-installer.png" optionsthumb1="300x200" title1="Instalador de Xubuntu"
+    image2="image:xubuntu.png" optionsthumb2="300x200" title2="Xubuntu con XFCE"
     caption="Xubuntu con XFCE" >}}
 
 * Para usuarios con preferencias de software libre: aunque las distribuciones GNU/Linux son en su mayoría software libre hay algunas partes que no lo son como controladores privativos de la tarjeta gráfica o diversos firmwares del núcleo o controladores. Estas distribuciones tratan de eliminar la mayor parte posible de ese software que no es libre.
@@ -121,8 +122,8 @@ Esta categorización que he hecho es general y muchos usuarios avanzados usan di
 
 {{< image
     gallery="true"
-    image1="resource:triquel-installer.png" optionsthumb1="300x200" title1="Instalador de Trisquel"
-    image2="resource:trisquel.png" optionsthumb2="300x200" title2="Trisquel"
+    image1="image:triquel-installer.png" optionsthumb1="300x200" title1="Instalador de Trisquel"
+    image2="image:trisquel.png" optionsthumb2="300x200" title2="Trisquel"
     caption="Trisquel" >}}
 
 Estas son solo algunas de las distribuciones más populares y usadas de GNU/Linux y las que recomiendo pero en [DistroWatch][distrowatch] hay un listado más completo. En el libro [Introduction Linux Distros](https://amzn.to/2fol03B) encontraremos una introducción más detallada a GNU/Linux y sus distribuciones.

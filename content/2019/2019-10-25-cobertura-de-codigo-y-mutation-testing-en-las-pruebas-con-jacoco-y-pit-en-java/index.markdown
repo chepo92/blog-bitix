@@ -11,6 +11,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "En el caso extremo una cobertura de código del cien por cien pero que no tenga ningún _assert_ pasa los teses pero que en realidad no comprueba nada así que por si sola no es garantía de tener teses efectivos. _Mutation testing_ da una medida adicional a la cobertura de los teses más completa y efectiva que simplemente la cobertura de código ejecutado por los teses unitarios."
 ---
@@ -65,21 +66,21 @@ Sin los casos de prueba _calculatePriceForChildNarrowCase_ y _calculatePriceForF
 
 {{< image
     gallery="true"
-    image1="resource:tests-report-correct.png" optionsthumb1="200x150" title1="Informe de teses correcto"
-    image2="resource:pit-report-fail-1.png" optionsthumb2="200x150" title2="Informe de PIT incorrecto"
-    image3="resource:pit-report-fail-2.png" optionsthumb3="200x150" title3="Informe de PIT incorrecto"
+    image1="image:tests-report-correct.png" optionsthumb1="200x150" title1="Informe de teses correcto"
+    image2="image:pit-report-fail-1.png" optionsthumb2="200x150" title2="Informe de PIT incorrecto"
+    image3="image:pit-report-fail-2.png" optionsthumb3="200x150" title3="Informe de PIT incorrecto"
     caption="Informe de teses correcto y de PIT incorrecto" >}}
 
 El caso de prueba _calculatePriceForFamily_ prueba que una familia esté formada por 2 adultos y 2 menores, PIT realiza las mutaciones para considerar una familia en el caso de ser de 3 adultos o 3 menores, la prueba de _calculatePriceForFamily_ mata estas mutaciones haciendo que los teses sean precisos y completos. La cobertura de teses de mutación llega al cien por cien. En el informe de PIT se observa una descripción y número de mutaciones que ha realizado entre ellas divisiones en vez de multiplicaciones, substracciones en vez de sumas, reemplazo de valores de retorno o cambios y negaciones en condicionales. Los teses _calculatePriceForNoFamilyByNoAdults_ y _calculatePriceForNoFamilyByNoChildren_ completan la cobertura de todas las ramas del método _isFamily_.
 
 {{< image
     gallery="true"
-    image1="resource:tests-report.png" optionsthumb1="300x200" title1="Informe de pruebas de JUnit"
-    image2="resource:jacoco-report.png" optionsthumb2="300x200" title2="Informe de cobertura de JaCoCo" >}}
+    image1="image:tests-report.png" optionsthumb1="300x200" title1="Informe de pruebas de JUnit"
+    image2="image:jacoco-report.png" optionsthumb2="300x200" title2="Informe de cobertura de JaCoCo" >}}
 {{< image
     gallery="true"
-    image1="resource:pit-report-1.png" optionsthumb1="300x200" title1="Informe de mutación de PIT"
-    image2="resource:pit-report-2.png" optionsthumb2="300x200" title2="Informe de mutación de PIT"
+    image1="image:pit-report-1.png" optionsthumb1="300x200" title1="Informe de mutación de PIT"
+    image2="image:pit-report-2.png" optionsthumb2="300x200" title2="Informe de mutación de PIT"
     caption="Informe de pruebas de JUnit, de cobertura de JaCoCo y de mutación de PIT" >}}
 
 Para generar los informes de cobertura de código y de mutación en Java y usando [Gradle][gradle] como herramienta de construcción las herramientas JaCoCo y PIT proporcionan un complemento o _plugin_ que hay que añadir al archivo de construcción además de proporcionar algunas opciones de configuración en la sección _pitest_, entre estas propiedades está _mutators_ en la que se puede indicar los _mutators_ que PIT emplea para lanzar los teses con mutaciones. Los informes se generan en el directorio _build/reports/_. Realizar _mutation testing_ solo requiere cierta configuración en el archivo de construcción del proyecto.

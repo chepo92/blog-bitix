@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 ---
 
@@ -28,7 +29,7 @@ El siguiente ejemplo realiza una petición a la página del buscador Google con 
 
 {{< image
     gallery="true"
-    image1="resource:java-http2.png" optionsthumb1="300x200" title1="Petición con el cliente de Java para HTTP/2"
+    image1="image:java-http2.png" optionsthumb1="300x200" title1="Petición con el cliente de Java para HTTP/2"
     caption="Petición con el cliente de Java para HTTP/2" >}}
 
 Otras fomas de manejadores del resultado de la petición son los siguientes:

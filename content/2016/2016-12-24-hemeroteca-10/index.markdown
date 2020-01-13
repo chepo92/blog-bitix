@@ -8,6 +8,7 @@ language: "es"
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:hugo.svg"
 tags: ["blog", "java", "planeta-codigo", "programacion", "software", "software-libre", "tapestry", "gnu-linux"]
 series: ["hemeroteca"]
 library: "true"
@@ -24,8 +25,8 @@ A pesar de la gran mejora en número de visitas mensuales durante este año cues
 
 {{< image
     gallery="true"
-    image1="resource:analytics-2016.png" optionsthumb1="300x200" title1="Analytics 2016 de Blog Bitix"
-    image2="resource:gadsense-2016.png" optionsthumb2="300x200" title2="AdSense 2016 de Blog Bitix"
+    image1="image:analytics-2016.png" optionsthumb1="300x200" title1="Analytics 2016 de Blog Bitix"
+    image2="image:gadsense-2016.png" optionsthumb2="300x200" title2="AdSense 2016 de Blog Bitix"
     caption="Evolución visitas e ingresos de AdSense en 2016" >}}
 
 Una de las cosas que me estoy arrepintiendo ahora es no de tener dominio propio, no lo hice porque con [GitHub Pages][github-pages] me ofrecía el hospedaje gratis y sin complicaciones. Ahora me plantearía hospedar el blog en una máquina de [Linode][linode], [Digital Ocean][digital-ocean] o en la reciente competencia de estos con [Amazon Lightsail][amazon-lightsail]. Mas que por necesidad por practicar con [Ansible][ansible] e implementar en el blog HTTPS/2 o usar [Let's encrypt][letsencrypt] asi como aprender sobre esos servicios en la nube. La migración es posible pero posiblemente no perfecta.
@@ -97,7 +98,7 @@ En la categoría de artículos de opinion junto con otros de teḿatica variada 
 
 {{< image
     gallery="true"
-    image1="resource:christmas-tux-2016.jpg" optionsthumb1="600x450" title1="¡Felices fiestas y buen 2017!"
+    image1="image:christmas-tux-2016.jpg" optionsthumb1="600x450" title1="¡Felices fiestas y buen 2017!"
     caption="¡Felices fiestas y buen 2017!" source="klowner.com" >}}
 
 {{% /post %}}

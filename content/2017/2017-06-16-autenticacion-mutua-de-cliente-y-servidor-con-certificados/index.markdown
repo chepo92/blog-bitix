@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:openssl.svg"
 tags: ["java", "planeta-codigo", "programacion", "seguridad", "web"]
 ---
 
@@ -72,17 +73,17 @@ Lo anterior es usando la herramienta _curl_ o un un programa en la plataforma Ja
 
 {{< image
     gallery="true"
-    image1="resource:firefox-bad-request.png" optionsthumb1="300x250" title1="Autenticación mutua fallida"
-    image2="resource:firefox-mutual-authorized.png" optionsthumb2="300x250" title2="Autenticación mutua correcta"
-    image3="resource:firefox-server-cert.png" optionsthumb3="300x250" title3="Certificado del servidor validado por la CA" >}}
+    image1="image:firefox-bad-request.png" optionsthumb1="300x250" title1="Autenticación mutua fallida"
+    image2="image:firefox-mutual-authorized.png" optionsthumb2="300x250" title2="Autenticación mutua correcta"
+    image3="image:firefox-server-cert.png" optionsthumb3="300x250" title3="Certificado del servidor validado por la CA" >}}
 {{< image
     gallery="true"
-    image1="resource:firefox-certs.png" optionsthumb1="300x250" title1="Certificados de cliente"
-    image2="resource:firefox-cas.png" optionsthumb2="300x250" title2="Certificados de la autoridades de certificación"
-    image3="resource:firefox-ca.png" optionsthumb3="300x250" title3="Añadir certificado de CA" >}}
+    image1="image:firefox-certs.png" optionsthumb1="300x250" title1="Certificados de cliente"
+    image2="image:firefox-cas.png" optionsthumb2="300x250" title2="Certificados de la autoridades de certificación"
+    image3="image:firefox-ca.png" optionsthumb3="300x250" title3="Añadir certificado de CA" >}}
 {{< image
     gallery="true"
-    image1="resource:firefox-select-cert.png" optionsthumb1="300x250" title1="Selección de certificado de cliente"
+    image1="image:firefox-select-cert.png" optionsthumb1="300x250" title1="Selección de certificado de cliente"
     caption="Autenticación mutua de cliente y servidor con el navegador web Firefox" >}}
 
 {{< sourcecode git="blog-ejemplos/tree/master/MutualCertAuth" command="docker-compose up, groovy MutualCertAuth.groovy" >}}

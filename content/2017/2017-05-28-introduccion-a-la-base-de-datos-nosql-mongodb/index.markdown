@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:mongodb.svg"
 tags: ["gnu-linux", "planeta-codigo", "programacion"]
 summary: "En unos pocos años las bases de datos NoSQL se han dado a conocer ampliamente. Resuelven algunas problemáticas para las que las bases de datos relacionales más longevas no proporcionan una solución totalmente satisfactoria como el escalado horizontal y un modelo de datos normalizado en varias tablas, filas y columnas predefinidas y significativamente diferente del modelo de datos usados por las aplicaciones. La base de datos NoSQL MongoDB que almacena documentos se adecua mejor a cierto tipo de requerimientos."
 ---

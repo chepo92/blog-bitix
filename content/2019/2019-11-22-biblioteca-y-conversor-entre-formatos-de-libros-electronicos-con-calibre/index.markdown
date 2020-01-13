@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "resource:images/calibre.png"
 tags: ["gnu-linux", "software"]
 summary: "Dado que los libros electrónicos ocupan muy poco se puede llegar a tener una biblioteca grande de libros que necesitan de una herramienta para ser catalogados y para realizar conversión entre formatos si es necesario para uno de entre los que soporte el dispositivo de libros electrónicos. Calibre es una aplicación que ofrece estas dos principales funciones."
 ---
@@ -24,29 +25,29 @@ Calibre permite organizar los libros por autor y muestra las portadas de los mis
 
 {{< image
     gallery="true"
-    image1="resource:calibre.png" optionsthumb1="300x200" title1="Bibliteca y conversor de libros electrónicos Calibre"
+    image1="image:calibre.png" optionsthumb1="300x200" title1="Bibliteca y conversor de libros electrónicos Calibre"
     caption="Biblioteca y conversor de libros electrónicos Calibre" >}}
 
 La conversión entre formatos no tarda muchos y en ningún momento me he encontrado que el resultado sea malo si el original está correctamente formateado. Como los libros electrónicos son archivos pequeños la conversión se realiza en unos pocos decenas de segundos. Además, Calibre permite realizar la conversión de forma masiva sobre varios libros guardando los libros en diferentes formatos en la biblioteca.
 
 {{< image
     gallery="true"
-    image1="resource:calibre-convertir.png" optionsthumb1="300x200" title1="Convertir un libro electrónico a otro formato con Calibre"
+    image1="image:calibre-convertir.png" optionsthumb1="300x200" title1="Convertir un libro electrónico a otro formato con Calibre"
     caption="Convertir un libro electrónico a otro formato" >}}
 
 La biblioteca se guarda en el sistema de archivos del ordenador en una estructura de directorios organizados por autor, títulos del libro y en los formatos en los que se haya realizado la conversión.
 
 {{< image
     gallery="true"
-    image1="resource:calibre-biblioteca-autores.png" optionsthumb1="300x200" title1="Organización por autores de los archivos en la biblioteca"
-    image2="resource:calibre-biblioteca-libros.png" optionsthumb2="300x200" title2="Organización por autor de los archivos en la biblioteca"
+    image1="image:calibre-biblioteca-autores.png" optionsthumb1="300x200" title1="Organización por autores de los archivos en la biblioteca"
+    image2="image:calibre-biblioteca-libros.png" optionsthumb2="300x200" title2="Organización por autor de los archivos en la biblioteca"
     caption="Organización de los archivos en la biblioteca" >}}
 
 Quizá algunos de los libros no tenga los metadatos correctos como el título, nombre del autor o el número del libro si forma parte de una serie de libros relacionados, mediante otro diálogo se puede editar y catalogar correctamente el libro.
 
 {{< image
     gallery="true"
-    image1="resource:calibre-metadatos.png" optionsthumb1="300x200" title1="Convertir un libro electrónico a otro formato con Calibre"
+    image1="image:calibre-metadatos.png" optionsthumb1="300x200" title1="Convertir un libro electrónico a otro formato con Calibre"
     caption="Metadatos de un libro electrónico" >}}
 
 Calibre tiene más funciones pero la catalogar los libros en una biblioteca digital y la realizar la conversión entre formatos para diferentes dispositivos son las dos principales. Está [disponible para los principales sistemas operativos](https://calibre-ebook.com/download) como [GNU][gnu]/[Linux][linux] en forma de paquete proporcionado por la distribución o como [aplicación Flatpak universal para cualquier distribución](https://flathub.org/apps/details/com.calibre_ebook.calibre), [Windows][windows] y [macOS][macos]. Puedes conocer la [historia de Calibre](https://calibre-ebook.com/about#history) y cmo surgió como una necesidad de su autor.

@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:hugo.svg"
 tags: ["planeta-codigo", "software-libre"]
 series: ["donacion"]
 ---
@@ -49,15 +50,15 @@ Por un problema con el medio de pago que usa Arch Linux, [Software in the Public
 
 {{< image
     gallery="true"
-    image1="resource:donacion-gnome.png" optionsthumb1="650x450" title1="Donación GNOME"
+    image1="image:donacion-gnome.png" optionsthumb1="650x450" title1="Donación GNOME"
     caption="Donación GNOME" >}}
 {{< image
     gallery="true"
-    image1="resource:donacion-videolan.png" optionsthumb1="650x450" title1="Donación VideoLAN (VLC)"
+    image1="image:donacion-videolan.png" optionsthumb1="650x450" title1="Donación VideoLAN (VLC)"
     caption="Donación VideoLAN (VLC)" >}}
 {{< image
     gallery="true"
-    image1="resource:donacion-archlinux.png" optionsthumb1="650x450" title1="Donación Arch Linux"
+    image1="image:donacion-archlinux.png" optionsthumb1="650x450" title1="Donación Arch Linux"
     caption="Donación Arch Linux" >}}
 
 Las donaciones no son muy cuantiosas pero son una forma de entre las muchas que hay de colaborar con estos proyectos. Otras formas de colaborar son reportando de errores o que no requieren conocimiento técnico como traduciendo las aplicaciones al lenguaje español o simplemente compartiendo las imágenes torrent de las distribuciones GNU/Linux.

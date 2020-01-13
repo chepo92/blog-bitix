@@ -8,6 +8,7 @@ language: "es"
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:rabbitmq.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Entre las ventajas de integrar dos aplicaciones mediante el envío de mensajes están que evita que estén acopladas y la comunicación es asíncrona. Con RabbitMQ también podremos implementar cada uno de ellas con el lenguaje de programación que prefiramos de entre las varias posibilidades para las que ofrece clientes y por esto último podemos preferir usarlo en vez de las especificación JMS propia de Java EE que nos obligaría a usar un servidor de aplicaciones que lo implemente, posiblemente JBoss/Wildfly o Weblogic en vez de Tomcat o Jetty. En el artículo incluyo un ejemplo para el lenguaje Java mostrando el envío y recepción de mensajes junto con la aplicación de administración que nos proporcionará información útil."
 ---
@@ -48,8 +49,8 @@ Una vez iniciado el contenedor y con el código fuente del ejemplo, iniciamos en
 
 {{< image
     gallery="true"
-    image1="resource:send.png" optionsthumb1="300x200" title1="Aplicación de ejemplo enviando mensajes"
-    image2="resource:receive.png" optionsthumb2="300x200" title2="Aplicación de ejemplo reciviendo mensajes" >}}
+    image1="image:send.png" optionsthumb1="300x200" title1="Aplicación de ejemplo enviando mensajes"
+    image2="image:receive.png" optionsthumb2="300x200" title2="Aplicación de ejemplo reciviendo mensajes" >}}
 
 En la comunicación con RabbitMQ se puede usar [TLS/SSL](http://www.rabbitmq.com/ssl.html) así como mecanismos de [autenticación](http://www.rabbitmq.com/authentication.html) y [autorización](http://www.rabbitmq.com/access-control.html) para mayor seguridad. Usando confirmaciones si el receptor falla en el procesado el mensaje no se pierde ya que no se habrá declarado como _acknowledge_ aún así si RabbitMQ falla los mensajes se perderán a menos que las colas se declaren como persistentes las cuales se guardarán en disco perdurando a una catástrofe.
 
@@ -57,8 +58,8 @@ RabbitMQ posee un [_plugin_ para la administración](https://www.rabbitmq.com/ma
 
 {{< image
     gallery="true"
-    image1="resource:rabbitmq-management.png" optionsthumb1="300x200" title1="Aplicación web de administración de RabbitMQ"
-    image2="resource:rabbitmq-queue.png" optionsthumb2="300x200" title2="Información de estado de una cola" >}}
+    image1="image:rabbitmq-management.png" optionsthumb1="300x200" title1="Aplicación web de administración de RabbitMQ"
+    image2="image:rabbitmq-queue.png" optionsthumb2="300x200" title2="Información de estado de una cola" >}}
 
 Para profundizar más en las aplicaciones basadas en mensajes con RabbitMQ dos buenos libros son [Learning RabbitMQ](https://amzn.to/2lTGMQc) y [Matering RabbitMQ](https://amzn.to/2lW9qwF) cubriendo temas más avanzados como _clustering_, alta disponibilidad, arquitectura, patrones de diseño, seguridad y rendimiento.
 

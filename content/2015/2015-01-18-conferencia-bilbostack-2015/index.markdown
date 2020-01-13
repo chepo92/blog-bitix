@@ -8,6 +8,7 @@ updated: 2016-01-31T10:00:00+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:bilbostack.png"
 tags: ["planeta-codigo"]
 series: ["bilbostack"]
 ---
@@ -20,7 +21,7 @@ Un año más una de las primeras conferencias del año se ha celebrado en Bilbao
 
 {{< image
     gallery="true"
-    image1="resource:universidad.jpg" optionsthumb1="300x200" title1="Universidad de Deusto" >}}
+    image1="image:universidad.jpg" optionsthumb1="300x200" title1="Universidad de Deusto" >}}
 
 Hasta el momento el formato de la conferencia ha sido presentaciones de 45 minutos en dos tracks simultáneos en horario únicamente de mañana y durante un día, siendo la agenda de este 2015 la siguiente:
 
@@ -84,10 +85,10 @@ Hasta el momento el formato de la conferencia ha sido presentaciones de 45 minut
 
 {{< image
     gallery="true"
-    image1="resource:track1.jpg" optionsthumb1="300x200" title1="Sala track 1" >}}
+    image1="image:track1.jpg" optionsthumb1="300x200" title1="Sala track 1" >}}
 {{< image
     gallery="true"
-    image1="resource:track2.jpg" optionsthumb1="300x200" title1="Sala track 2" >}}
+    image1="image:track2.jpg" optionsthumb1="300x200" title1="Sala track 2" >}}
 
 Como cada año no puede faltar alguna presentación del ubicuo JavaScript y en las presentaciones de años anteriores ha habido de PHP, Python, Groovy y .NET pero aún no ha habido ninguna de Java (a pesar de que será uno de los más usados por los asistentes). Después de revisar la agenda de este año he asistido únicamente y a todas a las presentaciones del track 1. Del track 2 me llamaban la atención la de ReactJS, pero es una herramienta que ya conozco y que me parece de lo mejor para su propósito aún así intuía que iba a conocer poco nuevo después de escribir el artículo [Ejemplo lista de tareas con Backbone y React][blogbitix-20] y usarlo en el ejemplo simple pero ilustrativo mostrado. También me llamaba la atención Wordpress al límite y Arquitectura frontend de CartoDB. A continuación un resumen breve de cada una de las presentaciones a las que he asistido.
 
@@ -103,7 +104,7 @@ Después de la presentación me planteo aprender algo de .NET porque siendo prag
 
 {{< image
     gallery="true"
-    image1="resource:dotnet.jpg" optionsthumb1="300x200" title1="Desarrollo de aplicaciones web con .NET en MAC o Linux" >}}
+    image1="image:dotnet.jpg" optionsthumb1="300x200" title1="Desarrollo de aplicaciones web con .NET en MAC o Linux" >}}
 
 ### Google es ciego <em>por Oihana Alberdi</em>
 
@@ -113,7 +114,7 @@ En la mejora de la accesibilidad de una página intervienen tanto diseñadores (
 
 {{< image
     gallery="true"
-    image1="resource:google-es-ciego.jpg" optionsthumb1="300x200" title1="Google es ciego" >}}
+    image1="image:google-es-ciego.jpg" optionsthumb1="300x200" title1="Google es ciego" >}}
 
 ### Descubriendo los Beacons <em>por Borja Reinares</em>
 
@@ -127,7 +128,7 @@ Los _beacons_ y BLE puede ser un nuevo campo tecnológico, veremos si realmente 
 
 {{< image
     gallery="true"
-    image1="resource:beacons.jpg" optionsthumb1="300x200" title1="Descubriendo los Beacons" >}}
+    image1="image:beacons.jpg" optionsthumb1="300x200" title1="Descubriendo los Beacons" >}}
 
 ### ¿Qué es eso de IoT? <em>por Quique Martinez</em>
 
@@ -139,7 +140,7 @@ Otro nuevo área tecnológico en el que descubrir aplicaciones útiles y con gra
 
 {{< image
     gallery="true"
-    image1="resource:iot.jpg" optionsthumb1="300x200" title1="Internet de las cosas (IoT)" >}}
+    image1="image:iot.jpg" optionsthumb1="300x200" title1="Internet de las cosas (IoT)" >}}
 
 ### Bomberos pirómanos <em>por Ujue Agudo y Aritz Suescun</em>
 
@@ -153,7 +154,7 @@ En [Biko](https://www.biko2.com/) siguen tres ideas para mantener estos fuegos c
 
 {{< image
     gallery="true"
-    image1="resource:bomberos-piromanos.jpg" optionsthumb1="300x200" title1="Bombero pirómano" >}}
+    image1="image:bomberos-piromanos.jpg" optionsthumb1="300x200" title1="Bombero pirómano" >}}
 
 <hr>
 

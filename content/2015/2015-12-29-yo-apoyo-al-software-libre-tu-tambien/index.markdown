@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:fsf.svg"
 tags: ["planeta-codigo", "software-libre"]
 series: ["donacion"]
 summary: "Hay múltiples formas con las que colaborar con el software libre, una muy importante es usándolo y al final de cierto tiempo uno se plantea de colaborar de otras formas para devolver un poquito de todo lo que nos ha ofrecido. Así pues, podemos colaborar realizando o mejorando la traducción de algún programa que usemos, promocionándolo entre nuestros conocidos o escribiendo en un blog sobre él, enviando informes de error o si tenemos los conocimientos aportando código para corregir algún error o añadiéndole alguna funcionalidad, depende de tiempo y conocimiento que tengamos también. Otra forma es realizando alguna donación económica aunque sea una pequeña cantidad a algún proyecto o software que nos resulte de interés. Después de recibir el ingreso de AdSense por la publicidad de esta bitácora este es mi caso."
@@ -35,7 +36,7 @@ Finalmente como tenía intención, hice una donación a la [organización Europe
 
 {{< image
     gallery="true"
-    image1="resource:fsfe-t-shirts.jpg" optionsthumb1="650x450" title1="Camisetas FSFE"
+    image1="image:fsfe-t-shirts.jpg" optionsthumb1="650x450" title1="Camisetas FSFE"
     caption="Camisetas FSFE" >}}
 
 La económica solo es una forma de colaborar con el software libre, usarlo es una buena iniciativa y contribuir con él de alguna manera es algo que está al alcance de todos. No tiene por que ser haciendo donaciones económicas puede ser difundiendo su uso instalando alguna distribución [GNU][gnu]/[Linux][linux] a alguien que te pide que le reinstales el sistema operativo, dando una charla, realizando traducciones al español como en mi caso a dos programa que uso como son el [Reproductor multimedia VLC][vlc] y [VirtualBox][virtualbox], escribiendo artículos en una bitácora como podría ser esta e incluso un libro gratuito sobre el _framework_ web de desarrollo para aplicaciones Java, [PlugIn Tapestry][blogbitix-12].
@@ -48,7 +49,7 @@ Y esta es la muestra de la factura de PayPal en la que se ve la donación/adquis
 
 {{< image
     gallery="true"
-    image1="resource:donacion-fsfe.png" optionsthumb1="650x450" title1="Donación Free Software Foundation Europe"
+    image1="image:donacion-fsfe.png" optionsthumb1="650x450" title1="Donación Free Software Foundation Europe"
     caption="Donación Free Software Foundation Europe" >}}
 
 {{< donations >}}

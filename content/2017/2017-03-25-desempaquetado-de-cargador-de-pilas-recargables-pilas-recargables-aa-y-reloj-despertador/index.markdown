@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:"
 tags: []
 series: ["desempaquetado-otros"]
 summary: "Otros productos que he comprado han sido un cargador de pilas recargables que admitiese los tipos AA y AAA, también he comprado unas pilas AA que he incluido en el mismo pedido."
@@ -26,12 +27,12 @@ En cuanto al cargador lo que quería era que admitiese al menos pilas del tipo A
 
 {{< image
     gallery="true"
-    image1="resource:cargador-1.jpg" optionsthumb1="300x200"
-    image2="resource:cargador-2.jpg" optionsthumb2="300x200" >}}
+    image1="image:cargador-1.jpg" optionsthumb1="300x200"
+    image2="image:cargador-2.jpg" optionsthumb2="300x200" >}}
 {{< image
     gallery="true"
-    image1="resource:cargador-3.jpg" optionsthumb1="300x200"
-    image2="resource:cargador-4.jpg" optionsthumb2="300x200" >}}
+    image1="image:cargador-3.jpg" optionsthumb1="300x200"
+    image2="image:cargador-4.jpg" optionsthumb2="300x200" >}}
 
 {{< amazon
     linkids="0bfa2d5bd06eb2605fb1139281987bf5,5c3dcd6a3b17aca40628ad288a0947ed,0ffb4d325c98b4193eeee9efc053355a"
@@ -51,11 +52,11 @@ Por ello, finalmente me decidí por el siguiente modelo de [reloj de manecillas 
 
 {{< image
     gallery="true"
-    image1="resource:reloj-1.jpg" optionsthumb1="300x200"
-    image2="resource:reloj-2.jpg" optionsthumb2="300x200" >}}
+    image1="image:reloj-1.jpg" optionsthumb1="300x200"
+    image2="image:reloj-2.jpg" optionsthumb2="300x200" >}}
 {{< image
     gallery="true"
-    image1="resource:reloj-3.jpg" optionsthumb1="300x200" >}}
+    image1="image:reloj-3.jpg" optionsthumb1="300x200" >}}
 
 {{< amazon
     linkids="b4520ee6411fb18af5d5eeecf755ca44"
@@ -73,12 +74,12 @@ Para completar el pedido compré unas [pilas AA recargables de AmazonBasics](htt
 
 {{< image
     gallery="true"
-    image1="resource:pila-1.jpg" optionsthumb1="300x200"
-    image2="resource:pila-2.jpg" optionsthumb2="300x200" >}}
+    image1="image:pila-1.jpg" optionsthumb1="300x200"
+    image2="image:pila-2.jpg" optionsthumb2="300x200" >}}
 {{< image
     gallery="true"
-    image1="resource:pila-3.jpg" optionsthumb1="300x200"
-    image2="resource:pila-4.jpg" optionsthumb2="300x200" >}}
+    image1="image:pila-3.jpg" optionsthumb1="300x200"
+    image2="image:pila-4.jpg" optionsthumb2="300x200" >}}
 
 Pilas AA y AAA en Amazon.
 

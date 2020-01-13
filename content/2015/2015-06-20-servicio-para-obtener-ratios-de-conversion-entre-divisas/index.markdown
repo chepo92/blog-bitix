@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "¿Trabajas con importes en diferentes divisas y necesitas hacer conversiones entre ellas? Si es el caso necesitas obtener los ratios de conversión entre divisas de alguna fuente de forma regular y de forma automatizada ya que se varían constantemente (en minutos) según diversos factores. Hay diferentes fuentes para obtenerlos y empresas que ofrecen las cotizaciones como producto, en este artículo comentaré una con suficiente detalle como para integrarla en cualquier aplicación."
 ---

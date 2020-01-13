@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:gnu.svg"
 tags: ["gnu-linux", "planeta-codigo"]
 ---
 
@@ -30,7 +31,7 @@ En este caso se han escrito 326 MB en el dispositivo _nvme0n1p2_ que corresponde
 
 {{< image
     gallery="true"
-    image1="resource:awk.png" optionsthumb1="300x200" title1="Datos escritos al almacenamiento desde el inicio del sistema"
+    image1="image:awk.png" optionsthumb1="300x200" title1="Datos escritos al almacenamiento desde el inicio del sistema"
     caption="Datos escritos al almacenamiento desde el inicio del sistema" >}}
 
 También es interesante conocer los datos escritos en la unidad en total desde su instalación, en realidad lo siguiente nos dará los GiB escritos desde la creación de la partición, si se han hecho varios particionados no será el total del tiempo de vida de la unidad. Al usar LVM on LUKS el nombre que Linux le a la unidad en mi caso es _dm-1_, según la configuración del sistema otro nombre que se le asigna es _sda2_. En esta captura de 129 GB.
@@ -39,7 +40,7 @@ También es interesante conocer los datos escritos en la unidad en total desde s
 
 {{< image
     gallery="true"
-    image1="resource:awk-lifetime.png" optionsthumb1="300x200" title1="Datos escritos a una partición"
+    image1="image:awk-lifetime.png" optionsthumb1="300x200" title1="Datos escritos a una partición"
     caption="Datos escritos a una partición" >}}
 
 Después de [comprar un Intel NUC junto con SSD][blogbitix-363] e instalarle [Arch Linux][archlinux] me he dado cuenta que de forma periódica, cada 5 o 10 segundos, parpadea la luz de actividad del disco duro (o simplemente almacenamiento al tener un SSD) sin hacer ninguna actividad salvo tener algunas aplicaciones abietas. He instalado _iotop_ para descubrir el origen de esta actividad y he encontrado dos. Por un lado [Firefox][firefox], varios procesos de él, y otro proceso del sistema _jdb2-dm-1-8_ que corresponde al _journaling_ del sistema de archivos. La opción _-a_ de iotop muestra la cantidad de E/S en la sesión por proceso y la opción _--only_ solo aquellos que han realizado E/S.
@@ -48,7 +49,7 @@ Después de [comprar un Intel NUC junto con SSD][blogbitix-363] e instalarle [Ar
 
 {{< image
     gallery="true"
-    image1="resource:iotop.png" optionsthumb1="300x200" title1="Datos escritos por procesos del sistema"
+    image1="image:iotop.png" optionsthumb1="300x200" title1="Datos escritos por procesos del sistema"
     caption="Datos escritos por procesos del sistema" >}}
 
 Investigando sobre los motivos de escritura de Firefox he encotrado algunos artículos y tres recomendaciones a cambiar en la configuración de Firefox para optimizar su uso en unidades SSD.
@@ -66,8 +67,8 @@ Estas opciones se cambian el la sección de configuración de Firefox introducie
 
 {{< image
     gallery="true"
-    image1="resource:firefox-config-1.png" optionsthumb1="300x200" title1="Configuración de Firefox optimizado para SSD"
-    image2="resource:firefox-config-2.png" optionsthumb2="300x200" title2="Configuración de Firefox optimizado para SSD"
+    image1="image:firefox-config-1.png" optionsthumb1="300x200" title1="Configuración de Firefox optimizado para SSD"
+    image2="image:firefox-config-2.png" optionsthumb2="300x200" title2="Configuración de Firefox optimizado para SSD"
     caption="Configuración de Firefox optimizado para SSD" >}}
 
 Con la configuración por defecto y cambiando estas opciones esta es la diferencia de los procesos de Firefox que causan E/S después de un tiempo de uso. Por defecto se observa que hay un proceso relacionado que debe estar relacionado con la caché a raíz de su nombre que escribe en el almacenamiento y cambiadas las opciones solo los procesos _mozStorage_ escriben, estos procesos están relacionados con las _cookies_ y almacenamiento local o bases de datos que los navegadores ofrecen a las páginas web pero los procesos relacionados con la caché han desaparecido. La cantidad de datos escritos con las opciones por defecto y cambiadas son significativamente menores en el mismo periodo de tiempo.
@@ -76,15 +77,15 @@ Dado que la caché ocasiona escrituras en el almacenamiento el proceso de _journ
 
 {{< image
     gallery="true"
-    image1="resource:firefox-default.png" optionsthumb1="300x200" title1="Entrada y salida con las opciones de Firefox por defecto"
-    image2="resource:firefox-ssd.png" optionsthumb2="300x200" title2="Entrada y salida con opciones de Firefox optimizadas para SSD"
+    image1="image:firefox-default.png" optionsthumb1="300x200" title1="Entrada y salida con las opciones de Firefox por defecto"
+    image2="image:firefox-ssd.png" optionsthumb2="300x200" title2="Entrada y salida con opciones de Firefox optimizadas para SSD"
     caption="Entrada y salida de Firefox por defecto y optimizado para SSD" >}}
 
 En el entorno de escritorio [GNOME][gnome] con la aplicación _Monitor del sistema_ es posible ver la cantidad de datos escritos por un proceso en total y en tiempo real.
 
 {{< image
     gallery="true"
-    image1="resource:gnome-monitor-del-sistema.png" optionsthumb1="300x200" title1="Monitor del sistema de GNOME"
+    image1="image:gnome-monitor-del-sistema.png" optionsthumb1="300x200" title1="Monitor del sistema de GNOME"
     caption="Monitor del sistema de GNOME" >}}
 
 Dado que los SSD no hacen ruido no se ha pedido la alerta sonora del «rascar» del disco cuando algún programa está escribiendo o leyendo de forma intensiva y por ello quizá no nos demos cuenta de que algún programa está teniendo un mal comportamiento y esté escribiendo muchos datos al SSD, peor aún si el sistema ni siquiera dispone de este LED de actividad.
@@ -93,7 +94,7 @@ Para visualizar el uso del disco de forma constante [en GNOME hay una extensión
 
 {{< image
     gallery="true"
-    image1="resource:gnome-extension-system-monitor.png" optionsthumb1="300x200" title1="Extensión de GNOME de monitor del sistema"
+    image1="image:gnome-extension-system-monitor.png" optionsthumb1="300x200" title1="Extensión de GNOME de monitor del sistema"
     caption="Extensión de GNOME de monitor del sistema" >}}
 
 {{% /post %}}

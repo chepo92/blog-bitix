@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "opinion", "planeta-codigo", "programacion"]
 summary: "Las tecnologías para desarrollar una aplicación son un medio para resolver las necesidades del negocio o un cliente, no un fin. Pero esto no quiere decir que la elección sea trivial o poco importante, realizar las elecciones adecuadas según lo requisitos puede evitar complicaciones en un futuro. Para un proyecto basado en la plataforma Java esta es mi selección de herramientas de las que conozco."
 ---

@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 series: ["jooq"]
 summary: "jOOQ es una alternativa a Hibernate que devuelve la base de datos a primer plano en una aplicación. Por la importancia en cualquier aplicación de los datos propone que la base de datos sea la única fuente de la verdad. Para los modelos es patente al generarse a partir del esquema de la base de datos para las validaciones se puede hacer con restricciones de integridad pero si queremos conocer los errores detalladamente que se produzcan puede que deseemos usar Spring Validation."

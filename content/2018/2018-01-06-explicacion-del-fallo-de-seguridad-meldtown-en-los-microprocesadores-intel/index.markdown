@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:intel.svg"
 tags: ["hardware", "planeta-codigo", "seguridad", "software"]
 summary: "Los procesadores Intel se han visto afectados por un grave error de seguridad debido a que fueron diseñados con ejecución especulativa sin tener algunas consideraciones de seguridad, técnica empleada para aumentar el rendimiento pero que tiene efectos colaterales en la cache que pueden se aprovechados para realizar ataques _side-channel_ con los que leer el contenido de la memoria del _kernel_, independientemente del sistema operativo utilizado."
 ---

@@ -11,6 +11,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Leer un CSV, escribir un CSV, archivos excel, generar gráficas para visualizar datos junto con generar documentos PDF son tareas comunes de las aplicaciones como forma de exportar los datos de la base de datos de una aplicación. Generar un archivo PDF con PDFBox requiere unas pocas lineas de código para documentos con cierta complejidad quizá sea más adecuado usar la librería JasperReports."
 ---
@@ -32,7 +33,7 @@ Para generar documentos en PDF en Java está disponible la librería [Apache PDF
 
 {{< image
     gallery="true"
-    image1="resource:document.png" optionsthumb1="600x450" title1="Documento generado con PDFBox"
+    image1="image:document.png" optionsthumb1="600x450" title1="Documento generado con PDFBox"
     caption="Documento generado con PDFBox" >}}
 
 Una alternativa a PDFBox es [iText][itext], la primera tiene una [licencia Apache][apache-license] e iText una [licencia AGPL][gnu-agpl] o comercial lo que puede ser determinante para un proyecto. La licencia AGPL obliga a que una aplicación web haga público su código fuente lo que probablemente en usos comerciales no sea lo deseado y usar la versión de la licencia comercial obliga a adquirir el derecho de uso al que obliga la licencia que posee un coste tal vez indeseado o que directamente hace que quede descartada.

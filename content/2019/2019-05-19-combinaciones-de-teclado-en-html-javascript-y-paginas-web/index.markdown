@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:html.svg"
 tags: ["javascript", "programacion", "planeta-codigo"]
 summary: "En las páginas y aplicaciones web también es posible utilizar combinaciones de teclas para proporcionar acceso rápido a funciones usadas frecuentemente. Utilizando la propiedad global _accesskey_ para los campos de texto la acción es ubicar el foco en el campo y para los botones realizar la acción de clic. Los _listeners_ como _onkeydown_ permiten conocer que teclas modificadoras como <kbd>Ctrl</kbd>, <kbd>Shift</kbd> y <kbd>Alt</kbd> se han pulsado al mismo tiempo."
 ---
@@ -27,7 +28,7 @@ En este ejemplo se captura la combinación de teclas <kbd>Ctrl + Shift + s</kbd>
 
 {{< image
     gallery="true"
-    image1="resource:key-combinations-1.png" optionsthumb1="300x200" title1="Ejemplo combinaciones de teclas"
+    image1="image:key-combinations-1.png" optionsthumb1="300x200" title1="Ejemplo combinaciones de teclas"
     caption="Ejemplo combinaciones de teclas" >}}
 
 Los usos que se les pueden dar a estas combinaciones de teclas van desde posicionar el foco en un determinado campo de entrada o realizar alguna acción como enviar los datos de un formulario una vez están rellenados y son válidos o cualquiera otra acción mediante [JavaScript][javascript]. Haciendo uso del método [preventDefault()](https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault) del objeto evento se evita que el evento dispare la acción por defecto si tiene una asignada.
@@ -36,9 +37,9 @@ La propiedad global _accesskey_ puede utilizarse en cualquier elemento de HTML, 
 
 {{< image
     gallery="true"
-    image1="resource:key-combinations-2.png" optionsthumb1="200x150" title1="Captura de Ctrl + Shift + s"
-    image2="resource:key-combinations-3.png" optionsthumb2="200x150" title2="Captura de Alt + Shift + t, ubica el foco en el campo de texto"
-    image3="resource:key-combinations-4.png" optionsthumb3="200x150" title3="Captura de Alt + Shift + b, ejecuta la acción clic del botón"
+    image1="image:key-combinations-2.png" optionsthumb1="200x150" title1="Captura de Ctrl + Shift + s"
+    image2="image:key-combinations-3.png" optionsthumb2="200x150" title2="Captura de Alt + Shift + t, ubica el foco en el campo de texto"
+    image3="image:key-combinations-4.png" optionsthumb3="200x150" title3="Captura de Alt + Shift + b, ejecuta la acción clic del botón"
     caption="Acciones con combinaciones de teclas" >}}
 
 {{< reference >}}

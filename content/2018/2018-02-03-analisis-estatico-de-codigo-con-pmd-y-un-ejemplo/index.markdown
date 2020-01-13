@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:pmd.png"
 tags: ["java", "planeta-codigo", "programacion"]
 ---
 
@@ -45,7 +46,7 @@ Para que en el informe aparezcan datos he cambiado la configuración de longitud
 
 {{< image
     gallery="true"
-    image1="resource:pmd-report.png" optionsthumb1="300x200" title1="Informe de PMD con violaciones a las reglas"
+    image1="image:pmd-report.png" optionsthumb1="300x200" title1="Informe de PMD con violaciones a las reglas"
     caption="Informe de PMD con violaciones a las reglas" >}}
 
 {{< sourcecode git="blog-ejemplos/tree/master/PlugInTapestry" command="./gradlew check" >}}

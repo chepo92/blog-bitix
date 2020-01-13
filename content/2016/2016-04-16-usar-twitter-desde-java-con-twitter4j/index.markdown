@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 ---
 
@@ -21,7 +22,7 @@ twitter4j nos ofrece una API Java para acceder a la API REST de Twitter de forma
 
 {{< image
     gallery="true"
-    image1="resource:twitter-apps.png" optionsthumb1="300x200" title1="Twitter Apps"
+    image1="image:twitter-apps.png" optionsthumb1="300x200" title1="Twitter Apps"
     caption="Twitter Apps" >}}
 
 Un a vez creada la aplicación y obtenidos los tokens en la sección _Keys and Access Tokens_ para que la aplicación tenga acceso a la cuenta podemos usar twitter4j. Para publicar un tweet usamos el siguiente código. Creamos el objeto de configuración [ConfigurationBuilder](http://twitter4j.org/javadoc/twitter4j/conf/ConfigurationBuilder.html) en el que establecemos los datos de acceso a la API para la aplicacion y la cuenta en la que se realizarán las publicaciones y posteriormente con [TwitterFactory](http://twitter4j.org/javadoc/twitter4j/TwitterFactory.html) obtenemos la clase [Twitter](http://twitter4j.org/javadoc/twitter4j/Twitter.html) con la que realizaremos las operaciones que deseemos.

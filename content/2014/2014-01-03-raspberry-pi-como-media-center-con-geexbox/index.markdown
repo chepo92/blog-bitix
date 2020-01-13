@@ -8,6 +8,7 @@ updated: 2018-02-08T16:30:00+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:geexbox.png"
 tags: ["hardware", "software", "software-libre"]
 ---
 
@@ -43,16 +44,16 @@ Este comando tardará un poco de tiempo dada la lentitud de las tarjetas SD. Una
 
 {{< image
     gallery="true"
-    image1="resource:geexbox-inicio.jpg" optionsthumb1="300x200"
-    image2="resource:geexbox-ajustes.jpg" optionsthumb2="300x200" >}}
+    image1="image:geexbox-inicio.jpg" optionsthumb1="300x200"
+    image2="image:geexbox-ajustes.jpg" optionsthumb2="300x200" >}}
 {{< image
     gallery="true"
-    image1="resource:geexbox-ajustes-video.jpg" optionsthumb1="300x200"
-    image2="resource:geexbox-apariencia-ajustes.jpg" optionsthumb2="300x200" >}}
+    image1="image:geexbox-ajustes-video.jpg" optionsthumb1="300x200"
+    image2="image:geexbox-apariencia-ajustes.jpg" optionsthumb2="300x200" >}}
 {{< image
     gallery="true"
-    image1="resource:geexbox-servicios.jpg" optionsthumb1="300x200"
-    image2="resource:geexbox-reproduccion.jpg" optionsthumb2="300x200" >}}
+    image1="image:geexbox-servicios.jpg" optionsthumb1="300x200"
+    image2="image:geexbox-reproduccion.jpg" optionsthumb2="300x200" >}}
 
 Como apunte a tener en cuenta es que para reproducir películas en formato imagen de DVD (iso) *intuyo* que se necesita adquirir la licencia MPEG-2 en la [tienda de la propia página de Raspberry Pi](http://www.raspberrypi.com/license-keys/). Para otros formatos como DivX (avi) o Matroska (mkv) no tendremos ningún problema en reproducir las películas y van totalmente fluídas. Otras opciones son bastante más potentes pero Pi ya tiene capacidad suficiente para reproducir películas a 1080p.
 

@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:flatpak.svg"
 tags: ["gnu-linux", "planeta-codigo", "software", "software-libre"]
 ---
 

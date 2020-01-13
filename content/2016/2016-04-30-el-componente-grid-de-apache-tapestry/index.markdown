@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:apache-tapestry-5.svg"
 tags: ["java", "planeta-codigo", "tapestry", "programacion"]
 summary: "En la mayoría de aplicaciones no solo es habitual sino algo muy usado el mostrar listados de elementos de forma tabular con paginación y columnas ordenables. En estos listados el complejo componente internamente _Grid_ de Apache Tapestry pero a la vez muy sencillo de usar puede marcar una diferencia significativa en el número de líneas de código necesarias a escribir, la flexibilidad, funcionalidad ofrecida, la productividad al hacer la implementación o modificarla comparándolo con lo necesario en otros _frameworks_ web en los que no hay nada comparable de serie."
 ---
@@ -27,7 +28,7 @@ Aunque el componente tiene un buen número de parámetros para personalizar seg�
 
 {{< image
     gallery="true"
-    image1="resource:grid.png" optionsthumb1="300x200" title1="Componente Grid de Tapestry"
+    image1="image:grid.png" optionsthumb1="300x200" title1="Componente Grid de Tapestry"
     caption="Componente Grid de Tapestry" >}}
 
 * _source_
@@ -55,7 +56,7 @@ Con el parámetro _empty_ definimos un componente [Block](http://tapestry.apache
 
 {{< image
     gallery="true"
-    image1="resource:grid-sin-elementos.png" optionsthumb1="300x200" title1="Mensaje de un Grid sin elementos"
+    image1="image:grid-sin-elementos.png" optionsthumb1="300x200" title1="Mensaje de un Grid sin elementos"
     caption="Mensaje de un Grid sin elementos" >}}
 
 * _empty_

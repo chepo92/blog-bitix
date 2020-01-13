@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:apache-tapestry-5.svg"
 tags: ["java", "planeta-codigo", "tapestry", "programacion"]
 ---
 
@@ -42,7 +43,7 @@ Buen regalo para acabar el año 2015, ¡feliz navidad!.
 
 {{< image
     gallery="false"
-    image1="resource:christmastux2015.jpg" optionsthumb1="600x450" title1="ChristmasTux 2015" >}}
+    image1="image:christmastux2015.jpg" optionsthumb1="600x450" title1="ChristmasTux 2015" >}}
 
 {{< plugintapestry >}}
 

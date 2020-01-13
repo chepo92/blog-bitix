@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:nginx.svg"
 tags: ["planeta-codigo", "software", "software-libre", "web"]
 summary: "Para escalar horizontalmente los servidores de aplicaciones, aumentar el rendimiento, disminuir la latencia, conseguir tolerancia a fallos y aumentar la disponibilidad podemos usar el servidor web Nginx como balanceador de carga entre varios servidores de aplicaciones. En este ejemplo muestro la configuración necesaria para añadir la funcionalidad de balanceador de carga a Nginx entre varios servidores de aplicaciones Tomcat usando además Docker."
 ---
@@ -53,11 +54,11 @@ Si queremos que el cliente conozca que servidor atendió la petición podemos a�
 
 {{< image
     gallery="true"
-    image1="resource:nginx-load-balancer-1.png" optionsthumb1="300x200" title1="Servidor balanceado 172.17.0.2:8080"
-    image2="resource:nginx-load-balancer-2.png" optionsthumb2="300x200" title2="Servidor balanceado 172.17.0.3:8080" >}}
+    image1="image:nginx-load-balancer-1.png" optionsthumb1="300x200" title1="Servidor balanceado 172.17.0.2:8080"
+    image2="image:nginx-load-balancer-2.png" optionsthumb2="300x200" title2="Servidor balanceado 172.17.0.3:8080" >}}
 {{< image
     gallery="true"
-    image1="resource:nginx-load-balancer-3.png" optionsthumb1="300x200" title1="Servidor balanceado 172.17.0.4:8080"
+    image1="image:nginx-load-balancer-3.png" optionsthumb1="300x200" title1="Servidor balanceado 172.17.0.4:8080"
     caption="Nginx balanceando la carga entre 3 servidores de aplicaciones Tomcat" >}}
 
 En el ejemplo de configuración usaré [Docker][docker] para crear un servidor web Nginx que haga de balanceador de carga entre tres servidores de aplicaciones Tomcat. Con Docker hacer esta prueba es mucho más sencilla que instalar tres Tomcats y un servidor Nginx a travbés de los paquetes del sistema o descargando binarios, puedes leer los [artículos de la serie Docker][blogbitix-serie-docker] que he escrito para conocer como usarlo y que ofrece esta útil herramienta. El archivo de _docker-compose.yml_ completo es el siguiente:

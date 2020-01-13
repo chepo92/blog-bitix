@@ -8,6 +8,7 @@ updated: 2015-06-06T11:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:apache-tapestry-5.svg"
 tags: ["java", "programacion", "tapestry", "planeta-codigo"]
 ---
 
@@ -21,7 +22,7 @@ En la mayoría de _frameworks_ de desarrollo de aplicaciones o páginas web para
 
 {{< image
     gallery="true"
-    image1="resource:modelo-push.png" optionsthumb1="300x200" title1="Modelo push" width1="650" >}}
+    image1="image:modelo-push.png" optionsthumb1="300x200" title1="Modelo push" width1="650" >}}
 
 Los pasos que se siguen en este modelo son:
 
@@ -38,7 +39,7 @@ Los pasos que se siguen en este modelo son:
 
 {{< image
     gallery="true"
-    image1="resource:modelo-pull.png" optionsthumb1="300x200" title1="Modelo pull" width1="650" >}}
+    image1="image:modelo-pull.png" optionsthumb1="300x200" title1="Modelo pull" width1="650" >}}
 
 Los pasos que se siguen en este modelo varían ligeramente del modelo push pero de forma importante, son:
 

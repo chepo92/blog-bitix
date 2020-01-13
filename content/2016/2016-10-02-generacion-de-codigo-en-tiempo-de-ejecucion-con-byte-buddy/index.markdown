@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:bytebuddy.png"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "El tipado seguro y el sistema de tipos es sin duda una de las características más importante del lenguaje de programación Java que han contribuido a su éxito. Cuando no conocemos los tipos en tiempo de compilación el sistema de tipos es una limitación donde los lenguajes dinámicos son capaces de resolver el problema sin necesidad de los tipos pero perdiendo la ayuda del compilador. Usando una librería de generación de código en tiempo de compilación o ejecución tenemos la posibilidad en Java de realizar algunas tareas que los lenguajes dinámicos permiten."
 ---

@@ -8,6 +8,7 @@ updated: 2015-11-10T19:00:00+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:java.svg"
 tags: ["programacion", "java", "planeta-codigo"]
 ---
 
@@ -42,7 +43,7 @@ Esta es la teoría, veamos el código del ejemplo de configuración en Java con 
 
 {{< image
     gallery="true"
-    image1="resource:main.png" optionsthumb1="300x200" title1="Salida programa Main.java" >}}
+    image1="image:main.png" optionsthumb1="300x200" title1="Salida programa Main.java" >}}
 
 Esta idea de no utilizar archivos de configuración sino emplear código como la mejor forma y más breve de definirla es algo que hace [gradle][gradle] con los archivos de configuración del proyecto y [apache tapestry][tapestry] para definir los módulos y la configuración del contenedor de inversión de control, parece una tendencia por el hecho de tener las propiedades y ventajas comentadas sobre otro tipo de archivos ya sean xml o sus sustitutos más recientes como yaml, json, ... que son más compactos y legibles que xml pero que siguen adoleciendo de algunos de los mismos defectos.
 

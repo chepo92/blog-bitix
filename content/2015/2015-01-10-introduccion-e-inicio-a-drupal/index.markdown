@@ -8,6 +8,7 @@ updated: 2015-11-10T19:00:00+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:drupal.svg"
 tags: ["gnu-linux", "planeta-codigo", "software", "software-libre"]
 ---
 
@@ -23,30 +24,30 @@ Drupal como decía está desarrollado sobre PHP pero solo necesitaremos conocer 
 
 {{< image
     gallery="true"
-    image1="resource:inicio.png" optionsthumb1="300x200" title1="Inicio Drupal"
-    image2="resource:inicio-administracion.png" optionsthumb2="300x200" title2="Inicio Drupal (Administración)" >}}
+    image1="image:inicio.png" optionsthumb1="300x200" title1="Inicio Drupal"
+    image2="image:inicio-administracion.png" optionsthumb2="300x200" title2="Inicio Drupal (Administración)" >}}
 
 Por defecto Drupal ofrece dos tipos de contenido páginas y artículos que poseen un título y un cuerpo aunque podemos crear nuevos tipos de contenido con información adicional como podría ser eventos que recojan además una fecha y hora de inicio, fecha y hora de fin, lugar, .... Podemos crear usuarios y roles y asignarles permisos como poder crear contenidos, crear menús con enlaces a ciertos contenidos que queramos destacar. Podemos usar taxonomía para categorizar el contenido y que este esté organizado y sea fácilmente encontrado por los usuarios. Asociar tipos de contenido con ciertos tipo de taxonomía. Modificar los bloques como menús, formulario de inicio de sesión, ... y hacer que solo se vean en ciertas páginas, para algunos tipos de contenidos, ciertos roles o usuarios. Hacer vistas o listas de los contenidos. Modificar la disposición o layout de las páginas por ejemplo para que tenga dos, tres columnas, una cabecera y un pie, .... Finalmente también podemos modificar y personalizar el aspecto del sitio web con temas que podemos descargar o desarrollar nosotros mismos.
 
 {{< image
     gallery="true"
-    image1="resource:crear-pagina.png" optionsthumb1="300x200" title1="Crear página"
-    image2="resource:crear-articulo.png" optionsthumb2="300x200" title2="Crear artículo" >}}
+    image1="image:crear-pagina.png" optionsthumb1="300x200" title1="Crear página"
+    image2="image:crear-articulo.png" optionsthumb2="300x200" title2="Crear artículo" >}}
 {{< image
     gallery="true"
-    image1="resource:tipos-contenido.png" optionsthumb1="300x200" title1="Tipos de contenido"
-    image2="resource:taxonomia.png" optionsthumb2="300x200" title2="Taxonomía" >}}
+    image1="image:tipos-contenido.png" optionsthumb1="300x200" title1="Tipos de contenido"
+    image2="image:taxonomia.png" optionsthumb2="300x200" title2="Taxonomía" >}}
 {{< image
     gallery="true"
-    image1="resource:taxonomia-etiquetas.png" optionsthumb1="300x200" title1="Etiquetas taxonomía"
-    image2="resource:bloques.png" optionsthumb2="300x200" title2="Bloques" >}}
+    image1="image:taxonomia-etiquetas.png" optionsthumb1="300x200" title1="Etiquetas taxonomía"
+    image2="image:bloques.png" optionsthumb2="300x200" title2="Bloques" >}}
 {{< image
     gallery="true"
-    image1="resource:personas.png" optionsthumb1="300x200" title1="Personas"
-    image2="resource:personas-permisos.png" optionsthumb2="300x200" title2="Permisos personas" >}}
+    image1="image:personas.png" optionsthumb1="300x200" title1="Personas"
+    image2="image:personas-permisos.png" optionsthumb2="300x200" title2="Permisos personas" >}}
 {{< image
     gallery="true"
-    image1="resource:personas-roles.png" optionsthumb1="300x200" title1="Roles personas" >}}
+    image1="image:personas-roles.png" optionsthumb1="300x200" title1="Roles personas" >}}
 
 Drupal es ampliamente [extensible mediante módulos](https://www.drupal.org/project/project_module) permitiendo agregarle funcionalidades de diferentes categorías (contenido, administración, integración con terceros, comercio electrónico, ...) si las incorporadas por defecto no nos son suficientes. Algunos de  los módulos más empleados son [Panels](https://www.drupal.org/project/panels) que permite definir contenedores (barra izquierda, región contenido, barra derecha, pie, cabecera, ...) en una página y asignar el contenido que queremos que aparezca en cada uno de ellos, [Content Construction Kit (CCK)](https://www.drupal.org/project/cck), [Views](https://www.drupal.org/project/views) para definir vistas de una colección de elementos, [Pathauto](https://www.drupal.org/project/pathauto) para hacer las URLs amigables al usuario y buscadores mejorando el SEO del sitio, [Webform](https://www.drupal.org/project/webform) para crear formularios y recoger información y otros muchos más para infinidad de cosas. Sin embargo, conviene usar los más populares que están ampliamente probados y hayan demostrado su utilidad, los que tenga buen soporte y un mantenimiento activo, estas cosas las podemos seleccionar con el filtro en el formulario de búsqueda de módulos.
 

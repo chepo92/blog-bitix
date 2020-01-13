@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Java ofrece un mecanismo incluido en el propio JDK para hacer las aplicaciones extensibles o ampliables en un momento posterior al de desarrollo. La clase _ServiceLoader_ permite obtener las implementaciones definidas en el _classpath_ de una determinada interfaz. En este artículo explico esta clase y muestro un ejemplo sencillo de como usarla."
 ---

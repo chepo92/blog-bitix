@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:apache.svg"
 tags: ["planeta-codigo", "web"]
 summary: "La tecnología avanza inexorablemente respondiendo a nuevas necesidades o mejor a las existentes. El protocolo HTTP se ha mantenido sin grandes cambios durante más de 15 años, sin embargo, para reducir las latencias en la carga de las páginas y ser más eficiente se ha desarrollado una nueva especificación que ya promete reducir estos problemas. HTTP/2 no es compatible hacia atrás pero se puede usar junto con HTTP 1.1 y los dispositivos que usen aprovecharse de sus ventajas. Los navegadores más populares ya lo han implementado y los servidores web o de aplicaciones ya ofrecen soporte para ser usado."
 ---

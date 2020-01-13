@@ -8,6 +8,7 @@ language: "es"
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:spring.svg"
 tags: ["java", "planeta-codigo", "programacion", "spring"]
 series: ["spring-cloud"]
 summary: "Tradicionalmente el conectar un servicio con sus servicios dependientes se ha realizado por configuración, normalmente mediante un nombre de dominio y su puerto. Esta configuración estática es suficiente para unos pocos servicios y que no varían durante su funcionamiento. Con el advenimiento de los microservicios con su estado y número cambiantes en el tiempo han surgido varias herramientas para en vez de usar configuración usar descubrimiento. Una de estas herramientas Consul para la que Spring Cloud proporciona integración."
@@ -30,7 +31,7 @@ Consul además de descubrimiento de servicios proporciona otras funcionalidades 
 
 {{< image
     gallery="false"
-    image1="resource:consul.png" optionsthumb1="300x250" title1="Consul" >}}
+    image1="image:consul.png" optionsthumb1="300x250" title1="Consul" >}}
 
 Instalar Consul es muy sencillo basta con [descargar un binario](https://www.consul.io/downloads.html) y descargar la interfaz web si queremos tener el _dashboard_ con la información del servicio. Descargados y descomprimidos Consul se inicia con el siguiente comando. Podemos acceder al panel _dashboard_ con la dirección _http\://localhost:8500_ con un navegador web. Inicialmente en el panel de servicios solo se encuentra el propio de Consul cuando aún no se ha registrado ningún servicio, aplicación o microservicio.
 
@@ -45,7 +46,7 @@ Spring Cloud proporciona además un servicio que podemos usar para conocer los s
 
 {{< image
     gallery="true"
-    image1="resource:consul-services.png" optionsthumb1="300x200" title1="Servicios registrados en Consul"
+    image1="image:consul-services.png" optionsthumb1="300x200" title1="Servicios registrados en Consul"
     caption="Servicios registrados en Consul" >}}
 
 Consul para conocer que los servicios siguen en funcionamiento hace una petición <abbr>HTTP</abbr> cada ciertos segundos a una ruta de la aplicación, Spring Boot proporciona una dependencia, _spring-boot-starter-actuator_, que usada provee del _endpoint /health_ para que Consul monitorice el estado del servicio.
@@ -54,7 +55,7 @@ Consul para conocer que los servicios siguen en funcionamiento hace una petició
 
 {{< image
     gallery="true"
-    image1="resource:service-health.png" optionsthumb1="300x200" title1="Endpoint de estado de servicio"
+    image1="image:service-health.png" optionsthumb1="300x200" title1="Endpoint de estado de servicio"
     caption="Endpoint de estado de servicio" >}}
 
 Esta es la salida en la consola listando los servicios disponibles, siendo uno de ellos esta aplicación.

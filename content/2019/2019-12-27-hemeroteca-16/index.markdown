@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:hugo.svg"
 tags: ["blog", "gnu-linux", "java", "planeta-codigo"]
 series: ["hemeroteca"]
 library: "true"
@@ -75,26 +76,26 @@ He escrito lo que en cada momento lo que me ha apetecido, lógicamente no desde�
 
 {{< image
     gallery="true"
-    image1="resource:analytics-2019.png" optionsthumb1="600x450" title1="Analytics 2019 de Blog Bitix"
-    image2="resource:gadsense-2019.png" optionsthumb2="600x450" title2="AdSense 2019 de Blog Bitix"
+    image1="image:analytics-2019.png" optionsthumb1="600x450" title1="Analytics 2019 de Blog Bitix"
+    image2="image:gadsense-2019.png" optionsthumb2="600x450" title2="AdSense 2019 de Blog Bitix"
     caption="Evolución visitas e ingresos en 2019" >}}
 
 En cuanto a ingresos algunos menos 410€ frente a 480€ del año anterior, aún así todos los meses de forma consistente los ingresos están alrededor de entre 20 y 30 euros que no está mal.
 
 {{< image
     gallery="true"
-    image1="resource:gadsense-ingresos-2019.png" optionsthumb1="300x200" title1="Ingresos 2018 de Blog Bitix"
-    image2="resource:gadsense-paginas-vistas-2019.png" optionsthumb2="300x200" title2="Páginas vistas 2018 de Blog Bitix"
-    image3="resource:gadsense-clics-2019.png" optionsthumb3="300x200" title3="Clics 2018 de Blog Bitix" >}}
+    image1="image:gadsense-ingresos-2019.png" optionsthumb1="300x200" title1="Ingresos 2018 de Blog Bitix"
+    image2="image:gadsense-paginas-vistas-2019.png" optionsthumb2="300x200" title2="Páginas vistas 2018 de Blog Bitix"
+    image3="image:gadsense-clics-2019.png" optionsthumb3="300x200" title3="Clics 2018 de Blog Bitix" >}}
 {{< image
     gallery="true"
-    image1="resource:gadsense-crt-2019.png" optionsthumb1="300x200" title1="CRT 2019 de Blog Bitix"
-    image2="resource:gadsense-cpc-2019.png" optionsthumb2="300x200" title2="CPC 2019 de Blog Bitix"
-    image3="resource:gadsense-rpm-2019.png" optionsthumb3="300x200" title3="RPM 2019 de Blog Bitix" >}}
+    image1="image:gadsense-crt-2019.png" optionsthumb1="300x200" title1="CRT 2019 de Blog Bitix"
+    image2="image:gadsense-cpc-2019.png" optionsthumb2="300x200" title2="CPC 2019 de Blog Bitix"
+    image3="image:gadsense-rpm-2019.png" optionsthumb3="300x200" title3="RPM 2019 de Blog Bitix" >}}
 {{< image
     gallery="true"
-    image1="resource:gadsense-tipos-de-puja-2019.png" optionsthumb1="300x200" title1="Tipos de puja 2019 de Blog Bitix"
-    image2="resource:gadsense-plataformas-2019.png" optionsthumb2="300x200" title2="Plataformas 2019 de Blog Bitix"
+    image1="image:gadsense-tipos-de-puja-2019.png" optionsthumb1="300x200" title1="Tipos de puja 2019 de Blog Bitix"
+    image2="image:gadsense-plataformas-2019.png" optionsthumb2="300x200" title2="Plataformas 2019 de Blog Bitix"
     caption="Métricas de AdSense" >}}
 
 En los ingresos por enlaces de afiliado de [Amazon][amazon] ha habido algunos meses especialmente notables y me sorprende que un solo blog como este le proporcione a Amazon facturar esa cantidad de dinero.
@@ -103,13 +104,13 @@ Aparte de la publicidad de AdSense la monetización por afiliación es una gran 
 
 {{< image
     gallery="true"
-    image1="resource:amazon-2019.png" optionsthumb1="600x450" title1="Facturación e ingresos Amazon" >}}
+    image1="image:amazon-2019.png" optionsthumb1="600x450" title1="Facturación e ingresos Amazon" >}}
 
 Esto es todo, ¡buen 2020!
 
 {{< image
     gallery="true"
-    image1="resource:christmas-tux-2019.jpg" optionsthumb1="600x450" title1="Christmas Tux 2019"
+    image1="image:christmas-tux-2019.jpg" optionsthumb1="600x450" title1="Christmas Tux 2019"
     caption="¡Buen 2020!" source="klowner.com" >}}
 
 {{% /post %}}

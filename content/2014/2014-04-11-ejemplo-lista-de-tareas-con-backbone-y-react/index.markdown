@@ -8,6 +8,7 @@ updated: 2015-10-01T20:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:backbone.svg"
 tags: ["software", "programacion", "javascript", "planeta-codigo"]
 summary: "He desarrollado este ejemplo de lista de tareas usando diferentes herramientas javascript primeramente con solo Backbone y después con Marionette. En este caso realizaré el mismo ejemplo para ver las diferencias usando la combinación Backbone para los modelos y React para las vistas junto con otras herramientas como ReactJS, Mustache, Jasmine, Grunt e i18n. Un ejemplo bastante completo de lo que ofrece javascript en estos momentos con la composición de herramientas que más me ha gustado."
 ---
@@ -32,7 +33,7 @@ El resultado es el siguiente:
 
 {{< image
     gallery="true"
-    image1="resource:backbone-react.png" optionsthumb1="300x200" >}}
+    image1="image:backbone-react.png" optionsthumb1="300x200" >}}
 
 Los elementos de las vistas se recomienda definirlas con los elementos que proporciona React con React.DOM, pueden definirse más al estilo de html con jsx pero esto hace que el javascript haya de compilarse para transformar ese jsx/html a los elementos React.DOM, el mayor problema es que esto es un proceso costoso lo que puede ralentizar la carga de una página y que el compilador tiene un tamaño considerable de unos 300 KiB. El JSX es más claro y parecido al resultado final que el código equivalente React.DOM pero aún así el código javascript es suficientemente claro. Si aún así quisiésemos usar JSX lo recomendable sería que los archivos con contenido jsx se precompilase en un momento anterior de enviarlo al cliente, posiblemente antes del despliegue de la aplicación en el servidor.
 

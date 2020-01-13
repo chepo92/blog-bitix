@@ -9,6 +9,7 @@ language: "es"
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:hugo.svg"
 tags: ["planeta-codigo", "software-libre"]
 series: ["donacion"]
 ---
@@ -49,15 +50,15 @@ El tercer proyecto al que he donado ha sido a Arch Linux ARM ya que lo uso en la
 
 {{< image
     gallery="true"
-    image1="resource:donacion-elementary.png" optionsthumb1="300x200" title1="Donación Elementary OS"
+    image1="image:donacion-elementary.png" optionsthumb1="300x200" title1="Donación Elementary OS"
     caption="Donación Elementary OS" >}}
 {{< image
     gallery="true"
-    image1="resource:donacion-thedocumentfoundation.png" optionsthumb1="300x200" title1="Donación The Document Foundation"
+    image1="image:donacion-thedocumentfoundation.png" optionsthumb1="300x200" title1="Donación The Document Foundation"
     caption="Donación The Document Foundation" >}}
 {{< image
     gallery="true"
-    image1="resource:donacion-archlinuxarm.png" optionsthumb1="300x200" title1="Donación Arch Linux ARM"
+    image1="image:donacion-archlinuxarm.png" optionsthumb1="300x200" title1="Donación Arch Linux ARM"
     caption="Donación Arch Linux ARM" >}}
 
 Otros proyectos que me planteo hacer una donación en el futuro son a algún proyecto relacionado con las [distribuciones BSD](https://es.wikipedia.org/wiki/Berkeley_Software_Distribution), [GNOME][gnome] o el [reproductor multimedia VLC][vlc]. Desde luego no es mucho ni todo lo que recibo como ingresos por la publicidad, sin embargo, espero que ayude a que estos grandes proyectos de software libre sigan mejorando y yo como usuario junto con otros muchos de algunos de ellos disfrutándolos en la totalidad de ellos sin coste alguno en licencias de software.

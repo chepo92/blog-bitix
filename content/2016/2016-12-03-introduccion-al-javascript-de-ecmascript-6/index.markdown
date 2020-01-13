@@ -10,6 +10,7 @@ language: "es"
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:javascript.svg"
 tags: ["javascript", "planeta-codigo", "programacion"]
 summary: "Con ECMAScript 6 se han incorporado al lenguaje varias novedades como nuevas palabras reservadas para definir variables y constantes, símbolos, interpolación de variables en cadenas, desestructuración, forma abreviada para declarar funciones, nueva sintaxis más sencilla para definir clases, objetos de tipo _Map_ y _Set_, _Promises_ como alternativa a _callbacks_, el protocolo _Iterator_ y generadores, además de algunas otras cosas que si como yo no habías dedicado tiempo a aprender mejor JavaScript aún te resulten novedosas."
 ---

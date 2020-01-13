@@ -8,6 +8,7 @@ updated: 2015-11-10T19:00:00+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:jmonkeyengine.png"
 tags: ["java", "programacion", "planeta-codigo"]
 ---
 
@@ -58,40 +59,40 @@ Algunas capturas de imagen de estos juegos, en los enlaces anteriores se pueden 
 
 {{< image
     gallery="true"
-    image1="resource:4089.jpg" optionsthumb1="300x200" title1="4089: Ghost Within"
-    image2="resource:rising-world.jpg" optionsthumb2="300x200" title2="Rising World" >}}
+    image1="image:4089.jpg" optionsthumb1="300x200" title1="4089: Ghost Within"
+    image2="image:rising-world.jpg" optionsthumb2="300x200" title2="Rising World" >}}
 {{< image
     gallery="true"
-    image1="resource:seizon.jpg" optionsthumb1="300x200" title1="Seizon"
-    image2="resource:copod.png" optionsthumb2="300x200" title2="Copod" >}}
+    image1="image:seizon.jpg" optionsthumb1="300x200" title1="Seizon"
+    image2="image:copod.png" optionsthumb2="300x200" title2="Copod" >}}
 {{< image
     gallery="true"
-    image1="resource:drohtin-tales-of-old-kingdom.png" optionsthumb1="300x200" title1="Drohtin – Tales of an Old Kingdom"
-    image2="resource:chaos_in-the-darkness.jpg" optionsthumb2="300x200" title2="CHAOS: In the Darkness" >}}
+    image1="image:drohtin-tales-of-old-kingdom.png" optionsthumb1="300x200" title1="Drohtin – Tales of an Old Kingdom"
+    image2="image:chaos_in-the-darkness.jpg" optionsthumb2="300x200" title2="CHAOS: In the Darkness" >}}
 {{< image
     gallery="true"
-    image1="resource:just-tactics.jpg" optionsthumb1="300x200" title1="Just Tactics"
-    image2="resource:spermination.png" optionsthumb2="300x200" title2="Spermination" >}}
+    image1="image:just-tactics.jpg" optionsthumb1="300x200" title1="Just Tactics"
+    image2="image:spermination.png" optionsthumb2="300x200" title2="Spermination" >}}
 {{< image
     gallery="true"
-    image1="resource:makers-tale.jpg" optionsthumb1="300x200" title1="Maker’s Tale"
-    image2="resource:piratehell.jpg" optionsthumb2="300x200" title2="PirateHell" >}}
+    image1="image:makers-tale.jpg" optionsthumb1="300x200" title1="Maker’s Tale"
+    image2="image:piratehell.jpg" optionsthumb2="300x200" title2="PirateHell" >}}
 {{< image
     gallery="true"
-    image1="resource:hostile-sector.jpg" optionsthumb1="300x200" title1="Hostile Sector"
-    image2="resource:3079.png" optionsthumb2="300x200" title2="3079" >}}
+    image1="image:hostile-sector.jpg" optionsthumb1="300x200" title1="Hostile Sector"
+    image2="image:3079.png" optionsthumb2="300x200" title2="3079" >}}
 {{< image
     gallery="true"
-    image1="resource:urban-galaxy.jpg" optionsthumb1="300x200" title1="Urban Galaxy"
-    image2="resource:grapplinghook.jpg" optionsthumb2="300x200" title2="Grappling Hook" >}}
+    image1="image:urban-galaxy.jpg" optionsthumb1="300x200" title1="Urban Galaxy"
+    image2="image:grapplinghook.jpg" optionsthumb2="300x200" title2="Grappling Hook" >}}
 {{< image
     gallery="true"
-    image1="resource:mad-skills-motocross.jpg" optionsthumb1="300x200" title1="Mad Skills Motocross"
-    image2="resource:pets-vs-monsters.jpg" optionsthumb2="300x200" title2="Pets vs Monsters" >}}
+    image1="image:mad-skills-motocross.jpg" optionsthumb1="300x200" title1="Mad Skills Motocross"
+    image2="image:pets-vs-monsters.jpg" optionsthumb2="300x200" title2="Pets vs Monsters" >}}
 {{< image
     gallery="true"
-    image1="resource:bang-howdy.jpg" optionsthumb1="300x200" title1="Bang! Howdy"
-    image2="resource:imperii.jpg" optionsthumb2="300x200" title2="Imperii" >}}
+    image1="image:bang-howdy.jpg" optionsthumb1="300x200" title1="Bang! Howdy"
+    image2="image:imperii.jpg" optionsthumb2="300x200" title2="Imperii" >}}
 
 Todos estos juegos están programados utilizando el lenguaje de programación Java y la librería [jMonkeyEngine][jmonkeyengine] que facilita las tareas de programación de videojuegos proporcionando programación gráfica en 3D usando [OpenGL][opengl], manejo de eventos de entrada como teclado o ratón, manejo de sonido, pantallas de menús o red. Usando jMonkeyEngine se pueden hacer cosas muy interesantes como se ve en los ejemplos. En el siguiente enlace se pueden encontrar el [código fuente de varios ejemplos](https://github.com/jMonkeyEngine/BookSamples/tree/master/src) que podemos probar.
 
@@ -104,12 +105,12 @@ Se pueden crear objetos con texturas transparentes, efectos de luz, _ray casting
 
 {{< image
     gallery="true"
-    image1="resource:cubo.png" optionsthumb1="300x200" title1="¡Hola mundo!"
-    image2="resource:cubos.png" optionsthumb2="300x200" title2="Texturas y materiales" >}}
+    image1="image:cubo.png" optionsthumb1="300x200" title1="¡Hola mundo!"
+    image2="image:cubos.png" optionsthumb2="300x200" title2="Texturas y materiales" >}}
 {{< image
     gallery="true"
-    image1="resource:particulas-fuego.png" optionsthumb1="300x200" title1="Sistemas de partículas, fuego"
-    image2="resource:agua.png" optionsthumb2="300x200" title2="Agua" >}}
+    image1="image:particulas-fuego.png" optionsthumb1="300x200" title1="Sistemas de partículas, fuego"
+    image2="image:agua.png" optionsthumb2="300x200" title2="Agua" >}}
 
 Un videojuego se compone de múltiples recursos como imágenes, modelos 3D, música, _sprites_, texturas, fuentes de texto, sonidos, iconos... en la página [Open Game Art](http://opengameart.org) podemos encontrar todo este tipo de material sin necesidad de tener que crearlo desde la nada.
 

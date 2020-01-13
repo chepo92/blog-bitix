@@ -7,6 +7,7 @@ date: 2015-01-16T13:03:52+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 ---
 
@@ -35,7 +36,7 @@ El resultado aplicando está solución puede verse en el [feed de la portada de 
 
 {{< image
     gallery="true"
-    image1="resource:blogstack.png" optionsthumb1="300x200" title1="Portada Blog Stack" >}}
+    image1="image:blogstack.png" optionsthumb1="300x200" title1="Portada Blog Stack" >}}
 
 El código fuente de Blog Stack está disponible en un [repositorio de GitHub](https://github.com/picodotdev/blog-stack/tree/master) donde puede verse el código completo.
 

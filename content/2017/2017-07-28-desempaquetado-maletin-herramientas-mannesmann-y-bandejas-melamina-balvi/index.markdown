@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "image:maletin-herramientas-mannesmann-01.jpg"
 tags: []
 series: ["desempaquetado-otros"]
 ---
@@ -24,41 +25,41 @@ Este maletín no son herramientas para un profesional por su calidad pero cumple
 
 {{< image
     gallery="true"
-    image1="resource:maletin-herramientas-mannesmann-01.jpg" optionsthumb1="300x200" title1="Maletín herramientas Mannesmann"
-    image2="resource:maletin-herramientas-mannesmann-02.jpg" optionsthumb2="300x200" title2="Maletín herramientas Mannesmann"
-    image3="resource:maletin-herramientas-mannesmann-03.jpg" optionsthumb3="300x200" title3="Maletin herramientas Mannesmann" >}}
+    image1="image:maletin-herramientas-mannesmann-01.jpg" optionsthumb1="300x200" title1="Maletín herramientas Mannesmann"
+    image2="image:maletin-herramientas-mannesmann-02.jpg" optionsthumb2="300x200" title2="Maletín herramientas Mannesmann"
+    image3="image:maletin-herramientas-mannesmann-03.jpg" optionsthumb3="300x200" title3="Maletin herramientas Mannesmann" >}}
 {{< image
     gallery="true"
-    image1="resource:maletin-herramientas-mannesmann-04.jpg" optionsthumb1="300x200" title1="Maletín herramientas Mannesmann"
+    image1="image:maletin-herramientas-mannesmann-04.jpg" optionsthumb1="300x200" title1="Maletín herramientas Mannesmann"
     caption="Maletín herramientas Mannesmann M29085" >}}
 
 El interior del maletín está organizado y todos los elementos permanecen sujetados aunque el maletín se mueva. En las cajas es habitual dar vueltas a los elementos que contiene hasta dar con el que buscamos, en este maletín todos los elementos están fácilmente accesibles y es fácil saber si falta alguno por el hueco que deja.
 
 {{< image
     gallery="true"
-    image1="resource:maletin-herramientas-mannesmann-05.jpg" optionsthumb1="300x200" title1="Juego de herramientas Mannesmann" >}}
+    image1="image:maletin-herramientas-mannesmann-05.jpg" optionsthumb1="300x200" title1="Juego de herramientas Mannesmann" >}}
 {{< image
     gallery="true"
-    image1="resource:maletin-herramientas-mannesmann-06.jpg" optionsthumb1="300x200" title1="Juego de herramientas Mannesmann"
-    image2="resource:maletin-herramientas-mannesmann-07.jpg" optionsthumb2="300x200" title2="Juego de herramientas Mannesmann"
-    image3="resource:maletin-herramientas-mannesmann-08.jpg" optionsthumb3="300x200" title3="Juego de herramientas Mannesmann"
+    image1="image:maletin-herramientas-mannesmann-06.jpg" optionsthumb1="300x200" title1="Juego de herramientas Mannesmann"
+    image2="image:maletin-herramientas-mannesmann-07.jpg" optionsthumb2="300x200" title2="Juego de herramientas Mannesmann"
+    image3="image:maletin-herramientas-mannesmann-08.jpg" optionsthumb3="300x200" title3="Juego de herramientas Mannesmann"
     caption="Juego de  herramientas Mannesmann M29085" >}}
 
 Las puntas para atornillar se usan con un adaptador y las llaves de vaso se pueden colocar en la llave de carraca y en el elemento similar a un destornillador denominado _coupler_.
 
 {{< image
     gallery="true"
-    image1="resource:maletin-herramientas-mannesmann-09.jpg" optionsthumb1="300x200" title1="Aclopador y puntas para el acoplador"
-    image2="resource:maletin-herramientas-mannesmann-10.jpg" optionsthumb2="300x200" title2="Aclopador y puntas para el acoplador"
-    image3="resource:maletin-herramientas-mannesmann-11.jpg" optionsthumb3="300x200" title3="Aclopador y puntas para el acoplador" >}}
+    image1="image:maletin-herramientas-mannesmann-09.jpg" optionsthumb1="300x200" title1="Aclopador y puntas para el acoplador"
+    image2="image:maletin-herramientas-mannesmann-10.jpg" optionsthumb2="300x200" title2="Aclopador y puntas para el acoplador"
+    image3="image:maletin-herramientas-mannesmann-11.jpg" optionsthumb3="300x200" title3="Aclopador y puntas para el acoplador" >}}
 {{< image
     gallery="true"
-    image1="resource:maletin-herramientas-mannesmann-12.jpg" optionsthumb1="300x200" title1="Nivel y metro"
-    image2="resource:maletin-herramientas-mannesmann-13.jpg" optionsthumb2="300x200" title2="Nivel y metro" >}}
+    image1="image:maletin-herramientas-mannesmann-12.jpg" optionsthumb1="300x200" title1="Nivel y metro"
+    image2="image:maletin-herramientas-mannesmann-13.jpg" optionsthumb2="300x200" title2="Nivel y metro" >}}
 {{< image
     gallery="true"
-    image1="resource:maletin-herramientas-mannesmann-14.jpg" optionsthumb1="300x200" title1="Llave de carraca"
-    image2="resource:maletin-herramientas-mannesmann-15.jpg" optionsthumb2="300x200" title2="Llave de carraca, acoplador y punta destornillador"
+    image1="image:maletin-herramientas-mannesmann-14.jpg" optionsthumb1="300x200" title1="Llave de carraca"
+    image2="image:maletin-herramientas-mannesmann-15.jpg" optionsthumb2="300x200" title2="Llave de carraca, acoplador y punta destornillador"
     caption="Acoplador, puntas para el acoplador, nivel, metro y llave de carraca" >}}
 
 {{< amazon
@@ -71,9 +72,9 @@ También necesitaba unas bandejas para llevar platos, cubiertos, vaso, pan o el 
 
 {{< image
     gallery="true"
-    image1="resource:bandeja-balvi-01.jpg" optionsthumb1="300x200" title1="Bandeja Balvi modelo sandwiches"
-    image2="resource:bandeja-balvi-02.jpg" optionsthumb2="300x200" title2="Bandeja Balvi modelo hamburgers"
-    image3="resource:bandeja-balvi-03.jpg" optionsthumb3="300x200" title3="Parte trasera Balvi"
+    image1="image:bandeja-balvi-01.jpg" optionsthumb1="300x200" title1="Bandeja Balvi modelo sandwiches"
+    image2="image:bandeja-balvi-02.jpg" optionsthumb2="300x200" title2="Bandeja Balvi modelo hamburgers"
+    image3="image:bandeja-balvi-03.jpg" optionsthumb3="300x200" title3="Parte trasera Balvi"
     caption="Bandejas melamina Balvi" >}}
 
 En algún comentario de Amazon un usuario le ponía a estas bandejas una sola estrella porque decía que las cosas resbalaban, la superficie es muy pulida y no tiene rugosidades pero de ahí que las cosas resbalen creo que no salvo que en algún momento no mantengas la horizontalidad de la bandeja al transportar las cosas.

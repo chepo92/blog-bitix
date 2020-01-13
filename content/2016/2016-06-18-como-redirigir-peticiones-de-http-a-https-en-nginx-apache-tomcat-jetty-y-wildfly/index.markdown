@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:nginx.svg"
 tags: ["planeta-codigo", "seguridad", "software", "software-libre", "web"]
 summary: "Usar el protocolo seguro HTTPS proporciona confidencialidad en la comunicación entre el navegador del usuario y el servidor, es una forma de mejorar la seguridad y privacidad. Por ello el buscador de Google lo tiene en cuenta como un parámetro que afecta al SEO siendo mejor usar el protocolo seguro. Sin embargo, el usuario puede estar accediendo por el protocolo no seguro a la página web al poner la dirección en la barra de direcciones o hay enlaces hacia nuestro sitio en otros que hacen uso del protocolo HTTP. Si queremos que nuestro sitio sea accedido únicamente usando el protocolo seguro deberemos hacer una redirección en el servidor."
 ---
@@ -32,7 +33,7 @@ En la sección del servidor que escucha en el puerto HTTP (80) realizamos la red
 
 {{< image
     gallery="true"
-    image1="resource:nginx-https.png" optionsthumb1="300x200" title1="Redirección de HTTP a HTTPS en Nginx"
+    image1="image:nginx-https.png" optionsthumb1="300x200" title1="Redirección de HTTP a HTTPS en Nginx"
     caption="Redirección de HTTP a HTTPS en Nginx" >}}
 
 ### Apache HTTPD
@@ -43,7 +44,7 @@ La configuración para Apache HTTPD es similar simplemente cambian las directiva
 
 {{< image
     gallery="true"
-    image1="resource:apache-httpd-https.png" optionsthumb1="300x200" title1="Redirección de HTTP a HTTPS en Apache HTTPD"
+    image1="image:apache-httpd-https.png" optionsthumb1="300x200" title1="Redirección de HTTP a HTTPS en Apache HTTPD"
     caption="Redirección de HTTP a HTTPS en Apache HTTPD" >}}
 
 ### Tomcat, Jetty y WildFly

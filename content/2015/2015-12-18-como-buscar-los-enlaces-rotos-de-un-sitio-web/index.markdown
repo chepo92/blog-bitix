@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:html.svg"
 tags: ["planeta-codigo"]
 summary: "Ya tengamos un sitio web, una bitácora, o una aplicación web es recomendable comprobar cada cierto tiempo los enlaces rotos. Las páginas pueden desaparecer o cambiar de dirección y esto provocará páginas no encontradas en los enlaces que las referenciasen. Usando herramientas que automaticen la tarea podemos encontrar enlaces rotos de forma efectiva y rápida."
 ---
@@ -30,7 +31,7 @@ Después de introducir la dirección del sitio web, que con estas herramientas h
 
 {{< image
     gallery="true"
-    image1="resource:w3c-linkchecker.png" optionsthumb1="300x200" title1="W3C Link Checker"
+    image1="image:w3c-linkchecker.png" optionsthumb1="300x200" title1="W3C Link Checker"
     caption="W3C Link Checker" >}}
 
 Si el sitio web no está accesible en internet o queremos encontrar enlaces rotos en el momento de desarrollo podemos usar el comando <code>wget</code> para que nos rastree los enlaces, cada petición que devuelva un código 404 será un enlace roto. En el archivo _wget.log_ tendremos los resultados del rastreo.
@@ -39,7 +40,7 @@ Si el sitio web no está accesible en internet o queremos encontrar enlaces roto
 
 {{< image
     gallery="true"
-    image1="resource:wget.png" optionsthumb1="300x200" title1="Comprobación de enlaces con wget"
+    image1="image:wget.png" optionsthumb1="300x200" title1="Comprobación de enlaces con wget"
     caption="Comprobación de enlaces con wget" >}}
 
 Lo anterior nos sirve para detectar los enlaces rotos que tenemos en nuestro sitio hacia otros, seguramente también nos interesará conocer los enlaces rotos que tienen otros sitios hacia el nuestro. Podemos saber a que páginas no encontradas están accediendo los usuarios de nuestro sitio web lanzando un evento personalizado de [Google Analytics][google-analytics] en la página para el error 404 que mostremos. Dado que los enlaces hacia nuestro sitio incluidos en otros no podemos modificarlos si se tratase de alguno especialmente importante al menos podremos hacer una redirección para que los usuarios lleguen al contenido más apropiado en vez de a una página no encontrada:

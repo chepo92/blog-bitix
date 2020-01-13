@@ -8,6 +8,7 @@ updated: 2015-05-27T23:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:apache-tapestry-5.svg"
 tags: ["java", "programacion", "tapestry", "planeta-codigo"]
 ---
 
@@ -21,7 +22,7 @@ La página [T5Dashboard](http://tapestry.apache.org/5.4/apidocs/org/apache/tapes
 
 {{< image
     gallery="true"
-    image1="resource:tapestry-dashboard-1.png" optionsthumb1="300x200" title1="Estado de la aplicación Tapestry" >}}
+    image1="image:tapestry-dashboard-1.png" optionsthumb1="300x200" title1="Estado de la aplicación Tapestry" >}}
 
 Como se ve en la imagen podemos ver las páginas disponibles, cargadas, cuanto tiempo llevó construirlas, que complejidad y por cuantos componentes están formadas. Y algo que nos resultará muy útil es provocar la acción de cargar todas las páginas quizá después de hacer un despliegue para evitar tiempos de inicialización en las primeras peticiones pero tan o más importante nos permitirá descubrir errores en los archivos tml de los componentes ¿cuantas veces te ha ocurrido que en un php, jsp, gsp, ... hasta que no se usa esa plantilla no descubres un error digamos "de compilación" (variable con nombre que no existe, atributo mal entrecomillado, ...) ? Seguramente como a mi, muchas. Los archivos de plantilla tml son xml válido con lo que si no están bien formados se nos notificará del error, nuevamente ¿te ha ocurrido alguna vez tener un php, jsp o gsp que no genera html bien balanceado? Pero también si se está usando un componente que no existe, varios componentes con el mismo nombre, ... . Aunque parezca que no estos tipos de errores se pueden producir con relativa facilidad tanto en desarrollo y con mayor peligro si tenemos un flujo de trabajo con varias ramas donde vamos mergeando los cambios de trunk a la rama que se despliega en producción y nos ocurren conflictos en los merges que tenemos que resolver manualmente con la posibilidad de cometer un error.
 
@@ -34,13 +35,13 @@ En otra sección también podemos ver el estado de los servicios que puede ser:
 
 {{< image
     gallery="true"
-    image1="resource:tapestry-dashboard-2.png" optionsthumb1="300x200" >}}
+    image1="image:tapestry-dashboard-2.png" optionsthumb1="300x200" >}}
 
 Finalmente, en la sección HibernateStatistics podemos obtener un montón de datos que nos pueden servir para detectar situaciones anómalas en la aplicación como un gran número de sql que se lanzan en una página como podría ser en un problema de carga N+1 en una relación entre dos entidades, el estado de la cache de segundo nivel que nos permitirá optimizar las caches, la cache de queries, número de transacciones realizadas y otra gran cantidad de información.
 
 {{< image
     gallery="true"
-    image1="resource:tapestry-dashboard-3.png" optionsthumb1="300x200" title1="Estadísticas de Hibernate en Tapestry" >}}
+    image1="image:tapestry-dashboard-3.png" optionsthumb1="300x200" title1="Estadísticas de Hibernate en Tapestry" >}}
 
 Para que hibernate genere estadísticas es necesario indica en el archivo hibernate.cfg.xml la propiedad hibernate.generate_statistics:
 

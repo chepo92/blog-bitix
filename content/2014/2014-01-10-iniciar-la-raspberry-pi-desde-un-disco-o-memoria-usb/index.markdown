@@ -8,6 +8,7 @@ updated: 2016-09-23T18:30:00+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:raspberrypi.svg"
 tags: ["hardware", "software-libre"]
 summary: "La Raspberry Pi utiliza para arrancar una tarjeta SD en todo caso, sin embargo, dada la lentitud de lectura y escritura de esta es recomendable instalar el sistema en una memoria USB o disco duro externo. No es muy complicado y el aumento de rendimiento es notable."
 ---
@@ -24,7 +25,7 @@ Teniendo instalado en la tarjeta SD tanto la partición de arranque como la part
 
 {{< image
     gallery="true"
-    image1="resource:lsbk.png" optionsthumb1="300x200" >}}
+    image1="image:lsbk.png" optionsthumb1="300x200" >}}
 
 {{< code file="leer-particion.sh" language="bash" options="" >}}
 
@@ -36,7 +37,7 @@ Una vez escrita la imagen muy probablemente deberemos redimensionar la partició
 
 {{< image
     gallery="true"
-    image1="resource:gparted.png" optionsthumb1="300x200" title1="Redimiensionado de patición con GParted" >}}
+    image1="image:gparted.png" optionsthumb1="300x200" title1="Redimiensionado de patición con GParted" >}}
 
 El paso final que deberemos hacer es cambiar en la partición de arranque que sigue estando en la tarjeta SD un archivo para indicar que la partición del sistema ahora está en un dispositivo USB. Probablemente la partición del sistema que deberemos indicar sea /dev/sda1, con este valor modificamos el archivo cmdline.txt y lo asignamos al parámetro root, deberemos tener algo como como lo siguiente:
 

@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion", "software", "spring"]
 series: ["spring-cloud"]
 ---
@@ -36,7 +37,7 @@ Con estas métricas recolectadas por Prometheus se pueden visualizar en gráfica
 
 {{< image
     gallery="true"
-    image1="resource:grafana-hystrix-dashboard.png" optionsthumb1="600x450" title1="Panel de Grafana pàra métricas de Hystrix"
+    image1="image:grafana-hystrix-dashboard.png" optionsthumb1="600x450" title1="Panel de Grafana pàra métricas de Hystrix"
     caption="Panel de Grafana para métricas de Hystrix" >}}
 
 Exponer las métricas en una aplicación de Spring Boot para Prometheus es muy sencillo y con Grafana se puede observar el estado del sistema de forma tan detallada como lo sean las métricas expuestas por la aplicación. Por defecto Spring Boot ya expone una buena cantidad de métricas del estado del servicio como uso de CPU, memoria, hilos o recolector de basura.

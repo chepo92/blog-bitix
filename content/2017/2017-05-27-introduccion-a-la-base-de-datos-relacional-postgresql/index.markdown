@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:postgresql.svg"
 tags: ["gnu-linux", "planeta-codigo", "programacion"]
 summary: "De todas las funcionalidades que tiene SQL muchos desarrolladores solo usamos un pequeño conjunto de las posibilidades del lenguaje. Algunas bases de datos no implementan muchas posibilidades del lenguaje SQL y no son usables en esos sistemas, PostgreSQL es una de las bases de datos relacionales que mejor soporta el estándar ANSI-SQL. Conociendo sus posibilidades podremos implementar funcionalidades de forma más sencilla o con mejor rendimiento."
 ---

@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Con la clase _Optional_ añadida en el JDK en la versión 8 del lenguaje Java se puede evitar una de las excepciones más comunes que se produce cuando se hace uso de una referencia nula a un objeto."
 ---

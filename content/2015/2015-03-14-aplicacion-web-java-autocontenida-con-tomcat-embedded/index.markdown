@@ -8,6 +8,7 @@ updated: 2015-11-10T19:00:00+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 ---
 
@@ -35,11 +36,11 @@ Generamos el war de la aplicación que queremos desplegar embebida, e iniciamos 
 
 {{< image
     gallery="true"
-    image1="resource:tomcat-embedded-comando.png" optionsthumb1="300x200" title1="Iniciando TomcatEmbedded"
-    image2="resource:tomcat-embedded-app.png" optionsthumb2="300x200" title2="TomcatEmbedded iniciado" >}}
+    image1="image:tomcat-embedded-comando.png" optionsthumb1="300x200" title1="Iniciando TomcatEmbedded"
+    image2="image:tomcat-embedded-app.png" optionsthumb2="300x200" title2="TomcatEmbedded iniciado" >}}
 {{< image
     gallery="true"
-    image1="resource:app.png" optionsthumb1="300x200" title1="Aplicación web en TomcatEmbedded" >}}
+    image1="image:app.png" optionsthumb1="300x200" title1="Aplicación web en TomcatEmbedded" >}}
 
 La tendencia actual es que las aplicaciones evolucionen hacia microservicios por varias características deseables que ofrecen como al ser más pequeñas las funcionalidades sean más manejables, sean reemplazables, posibilidad de usar la tecnología más adecuada según el servicio desde lenguaje de programación al sistema de persistencia (relacional o noSQL), facilidad de despliegue, .... Si te interesan los microservicios un libro muy interesante y recomendable es [Building Microservices](https://amzn.to/2MTStSv). Proporciona una visión detallada de los diferentes aspectos que deben tratar las aplicaciones construidas según esta arquitectura.
 

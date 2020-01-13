@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:graphql.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 series: ["graphql"]
 ---
@@ -31,8 +32,8 @@ Si se desea recuperar solo el _id_ y _title_ sin el _date_ la consulta debe ser 
 
 {{< image
     gallery="true"
-    image1="resource:image-1.png" optionsthumb1="300x200" title1="Consulta id, title y date"
-    image2="resource:image-2.png" optionsthumb2="300x200" title2="Consulta id y title"
+    image1="image:image-1.png" optionsthumb1="300x200" title1="Consulta id, title y date"
+    image2="image:image-2.png" optionsthumb2="300x200" title2="Consulta id y title"
     caption="Consultas diferentes que devuelven diferentes datos" >}}
 
 Esto obliga en principio a tener dos consultas diferentes según los datos recuperar. En principio, ya que las [directivas _skip_ e _include_](https://graphql.org/learn/queries/#directives) definidas en la especificación de GraphQL permiten tener la misma consulta y parametrizar si un determinado dato ha de incluirse o no en el resultado.
@@ -49,8 +50,8 @@ Utilizando [el editor GraphiQL][blogbitix-340] para construir y ejecutar consult
 
 {{< image
     gallery="true"
-    image1="resource:image-3.png" optionsthumb1="300x200" title1="Consulta con directiva include"
-    image2="resource:image-4.png" optionsthumb2="300x200" title2="Consulta con directiva include"
+    image1="image:image-3.png" optionsthumb1="300x200" title1="Consulta con directiva include"
+    image2="image:image-4.png" optionsthumb2="300x200" title2="Consulta con directiva include"
     caption="Misma consulta con directiva include que devuelve diferentes datos" >}}
 
 Con un comando _curl_ se realizan las mismas consultas.

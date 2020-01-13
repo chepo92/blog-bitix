@@ -12,6 +12,7 @@ sharing: true
 comments: true
 promoted: false
 imageHead: "images/battle-net-3.jpg"
+imagePost: "logotype:wine.svg"
 tags: ["gnu-linux", "juegos", "software", "software-libre", "windows"]
 series: ["juegos"]
 ---
@@ -55,15 +56,15 @@ Una vez instalados los paquetes necesarios y realizada la configuración se pued
 
 {{< image
     gallery="true"
-    image1="resource:battle-net-1.png" optionsthumb1="200x150" title1="Cliente de Battle.net"
-    image2="resource:battle-net-2.png" optionsthumb2="200x150" title2="Cliente de Battle.net"
-    image3="resource:battle-net-3.jpg" optionsthumb3="200x150" title3="Cliente de Battle.net"
+    image1="image:battle-net-1.png" optionsthumb1="200x150" title1="Cliente de Battle.net"
+    image2="image:battle-net-2.png" optionsthumb2="200x150" title2="Cliente de Battle.net"
+    image3="image:battle-net-3.jpg" optionsthumb3="200x150" title3="Cliente de Battle.net"
     caption="Cliente de Battle.net" >}}
 {{< image
     gallery="true"
-    image1="resource:battle-net-4.jpg" optionsthumb1="200x150" title1="Instalación de Diablo 3"
-    image2="resource:battle-net-5.jpg" optionsthumb2="200x150" title2="Instalación de Diablo 3"
-    image3="resource:battle-net-6.jpg" optionsthumb3="200x150" title3="Instalación de Diablo 3"
+    image1="image:battle-net-4.jpg" optionsthumb1="200x150" title1="Instalación de Diablo 3"
+    image2="image:battle-net-5.jpg" optionsthumb2="200x150" title2="Instalación de Diablo 3"
+    image3="image:battle-net-6.jpg" optionsthumb3="200x150" title3="Instalación de Diablo 3"
     caption="Instalación de Diablo 3" >}}
 
 Instalado el juego se inicia con un comando de Wine o con el acceso directo del menú de aplicaciones del juego o del cliente de Battle.net.
@@ -72,7 +73,7 @@ Instalado el juego se inicia con un comando de Wine o con el acceso directo del 
 
 {{< image
     gallery="true"
-    image1="resource:menu-aplicaciones.jpg" optionsthumb1="200x150" title1="Menú de aplicaciones con accesos directos de Battle.net y Diablo 3"
+    image1="image:menu-aplicaciones.jpg" optionsthumb1="200x150" title1="Menú de aplicaciones con accesos directos de Battle.net y Diablo 3"
     caption="Menú de aplicaciones" >}}
 
 Leyendo la [página de información de Diablo 3](https://appdb.winehq.org/objectManager.php?sClass=version&iId=29952) indica que hay que utilizar el cliente de 32 bits sino se utiliza la API de gráficos DirectX 11 que no ofrece buen rendimiento como he comprobado, no ofrece más de 10 fps. Con el cliente de 32 bits el rendiminto ya es el normal. El cliente de 32 bits se activa en _Battle.net App -> Settings -> Game Settings -> Diablo 3 -> Launch 32-bit client (instead of 64-bit)_.
@@ -87,13 +88,13 @@ La trama del juego comienza con la caída de una estrella en la antigua catedral
 
 {{< image
     gallery="true"
-    image1="resource:diablo-3-1.jpg" optionsthumb1="300x200" title1="Personaje de clase monje"
-    image2="resource:diablo-3-2.jpg" optionsthumb2="300x200" title2="Caminio hacia Nueva Tristán" >}}
+    image1="image:diablo-3-1.jpg" optionsthumb1="300x200" title1="Personaje de clase monje"
+    image2="image:diablo-3-2.jpg" optionsthumb2="300x200" title2="Caminio hacia Nueva Tristán" >}}
 {{< image
     gallery="true"
-    image1="resource:diablo-3-3.jpg" optionsthumb1="200x150" title1="Jugando a Diablo 3"
-    image2="resource:diablo-3-4.jpg" optionsthumb2="200x150" title2="Jugando a Diablo 3"
-    image3="resource:diablo-3-5.jpg" optionsthumb3="200x150" title3="Jugando a Diablo 3"
+    image1="image:diablo-3-3.jpg" optionsthumb1="200x150" title1="Jugando a Diablo 3"
+    image2="image:diablo-3-4.jpg" optionsthumb2="200x150" title2="Jugando a Diablo 3"
+    image3="image:diablo-3-5.jpg" optionsthumb3="200x150" title3="Jugando a Diablo 3"
     caption="Juego de Diablo 3" >}}
 
 El juego se inicia y funciona correctamente, en unas poca horas que he estado jugando, no ha quedado engendro, barril ni tocón en pie >:), no he tenido ningún cierre del juego inesperado ni ningún error, salvo por las cinemáticas irreproducibles de las que se sale con la tecla escape. El NUC en el que lo he ejecutado parece que no se calienta en exceso al tacto, la temperatura de la CPU se mantiene de forma estable a 75ºobservando sus sensores por software, el ventilador funcionando a esta temperatura hace mucho ruido y no se percibe en el fragor del juego, con buenos FPS aún a resolución QHD de 2560x1440. .
@@ -106,7 +107,7 @@ El juego permite ajustar la calidad gráfica a la capacidad del equipo para tene
 
 {{< image
     gallery="true"
-    image1="resource:opciones-graficas.jpg" optionsthumb1="300x200" title1="Opciones de calidad gráfica usadas para medir el rendimiento en fps"
+    image1="image:opciones-graficas.jpg" optionsthumb1="300x200" title1="Opciones de calidad gráfica usadas para medir el rendimiento en fps"
     caption="Opciones de calidad gráfica usadas para medir el rendimiento en fps" >}}
 
 Por defeco en mi caso no he podido cambiar la resolución del juego desde las opciones solo me ofrece una opción la de la resolución del monitor, como 2560x1440 es una resolución alta y aún jugables los 42 fps no son muchos, a más fps se aprecia más fluidez. Para cambiar la resolución he tenido que utilizar el siguiente comando desde la terminal con el que Wine ejecuta el programa en modo explorador o en un escritorio virtual, se indica el nombre del escritorio virtual Diablo 3, 1920x1080 es la resolución deseada en este caso y el último parámetro _Diablo III.exe_ es la ubiciación del ejecutable.
@@ -115,15 +116,15 @@ Por defeco en mi caso no he podido cambiar la resolución del juego desde las op
 
 {{< image
     gallery="true"
-    image1="resource:wine-exporer-1.jpg" optionsthumb1="300x200" title1="Diablo 3 en Wine modo explorardor"
-    image2="resource:wine-exporer-2.jpg" optionsthumb2="300x200" title2="Diablo 3 a resolución 1920x1080"
+    image1="image:wine-exporer-1.jpg" optionsthumb1="300x200" title1="Diablo 3 en Wine modo explorardor"
+    image2="image:wine-exporer-2.jpg" optionsthumb2="300x200" title2="Diablo 3 a resolución 1920x1080"
     caption="Diablo 3 en Wine modo explorardor a 1920x1080" >}}
 
 Si soy sincero en toda mi época jugona creo que no he pagado por ningún juego de los que he tenido y he jugado a muchos de los más populares que estaban cada momento. Así que recuerde es muy posible que me decida a pagar por este Diablo 3 por primera vez por un juego viendo que puedo jugar el GNU/Linux perfectamente. Se puede mediante [PayPal][paypal] y por supuesto con tarjeta de crédito. La única duda que tengo es si ejecutar Diablo 3 sobre Wine es algo aceptable por Blizzard o si esto es motivo de expulsión y cierre de cuenta, el llamado _baneo_, hay comentados algunos casos por estos motivos. El [juego básico de Diablo 3](https://eu.shop.battle.net/es-es/product/diablo-iii) cuesta 20 € y [la expansión Reaper of Souls](https://eu.shop.battle.net/es-es/product/diablo-iii-reaper-of-souls) que incluye una nueva clase la de cruzado, el acto V, modo aventura y nuevas habilidades en clases otros 20€, [comprando ambos a la vez](https://eu.shop.battle.net/es-es/product/diablo-iii-battle-chest) son 30€. Hay una [segunda expansión, Despertar del Nigromante](https://eu.shop.battle.net/es-es/product/diablo-iii-rise-of-the-necromancer), que permite jugar con una clase adicional de nigromante por 15 €.
 
 {{< image
     gallery="true"
-    image1="resource:pago.png" optionsthumb1="300x200" title1="Formas de pago"
+    image1="image:pago.png" optionsthumb1="300x200" title1="Formas de pago"
     caption="Formas de pago" >}}
 
 Otros juegos que tengo en mi lista pero ya de [Steam que tiene un cliente ya nativo para GNU/Linux][blogbitix-431] con varios juegos compatibles. Aunque sea solo para probar que también se pueden jugar a muchos juegos del amplio catálogo de Steam lo probaré. Otra plataforma que posiblemente pruebe sea [GOG][gog]. Y con estas tres plataformas espero que quede demostrado que en GNU/Linux se puede jugar a juegos comerciales aceptablemente, aún alguno teniendo varios años como este Diablo 3 pero que para mi habiendo estado bastante desconectado de los juegos me parece que tiene una historia, argumento y una calidad gráfica artística impresionante.

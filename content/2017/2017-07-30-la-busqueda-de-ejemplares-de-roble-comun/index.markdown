@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:quercus-robur.png"
 tags: ["jardineria", "fuera-de-tema"]
 series: ["quercus-robur"]
 ---
@@ -36,34 +37,34 @@ Aprovechando el típico paseo andando del fin de semana me he ido fijando y yend
 
 {{< image
     gallery="true"
-    image1="resource:roble-sarriko-1.jpg" optionsthumb1="300x200" title1="Roble en Universidad de Sarriko"
-    image2="resource:roble-sarriko-2.jpg" optionsthumb2="300x200" title2="Roble en Universidad de Sarriko"
+    image1="image:roble-sarriko-1.jpg" optionsthumb1="300x200" title1="Roble en Universidad de Sarriko"
+    image2="image:roble-sarriko-2.jpg" optionsthumb2="300x200" title2="Roble en Universidad de Sarriko"
     caption="Roble en la Universidad de Sarriko" >}}
 
 También he encontrado un grupo de ellos en una zona ajardinada de un parque en Deusto pegado a la ría. Unos cinco juntos aunque un par de ellos no se si están en el mejor estado. También tenían algunas bellotas en las ramas y algunas en el césped.
 
 {{< image
     gallery="true"
-    image1="resource:roble-deusto.jpg" optionsthumb1="300x200" title1="Roble en parque de Deusto"
+    image1="image:roble-deusto.jpg" optionsthumb1="300x200" title1="Roble en parque de Deusto"
     caption="Roble en el parque de Deusto" >}}
 
 Pasado el museo Guggenheim enfrente de la nueva biblioteca de la Universidad de Deusto en otra zona ajardinada hay otro grupo de robles comunes con muy buen aspecto de salud. No son tan grandes como el de la Universidad de Sarriko pero al estar en una zona ajardinada están mejor cuidados y se nota que están bien sanos.
 
 {{< image
     gallery="true"
-    image1="resource:roble-abandoibarra-1.jpg" optionsthumb1="300x200" title1="Roble en Abandoibarra"
-    image2="resource:roble-abandoibarra-2.jpg" optionsthumb2="300x200" title2="Roble en Abandoibarra" >}}
+    image1="image:roble-abandoibarra-1.jpg" optionsthumb1="300x200" title1="Roble en Abandoibarra"
+    image2="image:roble-abandoibarra-2.jpg" optionsthumb2="300x200" title2="Roble en Abandoibarra" >}}
 {{< image
     gallery="true"
-    image1="resource:roble-abandoibarra-3.jpg" optionsthumb1="300x200" title1="Roble en Abandoibarra"
+    image1="image:roble-abandoibarra-3.jpg" optionsthumb1="300x200" title1="Roble en Abandoibarra"
     caption="Robles en Abandoibarra" >}}
 
 Incluso debajo de alguno de ellos hay algunos retoños.
 
 {{< image
     gallery="true"
-    image1="resource:plantulas-abandoibarra-1.jpg" optionsthumb1="300x200" title1="Plántulas en Abandoibarra"
-    image2="resource:plantulas-abandoibarra-2.jpg" optionsthumb2="300x200" title2="Plántulas en Abandoibarra"
+    image1="image:plantulas-abandoibarra-1.jpg" optionsthumb1="300x200" title1="Plántulas en Abandoibarra"
+    image2="image:plantulas-abandoibarra-2.jpg" optionsthumb2="300x200" title2="Plántulas en Abandoibarra"
     caption="Plántulas en Abandoibarra" >}}
 
 Donde esperaba haber encontrado alguno ha sido en el parque de Doña Casilda y sin embargo solo he encontrado uno apartado y no con tan buen aspecto como los anteriores. Aún así, es otro ejemplar y tenía alguna bellota que en julio aún están verdes.
@@ -76,7 +77,7 @@ Sin embargo, aprovechando esta ocasión ya he recogido unas cuantas bellotas con
 
 {{< image
     gallery="true"
-    image1="resource:bellotas-roble.jpg" optionsthumb1="300x200" title1="Bellotas de roble común"
+    image1="image:bellotas-roble.jpg" optionsthumb1="300x200" title1="Bellotas de roble común"
     caption="Bellotas de roble común" >}}
 
 Cuando llegue la época de caída de las bellotas recogeré más y seguro que con mejor aspecto y mayor probabilidad de germinar que las que ya tengo. Solo he de tener paciencia y dejar que pase el tiempo. Mientras llega la época adecuada de recolección y aún unos meses más para la germinación aprovecharé para buscar en internet cómo hacer germinar bellotas, que necesita un roble, como cuidarlo sobre todo en el riego necesario.

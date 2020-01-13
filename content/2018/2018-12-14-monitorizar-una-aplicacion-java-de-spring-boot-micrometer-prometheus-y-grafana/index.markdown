@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion", "software", "spring"]
 series: ["spring-cloud"]
 ---
@@ -71,8 +72,8 @@ Prometheus posee la funcionalidad básica de crear gŕaficas con las métricas r
 
 {{< image
     gallery="true"
-    image1="resource:prometheus-graph.png" optionsthumb1="300x200" title1="Métrica de la aplicación en Prometheus"
-    image2="resource:grafana-graph.png" optionsthumb2="300x200" title2="Métrica de la aplicación en Grafana"
+    image1="image:prometheus-graph.png" optionsthumb1="300x200" title1="Métrica de la aplicación en Prometheus"
+    image2="image:grafana-graph.png" optionsthumb2="300x200" title2="Métrica de la aplicación en Grafana"
     caption="Métrica de la aplicación en Prometheus y Grafana" >}}
 
 Una vez que Prometheus recolecta los datos de las métricas al introducir las expresiones se proporciona asistencia de código. Por otro lado, en la sección _Status > Targets_ de 
@@ -80,14 +81,14 @@ Prometheus se puede ver el estado de los servicios de los que recolecta métrica
 
 {{< image
     gallery="true"
-    image1="resource:prometheus-targets.png" optionsthumb1="300x200" title1="Estado de servicios en Prometheus"
+    image1="image:prometheus-targets.png" optionsthumb1="300x200" title1="Estado de servicios en Prometheus"
     caption="Estado de los servicios rastreados por Prometheus" >}}
 
 Como Spring Boot Actuator exporta muchas métricas del funcionamiento del servicio Grafana puede crear gráficas de todas ellas. No hace falta crear un _dashboard_ desde cero, se pueden descargar e importar _dashboards_. Este [ejemplo para Micrometer](https://grafana.com/dashboards/4701) recoge la memoria de la JVM (_heap_ y no _heap_), uso de CPU, carga, hilos, estado de hilos, descriptores de archivos, recolector de basura, _classloader_ y entrada/salida básica.
 
 {{< image
     gallery="true"
-    image1="resource:grafana-spring-boot-micrometer-dashboard.png" optionsthumb1="600x450" title1="Estado de servicios en Prometheus"
+    image1="image:grafana-spring-boot-micrometer-dashboard.png" optionsthumb1="600x450" title1="Estado de servicios en Prometheus"
     caption="Dashboard de una aplicación Spring Boot en Grafana" >}}
 
 [Grafana tiene _plugins_](https://grafana.com/plugins) para añadir como fuentes de datos bases de datos relacionales para extraer mediante sentencias SQL y visualizar datos almacenados en [MySQL][mysql],  [PostgreSQL][postgresql] u [Oracle][oracle].

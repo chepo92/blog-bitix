@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:archlinux.svg"
 tags: ["gnu-linux"]
 ---
 

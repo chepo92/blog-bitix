@@ -8,6 +8,7 @@ updated: 2015-05-27T23:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:apache-tapestry-5.svg"
 tags: ["java", "programacion", "tapestry", "software", "planeta-codigo"]
 ---
 
@@ -19,7 +20,7 @@ El 10 de febrero tuve la oportunidad de dar una charla, la primera, sobre [Apach
 
 {{< image
     gallery="true"
-    image1="resource:presentacion-apache-tapestry.jpg" optionsthumb1="300x200" title1="Presentación sobre Apache Tapestry" >}}
+    image1="image:presentacion-apache-tapestry.jpg" optionsthumb1="300x200" title1="Presentación sobre Apache Tapestry" >}}
 
 Fue una charla simplemente como cultura general ya que el _framework_ y el lenguaje que usamos como pila tecnológica es [Grails][grails] y [Groovy][groovy] y eso es complicado que cambie. Otro motivo fue poder compartir el conocimiento de este _framework_ para el desarrollo de aplicaciones y páginas web que a mi me gusta mucho. Si estás suscrito al [feed de mi blog](http://feeds.feedburner.com/blog-bitix/) ya conocerás que de vez en cuando publico alguna entrada comentando algún aspecto sobre él (tengo ya algunas preparadas y otras en mente) y si estás suscrito desde hace unos meses conocerás que escribí un libro. La charla fue para comentar los «porque» alguien podría elegir este _framework_ y no tanto el «como» se hacen las cosas en él, para esto último ya esta el [libro PlugIn Tapestry][blogbitix-12], [otra documentación](https://elblogdepicodev.blogspot.com.es/2010/05/documentacion-sobre-apache-tapestry.html) y la propia [documentación del proyecto](http://tapestry.apache.org/documentation.html).
 

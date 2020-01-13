@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion", "tapestry"]
 ---
 
@@ -34,7 +35,7 @@ Inspeccionando el código fuente de la página devuelta se observa que en el cas
 
 {{< image
     gallery="true"
-    image1="resource:tapestry-webjars.png" optionsthumb1="650x450" title1="Apache Tapestry con Webjars"
+    image1="image:tapestry-webjars.png" optionsthumb1="650x450" title1="Apache Tapestry con Webjars"
     caption="Apache Tapestry con Webjars" >}}
 
 Los _webjars_ muy útiles para gestionar las librerías de lado cliente que hacen innecesario descargar manualmente las dependencias, automatizan la descarga, hacen muy sencillo actualizar a nuevas versiones y es muy fácil de usar al no requerir mucha confiración ni ser invasiva. Además, al estar como una dependencia en el archivo de construcción del proyecto queda indicado de forma explícita que el proyecto utiliza y necesita esa librería. Para mi son una herramienta imprescindible.

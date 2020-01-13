@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Java proporciona en su API numerosas primitivas para realizar programación concurrente. La programación concurrente permite realizar varias tareas simultáneamente aprovechando los múltiples núcleos de los procesadores modernos con un tiempo de ejecución total para un conjunto de tareas significativamente menor. Dos de los problemas de concurrencia más conocidos son el problema de los filósofos y del barbero que en este artículo muestro como implementar usando varias de las primitivas ofrecidas por Java."
 ---

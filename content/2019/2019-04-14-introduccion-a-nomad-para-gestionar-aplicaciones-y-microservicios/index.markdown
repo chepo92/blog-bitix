@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:nomad.svg"
 tags: ["planeta-codigo", "programacion", "software"]
 series: ["hashicorp"]
 summary: "En las aplicaciones basadas en microservicios dado el número de ellos y de instancias tienen han de gestionarse como si fuesen ganado en vez como si fuesen animales de compañía. Nomad es un orquestador de servicios que a diferencia de Docker Swarm permite gestionar servicios con otros sistemas de ejecución además de contenedores docker y a diferencia de Kubernetes es más sencillo."
@@ -49,9 +50,9 @@ También poseen una interfaz web integrada en la que consultar la misma informac
 
 {{< image
     gallery="true"
-    image1="resource:consul.png" optionsthumb1="200x150" title1="Consul"
-    image2="resource:nomad-1.png" optionsthumb2="200x150" title2="Nomad"
-    image3="resource:nomad-2.png" optionsthumb3="200x150" title3="Nomad"
+    image1="image:consul.png" optionsthumb1="200x150" title1="Consul"
+    image2="image:nomad-1.png" optionsthumb2="200x150" title2="Nomad"
+    image3="image:nomad-2.png" optionsthumb3="200x150" title3="Nomad"
     caption="Interfaces web de Consul y Nomad" >}}
 
 Nomad permite varias estrategias para actualizar los _jobs_ a una nueva versión de un servicio, basta modificar la configuración del _job_, volverlo a enviar a Nomad y este se encarga de [actualizar las instancias siguiendo la estrategia _rolling_, _blue/green_ o _canary_][blogbitix-399] definida en el _job_, pero eso lo muestro mas detalladamente en otro artículo.

@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 ---
 
@@ -35,7 +36,7 @@ Cachear datos se puede hacer en varios puntos de una aplicación, si se trata de
 
 {{< image
     gallery="true"
-    image1="resource:java-cache.png" optionsthumb1="300x200" title1="Ejecución del ejemplo" >}}
+    image1="image:java-cache.png" optionsthumb1="300x200" title1="Ejecución del ejemplo" >}}
 
 {{< sourcecode git="blog-ejemplos/tree/master/JavaCache" command="./gradlew run" >}}
 

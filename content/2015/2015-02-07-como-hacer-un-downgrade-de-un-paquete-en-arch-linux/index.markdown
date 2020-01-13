@@ -8,6 +8,7 @@ updated: 2015-04-10T20:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:archlinux.svg"
 tags: ["gnu-linux"]
 ---
 

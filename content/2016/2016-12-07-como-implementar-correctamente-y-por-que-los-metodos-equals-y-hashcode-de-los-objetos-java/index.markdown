@@ -9,6 +9,7 @@ language: "es"
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Los métodos _equals_ y _hashCode_ son esenciales en las colecciones de objetos. Para su correcta implementación es necesario conocer unas cuantas propiedades que han de cumplir estos métodos. Pueden parecer sencillos pero no lo son tanto y una mala implementación posiblemente produzca algún tipo de error o comportamiento anómalo indeseado. En el siguiente artículo comento varias formas de implementarlos de forma sencilla y correcta."
 ---

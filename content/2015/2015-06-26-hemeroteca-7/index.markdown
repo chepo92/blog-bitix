@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:hugo.svg"
 tags: ["blog", "java", "planeta-codigo", "programacion", "software", "software-libre", "tapestry", "gnu-linux"]
 series: ["hemeroteca"]
 library: "true"
@@ -59,7 +60,7 @@ Cada mes sigo aumentando ligeramente o manteniendo el número de visitas del mes
 
 {{< image
     gallery="true"
-    image1="resource:analytics.png" optionsthumb1="300x200" title1="Visitas semanales de Blog Bitix"
+    image1="image:analytics.png" optionsthumb1="300x200" title1="Visitas semanales de Blog Bitix"
     caption="Evolución de sesiones semanales en Blog Bitix" >}}
 
 

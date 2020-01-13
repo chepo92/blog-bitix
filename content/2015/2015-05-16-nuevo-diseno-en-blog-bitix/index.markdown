@@ -8,6 +8,7 @@ updated: 2015-05-17T13:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:hugo.svg"
 tags: ["blog", "planeta-codigo"]
 ---
 
@@ -30,8 +31,8 @@ Entre las cosas de diseño que quería cambiar estaba la cabecera intentando que
 
 {{< image
     gallery="true"
-    image1="resource:blog-bitix-hugo.jpg" optionsthumb1="300x200" title1="Diseño nuevo"
-    image2="resource:blog-bitix-octopress.jpg" optionsthumb2="300x200" title2="Diseño anterior"
+    image1="image:blog-bitix-hugo.jpg" optionsthumb1="300x200" title1="Diseño nuevo"
+    image2="image:blog-bitix-octopress.jpg" optionsthumb2="300x200" title2="Diseño anterior"
     caption="Diseño de Blog Bitix ahora con Hugo y antes con Octopress" >}}
 
 Las _urls_ del contenido no han variado, sí algunas del archivo y de las etiquetas pero como tengo bloqueadas estas con el archivo _robots.txt_ Google no me indicará errores 404. Probablemente si me informe de algún 404 en el contenido aunque espero que no muchos, si ocurre los corregiré en los próximos días o cualquier otra cosa de la que vaya dándome cuenta.

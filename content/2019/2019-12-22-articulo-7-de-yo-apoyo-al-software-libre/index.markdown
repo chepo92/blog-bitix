@@ -26,7 +26,7 @@ Hace unos meses se publicó la versión 4.0 del programa y cada semana o dos sem
 
 {{< image
     gallery="true"
-    image1="resource:calibre.png" optionsthumb1="300x200" title1="Bibliteca y conversor de libros electrónicos Calibre"
+    image1="image:calibre.png" optionsthumb1="300x200" title1="Bibliteca y conversor de libros electrónicos Calibre"
     caption="Biblioteca y conversor de libros electrónicos Calibre" >}}
 
 La cantidad que he donado no es mucho pero si un porcentaje de los usuarios que lo utilizan realizarán una pequeña donación el proyecto continuará desarrollándose. Muchos programas de software libre utilizados por usuarios e incluso empresas que ganan millones de dólares confían en proyectos que en algunos casos solo están mantenidos por una persona y de forma voluntaria en su tiempo libre sin recibir un sueldo a cambio.
@@ -35,7 +35,7 @@ Una donación en la medida que uno pueda o desee es una buena forma de si un pro
 
 {{< image
     gallery="true"
-    image1="resource:donacion-calibre.png" optionsthumb1="650x450" title1="Donación Calibre"
+    image1="image:donacion-calibre.png" optionsthumb1="650x450" title1="Donación Calibre"
     caption="Donación Calibre" >}}
 
 Recuerda que si no es por privacidad y usas un bloqueador de anuncios [desactivándolo en Blog Bitix][adblockplus-disable] ayudas a que pueda seguir haciendo estas donaciones aún siendo pequeñas y una parte pequeña de los ingresos que me genera el blog.

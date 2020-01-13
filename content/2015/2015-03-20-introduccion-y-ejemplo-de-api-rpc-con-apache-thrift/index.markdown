@@ -8,6 +8,7 @@ updated: 2015-11-10T19:00:00+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 ---
 
@@ -57,8 +58,8 @@ Ejecutando el cliente y llamando a los métodos de la interfaz del servicio vere
 
 {{< image
     gallery="true"
-    image1="resource:cliente.png" optionsthumb1="300x200" title1="Salida de consola del cliente"
-    image2="resource:servidor.png" optionsthumb2="300x200" title2="Salida de consola del servidor" >}}
+    image1="image:cliente.png" optionsthumb1="300x200" title1="Salida de consola del cliente"
+    image2="image:servidor.png" optionsthumb2="300x200" title2="Salida de consola del servidor" >}}
 
 Si te interesan las arquitecturas de aplicaciones con microservicios ya sea con API RPC o REST un libro muy interesante y recomendable es [Building Microservices](https://amzn.to/2Fm8ywj). Proporciona una visión detallada de los diferentes aspectos que deben tratar este tipo de aplicaciones.
 

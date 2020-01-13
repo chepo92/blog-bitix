@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:mysql.svg"
 tags: ["planeta-codigo", "programacion"]
 ---
 

@@ -8,6 +8,7 @@ updated: 2015-02-14T23:30:00+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Aunque no es muy utilizada, para tareas de depuración es una ayuda que bien empleada permite descubrir el origen de algún _bug_ en un programa. Los _asserts_ en Java son ignorados, por tanto no suponen ninguna penalización en tiempo de ejecucción, salvo que se indique de forma explicita en la ejecución del programa, esto permite añadirlos al código fuente y activarlos en el momento que se desee realizar una depuración para encontrar errores."
 ---
@@ -40,14 +41,14 @@ Un _assert_ cuya expresión se evalúa como falso produce una excepción del tip
 
 {{< image
     gallery="true"
-    image1="resource:activacion-assert-java.png" optionsthumb1="300x200" title1="Activación asserts en eclipse" >}}
+    image1="image:activacion-assert-java.png" optionsthumb1="300x200" title1="Activación asserts en eclipse" >}}
 
 En la primera de las siguentes capturas de pantalla puede verse como el programa se ejecuta sin producir una excepción a pesar de no cumplirse el _assert_ del método _nextNumber_ ya que los _asserts_ no fueron activados, en la segunda captura activando los _assert_ se lanza una excepción al no cumplirse la postcondición.
 
 {{< image
     gallery="true"
-    image1="resource:no-excepcion.png" optionsthumb1="300x200" title1="Ejecución sin excepción"
-    image1="resource:excepcion-assert.png" optionsthumb1="300x200" title2="Ejecución con excepción" >}}
+    image1="image:no-excepcion.png" optionsthumb1="300x200" title1="Ejecución sin excepción"
+    image1="image:excepcion-assert.png" optionsthumb1="300x200" title2="Ejecución con excepción" >}}
 
 En el recomendable artículo [_Programming With Assertions_](https://docs.oracle.com/javase/8/docs/technotes/guides/language/assert.html) se comenta de forma más detallada y amplia el funcionamiento y uso adecuado de la palabra clave _assert_ de Java.
 

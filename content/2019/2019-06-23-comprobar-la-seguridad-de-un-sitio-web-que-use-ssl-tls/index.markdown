@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:html.svg"
 tags: ["planeta-codigo", "seguridad", "software", "web"]
 ---
 
@@ -24,7 +25,7 @@ El informe que proporciona incluye información sobre el certificado del servido
 
 {{< image
     gallery="true"
-    image1="resource:ssllabs.png" optionsthumb1="650x450" title1="Informe de seguridad TLS"
+    image1="image:ssllabs.png" optionsthumb1="650x450" title1="Informe de seguridad TLS"
     caption="Informe de seguridad TLS" >}}
 
 La herramienta proporciona una nota entre A y F siendo la A la mejor calificación posible. Como se observa en la captura para GitHub Pages la herramienta proporciona una calificación de A.

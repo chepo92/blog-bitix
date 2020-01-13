@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Por seguridad, por auditoría o histórico de datos una aplicación puede requerir no solo guardar los valores actuales de los datos que maneja sino también las versiones anteriores y los cambios en cada valor de los mismos. En Java hay una librería llamada Javers que nos proporciona funcionalidades como comparación, _snapshots_, persistencia y un lenguaje de consulta para hacer búsquedas."
 ---

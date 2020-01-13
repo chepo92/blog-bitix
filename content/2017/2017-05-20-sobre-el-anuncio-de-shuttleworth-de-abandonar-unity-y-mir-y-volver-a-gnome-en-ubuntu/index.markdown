@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:ubuntu.svg"
 tags: ["gnu-linux", "opinion", "planeta-codigo"]
 ---
 

@@ -8,6 +8,7 @@ updated: 2015-05-25T23:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:archlinux.svg"
 tags: ["gnu-linux", "planeta-codigo", "software", "software-libre"]
 summary: "Arch Linux es una distribución que deja al usuario decidir en gran medida los componentes que quiere usar. Desde el sistema de arranque, el entorno de escritorio hasta los programas. Para ello no proporciona un instalador ni en modo texto ni con interfaz gráfica que guíe al usuario en diferentes pasos en la instalación de la distribución, en vez de eso proporciona una guía con la información relevante que el usuario necesita conocer para el mismo mediante comandos instale y configure el sistema con los componentes que desee. Este anexo complementa y reune los comandos que sigo para instalar Arch Linux desde la imagen de instalación hasta el entorno de escritorio GNOME."
 note: "<strong>Nota</strong>: Si quieres [instalar Arch Linux de forma desatendida, automatizada y personalizable](https://picodotdev.github.io/blog-bitix/2017/01/script-de-instalacion-de-arch-linux-desatendido-automatizado-y-personalizable/) te recomiendo usar un _script_ en bash que he desarrollado. La instalación que realiza el _script_ no es distinta de la que harías tu introduciendo los comandos uno detrás de otro pero si mucho más fácil, rápida y probada."
@@ -37,8 +38,8 @@ Una vez disponemos del CD o memoria USB deberemos iniciar el sistema con él. La
 
 {{< image
     gallery="true"
-    image1="resource:instalacion-arch-linux.png" optionsthumb1="300x200" title1="Menú instalación Arch Linux"
-    image2="resource:instalacion-arch-linux-prompt.png" optionsthumb2="300x200" title2="Inicio instalación Arch Linux" >}}
+    image1="image:instalacion-arch-linux.png" optionsthumb1="300x200" title1="Menú instalación Arch Linux"
+    image2="image:instalacion-arch-linux-prompt.png" optionsthumb2="300x200" title2="Inicio instalación Arch Linux" >}}
 
 Una vez estemos en el prompt inicial de la instalación deberemos cargar el mapa según nuestro teclado, para un teclado español usaremos normalmente:
 
@@ -272,6 +273,6 @@ El resultado de la instalación y usando GNOME es el siguiente:
 
 {{< image
     gallery="true"
-    image1="resource:escritorio-gnome.jpg" optionsthumb1="300x200" >}}
+    image1="image:escritorio-gnome.jpg" optionsthumb1="300x200" >}}
 
 {{% /post %}}

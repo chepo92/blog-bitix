@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 ---
 
@@ -24,7 +25,7 @@ Se genera a partir del propio código fuente de las clases con los comentarios i
 
 {{< image
     gallery="true"
-    image1="resource:javadoc-jdk.png" optionsthumb1="300x200" title1="Documentación Javadoc del JDK"
+    image1="image:javadoc-jdk.png" optionsthumb1="300x200" title1="Documentación Javadoc del JDK"
     caption="Documentación Javadoc del JDK" >}}
 
 La documentación en el código fuente se incluye en comentarios que preceden una clase o método, además, con anotaciones se pueden documentar los parámetros y el valor de retorno. Se pueden incluir etiquetas HTML junto con algunas de las anotaciones o _doclets_/_taglets_, algunas [anotaciones Javadoc incluidas en el JDK](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javadoc.html#javadoctags) son las siguientes pero también se pueden [desarrollar _doclets_/_taglets_ propios][blogbitix-261] o [personalizar los estilos de la documentación][blogbitix-262] para cambiar el contenido, información incluida o adaptar los estilos a unos según los colores de la organización.
@@ -62,12 +63,12 @@ La propia documentación de las clases del JDK está generada con la herramienta
 
 {{< image
     gallery="true"
-    image1="resource:javadoc-1.png" optionsthumb1="300x200" title1="Documentación Javadoc"
-    image2="resource:javadoc-2.png" optionsthumb2="300x200" title2="Documentación Javadoc"
+    image1="image:javadoc-1.png" optionsthumb1="300x200" title1="Documentación Javadoc"
+    image2="image:javadoc-2.png" optionsthumb2="300x200" title2="Documentación Javadoc"
     caption="Documentación Javadoc del ejemplo" >}}
 {{< image
     gallery="true"
-    image1="resource:javadoc-archivos.png" optionsthumb1="300x200" title1="Archivos de la documentación Javadoc"
+    image1="image:javadoc-archivos.png" optionsthumb1="300x200" title1="Archivos de la documentación Javadoc"
     caption="Archivos de la documentación Javadoc" >}}
 
 La documentación Javadoc al ser una colección de archivos HTML y demás recursos estáticos pueden copiarse a cualquier servidor web si es necesario que estén disponibles a través de internet y accesibles con cualquier navegador web.

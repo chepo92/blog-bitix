@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:microsoft.svg"
 tags: ["gnu-linux", "microsoft", "software", "software-libre"]
 summary: "Microsoft Office is the office suite with a great margin of difference in the usage quota with the next option on Windows systems. It is very complete and includes more features that most users know but it is also a more expensive option than other alternatives that are free without having anything to envy for most users and use cases."
 ---
@@ -35,11 +36,11 @@ Microsoft Office includes Word as word processor, Powerpoint for presentations, 
 
 {{< image
     gallery="true"
-    image1="resource:microsoftoffice-word.png" optionsthumb1="300x200" title1="Microsoft Office Word"
-    image2="resource:microsoftoffice-excel.png" optionsthumb2="300x200" title2="Microsoft Office Excel" >}}
+    image1="image:microsoftoffice-word.png" optionsthumb1="300x200" title1="Microsoft Office Word"
+    image2="image:microsoftoffice-excel.png" optionsthumb2="300x200" title2="Microsoft Office Excel" >}}
 {{< image
     gallery="true"
-    image1="resource:microsoftoffice-powerpoint.png" optionsthumb1="300x200" title1="Microsoft Office Powerpoint" >}}
+    image1="image:microsoftoffice-powerpoint.png" optionsthumb1="300x200" title1="Microsoft Office Powerpoint" >}}
 
 ### LibreOffice
 
@@ -47,11 +48,11 @@ The free and libre alternative of Office is [LibreOffice](https://es.libreoffice
 
 {{< image
     gallery="true"
-    image1="resource:libreoffice-writer.png" optionsthumb1="300x200" title1="LibreOffice Writer"
-    image2="resource:libreoffice-calc.png" optionsthumb2="300x200" title2="LibreOffice Calc" >}}
+    image1="image:libreoffice-writer.png" optionsthumb1="300x200" title1="LibreOffice Writer"
+    image2="image:libreoffice-calc.png" optionsthumb2="300x200" title2="LibreOffice Calc" >}}
 {{< image
     gallery="true"
-    image1="resource:libreoffice-impress.png" optionsthumb1="300x200" title1="LibreOffice Impress" >}}
+    image1="image:libreoffice-impress.png" optionsthumb1="300x200" title1="LibreOffice Impress" >}}
 
 ### WPS Office
 
@@ -63,11 +64,11 @@ It is available for Windows (XP, Vista, 7, 8, 10) even in versions for which Mic
 
 {{< image
     gallery="true"
-    image1="resource:wpsoffice-writer.png" optionsthumb1="300x200" title1="WPS Writer"
-    image2="resource:wpsoffice-spreadsheets.png" optionsthumb2="300x200" title2="WPS Spreadsheets" >}}
+    image1="image:wpsoffice-writer.png" optionsthumb1="300x200" title1="WPS Writer"
+    image2="image:wpsoffice-spreadsheets.png" optionsthumb2="300x200" title2="WPS Spreadsheets" >}}
 {{< image
     gallery="true"
-    image1="resource:wpsoffice-presentation.png" optionsthumb1="300x200" title1="WPS Office Presentation" >}}
+    image1="image:wpsoffice-presentation.png" optionsthumb1="300x200" title1="WPS Office Presentation" >}}
 
 ### Google Docs
 
@@ -77,11 +78,11 @@ For companies it is offered at the price of 4€ per user per month which includ
 
 {{< image
     gallery="true"
-    image1="resource:googledocs-documento.png" optionsthumb1="300x200" title1="Documento Google Docs"
-    image2="resource:googledocs-hoja-de-calculo.png" optionsthumb2="300x200" title2="Hoja de cálculo Google Docs" >}}
+    image1="image:googledocs-documento.png" optionsthumb1="300x200" title1="Documento Google Docs"
+    image2="image:googledocs-hoja-de-calculo.png" optionsthumb2="300x200" title2="Hoja de cálculo Google Docs" >}}
 {{< image
     gallery="true"
-    image1="resource:googledocs-presentacion.png" optionsthumb1="300x200" title1="Presentación Google Docs" >}}
+    image1="image:googledocs-presentacion.png" optionsthumb1="300x200" title1="Presentación Google Docs" >}}
 
 Some other options that deserves to be commented is [Calligra][calligra] the [KDE desktop environment][kde] suite, [Abiword][abiword], [Lyx][lyx] or [Gnumeric][gnumeric].
 

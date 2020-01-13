@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:archlinux.svg"
 tags: ["gnu-linux"]
 summary: "Después de mucho tiempo sin tener configurada una impresora en red decidí dedicarle un tiempo a realizar la configuración. Con un par de errores que me encontré finalmente conseguí realizar correctamente la impresión de prueba con el modelo de impresora en concreto del que dispongo."
 ---
@@ -29,25 +30,25 @@ CUPS posee un panel de administración accesible con el navegador en la direcci�
 
 {{< image
     gallery="true"
-    image1="resource:cups-administracion.png" optionsthumb1="300x200" title1="Administración de CUPS"
-    image2="resource:cups-anadir-impresora-1.png" optionsthumb2="300x200" title2="Asistente añadir impresora en CUPS" >}}
+    image1="image:cups-administracion.png" optionsthumb1="300x200" title1="Administración de CUPS"
+    image2="image:cups-anadir-impresora-1.png" optionsthumb2="300x200" title2="Asistente añadir impresora en CUPS" >}}
 {{< image
     gallery="true"
-    image1="resource:cups-anadir-impresora-2.png" optionsthumb1="300x200" title1="Asistente añadir impresora en CUPS"
-    image2="resource:cups-anadir-impresora-3.png" optionsthumb2="300x200" title2="Asistente añadir impresora en CUPS" >}}
+    image1="image:cups-anadir-impresora-2.png" optionsthumb1="300x200" title1="Asistente añadir impresora en CUPS"
+    image2="image:cups-anadir-impresora-3.png" optionsthumb2="300x200" title2="Asistente añadir impresora en CUPS" >}}
 {{< image
     gallery="true"
-    image1="resource:cups-anadir-impresora-4.png" optionsthumb1="300x200" title1="Asistente añadir impresora en CUPS" >}}
+    image1="image:cups-anadir-impresora-4.png" optionsthumb1="300x200" title1="Asistente añadir impresora en CUPS" >}}
 
 Finalizado el asistente en la sección _Impresoras_ examinado los detalles de la misma podremos ver los documentos imprimidos o en proceso de impresión. En el desplegable _Mantenimiento_ podremos imprimir una página de prueba con la que comprobaremos que funciona correctamente además de otras acciones sobre los trabajos, en el desplegable _Administración_ podemos eliminarla o modificarla.
 
 {{< image
     gallery="true"
-    image1="resource:cups-impresoras-1.png" optionsthumb1="300x200" title1="Impresoras en CUPS"
-    image2="resource:cups-impresoras-2.png" optionsthumb2="300x200" title2="Impresoras en CUPS" >}}
+    image1="image:cups-impresoras-1.png" optionsthumb1="300x200" title1="Impresoras en CUPS"
+    image2="image:cups-impresoras-2.png" optionsthumb2="300x200" title2="Impresoras en CUPS" >}}
 {{< image
     gallery="true"
-    image1="resource:gnome-impresoras.png" optionsthumb1="300x200" title1="Impresoras en GNOME" >}}
+    image1="image:gnome-impresoras.png" optionsthumb1="300x200" title1="Impresoras en GNOME" >}}
 
 Si la página de prueba no funciona en el archivo _/var/log/cups/error\_log_ encontraremos mensajes de error con pistas que nos ayudarán a saber que está fallando. Algunos de los mensajes de error que me encontré al realizar la configuración fué el siguiente.
 
@@ -61,7 +62,7 @@ Con todo configurado la prueba de impresión realizable tanto desde la página d
 
 {{< image
     gallery="true"
-    image1="resource:prueba-de-impresion-cups.jpg" optionsthumb1="300x200" title1="Prueba de impresión con CUPS" >}}
+    image1="image:prueba-de-impresion-cups.jpg" optionsthumb1="300x200" title1="Prueba de impresión con CUPS" >}}
 
 Para otras marcas y modelos de impresoras deberemos instalar otro controlador, en la siguiente [base de datos de impresoras](http://www.openprinting.org/printers) encontraremos el controlador aconsejado si en nuestra distribución no está documentado.
 

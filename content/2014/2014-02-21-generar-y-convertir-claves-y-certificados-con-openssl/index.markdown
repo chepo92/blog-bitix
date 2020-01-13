@@ -8,6 +8,7 @@ updated: 2017-04-08T23:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:openssl.svg"
 tags: ["programacion", "seguridad", "software", "software-libre", "web"]
 summary: "Usando los comandos expuestos en este artículo y con OpenSSL podemos crear una clave pública y privada para usarlo con ssh o para cifrar y descifrar mensajes, un certificado autofirmado que podremos usar en un servidor de aplicaciones para usar un protocolo seguro y también convertir las claves y certificados a uno de los formatos aceptados por la aplicación que usemos."
 ---
@@ -52,7 +53,7 @@ También se puede obtener la clave pública en formato [OpenSSH][openssh] y una 
 
 {{< image
     gallery="true"
-    image1="resource:openssh-fingerprint.png" optionsthumb1="300x200" title1="Huella digital de una clave pública OpenSSH"
+    image1="image:openssh-fingerprint.png" optionsthumb1="300x200" title1="Huella digital de una clave pública OpenSSH"
     caption="Huella digital de una clave pública OpenSSH" >}}
 
 #### Obtener la huella digital de la clave pública
@@ -63,7 +64,7 @@ La huella digital de una clave pública sirve para comprobar que la clave es la 
 
 {{< image
     gallery="true"
-    image1="resource:openssl-dgst.png" optionsthumb1="300x200" title1="Huella digital de una clave pública"
+    image1="image:openssl-dgst.png" optionsthumb1="300x200" title1="Huella digital de una clave pública"
     caption="Huella digital de una clave pública" >}}
 
 #### Crear un certificado

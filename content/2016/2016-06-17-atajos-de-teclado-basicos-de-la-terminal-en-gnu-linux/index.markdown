@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:gnu.svg"
 tags: ["gnu-linux", "planeta-codigo", "software-libre"]
 series: ["terminal"]
 summary: "Aprender las combinaciones de teclas de aquellas aplicaciones que usamos frecuentemente y durante mucho tiempo nos ayuda a hacer las cosas en menos tiempo y de forma más sencilla. Cada aplicación tiene los suyos propios, en este artículo los de la terminal con el intérprete de comandos _bash_ para GNU/Linux."
@@ -62,7 +63,7 @@ Las anteriores combinaciones de teclas son del intérprete de comandos bash, el 
 
 {{< image
     gallery="true"
-    image1="resource:gnome-terminal.png" optionsthumb1="300x200" title1="Terminal de GNOME con el intérprete de comandos bash"
+    image1="image:gnome-terminal.png" optionsthumb1="300x200" title1="Terminal de GNOME con el intérprete de comandos bash"
     caption="Terminal de GNOME con el intérprete de comandos bash" >}}
 
 {{< reference >}}

@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:spring.svg"
 tags: ["java", "planeta-codigo", "programacion", "spring"]
 series: ["spring-cloud"]
 ---
@@ -29,15 +30,15 @@ En ambos casos se evita que la cadena de microservicios empiece a fallar y con e
 
 {{< image
     gallery="false"
-    image1="resource:hystrix.png" command1="Fit" optionsthumb1="650x450" title1="Hystrix" >}}
+    image1="image:hystrix.png" command1="Fit" optionsthumb1="650x450" title1="Hystrix" >}}
 
 El patrón _circuit breaker_ se denomina así ya que implementa una lógica similar a un circuito eléctrico. El circuito en su estado normal está cerrado y se realizan las llamadas al microservicio servidor. Si el microservicio servidor empieza a fallar se llama a la acción alternativa con su valor, si se supera un umbral de errores el circuito pasa a estado abierto y se dejan de hacer llamadas al microservicio servidor. Cada cierto tiempo definido se realiza una llamada al servicio servidor para comprobar su estado de forma que si responde correctamente el circuito pasa a estado cerrado nuevamente y las siguientes llamadas se realizan al microservicio servidor dejándose de utilizar la acción alternativa.
 
 {{< image
     gallery="true"
-    image1="resource:circuit-breaker-diagram.png" optionsthumb1="300x200" title1="Diagrama del patrón circuit breaker"
-    image2="resource:circuit-breaker-states.png" optionsthumb2="300x200" title2="Diagrama de estados"
-    image3="resource:hystrix-fallback.png" optionsthumb3="300x200" title3="Fallback del patrón circuit breaker"
+    image1="image:circuit-breaker-diagram.png" optionsthumb1="300x200" title1="Diagrama del patrón circuit breaker"
+    image2="image:circuit-breaker-states.png" optionsthumb2="300x200" title2="Diagrama de estados"
+    image3="image:hystrix-fallback.png" optionsthumb3="300x200" title3="Fallback del patrón circuit breaker"
     caption="Diagrama del patrón circuit breaker, de estados y método fallback" >}}
 
 Para utilizar Hystrix como implementación del patrón _circuit breaker_ en una aplicación Java con [Spring Boot][spring-boot] el método que realiza la llamada al microservicio servidor ha de  encapsularse en un método anotado con la anotación [@HystrixCommand](https://netflix.github.io/Hystrix/javadoc/com/netflix/hystrix/HystrixCommand.html), como parámetro se indica un método con la acción alternativa o _fallback_ que obtiene un valor en los fallos. También se puede indicar el _tiemout_ de espera antes de considerar que la llamada ha fallado con la propiedad _execution.isolation.thread.timeoutInMilliseconds_. Igualmente se pueden indicar los valores para abrir el circuito con _circuitBreaker.requestVolumeThreshold_ y _circuitBreaker.errorThresholdPercentage_. Esos son los básicos para utilizar este patrón de tolerancia a fallos. Tiene [algunos valores adicionales más que se pueden configurar](https://github.com/Netflix/Hystrix/tree/master/hystrix-contrib/hystrix-javanica#configuration) para adaptar el patrón a los valores óptimos de la aplicación.
@@ -60,8 +61,8 @@ Para monitorizar en tiempo real el estado del sistema y de los circuitos se ofre
 
 {{< image
     gallery="true"
-    image1="resource:circuit-breaker-closed.png" optionsthumb1="300x200" title1="Circuit breaker cerrado"
-    image2="resource:circuit-breaker-open.png" optionsthumb2="300x200" title2="Circuit breaker abierto"
+    image1="image:circuit-breaker-closed.png" optionsthumb1="300x200" title1="Circuit breaker cerrado"
+    image2="image:circuit-breaker-open.png" optionsthumb2="300x200" title2="Circuit breaker abierto"
     caption="Estados del circuit breaker" >}}
 
 {{< code file="gradle-run.sh" language="bash" options="" >}}

@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion", "seguridad"]
 summary: "El correo electrónico es un medio muy utilizado para realizar ataques de _phising_, algunos son muy burdos pero seguramente algunos usuarios sin muchos conocimientos caen víctimas de ellos y aún los usuarios con conocimientos también pueden serlo si están bien realizados y muestran un correo electrónico exactamente igual que el que intentan suplantar. Los usuarios son las víctimas pero si los sitios web que envían los correos electrónicos legítimos los firmasen digitalmente sería una garantía más para proteger a sus usuarios, pudiendo detectar de otra forma el _spam_ y _phising_. En este artículo muestro a modo de ejemplo como firmar un correo electrónico con GPG y JavaMail e igualmente podría utilizarse para cifrarlo, aunque usar DKIM sería lo más apropiado."
 ---
@@ -35,7 +36,7 @@ En este ejemplo solo se firma el contenido del mensaje quedando fuera de la firm
 
 {{< image
     gallery="true"
-    image1="resource:gpg-verify.png" optionsthumb1="300x200" title1="Verificación de la firma GPG del correo electrónico"
+    image1="image:gpg-verify.png" optionsthumb1="300x200" title1="Verificación de la firma GPG del correo electrónico"
     caption="Verificación de la firma GPG del correo electrónico" >}}
 
 En el anillo de claves de GPG la clave que usemos para firmar no ha de tener _passphrase_ de lo contrario cuando se ejecute el comando GPG la solicitará en una ventana emergente. Aunque con las opciones <code>--passphrase</code> y <code>--batch</code> no debería solicitarla no he conseguido evitarlo.

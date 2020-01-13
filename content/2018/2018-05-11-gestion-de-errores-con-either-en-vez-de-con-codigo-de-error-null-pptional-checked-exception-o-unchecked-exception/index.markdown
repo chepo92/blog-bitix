@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "A lo largo del tiempo han surgido varias formas de gestionar las excepciones. En C hace muchos años eran con códigos de error, en Java se incorporaron en el lenguaje las excepciones _checked_ o _uncheked_ o la nueva clase Optional en Java cada una con sus ventajas y y algunas deficiencias. Más recientemente usando un tipo tal que _Either<L,R>_ son otra forma para el tratamiento de errores sobre las opciones anteriores."
 ---

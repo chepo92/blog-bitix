@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:graphql.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 series: ["graphql"]
 ---
@@ -32,9 +33,9 @@ Varias de las mismas consultas que hacía con _curl_ en otros artículos es posi
 
 {{< image
     gallery="true"
-    image1="resource:graphiql-1.png" optionsthumb1="300x200" title1="Consulta"
-    image2="resource:graphiql-2.png" optionsthumb2="300x200" title2="Asistencia contextual"
-    image3="resource:graphiql-3.png" optionsthumb3="300x200" title3="Explorador del esquema"
+    image1="image:graphiql-1.png" optionsthumb1="300x200" title1="Consulta"
+    image2="image:graphiql-2.png" optionsthumb2="300x200" title2="Asistencia contextual"
+    image3="image:graphiql-3.png" optionsthumb3="300x200" title3="Explorador del esquema"
     caption="El editor GraphiQL para una API con GraphQL" >}}
 
 {{< sourcecode git="blog-ejemplos/tree/master/GraphQL" command="./gradlew run" >}}

@@ -8,6 +8,7 @@ updated: 2015-09-28T21:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:java.svg"
 tags: ["java", "programacion", "planeta-codigo"]
 ---
 

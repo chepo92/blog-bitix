@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "resource:images/nextcloud-inicio.png"
 tags: ["planeta-codigo", "software", "software-libre"]
 summary: "Empresas como Google ofrecen servicios gratuitos que los usuarios pueden utilizar, algunos de ellos a cambio de entregrarles documentos con información personal con la consiguiente potencial pérdida de privacidad. Algunos de estos servicios son sustituibles con alternativas como Nextcloud y OnlyOffice que permiten a sus usuarios ser dueños de su información ya sea utilizando una Raspberry Pi como servidor que debe ser administrada o incluso en la nube con servicios como DigitalOcean o AWS."
 ---
@@ -47,35 +48,35 @@ Este archivo de Docker Compose incluye Nextcloud con OnlyOffice sin usar una bas
 
 {{< image
     gallery="true"
-    image1="resource:nextcloud-configuracion.png" optionsthumb1="300x200" title1="Configuración de Nextcloud"
-    image2="resource:nextcloud-inicio.png" optionsthumb2="300x200" title2="Inicio de Nextcluod"
-    image3="resource:nextcloud-archivos.png" optionsthumb3="300x200" title3="Archivos en Nextcloud"
+    image1="image:nextcloud-configuracion.png" optionsthumb1="300x200" title1="Configuración de Nextcloud"
+    image2="image:nextcloud-inicio.png" optionsthumb2="300x200" title2="Inicio de Nextcluod"
+    image3="image:nextcloud-archivos.png" optionsthumb3="300x200" title3="Archivos en Nextcloud"
     caption="Configuración y archivos en Nextcloud" >}}
 
 [OnlyOffice es un paquete ofimático alternativa a Microsoft Office][blogbitix-143] que ofrece un editor de documentos de texto, una hoja de cálculo y una aplicación para realizar presentaciones integrables en Nextcloud. Son aplicaciones con menos opciones que las ofrecidas por Microsoft Office pero suficientes para un uso sencillo, también dispone de una versión como aplicaciones de escritorio.
 
 {{< image
     gallery="true"
-    image1="resource:nextcloud-onlyoffice-documento.png" optionsthumb1="300x200" title1="Documento con OnlyOffice"
-    image2="resource:nextcloud-onlyoffice-hoja-de-calculo.png" optionsthumb2="300x200" title2="Hola de cálculo con OnlyOffice"
-    image3="resource:nextcloud-onlyoffice-presentacion.png" optionsthumb3="300x200" title3="Presentación con OnlyOffice"
+    image1="image:nextcloud-onlyoffice-documento.png" optionsthumb1="300x200" title1="Documento con OnlyOffice"
+    image2="image:nextcloud-onlyoffice-hoja-de-calculo.png" optionsthumb2="300x200" title2="Hola de cálculo con OnlyOffice"
+    image3="image:nextcloud-onlyoffice-presentacion.png" optionsthumb3="300x200" title3="Presentación con OnlyOffice"
     caption="Ofimática con OnlyOffice y Nextcloud alternativa a Google Docs" >}}
 
 Otras utilidades es un reproductor de música, calendario o galería de fotos, hay un complemento para añadir estas funcionalidades.
 
 {{< image
     gallery="true"
-    image1="resource:nextcloud-visor-pdf.png" optionsthumb1="300x200" title1="Visor de documento PDF"
-    image2="resource:nextcloud-calendario.png" optionsthumb2="300x200" title2="Calendario"
-    image3="resource:nextcloud-visor-fotos.png" optionsthumb3="300x200" title3="Vidor de fotos"
+    image1="image:nextcloud-visor-pdf.png" optionsthumb1="300x200" title1="Visor de documento PDF"
+    image2="image:nextcloud-calendario.png" optionsthumb2="300x200" title2="Calendario"
+    image3="image:nextcloud-visor-fotos.png" optionsthumb3="300x200" title3="Vidor de fotos"
     caption="Aplicaciones y complementos" >}}
 
 Con [WebDAV](https://en.wikipedia.org/wiki/WebDAV) los documentos son accesibles como si fuese una unidad local proporcionando la misma funcionalidad de Google Drive. En GNOME con el explorador de archivos Nautilus es posible conectarse a dispositivo WebDAV, en el caso de Nextcloud la dirección es _dav\://localhost/remote.php/dav/files/admin_.
 
 {{< image
     gallery="true"
-    image1="resource:nextcloud-webdav.png" optionsthumb1="300x200" title1="Archivos en el explorador de archivos Nautilus con WebDAV"
-    image2="resource:nextcloud-administracion.png" optionsthumb2="300x200" title2="Opciones de administración"
+    image1="image:nextcloud-webdav.png" optionsthumb1="300x200" title1="Archivos en el explorador de archivos Nautilus con WebDAV"
+    image2="image:nextcloud-administracion.png" optionsthumb2="300x200" title2="Opciones de administración"
     caption="Archivos en el explorador de archivos Nautilus con WebDAV y opciones de administración" >}}
 
 Con las [aplicaciones para _smatphone_](https://nextcloud.com/install/#) los documentos quedan accesibles en cualquier lugar teniendo un dispositivo móvil, _smartphone_ o tableta. Tener una nube propia que esté accesible en internet hace necesario tener un dominio propio, añadir seguridad para lo que es necesario configurar Nextcloud de modo que utilice el protocolo seguro que cifre las comunicaciones con TLS, esto requiere obtener [un certificado autofirmado][blogbitix-13] al menos o mejor obteniendolo de [Let's Encrypt][letsencrypt], que proporciona certificados de forma automatizada y gratuita. Otra medida para aumentar la seguridad es utilizar un segundo factor de autenticación o _2FA_.

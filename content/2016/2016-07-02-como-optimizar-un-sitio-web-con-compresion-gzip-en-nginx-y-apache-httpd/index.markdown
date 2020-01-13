@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:nginx.svg"
 tags: ["planeta-codigo", "software", "software-libre", "web"]
 summary: "Comprimir el contenido es de utilidad para aquellos usuarios a los que se les factura por los datos transmitidos o tienen límites de transferencia en sus contratos con los proveedores de banda ancha o red móvil. Modificando la configuración del servidor web que usemos haremos que nuestra página o aplicación web comprima el contenido que envía a los navegadores de los usuarios reduciendo los datos transferidos y optimizando el sitio web."
 ---
@@ -36,8 +37,8 @@ Unos pocos kilobytes no son mucho para un único recurso pero si tenemos en cuen
 
 {{< image
     gallery="true"
-    image1="resource:nginx-no-gzip.png" optionsthumb1="300x200" title1="Nginx configurado sin compresión GZIP"
-    image2="resource:nginx-gzip.png" optionsthumb2="300x200" title2="Nginx configurado con compresión GZIP"
+    image1="image:nginx-no-gzip.png" optionsthumb1="300x200" title1="Nginx configurado sin compresión GZIP"
+    image2="image:nginx-gzip.png" optionsthumb2="300x200" title2="Nginx configurado con compresión GZIP"
     caption="Nginx configurado sin y con compresión GZIP" >}}
 
 ### Apache HTTPD
@@ -51,8 +52,8 @@ Vemos una reducción en la transferencia similar a la conseguida en Nginx. En Ap
 
 {{< image
     gallery="true"
-    image1="resource:apache-httpd-no-gzip.png" optionsthumb1="300x200" title1="Apache HTTPD configurado sin compresión GZIP"
-    image2="resource:apache-httpd-gzip.png" optionsthumb2="300x200" title2="Apache HTTPD configurado con compresión GZIP"
+    image1="image:apache-httpd-no-gzip.png" optionsthumb1="300x200" title1="Apache HTTPD configurado sin compresión GZIP"
+    image2="image:apache-httpd-gzip.png" optionsthumb2="300x200" title2="Apache HTTPD configurado con compresión GZIP"
     caption="Apache HTTPD configurado sin y con compresión GZIP" >}}
 
 La compresión se hace en cada petición que se hace al servidor que con los avanzados procesadores actuales con eficientes instrucciones específicas para la tarea implementadas en el hardware salvo un tráfico muy elevado no tiene por que notarse en gran medida el procesado de cada recurso. Si el tráfico fuese elevado y la carga de compresión se notase Nginx y Apache ofrecen la posibilidad de [precomprimir los recursos](http://nginx.org/en/docs/http/ngx_http_gzip_static_module.html) y de forma similar [precomprimir los recursos en apache](http://httpd.apache.org/docs/current/mod/mod_deflate.html#precompressed).

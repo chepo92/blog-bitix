@@ -10,6 +10,7 @@ language: "es"
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:keepassxc.png"
 tags: ["gnu-linux", "planeta-codigo"]
 ---
 
@@ -31,27 +32,27 @@ Instalado el [paquete de KeePassXC](https://www.archlinux.org/packages/community
 
 {{< image
     gallery="true"
-    image1="resource:keepassxc-1.png" optionsthumb1="300x200" title1="KeePassXC"
-    image2="resource:keepassxc-2.png" optionsthumb2="300x200" title2="KeePassXC" >}}
+    image1="image:keepassxc-1.png" optionsthumb1="300x200" title1="KeePassXC"
+    image2="image:keepassxc-2.png" optionsthumb2="300x200" title2="KeePassXC" >}}
 
 Lo siguiente será crear una entrada con el usuario y contraseña de un servicio.
 
 {{< image
     gallery="true"
-    image1="resource:keepassxc-4.png" optionsthumb1="300x200" title1="KeePassXC"
-    image2="resource:keepassxc-3.png" optionsthumb2="300x200" title2="KeePassXC" >}}
+    image1="image:keepassxc-4.png" optionsthumb1="300x200" title1="KeePassXC"
+    image2="image:keepassxc-3.png" optionsthumb2="300x200" title2="KeePassXC" >}}
 
 Una vez almacenada la credencial se puede copiar al portapapeles el usuario y contraseña para usarlas en la página de autenticación del servicio con unos botones en la parte superior a tal efecto. También se puede ver la contraseña no protegida con asteriscos sino los caracteres originales. Otra funcionalidad muy útil es la de realizar autoescritura que automatiza el introducir el usuario y contraseña en la página que solicita autenticación. Normalmente consiste en escribir la contraseña en un campo de entrada, pulsar la tecla tabulador para cambiar al campo de entrada de la contraseña, introducir la contraseña y pulsar la tecla _return_. Con KeePassXC se puede realizar todo esto con un par de pulsaciones de ratón.
 
 {{< image
     gallery="true"
-    image1="resource:keepassxc-6.png" optionsthumb1="300x200" title1="Configuración de autoescritura" >}}
+    image1="image:keepassxc-6.png" optionsthumb1="300x200" title1="Configuración de autoescritura" >}}
 
 KeePassXC es una herramienta que no tiene más complejidad, podemos asociar alguna información más a la credencial con atributos adicionales y archivos adjuntos pero no es imprescindible. Por supuesto, tiene un generador de contraseñas muy útil con el que obtener contraseñas únicas para cada servicio con las propiedades de seguridad que se requiera en cuanto a longitud, caracteres especiales, mayúsculas, minúsculas y números.
 
 {{< image
     gallery="true"
-    image1="resource:keepassxc-5.png" optionsthumb1="300x200" title1="Nueva contraseña" >}}
+    image1="image:keepassxc-5.png" optionsthumb1="300x200" title1="Nueva contraseña" >}}
 
 Si somos nosotros los que implementamos un servicio con el método de autenticación de usuario y contraseña deberíamos [almacenar las contraseñas de forma segura usando «password salted hasing»][blogbitix-75].
 

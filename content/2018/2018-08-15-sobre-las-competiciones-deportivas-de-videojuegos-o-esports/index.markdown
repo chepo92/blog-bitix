@@ -11,6 +11,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "image:4.jpg"
 tags: ["opinion", "planeta-codigo"]
 ---
 
@@ -20,9 +21,9 @@ El sector de los videojuegos es una industria que mueve miles de millones de eur
 
 {{< image
     gallery="true"
-    image1="resource:1.jpg" optionsthumb1="300x200" title1="Primer videojuego"
-    image2="resource:2.jpg" optionsthumb2="300x200" title2="Pong"
-    image3="resource:3.jpg" optionsthumb3="300x200" title3="3 en raya"
+    image1="image:1.jpg" optionsthumb1="300x200" title1="Primer videojuego"
+    image2="image:2.jpg" optionsthumb2="300x200" title2="Pong"
+    image3="image:3.jpg" optionsthumb3="300x200" title3="3 en raya"
     caption="Primeros videojuegos" >}}
 
 Esta es una muestra de la evolución gráfica que han experimentado los juegos desde 1995 hasta 2018, dos décadas en este caso con el juego de ación y aventuras Tomb Raider.
@@ -33,7 +34,7 @@ La industria de juego sigue creciendo con las nuevas generaciones ya siendo nati
 
 {{< image
     gallery="true"
-    image1="resource:4.jpg" optionsthumb1="600x450" title1="Estadio de una final de League of legends"
+    image1="image:4.jpg" optionsthumb1="600x450" title1="Estadio de una final de League of legends"
     caption="Estadio de una final de League of legends" >}}
 
 Algunos de los juegos actuales en los que se realizan competiciones son [Hearthstone](https://playhearthstone.com/es-es/), [League of legends](https://play.euw.leagueoflegends.com/es_ES), [Clash Royale](https://clashroyale.com/es/), ... que han sido diseñados no solo como para el entretenimiento como los juegos de hace unas pocas décadas para competir entre humano e inteligencia artificial más o menos inteligente o automática de la máquina sino para ser jugados de forma competitiva entre humanos principalmente.

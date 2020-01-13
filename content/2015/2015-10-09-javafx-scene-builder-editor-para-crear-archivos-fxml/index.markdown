@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Con la aplicación JavaFX Scene Builder podemos construir la interfaz gráfica de una aplicación de escritorio Java de forma más sencilla. JavaFX Scene Builder genera archivos descriptores FXML que podemos cargar en la aplicación evitando la tediosa y no sencilla tarea de construir la interfaz gráfica mediante código. En el artículo comento la aplicación JavaFX Scene Builder, como usar los archivos FXML en una aplicación de escritorio, como asociar manejadores de eventos y como cambiar las propiedades de los controles."
 ---
@@ -23,7 +24,7 @@ Con los archivos FXML que genera la aplicación JavaFX Scene Builder crear aplic
 
 {{< image
     gallery="true"
-    image1="resource:javafx-scene-builder.png" optionsthumb1="300x200" title1="JavaFX Scene Builder con la aplicación ¡Hola Mundo!"
+    image1="image:javafx-scene-builder.png" optionsthumb1="300x200" title1="JavaFX Scene Builder con la aplicación ¡Hola Mundo!"
     caption="JavaFX Scene Builder con la aplicación ¡Hola Mundo!" >}}
 
 Y el FXML que genera del mismo ejemplo.
@@ -38,7 +39,7 @@ En la aplicación JavaFX Scene Builder disponemos de una amplia paleta de contro
 
 {{< image
     gallery="true"
-    image1="resource:controles-javafx-scene-builder.png" optionsthumb1="300x200" title1="Controles de JavaFX"
+    image1="image:controles-javafx-scene-builder.png" optionsthumb1="300x200" title1="Controles de JavaFX"
     caption="Controles de JavaFX" >}}
 
 Si con los archivos FXML construimos la interfaz queda como enlazar los elementos visuales con su comportamiento mediante eventos. Una forma es inyectar en propiedades con una anotación los elementos visuales y añadirles el código de comportamiento, otra es indicar en el propio archivo FXML la clase controlador que se encargará del manejo de los eventos del evento visual y otra es incluir el código manejador de evento en el propio archivo FXML.
@@ -49,25 +50,25 @@ La clase manejador de eventos se indica en el panel _Controller_ y es una clase 
 
 {{< image
     gallery="true"
-    image1="resource:javafx-scene-builder-controller.png" optionsthumb1="300x200" title1="Añadiendo comportamiento a aplicación JavaFX"
+    image1="image:javafx-scene-builder-controller.png" optionsthumb1="300x200" title1="Añadiendo comportamiento a aplicación JavaFX"
     caption="Añadiendo comportamiento a aplicación JavaFX" >}}
 
 Además de poder enlazar los componente visuales con el código para añadirles funcionalidad se pueden modificar las propiedades visuales como el texto, fuente y tamaño, alineación, opacidad, visibilidad, altura, anchura, margen, margen interior, rotación, escalado, ... . Algunas propiedades son aplicables a varios componentes otras son específicas según el componente.
 
 {{< image
     gallery="true"
-    image1="resource:propiedades-javafx-scene-builder.png" optionsthumb1="300x200" title1="Propiedades de los controles JavaFX"
+    image1="image:propiedades-javafx-scene-builder.png" optionsthumb1="300x200" title1="Propiedades de los controles JavaFX"
     caption="Propiedades de los controles JavaFX, en este caso de un botón" >}}
 
 Entre las [demostraciones y ejemplos de Java 8](https://www.oracle.com/technetwork/java/javase/downloads/index.html) está la aplicación _Modena_ con la que podemos ver el aspecto visual de los componentes, en la aplicación _Ensemble_ hay más ejemplos junto con código de muchos controles.
 
 {{< image
     gallery="true"
-    image1="resource:modena.png" optionsthumb1="300x200" title1="Aplicación Modena"
+    image1="image:modena.png" optionsthumb1="300x200" title1="Aplicación Modena"
     caption="Aplicación Modena" >}}
 {{< image
     gallery="true"
-    image1="resource:ensemble.png" optionsthumb1="300x200" title1="Aplicación Ensemble"
+    image1="image:ensemble.png" optionsthumb1="300x200" title1="Aplicación Ensemble"
     caption="Aplicación Ensemble" >}}
 
 En la propia página web de JavaFX, en el libro [JavaFX For Dummies](https://amzn.to/2ZQN8kp) y otra documentación se puede encontrar explicado de forma más detallada JavaFX.

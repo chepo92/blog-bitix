@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:html.svg"
 tags: ["planeta-codigo", "software", "software-libre", "web"]
 summary: "Establecer directivas de cacheo en los recursos devueltos en una página o aplicación web tiene las ventajas de reducir el número de peticiones que llegan al servidor mejorando la latencia y el rendimiento pudiendo atender a más usuarios y mejora los tiempos de carga de las páginas. Usando varias directivas de cacheo la aplicación es capaz de determinar cómo quiere que el contenido devuelto o los recursos sean cacheados por los clientes o servidores de cache intermedios."
 ---
@@ -25,8 +26,8 @@ Según la cantidad de tiempo de expiración que establezcamos como cache para el
 
 {{< image
     gallery="true"
-    image1="resource:cache-hit.png" optionsthumb1="300x200" title1="Petición con acierto en cache"
-    image2="resource:cache-miss.png" optionsthumb2="300x200" title2="Petición con fallo en cache"
+    image1="image:cache-hit.png" optionsthumb1="300x200" title1="Petición con acierto en cache"
+    image2="image:cache-miss.png" optionsthumb2="300x200" title2="Petición con fallo en cache"
     caption="Petición con acierto y fallo en la cache" >}}
 
 En el protocolo HTTP 1.1 se definieron tres mecanismos para las caches:

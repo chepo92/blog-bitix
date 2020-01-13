@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:hugo.svg"
 tags: ["blog", "planeta-codigo"]
 summary: "Incluir enlaces a otras web u otras páginas o artículos dentro del mismo sitio es el fundamento de internet y como tal es muy común. En el momento que queramos cambiar la URL de un enlace que haya sido incluido múltiples veces en un sitio puede que no nos sea una tarea sencilla, ni para buscarlos o por hacerlo uno a uno. Usando Hugo sigo la forma que explico a continuación para simplificar el sustituir una URL que cambia y para simplificar el hacer referencia e insertar los enlaces."
 ---

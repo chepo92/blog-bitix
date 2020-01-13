@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Otro de los patrones de diseño que en algún momento nos puede ser útil es el patrón _Observer_. Podemos usar este patrón si tenemos la necesidad de realizar acciones como consecuencia del cambio de estado o cierta circunstancia de un objeto. El patrón _Observer_ nos permite mantener desacoplados el objeto que emite el evento y el objeto que recibe el evento e independizar al objeto observable del número de observadores que tenga."
 ---

@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: true
+imagePost: "logotype:cloudingio.png"
 tags: ["planeta-codigo", "patrocinado"]
 summary: "Al escribir este artículo patrocinado sobre Clouding.io he podido probar de primera mano el crear un servidor virtual basado en la computación en la nube. Después de probarlo me parece una opción sencilla y sin complicaciones, adecuada y más que suficiente para proyectos de presencia en internet, blogs, pequeños y medianos proyectos de páginas web. Además, con soporte en español en caso de necesitar algún tipo de asistencia o ayuda."
 ---
@@ -24,7 +25,7 @@ Hay múltiples opciones de computación en la nube algunas con más servicios y 
 
 {{< image
     gallery="true"
-    image1="resource:web-cloudingio.png" optionsthumb1="300x200" title1="Página web de Clouding.io"
+    image1="image:web-cloudingio.png" optionsthumb1="300x200" title1="Página web de Clouding.io"
     caption="Página web de Clouding.io" >}}
 
 Algunas de las características de Clouding.io algo más detalladas en su página web es que ofrecen soporte en español y discos SSD rápidos para el almacenamiento además de las siguientes:
@@ -58,47 +59,47 @@ Para probar su servicio ofrecen un cupón de 5€, que con la opción más bási
 
 {{< image
     gallery="true"
-    image1="resource:registro.png" optionsthumb1="300x200" title1="Pasos de verificación del registro"
+    image1="image:registro.png" optionsthumb1="300x200" title1="Pasos de verificación del registro"
     caption="Registro" >}}
 
 Completado el registro accediendo al panel de administración en la sección servidores podremos crear las instancias y con que cantidad de recursos reservados, para ajustar el precio y dada la elasticidad de los servidores se puede empezar por las opciones mínimas e ir subiendo hasta que los recursos sean suficientes para el correcto funcionamiento de servidor según los recursos necesarios.
 
 {{< image
     gallery="true"
-    image1="resource:panel-administracion.png" optionsthumb1="300x200" title1="Panel de administración"
+    image1="image:panel-administracion.png" optionsthumb1="300x200" title1="Panel de administración"
     caption="Panel de administración" >}}
 
 Como utilidad Clouding.io ofrece un panel donde gestionar los registros DNS del dominio que contratemos y conocer los nombre de _host_ y direcciones IP de los servidores de DNS de Clouding.io. Casi seguro que la entidad registradora del dominio que le asignemos al servicio para su acceso también tenga la opción de administrar los registros DNS, usar el de Clouding.io es más por unificar en un solo sitio toda la administración del servidor. En las opciones avanzadas se pueden administrar multitud de tipos de registro DNS.
 
 {{< image
     gallery="true"
-    image1="resource:dns.png" optionsthumb1="300x200" title1="Administración DNS"
+    image1="image:dns.png" optionsthumb1="300x200" title1="Administración DNS"
     caption="Administración DNS" >}}
 
 La sección principal es la de _Servidores_ donde hay tres pestañas: una para los servidores, otra para las reglas de _firewall_ para controlar el tráfico entrante y saliente de cada servidor y otra para las _llaves SSH_ que usaremos para conectarnos desde nuestro equipo de forma segura. Seleccionado las características del servidor (memoria, procesadores y espacio en disco) al cabo de unos momentos el servidor se iniciará y estará disponible para que nos conectemos mediante SSH o desde la terminal con interfaz web ofrecida. Desde el listado de servidores podremos pararlo, reiniciarlo, redimensionarlo o eliminarlo. En la pestaña _Acceso_ obtendremos el nombre de _host_ asignado y la dirección IP privada y pública asignada, así como la contraseña del usuario _root_. En la pestaña _Estadísticas_ monitorizaremos el estado del servidor y conoceremos si es necesario redimiensionarlo en algún parámetro.
 
 {{< image
     gallery="true"
-    image1="resource:servidor.png" optionsthumb1="300x200" title1="Parámetros de acceso de un servidor"
-    image2="resource:acceso.png" optionsthumb2="300x200" title2="Parámetros de acceso de un servidor"
+    image1="image:servidor.png" optionsthumb1="300x200" title1="Parámetros de acceso de un servidor"
+    image2="image:acceso.png" optionsthumb2="300x200" title2="Parámetros de acceso de un servidor"
     caption="Un servidor y sus parámetros de acceso" >}}
 {{< image
     gallery="true"
-    image1="resource:nuevo-servidor.png" optionsthumb1="300x200" title1="Nuevo servidor"
+    image1="image:nuevo-servidor.png" optionsthumb1="300x200" title1="Nuevo servidor"
     caption="Nuevo servidor" >}}
 
 Las reglas del _firewall_ por defecto son demasiado permisivas, si solo necesitamos que el puerto 80, el del servidor web, esté abierto el resto de reglas para otros puertos se pueden eliminar para evitar posibles agujeros de seguridad. Una cosa buena es que se pueden crear múltiples reglas de seguridad y aplicar a cada servidor la más conveniente.
 
 {{< image
     gallery="true"
-    image1="resource:firewall.png" optionsthumb1="300x200" title1="Reglas de firewall"
+    image1="image:firewall.png" optionsthumb1="300x200" title1="Reglas de firewall"
     caption="Reglas de firewall" >}}
 
 Las llaves SSH son necesarias para conectarnos al servidor y lanzar comandos desde la terminal. Generada una llave SSH desde el apartado _Llaves SSH_ descargaremos la clave privada, la añadiremos al directorio _~/.ssh_ y configuraremos el archivo _~/.ssh/config_ para acceder al servidor.
 
 {{< image
     gallery="true"
-    image1="resource:llaves-ssh.png" optionsthumb1="300x200" title1="Claves SSH"
+    image1="image:llaves-ssh.png" optionsthumb1="300x200" title1="Claves SSH"
     caption="Claves SSH" >}}
 {{< code file="config" language="plaintext" options="" >}}
 {{< code file="clouding.pem" language="plaintext" options="" >}}
@@ -107,22 +108,22 @@ En los ajustes veremos el saldo disponible que se irá descontando según los re
 
 {{< image
     gallery="true"
-    image1="resource:ajustes.png" optionsthumb1="300x200" title1="Ajustes, facturación e informes"
+    image1="image:ajustes.png" optionsthumb1="300x200" title1="Ajustes, facturación e informes"
     caption="Ajustes, facturación e informes" >}}
 
 Una de las primeras cosas aconsejables realizar es tener acceso mediante SSH descargando la clave privada desde le apartado _Llaves SSH_, con GNU/Linux no se necesita mucho más para conectarse al servidor, en Windows se puede utilizar un programa como [PuTTY][putty]. En cualquier caso siempre está disponible el acceso vía web. Otra de las cosas que a realizar es acceder al servidor SSH mediante un dominio propio que también con anterioridad hay que registrar. Y también es recomendable actualizar todos los paquetes o actualizaciones de seguridad del sistema.
 
 {{< image
     gallery="true"
-    image1="resource:ssh.png" optionsthumb1="300x200" title1="Acceso mediante SSH"
-    image2="resource:consola-vnc.png" optionsthumb2="300x200" title2="Acceso mediante consola VNC"
+    image1="image:ssh.png" optionsthumb1="300x200" title1="Acceso mediante SSH"
+    image2="image:consola-vnc.png" optionsthumb2="300x200" title2="Acceso mediante consola VNC"
     caption="Acceso mediante SSH y consola VNC" >}}
 
 Con acceso vía SSH al servidor ya es posible administrarlo con una herramienta como [Ansible][ansible] instalando paquetes, actualizar el servidor y configurar servicios como los servidores web [nginx][nginx] o [Apache][apache-httpd], [Docker][docker] y otra multitud de tareas que permite esta herramienta.
 
 {{< image
     gallery="true"
-    image1="resource:nginx.png" optionsthumb1="300x200" title1="Servidor NGINX"
+    image1="image:nginx.png" optionsthumb1="300x200" title1="Servidor NGINX"
     caption="Servidor NGINX" >}}
 
 He encontrado en su blog algunos artículos interesantes y base de conocimiento. Otros artículos de interés son los que escribí en la [serie web][blogbitix-serie-web] en la que comentaba aspectos como HTTP/2, HTTPS, redirecciones o GZIP.

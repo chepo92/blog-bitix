@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:postgres.svg"
 tags: ["planeta-codigo", "programacion"]
 summary: "En la universidad se explican las formas normales, en mi caso que yo recuerde hasta la tercera forma normal. Conocer la tercera forma normal suele ser suficiente pero en la teoría existe hasta la sexta forma normal. Cumplir las formas normales evita redundancias e inconsistencias en los datos a costa de crear más tablas que en algunos consultas puede hacerlas lentas. El proceso contrario de la normalización es la desnormalización, puede producir inconsistencias pero los datos son más sencillos y en algunos casos más rápido de consultar."
 ---

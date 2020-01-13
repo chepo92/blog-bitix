@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "en"
+imagePost: "logotype:microsoft.svg"
 tags: ["microsoft", "opinion"]
 summary: "I commented in an article that it is surprising that Microsoft with the capacity that it has and being the devices connected to Internet mostly is not able to avoid using its software without license. I'm about to see if with Windows 10 and Office 2016 it's still as easy to use as always. I will also have a sample of the unfair fame of Windows but that allows Microsoft for the bloatware that the device manufacturers pre-installs with its operating system."
 ---
@@ -41,11 +42,11 @@ It is the beginning of 2016 and I have not made one but three installations of W
 
 {{< image
     gallery="true"
-    image1="resource:windows-10.png" optionsthumb1="300x200" title1="Windows 10"
+    image1="image:windows-10.png" optionsthumb1="300x200" title1="Windows 10"
     caption="Windows 10" >}}
 {{< image
     gallery="true"
-    image1="resource:microsoft-word-2016.png" optionsthumb1="300x200" title1="Microsoft Word 2016"
+    image1="image:microsoft-word-2016.png" optionsthumb1="300x200" title1="Microsoft Word 2016"
     caption="Microsoft Word 2016" >}}
 
 If you can use software with a legal license but if not use some of the alternative options available for both Windows [choosing a GNU/Linux distribution][blogbitix-180] and [Office and any of its alternatives][blogbitix-225] that suits your needs.

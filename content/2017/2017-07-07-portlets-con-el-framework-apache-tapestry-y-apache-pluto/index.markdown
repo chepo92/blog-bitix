@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:apache-tapestry-5.svg"
 tags: ["java", "planeta-codigo", "programacion", "tapestry"]
 summary: "Los portales ofrecen una solución para los casos de uso de integración de aplicaciones, edición de contenido a modo de CMS, agregación de blogs, foros, colaboración entre personas, red social entre otros. La pieza fundamental de un portal en Java es un _portlet_. Desarrollar un _portlet_ usando la API directamente no es simple, algunos _frameworks_ que usaríamos para desarrollar aplicaciones y páginas web son usables para desarrollar _portlets_, Apache Tapestry es uno de ellos como muestro con un ejemplo en este artículo."
 ---
@@ -55,19 +56,19 @@ Construido el _portlet_ con una tarea de [Gradle][gradle] el _portlet_ se despli
 
 {{< image
     gallery="true"
-    image1="resource:pluto-admin.png" optionsthumb1="300x250" title1="Página de administración de portlets de Apache Pluto"
-    image2="resource:pluto-login.png" optionsthumb2="300x250" title2="Inicio de sesión de Apache Pluto"
+    image1="image:pluto-admin.png" optionsthumb1="300x250" title1="Página de administración de portlets de Apache Pluto"
+    image2="image:pluto-login.png" optionsthumb2="300x250" title2="Inicio de sesión de Apache Pluto"
     caption="Páginas de administración y sesión de Apache Pluto" >}}
 
 Insertado el _portlet_ en una página y accediendo a ella el _portlet_ muestra el mensaje que emite y seleccionando la opción _edit_ acceder a la página de preferencias acceder a la página que muestra el formulario y permite cambiar el mensaje. Este es el resultado del _portlet_ desplegado en Apache Pluto.
 
 {{< image
     gallery="true"
-    image1="resource:tapestry-portlet.png" optionsthumb1="300x250" title1="Porlet con Apache Tapestry en Apache Pluto"
-    image2="resource:tapestry-portlet-preferences.png" optionsthumb2="300x250" title2="Página de preferencias del portlet" >}}
+    image1="image:tapestry-portlet.png" optionsthumb1="300x250" title1="Porlet con Apache Tapestry en Apache Pluto"
+    image2="image:tapestry-portlet-preferences.png" optionsthumb2="300x250" title2="Página de preferencias del portlet" >}}
 {{< image
     gallery="true"
-    image3="resource:tapestry-portlet-name.png" optionsthumb3="300x250" title3="Portlet usando un dato almacenado en las preferencias"
+    image3="image:tapestry-portlet-name.png" optionsthumb3="300x250" title3="Portlet usando un dato almacenado en las preferencias"
     caption="Porlet con Apache Tapestry en Apache Pluto" >}}
 
 Para conocer más sobre los _portlets_ el libro [Portlets in Action](https://amzn.to/2tzpbjL) es una buena fuente de documentación.

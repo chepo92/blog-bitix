@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:hugo.svg"
 tags: ["blog", "planeta-codigo"]
 summary: "Hugo es un de las mejores herramientas en la categoría de generadores de páginas web estáticas, también puede utilizarse para generar bitácoras. Su fácil instalación, rapidez, personalización o su gran sistema de plantillas y taxonomía son varias de sus características destacadas. Con Hugo conseguí resolver varias de las necesidades que tenía para Blog Bitix, la gestión de enlaces internos y externos, personalización de diseño y procesado de imágenes."
 ---

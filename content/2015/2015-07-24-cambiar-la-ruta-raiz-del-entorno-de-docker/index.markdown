@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:docker.svg"
 tags: ["gnu-linux", "planeta-codigo"]
 series: ["docker"]
 summary: "Cambiando la ruta raíz del entorno de ejecución de docker, dónde guarda las imágenes de los contenedores, los datos de los contenedores y otros metadatos, podemos almacenar esta información en un disco duro externo o memoria USB."
@@ -36,7 +37,7 @@ Iniciando ahora el servicio de Docker veremos que en el directorio que hayamos e
 
 {{< image
     gallery="true"
-    image1="resource:docker-root.png" optionsthumb1="300x200" title1="Directorio raíz de docker"
+    image1="image:docker-root.png" optionsthumb1="300x200" title1="Directorio raíz de docker"
     caption="Directorio raíz de docker" >}}
 
 {{% warning %}}

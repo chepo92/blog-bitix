@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:raspberrypi.svg"
 tags: ["gnu-linux", "java", "planeta-codigo", "programacion"]
 series: ["electronica"]
 ---
@@ -24,15 +25,15 @@ El sensor de golpes necesita de tres cables uno para la corriente de 3.3V, otro 
 
 {{< image
     gallery="true"
-    image1="resource:sensores-1.jpg" optionsthumb1="300x200" title1="Sensor de golpes y detector de movimiento"
-    image2="resource:sensores-2.jpg" optionsthumb2="300x200" title2="Sensor de golpes y detector de movimiento"
+    image1="image:sensores-1.jpg" optionsthumb1="300x200" title1="Sensor de golpes y detector de movimiento"
+    image2="image:sensores-2.jpg" optionsthumb2="300x200" title2="Sensor de golpes y detector de movimiento"
     caption="Sensor de golpes y detector de movimiento" >}}
 
 Usando la librería [diozero][diozero] para controlar los _pines_ GPIO desde un programa implementado con Java detectamos si el sensor está activo o no según la posición de la bolita de mercurio. El ejemplo consiste en [encender un diodo LED][blogbitix-214] que ya mostré en un artículo anterior de esta [serie sobre electrónica][blogbitix-serie-electronica] cuando el sensor _tilt_ esté activo. Usaré el _pin_ 18 para el diodo LED y el _pin_ 21 para el sensor según la nomenclatura de Broadcom. Los _pines_ serían el 12 según la nomenclatura del _header_ y 1 según la nomenclatura de wiringPi para el diodo LED y 13 y 2 para el sensor _tilt_.
 
 {{< image
     gallery="true"
-    image1="resource:cableado-tilt.jpg" optionsthumb1="300x200" title1="Cableado sensor de golpes"
+    image1="image:cableado-tilt.jpg" optionsthumb1="300x200" title1="Cableado sensor de golpes"
     caption="Cableado sensor de golpes" >}}
 
 {{< code file="Tilt.java" language="java" options="" >}}
@@ -48,7 +49,7 @@ El programa Java para el sensor de movimiento es similar al sensor _tilt_ e igua
 
 {{< image
     gallery="true"
-    image1="resource:cableado-motion.jpg" optionsthumb1="300x200" title1="Cableado sensor de movimiento"
+    image1="image:cableado-motion.jpg" optionsthumb1="300x200" title1="Cableado sensor de movimiento"
     caption="Cableado sensor de movimiento" >}}
 
 {{< code file="Motion.java" language="java" options="" >}}

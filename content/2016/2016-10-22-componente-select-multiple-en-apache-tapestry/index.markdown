@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:apache-tapestry-5.svg"
 tags: ["java", "javascript", "planeta-codigo", "programacion", "tapestry"]
 ---
 
@@ -40,16 +41,16 @@ Este sería el aspecto del _select_ múltiple con sus botones para seleccionar t
 
 {{< image
     gallery="true"
-    image1="resource:multiselect.png" optionsthumb1="300x200" title1="Aspecto del componente select mútiple"
-    image2="resource:multiselect-2.png" optionsthumb2="300x200" title2="Vista con opciones seleccionadas enviadas al servidor"
+    image1="image:multiselect.png" optionsthumb1="300x200" title1="Aspecto del componente select mútiple"
+    image2="image:multiselect-2.png" optionsthumb2="300x200" title2="Vista con opciones seleccionadas enviadas al servidor"
     caption="Componente MultiSelect con bootstrap-select" >}}
 
 Si queremos seleccionar múltiples opciones usando _checkboxes_ Tapestry ofrece el componente [Checklist](https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/corelib/components/Checklist.html) y usando _selects_ otra opción es el componente [Palette](https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/corelib/components/Palette.html) pero seguramente no sea lo que deseamos.
 
 {{< image
     gallery="true"
-    image1="resource:checklist.png" optionsthumb1="300x200" title1="Componente Checklist de Tapestry"
-    image2="resource:palette.png" optionsthumb2="300x200" title2="Componente Palette de Tapestry"
+    image1="image:checklist.png" optionsthumb1="300x200" title1="Componente Checklist de Tapestry"
+    image2="image:palette.png" optionsthumb2="300x200" title2="Componente Palette de Tapestry"
     caption="Componentes Checklist y Palette" >}}
 
 En un artículo anterior comenté como [adaptar el componente _Select_ y este _MultiSelect_ para añadirle funcionalidades de la librería bootstrap-select][blogbitix-187] como cuadro de búsqueda, búsqueda por palabras clave, divisores, etc que consiste en añadir a las etiquetas HTML _select_, _optiongrp_ y _option_ ciertos atributos con sus correspondientes valores con una combinación de parámetros informales y personalización de la clase [SelectModel](https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/SelectModel.html). En el siguiente artículo comentaré como [añadir botones selectores de opciones][blogbitix-189] además de los que incorpora _bootstrap-select_ de Todos y Ninguno.

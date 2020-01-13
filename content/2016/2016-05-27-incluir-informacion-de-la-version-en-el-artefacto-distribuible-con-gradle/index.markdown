@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Tener trazabilidad entre el código fuente y el código que se está ejecutando en el entorno de producción es importante para saber cual es el origen de alguna excepción o error que se produzca. Con Gradle podemos conseguir esta trazabilidad haciendo unas pocas modificaciones al _script_ de construcción."
 ---
@@ -34,7 +35,7 @@ En el caso de un artefacto _jar_ Gradle lo genera en _build/libs/GradleVersion-1
 
 {{< image
     gallery="true"
-    image1="resource:gradle-version.png" optionsthumb1="300x200" title1="Artefacto distribuible con información de versión" >}}
+    image1="image:gradle-version.png" optionsthumb1="300x200" title1="Artefacto distribuible con información de versión" >}}
 
 En este caso el artefacto que he usado ha sido un archivo _jar_ si se tratase de una aplicación web y de un archivo _war_ en el archivo de construcción de Grade se puede aplicar esto de forma similar. La aplicación podría devolver la versión como una cabecera <abbr title="HyperText Transfer Protocol">HTTP</abbr> o el en código fuente de <abbr title="HyperText Markup Language">HTML</abbr> como un comentario que genere sus páginas web.
 

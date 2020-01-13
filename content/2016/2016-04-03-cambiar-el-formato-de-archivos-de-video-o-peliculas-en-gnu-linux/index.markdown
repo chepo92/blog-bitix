@@ -8,6 +8,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:ffmpeg.svg"
 tags: ["gnu-linux", "software-libre"]
 ---
 
@@ -38,7 +39,7 @@ Partiendo de un vídeo en un contenedor MKV, vídeo codificado con H.264 y audio
 
 {{< image
     gallery="true"
-    image1="resource:ffmpeg-output.png" optionsthumb1="300x250" title1="Salida conversión de MKV a MPG" >}}
+    image1="image:ffmpeg-output.png" optionsthumb1="300x250" title1="Salida conversión de MKV a MPG" >}}
 
 Si no se indica la tasa de bits como indican en la [documentación de FFmpeg](https://ffmpeg.org/ffmpeg.html) el codificador seleccionará por defecto una tasa de bits muy baja resultando en una calidad muy pobre por lo que deberemos indicar una similar a la original. Para ver ver la calidad de un vídeo y del audio usamos el parámetro _-i_:
 
@@ -58,7 +59,7 @@ Los vídeos pueden tener múltiples pistas de audio y subtítulos en varios idio
 
 {{< image
     gallery="true"
-    image1="resource:ffmpeg-i.png" optionsthumb1="300x250" title1="Información de un vídeo" >}}
+    image1="image:ffmpeg-i.png" optionsthumb1="300x250" title1="Información de un vídeo" >}}
 
 Para hacer la eliminación de las pistas usamos el siguiente comando donde los parámetros _-map_ son las pistas o _streams_ que queremos copiar y conservar del original en el nuevo archivo, en este caso solo la pista del vídeo y la pista de audio en español. Dependiendo del número de pistas para otros idiomas que tenga el archivo y de la duración del vídeo el ahorro de espacio que conseguiremos será más o menos notable. Haciendo un cálculo suponiendo algunas cifras habituales un audio a 320kb/s para una película de 120 minutos el audio ocupa alrededor de 281 MiB que ya es una cifra notable ((320 kilobits/segundo / 8 bits/byte) * 60 segundos/minuto * 120 minutos / 1024 kilobytes/megabyte = 281,25 megabytes) y a lo que hay que multiplicar cada pista de audio que eliminemos del original.
 
@@ -70,7 +71,7 @@ Si no tenemos instalado un reproductor de vídeo con el comando <code>ffplay</co
 
 {{< image
     gallery="true"
-    image1="resource:ffplay.jpg" optionsthumb1="300x250" title1="FFplay" >}}
+    image1="image:ffplay.jpg" optionsthumb1="300x250" title1="FFplay" >}}
 
 Al igual que comentaba en el artículo de convertir archivos de audio todas estas operaciones son realizables de forma masiva en un directorio o recursiva en múltiples directorios con los siguientes comandos.
 
@@ -86,19 +87,19 @@ Si preferimos realizar la conversión mediante una interfaz gráfica podemos usa
 
 {{< image
     gallery="true"
-    image1="resource:vlc-input.png" optionsthumb1="300x250" title1="Selección de archivo"
-    image2="resource:vlc-convert-codecs.png" optionsthumb2="300x250" title2="Selección de códec" >}}
+    image1="image:vlc-input.png" optionsthumb1="300x250" title1="Selección de archivo"
+    image2="image:vlc-convert-codecs.png" optionsthumb2="300x250" title2="Selección de códec" >}}
 {{< image
     gallery="true"
-    image1="resource:vlc-input.png" optionsthumb1="300x250" title1="Selección de archivo"
-    image2="resource:vlc-convert-container.png" optionsthumb2="300x250" title2="Información de contenedor" >}}
+    image1="image:vlc-input.png" optionsthumb1="300x250" title1="Selección de archivo"
+    image2="image:vlc-convert-container.png" optionsthumb2="300x250" title2="Información de contenedor" >}}
 {{< image
     gallery="true"
-    image1="resource:vlc-convert-resolution.png" optionsthumb1="300x250" title1="Resolución del vídeo" >}}
+    image1="image:vlc-convert-resolution.png" optionsthumb1="300x250" title1="Resolución del vídeo" >}}
 {{< image
     gallery="true"
-    image1="resource:vlc-convert-video-codec.png" optionsthumb1="300x250" title1="Parámetros del códec de vídeo"
-    image2="resource:vlc-convert-audio-codec.png" optionsthumb2="300x250" title2="Parámetros del códec de audio" >}}
+    image1="image:vlc-convert-video-codec.png" optionsthumb1="300x250" title1="Parámetros del códec de vídeo"
+    image2="image:vlc-convert-audio-codec.png" optionsthumb2="300x250" title2="Parámetros del códec de audio" >}}
 
 {{< reference >}}
 * [Documentación de FFmpeg](https://trac.ffmpeg.org/wiki)

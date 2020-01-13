@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Al trabajar con referencias de tipos genéricos, _raw_ y arrays debemos conocer el concepto de _Heap Pollution_ si no queremos que en algún punto del programa Java se produzca una excepción no esperada del tipo _ClassCastException_. No teniéndolo en cuenta nos encontraremos con un error de los más difíciles de depurar ya que la excepción solo nos dirá donde se produjo no donde se encuentra el código erróneo que lo provocó."
 ---

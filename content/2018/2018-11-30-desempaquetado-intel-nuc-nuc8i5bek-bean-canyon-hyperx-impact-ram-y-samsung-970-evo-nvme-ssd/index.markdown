@@ -11,6 +11,7 @@ sharing: true
 comments: true
 promoted: false
 imageHead: "images/desempaquetado-nuc-2.jpg"
+imagePost: "logotype:intel.svg"
 tags: ["hardware", "planeta-codigo", "software"]
 series: ["desempaquetado-tecnologia"]
 summary: "Al fin tengo nuevo equipo que cumple con los requisitos que le demandaba. Principalmente que sea pequeño pero al mismo tiempo suficientemente potente para que me suponga un salto notable en rendimiento respecto al portátil que tenía. Después de decidirme entre nuevo portátil, ITX o NUC me decidí por unos de los nuevos Bean Canyon con procesador de 4 núcleos y 8 hilos, posibilidad de SSD con NVMe y hasta un máximo de 32 GiB de RAM."
@@ -28,9 +29,9 @@ Siempre que puedo cuando algún familiar necesita un ordenador lo que hago es da
 
 {{< image
     gallery="true"
-    image1="resource:componentes.jpg" optionsthumb1="200x150" title1="4 GiB DDR2 de memoria RAM, AMD Athlon e Intel Core 2 Duo (T8100)"
-    image2="resource:amd-athlon.jpg" optionsthumb2="200x150" title2="Microprocesador AMD Athlon"
-    image3="resource:intel-core-2-duo.jpg" optionsthumb3="200x150" title3="Microprocesador Intel Core 2 Duo (T8100)"
+    image1="image:componentes.jpg" optionsthumb1="200x150" title1="4 GiB DDR2 de memoria RAM, AMD Athlon e Intel Core 2 Duo (T8100)"
+    image2="image:amd-athlon.jpg" optionsthumb2="200x150" title2="Microprocesador AMD Athlon"
+    image3="image:intel-core-2-duo.jpg" optionsthumb3="200x150" title3="Microprocesador Intel Core 2 Duo (T8100)"
     caption="4 GiB DDR2 de memoria RAM, AMD Athlon e Intel Core 2 Duo (T8100) de anteriores equipos" >}}
 
 ### La búsqueda
@@ -67,12 +68,12 @@ Ocupan muy poco, tiene un tamaño de 11x11x3.6cm (ancho, largo, alto en centíme
 
 {{< image
     gallery="true"
-    image1="resource:intel-nuc8i5-brief.png" optionsthumb1="600x450" title1="Intel NUC Bean Canyon (tall)"
+    image1="image:intel-nuc8i5-brief.png" optionsthumb1="600x450" title1="Intel NUC Bean Canyon (tall)"
     caption="Intel NUC Bean Canyon (slim y tall)" >}}
 
 {{< image
     gallery="true"
-    image1="resource:especificaciones-modelos-intel-nuc-bean-canyon.png" optionsthumb1="600x450" title1="Especificaciones de los modelos Intel NUC Bean Canyon"
+    image1="image:especificaciones-modelos-intel-nuc-bean-canyon.png" optionsthumb1="600x450" title1="Especificaciones de los modelos Intel NUC Bean Canyon"
     caption="Especificaciones de los modelos Intel NUC Bean Canyon" >}}
 
 En el momento de comercialización el modelo NUC8i3BEK tiene un precio sobre los 300€, el NUC8i5BEK sobre los 400€ y el NUC8i7BEK sobre los 500€. Los Hades Canyon llegan a los 800€ y 1000€ pero con mejor gráfica y mayor número de puertos de conexión. Con la aparición de los Bean Canyon los [Baby Canyon][intel-nuc-baby-canyon] de la generación anterior se han convertido en una opción desaconsejada por la reducida diferencia de precio, el [NUC7i5BNK](https://www.intel.com/content/www/us/en/products/boards-kits/nuc/kits/nuc7i5bnk.html) (i5-7260U) cuesta unos 360€ y tiene 2 núcleos menos que el NUC8i5.
@@ -160,60 +161,60 @@ La caja del NUC es muy pequeña en la que se incluye el NUC y la fuente de alime
 
 {{< image
     gallery="true"
-    image1="resource:desempaquetado-nuc-1.jpg" optionsthumb1="200x150" title1="Caja Intel NUC8i5BEK"
-    image2="resource:desempaquetado-nuc-2.jpg" optionsthumb2="200x150" title2="Caja Intel NUC8i5BEK"
-    image3="resource:desempaquetado-nuc-3.jpg" optionsthumb3="200x150" title3="Caja Intel NUC8i5BEK" >}}
+    image1="image:desempaquetado-nuc-1.jpg" optionsthumb1="200x150" title1="Caja Intel NUC8i5BEK"
+    image2="image:desempaquetado-nuc-2.jpg" optionsthumb2="200x150" title2="Caja Intel NUC8i5BEK"
+    image3="image:desempaquetado-nuc-3.jpg" optionsthumb3="200x150" title3="Caja Intel NUC8i5BEK" >}}
 {{< image
     gallery="true"
-    image1="resource:desempaquetado-nuc-4.jpg" optionsthumb1="200x150" title1="Caja Intel NUC8i5BEK"
-    image2="resource:desempaquetado-nuc-5.jpg" optionsthumb2="200x150" title2="Caja Intel NUC8i5BEK"
-    image3="resource:desempaquetado-nuc-6.jpg" optionsthumb3="200x150" title3="Caja Intel NUC8i5BEK"
+    image1="image:desempaquetado-nuc-4.jpg" optionsthumb1="200x150" title1="Caja Intel NUC8i5BEK"
+    image2="image:desempaquetado-nuc-5.jpg" optionsthumb2="200x150" title2="Caja Intel NUC8i5BEK"
+    image3="image:desempaquetado-nuc-6.jpg" optionsthumb3="200x150" title3="Caja Intel NUC8i5BEK"
     caption="Caja Intel NUC8i5BEK" >}}
 
 Aspecto exterior del NUC.
 
 {{< image
     gallery="true"
-    image1="resource:desempaquetado-nuc-7.jpg" optionsthumb1="200x150" title1="Aspecto exterior Intel NUC8i5BEK"
-    image2="resource:desempaquetado-nuc-8.jpg" optionsthumb2="200x150" title2="Aspecto exterior Intel NUC8i5BEK"
-    image3="resource:desempaquetado-nuc-9.jpg" optionsthumb3="200x150" title3="Aspecto exterior Intel NUC8i5BEK" >}}
+    image1="image:desempaquetado-nuc-7.jpg" optionsthumb1="200x150" title1="Aspecto exterior Intel NUC8i5BEK"
+    image2="image:desempaquetado-nuc-8.jpg" optionsthumb2="200x150" title2="Aspecto exterior Intel NUC8i5BEK"
+    image3="image:desempaquetado-nuc-9.jpg" optionsthumb3="200x150" title3="Aspecto exterior Intel NUC8i5BEK" >}}
 {{< image
     gallery="true"
-    image1="resource:desempaquetado-nuc-10.jpg" optionsthumb1="200x150" title1="Aspecto exterior Intel NUC8i5BEK"
-    image2="resource:desempaquetado-nuc-11.jpg" optionsthumb2="200x150" title2="Aspecto exterior Intel NUC8i5BEK"
-    image3="resource:desempaquetado-nuc-12.jpg" optionsthumb3="200x150" title3="Aspecto exterior Intel NUC8i5BEK"
+    image1="image:desempaquetado-nuc-10.jpg" optionsthumb1="200x150" title1="Aspecto exterior Intel NUC8i5BEK"
+    image2="image:desempaquetado-nuc-11.jpg" optionsthumb2="200x150" title2="Aspecto exterior Intel NUC8i5BEK"
+    image3="image:desempaquetado-nuc-12.jpg" optionsthumb3="200x150" title3="Aspecto exterior Intel NUC8i5BEK"
     caption="Aspecto exterior Intel NUC8i5BEK" >}}
 
 La fuente de alimentación del NUC y el soporte VESA con sus tornillos.
 
 {{< image
     gallery="true"
-    image1="resource:desempaquetado-nuc-13.jpg" optionsthumb1="200x150" title1="Fuente de alimentación"
-    image2="resource:desempaquetado-nuc-14.jpg" optionsthumb2="200x150" title2="Soporte VESA"
+    image1="image:desempaquetado-nuc-13.jpg" optionsthumb1="200x150" title1="Fuente de alimentación"
+    image2="image:desempaquetado-nuc-14.jpg" optionsthumb2="200x150" title2="Soporte VESA"
     caption="Fuente de alimentación y soporte VESA" >}}
 
 Manuales e instrucciones del NUC.
 
 {{< image
     gallery="true"
-    image1="resource:instrucciones-1.jpg" optionsthumb1="200x150" title1="Manuales e instrucciones del NUC"
-    image2="resource:instrucciones-2.jpg" optionsthumb2="200x150" title2="Manuales e instrucciones del NUC"
-    image3="resource:instrucciones-3.jpg" optionsthumb3="200x150" title3="Manuales e instrucciones del NUC"
+    image1="image:instrucciones-1.jpg" optionsthumb1="200x150" title1="Manuales e instrucciones del NUC"
+    image2="image:instrucciones-2.jpg" optionsthumb2="200x150" title2="Manuales e instrucciones del NUC"
+    image3="image:instrucciones-3.jpg" optionsthumb3="200x150" title3="Manuales e instrucciones del NUC"
     caption="Manuales e instrucciones del NUC" >}}
 
 En el interior se aprecia el conector SATA aunque para usarlo en la versión _slim_ hay que dejar la tapa inferior sin poner para poder añadir el disco 2.5" y los cables que necesita. La parte interior de la tapa inferior tiene una tira de un material que hace de disipador para el SSD NVMe.
 
 {{< image
     gallery="true"
-    image1="resource:nucblog-interior-1.jpg" optionsthumb1="200x150" title1="Placa base del NUC"
+    image1="image:nucblog-interior-1.jpg" optionsthumb1="200x150" title1="Placa base del NUC"
     caption="Placa base del NUC" source="nucblog.net" >}}
 
 El ventilador es más grande que en generaciones anteriores.
 
 {{< image
     gallery="true"
-    image1="resource:nucblog-nuc8i3beh-fan.jpg" optionsthumb1="200x150" title1="Ventilador"
-    image2="resource:nucblog-nuc8i3beh-heatsink.jpg" optionsthumb2="200x150" title2="Disipador"
+    image1="image:nucblog-nuc8i3beh-fan.jpg" optionsthumb1="200x150" title1="Ventilador"
+    image2="image:nucblog-nuc8i3beh-heatsink.jpg" optionsthumb2="200x150" title2="Disipador"
     caption="Ventilador y disipador" source="nucblog.net" >}}
 
 #### Memoria
@@ -222,9 +223,9 @@ El _kit_ de la memoria DDR4 a 2400 Mhz no tiene nada especial. Cada módulo est�
 
 {{< image
     gallery="true"
-    image1="resource:desempaquetado-ram-1.jpg" optionsthumb1="200x150" title1="Desempaquetado memoria HyperX Impact"
-    image2="resource:desempaquetado-ram-2.jpg" optionsthumb2="200x150" title2="Desempaquetado memoria HyperX Impact"
-    image3="resource:desempaquetado-ram-3.jpg" optionsthumb3="200x150" title3="Desempaquetado memoria HyperX Impact"
+    image1="image:desempaquetado-ram-1.jpg" optionsthumb1="200x150" title1="Desempaquetado memoria HyperX Impact"
+    image2="image:desempaquetado-ram-2.jpg" optionsthumb2="200x150" title2="Desempaquetado memoria HyperX Impact"
+    image3="image:desempaquetado-ram-3.jpg" optionsthumb3="200x150" title3="Desempaquetado memoria HyperX Impact"
     caption="Desempaquetado memoria HyperX Impact" >}}
 
 #### SSD
@@ -233,12 +234,12 @@ El _stick_ del SSD también es muy pequeño solo mide 8cm de largo y unos 2,5 cm
 
 {{< image
     gallery="true"
-    image1="resource:desempaquetado-ssd-1.jpg" optionsthumb1="200x150" title1="Desempaquetado SSD Samsung 970 EVO NVMe"
-    image2="resource:desempaquetado-ssd-2.jpg" optionsthumb2="200x150" title2="Desempaquetado SSD Samsung 970 EVO NVMe"
-    image3="resource:desempaquetado-ssd-3.jpg" optionsthumb3="200x150" title3="Desempaquetado SSD Samsung 970 EVO NVMe" >}}
+    image1="image:desempaquetado-ssd-1.jpg" optionsthumb1="200x150" title1="Desempaquetado SSD Samsung 970 EVO NVMe"
+    image2="image:desempaquetado-ssd-2.jpg" optionsthumb2="200x150" title2="Desempaquetado SSD Samsung 970 EVO NVMe"
+    image3="image:desempaquetado-ssd-3.jpg" optionsthumb3="200x150" title3="Desempaquetado SSD Samsung 970 EVO NVMe" >}}
 {{< image
     gallery="true"
-    image1="resource:desempaquetado-ssd-4.jpg" optionsthumb1="200x150" title1="Desempaquetado SSD Samsung 970 EVO NVMe"
+    image1="image:desempaquetado-ssd-4.jpg" optionsthumb1="200x150" title1="Desempaquetado SSD Samsung 970 EVO NVMe"
     caption="Desempaquetado SSD Samsung 970 EVO NVMe" >}}
 
 ### Montaje de memoria y SSD
@@ -253,9 +254,9 @@ Una vez colocados ambos elementos se vuelve a colocar la tapa inferior que hace 
 
 {{< image
     gallery="true"
-    image1="resource:montaje-nuc-1.jpg" optionsthumb1="200x150" title1="Montaje de memoria y SSD M.2"
-    image2="resource:montaje-nuc-2.jpg" optionsthumb2="200x150" title2="Montaje de memoria y SSD M.2"
-    image3="resource:montaje-nuc-3.jpg" optionsthumb3="200x150" title3="Montaje de memoria y SSD M.2"
+    image1="image:montaje-nuc-1.jpg" optionsthumb1="200x150" title1="Montaje de memoria y SSD M.2"
+    image2="image:montaje-nuc-2.jpg" optionsthumb2="200x150" title2="Montaje de memoria y SSD M.2"
+    image3="image:montaje-nuc-3.jpg" optionsthumb3="200x150" title3="Montaje de memoria y SSD M.2"
     caption="Montaje de memoria y SSD M.2" >}}
 
 El ventilador está en la parte superior del NUC, para acceder a él hay que desmontar la placa base con el objetivo de limpiar el polvo que se le acumule para que su capacidad de refrigeración sea eficiente. En el momento que funcione más rápidamente de lo normal en tareas que no requiere demasiada computación hay que hacerle una limpieza y al disipador.
@@ -268,19 +269,19 @@ El NUC es realmente pequeño con sus 11x11cm ocupa muy poco espacio, además la 
 
 {{< image
     gallery="true"
-    image1="resource:nucblog-nuc8i5_bios1.png" optionsthumb1="200x150" title1="BIOS"
-    image2="resource:nucblog-nuc8i5_bios2.png" optionsthumb2="200x150" title2="BIOS"
-    image3="resource:nucblog-nuc8i5_bios3.png" optionsthumb3="200x150" title3="BIOS" >}}
+    image1="image:nucblog-nuc8i5_bios1.png" optionsthumb1="200x150" title1="BIOS"
+    image2="image:nucblog-nuc8i5_bios2.png" optionsthumb2="200x150" title2="BIOS"
+    image3="image:nucblog-nuc8i5_bios3.png" optionsthumb3="200x150" title3="BIOS" >}}
 {{< image
     gallery="true"
-    image1="resource:nucblog-nuc8i5_bios4.png" optionsthumb1="200x150" title1="BIOS"
-    image2="resource:nucblog-nuc8i5_bios5.png" optionsthumb2="200x150" title2="BIOS"
-    image3="resource:nucblog-nuc8i5_bios6.png" optionsthumb3="200x150" title3="BIOS" >}}
+    image1="image:nucblog-nuc8i5_bios4.png" optionsthumb1="200x150" title1="BIOS"
+    image2="image:nucblog-nuc8i5_bios5.png" optionsthumb2="200x150" title2="BIOS"
+    image3="image:nucblog-nuc8i5_bios6.png" optionsthumb3="200x150" title3="BIOS" >}}
 {{< image
     gallery="true"
-    image1="resource:nucblog-nuc8i5_bios7.png" optionsthumb1="200x150" title1="BIOS"
-    image2="resource:nucblog-nuc8i5_bios8.png" optionsthumb2="200x150" title2="BIOS"
-    image3="resource:nucblog-nuc8i5_bios9.png" optionsthumb3="200x150" title3="BIOS"
+    image1="image:nucblog-nuc8i5_bios7.png" optionsthumb1="200x150" title1="BIOS"
+    image2="image:nucblog-nuc8i5_bios8.png" optionsthumb2="200x150" title2="BIOS"
+    image3="image:nucblog-nuc8i5_bios9.png" optionsthumb3="200x150" title3="BIOS"
     caption="BIOS" source="nucblog.net" >}}
 
 Usando el [_script_ para instalar Arch Linux de forma automatizada, desatendida y personalizable][blogbitix-204] conseguí instalarlo a la primera sin nada grave que no halla podido resolver. En GNU/Linux todo el hardware ha sido reconocido correctamente sin necesidad de instalar controladores adicionales. Desde la WIFI, Bluetooth, Thunderbolt, el SSD NVMe, puertos USB, tarjeta gráfica, salida HDMI y por supuesto los 32GiB de memoria. El monitor Benq con su resolución QHD también ha sido reconocido correctamente también en la instalación. Aún tengo que probarlo más pero tengo la sensación de que el texto está mejor definido en GNOME que en macOS. Lo anterior puede ser una percepción pero por otro lado me he dado cuenta es que en macOS sacando el audio por el cable HDMI no se puede controlar el volumen ni silenciarlo, en Arch Linux con GNOME si se puede controlar el volumen del sonido cuando se emite por el cable HDMI también usar las teclas para silenciarlo.
@@ -299,9 +300,9 @@ Por otra parte al comparar el monitor entre usar una Mac Book Retina de 13" y el
 
 {{< image
     gallery="true"
-    image1="resource:mac-mini-1.jpg" optionsthumb1="200x150" title1="Mac mini (2018)"
-    image2="resource:mac-mini-2.jpg" optionsthumb2="200x150" title2="Mac mini (2018)"
-    image3="resource:mac-mini-3.jpg" optionsthumb3="200x150" title3="Mac mini (2018)"
+    image1="image:mac-mini-1.jpg" optionsthumb1="200x150" title1="Mac mini (2018)"
+    image2="image:mac-mini-2.jpg" optionsthumb2="200x150" title2="Mac mini (2018)"
+    image3="image:mac-mini-3.jpg" optionsthumb3="200x150" title3="Mac mini (2018)"
     caption="Mac mini (2018)" >}}
 
 En cualquier caso no entraba dentro de mis planes un Mac mini ni aunque tuviese el mismo precio del NUC ya que prefiero GNU/Linux como detallo en [Tú con tu Mac, yo con mi GNU/Linux][blogbitix-305].
@@ -344,9 +345,9 @@ También hubiese podido optar por un [Slimbook One](https://slimbook.es/en/power
 
 {{< image
     gallery="true"
-    image1="resource:slimbook-one-1.jpg" optionsthumb1="200x150" title1="Slimbook ONE (v2)"
-    image2="resource:slimbook-one-2.jpg" optionsthumb2="200x150" title2="Slimbook ONE (v2)"
-    image3="resource:slimbook-one-3.jpg" optionsthumb3="200x150" title3="Slimbook ONE (v2)"
+    image1="image:slimbook-one-1.jpg" optionsthumb1="200x150" title1="Slimbook ONE (v2)"
+    image2="image:slimbook-one-2.jpg" optionsthumb2="200x150" title2="Slimbook ONE (v2)"
+    image3="image:slimbook-one-3.jpg" optionsthumb3="200x150" title3="Slimbook ONE (v2)"
     caption="Slimbook ONE (v2)" >}}
 
 ### Switch HDMI, monitor con el ordenador y consola
@@ -373,23 +374,23 @@ He tenido que esperar muchos meses a tener esta configuración, entre elegir que
 
 {{< image
     gallery="true"
-    image1="resource:gnome.png" optionsthumb1="600x450" title1="Intel NUC8i5BEK con Arch Linux y GNOME"
+    image1="image:gnome.png" optionsthumb1="600x450" title1="Intel NUC8i5BEK con Arch Linux y GNOME"
     caption="Intel NUC8i5BEK con Arch Linux y GNOME" >}}
 
 Este es [el escritorio que tenía antes][blogbitix-201], con mucho espacio desaprovechado por la ubicación del portátil. 
 
 {{< image
     gallery="true"
-    image1="resource:escritorio-portatil-1.jpg" optionsthumb1="200x150" title1="Escritorio con portátil"
+    image1="image:escritorio-portatil-1.jpg" optionsthumb1="200x150" title1="Escritorio con portátil"
     caption="Escritorio con portátil" >}}
 
 Y el que tengo ahora.
 
 {{< image
     gallery="true"
-    image1="resource:escritorio-nuc-1.jpg" optionsthumb1="200x150" title1="Escritorio con NUC"
-    image2="resource:escritorio-nuc-2.jpg" optionsthumb2="200x150" title2="Escritorio con NUC"
-    image3="resource:escritorio-nuc-3.jpg" optionsthumb3="200x150" title3="Escritorio con NUC"
+    image1="image:escritorio-nuc-1.jpg" optionsthumb1="200x150" title1="Escritorio con NUC"
+    image2="image:escritorio-nuc-2.jpg" optionsthumb2="200x150" title2="Escritorio con NUC"
+    image3="image:escritorio-nuc-3.jpg" optionsthumb3="200x150" title3="Escritorio con NUC"
     caption="Escritorio con NUC" >}}
 
 > Software. Hardware. Complete.

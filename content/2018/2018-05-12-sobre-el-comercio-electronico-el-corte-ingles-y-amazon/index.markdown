@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:amazon.svg"
 tags: ["opinion"]
 summary: "Internet es la revolución de finales del sigo XX e inicio del siglo XXI equivalente a la revolución industrial de los siglos anteriores. Está transformando la sociedad y cambiando aquellos sectores en los que se adentra."
 ---
@@ -30,7 +31,7 @@ Los pequeños comercios locales difícilmente pueden competir con estos gigantes
 
 {{< image
     gallery="true"
-    image1="resource:the-new-yorker.jpg" optionsthumb1="650x450" title1="Portada The New Yorker"
+    image1="image:the-new-yorker.jpg" optionsthumb1="650x450" title1="Portada The New Yorker"
     caption="Portada The New Yorker" >}}
 
 Una de las dificultades de comprar por internet es la incertidumbre de saber como es el producto sin verlo físicamente, esto dificulta la compra. Para eliminar parte de esa incertidumbre están las descripciones detallatdas del producto junto con fotos pero Amazon también tiene algo tan simple como los comentarios que añaden los usuarios que han comprado con anterioridad ese producto. Aunque haya un comentario negativo esto también es bueno ya que permite a un usuario conocer sus defectos, esto es mejor que que un usuario compre un producto y no le guste, normalmente la mayoría de los comentarios son positivos. Por otro lado Amazon incentiva que los usuarios hagan comentarios envíando un correo electrónicos pasados unos días después de haber recibido el producto para que cuenten sus impresiones.

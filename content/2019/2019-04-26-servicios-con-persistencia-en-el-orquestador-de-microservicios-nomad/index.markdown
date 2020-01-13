@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:nomad.svg"
 tags: ["planeta-codigo", "programacion", "software"]
 series: ["hashicorp"]
 summary: "Los servicios que necesitan almacenar datos como las bases de datos o un sistema de archivos tienen más restricciones que los servicios sin estado por la necesidad de tener acceso a esos datos. Esto hace que los contenedores puedan no tener tantan libertad para iniciarse en cualquier nodo. En Nomad una estategia es imponer ciertas restricciones a los servicios que almacenen estado para que solo se puedan iniciar en el nodo que donde estén almacenados."

@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:consul.png"
 tags: ["planeta-codigo", "programacion", "software"]
 series: ["docker", "hashicorp"]
 summary: "En los microservicios se hace necesario un servicio de registro y descubrimiento como Eureka o Consul que permita conocer la ubicación de las instancias en cada momento. Las instancias de los servicios se pueden registrar ellas mismas o esta tarea se puede delegar en una en otro servicio. Al usar contenedores de Docker una herramienta que permite delegar el registro y desregistro en Consul de los servicios es GliderLabs Registrator."
@@ -42,7 +43,7 @@ Iniciados estos dos servicios en la interfaz de estado de Consul se observa que 
 
 {{< image
     gallery="true"
-    image1="resource:consul.png" optionsthumb1="300x200" title1="Dirección" >}}
+    image1="image:consul.png" optionsthumb1="300x200" title1="Dirección" >}}
 
 En este caso se utiliza como servicio una base de datos [PostgreSQL][postgresql]. Dado que el puerto en el que esté disponible el servicio de PostgreSQL es indiferente al utilizar un servicio de registro y descubrimiento se indica el _-p_ sin indicar el puerto del _host_, de este modo Docker le asigna un puerto público aleatorio.
 
@@ -57,8 +58,8 @@ Una vez iniciado el servicio de postgres en la consola de Consul se muestra con 
 
 {{< image
     gallery="true"
-    image1="resource:consul-postgres-1.png" optionsthumb1="300x200" title1="Servicio de postgres registrado en Consul"
-    image2="resource:consul-postgres-2.png" optionsthumb2="300x200" title2="Servicio de postgres registrado en Consul"
+    image1="image:consul-postgres-1.png" optionsthumb1="300x200" title1="Servicio de postgres registrado en Consul"
+    image2="image:consul-postgres-2.png" optionsthumb2="300x200" title2="Servicio de postgres registrado en Consul"
     caption="Servicio de postgres registrado en Consul por Registrator" >}}
 
 En vez de iniciar los servicios individualmente con comandos de Docker creando un archivo de [Docker Compose][docker-compose] con la definición de todos los contenedores se facilita iniciar todos los contenedores con un comando.
