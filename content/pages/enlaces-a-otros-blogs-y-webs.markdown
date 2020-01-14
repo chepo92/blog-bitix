@@ -48,22 +48,26 @@ uno nuevo según tus necesidades y restricciones de presupuesto.
 * [Incognitosis](https://javipas.com/): el blog personal de un editor de Xataka con artículos de opinión sobre tecnología.
 * [Hardware 360º](https://www.youtube.com/channel/UC40Ztmc_11leuUR-tHh_irQ): canal de YouTube especializado en hardware de consumo como procesadores y targetas gráficas pero también consolas. Son exhaustivos y de fácil comprensión con los que informarse en profundidad del hardware de las computadoras.
 
-## Software libre y Linux
+## Software libre y GNU/Linux
 
+* [Red Hat](https://www.redhat.com): web de una de las empresas que más colaboran con el desarrollo de GNU/Linux y que ofrece servicios para empresas siendo una de las que más éxito han tenido usando este modelo de negocio. Su distribución empresarial es RHEL.
+* [Fedora](https://getfedora.org/): distribución que incorpora rápido las nuevas tecnologías de Linux, respaldada por Red Hat y que pasado un tiempo incluye en su distribución empresarial RHEL las nuevas características ya probadas en Fedora.
+* [Ubuntu](https://ubuntu.com): una de las distribuciones más populares de GNU/Linux basada en Debian, respaldada por la empresa Canonical.
+* [FreeBSD](https://www.freebsd.org/): una de las ditribuciones BSD alternativas a GNU/Linux, también basadas en software libre pero con una licencia más permisiva y atractiva para algunas empresas que la GPL de la FSF.
 * [BSD Magazine](https://bsdmag.org/): publicación mensual relacionada con la distribuciones BSD pero con artículos interesantes. Conocer el punto de vista de BSD enriquece a cualquier persona que use GNU/Linux.
-* [Planet GNOME](https://planet.gnome.org/)
-* [Ubuntu Planet](http://planet.ubuntu.com/)
+* [Planet GNOME](https://planet.gnome.org/): agregador de diferentes blogs de algunos de los desarrolladores de GNOME, algunos artículos permiten conocer que desarrollo se están realizando y se incorporarán en futuras versiones del entorno de escritorio.
+* [Ubuntu Planet](http://planet.ubuntu.com/): agregador de blogs con la temática de la distribución Ubuntu.
 * [Planeta Linux](http://planetalinux.org/es/): agregador de varios blogs con una temática sobre Linux o el software libre.
-* [ESLE](http://www.esle.eu/)
+* [ESLE](http://www.esle.eu/): web de la asociación de empresas de tecnologías y conocimiento libre de Euskadi.
 * [Software Libre Deusto](http://softwarelibre.deusto.es/)
-* [Administración de sistemas - systemadmin.es](http://systemadmin.es/)
-* [DesdeLinux](https://blog.desdelinux.net/)
+* [DesdeLinux](https://blog.desdelinux.net/): noticias de actualidad y tutoriales sobre GNU/Linux.
 * [SYSADMIT](https://www.sysadmit.com/): contiene artículos de Linux, Microsoft, VMware y más temas relacionados con la administración de sistemas informáticos.
+* [Linuxito](https://www.linuxito.com/): blog personal sobre distribuciones GNU/Linux y BSD con gran cantidad de artículos. Contiene una lista de la [blogosfera de GNU/Linux y el software libre](https://www.linuxito.com/herramientas/blogosfera) en la que conocer otros blogs de la misma temática.
+* [Linux Adictos](https://www.linuxadictos.com/): web centrada en el software libre y GNU/Linux con noticias de actualidad.
+* [La sombra del helicóptero](https://lasombradelhelicoptero.wordpress.com/): blog personal que ya no ofrece nuevo contenido ya que su autor dejó de publicar en él pero en el que encontrar todavía artículos interesantes.
+* [Victorhck in the free world](https://victorhckinthefreeworld.com/): blog personal que promociona y defiende el software libre y los derechos de los usuarios en la tecnología.
+* [Administración de sistemas - systemadmin.es](http://systemadmin.es/)
 * [LiGNUx](https://lignux.com/)
-* [Linuxito](https://www.linuxito.com/)
-* [Linux Adictos](https://www.linuxadictos.com/)
-* [La sombra del helicóptero](https://lasombradelhelicoptero.wordpress.com/)
-* [Victorhck in the free world](https://victorhckinthefreeworld.com/)
 
 ## Desarrollo y programación
 

@@ -1,26 +1,26 @@
 {{ printf "<?xml version=\"1.0\" encoding=\"utf-8\"?>" | safeHTML }}
-<feed version="2.0" xmlns="http://www.w3.org/2005/Atom">
-    <id>{{ .Permalink }}</id>
+<feed xmlns="http://www.w3.org/2005/Atom">
     <title type="text">{{ .Site.Title }}</title>
-    <subtitle>Recent content on {{ .Site.Title }}</subtitle>
+    <subtitle type="text">{{ .Site.Params.description }}</subtitle>
+    <link rel="self" href="{{ "index.xml" | absURL }}"/>
+    <link href="{{ .Site.BaseURL }}" />
+    <id>{{ .Permalink }}</id>
     <updated>{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</updated>
     <author>{{ with .Site.Author.name }}<name>{{.}}</name>{{end}}</author>
     <generator>Hugo</generator>
-    <icon>{{ .Site.BaseURL }}assets/images/logotipos/hugo.png</icon>
-    <logo>{{ .Site.BaseURL }}assets/images/logotipos/hugo.png</logo>
+    <icon>{{ "assets/favicon.ico" | absURL }}</icon>
+    <logo>{{ .Site.Params.publisher.logotype }}</logo>
     {{ with .Site.Copyright }}<rights>{{.}}</rights>{{end}}
-    {{ range first 15 (where .RegularPages ".Params.rss" true) }}
+    {{ range first 15 (where .Site.RegularPages ".Params.rss" true) }}
     <entry>
         <id>{{ .Permalink }}</id>
-        <title>{{ .Title }}</title>        
+        <title>{{ .Title }}</title>
         <updated>{{ if isset .Params "updated" }}{{ .Params.updated | safeHTML }}{{ else }}{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}{{ end }}</updated>
         <published>{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</published>
-        <link rel="alternate" href="{{ .Permalink }}"/>
+        <link rel="alternate" type="text/html" href="{{ .Permalink }}"/>
         {{ if isset .Params "author" }}<author><name>{{ .Params.author }}</name></author>{{ else }}<author><name>{{ .Site.Author.name }}</name></author>{{ end }}
         <content type="html">
-        {{ if isset .Params "summary" }}
-          {{ htmlUnescape "&lt;![CDATA[" | safeHTML }}<p><strong>{{ .Params.summary | markdownify }}</strong></p>]]>
-        {{ end }}
+        {{ if isset .Params "summary" }}{{ htmlUnescape "&lt;![CDATA[" | safeHTML }}<p><strong>{{ .Params.summary | markdownify }}</strong></p>]]>{{ end }}
         {{ htmlUnescape "&lt;![CDATA[" | safeHTML }}{{ .Content }}]]>
         </content>
         {{ if isset .Params "tags" }}
