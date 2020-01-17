@@ -1,1 +1,1 @@
-$ wget –spider -o wget.log -e robots=off -r -p http://localhost:1313/blog-bitix/
+$ wget –spider -o wget.log -e robots=off -r -p https://picodotdev.github.io/blog-bitix/
