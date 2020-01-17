@@ -3,7 +3,7 @@ pid: 455
 type: "post"
 title: "Los permisos del sistema de archivos de GNU/Linux"
 url: "/2020/01/los-permisos-del-sistema-de-archivos-de-gnu-linux/"
-date: 2020-01-17T19:00:00+01:00
+date: 2020-01-17T19:15:00+01:00
 language: "es"
 rss: true
 sharing: true
