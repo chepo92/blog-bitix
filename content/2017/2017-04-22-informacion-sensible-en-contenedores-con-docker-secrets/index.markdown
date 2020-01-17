@@ -37,7 +37,7 @@ Algunos comandos para manejar los secretos son los siguientes:
 * _docker secret inspect secreto_: muestra los detalles de un secreto.
 * _docker secret ls_: lista los secretos creados.
 * _docker secret rm secreto_: elimina un secreto.
-* Se usa el parámetro _--secret_ para _docker service create_ y _--secret-add_ y _--secret-rm flags_ para _docker service update_.
+* Se usa el parámetro _\-\-secret_ para _docker service create_ y _\-\-secret-add_ y _\-\-secret-rm flags_ para _docker service update_.
 
 Usando un _stack_ de servicios con un archivo de [Docker Compose][docker-compose] en la sección _secrets_ de los servicios se indica cuales usa, en la sección _secrets_ se definen los secretos de los servicios con sus nombres y su contenido referenciando archivos que pueden ser binarios o de text no superior a 500 KiB.
 

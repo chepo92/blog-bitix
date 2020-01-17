@@ -1,0 +1,1 @@
+-rw-r--r-- 1 archie users  5120 Jun 27 08:28 foobar

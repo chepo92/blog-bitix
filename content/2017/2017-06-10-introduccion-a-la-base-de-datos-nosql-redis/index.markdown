@@ -31,7 +31,7 @@ Redis es un sistema de datos clave-valor en el que cada clave tiene asociado un 
 * [Operaciones con hashes](https://redis.io/commands#hash)
 * [Operaciones genéricas con keys](https://redis.io/commands#generic)
 
-Usando [Docker][docker] se puede iniciar una instancia de Redis con un archivo descriptor del contenedor en formato _yml_ y el comando <code>docker-compose up</code>. Redis al igual que otras bases de datos posee un _shell_ de linea de comandos, _redis-cli_. Iniciada la instancia del contenedor y el servicio de Redis se puede iniciar una sesión de _sh_ y con ella el _shell_.
+Usando [Docker][docker] se puede iniciar una instancia de Redis con un archivo descriptor del contenedor en formato _yml_ y el comando `docker-compose up`. Redis al igual que otras bases de datos posee un _shell_ de linea de comandos, _redis-cli_. Iniciada la instancia del contenedor y el servicio de Redis se puede iniciar una sesión de _sh_ y con ella el _shell_.
 
 {{< code file="docker-compose.sh" language="bash" options="" >}}
 {{< code file="docker-compose.yml" language="YAML" options="" >}}

@@ -53,7 +53,7 @@ La aplicación irá registrando los usuarios conectados a la aplicación con el 
 {{< code file="Supermarket.java" language="java" options="" >}}
 {{< code file="SupermarketLocal.java" language="java" options="" >}}
 
-Usando la API de seguridad de Java EE autenticaremos al comprador o vendedor, la página se personalizará según el rol del usuario y en el servidor con la anotación [RolesAllowed](https://docs.oracle.com/javaee/7/api/javax/annotation/security/RolesAllowed.html) y métodos _post_, _get_, _list_ se limitarán las acciones que pueden realizar según sus roles, su uso se puede ver en los listados de código anteriores. Con la página de inicio de sesión se autenticará al usuario de forma programática usando <code>request.login(username, password);</code>. Esta acción es recomendable hacerla usando el [protocolo seguro HTTPS con TLS a configurar en el servidor][blogbitix-14] para que la contraseña se transmita cifrada entre el cliente y el servidor.
+Usando la API de seguridad de Java EE autenticaremos al comprador o vendedor, la página se personalizará según el rol del usuario y en el servidor con la anotación [RolesAllowed](https://docs.oracle.com/javaee/7/api/javax/annotation/security/RolesAllowed.html) y métodos _post_, _get_, _list_ se limitarán las acciones que pueden realizar según sus roles, su uso se puede ver en los listados de código anteriores. Con la página de inicio de sesión se autenticará al usuario de forma programática usando `request.login(username, password);`. Esta acción es recomendable hacerla usando el [protocolo seguro HTTPS con TLS a configurar en el servidor][blogbitix-14] para que la contraseña se transmita cifrada entre el cliente y el servidor.
 
 {{< code file="login.html" language="html" options="" >}}
 {{< code file="LoginBean.java" language="java" options="" >}}
@@ -77,7 +77,7 @@ Algunos libros sobre Java EE que he leído y que me han gustado han sido los sig
 
 Con Java EE 6 y 7 ciertas partes de configuración se pueden realizar con anotaciones en vez de con XML sin embargo aún no ha desaparecido completamente aunque si reducido considerablemente.
 
-Ejecutar este ejemplo require instalar previamente el servidor de aplicaciones [WildFly][wildfly] e iniciarlo con <code>./standalone.sh -c standalone-full.xml</code>. Iniciado el servidor y desplegada la aplicación con el siguiente comando de Gradle se puede acceder a ella con el navegador en la dirección _https\://localhost:8443/war/_ teniendo el protocolo seguro configurado.
+Ejecutar este ejemplo require instalar previamente el servidor de aplicaciones [WildFly][wildfly] e iniciarlo con `./standalone.sh -c standalone-full.xml`. Iniciado el servidor y desplegada la aplicación con el siguiente comando de Gradle se puede acceder a ella con el navegador en la dirección _https\://localhost:8443/war/_ teniendo el protocolo seguro configurado.
 
 {{< sourcecode git="blog-ejemplos/tree/master/JavaEE7" command="./gradlew build deploy" >}}
 

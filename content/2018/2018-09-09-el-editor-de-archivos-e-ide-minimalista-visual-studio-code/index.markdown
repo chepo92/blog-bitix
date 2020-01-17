@@ -34,7 +34,7 @@ Incluye una [terminal integrada](https://code.visualstudio.com/docs/editor/integ
     image1="image:git.png" optionsthumb1="300x200" title1="Git integrado"
     caption="Git integrado" >}}
 
-Con la combinación <code>Ctrl + P</code> se abre una ventana emergente para abrir archivos por su nombre. Introduciendo <code>?</code> se obtienen las posibles acciones que se pueden realizar. Otra muy utilizada es <code>Ctrl + G</code> para ir a una línea específica del archivo, también se puede hacer desde la ventana emergente e introduciendo el carácter <code>:</code>. Con <code>Ctrl + Shift + O</code> se va a los símbolos detectados por editor según el tipo de archivo. Posee una buena [documentación](https://code.visualstudio.com/docs) con la que ir aprendiendo a medida que se usa el mayor provecho posible.
+Con la combinación `Ctrl + P` se abre una ventana emergente para abrir archivos por su nombre. Introduciendo `?` se obtienen las posibles acciones que se pueden realizar. Otra muy utilizada es `Ctrl + G` para ir a una línea específica del archivo, también se puede hacer desde la ventana emergente e introduciendo el carácter `:`. Con `Ctrl + Shift + O` se va a los símbolos detectados por editor según el tipo de archivo. Posee una buena [documentación](https://code.visualstudio.com/docs) con la que ir aprendiendo a medida que se usa el mayor provecho posible.
 
 {{< image
     gallery="true"

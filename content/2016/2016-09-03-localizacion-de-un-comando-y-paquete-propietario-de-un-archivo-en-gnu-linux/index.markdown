@@ -18,7 +18,7 @@ tags: ["gnu-linux"]
 
 Usando alguna distribución [GNU][gnu]/[Linux][linux] en algún momento nos interesará saber a qué paquete de los que tenemos instalados pertenece un determinado comando o a qué paquete pertenece un determinado archivo del sistema.
 
-Para saber en qué paquete está un determinado archivo primero deberemos conocer la ruta absoluta del archivo en cuestión. Si se trata de un comando con el comando <code>which</code> conoceremos la ubicación absoluta. Por ejemplo, para conocer la ubicación de el comando <code>java</code> usamos:
+Para saber en qué paquete está un determinado archivo primero deberemos conocer la ruta absoluta del archivo en cuestión. Si se trata de un comando con el comando `which` conoceremos la ubicación absoluta. Por ejemplo, para conocer la ubicación de el comando `java` usamos:
 
 {{< code file="which.sh" language="bash" options="" >}}
 
@@ -30,7 +30,7 @@ En Arch Linux _java-runtime-common_ es un paquete que nos permite cambiar la ver
 
 {{< code file="ls.sh" language="bash" options="" >}}
 
-Si queremos conocer el paquete del binario <code>java</code> usaremos la ruta absoluta en el comando para averiguarlo con el gestor de paquetes ya sea con <code>pacman</code> o <code>yaourt</code>:
+Si queremos conocer el paquete del binario `java` usaremos la ruta absoluta en el comando para averiguarlo con el gestor de paquetes ya sea con `pacman` o `yaourt`:
 
 {{< code file="pacman-java8.sh" language="bash" options="" >}}
 

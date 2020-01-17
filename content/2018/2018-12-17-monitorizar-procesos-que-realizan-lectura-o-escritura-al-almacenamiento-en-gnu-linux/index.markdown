@@ -43,7 +43,7 @@ También es interesante conocer los datos escritos en la unidad en total desde s
     image1="image:awk-lifetime.png" optionsthumb1="300x200" title1="Datos escritos a una partición"
     caption="Datos escritos a una partición" >}}
 
-Después de [comprar un Intel NUC junto con SSD][blogbitix-363] e instalarle [Arch Linux][archlinux] me he dado cuenta que de forma periódica, cada 5 o 10 segundos, parpadea la luz de actividad del disco duro (o simplemente almacenamiento al tener un SSD) sin hacer ninguna actividad salvo tener algunas aplicaciones abietas. He instalado _iotop_ para descubrir el origen de esta actividad y he encontrado dos. Por un lado [Firefox][firefox], varios procesos de él, y otro proceso del sistema _jdb2-dm-1-8_ que corresponde al _journaling_ del sistema de archivos. La opción _-a_ de iotop muestra la cantidad de E/S en la sesión por proceso y la opción _--only_ solo aquellos que han realizado E/S.
+Después de [comprar un Intel NUC junto con SSD][blogbitix-363] e instalarle [Arch Linux][archlinux] me he dado cuenta que de forma periódica, cada 5 o 10 segundos, parpadea la luz de actividad del disco duro (o simplemente almacenamiento al tener un SSD) sin hacer ninguna actividad salvo tener algunas aplicaciones abietas. He instalado _iotop_ para descubrir el origen de esta actividad y he encontrado dos. Por un lado [Firefox][firefox], varios procesos de él, y otro proceso del sistema _jdb2-dm-1-8_ que corresponde al _journaling_ del sistema de archivos. La opción _-a_ de iotop muestra la cantidad de E/S en la sesión por proceso y la opción _\-\-only_ solo aquellos que han realizado E/S.
 
 {{< code file="iotop.sh" language="bash" options="" >}}
 

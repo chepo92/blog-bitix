@@ -41,7 +41,7 @@ A continuación deberemos definir la interfaz del servicio, supongamos que quere
 
 {{< code file="Service.thrift" language="plaintext" options="" >}}
 
-Podemos elegir cualesquiera lenguajes deseemos de la amplia lista soportada anterior, en este caso usaré Java tanto para el servidor como para el cliente. Usando el comando <code>thrift</code> e indicando el lenguaje y la interfaz generamos los artefactos:
+Podemos elegir cualesquiera lenguajes deseemos de la amplia lista soportada anterior, en este caso usaré Java tanto para el servidor como para el cliente. Usando el comando `thrift` e indicando el lenguaje y la interfaz generamos los artefactos:
 
 {{< code file="gradlew.sh" language="bash" options="" >}}
 {{< code file="build.gradle" language="groovy" options="" >}}

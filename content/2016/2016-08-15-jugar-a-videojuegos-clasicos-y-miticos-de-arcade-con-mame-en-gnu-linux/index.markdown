@@ -110,7 +110,7 @@ Esta es una pequeña lista no completa de los juegos míticos que recuerdo de mi
 
 Ya solo nos queda buscar con tu buscador preferido algún artículo que recopile las mejores ROMs o aquellas que recuerdes y descargarlas en el directorio de las ROMS. Algunos emuladores deberemos previamente [descargar su ROM de emulador como en el caso de Neo-Geo](https://www.emuparadise.me/M.A.M.E._-_Multiple_Arcade_Machine_Emulator_ROMs/Neo-Geo/15030) para esta plataforma y colocarla también en el directorio de las ROMs.
 
-Para jugar a los juegos de la NES de Nintendo con QMC2 no he conseguido ejecutarlos, he tenido que introducir el comando <code>sdlmame nes</code> en la terminal buscar la ROM navegando por los directorios, seleccionarla y usar la opción de _reset_.
+Para jugar a los juegos de la NES de Nintendo con QMC2 no he conseguido ejecutarlos, he tenido que introducir el comando `sdlmame nes` en la terminal buscar la ROM navegando por los directorios, seleccionarla y usar la opción de _reset_.
 
 {{< image
     gallery="true"

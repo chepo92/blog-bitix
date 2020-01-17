@@ -22,14 +22,14 @@ Toda aplicación en último término genera un artefacto destinado a ejecutarse 
 
 La forma tradicional es dar un número de versión al proyecto, hay diferentes nomenclaturas dependiendo del grado de precisión que necesitemos, suele bastar versión mayor, versión menor, y corrección de errores, los tres números que se van incrementando. Si usamos [Jenkins][jenkins] para construir los artefactos nos puede interesar conocer el número de _build_ que lo produjo o la fecha de creación. También nos puede interesar conocer el _hash_ del último _commit_ del código fuente del artefacto. Por otro lado puede que queramos que la aplicación nos informe de la versión que se está ejecutando ya que en algunas corporaciones el acesso al entorno de producción está restringido a sus administradores.
 
-Para conseguir esta trazabilidad haremos dos modificaciones al archivo de construcción de Gradle, modificar el nombre del artefacto con el nombre de la _build_ y el _hash_ del _commit_ e incluir en él un archivo _properties_ con la información de la versión con el que la aplicación sea capaz de informar que versión es la que se está ejecutando. El _hash_ del _commit_ de [Git][git] se obtiene con el comando <code>git log -n 1 --format=%h</code> ejecutando con las facilidades que proporciona [Groovy][groovy].
+Para conseguir esta trazabilidad haremos dos modificaciones al archivo de construcción de Gradle, modificar el nombre del artefacto con el nombre de la _build_ y el _hash_ del _commit_ e incluir en él un archivo _properties_ con la información de la versión con el que la aplicación sea capaz de informar que versión es la que se está ejecutando. El _hash_ del _commit_ de [Git][git] se obtiene con el comando `git log -n 1 --format=%h` ejecutando con las facilidades que proporciona [Groovy][groovy].
 
 El nombre del artefacto se modifica con una clase cuyo método _toString()_ proporciona la versión que podemos asignar a la propiedad _version_ de la clase [Project](https://docs.gradle.org/current/javadoc/org/gradle/api/Project.html) definida con el archivo de construcción Gradle. Para proporcionar la información de la versión en la aplicación se incluye un archivo al construir el artefacto modificando la tarea _jar_ y generando el archivo con la tarea _createBuildInfoFile_. Este es el archivo de construcción de Gradle y la clase que contiene la información de la versión que se coloca en el directorio _buildSrc_.
 
 {{< code file="build.gradle" language="groovy" options="" >}}
 {{< code file="ProjectVersion.groovy" language="groovy" options="" >}}
 
-En el caso de un artefacto _jar_ Gradle lo genera en _build/libs/GradleVersion-1.0.b42.fea4d2f.jar_. Ejecutando el _jar_ con <code>java -jar build/libs/GradleVersion-1.0.b42.77c083e.jar</code> cuya clase con el método _main_ informa de la versión leyendo el archivo _properties_ incluído en el _jar_ obtenemos la siguiente salida en la terminal.
+En el caso de un artefacto _jar_ Gradle lo genera en _build/libs/GradleVersion-1.0.b42.fea4d2f.jar_. Ejecutando el _jar_ con `java -jar build/libs/GradleVersion-1.0.b42.77c083e.jar` cuya clase con el método _main_ informa de la versión leyendo el archivo _properties_ incluído en el _jar_ obtenemos la siguiente salida en la terminal.
 
 {{< code file="Main.java" language="java" options="" >}}
 

@@ -37,7 +37,7 @@ Instalar Consul es muy sencillo basta con [descargar un binario](https://www.con
 
 {{< code file="consul.sh" language="bash" options="" >}}
 
-Una aplicación que use Spring Boot y que quiera hacer pública su disponibilidad en Consul basta con que use la anotación <code>@EnableDiscoveryClient</code> en la clase de inicio de la aplicación junto con las dependencias adecuadas. Con la declaración de esta anotación y la dependencia _spring-cloud-starter-consul-all_ Spring se comunicará con Consul a través de la API REST para registrar cuando se inicie la aplicación, su nombre, nombre de máquina y puerto en el que estará disponible.
+Una aplicación que use Spring Boot y que quiera hacer pública su disponibilidad en Consul basta con que use la anotación `@EnableDiscoveryClient` en la clase de inicio de la aplicación junto con las dependencias adecuadas. Con la declaración de esta anotación y la dependencia _spring-cloud-starter-consul-all_ Spring se comunicará con Consul a través de la API REST para registrar cuando se inicie la aplicación, su nombre, nombre de máquina y puerto en el que estará disponible.
 
 {{< code file="Main.java" language="java" options="" >}}
 {{< code file="application.yml" language="YAML" options="" >}}

@@ -33,7 +33,7 @@ Con los siguientes comandos podemos crear una máquina virtual para los contened
 
 {{< code file="docker-machine-create.sh" language="bash" options="" >}}
 
-Estableciendo las variables de entorno de la máquina virtual podemos usar el comando docker como si de la máquina anfitrión fuera, todos los comandos de docker que lancemos se ejecutarán contra el contenedor docker de la máquina virtual. En el siguiente caso se ejecuta el contenedor de _busybox_ en la máquina virtual _dev_. Con _--unset_ podemos reiniciar la configuración a la máquina anfitrión.
+Estableciendo las variables de entorno de la máquina virtual podemos usar el comando docker como si de la máquina anfitrión fuera, todos los comandos de docker que lancemos se ejecutarán contra el contenedor docker de la máquina virtual. En el siguiente caso se ejecuta el contenedor de _busybox_ en la máquina virtual _dev_. Con _\-\-unset_ podemos reiniciar la configuración a la máquina anfitrión.
 
 {{< code file="docker-machine-run.sh" language="bash" options="" >}}
 
@@ -42,7 +42,7 @@ Podemos detener, volver a iniciar, hacer SSH y eliminar la máquina virtual con:
 {{< code file="docker-machine-manage.sh" language="bash" options="" >}}
 {{< asciinema id="23600" caption="Comandos y uso de Docker Machine en una máquina virtual" >}}
 
-El directorio por defecto donde se guardarán los archivos de las máquinas virtuales es _~/.docker/machine_, si queremos cambiarlo podemos utilizar el parámetro _--storage-path_ en cada uno de los comandos anteriores de la siguiente forma, el orden de los parámetros es importante:
+El directorio por defecto donde se guardarán los archivos de las máquinas virtuales es _~/.docker/machine_, si queremos cambiarlo podemos utilizar el parámetro _\-\-storage-path_ en cada uno de los comandos anteriores de la siguiente forma, el orden de los parámetros es importante:
 
 {{< code file="docker-machine-storage-path.sh" language="bash" options="" >}}
 

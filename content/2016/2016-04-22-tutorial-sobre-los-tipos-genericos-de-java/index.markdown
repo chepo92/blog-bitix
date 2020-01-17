@@ -26,7 +26,7 @@ Los _generics_ permiten usar tipos para parametrizar las clases, interfaces y m�
 * Eliminación de _casts_ aumentando la legibilidad del código.
 * Posibilidad de implementar algoritmos genéricos, con tipado seguro.
 
-Un tipo usando _generics_ tiene el siguiente aspecto, por ejemplo usando una clase _Box_ contenedor de una referencia a un tipo no determinado en la definición de la clase pero que lo será en su uso. Una clase genérica puede tener múltiples argumentos de tipos y los argumentos pueden ser a su vez tipos genéricos. Después del nombre de la clase se puede indicar la lista de parámetros de tipos con el formato <code>\<T1, T2, T3, ...\></code>.
+Un tipo usando _generics_ tiene el siguiente aspecto, por ejemplo usando una clase _Box_ contenedor de una referencia a un tipo no determinado en la definición de la clase pero que lo será en su uso. Una clase genérica puede tener múltiples argumentos de tipos y los argumentos pueden ser a su vez tipos genéricos. Después del nombre de la clase se puede indicar la lista de parámetros de tipos con el formato `\<T1, T2, T3, ...\>`.
 
 {{< code file="Box.java" language="java" options="" >}}
 {{< code file="Pair.java" language="java" options="" >}}
@@ -61,7 +61,7 @@ Aunque puede abreviarse ya que el compilador puede inferir los tipos:
 
 {{< code file="MethodUsageInference.java" language="java" options="" >}}
 
-A veces querremos limitar los tipos que pueden ser usados empleando lo que se denomina _bounded type_. Con <code>\<U extends Number\></code> el tipo _U_ debe extender la clase _Number_.
+A veces querremos limitar los tipos que pueden ser usados empleando lo que se denomina _bounded type_. Con `\<U extends Number\>` el tipo _U_ debe extender la clase _Number_.
 
 {{< code file="BoxBounds.java" language="java" options="" >}}
 

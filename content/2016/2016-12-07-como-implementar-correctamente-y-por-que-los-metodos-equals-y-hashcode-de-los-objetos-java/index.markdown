@@ -32,11 +32,11 @@ Una de las cosas que tenemos que tener cuenta es que siempre que sobreescribamos
 
 Según la [especificación del método equals](javadoc8:java/lang/Object.html#equals-java.lang.Object-) definido en la clase _Object_ debe tener las siguientes propiedades:
 
-* Es reflexiva: para cualquier referencia no nula de <code>x</code>, <code>x.equals(x)</code> debe retornar _true_.
-* Es simétrica: para cualquier referencia no nula de <code>x</code> e <code>y</code>, <code>x.equals(y)</code> debe retornar _true_ si y solo si <code>y.equals(x)</code> retorna _true_.
-* Es transitiva: para cualquier referencia no nula de <code>x</code>, <code>y</code> y <code>z</code>, si <code>x.equals(y)</code> retorna _true_ y <code>y.equals(z)</code> retorna _true_ entonces <code>x.equals(z)</code> debe retornar _true_.
-* Es consistente: para cualquier referencia no nula de <code>x</code> e <code>y</code>, múltiples invocaciones de <code>x.equals(y)</code> consistentemente debe retornar _true_ o _false_, si no se ha modificado la información utilizada en la comparación.
-* Para para cualquier referencia no nula de <code>x</code>, <code>x.equals(null)</code> debe retornar _false_.
+* Es reflexiva: para cualquier referencia no nula de `x`, `x.equals(x)` debe retornar _true_.
+* Es simétrica: para cualquier referencia no nula de `x` e `y`, `x.equals(y)` debe retornar _true_ si y solo si `y.equals(x)` retorna _true_.
+* Es transitiva: para cualquier referencia no nula de `x`, `y` y `z`, si `x.equals(y)` retorna _true_ y `y.equals(z)` retorna _true_ entonces `x.equals(z)` debe retornar _true_.
+* Es consistente: para cualquier referencia no nula de `x` e `y`, múltiples invocaciones de `x.equals(y)` consistentemente debe retornar _true_ o _false_, si no se ha modificado la información utilizada en la comparación.
+* Para para cualquier referencia no nula de `x`, `x.equals(null)` debe retornar _false_.
 
 La implementación del método _equals_ de la clase _Object_ usa la equivalencia más restrictiva posible, esto es, para cualquier referencia no nula de _x_ e _y_ este método retorna _true_ si y solo si son el mismo objeto (_x == y_ tienen la misma referencia).
 
@@ -55,14 +55,14 @@ La implementación del [método hashCode](javadoc8:java/lang/Object.html#hashCod
 
 * Almacenar un valor constante distinto de 0 en una variable int, por ejemplo 17.
 * Por cada campo usado en el método _equals_ se debe obtener un _hash code_ (int) realizando:
-  * Si el campo es un _boolean_ se debe calcular <code>(f ? 1 : 0)</code>.
-  * Si el campo es un _byte_, _char_, _short_ o _int_ se debe calcular <code>(int) f</code>.
-  * Si el campo es un _long_ se debe calcular <code>(int) (f ^ (f >>> 32))</code>.
-  * Si el campo es un _float_ se debe calcular <code>Float.floatToIntBits(f)</code>.
-  * Si el campo es un _double_ se debe calcular <code>Double.doubleToLongBits(f)</code> y calcular el _hash_ del _long_ obtenido en el paso para los tipos _long_.
+  * Si el campo es un _boolean_ se debe calcular `(f ? 1 : 0)`.
+  * Si el campo es un _byte_, _char_, _short_ o _int_ se debe calcular `(int) f`.
+  * Si el campo es un _long_ se debe calcular `(int) (f ^ (f >>> 32))`.
+  * Si el campo es un _float_ se debe calcular `Float.floatToIntBits(f)`.
+  * Si el campo es un _double_ se debe calcular `Double.doubleToLongBits(f)` y calcular el _hash_ del _long_ obtenido en el paso para los tipos _long_.
   * Si el campo es una referencia a un objeto y el método _equals_ de esta clase compara recursivamente invocando el método _equals_ del campo, invocar su método _hashCode_. si el valor de campo es nulo se debe retornar una constante que tradicionalmente es 0.
   * Si el campo es un _array_ se debe tratar individualmente cada elemento aplicando estas reglas a cada elemento. Si cada elemento del array es significativo se puede usar [Arrays.hashCode](javadoc8:java/util/Arrays.html#hashCode-java.lang.Object:A-).
-  * Combinar los _hash code_ obtenidos de la siguiente forma, <code>result = 31 * result + c</code>.
+  * Combinar los _hash code_ obtenidos de la siguiente forma, `result = 31 * result + c`.
 
 {{< code file="PhoneNumber-hashcode.java" language="java" options="" >}}
 

@@ -40,7 +40,7 @@ Suponiendo que con la intención de hacer el software más mantenible se define 
 {{< code file="build.gradle" language="groovy" options="" >}}
 {{< code file="ruleset.xml" language="XML" options="" >}}
 
-Aplicado el _plugin_ y definidas las reglas en las construcción del proyecto se revisarán y generará un informe con el comando <code>./gradlew check</code>. En el directorio _build/reports/pmd/_ relativo a la raíz del proyecto se genera un conjunto de archivos HTML y XML con los informes del análisis del código. En el informe se indica la clase, la linea y el error que se ha encontrado, con esta información es sencillo modificar el código para que en la siguiente ejecución de la validación el error desaparezca del informe, la myoría de reglas son fáciles de corregir.
+Aplicado el _plugin_ y definidas las reglas en las construcción del proyecto se revisarán y generará un informe con el comando `./gradlew check`. En el directorio _build/reports/pmd/_ relativo a la raíz del proyecto se genera un conjunto de archivos HTML y XML con los informes del análisis del código. En el informe se indica la clase, la linea y el error que se ha encontrado, con esta información es sencillo modificar el código para que en la siguiente ejecución de la validación el error desaparezca del informe, la myoría de reglas son fáciles de corregir.
 
 Para que en el informe aparezcan datos he cambiado la configuración de longitud a 10 líneas por método como máximo.
 

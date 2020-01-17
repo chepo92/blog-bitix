@@ -69,7 +69,7 @@ Para crear algunos datos en la base de datos hay que conectarse al contenedor y 
 
 {{< code file="postgres.sh" language="bash" options="" >}}
 
-Destruyendo el _stack_ y volviéndolo a arrancar posiblemente Docker Swarm iniciará el contenedor en otro nodo del _cluster_ pero los datos seguirán estando presentes en la base de datos postgres, se puede comprobar iniciando una nueva sesión bash en el nuevo contenedor, iniciando el cliente de psql y lanzando la consulta _select_ de SQL o con el comando <code>\dt</code> para obtener las tablas de la base de datos, _\d+ company_ para obtener una descripción de la tabla y la consulta SQL _SELECT * FROM company;_.
+Destruyendo el _stack_ y volviéndolo a arrancar posiblemente Docker Swarm iniciará el contenedor en otro nodo del _cluster_ pero los datos seguirán estando presentes en la base de datos postgres, se puede comprobar iniciando una nueva sesión bash en el nuevo contenedor, iniciando el cliente de psql y lanzando la consulta _select_ de SQL o con el comando `\dt` para obtener las tablas de la base de datos, _\d+ company_ para obtener una descripción de la tabla y la consulta SQL _SELECT * FROM company;_.
 
 {{< code file="docker-compose-stack-remove-postgres.sh" language="bash" options="" >}}
 

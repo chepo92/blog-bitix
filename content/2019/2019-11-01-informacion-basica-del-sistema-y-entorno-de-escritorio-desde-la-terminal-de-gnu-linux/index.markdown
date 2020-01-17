@@ -21,7 +21,7 @@ Los comandos [neofetch][neofetch] y [screenfetch][screenfetch] permiten obtener 
 
 Al realizar una captura de pantalla del escritorio es muy interesante mostrar una terminal con esta información. Es habitual hacerlo al mostrar la personalización del escritorio con su tema de iconos, que entorno de escritorio es el usado, la configuración de colores de la terminal, etc. que permite a otros usuarios que vean esa captura obtener mucha información para obtener la misma personalización. O conocer la CPU, GPU y _kernel_ del sistema en que se tomó la captura.
 
-Los comandos _neofetch_ y _screenfetch_ son muy similares en la salida que producen, quizá prefiero _neofetch_ porque tiene menos dependencias sobre otros paquetes y ocupa menos. Con la opción _--help_ de cada uno de ellos muestran las opciones de personalización que poseen.
+Los comandos _neofetch_ y _screenfetch_ son muy similares en la salida que producen, quizá prefiero _neofetch_ porque tiene menos dependencias sobre otros paquetes y ocupa menos. Con la opción _\-\-help_ de cada uno de ellos muestran las opciones de personalización que poseen.
 
 {{< code file="commands.sh" language="bash" options="" >}}
 

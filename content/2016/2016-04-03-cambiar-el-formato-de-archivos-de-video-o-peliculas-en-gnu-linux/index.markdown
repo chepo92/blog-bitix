@@ -65,7 +65,7 @@ Para hacer la eliminación de las pistas usamos el siguiente comando donde los p
 
 {{< code file="ffmpeg-map.sh" language="bash" options="" >}}
 
-Si no tenemos instalado un reproductor de vídeo con el comando <code>ffplay</code> podemos reproducirlo, quizá en algún caso nos sirva aunque esté destinado principalmente para pruebas ya que no ofrece controles para pausar o detener la reproducción.
+Si no tenemos instalado un reproductor de vídeo con el comando `ffplay` podemos reproducirlo, quizá en algún caso nos sirva aunque esté destinado principalmente para pruebas ya que no ofrece controles para pausar o detener la reproducción.
 
 {{< code file="ffplay.sh" language="bash" options="" >}}
 

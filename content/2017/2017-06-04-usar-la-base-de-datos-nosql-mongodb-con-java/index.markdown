@@ -30,11 +30,11 @@ Con la referencia a una colección se realizan las operaciones de inserción de 
 {{< code file="Main.java" language="java" options="" >}}
 {{< code file="build.gradle" language="groovy" options="" >}}
 
-La instancia del servidor de MongDB la inicio usando Docker con un archivo de [Docker Compose][docker-compose] y el comando <code>docker-compose up</code>. En la  [serie de artículos sobre Docker][blogbitix-serie-docker] que escribí puedes aprender como empezar a usar Docker y adquirir un conocimiento hasta un nivel intermedio.
+La instancia del servidor de MongDB la inicio usando Docker con un archivo de [Docker Compose][docker-compose] y el comando `docker-compose up`. En la  [serie de artículos sobre Docker][blogbitix-serie-docker] que escribí puedes aprender como empezar a usar Docker y adquirir un conocimiento hasta un nivel intermedio.
 
 {{< code file="docker-compose.yml" language="YAML" options="" >}}
 
-El resultado en la terimnal de ejecutar el ejemplo con el comando <code>gradlew run</code> es el siguiente donde se muestran las bases de datos, la colección _users_ creada en el ejemplo, los usuarios de la colección y una búsqueda de un usuario, el resultado de actualizar la propiedad de un documento y finalmente el número de documentos en la colección.
+El resultado en la terimnal de ejecutar el ejemplo con el comando `gradlew run` es el siguiente donde se muestran las bases de datos, la colección _users_ creada en el ejemplo, los usuarios de la colección y una búsqueda de un usuario, el resultado de actualizar la propiedad de un documento y finalmente el número de documentos en la colección.
 
 {{< code file="System.out" language="plaintext" options="" >}}
 

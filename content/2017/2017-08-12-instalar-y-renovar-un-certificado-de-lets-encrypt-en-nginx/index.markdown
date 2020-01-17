@@ -50,7 +50,7 @@ Dado el relativo poco tiempo de validez de los certificados es recomendable auto
 
 {{< code file="cron.sh" language="bash" options="" >}}
 
-Una vez que se ha renovado el certificado hay que reiniciar el servidor web para que lo utilice y para ello está el parámetro _--renew-hook_ que ejecuta un comando cuando se produce una renovación. En el ejemplo anterior está el comando para reiniciar el servicio de nginx con el sistema gestión de procesos de [systemd][systemd].
+Una vez que se ha renovado el certificado hay que reiniciar el servidor web para que lo utilice y para ello está el parámetro _\-\-renew-hook_ que ejecuta un comando cuando se produce una renovación. En el ejemplo anterior está el comando para reiniciar el servicio de nginx con el sistema gestión de procesos de [systemd][systemd].
 
 Let's Encrypt con _certbot_ comprueba si somos el propietario de un sitio web instalando en el servidor web un archivo que posteriormente antes de generar el certificado lo valida. Este archivo para nginx se ubica en el directorio _/usr/share/nginx/html/.well-known/acme-challenge/_ y ha de estar accesible desde internet con el protocolo HTTP en la dirección _/.well-known/acme-challenge/_ del servidor web.
 

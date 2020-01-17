@@ -46,7 +46,7 @@ Al hacer un _proxy_ inverso debemos tener en cuenta que el servidor Tomcat si de
 
 En la documentación se comentan varios [parámetros de configuración de Tomcat](https://tomcat.apache.org/tomcat-8.0-doc/config/http.html) como _proxyPort_ y _scheme_ que ajustan la información devuelta por los métodos _request.getServerPort()_ y _request.getScheme()_ y que nos servirá en caso de tener que generar URLs absolutas.
 
-Arrancado los contenedores con el comando <code>docker-compose up</code> accediendo al servidor web veremos que el contenido proporcionado es el ofrecido por Tomcat, que con la configuración del ejemplo es la página de inicio de Tomcat. En las cabeceras de respuesta Nginx añade una, _Server_, indicando su versión.
+Arrancado los contenedores con el comando `docker-compose up` accediendo al servidor web veremos que el contenido proporcionado es el ofrecido por Tomcat, que con la configuración del ejemplo es la página de inicio de Tomcat. En las cabeceras de respuesta Nginx añade una, _Server_, indicando su versión.
 
 {{< image
     gallery="true"

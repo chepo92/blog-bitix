@@ -21,11 +21,11 @@ Al actualizar los paquetes de la distribución _rolling release_ [Arch Linux][ar
 
 Algunos de los paquetes del sistema como el _kernel linux_, el gestor de arranque como _grub_ o _refind_ o el gestor del sistema como _systemd_ requieren realizar un reinicio del sistema para usar las nuevas versiones. Puede que solo queramos reiniciar el sistema al finalizar la sesión pero sin tener que esperar a que se descarguen la mayoría de los paquetes del repositorio que usemos. Dependiendo de la frecuencia con que actualicemos el sistema el tamaño de la descarga variará, en mi caso que suelo hacer una actualización cada dos semanas el tamaño total de la descarga ronda entre los 300 y 500 MiB.
 
-Para descargar las bases de datos de paquetes usamos la opción <code>-y</code> y para realizar la actualización completa de los paquetes desactualizados que tengamos instalados con la opción <code>-u</code>. Poniendo el comando completo usando <code>pacman</code> o la alternativa <code>yaourt</code>:
+Para descargar las bases de datos de paquetes usamos la opción `-y` y para realizar la actualización completa de los paquetes desactualizados que tengamos instalados con la opción `-u`. Poniendo el comando completo usando `pacman` o la alternativa `yaourt`:
 
 {{< code file="pacman-update.sh" language="bash" options="" >}}
 
-Si queremos actualizar las bases de datos de paquetes y descargar los paquetes a actualizar pero sin realizar la actualización añadimos simplemente la opción <code>-w</code> de tal forma que los comandos anteriores nos quedarían:
+Si queremos actualizar las bases de datos de paquetes y descargar los paquetes a actualizar pero sin realizar la actualización añadimos simplemente la opción `-w` de tal forma que los comandos anteriores nos quedarían:
 
 {{< code file="pacman-download.sh" language="bash" options="" >}}
 

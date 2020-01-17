@@ -27,7 +27,7 @@ Al ejecutar un comando podemos querer encadenar la salida de un comando con la e
 
 Una de las cosas buenas de Bash es que está presente por defecto en la mayoría de las distribuciones Linux y si no es este intérprete de comandos será otro similar por lo que no necesitamos instalar nada más adicional para usarlo. Aún así si necesitaremos algo más potente que Bash como lenguaje de programación podemos optar por un lenguaje de programación como [Python] para realizar los _scripts_ aunque necesitaremos instalar su paquete y las dependencias que los _scripts_ usen.
 
-Por ejemplo, dada una lista de concursantes habilitados en un sorteo podemos obtener 3 ganadores de forma aleatoria con la combinación de los siguientes comandos. El comando <code>grep</code> permite aplicar una expresión regular a cada línea de un fichero que si la cumple es enviada a la salida, <code>shuf</code> reordena las líneas de forma aleatoria y con la opción <code>-n 3</code> emite las 3 primeras. Los comandos proporcionados por GNU en los sistemas Linux proporcionan multitud de comandos como estos muy útiles, combinándolos conseguimos tareas más capaces que lo que son los comandos individualmente.
+Por ejemplo, dada una lista de concursantes habilitados en un sorteo podemos obtener 3 ganadores de forma aleatoria con la combinación de los siguientes comandos. El comando `grep` permite aplicar una expresión regular a cada línea de un fichero que si la cumple es enviada a la salida, `shuf` reordena las líneas de forma aleatoria y con la opción `-n 3` emite las 3 primeras. Los comandos proporcionados por GNU en los sistemas Linux proporcionan multitud de comandos como estos muy útiles, combinándolos conseguimos tareas más capaces que lo que son los comandos individualmente.
 
 {{< code file="sorteo-1.sh" language="bash" options="" >}}
 
@@ -36,16 +36,16 @@ Por ejemplo, dada una lista de concursantes habilitados en un sorteo podemos obt
     image1="image:sorteo.png" optionsthumb1="300x200" title1="Sorteo implementado con dos comandos de GNU/Linux"
     caption="Sorteo implementado con dos comandos de GNU/Linux" >}}
 
-Por defecto la salida estándar de un comando es la terminal pero podemos redirigirla a un fichero con la opción <code>></code>.
+Por defecto la salida estándar de un comando es la terminal pero podemos redirigirla a un fichero con la opción `>`.
 
 {{< code file="sorteo-2.sh" language="bash" options="" >}}
 
-Además de la salida estándar los programas tienen la salida de errores que podemos redirigir con <code>2></code>, si queremos redirigir la salida estándar y la de error podemos usar la redirección <code>&></code>. Tanto la opción <code>></code> y <code>2></code> crean un fichero con la salida redirigida, si en vez de sobreescribir el contenido del archivo queremos añadirlo al final podemos hacer la redirección con <code>>></code>.
+Además de la salida estándar los programas tienen la salida de errores que podemos redirigir con `2>`, si queremos redirigir la salida estándar y la de error podemos usar la redirección `&>`. Tanto la opción `>` y `2>` crean un fichero con la salida redirigida, si en vez de sobreescribir el contenido del archivo queremos añadirlo al final podemos hacer la redirección con `>>`.
 
 {{< code file="sorteo-3.sh" language="bash" options="" >}}
 
 ### Múltiples comandos
-Si necesitamos ejecutar dos comandos seguidos podemos introducirlos en la misma línea en vez de individualmente, ejecutar un comando si el anterior se ha ejecutado correctamente con <code>&&</code> o al contrario ejecutar un comando si el anterior ha fallado con <code>||</code>. Si en la ubicación de trabajo que estamos existe un directorio no se podrá crear otro con el mismo nombre, dependiendo de las opciones de encadenamiento según el resultado del comando anterior se ejecutará o no el siguiente comando.
+Si necesitamos ejecutar dos comandos seguidos podemos introducirlos en la misma línea en vez de individualmente, ejecutar un comando si el anterior se ha ejecutado correctamente con `&&` o al contrario ejecutar un comando si el anterior ha fallado con `||`. Si en la ubicación de trabajo que estamos existe un directorio no se podrá crear otro con el mismo nombre, dependiendo de las opciones de encadenamiento según el resultado del comando anterior se ejecutará o no el siguiente comando.
 
 {{< code file="multiples-comandos.sh" language="bash" options="" >}}
 
@@ -69,7 +69,7 @@ También podemos interpolar la salida de un comando dentro de una cadena:
     caption="Interpolación en cadenas de variables y comandos" >}}
 
 ### Invocaciones de comandos anteriores
-Con el comando <code>history</code> podemos ver el historial completo de comandos que hemos ejecutado con anterioridad. Al lado de cada comando vemos un identificador numérico que podemos usar para ejecutarlo de nuevo con <code>![identificador]</code>. Con el siguiente historial podemos ejecutar el comando con identificador 512 indicando una exclamación y el identificador, <code>!512</code>. Si queremos ejecutar el último comando introducido podemos usar la doble exclamación <code>!!</code>. Si queremos ejecutar el último comando completo de cierto comando podemos usar <code>![comando]</code> en vez de su identificador.
+Con el comando `history` podemos ver el historial completo de comandos que hemos ejecutado con anterioridad. Al lado de cada comando vemos un identificador numérico que podemos usar para ejecutarlo de nuevo con `![identificador]`. Con el siguiente historial podemos ejecutar el comando con identificador 512 indicando una exclamación y el identificador, `!512`. Si queremos ejecutar el último comando introducido podemos usar la doble exclamación `!!`. Si queremos ejecutar el último comando completo de cierto comando podemos usar `![comando]` en vez de su identificador.
 
 {{< image
     gallery="true"
@@ -83,7 +83,7 @@ Los _scritps_ son archivos de texto con permisos de ejecución interpretados por
 
 {{< code file="scripts-1.sh" language="bash" options="" >}}
 
-Una vez escrito el _script_ antes de ejecutarlo debemos darle permisos de ejecución con el comando <code>chmod</code>:
+Una vez escrito el _script_ antes de ejecutarlo debemos darle permisos de ejecución con el comando `chmod`:
 
 {{< code file="scripts-2.sh" language="bash" options="" >}}
 
@@ -159,7 +159,7 @@ Las expresiones anteriores se pueden combinar:
 * [ EXPR1 -o EXPR2 ]: verdadero si alguna de _EXPR1_ y _EXPR2_ son verdadero, operador _or_.
 
 ### Control de trabajos
-El comando <code>jobs</code> obtenemos una lista de trabajos que se está ejecutando junto con su identificador y estado, con la combinación de teclas <kbd>Ctrl+z</kbd> dejamos el proceso actual detenido y en segundo plano, con <code>fg</code> lo devolvemos a primer plano y si estaba detenido se continua su ejecución, con <code>bg</code> si estaba detenido continua su ejecución en segundo plano.
+El comando `jobs` obtenemos una lista de trabajos que se está ejecutando junto con su identificador y estado, con la combinación de teclas <kbd>Ctrl+z</kbd> dejamos el proceso actual detenido y en segundo plano, con `fg` lo devolvemos a primer plano y si estaba detenido se continua su ejecución, con `bg` si estaba detenido continua su ejecución en segundo plano.
 
 {{< image
     gallery="true"

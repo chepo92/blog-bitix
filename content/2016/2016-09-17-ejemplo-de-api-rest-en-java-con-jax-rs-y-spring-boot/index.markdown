@@ -36,7 +36,7 @@ El servicio lo definimos en una interfaz y una clase que la implementa.
 
 {{< code file="MessageResource.java" language="java" options="" >}}
 
-Iniciada la aplicación con <code>./gradlew run</code> y con la siguiente comando de <code>curl</code> y URL obtendremos el mensaje en formato JSON en la salida.
+Iniciada la aplicación con `./gradlew run` y con la siguiente comando de `curl` y URL obtendremos el mensaje en formato JSON en la salida.
 
 {{< code file="curl.sh" language="bash" options="" >}}
 {{< code file="out.txt" language="plaintext" options="" >}}

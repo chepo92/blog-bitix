@@ -63,7 +63,7 @@ Transformado con Uglify queda algo ilegible pero con el archivo _.map_ podremos 
 
 {{< sourcecode git="blog-ejemplos/tree/master/ECMAScript6" command="npm install, gulp, node ./build/dist/main.js" >}}
 
-El resultado son los siguientes mensajes en la terminal tanto para la ejecución del archivo ECMAScript 6 original con <code>node src/main/js/main.js</code> como para el _transpilado_ con <code>node ./build/dist/main.js</code>.
+El resultado son los siguientes mensajes en la terminal tanto para la ejecución del archivo ECMAScript 6 original con `node src/main/js/main.js` como para el _transpilado_ con `node ./build/dist/main.js`.
 
 {{< code file="System.out" language="plaintext" options="" >}}
 

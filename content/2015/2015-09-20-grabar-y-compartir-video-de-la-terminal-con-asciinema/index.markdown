@@ -22,7 +22,7 @@ Si queremos compartir las acciones en una terminal y su salida tenemos varias op
 
 Asciinema es como un vídeo pero de texto que además podemos compartir para que otras personas lo vean y que podemos incrustar en páginas web como artículos de bitácoras. Además permite seleccionar y copiar texto y seguro que necesita mucho menos ancho de banda que un vídeo de [YouTube][youtube]. Empezar a crear vídeos de texto es tan sencillo como [descargar el binario de Asciinema](https://github.com/asciinema/asciinema/releases) o [instalarlo con el gestor de paquetes](https://asciinema.org/docs/installation) de la distribución GNU/Linux que usemos, también se puede usar en [Mac OS][macos] y [FreeBSD][freebsd].
 
-Una vez instalado, podemos iniciar una grabación de la terminal, esto creará un archivo _video.asciinema_. Podremos parar la grabación con la combinación de teclas <kbd>ctrl+d</kbd> o tecleando el comando <code>exit</code>:
+Una vez instalado, podemos iniciar una grabación de la terminal, esto creará un archivo _video.asciinema_. Podremos parar la grabación con la combinación de teclas <kbd>ctrl+d</kbd> o tecleando el comando `exit`:
 
 {{< code file="asciinema-rec.sh" language="bash" options="" >}}
 

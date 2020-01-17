@@ -44,7 +44,7 @@ El parámetro _-P_ indica el perfil a usar y hay que crear uno para tomar captur
 {{< code file="firefox-gestor-perfiles.sh" language="bash" options="" >}}
 {{< code file="firefox-createprofile.sh" language="bash" options="" >}}
 
-Si hay necesidad de tomar varias capturas de pantalla de diferentes URLs de la aplicación o diferentes páginas web, con un script del intérprete de comandos [Bash][bash] y dada una lista de URLs una por línea en un archivo se realiza el bucle. El parámetro _screenshot_ contiene el nombre de la imagen en el que guardar la captura y a continuación la URL de la que tomar la captura, el parámetro _--window-size_ especifica el ancho del navegador al tomar la captura, cambiar el ancho permite observar como se visualiza la página en diferentes resoluciones de ancho (1366, 1600, 1920, 2560, ...).
+Si hay necesidad de tomar varias capturas de pantalla de diferentes URLs de la aplicación o diferentes páginas web, con un script del intérprete de comandos [Bash][bash] y dada una lista de URLs una por línea en un archivo se realiza el bucle. El parámetro _screenshot_ contiene el nombre de la imagen en el que guardar la captura y a continuación la URL de la que tomar la captura, el parámetro _\-\-window-size_ especifica el ancho del navegador al tomar la captura, cambiar el ancho permite observar como se visualiza la página en diferentes resoluciones de ancho (1366, 1600, 1920, 2560, ...).
 
 {{< code file="links.txt" language="plaintext" options="" >}}
 {{< code file="firefox-screenshot-links.sh" language="bash" options="" >}}

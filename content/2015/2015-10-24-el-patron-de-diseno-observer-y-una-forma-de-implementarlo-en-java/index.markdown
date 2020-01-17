@@ -41,7 +41,7 @@ Supongamos que tenemos una clase _Producto_ con un precio y queremos emitir un m
 
 Conocer los patrones de diseño, conocer sus beneficios y desventajas y saber cuando aplicarlos probablemente nos sea de provecho en los casos reales que nos encontremos. En el libro [Head First Design Patterns](https://amzn.to/2SVhrFc) explican bastante bien este y otros patrones, este libro lo considero como lectura recomendada junto a otros [8+ libros para mejorar como programadores][blogbitix-55].
 
-El [código fuente completo del ejemplo](https://github.com/picodotdev/blog-ejemplos/tree/master/PatronObserver) puedes descargarlo del repositorio de ejemplos alojado en [GitHub][github] y probarlo ejecutando el comando <code>./gradlew run</code>.
+El [código fuente completo del ejemplo](https://github.com/picodotdev/blog-ejemplos/tree/master/PatronObserver) puedes descargarlo del repositorio de ejemplos alojado en [GitHub][github] y probarlo ejecutando el comando `./gradlew run`.
 
 {{< reference >}}
 * [Patrones de diseño en la programación orientada a objetos][elblogdepicodev-97]

@@ -29,7 +29,7 @@ Para usar EncFS debemos instalar su paquete, en [Arch Linux][archlinux] con:
 
 {{< code file="pacman.sh" language="bash" options="" >}}
 
-Instalado el paquete y con el comando <code>encfs</code> indicamos el directorio donde se almacenará el sistema de archivos cifrado y el directorio donde EncFS montará el sistema de archivos sin cifrar, la primera vez que lo usemos nos pedirá la contraseña con la que el sistema de archivos se cifrará que deberemos recordar ya que nos la pedirá cada vez que montemos el sistema de archivos cifrado.
+Instalado el paquete y con el comando `encfs` indicamos el directorio donde se almacenará el sistema de archivos cifrado y el directorio donde EncFS montará el sistema de archivos sin cifrar, la primera vez que lo usemos nos pedirá la contraseña con la que el sistema de archivos se cifrará que deberemos recordar ya que nos la pedirá cada vez que montemos el sistema de archivos cifrado.
 
 {{< code file="encfs.sh" language="bash" options="" >}}
 {{< asciinema id="36852" caption="Inicialización y montaje de un sistema de archivos cifrado para su uso con EncFS" >}}

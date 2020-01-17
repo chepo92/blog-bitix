@@ -42,7 +42,7 @@ El acceso a una base de datos usando jOOQ se consigue a través de la clase [DSL
 
 {{< code file="AppConfiguration.java" language="java" options="" >}}
 
-Podemos crear la base de datos y los dos esquemas con una tarea de [Gradle][gradle] y con [Liquibase][liquibase], con el comando <code>./gradlew updateDatabase</code>, a continuación solo una parte del [archivo _build.gradle_ completo](https://github.com/picodotdev/blog-ejemplos/blob/master/Multidatabase/build.gradle) y los archivos XML de actualización de los esquemas.
+Podemos crear la base de datos y los dos esquemas con una tarea de [Gradle][gradle] y con [Liquibase][liquibase], con el comando `./gradlew updateDatabase`, a continuación solo una parte del [archivo _build.gradle_ completo](https://github.com/picodotdev/blog-ejemplos/blob/master/Multidatabase/build.gradle) y los archivos XML de actualización de los esquemas.
 
 {{< code file="build-liquibase.gradle" language="groovy" options="" >}}
 {{< code file="inventory-changelog.xml" language="XML" options="" >}}
@@ -53,11 +53,11 @@ Podemos crear la base de datos y los dos esquemas con una tarea de [Gradle][grad
     image1="image:basededatos.png" optionsthumb1="300x200" title1="Base de datos con varios esquemas"
     caption="Base de datos con varios esquemas, inventory y purchases" >}}
 
-Como en jOOQ la fuente de la verdad es la base de datos los modelos se generan a partir de ella usando otra tarea de Gradle, generará las clases con las que trabajaremos en la aplicación con el comando <code>./gradlew generateModels</code>. Las clases son las del paquete [io.github.picodotdev.blogbitix.multidatabase.jooq](https://github.com/picodotdev/blog-ejemplos/tree/master/Multidatabase/src/main/java/io/github/picodotdev/blogbitix/multidatabase/jooq).
+Como en jOOQ la fuente de la verdad es la base de datos los modelos se generan a partir de ella usando otra tarea de Gradle, generará las clases con las que trabajaremos en la aplicación con el comando `./gradlew generateModels`. Las clases son las del paquete [io.github.picodotdev.blogbitix.multidatabase.jooq](https://github.com/picodotdev/blog-ejemplos/tree/master/Multidatabase/src/main/java/io/github/picodotdev/blogbitix/multidatabase/jooq).
 
 {{< code file="build-jooq.gradle" language="groovy" options="" >}}
 
-Este sería el programa de ejemplo iniciado con [Spring Boot][spring-boot] que usa ambos servicios, el de inventario y el de compras, creando un producto y haciendo una compra junto con su salida en la terminal. Ejecutándolo repetidamente con <code>./gradlew run</code> veremos aumenta el número de productos y compras guardados en cada tabla de los dos esquemas.
+Este sería el programa de ejemplo iniciado con [Spring Boot][spring-boot] que usa ambos servicios, el de inventario y el de compras, creando un producto y haciendo una compra junto con su salida en la terminal. Ejecutándolo repetidamente con `./gradlew run` veremos aumenta el número de productos y compras guardados en cada tabla de los dos esquemas.
 
 {{< code file="Main.java" language="java" options="" >}}
 {{< code file="System.out" language="plaintext" options="" >}}

@@ -31,7 +31,7 @@ Esto para los enlaces externos hacia otras páginas pero de forma similar lo apl
 
 {{< code file="links-posts.html" language="html" options="" >}}
 
-Con estos archivos usando la [sintaxis de markdown](https://daringfireball.net/projects/markdown/syntax#link) con <code>\[texto enlace\]\[identificativo-enlace\]</code>, por ejemplo <code>\[¡Hola nuevo mundo!\]\[blogbitix-0\]</code>, puedo hacer referencia a los enlaces con su identificativo y al generar el contenido estas referencias será sustituidas por los enlaces referenciados.
+Con estos archivos usando la [sintaxis de markdown](https://daringfireball.net/projects/markdown/syntax#link) con `\[texto enlace\]\[identificativo-enlace\]`, por ejemplo `\[¡Hola nuevo mundo!\]\[blogbitix-0\]`, puedo hacer referencia a los enlaces con su identificativo y al generar el contenido estas referencias será sustituidas por los enlaces referenciados.
 
 Rastreando la página web o bitácora podremos encontrar y posteriormente corregir los enlaces rotos que encontremos. En el artículo [cómo buscar los enlaces rotos de un sitio web][blogbitix-115] comento varias formas de descubrir estos enlaces que en su momento lo fueron pero han dejado de ser válidos y que proporcionan una mala experiencia al usuario.
 

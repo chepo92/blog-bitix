@@ -28,7 +28,7 @@ Usando como ejemplo el caso de la [aplicación con el cliente de HTTP/2][blogbit
 
 {{< code file="module-info.java" language="java" options="" >}}
 
-Usando la linea de comandos o con una tarea de [Gradle][gradle] se genera el _runtime_ para la aplicación con _jlink_. El módulo ha de compilarse previamente. Con la opción _--launcher_ se crea un _script_ para lanzar la aplicación con la clase que contiene el método _main_ indicada como punto de entrada, la opción _--output_ indica donde se genera el contenido del _runtime_.
+Usando la linea de comandos o con una tarea de [Gradle][gradle] se genera el _runtime_ para la aplicación con _jlink_. El módulo ha de compilarse previamente. Con la opción _\-\-launcher_ se crea un _script_ para lanzar la aplicación con la clase que contiene el método _main_ indicada como punto de entrada, la opción _\-\-output_ indica donde se genera el contenido del _runtime_.
 
 {{< code file="jlink.sh" language="bash" options="" >}}
 

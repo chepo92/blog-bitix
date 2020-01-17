@@ -45,7 +45,7 @@ Para ejecutar el ejemplo usaré el [contenedor de Docker para RabbitMQ](https://
 {{< code file="docker-compose.yml" language="YAML" options="" >}}
 {{< code file="docker-run.sh" language="bash" options="" >}}
 
-Una vez iniciado el contenedor y con el código fuente del ejemplo, iniciamos en cualquier orden la parte receptora de los mensajes y la parte emisora de mensajes con los comandos <code>./gradlew receive</code> y <code>./gradlew send</code> respectivamente, momento en el cual veremos que en la consola salen las notificaciones de recepción y envío.
+Una vez iniciado el contenedor y con el código fuente del ejemplo, iniciamos en cualquier orden la parte receptora de los mensajes y la parte emisora de mensajes con los comandos `./gradlew receive` y `./gradlew send` respectivamente, momento en el cual veremos que en la consola salen las notificaciones de recepción y envío.
 
 {{< image
     gallery="true"

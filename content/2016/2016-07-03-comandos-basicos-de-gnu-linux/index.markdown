@@ -69,7 +69,7 @@ En la colección de [utilidades que forman el núcleo de GNU](https://www.gnu.or
 * _yes_: repite indefinidamente el mensaje _yes_ en la salida hasta que se finaliza. Útil para ejecutar comandos de forma desatendida que requieren la intervención del usuario.
 * _zip_: crea un archivador comprimiendo el contenido de los archivos.
 
-En sus respectivas páginas de manual, <code>man [comando]</code>, podemos conocer las opciones que permite cada uno de ellos junto con algunos ejemplos de uso. Estos comandos se pueden combinar haciendo que la salida de un comando sea la entrada del siguiente mediante tuberías, por ejemplo, para ordenar un fichero de texto y mostrar las 5 primeras líneas con los comandos _sort_ y _head_ usaríamos <code>sort fichero.txt | head -5</code>. Precisamente el comando <code>sort</code> es lo que he utilizado para ordenar alfabéticamente la lista de comandos anterior.
+En sus respectivas páginas de manual, `man [comando]`, podemos conocer las opciones que permite cada uno de ellos junto con algunos ejemplos de uso. Estos comandos se pueden combinar haciendo que la salida de un comando sea la entrada del siguiente mediante tuberías, por ejemplo, para ordenar un fichero de texto y mostrar las 5 primeras líneas con los comandos _sort_ y _head_ usaríamos `sort fichero.txt | head -5`. Precisamente el comando `sort` es lo que he utilizado para ordenar alfabéticamente la lista de comandos anterior.
 
 {{< image
     gallery="true"

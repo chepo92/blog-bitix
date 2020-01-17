@@ -46,7 +46,7 @@ Si con los archivos FXML construimos la interfaz queda como enlazar los elemento
 
 {{< code file="HelloWorldFXMLController.java" language="java" options="" >}}
 
-La clase manejador de eventos se indica en el panel _Controller_ y es una clase con métodos que posteriormente se indican en el editor con una almohadilla (<code>#</code>) delante en el panel _Code_. Por ejemplo, si el manejador de un botón se llama _onClick_ en la clase controlador _HelloWorldFXMLController_ deberemos tener ese método con el parámetro adecuado en este caso un [_ActionEvent_](https://docs.oracle.com/javase/8/javafx/api/javafx/event/ActionEvent.html).
+La clase manejador de eventos se indica en el panel _Controller_ y es una clase con métodos que posteriormente se indican en el editor con una almohadilla (`#`) delante en el panel _Code_. Por ejemplo, si el manejador de un botón se llama _onClick_ en la clase controlador _HelloWorldFXMLController_ deberemos tener ese método con el parámetro adecuado en este caso un [_ActionEvent_](https://docs.oracle.com/javase/8/javafx/api/javafx/event/ActionEvent.html).
 
 {{< image
     gallery="true"

@@ -31,7 +31,7 @@ Continuando la [serie de artículos sobre docker][blogbitix-serie-docker] que es
 
 ### Introducción a Docker Compose
 
-Las aplicaciones basadas en microservicios se prestan a usar múltiples contenedores cada uno con un servicio, uno puede contener la base de datos [postgresql][postgresql], otro una base de datos clave/valor [redis][redis] o de documentos como [elasticsearch][elasticsearch] para hacer búsquedas, otro un sistema de mensajería como [rabbitmq][rabbitmq], otro [tomcat][tomcat] o [wildfly][wildfly] que use los anteriores y un servidor web como [Nginx][nginx]. Teniendo múltiples contenedores usar el comando <code>docker run</code> para cada uno de ellos nos resultará incómodo. En este punto entra Docker Compose permitiéndonos definir nuestra aplicación multicontenedor en un archivo con las mismas propiedades que indicaríamos con el comando <code>docker run</code> individualmente. Con un único comando podremos iniciar todos los contenedores y en el orden que los especifiquemos.
+Las aplicaciones basadas en microservicios se prestan a usar múltiples contenedores cada uno con un servicio, uno puede contener la base de datos [postgresql][postgresql], otro una base de datos clave/valor [redis][redis] o de documentos como [elasticsearch][elasticsearch] para hacer búsquedas, otro un sistema de mensajería como [rabbitmq][rabbitmq], otro [tomcat][tomcat] o [wildfly][wildfly] que use los anteriores y un servidor web como [Nginx][nginx]. Teniendo múltiples contenedores usar el comando `docker run` para cada uno de ellos nos resultará incómodo. En este punto entra Docker Compose permitiéndonos definir nuestra aplicación multicontenedor en un archivo con las mismas propiedades que indicaríamos con el comando `docker run` individualmente. Con un único comando podremos iniciar todos los contenedores y en el orden que los especifiquemos.
 
 El archivo descriptor nos puede servir no solo como forma de iniciar los contenedores en un entorno de desarrollo sino como de documentación de la aplicación en la que veremos qué contenedores, imágenes, volúmenes, enlaces y demás propiedades tienen.
 
@@ -48,7 +48,7 @@ Con el siguiente comando veremos que Docker Compose funciona correctamente y la 
 
 ### El descriptor de contenedores
 
-El descriptor de los contenedores a usar con Docker Compose es un archivo de texto con [formato yaml][yaml] en la que especificamos los diferentes contenedores y sus propiedades, básicamente podemos indicar las mismas propiedades que indicamos arrancando los contenedores individualmente con el comando <code>docker run</code>. En el siguiente ejemplo vemos varios contenedores, dos contenedores de datos para redis y postgresql, los contenedores de redis y postgresql y un contenedor para la aplicación usando tomcat enlazado con los contenedores de redis y postgresql definidos previamente.
+El descriptor de los contenedores a usar con Docker Compose es un archivo de texto con [formato yaml][yaml] en la que especificamos los diferentes contenedores y sus propiedades, básicamente podemos indicar las mismas propiedades que indicamos arrancando los contenedores individualmente con el comando `docker run`. En el siguiente ejemplo vemos varios contenedores, dos contenedores de datos para redis y postgresql, los contenedores de redis y postgresql y un contenedor para la aplicación usando tomcat enlazado con los contenedores de redis y postgresql definidos previamente.
 
 {{< code file="docker-compose.yml" language="YAML" options="" >}}
 
@@ -58,7 +58,7 @@ La [descripción completa del formato del archivo de Docker Compose](https://doc
 
 ### Iniciar los contenedores con Docker Compose
 
-Escrito el archivo de los contenedores y llamándolo _docker-compose.yml_ podemos iniciar los contenedores con el comando <code>docker-compose up</code> estando en el mismo directorio de trabajo donde esté ubicado del archivo yml (y previamente habiendo iniciado el servicio de docker). Con _docker-compose ps_ podremos ver el estado de los contenedores y de cuales está compuesta la aplicación. Con la opción _--help_ podemos ver la lista completa de comandos que podemos usar.
+Escrito el archivo de los contenedores y llamándolo _docker-compose.yml_ podemos iniciar los contenedores con el comando `docker-compose up` estando en el mismo directorio de trabajo donde esté ubicado del archivo yml (y previamente habiendo iniciado el servicio de docker). Con _docker-compose ps_ podremos ver el estado de los contenedores y de cuales está compuesta la aplicación. Con la opción _\-\-help_ podemos ver la lista completa de comandos que podemos usar.
 
 {{< code file="docker-compose-up.sh" language="YAML" options="" >}}
 

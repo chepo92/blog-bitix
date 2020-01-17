@@ -40,7 +40,7 @@ Como una partida puede durar una buena cantidad de tiempo podemos salvar una par
 
 {{< code file="save-commands.txt" language="plaintext" options="" >}}
 
-Con el comando <code>help</code> obtendremos una lista completa de los comandos a nuestra disposición como volver un movimiento hacia atrás si nos hemos equivocado al introducir el siguiente movimiento.
+Con el comando `help` obtendremos una lista completa de los comandos a nuestra disposición como volver un movimiento hacia atrás si nos hemos equivocado al introducir el siguiente movimiento.
 
 {{< code file="help.out" language="plaintext" options="" >}}
 

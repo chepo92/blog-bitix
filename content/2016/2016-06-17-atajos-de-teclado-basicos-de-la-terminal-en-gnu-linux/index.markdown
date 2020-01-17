@@ -24,17 +24,17 @@ En el intérprete de la terminal [Bash][bash] podemos usar las siguientes combin
 
 * <kbd>Ctrl+a</kbd>: lleva el cursor al inicio de la línea de comandos.
 * <kbd>Ctrl+e</kbd>: lleva el cursor al final de la línea de comandos.
-* <kbd>Ctrl+l</kbd>: limpia la terminal, similar a lo que hace el comando <code>clear</code>.
+* <kbd>Ctrl+l</kbd>: limpia la terminal, similar a lo que hace el comando `clear`.
 * <kbd>Ctrl+u</kbd>: limpia desde la posición del cursor hasta el inicio de la línea. Si se está al final limpia la línea entera.
 * <kbd>Ctrl+k</kbd>: limpia desde la posición del cursor hasta el final de la línea. Si se está al inicio limpia la línea entera.
-* <kbd>Ctrl+h</kbd>: hace lo mismo que la tecla <code>backspace</code>, borra el caracter inmediatamente anterior a la posición del cursor.
+* <kbd>Ctrl+h</kbd>: hace lo mismo que la tecla `backspace`, borra el caracter inmediatamente anterior a la posición del cursor.
 * <kbd>Ctrl+w</kbd>: borra la palabra inmediatamente antes del cursor.
 * <kbd>Alt+d</kbd> o <kbd>Esc+d</kbd>: borra la palabra siguiente después del cursor.
 * <kbd>Ctrl+p</kbd>: establece la línea de comandos con el último comando introducido.
 * <kbd>Ctrl+r</kbd>: inicia la búsqueda de comandos usados anteriormente, tecleando parte de un comando usos anteriores que hayamos realizado incluyendo las opciones y parámetros. Hecha una búsqueda pulsando de nuevo la combinación de teclas encontraremos coincidencias anteriores.
 * <kbd>Ctrl+c</kbd>: termina el proceso que se esté ejecutando, útil para recuperar el control del sistema.
-* <kbd>Ctrl+d</kbd>: sale de la terminal, similar al comando <code>exit</code>.
-* <kbd>Ctrl+z</kbd>: suspende la ejecución del proceso que se está ejecutando y lo pone en segundo plano, con el comando <code>fg</code> podremos volver a continuar su ejecución.
+* <kbd>Ctrl+d</kbd>: sale de la terminal, similar al comando `exit`.
+* <kbd>Ctrl+z</kbd>: suspende la ejecución del proceso que se está ejecutando y lo pone en segundo plano, con el comando `fg` podremos volver a continuar su ejecución.
 * <kbd>Ctrl+t</kbd>: intercambia la posición de los dos caracteres antes del cursor, útil para corregir malos tecleos.
 * <kbd>Esc+t</kbd>: intercambia la posición de las dos palabras antes del cursor, útil para corregir malos tecleos.
 * <kbd>Alt+f</kbd>: mueve el cursor al inicio de la palabra siguiente de la línea, lo mismo que <kbd>Ctrl+right</kbd> en la terminal de GNOME.
@@ -43,11 +43,11 @@ En el intérprete de la terminal [Bash][bash] podemos usar las siguientes combin
 
 Poner comandos en segundo plano es útil si un proceso deja el sistema sin respuesta o queremos introducir otro antes de que termine el primero. Con tres comandos podemos [manejar los procesos en primer y segundo plano](http://www.tldp.org/LDP/abs/html/x9644.html):
 
-* <code>jobs</code>: con este comando podremos ver la lista de procesos en segundo plano, con información de si están detenidos/suspendidos o en ejecución además del identificativo asignado para usar en los comandos <code>fg</code> y <code>bg</code>.
-* <code>fg</code>: pone en primer plano un proceso, si estaba suspendido reanuda su ejecución.
-* <code>bg</code>: continua la ejecución del proceso pero lo deja en segundo plano, si emite contenido a la terminal se mostrará y quizá nos moleste al seguir trabajando.
-* <code>kill</code>: con el identificativo del proceso en segundo plano y un símbolo de porcentaje por delante podemos enviar la señal de terminado del proceso. Ejemplo, <code>kill %1</code>.
-* Añadiendo un _ampersand_, <code>&</code>, al final del comando pondremos el comando en ejecución pero en segundo plano directamente.
+* `jobs`: con este comando podremos ver la lista de procesos en segundo plano, con información de si están detenidos/suspendidos o en ejecución además del identificativo asignado para usar en los comandos `fg` y `bg`.
+* `fg`: pone en primer plano un proceso, si estaba suspendido reanuda su ejecución.
+* `bg`: continua la ejecución del proceso pero lo deja en segundo plano, si emite contenido a la terminal se mostrará y quizá nos moleste al seguir trabajando.
+* `kill`: con el identificativo del proceso en segundo plano y un símbolo de porcentaje por delante podemos enviar la señal de terminado del proceso. Ejemplo, `kill %1`.
+* Añadiendo un _ampersand_, `&`, al final del comando pondremos el comando en ejecución pero en segundo plano directamente.
 
 Las anteriores combinaciones de teclas son del intérprete de comandos bash, el emulador de terminal que usemos también incorpora algunas combinaciones de teclas más. En el caso del emulador del terminal de [GNOME][gnome] podemos usar las siguientes combinaciones muy útiles:
 

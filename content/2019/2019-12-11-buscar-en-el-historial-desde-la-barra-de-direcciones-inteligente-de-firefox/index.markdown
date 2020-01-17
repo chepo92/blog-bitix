@@ -27,12 +27,12 @@ Los navegadores web guardan un historial de todas las páginas a las que se acce
 
 Acceder al historial requiere abrir una ventana y luego hacer una búsqueda pero sin necesidad de abrir la ventana del historial desde la barra de direcciones inteligente también pueden hacerse búsquedas, no solo para las páginas del historial sino también entre los marcadores, pestañas abiertas, por títulos de página o por coincidencias en la dirección web. Con ciertos caracteres especiales se determina el comportamiento de la búsqueda.
 
-* <code>^</code>: para buscar coincidencias en el historial de búsqueda.
-* <code>*</code>: para buscar coincidencias en los marcadores.
-* <code>+</code>: para buscar coincidencias en las etiquetas de las páginas.
-* <code>%</code>: para buscar entre las pestañas abiertas actualmente.
-* <code>#</code>: Para buscar coincidencias en usando los títulos de página.
-+ <code>$</code>: para buscar coincidencias en la dirección web.
+* `^`: para buscar coincidencias en el historial de búsqueda.
+* `*`: para buscar coincidencias en los marcadores.
+* `+`: para buscar coincidencias en las etiquetas de las páginas.
+* `%`: para buscar entre las pestañas abiertas actualmente.
+* `#`: Para buscar coincidencias en usando los títulos de página.
++ `$`: para buscar coincidencias en la dirección web.
 
 En esta captura de hace una búsqueda por el título de las páginas en el historial.
 

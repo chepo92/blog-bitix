@@ -23,7 +23,7 @@ Al igual que un servicio de registro y descubrimiento es esencial para los micro
 
 Dado que este servicio de configuración es esencial para que los microservicios puedan obtener su configuración sin la cual no podrían proporcionar su funcionalidad hay que configurarlo de tal manera que sea tolerante a fallos. Una de las medidas para hacerlo tolerante a fallos es iniciar varias instancias de servidores de configuración, estas instancias se autoregistran en el servicio de descubrimiento para que los microservicios puedan descubrirlos y obtener su configuración al iniciarse.
 
-Con el comando <code>./gradlew configserver:run --args="--port=8090"</code> se inicia una instancia de servicio de configuración en el puerto _8090_, cambiando el número de puerto se puede iniciar otra instancia en el puerto especificado. Una vez iniciadas varias instancias en el _dashboard_ del servicio de descubrimiento se observa como se autoregistran y su estado.
+Con el comando `./gradlew configserver:run --args="--port=8090"` se inicia una instancia de servicio de configuración en el puerto _8090_, cambiando el número de puerto se puede iniciar otra instancia en el puerto especificado. Una vez iniciadas varias instancias en el _dashboard_ del servicio de descubrimiento se observa como se autoregistran y su estado.
 
 {{< code file="gradlew-run.sh" language="bash" options="" >}}
 

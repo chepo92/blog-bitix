@@ -63,7 +63,7 @@ Para añadir el soporte de IPv6 en un servidor web hay que usar la siguiente dir
 > \# Nginx<br>
 > listen [::]:80 default_server;
 
-En una máquina con [GNU][gnu]/[Linux][linux] se puede ver la dirección IPv6 asignada a cada interfaz de red con el comando <code>ip -6 addr show</code>.
+En una máquina con [GNU][gnu]/[Linux][linux] se puede ver la dirección IPv6 asignada a cada interfaz de red con el comando `ip -6 addr show`.
 
 [Amazon soporta en algunas regiones IPv6](https://docs.aws.amazon.com/es_es/elasticloadbalancing/latest/classic/elb-internet-facing-load-balancers.html) con lo que si usamos este servicio de computación en la nube se puede usar el nuevo protocolo. Otros actores importantes de la nube también lo soportan como [Digital Ocean][digital-ocean] ([1](https://www.digitalocean.com/community/tutorials/how-to-enable-ipv6-for-digitalocean-droplets)) o [Linode][linode] ([2](https://www.linode.com/docs/networking/native-ipv6-networking/)). En las entidades de registro de dominios basta con añadir un registro AAAA a las zonas DNS.
 
