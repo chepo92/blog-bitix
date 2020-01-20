@@ -11,7 +11,7 @@ sharing: true
 comments: true
 promoted: false
 imagePost: "image:image/temo.jpg"
-tags: ["desempaquetado"]
+series: ["desempaquetado-otros"]
 summary: "Cambié una caldera por un termo eléctrico. Haciendo unas estimaciones previas pensaba que si pero ahora que tengo una factura con el importe completo teniendo la cadera de gas y habiendo llegado otra con un periodo completo con termo eléctrico puedo comparar y comprobar cuales son los importes reales de cada una de las opciones, ¿el importe que pago en la factura con el termo eléctrico será menor?."
 ---
 

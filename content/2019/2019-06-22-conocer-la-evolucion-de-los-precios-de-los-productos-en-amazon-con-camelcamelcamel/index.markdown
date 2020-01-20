@@ -11,7 +11,7 @@ sharing: true
 comments: true
 promoted: false
 imagePost: "logotype:amazon.svg"
-tags: ["desempaquetado"]
+tags: ["desempaquetado-tecnologia", "desempaquetado-otros"]
 summary: "Haciendo un seguimiento de los precios en Amazon los de algunos productos se mantienen estables a lo largo del tiempo pero en la mayoría varían significativamente. Con la página CamelCamelCamel es posible conocer la evolución del precios en Amazon y su disponibilidad  y saber si están en un periodo de precio alto o en su mínimo histórico."
 ---
 
