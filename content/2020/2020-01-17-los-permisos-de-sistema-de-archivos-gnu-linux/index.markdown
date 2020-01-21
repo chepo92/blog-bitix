@@ -4,6 +4,7 @@ type: "post"
 title: "Los permisos del sistema de archivos de GNU/Linux"
 url: "/2020/01/los-permisos-del-sistema-de-archivos-de-gnu-linux/"
 date: 2020-01-17T19:15:00+01:00
+updated: 2020-01-21T20:15:00+01:00
 language: "es"
 rss: true
 sharing: true
@@ -20,7 +21,7 @@ summary: "El sistema de permisos de GNU/Linux por defecto es menos capaz que el 
 
 En un sistema multiprogramado como son cualquiera de los actuales modernos que son utilizados por varios usuarios y programas es necesario que tengan algún mecanismo de seguridad y permisos para proteger los recursos. En el caso del sistema de archivos GNU/Linux usa un sistema simple pero suficiente para una buena parte de casos de uso.
 
-En [GNU][gnu]/[Linux][linux] los permisos de cada archivo se dividen en lectura, escritura y ejecución, identificados por las letras _rwx_ respectivamente, para el propietario del archivo, el grupo de usuarios al que pertenece y para el resto de usuarios, identificados estos grupos con las letras _ugo_ respectivamente. Para saber si se posee el permiso de lectura, escritura y ejecución se utiliza un bit para cada uno de ellos. Para el conjunto de usuario, grupo y resto de usuarios en total se utilizan 9 bits. Estos 9 bits forman la cadena _rwxrwxrwx_ que para escribirlos de forma numérica y más simple se pueden utilizar base octal, por ejemplo 744 se traduce a binario en 111100100 significando que el usuario tiene permisos para leer, escribir y ejecutar el archivo, dados los tres primeros bits, y el grupo de usuario y resto de usuarios solo tienen el permiso de lectura.
+En [GNU][gnu]/[Linux][linux] implemenan un [control de acceso discrecional](https://es.wikipedia.org/wiki/Control_de_Acceso_Discrecional) o DAC en el que los permisos de cada archivo se dividen en lectura, escritura y ejecución, identificados por las letras _rwx_ respectivamente, para el propietario del archivo, el grupo de usuarios al que pertenece y para el resto de usuarios, identificados estos grupos con las letras _ugo_ respectivamente. Para saber si se posee el permiso de lectura, escritura y ejecución se utiliza un bit para cada uno de ellos. Para el conjunto de usuario, grupo y resto de usuarios en total se utilizan 9 bits. Estos 9 bits forman la cadena _rwxrwxrwx_ que para escribirlos de forma numérica y más simple se pueden utilizar base octal, por ejemplo 744 se traduce a binario en 111100100 significando que el usuario tiene permisos para leer, escribir y ejecutar el archivo, dados los tres primeros bits, y el grupo de usuario y resto de usuarios solo tienen el permiso de lectura.
 
 Con el comando para listar el contenido de un directorio _ls -lha_ se muestra el listado en formato largo con la opción _-l_ que incluye los permisos, las unidades de tamaño en formato legible para humanos con la opción _-h_, con la opción _-a_ incluye los archivos ocultos que son los que empiezan por _._ y con la opción _\-\-group-directories-first_ los directorios primero.
 
@@ -78,7 +79,7 @@ Otro ejemplo, en este caso para un archivo, no un directorio. La primera letra n
 
 {{< code file="permissions-5.sh" language="plaintext" options="" >}}
 
-Otro esquema más flexible pero más complejo son las [listas de control de acceso](https://wiki.archlinux.org/index.php/Access_Control_Lists) o ACL. Las ACL permiten dar permisos a cualquier usuario o grupo para cualquier archivo.
+Otros esquemas más flexibles pero más complejos son las [listas de control de acceso](https://wiki.archlinux.org/index.php/Access_Control_Lists) o ACL y los sistemas de control de acceso obligatorio o MAC, GNU/Linux también soporta este tipo de seguridades [activando ACL](https://wiki.archlinux.org/index.php/Access_Control_Lists) o [activando SELinux](https://wiki.archlinux.org/index.php/SELinux). Las ACL permiten dar permisos específicos a cualquier usuario o grupo para cualquier archivo.
 
 En la [wiki de Arch Linux sobre permisos de archivo y atributos](https://wiki.archlinux.org/index.php/File_permissions_and_attributes) se explica detalladamente y con ejemplos el sistema de permisos en GNU/Linux.
 

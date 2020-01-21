@@ -39,6 +39,7 @@ Para añadir tipos de datos que no están entre los básicos de JSON como es una
 {{< code file="GsonLocalDateTypeAdapter.java" language="java" options="" >}}
 {{< code file="JacksonLocalDateSerializer.java" language="java" options="" >}}
 {{< code file="JacksonLocalDateDeserializer.java" language="java" options="" >}}
+{{< code file="build.gradle" language="groovy" options="" >}}
 
 {{% sourcecode git="blog-ejemplos/tree/master/JavaJson" command="./gradlew run" %}}
 

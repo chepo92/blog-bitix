@@ -58,7 +58,7 @@ El siguiente comando comprueba los enlaces internos de un sitio web y los extern
 
 Lo anterior nos sirve para detectar los enlaces rotos que tenemos en nuestro sitio hacia otros, seguramente también nos interesará conocer los enlaces rotos que tienen otros sitios hacia el nuestro. Podemos saber a que páginas no encontradas están accediendo los usuarios de nuestro sitio web lanzando un evento personalizado de [Google Analytics][google-analytics] en la página para el error 404 que mostremos. Dado que los enlaces hacia nuestro sitio incluidos en otros no podemos modificarlos si se tratase de alguno especialmente importante al menos podremos hacer una redirección para que los usuarios lleguen al contenido más apropiado en vez de a una página no encontrada:
 
-{{< code file="analytics.js" language="JavaScript" options="" >}}
+{{< code file="analytics.js" language="javascript" options="" >}}
 
 Al mismo tiempo [validar el HTML](https://validator.w3.org/) y [validar los estilos CSS](http://jigsaw.w3.org/css-validator/) respecto a su especificación también mejorarán el código del sitio web.
 

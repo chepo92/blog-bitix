@@ -134,7 +134,7 @@ Las [especificación es de los _Web Components_](https://developer.mozilla.org/e
 
 En las _DevTools_ de [Firefox][firefox] se puede inspeccionar el _shadow_ DOM del web componentes. En la documentación de MDN hay varias páginas que detallan los Web Components con [ejemplos](https://html.spec.whatwg.org/multipage/custom-elements.html#custom-elements).
 
-Tenía claro que quería acudir a esta presentación, era una en la que no tenía muchas dudas al elegir por quien la daba [@ladybenko](https://twitter.com/ladybenko) de la que sigo Twitter sus interesantes comentarios que hace, desarrolladora de Firefox, es el nivel que hay en los ponentes de la BilboStack. Comenzaba la mañana posponiendo la alarma del despertador varias veces pero solo por esta presentación ya ha merecido el levantarme para acudir a la BilboStack.
+Tenía claro que quería acudir a esta presentación, era una en la que no tenía muchas dudas al elegir por quien la daba [@ladybenko](https://twitter.com/ladybenko), desarrolladora de Firefox, es el nivel que hay en los ponentes de la BilboStack. Comenzaba la mañana posponiendo la alarma del despertador varias veces pero solo por esta presentación ya ha merecido el levantarme para acudir a la BilboStack.
 
 {{< image
     gallery="true"
