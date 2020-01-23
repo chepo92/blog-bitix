@@ -17,6 +17,7 @@
   {{- $value := index (split $i "=") 1 -}}
   {{- $attributes = merge $attributes (dict $key $value) -}}
 {{- end -}}
+{{- $page := default "" (index $attributes "page") -}}
 {{- $url := index $attributes "url" -}}
 {{- $size := index $attributes "size" -}}  
 {{- $width := index (split $size "x") 0 -}}
@@ -37,17 +38,19 @@
     {{- $src = print "assets/images/logotypes/" $image | relURL -}}
     {{- $srcthumb = cond (eq $imagethumb nil) $src (print "assets/images/logotypes/" $imagethumb | relURL) -}}
   {{- else if or (eq $binding "resource") (eq $binding "image") -}}
+    {{ $p := cond (eq $page "") .Page (.Page.GetPage $page) }}
     {{ $path := cond (eq $binding "image") "images/" "" }}
 
     {{- if (findRE "\\.svg$|\\.webp$" $image) -}}
       {{- $src = print $path $image -}}
       {{- $srcthumb = cond (eq $imagethumb nil) $image (print $path $imagethumb) -}}
     {{- else -}}
-      {{- $resource := .Page.Resources.GetMatch (print $path $image) -}}
-      {{- $resourcethumb := .Page.Resources.GetMatch (print $path $image) -}}
+      {{- $resource := $p.Resources.GetMatch (print $path $image) -}}
+      {{- $resourcethumb := $p.Resources.GetMatch (print $path $image) -}}
       {{- $scaled := $nil -}}
       {{- $scaledhumb := $nil -}}
 
+      {{- if eq $resource nil -}}{{- errorf "Invalid resource '%s'" $image -}}{{- end -}}
       {{- if eq $optionsthumb nil -}}{{- errorf "Invalid thumb optionsthumb '%s'" $optionsthumb -}}{{- end -}}
 
       {{- if eq $command "Fit" -}}
@@ -74,6 +77,10 @@
       {{- $srcthumb = $scaledhumb.RelPermalink -}}
       {{- $width = $scaledhumb.Width -}}
       {{- $height = $scaledhumb.Height -}}
+
+      {{ if eq $layout "fixed-height" }}
+        {{ $width = $nil }}
+      {{ end }}
     {{- end -}}
   {{- else if eq $binding "asset" -}}
     {{- $src = $image | relURL -}}

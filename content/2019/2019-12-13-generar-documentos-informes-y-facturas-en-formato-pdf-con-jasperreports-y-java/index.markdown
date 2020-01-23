@@ -9,7 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "resource:images/jaspersoft-studio.png"
+imagePost: "image:jaspersoft-studio.png"
 tags: ["java", "planeta-codigo"]
 summary: "Para generar documentos PDF sencillos en Java está la librería PDFBox que mediante código permite insertar la información y los elementos del documento. Con PDFBox el documento es generado completamente mediante código, para separar el estilo del documento y la información que contiene y para documentos más complejos está JasperReports que mediante una plantilla hace que si cambia el estilo del documento el código no requiera cambios."
 ---

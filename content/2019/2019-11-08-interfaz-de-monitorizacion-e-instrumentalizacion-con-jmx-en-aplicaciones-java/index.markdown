@@ -9,7 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "resource:images/jconsole.png"
+imagePost: "image:jconsole.png"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "JMX es una forma sencilla e integrada en la plataforma Java de monitorizar e instrumentalizar ciertas operaciones de funcionamiento interno de la aplicación que no tenga que ver con el ámbito de negocio que resuelve sino en el aspecto técnico. Unos casos de uso son activar una característica de la aplicación mientras la aplicación está funcionando o limpiar una cache de modo que los datos que almacena se actualicen de nuevo de la fuente origen en tiempo real y sin necesidad de reniciarla, cualquier otro realizable con código Java es posible."
 ---

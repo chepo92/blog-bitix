@@ -10,7 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "resource:images/calibre.png"
+imagePost: "image:calibre.png"
 tags: ["gnu-linux", "software"]
 summary: "Dado que los libros electrónicos ocupan muy poco se puede llegar a tener una biblioteca grande de libros que necesitan de una herramienta para ser catalogados y para realizar conversión entre formatos si es necesario para uno de entre los que soporte el dispositivo de libros electrónicos. Calibre es una aplicación que ofrece estas dos principales funciones."
 ---

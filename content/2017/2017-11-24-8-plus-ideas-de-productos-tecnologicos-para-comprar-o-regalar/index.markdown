@@ -11,6 +11,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:hugo.svg"
 tags: []
 summary: "Los productos de tecnología de consumo son regalos siempre bien recibidos por las posibilidades y el entretenimiento que proporcionan. Son productos de tecnología pero permiten disfrutar de otras aficiones y en algunos casos de varias con un mismo dispositivo, desde la fotografía con un _smartphone_ con buena cámara fotográfica que no tienen mucho que envidiar a cámaras específicas para un usuario aficionado, los juegos de móvil, comunicaciones y redes sociales, _smart tv_ para disfrutar de películas de cine y series en gran calidad de sonido e imagen en pantallas grandes, libros electrónicos para la lectura y consolas para los juegos. Incluídos los ordenadores y portátiles que también permiten hacer un poco de todo lo anterior además de para el estudio y trabajo."
 ---

@@ -10,7 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "resource:images/image-1.jpg"
+imagePost: "image:image-1.jpg"
 tags: ["gnu-linux", "planeta-codigo"]
 summary: "Las velocidades de conexión actuales de 100 Mbps y de 600 Mbps en los hogares permiten no darle tanta importancia al tamaño de una imagen y aunque los dispositivos móviles también tienen unas velocidades de conexión rápidas reducir el tamaño de las imágenes puede significar que una página web cargue algo más rápido. El ahorro está en un 30% y 60% lo que en colecciones grandes de imágenes el ahorro es considerable. WebP proporciona un ahorro de tamaño en las imágenes con una calidad similar que _jpg_ y _png_."
 ---

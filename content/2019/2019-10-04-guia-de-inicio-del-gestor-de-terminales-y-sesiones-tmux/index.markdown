@@ -9,7 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "resource:images/tmux.png"
+imagePost: "image:tmux.png"
 tags: ["gnu-linux", "planeta-codigo", "software"]
 summary: "Las personas que usan de forma intensiva la terminal seguramente usando un mutiplexador de terminales como tmux su trabajo es facilitado. Tmux permite dividir una terminal en paneles, ventanas independiente y sesiones. Usando sus múltiples combinaciones de teclas se divide una terminal o una ventana de forma horizontal y vertical en paneles del tamaño que se desee pudiendo de esta forma visualizar al mismo tiempo varias terminales ubicadas en cada panel. También se puede crear una configuración para iniciar tmux con la misma disposición de paneles, ventanas y sesiones."
 ---

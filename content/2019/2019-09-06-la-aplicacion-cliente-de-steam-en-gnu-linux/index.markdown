@@ -10,7 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "resource:images/cliente-steam.png"
+imagePost: "image:cliente-steam.png"
 tags: ["gnu-linux", "planeta-codigo"]
 series: ["juegos"]
 summary: "Durante unos años he estado sin jugar a juegos porque al haberme pasado a GNU/Linux creía que no se podía al menos a los juegos comerciales actuales, en GNU/Linux hay algunos juegos que funcionan perfectamente como juegos retro con RetroArch, SuperTux, OpenTTD o Battle for Wesnoth en entre algunos de diversos géneros. Pero la realidad es que con Wine y el cliente de Steam son dos posibilidades para jugar a algunos perfectamente y tener un catálogo que no llega a la altura de Windows pero bastante amplio."

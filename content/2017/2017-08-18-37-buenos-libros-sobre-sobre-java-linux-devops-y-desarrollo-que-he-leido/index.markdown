@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imagePost: "logotype:hugo.svg"
 tags: ["blog", "gnu-linux", "java", "planeta-codigo", "programacion"]
 summary: "Con el buscador Google y usando las palabras clave adecuadas es raro no encontrar información sobre aquello que estemos buscando. Pero en internet la información suele estar muy dispersa y en cada sitio la información no es completa y con profundidad, internet esta muy bien como apoyo o para precisar una determinada cuestión. Sin embargo, los libros siguen siendo un buen material de aprendizaje, entre sus ventajas está que la información está mejor organizada con una estructura más didáctica y dependiendo del libro el tema tratado es explicado con profundidad. Desde el 2014 son unos cuantos libros más los que he leído."
 ---

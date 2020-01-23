@@ -9,7 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "resource:images/barra-de-busqueda-firefox.png"
+imagePost: "image:barra-de-busqueda-firefox.png"
 tags: ["planeta-codigo", "software"]
 ---
 

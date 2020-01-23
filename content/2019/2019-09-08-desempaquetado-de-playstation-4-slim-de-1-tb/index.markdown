@@ -11,7 +11,7 @@ sharing: true
 comments: true
 promoted: false
 imageHead: "images/ps4.jpg"
-imagePost: "resource:images/caja-1.jpg"
+imagePost: "image:caja-1.jpg"
 tags: ["hardware", "juegos"]
 series: ["desempaquetado-tecnologia", "juegos"]
 summary: "A pesar de estar la PlayStation 4 al final de su ciclo de vida igualmente puede ser un buen momento para comprarla por otros motivos. Como por ejemplo que ahora es cuando mejor catálogo de juegos posee y que se ofrece en un modelo _slim_ que consume menos energía, es sensiblemente más pequeña, se calienta menos y es más silenciosa. Como usuario de GNU/Linux y un Intel NUC como ordenador personal una consola es una buena opción como plataforma de juegos sin complicaciones."

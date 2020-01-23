@@ -9,7 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "resource:images/autenticacion-2fa-1.png"
+imagePost: "image:autenticacion-2fa-1.png"
 tags: ["java", "planeta-codigo", "programacion", "seguridad", "spring"]
 summary: "El segundo factor de autenticación es una medida adicional en la autenticación que proporciona una notable mayor seguridad que utilizar solo un usuario y contraseña. Utilizando Spring y la aplicación para _smatphone_ Google Authenticator se puede implementar en una aplicación Java el segundo factor de autenticación o _2FA_ con códigos temporales o _TOTP_."
 ---

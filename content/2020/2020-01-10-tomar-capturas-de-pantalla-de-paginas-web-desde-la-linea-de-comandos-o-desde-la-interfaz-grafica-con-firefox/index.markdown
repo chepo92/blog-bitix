@@ -10,7 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "resource:images/duckduckgo.png"
+imagePost: "image:duckduckgo.png"
 tags: ["planeta-codigo", "programacion"]
 summary: "El navegador web Firefox tiene una opción con la que poder tomar una captura de pantalla de una página web desde la línea de comandos, que es útil como parte de un proceso automatizado. Firefox también permite tomar capturas de pantalla de una página web desde su interfaz gráfica o desde la consola web."
 ---

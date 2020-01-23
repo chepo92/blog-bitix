@@ -10,7 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "resource:images/nextcloud-inicio.png"
+imagePost: "image:nextcloud-inicio.png"
 tags: ["planeta-codigo", "software", "software-libre"]
 summary: "Empresas como Google ofrecen servicios gratuitos que los usuarios pueden utilizar, algunos de ellos a cambio de entregrarles documentos con información personal con la consiguiente potencial pérdida de privacidad. Algunos de estos servicios son sustituibles con alternativas como Nextcloud y OnlyOffice que permiten a sus usuarios ser dueños de su información ya sea utilizando una Raspberry Pi como servidor que debe ser administrada o incluso en la nube con servicios como DigitalOcean o AWS."
 ---

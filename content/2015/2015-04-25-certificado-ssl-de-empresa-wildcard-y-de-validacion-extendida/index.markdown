@@ -8,6 +8,7 @@ updated: 2015-04-25T12:00:00+02:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:hugo.svg"
 tags: ["programacion", "seguridad", "planeta-codigo", "web"]
 ---
 

@@ -9,6 +9,7 @@ rss: true
 sharing: true
 comments: true
 language: "es"
+imagePost: "logotype:hugo.svg"
 tags: ["apple", "gnu-linux", "microsoft", "planeta-codigo", "opinion"]
 summary: "La tecnología no para de avanzar, cada varios meses salen noticias de avances importantes. Algunos avances se convierten en realidad, otros tardan más en llegar, otros llegan pero no triunfan y de otros pasado un tiempo no se vuelve a oír hablar de ellos. Algunos cambios aunque mejoran lo existente son leves sin añadir nuevas posibilidades ni cambian los comportamientos de los usuarios o como interaccionan estos con la tecnología. Otros pocos son disruptivos y cambian de forma significativa el mercado de la tecnología junto con sus usuarios, estos cambios novedosos son capaces de hundir empresas líderes si no saben adaptarse o no los prevén al mismo tiempo que crean nuevos líderes en el mercado."
 ---

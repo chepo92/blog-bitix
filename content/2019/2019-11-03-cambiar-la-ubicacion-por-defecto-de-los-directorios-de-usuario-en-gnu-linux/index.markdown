@@ -10,7 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "resource:images/gnome-user-dirs.png"
+imagePost: "image:gnome-user-dirs.png"
 tags: ["gnu-linux", "planeta-codigo"]
 ---
 

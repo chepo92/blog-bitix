@@ -10,7 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "resource:images/editor-md.png"
+imagePost: "image:editor-md.png"
 tags: ["java", "javascript", "planeta-codigo", "programacion"]
 ---
 

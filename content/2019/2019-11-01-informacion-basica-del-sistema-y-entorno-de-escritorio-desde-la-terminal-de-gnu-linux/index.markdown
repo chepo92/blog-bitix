@@ -9,7 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "resource:images/neofetch-1.png"
+imagePost: "image:neofetch-1.png"
 tags: ["gnu-linux", "planeta-codigo"]
 ---
 

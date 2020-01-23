@@ -7,6 +7,7 @@ date: 2014-12-13T12:06:06+01:00
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:java.svg"
 tags: ["java", "software-libre", "planeta-codigo", "programacion"]
 ---
 

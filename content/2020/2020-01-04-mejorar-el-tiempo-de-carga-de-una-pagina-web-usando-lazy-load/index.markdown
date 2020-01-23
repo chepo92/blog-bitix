@@ -10,7 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "resource:images/metricas-pagespeed-playstation-despues.png"
+imagePost: "image:metricas-pagespeed-playstation-despues.png"
 tags: ["planeta-codigo", "programacion", "web"]
 summary: "Las páginas grandes y con muchos recursos como imágenes e _iframes_ implementar la carga vaga o _lazy load_ obtienen un gran beneficio, necesitando realizar menos peticiones en la carga inicial, con menos tamaño y cargándose en menos tiempo. Los navegadores han añadido soporte para desde JavaScript proporciona este soporte."
 ---

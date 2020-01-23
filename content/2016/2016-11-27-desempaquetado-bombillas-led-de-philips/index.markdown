@@ -8,6 +8,7 @@ language: "es"
 rss: true
 sharing: true
 comments: true
+imagePost: "logotype:hugo.svg" 
 tags: []
 series: ["desempaquetado-otros"]
 summary: "Sustituyendo las bombillas incandescentes por bombillas LED o de bajo consumo de aquellas que usemos más habitualmente (salón, habitaciones y baño) podemos ahorrar de forma significativa en iluminación en la factura de electricidad. Su coste aunque más caro llega a compensar pasados unos meses tanto por su menor consumo como por su mayor vida útil."
