@@ -195,7 +195,7 @@ Los _tuppers_ de 840 ml tiene unas dimensiones de 18,5 cm de largo, 12 cm de anc
 
 ### Otros complementos
 
-Un complemento a una olla exprés un robot de cocina que permiten realizar algunas recetas y elaboraciones adicionales como salsas, cremas y sofritos, la diferencia está en que suelen tener una capacidad de mayor de 5 litros y ser sensiblemente más caros al menos los modelos de gama alta. Son un complemento porque hasta donde he visto estos aparatos no hacen la función de una olla rápida, no trabajan con presión.
+Un complemento a una olla exprés son los robots de cocina que permiten realizar algunas recetas y elaboraciones adicionales como salsas, cremas y sofritos, la diferencia está en que suelen tener una capacidad de mayor de 5 litros y ser sensiblemente más caros al menos los modelos de gama alta. Son un complemento porque hasta donde he visto estos aparatos no hacen la función de una olla rápida, no trabajan con presión.
 
 {{< amazon
     linkids="c3b40ef1da3c973bb5f496bad81aa984,43514935981db10e6a17aa5bf89a4db1,2a3f10222256601ee5c16268bf2475e2"
