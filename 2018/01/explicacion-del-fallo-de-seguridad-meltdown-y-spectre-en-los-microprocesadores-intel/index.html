@@ -3,11 +3,6 @@
 
 
 
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -272,7 +267,7 @@
 <a href="/blog-bitix/assets/images/logotypes/arm.svg" data-gallery="data-gallery" title="ARM"><img data-src="/blog-bitix/assets/images/logotypes/arm.svg" width="200" height="200" alt="ARM" title="ARM"  class="lozad"></a></p>
 </figure>
 </div>
-<h3 id="tcnicas-para-aumentar-el-rendimiento">Técnicas para aumentar el rendimiento</h3>
+<h3 id="técnicas-para-aumentar-el-rendimiento">Técnicas para aumentar el rendimiento</h3>
 <p>Los microprocesadores modernos implementan varias técnicas para aumentar el rendimiento. Una de las mas simples es aumentar la frecuencia de trabajo del microprocesador, uno de los primeros Pentium trabajaba únicamente a 100 Mhz y los actuales llegan hasta los 3 Ghz, casi 30 veces más. Pero aumentar la frecuencia solo es posible hasta cierto límite a partir del cual el microprocesador se calienta mucho y consume mucha energía. Por lo que hay que emplear otras técnicas al mismo tiempo.</p>
 <p>Otra de las mas simples es reducir el tamaño de los transistores, unos transistores más pequeños hace que sea posible incluir más transistores en el mismo espacio físico para incluir caches de mayor tamaño o nuevas funcionalidades, con más velocidad y con menor consumo de energía. El tamaño de los transistores de los Pentium originales era de 800 nanómetros e incluía 3.1 millones, los Intel Core de octava generación se fabrican a 14 nanómetros incluyendo unos 5000 millones, unas 60 veces más pequeños. Aún así cada vez es más difícil cumplir con la <a href="https://es.wikipedia.org/wiki/Ley_de_Moore">ley de Moore</a> ya que se está llegando a límite físico de los átomos de los materiales, consistía en que cada dos años se duplica el número de transistores de un microprocesador.</p>
 <p>Con la ayuda de unos transistores más pequeños y más espacio se aprovecha para aumentar el rendimiento incluyendo más núcleos de cómputo. Pero para aumentar el rendimiento de un núcleo de cómputo individual o el <abbr title="Instructions Per Cicle">IPC</abbr> se emplean otras técnicas como utilizar múltiples <em>pipelines</em> para ejecutar varias instrucciones simultáneamente, ejecución fuera de orden para reorganizar las instrucciones y la ejecución especulativa para mantener llenos esos <em>pipelines</em>.</p>
@@ -307,7 +302,7 @@
         <span>fuera-de-orden.py</span>
     </div>
 </div>
-<h3 id="prediccin-de-salto-y-ejecucin-especulativa">Predicción de salto y ejecución especulativa</h3>
+<h3 id="predicción-de-salto-y-ejecución-especulativa">Predicción de salto y ejecución especulativa</h3>
 <p>Los programas incluyen saltos con sentencias condicionales <em>if</em> o de bucle. Los microprocesadores tratan de adivinar si una sentencia de salto se producirá o no (con heurísticas y son bastante buenos acertando) para recuperar y tener preparadas las siguientes instrucciones. Mantener los <em>pipelines</em> llenos es difícil al aumentar su número a tres o cuatro. Para tratar de mantenerlos llenos los microprocesadores usan la predicción de salto y van ejecutando las instrucciones desechando las operaciones si finalmente no se acierta en el salto pero habiendo aumentado el rendimiento si se ha acertado, realizan <a href="https://en.wikipedia.org/wiki/Speculative_execution">ejecución especulativa</a> de las instrucciones.</p>
 <p>En este otro caso, <em>v</em> depende de <em>u</em> y <em>u</em> depende de <em>t</em> de modo que un microprocesador superescalar sin ejecución especulativa tardará tres ciclos computando <em>t</em>, <em>u</em> y <em>v</em> para determinar el valor de <em>v</em> en la sentencia condicional <em>if</em> (en otro ciclo) momento en que pasa otros tres ciclos calculando <em>w</em>, <em>x</em> e <em>y</em>, en total 4 o 7 ciclos dependiendo de si hay salto en la sentencia condicional.</p>
 <div class="code">
@@ -332,7 +327,7 @@
 </div>
 <h3 id="cache">Cache</h3>
 <p>Los microprocesadores son muy rápidos comparados con la memoria o el acceso al almacenamiento secundario. Un Cortex-A53 de una Raspberry Pi puede ejecutar una instrucción en 0.5 nanosegundos pero el acceso a memoria costar 100 nanosegundos. Esto no es bueno pero por fortuna los accesos a memoria siguen patrones, accediendo repetidamente a variables recientemente accedidas y accediendo a variables en posiciones cercanas, de forma que colocando estas variables en una cache más rápida y cercana al procesador que la memoria principal se mitiga en gran medida el problema.</p>
-<h3 id="relacin-entre-ejecucin-especulativa-cache-y--meltdown--y--spectre-">Relación entre ejecución especulativa, cache y <em>Meltdown</em> y <em>Spectre</em></h3>
+<h3 id="relación-entre-ejecución-especulativa-cache-y-_meltdown_-y-_spectre_">Relación entre ejecución especulativa, cache y <em>Meltdown</em> y <em>Spectre</em></h3>
 <p>La ejecución especulativa tiene el efecto colateral de colocar datos en la memoria cache del microprocesador y esto es utilizado para realizar una forma de <a href="https://en.wikipedia.org/wiki/Side-channel_attack">ataque side-channel</a>. Desde el punto de vista de <em>Meltdown</em> y <em>Spectre</em> y la ejecución especulativa lo importante es que midiendo el tiempo que tarda el acceso a memoria se puede conocer si el dato está en la cache (tarda poco) o no (tarda mucho).</p>
 <div class="code">
     <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span><span class="lnt">6&#10;</span><span class="lnt">7&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-Python" data-lang="Python"><span class="n">t</span> <span class="o">=</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span>&#10;<span class="n">u</span> <span class="o">=</span> <span class="n">t</span><span class="o">+</span><span class="n">c</span>&#10;<span class="n">v</span> <span class="o">=</span> <span class="n">u</span><span class="o">+</span><span class="n">d</span>&#10;<span class="k">if</span> <span class="n">v</span><span class="p">:</span>&#10;   <span class="n">w</span> <span class="o">=</span> <span class="n">kern_mem</span><span class="p">[</span><span class="n">address</span><span class="p">]</span>   <span class="c1"># si se llega aquí se produce un fallo</span>&#10;   <span class="n">x</span> <span class="o">=</span> <span class="n">w</span> <span class="o">&amp;</span> <span class="mh">0x100</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   <span class="c1"># operación de bit and</span>&#10;   <span class="n">y</span> <span class="o">=</span> <span class="n">user_mem</span><span class="p">[</span><span class="n">x</span><span class="p">]</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
@@ -372,17 +367,87 @@
         
     
     
+    <div class="row related"><div class="col-12"><p>Artículos relacionados:</p></div></div>
     <div class="row related">
-        <div class="col-md-12">
-            Artículos relacionados:
-            <ul>
-                <li><a href="/blog-bitix/2017/08/instalar-y-renovar-un-certificado-de-lets-encrypt-en-nginx/">Instalar y renovar un certificado de Let&#39;s Encrypt en Nginx</a></li>
-                <li><a href="/blog-bitix/2016/06/como-redirigir-peticiones-de-http-a-https-en-nginx-apache-tomcat-jetty-y-wildfly/">Cómo redirigir peticiones de HTTP a HTTPS en Nginx, Apache, Tomcat, Jetty y WildFly</a></li>
-                <li><a href="/blog-bitix/2014/11/introduccion-a-bitnami/">Introducción a Bitnami</a></li>
-                <li><a href="/blog-bitix/2014/02/configurar-ssl-en-un-servidor-tomcat-jboss-wildfly-lighttpd-nginx-apache/">Configurar SSL/TLS en un servidor Tomcat, JBoss, WildFly, Lighttpd, Nginx o Apache</a></li>
-                <li><a href="/blog-bitix/2013/12/firmar-digitalmente-documentos-con-el-dnie-y-sinadura/">Firmar digitalmente documentos con el DNIe y Sinadura</a></li>
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
                 
-            </ul>
+                <a href="/blog-bitix/2017/08/instalar-y-renovar-un-certificado-de-lets-encrypt-en-nginx/">
+                <img data-src="/blog-bitix/assets/images/logotypes/lets-encrypt.svg" height="125" layout="fixed-height"  class="lozad">
+                <h3>Instalar y renovar un certificado de Let&#39;s Encrypt en Nginx</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2016/06/como-redirigir-peticiones-de-http-a-https-en-nginx-apache-tomcat-jetty-y-wildfly/">
+                <img data-src="/blog-bitix/assets/images/logotypes/nginx.svg" height="125" layout="fixed-height"  class="lozad">
+                <h3>Cómo redirigir peticiones de HTTP a HTTPS en Nginx, Apache, Tomcat, Jetty y WildFly</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2014/11/introduccion-a-bitnami/">
+                <img data-src="/blog-bitix/assets/images/logotypes/bitnami.svg" height="125" layout="fixed-height"  class="lozad">
+                <h3>Introducción a Bitnami</h3>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="row related">
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2014/02/configurar-ssl-en-un-servidor-tomcat-jboss-wildfly-lighttpd-nginx-apache/">
+                <img data-src="/blog-bitix/assets/images/logotypes/openssl.svg" height="125" layout="fixed-height"  class="lozad">
+                <h3>Configurar SSL/TLS en un servidor Tomcat, JBoss, WildFly, Lighttpd, Nginx o Apache</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2013/12/firmar-digitalmente-documentos-con-el-dnie-y-sinadura/">
+                <img data-src="/blog-bitix/assets/images/logotypes/dnie.jpg" height="125" layout="fixed-height"  class="lozad">
+                <h3>Firmar digitalmente documentos con el DNIe y Sinadura</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2013/12/enviar-correos-electronicos-firmados-con-el-dnie-y-evolution/">
+                <img data-src="/blog-bitix/assets/images/logotypes/archlinux.svg" height="125" layout="fixed-height"  class="lozad">
+                <h3>Enviar correos electrónicos firmados con el DNIe y Evolution</h3>
+                </a>
+                
+            </div>
         </div>
     </div>
     

@@ -3,11 +3,6 @@
 
 
 
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -276,7 +271,7 @@
 <h3 id="las-posibilidades">Las posibilidades</h3>
 <p>Para implementar técnicamente el que solo se puedan hacer las acciones múltiples según los productos seleccionadas se habilitarán o deshabilitarán los botones con JavaScript sin peticiones AJAX adicionales al servidor para ello toda la información necesaria deberá estar en el cliente. En este caso bastará habilitar o deshabilitar cada botón según si esa acción es posible en todas los productos seleccionadas pero eso podría no bastar ya que se podría requerir que productos fuesen del mismo vendedor. En el ejemplo con un atributo en un elemento HTML de la fila que contenga las acciones posibles separadas por comas bastará. De esta forma no habrá que hacer consultas adicionales al servidor mediante peticiones AJAX en cada nueva selección.</p>
 <p>Sin embargo, como el contenido de los diálogos depende del producto o productos seleccionadas se hará una petición AJAX para obtener su contenido. De esta forma el contenido de los diálogos no tendrá que estar precargado (el número de acciones podría ser una decena) en el cliente ni generarlo con JavaScript en cliente que sería algo más complicado que usar la propia tecnología para generar contenido que está presente en el servidor y posiblemente más propenso a errores por usar JavaScript.</p>
-<h3 id="la-implementacin-con-apache-tapestry">La implementación con Apache Tapestry</h3>
+<h3 id="la-implementación-con-apache-tapestry">La implementación con Apache Tapestry</h3>
 <p>Definida la necesidad y unas pocas notas voy a poner el código de como con Apache Tapestry implementar la solución. La página del listado será la siguiente. En el <em>checkbox</em> de selección se añade el atributo <em>data-product-actions</em> con las acciones posibles que se obtienen del servicio <em>AppService</em> con el método <em>getAvaliableActions</em>. El componente de Tapestry <em>actions</em> generará el código de los botones tanto para los individuales en su uso <em>&lt;t:actions&gt;</em> con el parámetro <em>product</em> como múltiples en su uso con el parámetro <em>type</em>.</p>
 <div class="code">
     <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span><span class="lnt">22&#10;</span><span class="lnt">23&#10;</span><span class="lnt">24&#10;</span><span class="lnt">25&#10;</span><span class="lnt">26&#10;</span><span class="lnt">27&#10;</span><span class="lnt">28&#10;</span><span class="lnt">29&#10;</span><span class="lnt">30&#10;</span><span class="lnt">31&#10;</span><span class="lnt">32&#10;</span><span class="lnt">33&#10;</span><span class="lnt">34&#10;</span><span class="lnt">35&#10;</span><span class="lnt">36&#10;</span><span class="lnt">37&#10;</span><span class="lnt">38&#10;</span><span class="lnt">39&#10;</span><span class="lnt">40&#10;</span><span class="lnt">41&#10;</span><span class="lnt">42&#10;</span><span class="lnt">43&#10;</span><span class="lnt">44&#10;</span><span class="lnt">45&#10;</span><span class="lnt">46&#10;</span><span class="lnt">47&#10;</span><span class="lnt">48&#10;</span><span class="lnt">49&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix.tapestrymultipleactions.pages</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">io.github.picodotdev.blogbitix.tapestrymultipleactions.entities.Product</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">io.github.picodotdev.blogbitix.tapestrymultipleactions.services.AppService</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">io.github.picodotdev.blogbitix.tapestrymultipleactions.services.ProductRepository</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">org.apache.tapestry5.ComponentResources</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">org.apache.tapestry5.annotations.Property</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">org.apache.tapestry5.beaneditor.BeanModel</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">org.apache.tapestry5.ioc.annotations.Inject</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">org.apache.tapestry5.services.BeanModelSource</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">java.util.stream.Collectors</span><span class="o">;</span>&#10;&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Index</span> <span class="o">{</span>&#10;&#10;	<span class="nd">@Property</span>&#10;	<span class="kd">private</span> <span class="n">Product</span> <span class="n">product</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@Inject</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">AppService</span> <span class="n">service</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@Inject</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">ProductRepository</span> <span class="n">repository</span><span class="o">;</span>&#10;&#10;	<span class="nd">@Inject</span>&#10;	<span class="kd">private</span> <span class="n">BeanModelSource</span> <span class="n">beanModelSource</span><span class="o">;</span>&#10;&#10;	<span class="nd">@Inject</span>&#10;	<span class="kd">private</span> <span class="n">ComponentResources</span> <span class="n">resources</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Product</span><span class="o">&gt;</span> <span class="nf">getProducts</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">1</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;	<span class="k">return</span> <span class="n">repository</span><span class="o">.</span><span class="na">findAll</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;	<span class="kd">public</span> <span class="n">BeanModel</span><span class="o">&lt;</span><span class="n">Product</span><span class="o">&gt;</span> <span class="nf">getModel</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>&#10;		<span class="n">BeanModel</span><span class="o">&lt;</span><span class="n">Product</span><span class="o">&gt;</span> <span class="n">model</span> <span class="o">=</span> <span class="n">beanModelSource</span><span class="o">.</span><span class="na">createDisplayModel</span><span class="o">(</span><span class="n">Product</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">resources</span><span class="o">.</span><span class="na">getMessages</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>&#10;		<span class="n">model</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">&#34;select&#34;</span><span class="o">,</span> <span class="kc">null</span><span class="o">)</span><span class="o">.</span><span class="na">label</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">)</span><span class="o">.</span><span class="na">sortable</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span><span class="o">;</span>&#10;		<span class="n">model</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">&#34;action&#34;</span><span class="o">,</span> <span class="kc">null</span><span class="o">)</span><span class="o">.</span><span class="na">label</span><span class="o">(</span><span class="s">&#34;Actions&#34;</span><span class="o">)</span><span class="o">.</span><span class="na">sortable</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span><span class="o">;</span>&#10;		<span class="n">model</span><span class="o">.</span><span class="na">include</span><span class="o">(</span><span class="s">&#34;select&#34;</span><span class="o">,</span> <span class="s">&#34;name&#34;</span><span class="o">,</span> <span class="s">&#34;stock&#34;</span><span class="o">,</span> <span class="s">&#34;state&#34;</span><span class="o">,</span> <span class="s">&#34;action&#34;</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">model</span><span class="o">.</span><span class="na">reorder</span><span class="o">(</span><span class="s">&#34;select&#34;</span><span class="o">,</span> <span class="s">&#34;name&#34;</span><span class="o">,</span> <span class="s">&#34;stock&#34;</span><span class="o">,</span> <span class="s">&#34;state&#34;</span><span class="o">,</span> <span class="s">&#34;action&#34;</span><span class="o">)</span><span class="o">;</span>&#10;		<span class="k">return</span> <span class="n">model</span><span class="o">;</span>&#10;	<span class="o">}</span>&#10;&#10;	<span class="kd">public</span> <span class="n">String</span> <span class="nf">getActions</span><span class="o">(</span><span class="n">Product</span> <span class="n">product</span><span class="o">)</span> <span class="o">{</span>&#10;	&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">service</span><span class="o">.</span><span class="na">getAvaliableActions</span><span class="o">(</span><span class="n">product</span><span class="o">)</span><span class="o">.</span><span class="na">stream</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">a</span> <span class="o">-</span><span class="o">&gt;</span> <span class="n">a</span><span class="o">.</span><span class="na">name</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">toLowerCase</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="n">Collectors</span><span class="o">.</span><span class="na">joining</span><span class="o">(</span><span class="s">&#34;,&#34;</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;<span class="o">}</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
@@ -367,17 +362,87 @@
         
     
     
+    <div class="row related"><div class="col-12"><p>Artículos relacionados:</p></div></div>
     <div class="row related">
-        <div class="col-md-12">
-            Artículos relacionados:
-            <ul>
-                <li><a href="/blog-bitix/2016/07/hemeroteca-9/">Hemeroteca #9</a></li>
-                <li><a href="/blog-bitix/2016/04/el-componente-grid-de-apache-tapestry/">El componente Grid de Apache Tapestry</a></li>
-                <li><a href="/blog-bitix/2016/01/hemeroteca-8/">Hemeroteca #8</a></li>
-                <li><a href="/blog-bitix/2015/12/publicado-apache-tapestry-5-4/">Publicado Apache Tapestry 5.4</a></li>
-                <li><a href="/blog-bitix/2015/10/similitudes-entre-react-y-polymer-con-apache-tapestry/">Similitudes entre React y Polymer con Apache Tapestry</a></li>
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
                 
-            </ul>
+                <a href="/blog-bitix/2016/07/hemeroteca-9/">
+                <img data-src="/blog-bitix/assets/images/logotypes/hugo.svg" height="125" layout="fixed-height"  class="lozad">
+                <h3>Hemeroteca #9</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2016/04/el-componente-grid-de-apache-tapestry/">
+                <img data-src="/blog-bitix/assets/images/logotypes/apache-tapestry-5.svg" height="125" layout="fixed-height"  class="lozad">
+                <h3>El componente Grid de Apache Tapestry</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2016/01/hemeroteca-8/">
+                <img data-src="/blog-bitix/assets/images/logotypes/hugo.svg" height="125" layout="fixed-height"  class="lozad">
+                <h3>Hemeroteca #8</h3>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="row related">
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2015/12/publicado-apache-tapestry-5-4/">
+                <img data-src="/blog-bitix/assets/images/logotypes/apache-tapestry-5.svg" height="125" layout="fixed-height"  class="lozad">
+                <h3>Publicado Apache Tapestry 5.4</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2015/10/similitudes-entre-react-y-polymer-con-apache-tapestry/">
+                <img data-src="/blog-bitix/assets/images/logotypes/apache-tapestry-5.svg" height="125" layout="fixed-height"  class="lozad">
+                <h3>Similitudes entre React y Polymer con Apache Tapestry</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2015/09/ejemplo-de-multiproyecto-con-gradle/">
+                <img data-src="/blog-bitix/assets/images/logotypes/java.svg" height="125" layout="fixed-height"  class="lozad">
+                <h3>Ejemplo de multiproyecto con Gradle</h3>
+                </a>
+                
+            </div>
         </div>
     </div>
     
