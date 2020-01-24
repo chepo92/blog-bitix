@@ -10,7 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imageHead: "images/bilbostack-logo-1.jpg"
+imageHead: "image:bilbostack-logo-1.jpg"
 imagePost: "image:euskalduna-1.jpg"
 tags: ["planeta-codigo", "programacion"]
 series: ["bilbostack"]

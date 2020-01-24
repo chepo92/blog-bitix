@@ -10,7 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imageHead: "images/ps4.jpg"
+imageHead: "image:ps4.jpg"
 tags: ["juegos", "opinion", "planeta-codigo"]
 summary: "Todo indica que el formato físico de los juegos está a punto de desaparecer en una futura generación de consolas no muy lejana como ya ha ocurrido en gran medida con la música o los libros. Pero los juegos digitales crean otros problemas que los juegos físicos no tienen y es el motivo por el que algunos usuarios son contrarios a solo los digitales, ¿sería posible solución a los problemas de los juegos físicos y de los digitales? Aquí teorizo sobre este tema y planteo una solución, las _smartcards_."
 ---

@@ -12,7 +12,7 @@ sharing: true
 comments: true
 promoted: false
 imageHead: ""
-imagePost: "calibre.png"
+imagePost: "image:calibre.png"
 keywords: ""
 tags: ["blog", "planeta-codigo"]
 series: [""]
@@ -51,7 +51,7 @@ draft: true
     link4="" >}}
 
 {{< youtube
-    video1="" }}
+    video1="" >}}
 
 {{< code file="Main.java" language="java" options="" >}}
 

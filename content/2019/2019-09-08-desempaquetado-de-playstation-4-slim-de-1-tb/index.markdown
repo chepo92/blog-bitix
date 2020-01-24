@@ -10,7 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imageHead: "images/ps4.jpg"
+imageHead: "image:ps4.jpg"
 imagePost: "image:caja-1.jpg"
 tags: ["hardware", "juegos"]
 series: ["desempaquetado-tecnologia", "juegos"]

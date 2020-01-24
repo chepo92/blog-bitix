@@ -10,7 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imageHead: "images/desempaquetado-nuc-2.jpg"
+imageHead: "image:desempaquetado-nuc-2.jpg"
 imagePost: "logotype:intel.svg"
 tags: ["hardware", "planeta-codigo", "software"]
 series: ["desempaquetado-tecnologia"]

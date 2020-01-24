@@ -11,7 +11,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imageHead: "images/battle-net-3.jpg"
+imageHead: "image:battle-net-3.jpg"
 imagePost: "logotype:wine.svg"
 tags: ["gnu-linux", "juegos", "software", "software-libre", "windows"]
 series: ["juegos"]

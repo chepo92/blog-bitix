@@ -10,7 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imageHead: "images/image.jpg"
+imageHead: "image:image.jpg"
 imagePost: "logotype:benq.svg"
 tags: ["hardware", "planeta-codigo"]
 series: ["desempaquetado-tecnologia"]

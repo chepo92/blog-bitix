@@ -11,7 +11,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imageHead: "images/redhat.jpg"
+imageHead: "image:redhat.jpg"
 imagePost: "logotype:redhat.svg"
 tags: ["opinion", "planeta-codigo"]
 ---
