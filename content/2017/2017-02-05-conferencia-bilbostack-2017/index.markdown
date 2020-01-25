@@ -107,7 +107,7 @@ Estos aparatos conectados a internet nos ofrecen una nuevo área posibilidades. 
 El _hardware_ era la propia lámpara y una placa de computación [Intel Edison](https://software.intel.com/es-es/iot/hardware/edison) junto con un servicio en la nube de Azure pero perfectamente podría ser una [Raspberry Pi][raspberrypi] u otra de las numerosas pequeñas placas que están surgiendo en este nuevo mercado. El [código fuente del ejemplo](https://github.com/isabelcabezasm/notwificador) está compartido en un repositorio de GitHub.
 
 {{< reference >}}
-* [Presentación](https://es.slideshare.net/isabelcabezas/bilbostack-17-invisible-o-desaparece)
+* [Diapositivas presentación](https://es.slideshare.net/isabelcabezas/bilbostack-17-invisible-o-desaparece)
 {{< /reference >}}
 
 {{< image
@@ -136,7 +136,7 @@ Algunos recursos de diseño e implementaciones conocidas de _Design Systems_ son
 * Y el propio que ha comenzado a desarrollar Naiara, [nakDS](https://github.com/nabaroa/nakDS) que ha compartido en su GitHub
 
 {{< reference >}}
-* [Presentación](https://nabaroa.github.io/erase-una-vez-el-design-system/#/)
+* [Diapositivas presentación](https://nabaroa.github.io/erase-una-vez-el-design-system/#/)
 {{< /reference >}}
 
 {{< image
@@ -166,7 +166,7 @@ Un sistema ágil es una aproximación a la incertidumbre. Incertidumbre que siem
 La combinación de un WIP pequeño junto con un sistema _pull_ en el que no se construye lo no necesario, no se prueba lo que no se puede entregar, no se desarrolla lo que no se puede probar y no se especifica lo no se puede desarrollar produce una reducción de tiempos de entrega, hay mayor predictibilidad y elimina rehacer trabajo.
 
 {{< reference >}}
-* [Presentación](https://es.slideshare.net/Gailen/agile-forscrummiesbilbaostack)
+* [Diapositivas presentación](https://es.slideshare.net/Gailen/agile-forscrummiesbilbaostack)
 {{< /reference >}}
 
 {{< image
