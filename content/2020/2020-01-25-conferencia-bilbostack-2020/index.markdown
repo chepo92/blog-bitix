@@ -219,7 +219,7 @@ Momento de tomar un café y pasar por los _stands_ de los patrocinadores.
 Un sistema de diseño o _design system_ es importante para tener consistencia de la imagen de marca en todos los canales de comunicación desde la web a una aplicación móvil, un correo electrónico o un folleto impreso. Incluye colores, tipografía, espaciado. Algunos _design systems_ son:
 
 * [Material][material] de Google 
-* [Fluent][fluent] de Microsofrt
+* [Fluent][fluent] de Microsoft
 * [Primer][primer] de GitHub
 
 Al desarrollar un _design system_ en una organización es importante ofrecer documentación, dar visibilidad al proyecto e involucrar a toda la empresa de forma que se use en todos los departamentos, ha de mantenerse como cualquier otro desarrollo. En la jerga de los _design system_ se incluyen átomos, moléculas, organismos, plantillas y páginas.
@@ -258,7 +258,7 @@ El bus de eventos se convierte en un único punto de fallo con problemas que hay
 
 ### Acabando
 
-Dicen que en este evento el evento en realidad es el postevento, lo que ocurre a partir de las 14:00 en el _networking_, pintxo y poteo. No lo conozco por experiencia propia porque no he estado en ninguno, no es lo mio, ya tengo suficiente con dedicar una mañana a la asistencia. En cualquier caso el evento es el momento ideal para saludar a algunos excompañeros de trabajo para saber como les va o como nos va, incluídos a esos que solo saludan por cortesía pero que no quieren saber nada.
+Dicen que en este evento el evento en realidad es el postevento, lo que ocurre a partir de las 14:00 en el _networking_, pintxo y poteo. No lo conozco por experiencia propia porque no he estado en ninguno, no es lo mio, ya tengo suficiente con dedicar una mañana a la asistencia. En cualquier caso el evento es el momento ideal para saludar a algunos excompañeros de trabajo para saber como les va o como nos va.
 
 En las presentaciones se han mencionado algunas herramientas pero en estas que he estado este año han sido todas bastante teóricas, a los que ya conocen algo del tema que se trata poco les será nuevo y a los que no conocemos el tema hay que indagar acabado el evento para darle algo de sentido a lo expuesto. He recogido algunas ideas que con tiempo será interesante profundizar como el caso de los _design systems_.
 
