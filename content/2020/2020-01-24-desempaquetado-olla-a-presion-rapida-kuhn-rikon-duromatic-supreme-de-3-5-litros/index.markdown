@@ -4,6 +4,7 @@ type: "post"
 title: "Desempaquetado olla a presión rápida Kuhn Rikon Duromatic Supreme de 3,5 litros"
 url: "/2020/01/desempaquetado-olla-a-presion-rapida-kuhn-rikon-duromatic-supreme-de-3-5-litros/"
 date: 2020-01-24T19:00:00+01:00
+updated: 2020-01-27T19:00:00+01:00
 language: "es"
 rss: true
 sharing: true
@@ -168,6 +169,20 @@ Encontrar repuestos hace que no sea necesario comprar una nueva olla que salvo l
 {{< amazon
     linkids="d8dcfee2893422f4b8b1c15ce2d3aa9c,034dfff978a06245f548eeb4bdeb9715,ae9611cd66ce6971c2d65bd25dbbd6a6,fde1e977858635e14a86442d343bead0,eb4d7ed033e0d21454f46297749b1f09"
     asins="B00009A9Y1,B07QXTBSJB,B07QXTBSJC,B000P152I4,B000P1AIV0" >}}
+
+### Primer uso
+
+En el primer uso he comprobado que su funcionamiento es muy sencillo, no emite apenas ruido y salvo algo muy puntual no emite nada de agua ni vapor. En 9 minutos coge presión y una vez la primera anilla roja o la segunda según la comida aparece basta con dejarla el tiempo indicado en el manual para que el alimento quede cocinado. Una vez pasado el tiempo hay que apagar el fuego y apartarla, para que baje la presión se puede dejar a que de forma natural o presionando el émbolo indicador de presión para hacer una despresurización rápida.
+
+La mayor duda que tenía era sobre la capcidad de la olla, si los 3,5 litros se me quedarían grandes o pequeños. Para mi caso creo que he acertado con el tamaño, posiblemente la de 2,5 litros me hubiese quedado pequeña, la de 3,5 me permitirá hacer comida para desde 2 platos hasta 4 sin problemas que era lo que quería.
+
+La limpieza de la olla también es muy sencilla a mano, no tiene ningua parte donde especialmente puedan quedarse restos de suciedad. Lo único que hay que tener en cuenta es que no es apta para el lavavajillas.
+
+{{< image
+    gallery="true"
+    image1="image:primer-uso-kuhn-rikon-1.jpg" optionsthumb1="200x150" title1="Primer uso, con unas alubias"
+    image2="image:primer-uso-kuhn-rikon-2.jpg" optionsthumb2="200x150" title2="Primer uso, con unas alubias"
+    caption="Primer uso, con unas alubias" >}}
 
 ### Recipientes para transportar comida
 

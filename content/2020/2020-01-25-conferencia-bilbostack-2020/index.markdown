@@ -140,7 +140,7 @@ De las presentaciones a las que asistí recojo las ideas principales que he apun
 
 ###  Presentación
 
-La jornada al igual que el año anterior ha empezado con una presentación sobre la conferencia y los agradecimientos a los patrocinadores por su apoyo asi como unos comentarios de un miembro de Lan Ekintza, agencia el sector público del Ayuntamiento de Bilbao para el desarrollo local, sobre sus motivos de la importancia para la ciudad de eventos como este que ya tienen muchos años de constancia y el interés para empresas importantes que cotizan en bolsa ya existentes con sede en Bilbao y para otras que en un futuro se establezcan en el nuevo Zorrozaurre que en estos momentos está en una fase de construcción con algunas obras ya realizadas con la apertura del canal y otras obras que ya se están acometiendo.
+La jornada al igual que el año anterior ha empezado con una presentación sobre la conferencia y los agradecimientos a los patrocinadores por su apoyo asi como unos comentarios de un miembro de Lan Ekintza, agencia el sector público del Ayuntamiento de Bilbao para el desarrollo local, sobre sus motivos de la importancia para la ciudad de eventos como este que ya tienen muchos años de constancia y el interés para empresas importantes que cotizan en bolsa ya existentes con sede en Bilbao y para otras que en un futuro se establezcan en el nuevo Zorrozaurre como nuevo polo empresarial, en estos momentos está en una fase de construcción con algunas obras importantes ya realizadas con la apertura del canal y otras obras que ya se están acometiendo.
 
 {{< image
     gallery="true"
@@ -258,7 +258,7 @@ El bus de eventos se convierte en un único punto de fallo con problemas que hay
 
 ### Acabando
 
-Dicen que en este evento el evento en realidad es el postevento, lo que ocurre a partir de las 14:00 en el _networking_, pintxo y poteo. No lo conozco por experiencia propia porque no he estado en ninguno, no es lo mio, ya tengo suficiente con dedicar una mañana a la asistencia. En cualquier caso el evento es el momento ideal para saludar a algunos excompañeros de trabajo para saber como les va o como nos va.
+Dicen que en este evento el evento en realidad es el postevento, lo que ocurre a partir de las 14:00 en el _networking_, pintxo y poteo. No lo conozco por experiencia propia porque no he estado en ninguno, no se me da bien y ya tengo suficiente con dedicar una mañana a la asistencia. En cualquier caso el evento es el momento ideal para saludar a algunos excompañeros de trabajo para saber como les va o como nos va.
 
 En las presentaciones se han mencionado algunas herramientas pero en estas que he estado este año han sido todas bastante teóricas, a los que ya conocen algo del tema que se trata poco les será nuevo y a los que no conocemos el tema hay que indagar acabado el evento para darle algo de sentido a lo expuesto. He recogido algunas ideas que con tiempo será interesante profundizar como el caso de los _design systems_.
 
