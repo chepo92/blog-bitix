@@ -4,6 +4,7 @@ type: "post"
 title: "Los modificadores de acceso de clases, propiedades y métodos en Java"
 url: "/2020/01/los-modificadores-de-acceso-de-clases-propiedades-y-metodos-en-java/"
 date: 2020-01-31T17:00:00+01:00
+updated: 2020-01-31T18:30:00+01:00
 language: "es"
 rss: true
 sharing: true
