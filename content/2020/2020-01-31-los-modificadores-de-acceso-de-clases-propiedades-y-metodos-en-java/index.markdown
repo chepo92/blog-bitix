@@ -75,6 +75,8 @@ Los ámbitos de visibilidad según el modificador de acceso y el origen de acces
    </tbody>
 </table>
 
+En este gráfico hay representados paquetes que contienen clases, clases con rectángulos, las flechas indican herencia entre clases y las clases que están coloreadas indican que tienen visibilidad de la propiedad y método según el ámbito de acceso, la ubicación de la clase que accede y si hay una relación de herencia. En esencia es la misma información de la tabla pero representada de forma gráfica.
+
 {{< image
     gallery="true"
     image1="image:java-access-specifier.jpg" optionsthumb1="600x450" title1="Modificadores de acceso en Java"
