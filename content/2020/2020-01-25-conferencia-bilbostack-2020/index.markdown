@@ -258,7 +258,11 @@ El bus de eventos se convierte en un único punto de fallo con problemas que hay
 
 ### Acabando
 
-Dicen que en este evento el evento en realidad es el postevento, lo que ocurre a partir de las 14:00 en el _networking_, pintxo y poteo. No lo conozco por experiencia propia porque no he estado en ninguno, no se me da bien y ya tengo suficiente con dedicar una mañana a la asistencia. En cualquier caso el evento es el momento ideal para saludar a algunos excompañeros de trabajo para saber como les va o como nos va.
+Dicen que en este evento el evento en realidad es el postevento, lo que ocurre a partir de las 14:00 en el _networking_, pintxo y poteo. No lo conozco por experiencia propia porque no he estado en ninguno, no se me da bien y ya tengo suficiente con dedicar una mañana a la asistencia. En cualquier caso el evento es el momento ideal para saludar a algunos excompañeros de trabajo para saber como les va o como nos va. Este año hubo una charanga animando el _networking_.
+
+{{< twitter id="1221092391974768641" >}}
+<p lang="es" dir="ltr"><a href="https://twitter.com/hashtag/bilbostack20?src=hash&amp;ref_src=twsrc%5Etfw">#bilbostack20</a> sorpresa!!! <a href="https://t.co/6G1QmUHpe1">pic.twitter.com/6G1QmUHpe1</a></p>&mdash; Sergio (@Sergixnet) <a href="https://twitter.com/Sergixnet/status/1221092391974768641?ref_src=twsrc%5Etfw">January 25, 2020</a>
+{{< /twitter >}}
 
 En las presentaciones se han mencionado algunas herramientas pero en estas que he estado este año han sido todas bastante teóricas, a los que ya conocen algo del tema que se trata poco les será nuevo y a los que no conocemos el tema hay que indagar acabado el evento para darle algo de sentido a lo expuesto. He recogido algunas ideas que con tiempo será interesante profundizar como el caso de los _design systems_.
 

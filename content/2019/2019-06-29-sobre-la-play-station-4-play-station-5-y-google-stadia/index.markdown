@@ -55,6 +55,9 @@ Por lo demás el precio de suscripción de 10€/mes es recurrente pero teniendo
 
 Si Stadia ofrece un buen catalogo de juegos y la latencia no da problemas, los precios no son desorbitados y como parece se adelanta al lanzamiento de la PS5 puede suponer un cambio en las reglas del mercado de las consolas y ponerle dificultades a la hasta ahora dominante posición de PlayStation.
 
+{{< youtube
+    video="9uwunZ2a4gc" >}}
+
 ### Evaluando posibilidades
 
 No es tanto el precio de la PS4 que está en 200€ de segunda mano o 290€ en tienda como saber en un año se lanzará un modelo mucho más capaz que lo dejará descatalogado y que además será retrocompatible con él. Stadia requiere una buena conexión de internet y no tendrá los juegos exclusivos de la PS, uno de los motivos para que haya sido la consola vencedora de esta generación, aunque si otros muy buenos presentes en todas las plataformas.

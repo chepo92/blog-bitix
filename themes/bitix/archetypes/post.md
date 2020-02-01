@@ -51,7 +51,7 @@ draft: true
     link4="" >}}
 
 {{< youtube
-    video1="" >}}
+    video="" >}}
 
 {{< code file="Main.java" language="java" options="" >}}
 
