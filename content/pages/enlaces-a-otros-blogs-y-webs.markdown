@@ -37,6 +37,7 @@ Aunque no hace falta actualizar cada día es aconsejable seguirlo para conocer s
 * [Noticias 3D](https://www.noticias3d.com/) (su [feed](http://feed43.com/1358588145342036.xml)): noticias sobre tecnología y componentes informáticos, con unos análisis de productos hardware muy interesantes.
 * [Geektopia](https://www.geektopia.es/es/): más noticias de actualidad sobre tecnología, videojuegos y una sección muy completa con guías de compras sobre componentes y configuraciones de ordenadores ajustadas según presupuesto.
 * [Parcela Digital](https://parceladigital.com/): si te gusta la historia de la informática y curiosidades de los ordenadores de antaño así como noticias de actualidad esta página te va a encantar.
+* [Microsiervos](https://www.microsiervos.com/): una web con noticias de ciencia, tecnología e internet. Una referencia que ocasionalmente además de noticias publica artículos divulgativos sobre estas materias.
 * [Genbeta](https://www.genbeta.com/): una página con noticias de actualidad sobre el software, desde sistemas operativos a navegadores, cualquier información que se haga con código.
 * [Xataka](https://www.xataka.com/): al contrario que la web anterior en esta se publican noticias de actualidad relacionadas con el hardware y los _gadgets_.
 * [Linwind](https://www.dacostabalboa.com/es/): página también con noticias de sistemas operativos, software y hardware.
@@ -44,9 +45,9 @@ Aunque no hace falta actualizar cada día es aconsejable seguirlo para conocer s
 * [D'Oh](http://diegocg.blogspot.com.es/): un blog personal en el que suele publicar artículos de opinión y avances que se producen alrededor del software libre. Otro de los mejores blogs que tengo en mi lector de _feeds_, cada artículo suele ser una perla.
 * [Foro Noticias 3D](https://foro.noticias3d.com/): el foro de la página anterior donde podrás preguntar a usuarios con muchos conocimientos sobre cualquier problema en tu ordenador o consejos para
 uno nuevo según tus necesidades y restricciones de presupuesto.
-* [Barrapunto](http://barrapunto.com/): una web donde tan importante como la noticia son los comentarios de sus usuarios.
 * [Incognitosis](https://javipas.com/): el blog personal de un editor de Xataka con artículos de opinión sobre tecnología.
 * [Hardware 360º](https://www.youtube.com/channel/UC40Ztmc_11leuUR-tHh_irQ): canal de YouTube especializado en hardware de consumo como procesadores y targetas gráficas pero también consolas. Son exhaustivos y de fácil comprensión con los que informarse en profundidad del hardware de las computadoras.
+* Barrapunto(actualmente discontinuada): era la web al estilo de [slashdot](https://slashdot.org/) en español donde tan importante como la noticia eran los comentarios de sus usuarios.
 
 ## Software libre y GNU/Linux
 
@@ -97,12 +98,14 @@ A modo de entretenimiento los juegos son una buena opción. Hay múltiples pági
 
 * [RicharBetaCode](https://www.youtube.com/user/richar1979BetaCode/videos): en este canal hay partidas grabadas de cantidad de juegos en episodios de unos 45 minutos de duración. Interesantes para ver como es un juego, su historia y su jugabilidad.
 * [tonondor](https://www.youtube.com/user/TheTonondor/videos): canal de YouTube o vídeo blog sobre juegos y consolas en el que se comenta opiniones personales sensatas aunque uno tenga una opinión distinta en algunos puntos de diferentes temas relacionadas con el mundo de los juegos y consolas. Muy recomendable.
+* [El profesor gamer](https://www.youtube.com/channel/UCxCg-nM4YEw-DMGGmDFlSHg/videos): análisis y opinión de noticias sobre videojuegos a veces desde un punto de vista de los juegos como una industria y negocios.
 * [Video Bitacora](https://www.youtube.com/channel/UCvbMI-jDTAh54lLpdfBxSnw/videos): otro vídeo blog personal con opiniones alrededor de los juegos y consolas narrados con un tono ameno y alegre.
 * [slobulus y Generacion Actual](https://www.youtube.com/user/slobulus/videos): canal de otro _youtuber_ que publica vídeos tanto de opinión del mundo sobre los videojuegos, opiniones y _gameplays_. Otro canal muy recomendable.
 * [Filosofia Jugona](https://www.youtube.com/channel/UCmXLp8s3zqS81cE9MVRPHWA/videos): no publica vídeos todos los días pero si casi todas las semanas , al igual que los anteriores vídeo de opinión sobre el mundo de los videojuegos.
 * [El retrovisor de videojuegos](https://www.youtube.com/user/MrMagicKnight/videos): canal con _gameplays_ de videojuegos ya con unos años, muy interesante para recordar a esos que juegos y descubrir algunos antiguos míticos que merece la pena jugar aún hoy. Además, en cada vídeo el autor como introducción da detalles muy interesantes sobre la historia del juego en cuestión como la de [las máquinas Game & Watch de Nintendo](https://www.youtube.com/watch?v=P2aGBqQf9qo).
 * [CUBTC](https://www.youtube.com/channel/UC3-yxBBaDoMl-VhLjef_Vbw/videos): la mayoría de vídeos son sobre los juegos _free to play_ de [Wargaming][wargaming] como [World of Tanks][wargaming-worldoftanks] y [World of Warships][wargaming-worldofwarships] con una muy buena cantidad de guías de como jugar y guías con consejos sobre estrategia explicados muy detalladamente.
-* [Bandas sonoras originales de videojuegos](https://www.youtube.com/channel/UCdg9Ye9WLOHhmDVLfbZQiNA/playlists): los videojuegos no solo son un entretenimiento sino que cuenta una historia en la que particias con el personaje que encarnas, son una obra artística tanto en el apartdo gráfico como en el sonoro. En el apartado sonoro algunos videojuegos tiene producciónes a la altura de obras cinematográficas. En el canal se recogen las bandas sonoras originales de los video juegos.
+* [Video Games OST](https://www.youtube.com/channel/UCdg9Ye9WLOHhmDVLfbZQiNA/playlists), bandas sonoras originales de videojuegos: los videojuegos no solo son un entretenimiento sino que cuenta una historia en la que particias con el personaje que encarnas, son una obra artística tanto en el apartdo gráfico como en el sonoro. En el apartado sonoro algunos videojuegos tiene producciónes a la altura de obras cinematográficas. En el canal se recogen las bandas sonoras originales de los video juegos.
+* [Video Game Soundtrack Archive](https://www.youtube.com/channel/UCdg9Ye9WLOHhmDVLfbZQiNA/videos): otro canal dedicado a las bandas sonoras de videojuegos en el que encontrar algunas de los más populares hace ya unos cuantos años.
 
 ## Otros
 
