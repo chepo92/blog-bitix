@@ -339,7 +339,7 @@ Tanto en Wallapop como [Ebay][ebay] se pueden encontrar consolas de segunda mano
 * [Ebay PS4](https://www.ebay.es/sch/Consolas/139971/i.html?_from=R40&_sop=2&_nkw=playstation%204%201tb&LH_PrefLoc=1&_dcat=139971&Modelo=PlayStation%25204%2520%252D%2520Slim&rt=nc&_trksid=p2045573.m1684)
 * [Cash Converters PS4](https://www.cashconverters.es/es/es/comprar/videojuegos-y-consolas/consolas/consola-ps4/ps4-slim-1tb/?srule=price-low-to-high&sz=12&start=0)
 
-### Otros accesorios
+### Otros accesorios, switch HDMI, funda mando y teclado inalámbrico
 
 Para utilizar el ordenador y la consola en el mismo monitor sin tener que conectar y desconectar cables he comprado también un [conmutador HDMI 4K de tres entradas y una salida](https://amzn.to/2NaQDyL) con soporte para una resolución de hasta 4K@60Hz, hay modelos de conmutadores de hasta 5 entradas. Lo que me ha convencido de este conmutador HDMI es que el sensor infrarrojo del mando lo tiene incorporado y no necesita un elemento externo, posee un botón para realizar la selección de la fuente de entrada sin mando, soporta 60 Hz en resolución 4K cuando otros conmutadores solo soportan 30 Hz, no necesita alimentación aunque si fuera necesario posee un puerto USB para proporcionarle corriente y todos los puertos HDMI tanto de entrada como de salida están en el mismo lado. El conmutador no incluye cable HDMI por lo que es necesario adquirir un [cable HDMI](https://amzn.to/2Q7Tt9Q) si no se tiene uno adicional disponible.
 
@@ -379,6 +379,12 @@ El mando con la funda puesta. Hay que tener algo cuidado de no estirarla demasia
 {{< amazon
     linkids="c4e617b84dbe20273c022f528f7f5451,d6e6248621355a567e929b8e711a47c9"
     asins="B07KSYS2L4,B06XJ5ZR5P" >}}
+
+Otro accesorio de utilidad es un [teclado pequeño con soporte dual para bluetooth y comunicación inalámbrica 2.4 Ghz](https://amzn.to/36SUMMN) que es compatible tanto con el ordenador como una _smart tv_, teléfono Android o una PlayStation 4 aunque no estoy seguro de si es totalmente compatible con la PlayStation algunos usuarios comentan que si, solo he visto uno que le ha dado problemas. Usar el mando de la PlayStation para escribir testo es muy incómodo y lento, un teclado inalámbrico como este resulta mucho más simple de utilizar, además es retroiluminado para utilizarlo a oscuras sin la luz de la habitación, no va a pilas sino que funciona con una batería recargable.
+
+{{< amazon
+    linkids="ac037d001d51556cbf14f680b30146c2"
+    asins="B07RQBRRR7" >}}
 
 ### Conclusión
 

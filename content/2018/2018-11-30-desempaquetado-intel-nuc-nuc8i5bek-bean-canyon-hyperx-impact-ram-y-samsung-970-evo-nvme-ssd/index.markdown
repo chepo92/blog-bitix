@@ -352,11 +352,17 @@ También hubiese podido optar por un [Slimbook One](https://slimbook.es/en/power
 
 ### Switch HDMI, monitor con el ordenador y consola
 
-Si el monitor es compartido tanto por el ordenador como por [una consola como la PlayStation 4 como muestro en su desempaquetado][blogbitix-432] es necesario un adaptador o _switch_ HDMI de múltiples entradas y una salida para usar ambos sin necesidad de conectar y desconectar cables, no son caros y ofrecen mucha comodidad, con un botón se alterna entre la entrada del ordenador y la consola, además detecta la entrada pdesey se cambia automáticamente.
+Si el monitor es compartido tanto por el ordenador como por [una consola como la PlayStation 4 como muestro en su desempaquetado][blogbitix-432] es necesario un adaptador o [_switch_ HDMI de múltiples entradas](https://amzn.to/2S7G0g5) y una salida para usar ambos sin necesidad de conectar y desconectar cables, no son caros y ofrecen mucha comodidad, con un botón se alterna entre la entrada del ordenador y la consola, además detecta la entrada pdesey se cambia automáticamente.
 
 {{< amazon
     linkids="3a5a1b554cb717c2763220c81be8b6fa"
     asins="B07KSYS2L4" >}}
+
+Otro accesorio de utilidad es un [teclado pequeño con soporte dual para bluetooth y comunicación inalámbrica 2.4 Ghz](https://amzn.to/36SUMMN) que es compatible tanto con el ordenador como una _smart tv_, teléfono Android o una PlayStation 4. En mi caso un uso sería tener el teclado pequeño con soporte de ratón para ver películas desde la cama y poder controlar el PC a distancia, incluye teclas multimedia y una rueda específica para hacer desplazamiento vertical muy cómoda al visualizar páginas web, además es retroiluminado perfecto para utilizarlo a oscuras si se está viendo una película. Funciona con una batería recargable.
+
+{{< amazon
+    linkids="ac037d001d51556cbf14f680b30146c2"
+    asins="B07RQBRRR7" >}}
 
 ### Nuevo escritorio
 
