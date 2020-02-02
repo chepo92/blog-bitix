@@ -61,19 +61,16 @@ En las investigaciones según preferencia se puede empezar por investigar las ar
 
 * Armas modulares
 * Armas magnéticas
-
 * Fusil magnético
 * Escopeta magnética
 * Pistola magnética
 * Armas gauss
 * Rifle gaus
 * Cañón magnético
-
 * Materiales híbridos
 * Armadura blindada
 * Traje EXO
 * Traje araña
-
 * Elerio
 * Rifle de plasma
 * Lanza de plasma
@@ -82,7 +79,6 @@ En las investigaciones según preferencia se puede empezar por investigar las ar
 * Armadura potenciada
 * Traje espectro
 * Traje WAR
-
 * Comunicaciones
 * Radio
 
@@ -113,9 +109,9 @@ Los relés de energía son necesarios construirlos para dotar de energía al res
 El centro de guerra avanzada, el taller y el laboratorio son opcionales, respectivamente permiten reentrenar las habilidades de los personajes que sabiendo que mejoras adquirir según aumentan de rango es innecesaria, también permiten curar a los soldados en la mitad de tiempo el útil pero con tres soldados por especialidad no es imprescindible, en las batallas siempre es posible volver a cargar la partida si un soldado ha sufrido mucho daño. El taller permite crear _gremblins_ para poner en salas adyacentes en sustitución de ingenieros y el laboratorio realizar las investigaciones en menos tiempo.
 
 * Escuela de tácticas de guerrilla: aumento de tamaño de pelotón, entrenar soldados y otras habilidades.
-* Campo de pruebas
+* Campo de pruebas: permite realizar las investigaciones de nuevas armaduras y armamento.
 * Relé de energía: con las dos construcciones anteriores ya se necesita un relé, ubicado en una sala con bobina de energía proporciona mayor cantidad de energía, para ubicar los relés en una bobina hay que planificar con antelación para ir limpiando las salas necesarias para cuando sean necesarios, el segundo relé de energía cuando sea necesario también usando los ingenieros para ir limpiando las salas hasta la que tiene la segunda bobina de energía.
-* Comunicaciones de la resistencia
+* Comunicaciones de la resistencia: sirven para aumenta el límite de contactos con otras regiones. Con dos es suficiente.
 * Cámara de sombras: es necesaria para completar las investigaciones de la campaña principal y llegar al final del juego.
 
 Otras mejoras interesantes que proporciona la escuela tácticas de guerrilla son:
@@ -137,7 +133,7 @@ La instalación de defensa proporciona torretas en la misión en la que un ovni 
 {{< youtube
     video="qLxTGnly5Xk" >}}
 
-### Desplazamiento del AVENGER por el mapa
+### Desplazamiento del Avenger por el mapa
 
 La tarea principal es ampliar las redes de comunicadores, instalar repetidores, recoger los recursos al inicio de cada mes, pasar por el cuartel general y el mercado negro siempre que no haya misiones encargadas por el consejo. Contactar con otras regiones dará posibilidad de desplazarse a otras regiones para iniciar misiones en las instalaciones controladas por los aliens que permitirá eliminar algún punto en el progreso del proyecto AVATAR.
 
