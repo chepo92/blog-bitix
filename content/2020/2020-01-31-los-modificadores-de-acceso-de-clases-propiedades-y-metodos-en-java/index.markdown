@@ -4,7 +4,7 @@ type: "post"
 title: "Los modificadores de acceso de clases, propiedades y métodos en Java"
 url: "/2020/01/los-modificadores-de-acceso-de-clases-propiedades-y-metodos-en-java/"
 date: 2020-01-31T17:00:00+01:00
-updated: 2020-01-31T18:30:00+01:00
+updated: 2020-02-04T20:00:00+01:00
 language: "es"
 rss: true
 sharing: true
@@ -87,6 +87,12 @@ Una detalle a tener en cuenta es que los modificadores afectan a las clases, una
 {{< code file="Bar.java" language="java" options="" >}}
 
 No hay encapsulación entre las instancias de la misma clase, la encapsulación es para la clase accedida desde otras clases según los modificadores de acceso. Pero aunque una instancia tenga acceso y capacidad de modificar las propiedades de otra instancia se ha de seguir manteniendo la invariante, si una instancia modifica los datos de otra instancia ha de seguir manteniendo la invariante de la clase de esa otra instancia. Para mantener la invariante y la encapsulación generalmente se proporciona acceso a un método y no directamente a las propiedades.
+
+### La modularidad a partir Java 9
+
+Los ámbitos de visbilidad es un mecanismo bastante limitado ni es suficiente para proporcionar encapsulación. No hay ningún impedimento a que cualquiera pueda crear una clase en un paquete que contiene clases privadas de paquete o métodos _package private_ o heredar de esas clases y de esta menera tener acceso a clases, métodos y propiedades que el autor original no las diseñó para esos propósitos. Puede ser incluso un problema de seguridad.
+
+[La modularidad añadida en Java 9][blogbitix-263] viene a complementar y dar una solución más completa a los ámbitos de visibilidad así como garantizar mejor la encapsulación tal y como el programador del paquete original ha diseñado.
 
 {{% reference %}}
 * [Java syntax](https://en.wikipedia.org/wiki/Java_syntax)
