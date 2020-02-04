@@ -12,7 +12,6 @@ comments: true
 promoted: false
 imageHead: "image:caja-olla-kuhn-rikon-1.jpg"
 imagePost: "image:olla-kuhn-rikon-3.jpg"
-tags: [""]
 series: ["desempaquetado-otros"]
 summary: "Las ollas rápidas permiten cocina además de en poco tiempo fácilmente. Son fáciles de usar y una buena con sus recambios dura muchos años. Al igual que con otros productos que voy comprando para mi uso en este artículo hago un resumen de las opciones que he evaluado, que he tenido en cuenta desde la capacidad hasta los recambios y finalmente el desempaquetado de la Kuhn Rikon modelo Duromatic Supreme que he adquirido."
 ---
