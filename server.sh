@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-hugo server --source="." --buildDrafts --buildFuture --watch --disableLiveReload
+hugo server --verbose --source="." --templateMetrics --buildDrafts --buildFuture --watch --disableLiveReload

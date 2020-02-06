@@ -17,7 +17,7 @@ summary: "He cambiado ligeramente el diseño del blog con la intención de mejor
 
 {{% post %}}
 
-{{< logotype image1="hugo.svg" title1="Hugo" width1="200" >}}
+{{< logotype image1="hugo.svg" >}}
 
 En el último [diseño significativo que hice en el 2015][blogbitix-80] cambié a un tema más claro, la posición de varios _banners_ de publicidad además de quitar algunas secciones, otros cambios de menor importancia han sido quitar el justificado del texto o la posición del título en la cabecera, además de generar de forma estática el contenido del blog con [Hugo][hugo] en vez de [Octopress][octopress].
 

@@ -35,9 +35,9 @@ draft: true
 
 {{< image
     gallery="true"
-    image1="" optionsthumb1="300x200" title1=""
-    image2="" optionsthumb2="300x200" title2=""
-    image3="" optionsthumb3="300x200" title3=""
+    image1="image:" optionsthumb1="300x200" title1=""
+    image2="image:" optionsthumb2="300x200" title2=""
+    image3="image:" optionsthumb3="300x200" title3=""
     caption="" >}}
 
 {{< amazon

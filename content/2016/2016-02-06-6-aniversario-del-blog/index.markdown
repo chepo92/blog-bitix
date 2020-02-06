@@ -18,7 +18,7 @@ summary: "Muchas bitácoras perecen y son abandonadas al cabo de un par de años
 
 {{% post %}}
 
-{{< logotype image1="hugo.svg" title1="Hugo" width1="200" >}}
+{{< logotype image1="hugo.svg" >}}
 
 Seis años ya desde que que empecé a escribir en [El blog de pico.dev][elblogdepicodev] y [Blog Bitix][blogbitix] aquello de lo que me interesa, investigo, aprendo, descubro o un poco más tarde [analizando algunos productos que voy comprando][blogbitix-serie-desempaquetado-tecnologia]. Viendo los primeros artículos que escribía en El blog de pico.dev y comparándolos con los que escribo ahora en Blog Bitix hay una notable diferencia, ahora me cuesta menos escribir y los artículos tienen algo de más extensión siendo más completos. También pasar de usar [Blogger][blogger] a [Octopress][octopress] en el inicio de Blog Bitix junto con [GitHub Pages][github-pages] me ha permitido dedicar mucho menos tiempo a la edición de los artículos y hacerlo de forma más simple. Posteriormente usando [Hugo][hugo] como generador estático he podido personalizar mucho más el diseño. Diseño que tengo pendiente de mejorar sobre todo para la versión móvil.
 

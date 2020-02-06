@@ -13,7 +13,7 @@ footer: true
 
 {{% post %}}
 
-{{< logotype image1="hugo.svg" title1="Hugo" width1="200" >}}
+{{< logotype image1="hugo.svg" >}}
 
 En esta página quiero poner la selección de páginas web y blogs personales o compartidos por varios usuarios que tengo añadidas en mi lector de feeds y que considero que publican artículos interesantes y lo siguen haciendo actualmente con cierta regularidad acerca de la programación, el desarrollo de aplicaciones, la tecnología o la informática. Estos enlaces son parte de los que he ido recopilando a lo largo de mucho tiempo y que creo que al que tenga interés en estos temas a su vez les resulten interesantes.
 

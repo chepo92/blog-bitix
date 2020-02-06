@@ -17,7 +17,7 @@ summary: "Hugo es un de las mejores herramientas en la categoría de generadores
 
 {{% post %}}
 
-{{< logotype image1="hugo.svg" title1="Hugo" width1="200" >}}
+{{< logotype image1="hugo.svg" >}}
 
 En diciembre del 2013 pase de usar [Blogger][blogger] a usar [Ocotpress][octopress] junto con [GitHub Pages][github-pages] para el hospedaje. En mayo del 2015 modifiqué mi bitácora para usar en vez de [Octopress][octopress] la herramienta equivalente [Hugo][hugo], ambas sirven para generar sitios web estáticos formados únicamente por HTML, CSS, imágenes, documentos y JavaScript. Tanto Octopress, [Jekyll][jekyll] como Hugo y otros como [Pelican][pelican] son similares, a partir de archivos normalmente en formato _markdown_ genera el HTML de la página web o bitácora junto con los recursos estáticos que necesite. Cada una de estas opciones son adecuadas para páginas de presencia en internet y bitácoras.
 

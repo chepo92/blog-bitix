@@ -15,7 +15,7 @@ summary: "Incluir enlaces a otras web u otras páginas o artículos dentro del m
 
 {{% post %}}
 
-{{< logotype image1="hugo.svg" title1="Hugo" width1="200" >}}
+{{< logotype image1="hugo.svg" >}}
 
 Una de las tareas más comunes en una página web o en una bitácora es incluir enlaces a otras páginas, el enlace es uno de los elementos básicos que forman la web. Es probable que en muchas páginas o artículos incluyamos repetidamente los mismos enlaces y como resultado tendremos en muchas páginas y artículos los mismos enlaces. El día que unos de esos enlaces cambie de alguna forma su dirección URL deberíamos actualizar todas las páginas o artículos para referenciar la nueva URL y no tener enlaces rotos. Puede no ser una tarea sencilla, más si usamos [WordPress][wordpress], [Blogger][blogger] o una herramienta similar. Voy a comentar como he resuelto este posible problema en mi bitácora en la que uso [Hugo][hugo].
 

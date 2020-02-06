@@ -18,7 +18,7 @@ library: "true"
 
 {{% post %}}
 
-{{< logotype image1="hugo.svg" title1="Hugo" width1="200" >}}
+{{< logotype image1="hugo.svg" >}}
 
 Se acaba otro año y en este caso además la década, en el siguiente 2020 harán 10 años ya desde que empecé a escribir artículos técnicos principalmente sobre [GNU][gnu]/[Linux][linux] y Java, algunos artículos de opinión y desempaquetados los productos que compro relacionados con la tecnología. Una década escribiendo uno o dos artículos semanales, no es fácil aguantar durante todo este tiempo y conservar la motivación y tener el tiempo que requieren cada uno de los artículos. Muchos surgen de ideas del trabajo que en muchos casos no puedo aplicar laboralmente, salvo alguna pequeña excepción, por implementarlos en Java por mi preferencia en el caso de los de programación y usar otras tecnologías laboralmente. 
 
