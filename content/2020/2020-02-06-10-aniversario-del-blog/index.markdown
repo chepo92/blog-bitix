@@ -18,7 +18,7 @@ series: ["aniversario"]
 
 {{< logotype image1="hugo.svg" >}}
 
-    "Bueno, ¡pues ya está!, ya tengo mi propio blog, todavía está en fase de construcción así que según vaya teniendo tiempo iré haciendo pequeños cambios en los gadgets y en su disposición. Por ahora me conformo con tenerlo visible [...].  Pero lo principal, escribir entradas en el blog, es algo que ya puedo realizar. Tratarán sobre temas relacionados con el software libre, incluyendo las dos distribuciones GNU/Linux que en este momento uso más habitualmente que son Ubuntu y Arch Linux, temas de tecnología, quizá temas de programación, experiencias personales sobre los mismos y otras cosas que se me vayan ocurriendo. [...]".
+_"Bueno, ¡pues ya está!, ya tengo mi propio blog, todavía está en fase de construcción así que según vaya teniendo tiempo iré haciendo pequeños cambios en los gadgets y en su disposición. Por ahora me conformo con tenerlo visible [...].  Pero lo principal, escribir entradas en el blog, es algo que ya puedo realizar. Tratarán sobre temas relacionados con el software libre, incluyendo las dos distribuciones GNU/Linux que en este momento uso más habitualmente que son Ubuntu y Arch Linux, temas de tecnología, quizá temas de programación, experiencias personales sobre los mismos y otras cosas que se me vayan ocurriendo. [...]"_.
 
 Con el texto anterior empezaba el primer artículo a modo de prestación en [elblogdepicodev][elblogdepicodev-0] en el 2010, este mes de febrero se cumple que hace 10 años creé y empecé a escribir en un blog, durante todo este tiempo habrá habido pocas semanas de las 520 que no he escrito al menos un artículo, es más el total de artículos que he escrito desde entonces ha sido de unos 650 artículos dado que algunas semanas he publicado dos artículos y algunas esporádicamente incluso tres. En total 2,5 millones de páginas vistas, 525K en el último año. Cuando miro [Google Analytics][google-analytics] y veo artículos del año 2017, 2016, 2015, 2014, ... que se siguen visitado, no me da la sensación de que hayan pasado varios años desde que los publique.
 
@@ -35,13 +35,13 @@ Esos son los estilos por los que ha pasado el blog.
     image1="image:elblogdepicodev-blogger.jpg" optionsthumb1="200x150" title1="El blog de pico.dev con Blogger"
     image2="image:blogbitix-octopress.jpg" optionsthumb2="200x150" title2="Blog Bitix con Octopress"
     image3="image:blogbitix-hugo-2020-02.png" optionsthumb3="200x150" title3="Blog Bitix con Hugo"
-    caption="Rediseños por los que he ido realizando en el blog" >}}
+    caption="Rediseños que he ido realizando en el blog" >}}
 
 Algunas otras modificaciones ya he realizado, una de ellas crear la versión de [páginas AMP][blogbitix-amp] del blog para ver que resultado da. En un principio esta versión está mejor adaptada para los móviles, siendo más rápida, con lo que para Google es posible que la considere mejor, y dado que Google es la mayor fuente de usuarios quizá se note algo. Al final de año mediré con Analytics cual ha sido el resultado. En las primeras semanas algunos usuarios ya están accediendo a la versión AMP.
 
-Otra modificación importante que he realizado ha sido [cargar las imágenes, los comentarios de Disqus e _iframes_ como vídeos de YouTube con _lazy load_][blogbitix-453]. Así estos elementos no se soliciten hasta que realmente sean necesarios al ser visualizados, lo que hace que la página se cargue antes y sea más rápida. Mejora la métrica de PageSpeed y Google en su algoritmo de posicionamiento es posible que las posicione mejor en su página de resultados.
+Otra modificación importante que he realizado ha sido [cargar las imágenes, los comentarios de Disqus e _iframes_ como vídeos de YouTube con _lazy load_][blogbitix-453]. Así estos elementos no se solicitan hasta que realmente son necesarios al ser visualizados, lo que hace que la página se cargue antes y sea más rápida. Mejora la métrica de PageSpeed y Google en su algoritmo de posicionamiento es posible que las posicione mejor en su página de resultados.
 
-Con algunas nuevas capacidades de Hugo como los _render hooks_ de enlaces e imágenes es posible implementar cierta lógica para algunas cosas interesantes que simplifiquen la generación del contenido. Aún estoy pendiente de que Hugo permita usar el formato de [imágenes WebP](https://github.com/gohugoio/hugo/issues/5924) y [soporte _watermarking_](https://github.com/gohugoio/hugo/issues/4595).
+Con algunas nuevas capacidades de Hugo como los [render hooks](https://gohugo.io/getting-started/configuration-markup#markdown-render-hooks) de enlaces e imágenes es posible implementar cierta lógica para algunas cosas interesantes que simplifiquen la generación del contenido. Aún estoy pendiente de que [Hugo][hugo] permita usar el formato de [imágenes WebP](https://github.com/gohugoio/hugo/issues/5924) y [soporte _watermarking_](https://github.com/gohugoio/hugo/issues/4595).
 
 Vamos a ver que ocurre en la década del 2020.
 
