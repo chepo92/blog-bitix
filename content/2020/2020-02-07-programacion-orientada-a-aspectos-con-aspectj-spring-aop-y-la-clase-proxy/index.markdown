@@ -4,6 +4,7 @@ type: "post"
 title: "Programación orientada a aspectos con AspectJ, Spring AOP y la clase Proxy"
 url: "/2020/02/programacion-orientada-a-aspectos-con-aspectj-spring-aop-y-la-clase-proxy/"
 date: 2020-02-07T19:00:00+01:00
+date: 2020-02-07T20:30:00+01:00
 language: "es"
 rss: true
 sharing: true
