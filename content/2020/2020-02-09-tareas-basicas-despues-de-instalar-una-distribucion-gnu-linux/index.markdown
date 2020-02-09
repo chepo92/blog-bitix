@@ -1,8 +1,9 @@
 ---
 pid: 462
 type: "post"
-title: "Tareas básicas después de instalar una distribución GNU/Linux"
-url: "/2020/02/tareas-basicas-despues-de-instalar-una-distribucion-gnu-linux/"
+title: "Tareas básicas de administración y uso después de instalar una distribución GNU/Linux"
+url: "/2020/02/tareas-basicas-de-administracion-y-uso-despues-de-instalar-una-distribucion-gnu-linux/"
+alisases: ["/2020/02/tareas-basicas-despues-de-instalar-una-distribucion-gnu-linux/"]
 date: 2020-02-09T10:00:00+01:00
 language: "es"
 rss: true
