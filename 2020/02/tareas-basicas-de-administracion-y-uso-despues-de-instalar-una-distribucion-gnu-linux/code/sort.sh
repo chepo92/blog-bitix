@@ -1,0 +1,19 @@
+$ cat texto.txt | sort | uniq
+adipiscing
+aliqua
+amet
+consectetur
+dolor
+dolore
+eiusmod
+elit
+et
+incidunt
+ipsum
+labore
+Lorem
+magna
+sed
+sit
+tempor
+ut

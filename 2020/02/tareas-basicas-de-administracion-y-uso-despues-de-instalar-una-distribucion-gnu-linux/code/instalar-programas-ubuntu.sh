@@ -1,0 +1,1 @@
+$ apt install libreoffice libreoffice-l10n-es
