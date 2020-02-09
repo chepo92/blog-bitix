@@ -43,7 +43,7 @@ Las mismas imágenes comprimidas con WebP ocupan 826 KiB, un 18% menos, para la 
 
 [ImageMagick][imagemagick] permite convertir las imágenes entre estos formatos. Con este comando se convierten todas las imágenes _jpg_ y _png_ de un directorio a formato WebP.
 
-{{< code file="convert-to.webp.sh" language="bash" options="" >}}
+{{< code file="convert-to-webp.sh" language="bash" options="" >}}
 
 {{< reference >}}
 * [Convertir imágenes entre formatos y cambiar tamaño con ImageMagick][elblogdepicodev-129]

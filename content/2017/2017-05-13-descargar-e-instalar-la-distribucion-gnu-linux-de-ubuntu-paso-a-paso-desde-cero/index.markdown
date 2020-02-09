@@ -160,11 +160,13 @@ Si se ha elegido cifrar el contenido del dispositivo de almacenamiento al realiz
     image2="image:ubuntu-08.png" optionsthumb2="300x200" title2="Ubuntu 16.04 con entorno de escritorio KDE"
     caption="Ubuntu 16.04 con entorno de escritorio KDE" >}}
 
-### Centro de software y actualizaciones
+### Realizar tareas básicas de mantenimiento, obtener actualizaciones e instalar programas
 
-Ubuntu por defecto ya incorpora una buena cantidad de software preinstalado. En cualquier caso con la aplicación _Software de Ubuntu_ se puede instalar más.
+Después de instalar Ubuntu es necesario conocer como realizar algunas tareas básicas de matenimiento para tener actualizado el sistema, para obtener importantes actualizaciones de seguridad, correcciones de errores, nuevas funcionalidades, instalar nuevos programas y desisntalar los programas que se dejan de usar además empezar a conocer la terminal.
 
-Al cabo de un tiempo de haber instalado Ubuntu se publicarán actualizaciones del software que tengas instalado con mejoras y correcciones de seguridad que son recomendables instalarlas usando la aplicación _Actualizciones de software_.
+* [Tareas básicas después de instalar una distribución GNU/Linux][blogbitix-462]
+
+Ubuntu por defecto ya incorpora una buena cantidad de software preinstalado. En cualquier caso con la aplicación _Software de Ubuntu_ se puede instalar más. Al cabo de un tiempo de haber instalado Ubuntu se publicarán actualizaciones del software que tengas instalado con mejoras y correcciones de seguridad que son recomendables instalarlas usando la aplicación _Actualizciones de software_. Ubuntu comprueba periódicamente si hay nuevas actualizaciones, si las hay muestra una notificación con cuales son y permite realizar la actualización a conveniencia del usuario. Una vez aplicadas las actualizaciones puede se requieredo reiniciar el sistema para que surtan efecto.
 
 {{< image
     gallery="true"
