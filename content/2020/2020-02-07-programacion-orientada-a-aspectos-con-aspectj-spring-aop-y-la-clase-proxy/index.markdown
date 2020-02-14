@@ -10,7 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "logotype:aop-proxy-call.png"
+imagePost: "image:aop-proxy-call.png"
 tags: ["java", "planeta-codigo"]
 summary: "Los aspectos permiten separar código con distintas funcionalidades y centralizar un código común que sin utilizarlos está repartido por toda la aplicación. Son un concepto potente y una vez entendidos sus conceptos ofrecen muchas posibilidades para simplificar el código y mejorar su mantenimiento. Hay varias posibilidades, dos de las más utilizadas son AspectJ y Spring AOP, en el caso de que estas no se puedan utilizar el JDK incluye la clase _Proxy_ para usos básicos aunque más limitados."
 ---

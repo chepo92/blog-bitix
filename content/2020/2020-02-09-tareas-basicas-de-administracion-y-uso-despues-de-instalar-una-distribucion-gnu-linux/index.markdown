@@ -10,7 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "logotype:linux.png"
+imagePost: "logotype:linux.svg"
 tags: ["gnu-linux", "planeta-codigo"]
 summary: "Para utilizar de forma efectiva y eficiente una distribución GNU/Linux es necesario conocer las tareas básicas que hay que realizar en todo sistema. Estas son actualizar los paquetes instalados del sistema a nuevas versiones con correcciones de seguridad, correcciones de errores y mejoras, instalar y desinstalar nuevos paquetes y programas. Conocer el uso básico de la terminal permite automatizar y realizar de forma masiva algunas tareas además de también permitir actualizar el sistema e instalar y desinstalar programas."
 ---
