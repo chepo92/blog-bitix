@@ -4,6 +4,7 @@ type: "post"
 title: "El recolector de basura de Java, que hace y como funciona en cada versión"
 url: "/2020/02/el-recolector-de-basura-de-java-que-hace-y-como-funciona-en-cada-version/"
 date: 2020-02-14T17:00:00+01:00
+updated: 2020-02-15T01:00:00+01:00
 language: "es"
 rss: true
 sharing: true
@@ -34,6 +35,8 @@ El recolector de basura además de simplificar el código de las aplicaciones, e
 La desventaja de los recolectores de basura es que cada cierto tiempo requieren detener la ejecución de la aplicación para proceder a liberar la memoria dejada de usar por la aplicación. Estas pausas que suceden fuera del control de la aplicación hace que para entornos donde se necesite una respuesta bajo unos términos de tiempo bajos o extremadamente alto rendimiento como en el caso de sistemas en tiempo real hace que los recolectores de basura sean una dificultad.
 
 En Java una de las áreas para mejorar el rendimiento y tiempo de respuesta de las aplicaciones es modificar el algoritmo de recolección de basura, para mejorar el tiempo que necesita para ejecutarse y número de pausas además de posibilitar el paralelizar la ejecución del recolector de basura con la ejecución de la aplicación. A lo largo de los años en Java ha habido varios recolectores de basura.
+
+Salvo casos en los que hay que ajustar al límite la máquina virtual en aplicaciones que necesitan gran rendimiento no es necesario preocuparse por el funcionamiento del recolector de basura, hace su cometido como se espera. En mis años de experiencia nunca he tenido que configurarlo, pero es interesante conocer que mejoras se van implementando en cada nueva generación de algoritmo. En la mayoría de los casos parece que el sucesor se basa en el anterior y aporta alguna mejora.
 
 En [la revista JavaMagazine][java-magazine] se han publicado varios artículos explicando el recolector de basura de Java. En las secciones de las diferentes versiones de recolectores de basura resumo parte del contenido de esos artículos.
 
