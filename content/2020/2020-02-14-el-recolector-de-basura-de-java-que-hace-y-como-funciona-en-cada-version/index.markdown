@@ -12,7 +12,7 @@ comments: true
 promoted: false
 imagePost: "image:treenode-3.png"
 tags: ["java", "planeta-codigo"]
-summary: "El recolector de basura es una de las piezas fundamentales del lenguaje Java y su plataforma. Una ventaja sobre lenguajes que no poseen reflectores de basura y que se ha adoptado por los lenguajes desarrollados en la últimas décadas. Facilita a los programadores la creación de programas, una mayor productividad, evita errores y fallos de seguridad."
+summary: "El recolector de basura o _garbage collector_ es una de las piezas fundamentales del lenguaje Java y su plataforma. Una ventaja sobre lenguajes que no poseen reflectores de basura y que se ha adoptado por los lenguajes desarrollados en la últimas décadas. Facilita a los programadores la creación de programas, una mayor productividad, evita errores y fallos de seguridad."
 ---
 
 {{% post %}}
