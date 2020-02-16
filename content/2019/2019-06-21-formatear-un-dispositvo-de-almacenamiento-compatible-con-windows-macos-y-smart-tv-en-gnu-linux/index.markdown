@@ -16,7 +16,7 @@ summary: "Los dispositivos de almacenamiento se han de formatear con un sistema 
 
 {{% post %}}
 
-{{< logotype image1="gnu.svg" image2="linux.svg" image3="gnome.svg" title3="GNOME" width3="200" >}}
+{{< logotype image1="gnu.svg" image2="linux.svg" image3="gnome.svg" >}}
 
 Cada sistema operativo posee uno o varios formatos de sistemas de archivos que soporta de forma nativa. Así por ejemplo [Windows][windows] como sistema de archivos para el sistema se utiliza [NTFS](https://es.wikipedia.org/wiki/NTFS) y [FAT](https://en.wikipedia.org/wiki/File_Allocation_Table), [FAT32](https://fr.wikipedia.org/wiki/FAT32) o [exFAT](https://es.wikipedia.org/wiki/ExFAT) para los medios extraíbles. En [GNU][gnu]/[Linux][linux] para el sistema se suele utilizar [ext4](https://en.wikipedia.org/wiki/Ext4). Y en [macOS][macos] se utiliza [HFS+](https://en.wikipedia.org/wiki/HFS_Plus) o [APFS](https://en.wikipedia.org/wiki/Apple_File_System). Cada unos posee unas propiedades y los más antiguos para evitar sus limitaciones han sido sustituidos por unos sistemas de archivos más modernos.
 

@@ -15,7 +15,7 @@ series: ["juegos"]
 
 {{% post %}}
 
-{{< logotype image1="gnome.svg" title1="GNOME" width1="200" >}}
+{{< logotype image1="gnome.svg" >}}
 
 [GNU][gnu]/[Linux][linux] no es la plataforma primaria de los juegos triple A, pero existen multitud de juegos libres y gratuitos que igualmente nos hacen pasar muy buenos ratos. Hoy en día los juegos tienen unos gráficos en tres dimensiones espectaculares cada vez más realistas para lo que hasta hace unos pocos años atrás era posible. Aún así algunos juegos no tan avanzados gráficamente son tan o más adictivos y divertidos que cualquier juego triple A y con la ventaja de que no requieren tener la última tarjeta gráfica con al última tecnología, gran cantidad de memoria y se pueden jugar en un portátil sin el riesgo de sobrecalentarlo.
 

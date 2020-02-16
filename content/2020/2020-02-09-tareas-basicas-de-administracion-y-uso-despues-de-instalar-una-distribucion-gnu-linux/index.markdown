@@ -19,7 +19,7 @@ summary: "Para utilizar de forma efectiva y eficiente una distribución GNU/Linu
 
 {{< logotype image1="gnu.svg" image2="linux.svg" >}}
 
-Si has instalado recientemente o piensas instalar una distribución [GNU][gnu]/[Linux][linux] después de [elegir la distribución GNU/Linux][blogbitix-190] que más se adapte a tus preferecias y de seguir los pasos para [instalar una como Ubuntu][blogbitix-232], después es necesario conocer unas pocas tareas de administración del sistema. En cada distribución varía ligeramente pero en todas hay que realizar unas tareas básicas de mantenimiento.
+Si has instalado recientemente o piensas instalar una distribución [GNU][gnu]/[Linux][linux] después de [elegir la distribución GNU/Linux][blogbitix-190] que más se adapte a tus preferecias y de seguir los pasos para [instalar una como Ubuntu][blogbitix-232], después es necesario conocer unas pocas [tareas de administración del sistema][blogbitix-462], [las aplicaciones del entorno de escritorio de GNOME][blogbitix-464] y un _listado de programas básicos según categoría en GNU/Linux_. En cada distribución varía ligeramente pero en todas hay que realizar unas tareas básicas de mantenimiento.
 
 Estas tareas básicas de mantenimiento son:
 
