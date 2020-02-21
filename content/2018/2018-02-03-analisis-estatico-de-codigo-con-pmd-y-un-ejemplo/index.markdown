@@ -31,7 +31,7 @@ Estos aspectos del código requiere analizar el código. Si la base de código d
 
 En la documentación del proyecto PMD en la sección _Rule Reference_ están la reglas que se puede aplicar y configurar en el análisis, hay una buena cantidad de ellas que en algunos casos permiten modificar los umbrales u otras propiedades para adaptar la validación a lo deseado. Desde convenciones al formatear el código, uso de llaves, tamaño de código, comentarios, de diseño, bloques de código vacíos en sentencias _try-catch_, _if_, ..., _imports_ duplicados, no usados o del mismo paquete y por tanto innecesarios, usos innecesarios de nombres completamente cualificados, de nomenclatura de variables por ejemplo si son demasiado cortas o largas, optimizaciones, código innecesario o no usado que se puede eliminar.
 
-* [Convenciones y guías estilos para el código fuente de Java][blogbitix-465]
+* [Las convenciones y guías estilos para el código fuente de Java][blogbitix-465]
 
 Al heredar un nuevo proyecto cuyo mantenimiento es complicado y grande por no cumplir varias de las reglas anteriores no es posible revisar todo el código completamente manualmente, se puede intuir cuales son algunos de los problemas haciendo una revisión a algunas partes y suponer que en el resto también están. Un buen paso es utilizar PMD para detectar de forma precisa una buena cantidad e ir corrigiéndolas a medida que se van haciendo cambios al código, con el paso del tiempo el mantenimiento si sigue siendo difícil no será por que hay código innecesario, no usado bloques de código vacíos o _imports_ no usados que son completamente innecesarios y eliminables sin riesgo.
 
