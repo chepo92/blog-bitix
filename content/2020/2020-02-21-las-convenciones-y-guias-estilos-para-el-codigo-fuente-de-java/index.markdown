@@ -9,7 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "logotype:java.svg"
+imagePost: "image:intellij-code-style-1.png"
 tags: ["java", "planeta-codigo"]
 summary: "Java desde su creación ha definido como parte del lenguaje unas convenciones y guías de estilos como recomendación para ser usadas en el código fuente por los programadores que proporcionan homogeneidad en el código fuente y que facilitan su lectura y mantenimiento. El documento no es muy extenso para leerlo y los entornos de desarrollo integrados como IntelliJ permiten formatear el código fuente siguiendo las reglas preestablecidas con una simple combinación de teclas y herramientas como PMD permiten validar de forma automatizada que el código cumple las reglas con la herramienta de construcción o integración continua."
 ---
