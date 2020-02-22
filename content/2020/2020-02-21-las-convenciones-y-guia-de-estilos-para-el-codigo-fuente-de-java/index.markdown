@@ -1,8 +1,9 @@
 ---
 pid: 465
 type: "post"
-title: "Las convenciones y guías estilos para el código fuente de Java"
-url: "/2020/02/las-convenciones-y-guias-estilos-para-el-codigo-fuente-de-java/"
+title: "Las convenciones y guía de estilos para el código fuente de Java"
+url: "/2020/02/las-convenciones-y-guia-de-estilos-para-el-codigo-fuente-de-java/"
+aliases: ["/2020/02/las-convenciones-y-guias-estilos-para-el-codigo-fuente-de-java/"]
 date: 2020-02-21T18:00:00+01:00
 language: "es"
 rss: true
