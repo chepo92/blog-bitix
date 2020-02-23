@@ -68,7 +68,7 @@ El código QR es una imagen generada a partir del código secreto y una informac
     image1="image:qr-code-decoder.png" optionsthumb1="300x200" title1="Decodificador de imágenes código QR"
     caption="Decodificador de imágenes código QR" >}}
 
-{{< code file="login.html" language="html" options="" >}}
+{{< code file="login.xhtml" language="html" options="" >}}
 
 Las dependencias de librerías son las siguientes.
 

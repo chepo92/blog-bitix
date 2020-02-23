@@ -34,8 +34,8 @@ Para facilitar el desarrollo de la aplicación en el lado cliente usaré algunas
 
 Veamos primero la página inicial índice con el listado de productos generada con JSF. Obtiene el listado de productos y genera el HTML del mismo, además carga los JavaScripts necesarios para que la aplicación funcione en el navegador del cliente.
 
-{{< code file="index-1.html" language="html" options="" >}}
-{{< code file="template.html" language="html" options="" >}}
+{{< code file="index-1.xhtml" language="html" options="" >}}
+{{< code file="template.xhtml" language="html" options="" >}}
 {{< code file="IndexBean.java" language="java" options="" >}}
 
 El JavaScript añade la lógica en el cliente para ir realizando la lista de la compra usando poco más que [jQuery][jquery] y [Require JS][requirejs], además, inicializa el WebSocket para recibir los mensajes desde el servidor con la actualizaciones del stock de los productos. Realizada la lista de productos se enviará un petición REST al servidor para formalizar la compra.
@@ -55,7 +55,7 @@ La aplicación irá registrando los usuarios conectados a la aplicación con el 
 
 Usando la API de seguridad de Java EE autenticaremos al comprador o vendedor, la página se personalizará según el rol del usuario y en el servidor con la anotación [RolesAllowed](https://docs.oracle.com/javaee/7/api/javax/annotation/security/RolesAllowed.html) y métodos _post_, _get_, _list_ se limitarán las acciones que pueden realizar según sus roles, su uso se puede ver en los listados de código anteriores. Con la página de inicio de sesión se autenticará al usuario de forma programática usando `request.login(username, password);`. Esta acción es recomendable hacerla usando el [protocolo seguro HTTPS con TLS a configurar en el servidor][blogbitix-14] para que la contraseña se transmita cifrada entre el cliente y el servidor.
 
-{{< code file="login.html" language="html" options="" >}}
+{{< code file="login.xhtml" language="html" options="" >}}
 {{< code file="LoginBean.java" language="java" options="" >}}
 
 La aplicación está dividida en varios módulos construidos con la [herramienta de automatización Gradle][elblogdepicodev-98] siendo una aplicación <abbr title="Enterprise ARchive">EAR</abbr> estándar estando constituida por un módulo para los EJB, otro para la aplicación web con un <abbr title="Web  ARchive">WAR</abbr>. Un cliente podría conectarse directamente a la aplicación sin mediación de un navegador web, esto último sería lo que emplearíamos si fuese una [aplicación de escritorio empleando Java FX][blogbitix-100].

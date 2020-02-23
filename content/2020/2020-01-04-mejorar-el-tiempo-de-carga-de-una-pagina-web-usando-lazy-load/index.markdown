@@ -55,7 +55,7 @@ Para las imágenes e _iframes_ hay que añadir una clase a los elementos de HTML
 
 Este es una plantilla que utilizo para generar de forma estática el contenido del blog con [Hugo][hugo] en el que las imágenes ilustrativas de los artículos usan el atributo _data-src_ e incluyen la clase de CSS _lozad_, en el código fuente o utilizando la función Inspeccionar se comprueba el HTML resultado. El otro archivo parte del JavaScript de este blog que implementa la carga vaga de las imágenes, _iframes_ y _scritps_ de Disqus y ShareThis. Para el caso de insertar JavaScript dinámicamente se observa un elemento con una expresión de jQuery y mediante una función _callback_ que Lozad invoca cuando su elemento se visualiza momento en que se realiza la acción de insertar el recurso de JavaScript.
 
-{{< code file="figureproc.html" language="html" options="" >}}
+{{< code file="figureproc.xhtml" language="html" options="" >}}
 {{< code file="main.js" language="javascript" options="" >}}
 
 Con simplemente esta mejora, que no es complicada de realizar, añadiendo el código anterior y realizando los sencillos cambios en los atributos de imágenes e _iframes_ las métricas en la comparación con página anterior mejoran notablemente pasando apróximadamente de 15 segungos a menos de 4 en un tiempo de carga hasta que el navegador dejan de hacer peticiones.

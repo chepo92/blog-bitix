@@ -24,7 +24,7 @@ _Markdown_ es un formato de texto simple con una sintaxis que permite introducir
 
 Como editor JavaScript para _markdown_ de las varias opciones que he encontrado la que más me ha gustado es [Editor.md](https://pandao.github.io/editor.md/en.html) por sus numerosas opciones, documentación y ejemplos, aunque no tiene una versión reciente. Posee barra de herramientas para realizar opciones básicas de edición, previsualizador de contenido HTML, colapsador de secciones, manejadores de eventos, subir imágenes, internacionalización, personalizar la barra de herramientas como está descrito en su [sección de ejemplos](https://pandao.github.io/editor.md/examples/index.html). En la [página de Editor.md en GitHub](https://github.com/pandao/editor.md) están documentadas las opciones de configuración.
 
-{{< code file="index-1.html" language="html" options="" >}}
+{{< code file="index-1.xhtml" language="html" options="" >}}
 
 {{< image
     gallery="true"

@@ -16,7 +16,7 @@ tags: ["planeta-codigo", "programacion"]
 
 {{% post %}}
 
-{{< logotype image1="html.svg" title1="HTML" width1="200" image2="java.svg" >}}
+{{< logotype image1="html.svg" image2="java.svg" >}}
 
 Validar los datos es importante para una aplicación pero no es suficiente para crear una aplicación, es más, para crear una aplicación segura es más importante codificar correctamente los datos emitidos por la aplicación. Los ataques XSS se producen precisamente por no codificar correctamente los datos emitidos provenientes de una fuente no confiable. Una fuente no confiable puede ser un parámetro en una aplicación web pero también puede ser cualquier otro dato que incluya una petición HTTP como una cabecera.
 
@@ -27,7 +27,7 @@ El siguiente código de un archivo JSP que obtiene un parámetro de la petición
 
 El contenido HTML generado por la aplicación y enviado al navegador sería el siguiente:
 
-{{< code file="RequestParameter.html" language="html" options="" >}}
+{{< code file="RequestParameter.xhtml" language="html" options="" >}}
 
 En este caso al cargar la página en el navegador se muestra un mensaje _alert_ con una ventana emergente pero si el usuario malicioso enviase los datos de las _cookies_ a una URL suya el usuario ni siquiera sería consciente de que le han robado la sesión. Y este fallo de seguridad se produce simplemente por cargar una página de una aplicación insegura por XSS.
 

@@ -37,7 +37,7 @@ Este sería un ejemplo de código JavaScript junto con el uso del componente de 
 
 {{< code file="Index.tml" language="html" options="" >}}
 {{< code file="multiselect.js" language="JavaScript" options="" >}}
-{{< code file="Index.html" language="html" options="" >}}
+{{< code file="Index.xhtml" language="html" options="" >}}
 
 Y este sería el aspecto de componente en el navegador.
 

@@ -23,13 +23,13 @@ Hace un par de años cambié [de usar Blogger a usar Octopress][blogbitix-0] y d
 
 Para no incluir en las páginas o artículos las mismas URLs una y otra vez tengo un archivo de referencias a enlaces en el que en formato [markdown][markdown] a cada URL le doy un identificativo. Posteriormente hago uso de una facilidad que proporciona Hugo que son los [shortcodes](https://gohugo.io/extras/shortcodes/) similares a pequeños contenidos que pueden ser incluídos en los archivos de contenido u otras plantillas, este sería un trozo de un archivo de enlaces:
 
-{{< code file="links.html" language="html" options="" >}}
+{{< code file="links.xhtml" language="html" options="" >}}
 
 El día que un enlace cambie basta con que lo modifique en el archivo enlaces sin tener que revisar, buscar, reemplazar y editar los archivos de contenido.
 
 Esto para los enlaces externos hacia otras páginas pero de forma similar lo aplico a los enlaces internos hacia otras páginas de la bitácora. A cada artículo le asigno un número secuencial según los voy escribiendo y publicando, con esa secuencia creo un identificativo para el artículo y le asocio su URL.
 
-{{< code file="links-posts.html" language="html" options="" >}}
+{{< code file="links-posts.xhtml" language="html" options="" >}}
 
 Con estos archivos usando la [sintaxis de markdown](https://daringfireball.net/projects/markdown/syntax#link) con `\[texto enlace\]\[identificativo-enlace\]`, por ejemplo `\[¡Hola nuevo mundo!\]\[blogbitix-0\]`, puedo hacer referencia a los enlaces con su identificativo y al generar el contenido estas referencias será sustituidas por los enlaces referenciados.
 

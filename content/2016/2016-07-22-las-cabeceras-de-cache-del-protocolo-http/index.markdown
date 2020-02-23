@@ -16,7 +16,7 @@ summary: "Establecer directivas de cacheo en los recursos devueltos en una pági
 
 {{% post %}}
 
-{{< logotype image1="html.svg" title1="HTML" width1="200" >}}
+{{< logotype image1="html.svg" >}}
 
 Cachear aquella información que es costosa de generar y es muy solicitada consigue por un lado evitar que el servidor sea capaz de atender todo el tráfico reduciendo la cantidad de capacidad necesaria del servidor y por otro lado consigue que la información sea devuelta en menor tiempo. Para aquella información que no necesite estar completamente actualizada o que no cambia cada poco tiempo es candidata a cachearla en caso necesario. La cache se puede realizar en los navegadores guardando estos recursos como imágenes y hojas de estilos que consiguen reducir el número de peticiones al servidor y mostrando la página más rápidamente al usuario. La cache también se puede hacer en el lado del servidor usando soluciones específicas como [Varnish][varnish], [memcached][memcached] o para los casos más habituales que serán la mayoría las funcionalidades incorporadas en el servidor web como en el caso de [Nginx][nginx].
 

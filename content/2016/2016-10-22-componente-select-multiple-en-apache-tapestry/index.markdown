@@ -35,7 +35,7 @@ Esta implementación del componente no necesita de una plantilla _tml_ sino que 
 
 El código HTML generado por el componente es el siguiente:
 
-{{< code file="Index.html" language="html" options="" >}}
+{{< code file="Index.xhtml" language="html" options="" >}}
 
 Este sería el aspecto del _select_ múltiple con sus botones para seleccionar todas las opciones y deseleccionar todas, además de personalizados los textos y una pequeña flecha en el desplegable hacia el componente _select_, todo esto configurado principalmente a través de atributos _data_ y clases <abbr title="Cascading Stylesheets">CSS</abbr>.
 

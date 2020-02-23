@@ -19,8 +19,8 @@ Una de las cosas que he tenido que resolver en [Blog Stack][blogstack] es como c
 
 Por ejemplo, si tenemos la siguiente cadena y la cortamos en un mal punto y luego insertamos en una página html ese contenido lo que ocurrirá es que todo el texto a continuación de él aparecerá en negrita.
 
-{{< code file="text-1.html" language="html" options="" >}}
-{{< code file="text-2.html" language="html" options="" >}}
+{{< code file="text-1.xhtml" language="html" options="" >}}
+{{< code file="text-2.xhtml" language="html" options="" >}}
 
 Usar una expresión regular tampoco es solución, con alguna puede parecer que en algún caso funciona pero posiblemente para cada expresión regular podamos encontrar un html para el que no sirva. La expresión regular puede ser complicada.
 
@@ -30,7 +30,7 @@ Para dar solución a este problema podemos emplear jsoup. [Jsoup][jsoup] es una 
 
 Empleando esta librería la cadena del ejemplo anterior podría quedar:
 
-{{< code file="text-3.html" language="html" options="" >}}
+{{< code file="text-3.xhtml" language="html" options="" >}}
 
 El resultado aplicando está solución puede verse en el [feed de la portada de Blog Stack][blogbitix-feed] donde se muestra una entradilla o extracto del inicio del contenido de cada uno de los artículos.
 

@@ -17,7 +17,7 @@ summary: "Ya tengamos un sitio web, una bitácora, o una aplicación web es reco
 
 {{% post %}}
 
-{{< logotype image="html.svg" title="HTML" width="200" >}}
+{{< logotype image1="html.svg" >}}
 
 La web se basa en un conjunto de páginas donde unas hacen referencia a otras a través de enlaces. Unido a que las páginas que están bajo el control de los sitios referenciados pudiendo desaparecer o cambiar de dirección hace que las referencias puedan dejar de funcionar o necesitar una redirección, el mensaje que nos indicará el navegador es el conocido _Página no encontrada_ o [error 404](https://es.wikipedia.org/wiki/Error_404) para indicar lo mismo. Que un sitio web contenga referencias a páginas ya no existentes hace que el usuario no encuentre lo que busque empeorando su experiencia de usuario y que los buscadores tienen en cuenta en el posicionamiento de los resultados de búsqueda. Por estos motivos es recomendable de vez en cuando rastrear los enlaces de un sitio web para buscar [enlaces rotos](https://en.wikipedia.org/wiki/Link_rot) cambiándolos por otros nuevos o eliminarlos, ya sean enlaces internos (hacia nuestro propio sitio) o enlaces externos (a otros sitios).
 

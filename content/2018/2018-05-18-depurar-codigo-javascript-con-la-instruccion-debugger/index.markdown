@@ -23,7 +23,7 @@ Los navegadores web utilizan la palabra clave sentencia _debugger;_ como punto d
 
 Suponiendo que se desea poner un punto de ruptura en un código JavaScript hay que editar el archivo JavaScript de código fuente e incluir la sentencia _debugger;_ como en el siguiente caso. Cuando el navegador ejecute esa sentencia iniciará, tiendo las herramientas de depuración abiertas, el depurador.
 
-{{< code file="Debugger.html" language="html" options="" >}}
+{{< code file="Debugger.xhtml" language="html" options="" >}}
 
 {{< image
     gallery="true"

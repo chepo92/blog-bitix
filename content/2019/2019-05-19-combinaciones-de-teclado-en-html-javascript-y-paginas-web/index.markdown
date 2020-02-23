@@ -16,7 +16,7 @@ summary: "En las páginas y aplicaciones web también es posible utilizar combin
 
 {{% post %}}
 
-{{< logotype image1="html.svg" title1="HTML" width1="200" image2="javascript.svg" title2="JavaScript" width2="200" >}}
+{{< logotype image1="html.svg" image2="javascript.svg" title2="JavaScript" width2="200" >}}
 
 En las aplicaciones de escritorio es habitual usar atajos de teclado o combinaciones de teclas para realizar acciones sin necesidad del ratón y sin requerir levantar las manos del teclado. Estos atajos de teclado permiten ahorrar tiempo al realizar acciones habituales ya que conociendo y usando la combinación de teclas es mucho más rápido que usar el ratón. Los usuarios que trabajan con una aplicación gran cantidad de tiempo les facilita la tarea. En las aplicaciones web ya no es tan habitual encontrar asignaciones de combinación de teclas pero también se pueden emplear y son igual de útiles.
 
@@ -24,7 +24,7 @@ La forma de utilizar combinaciones de teclas en una página web es haciendo uso 
 
 En este ejemplo se captura la combinación de teclas <kbd>Ctrl + Shift + s</kbd> a nivel de página que muestra una ventana emergente utilizando la función _alert()_ de JavaScript. El [objeto del evento](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent) que se recibe como parámetro del _listener_ posee las propiedades _ctrlKey_, _shiftKey_ y _altKey_ con las que determinar además de la tecla pulsada las teclas modificadoras adicionales pulsadas al mismo tiempo.
 
-{{< code file="HtmlKeyCombinations.html" language="html" options="" >}}
+{{< code file="HtmlKeyCombinations.xhtml" language="html" options="" >}}
 
 {{< image
     gallery="true"
