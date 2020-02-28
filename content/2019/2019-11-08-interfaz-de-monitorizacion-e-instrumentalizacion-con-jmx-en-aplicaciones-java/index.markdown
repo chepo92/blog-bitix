@@ -28,7 +28,7 @@ La instrumentalización se implementa con los objetos _MBean_ similares a los ob
 * Un conjunto de operaciones invocables.
 * Una autodescripción.
 
-Además de propiedades y operaciones los _MBean_ también pueden emitir notificaciones cuando ocurren ciertos eventos.
+Además de propiedades y operaciones los _MBean_ también pueden emitir notificaciones cuando ocurren ciertos eventos. Una aplicación práctica de JMX es [cambiar de forma dinámica los niveles de log][blogbitix-467] para obtener más información de una funcionalidad o en caso de un error sin necesidad de reiniciar el servidor ni necesidad de hacer cambios en el repositorio de código de la aplicación para simplemente obtener mayor detalle de trazas.
 
 ### Ejemplo de JMX en una aplicación Java
 
