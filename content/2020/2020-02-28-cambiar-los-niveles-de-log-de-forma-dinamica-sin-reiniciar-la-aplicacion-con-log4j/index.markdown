@@ -2,8 +2,9 @@
 pid: 467
 type: "post"
 title: "Cambiar los niveles de log de forma dinámica sin reiniciar la aplicación con Log4j"
-url: "/2020/02/cambiar-los-niveles-de-log-de-forma-dinámica-sin-reiniciar-la-aplicacion-con-log4j/"
+url: "/2020/02/cambiar-los-niveles-de-log-de-forma-dinamica-sin-reiniciar-la-aplicacion-con-log4j/"
 date: 2020-02-28T19:00:00+01:00
+update: 2020-02-28T20:00:00+01:00
 language: "es"
 rss: true
 sharing: true
