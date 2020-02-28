@@ -5,12 +5,74 @@
     <link rel="self" href="https://picodotdev.github.io/blog-bitix/index.xml"/>
     <link href="https://picodotdev.github.io/blog-bitix/" />
     <id>https://picodotdev.github.io/blog-bitix/tags/</id>
-    <updated>2020-02-23T16:00:00+01:00</updated>
+    <updated>2020-02-28T19:00:00+01:00</updated>
     <author><name>picodotdev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix/assets/favicon.ico</icon>
     <logo>https://picodotdev.github.io/blog-bitix/assets/images/structured-data/blogbitix-1200.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2020/02/cambiar-los-niveles-de-log-de-forma-din%C3%A1mica-sin-reiniciar-la-aplicacion-con-log4j/</id>
+        <title>Cambiar los niveles de log de forma dinámica sin reiniciar la aplicación con Log4j</title>
+        <updated>2020-02-28T19:00:00+01:00</updated>
+        <published>2020-02-28T19:00:00+01:00</published>
+        <link rel="alternate" type="text/html" href="https://picodotdev.github.io/blog-bitix/2020/02/cambiar-los-niveles-de-log-de-forma-din%C3%A1mica-sin-reiniciar-la-aplicacion-con-log4j/"/>
+        <author><name>picodotdev</name></author>
+        <content type="html">
+        <![CDATA[<p><strong>Ocurre un bug en producción o en un entorno de pruebas se desea obtener más información. Actualizar el archivo de trazas para obtener más información requiere modificar el archivo de configuración, desplegarlo en el entorno y reiniciar la aplicación, este proceso consume tiempo dependiendo del nivel de automatización de la organización. Para reducir el tiempo necesario para obtener la información con Log4j hay dos posibilidades para cambiar dinámicamente los niveles de trazas de la aplicación sin necesidad de reiniciarla.</strong></p>]]>
+        <![CDATA[<div class="logotypes">
+<p><img src="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/java.svg" width="200" alt="Java" title="Java"  class="lozad"></p>
+</div>
+<p>Las trazas son muy útiles para tener un registro de lo que ha realizado una aplicación, también son muy útiles en tiempo de desarrollo y para depurar la aplicación. Cada traza se emite con un nivel de prioridad, en el momento de desarrollo puede que nos interese las trazas de más bajo nivel de <em>debug</em>, <em>trace</em> o <em>info</em>, en el entorno de producción donde la aplicación debe funcionar correctamente las trazas de <em>debug</em> e <em>info</em> se omiten y las aplicaciones se suele configuran con un nivel mínimo de <em>warn</em> o <em>error</em> para que las trazas sean registradas.</p>
+<p>Sin embargo, cuando se descubre un error en producción o se quiere obtener más información con los niveles de <em>info</em> de qué es lo que está ocurriendo la aplicación requiere al menos cambiar el archivo de configuración de las trazas con su <em>commit</em> al un repositorio de control de versiones, la actualización del archivo de configuración desplegado en el entorno de producción y un reinicio de la aplicación. Este proceso de desarrollo y operaciones requiere tiempo más o menos dependiendo del nivel de automatización que posee la aplicación, en cualquier caso consume tiempo de personas y retrasa el tiempo necesario para obtener información y por tanto para resolver el problema.</p>
+<p>¿Te imaginas lo bueno que sería que cuando hay un <em>bug</em> en producción o se necesita poder reconfigurar los niveles de trazas de dinámicamente sin reiniciar la aplicación ni despliegues? Una de las librerías más populares en Java para emitir trazas <a href="https://logging.apache.org/log4j/2.x/">Log4j</a> permite cambiar de forma dinámica el nivel de las trazas para cada <em>logger</em>.</p>
+<p>El requisito para que cambiar el nivel de las trazas sea útil es que deben estar incluidas previamente en la aplicación, con un nivel de traza y mensaje adecuado.</p>
+<p>Hay dos posibilidades:</p>
+<ul>
+<li>Utilizar la opción <em>monitorInterval</em> con la que Log4j monitoriza según el tiempo configurado el archivo de configuración de las trazas para conocer si ha tenido cambios y reconfigurar los niveles de trazas cuando detecta cambios.</li>
+<li>Utilizar la clase <a href="https://logging.apache.org/log4j/2.x/log4j-core/apidocs/org/apache/logging/log4j/core/config/Configurator.html">Configurator</a>. Esta clase no es parte de la API pública lo que implica que puede cambiar pero permite cambiar los niveles de trazas de forma programática.</li>
+</ul>
+<p>En este ejemplo de código se utiliza la clase <em>Configurator</em>.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span><span class="lnt">22&#10;</span><span class="lnt">23&#10;</span><span class="lnt">24&#10;</span><span class="lnt">25&#10;</span><span class="lnt">26&#10;</span><span class="lnt">27&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix.log4j</span><span class="o">;</span>&#10;&#10;<span class="o">...</span>&#10;&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">LogManager</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="n">Main</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">...</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Main</span><span class="o">.</span><span class="na">changeLogLevelDynamically</span><span class="o">();</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">...</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">changeLogLevelDynamically</span><span class="o">()</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Configurator</span><span class="o">.</span><span class="na">setLevel</span><span class="o">(</span><span class="n">logger</span><span class="o">.</span><span class="na">getName</span><span class="o">(),</span> <span class="n">Level</span><span class="o">.</span><span class="na">ERROR</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&#34;info trace&#34;</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&#34;error trace&#34;</span><span class="o">);</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">);</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Configurator</span><span class="o">.</span><span class="na">setLevel</span><span class="o">(</span><span class="n">logger</span><span class="o">.</span><span class="na">getName</span><span class="o">(),</span> <span class="n">Level</span><span class="o">.</span><span class="na">INFO</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&#34;info trace&#34;</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&#34;error trace&#34;</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;<span class="o">}</span>&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>Main.java</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">configuration</span><span class="p">:</span><span class="w">&#10;</span><span class="w">  </span><span class="k">status</span><span class="p">:</span><span class="w"> </span>warn<span class="w">&#10;</span><span class="w">&#10;</span><span class="w">  </span>...<span class="w">&#10;</span><span class="w">&#10;</span><span class="w">  </span><span class="k">loggers</span><span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="k">root</span><span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span><span class="k">level</span><span class="p">:</span><span class="w"> </span>info<span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span><span class="k">appenderRef</span><span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="k">ref</span><span class="p">:</span><span class="w"> </span>STDOUT</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>log4j2.yaml</span>
+    </div>
+</div>
+<p>El nivel de trazas según se inicia la aplicación para el <em>logger</em> es <em>info</em> por configuración, según se ejecuta el programa se cambia el nivel de trazas a <em>error</em> y finalmente se restablece el nivel de trazas a <em>info</em>. Se observa que cuando el nivel de las trazas está a nivel <em>error</em> la traza de nivel <em>info</em> no se emite, como es lo esperado. Al restablecer el nivel a <em>info</em> se emiten ambas trazas.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">2020-02-28 19:43:38,465  ERROR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;io.github.picodotdev.blogbitix.log4j.Main error trace&#10;2020-02-28 19:43:38,465  ERROR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;io.github.picodotdev.blogbitix.log4j.Main &#10;2020-02-28 19:43:38,465  INFO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; io.github.picodotdev.blogbitix.log4j.Main info trace&#10;2020-02-28 19:43:38,466  ERROR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;io.github.picodotdev.blogbitix.log4j.Main error trace</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>System.out</span>
+    </div>
+</div>
+<p>Para cambiar el nivel de trazas de una aplicación de forma programática se puede <a href="https://picodotdev.github.io/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/">ofrecer una interfaz JMX en la aplicación</a> o si se trata de una aplicación web una página de configuración que ofrezca la funcionalidad.</p>
+<p>La reconfiguración de los niveles de trazas deben ser temporales ya que la aplicación dependiendo de su carga emite más trazas que con los niveles <em>warn</em> y <em>error</em>. Si las trazas se guardan en un archivo, guardar mayor cantidad de ellas hace que su tamaño pueda ser significativo e incluso llenar el almacenamiento provocando malfuncionamiento en la aplicación. Para evitar que el archivo de trazas llene el almacenamiento persistente es posible <a href="https://picodotdev.github.io/blog-bitix/2019/11/rotar-los-archivos-de-trazas-con-log4j-por-fecha-o-tamano/">limitar por tamaño, por fecha y rotar los archivos de trazas</a>.</p>
+<div class="reference">
+    Referencia:<br>
+    <ul>
+<li><a href="https://logging.apache.org/log4j/2.x/manual/configuration.html">Log4j Configuration</a></li>
+<li><a href="https://logging.apache.org/log4j/2.x/faq.html#reconfig_level_from_code">How do I set a logger’s level programmatically?</a></li>
+<li><a href="https://stackoverflow.com/questions/4598702/dynamically-changing-log4j-log-level">Dynamically Changing log4j log level</a></li>
+</ul>
+</div>
+]]>
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2020/02/como-migrar-el-contenido-de-un-sitio-web-html-a-formato-markdown/</id>
@@ -2444,137 +2506,6 @@ El recolector de basura Shenandoah es un proyecto de OpenJDK que forma parte del
                 <category term="programacion"/>
             
                 <category term="web"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/</id>
-        <title>Hemeroteca #16</title>
-        <updated>2019-12-31T19:30:00+01:00</updated>
-        <published>2019-12-27T19:00:00+01:00</published>
-        <link rel="alternate" type="text/html" href="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/"/>
-        <author><name>picodotdev</name></author>
-        <content type="html">
-        
-        <![CDATA[<div class="logotypes">
-<p><img src="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/hugo.svg" width="200" alt="Hugo" title="Hugo"  class="lozad"></p>
-</div>
-<p>Se acaba otro año y en este caso además la década, en el siguiente 2020 harán 10 años ya desde que empecé a escribir artículos técnicos principalmente sobre <a href="https://www.gnu.org/">GNU</a>/<a href="https://www.linux.com/">Linux</a> y Java, algunos artículos de opinión y desempaquetados los productos que compro relacionados con la tecnología. Una década escribiendo uno o dos artículos semanales, no es fácil aguantar durante todo este tiempo y conservar la motivación y tener el tiempo que requieren cada uno de los artículos. Muchos surgen de ideas del trabajo que en muchos casos no puedo aplicar laboralmente, salvo alguna pequeña excepción, por implementarlos en Java por mi preferencia en el caso de los de programación y usar otras tecnologías laboralmente.</p>
-<p>Este segundo semestre he escrito algunos artículos menos, 34, frente a los 48 del primer semestre y es que con la <a href="https://picodotdev.github.io/blog-bitix/2019/09/desempaquetado-de-playstation-4-slim-de-1-tb/">compra de una PlayStation 4</a> estoy dedicando parte del tiempo que antes dedicaba al blog e investigar tecnología a jugar a algunos videojuegos, aún así esa cantidad de artículos sigue siendo al menos uno por semana que es mi cadencia mínima de publicación que deseo. En total en el 2019 he publicado 82 artículos para llegar a la cifra de 453 artículos en el tiempo de vida de Blog Bitix desde finales del 2013, son muchos más teniendo en cuenta para ser algo que dedico en mi tiempo libre y cada caracter de los artículos requiere teclearlo, corregir las faltas de ortografía, hacer que las frases estén bien construidas sintácticamente y sean fáciles de comprender, cada idea e imagen a recortar y capturar está colocada de forma artesanal y manual, lo único automatizado es generar la versión estática de la web que gracias a <a href="https://gohugo.io/">Hugo</a> junto con <a href="https://pages.github.com/">GitHub Pages</a> y algunos comandos de GNU/Linux me permite centrarme más en solo escribir el contenido.</p>
-<p>Pero los artículos no es lo único que he hecho este 2019, he recibido algunas <em>pull request</em> e <em>issues</em> para <a href="https://picodotdev.github.io/blog-bitix/2017/01/script-de-instalacion-de-arch-linux-desatendido-automatizado-y-personalizable/">Script de instalación de Arch Linux desatendido, automatizado y personalizable</a> y <a href="https://github.com/picodotdev/alis/">el repositorio en GitHub</a> tiene una buena cantidad de <em>stars</em> y <em>forks</em>, he continuado manteniendo la traducción al español de <a href="https://www.videolan.org/vlc/">VLC</a>, he enviado una actualización con las nuevas cadenas y corregidos algunos errores de la traducción al español para la reciente versión 6.1 de <a href="https://www.virtualbox.org/">VirtualBox</a> y tratado de mejorar la de <a href="https://keepassxc.org/">KeePassXC</a>, algunas mejoras internas para generar el blog, incluido <a href="https://picodotdev.github.io/blog-bitix/2019/05/rediseno-de-blog-bitix-con-contenido-centrado-mas-grande-horizontalmente-y-publicidad-lateral-sticky/">rediseñarlo para que el contenido esté centrado, más grande horizontalmente y publicidad lateral <em>sticky</em></a>.</p>
-<p>Listando los <a href="https://picodotdev.github.io/blog-bitix/2019/">artículos que he escrito durante el año 2019</a> y este semestre, en la categoría de artículos de desempaquetado he escrito sobre la PlayStation 4.</p>
-<ul>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/09/desempaquetado-de-playstation-4-slim-de-1-tb/">Desempaquetado de PlayStation 4 Slim de 1 TB</a></li>
-</ul>
-<p>Dos de opinión.</p>
-<ul>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/08/smartcards-en-vez-de-discos-para-una-futura-generacion-de-consolas/">Smartcards en vez de discos para una futura generación de consolas</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/12/sobre-los-planes-de-pensiones-analizando-sus-ventajas-fiscales-y-rentabilidad/">Sobre los planes de pensiones, analizando sus ventajas fiscales y rentabilidad</a></li>
-</ul>
-<p>Una de las temáticas principales de este blog es GNU/Linux, dentro de ella de diversa temática desde programación hasta el entorno de escritorio.</p>
-<ul>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/07/obtener-los-primeros-los-ultimos-o-los-caracteres-anteriores-y-posteriores-de-un-archivo-y-el-numero-de-ocurrencias-con-head-tail-y-grep/">Obtener los primeros, los últimos o los caracteres anteriores y posteriores de un archivo y el número de ocurrencias con head, tail y grep</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/07/administrar-secretos-y-proteger-datos-sensibles-con-vault/">Administrar secretos y proteger datos sensibles con Vault</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/08/generar-credenciales-de-conexion-a-base-de-datos-bajo-demanda-con-vault/">Generar credenciales de conexión a base de datos bajo demanda con Vault</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/08/utilizar-credenciales-de-conexion-a-la-base-de-datos-generadas-por-vault-en-una-aplicacion-de-spring/">Utilizar credenciales de conexión a la base de datos generadas por Vault en una aplicación de Spring</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/10/guia-de-inicio-del-gestor-de-terminales-y-sesiones-tmux/">Guía de inicio del gestor de terminales y sesiones tmux</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/">Microservicios con Spring Cloud, Consul, Nomad y Traefik</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/11/informacion-basica-del-sistema-y-entorno-de-escritorio-desde-la-terminal-de-gnu-linux/">Información básica del sistema y entorno de escritorio desde la terminal de GNU/Linux</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/11/cambiar-la-ubicacion-por-defecto-de-los-directorios-de-usuario-en-gnu-linux/">Cambiar la ubicación por defecto de los directorios de usuario en GNU/Linux</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/11/gestionar-biblioteca-y-convertir-entre-formatos-de-libros-electronicos-con-calibre/">Gestionar biblioteca y convertir entre formatos de libros electrónicos con Calibre</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/12/nube-privada-para-documentos-personales-con-nextcloud-y-onlyoffice/">Nube privada para documentos personales con Nextcloud y OnlyOffice</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/12/comando-para-convertir-imagenes-a-webp-con-menor-tamano-desde-jpeg-y-png/">Comando para convertir imágenes a WebP con menor tamaño desde JPEG y PNG</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/12/buscar-en-el-historial-desde-la-barra-de-direcciones-inteligente-de-firefox/">Buscar en el historial desde la barra de direcciones inteligente de Firefox</a></li>
-</ul>
-<p>La otra temática principal de mi blog es la programación con el lenguaje <a href="https://www.oracle.com/technetwork/java/index.html">Java</a> donde están la mayoría de los artículos que he escrito.</p>
-<ul>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/07/donde-comprar-un-ordenador-sin-windows-o-con-gnu-linux/">¿Donde comprar un ordenador sin Windows o con GNU/Linux?</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/07/los-tipos-de-modulos-de-jmps-anadidos-a-partir-de-java-9/">Los tipos de módulos de JPMS añadidos a partir de Java 9</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/07/recuperar-datos-eficientemente-en-graphql-usando-batching-con-data-loaders/">Recuperar datos eficientemente en GraphQL usando batching con data loaders</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/07/publicacion-y-suscripcion-de-eventos-con-guava-eventbus-en-una-aplicacion-java/">Publicación y suscripción de eventos con Guava EventBus en una aplicación Java</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/08/implementar-tolerancia-a-fallos-con-resilience4j/">Implementar tolerancia a fallos con Resilience4j</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/08/iniciar-una-aplicacion-de-spring-boot-en-un-puerto-aleatorio/">Iniciar una aplicación de Spring Boot en un puerto aleatorio</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/08/ejemplo-sencillo-de-como-crear-un-documento-pdf-con-java-y-pdfbox/">Ejemplo sencillo de como crear un documento PDF con Java y PDFBox</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/09/la-aplicacion-cliente-de-steam-en-gnu-linux/">La aplicación cliente de Steam en GNU/Linux</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/09/libreria-editor-de-markdown-javascript-y-procesador-de-markdown-para-generar-html-con-java/">Librería editor de markdown JavaScript y procesador de markdown para generar HTML con Java</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/09/novedades-de-java-13/">Novedades de Java 13</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/10/ventajas-de-usar-un-tipo-especifico-para-los-identificadores-de-las-entidades-en-vez-de-un-tipo-basico/">Ventajas de usar un tipo específico para los identificadores de las entidades en vez de un tipo básico</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/10/cobertura-de-codigo-y-mutation-testing-en-pruebas-unitarias-con-jacoco-y-pit-en-java/">Cobertura de código y mutation testing en pruebas unitarias con JaCoCo y PIT en Java</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/">Interfaz de monitorización e instrumentalización con JMX en aplicaciones Java</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/11/rotar-los-archivos-de-trazas-con-log4j-por-fecha-o-tamano/">Rotar los archivos de trazas con log4j por fecha o tamaño</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/11/extraer-informacion-del-navegador-del-usuario-en-el-servidor-de-una-aplicacion-web-java/">Extraer información del navegador del usuario en el servidor de una aplicación web Java</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/11/implementar-un-segundo-factor-de-autenticacion-en-una-aplicacion-web-java-con-spring/">Implementar un segundo factor de autenticación en una aplicación web Java con Spring</a></li>
-<li><a href="https://picodotdev.github.io/blog-bitix/2019/12/generar-documentos-informes-y-facturas-en-formato-pdf-con-jasperreports-y-java/">Generar documentos, informes y facturas en formato PDF con JasperReports y Java</a></li>
-</ul>
-<p>Pasado el año está bien hacer un pequeño balance de como ha sido para evaluar si hay algo que se puede hacer para mejorar, en cuanto a las cifras del blog en número de visitas se ha mantenido prácticamente igual al 2018 con ~500K páginas vistas, a pesar de la cifra anualizada no son más de 1.5K al día que no es mucho, hay mucho margen de mejora. Aunque siempre es un punto de motivación normalmente no pienso en escribir artículos que atraigan a más lectores sino antes en lo que me apetece escribir y publicar. Aún escribiendo artículos más avanzados uno de los artículos más visitados es a pesar de su sencillez y simplicidad <a href="https://picodotdev.github.io/blog-bitix/2017/07/4-formas-de-hacer-un-bucle-for-en-java/">4 formas de hacer un bucle for  en Java</a>, he escrito artículos mucho más complejos que mostrar varias formas de hacer un bucle <em>for</em> pero parece que los artículos sencillos tienen un público más amplio que los artículos más complejos.</p>
-<p>He escrito lo que en cada momento lo que me ha apetecido, lógicamente no desdeñanado conseguir más visitas pero sin ser esta la principal motivación de escribir algo. Como cada año, para observar las métricas pasados varios, hago públicos los datos de visitas en Analytics, ingresos de AdSense y de afiliación de Amazon. Por si a alguien sin blog, con uno o por comparar le resultan interesantes y quiere hacerse una idea.</p>
-<div class="media">
-<figure>
-<p>
-    <a href="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/analytics-2019_hu3aadba81fd120c0c2335c999e048002a_85387_2560x1440_fit_box_2.png" data-gallery="data-gallery" title="Analytics 2019 de Blog Bitix"><img src="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/analytics-2019_hu3aadba81fd120c0c2335c999e048002a_85387_600x450_fit_box_2.png" width="600" height="301" alt="Analytics 2019 de Blog Bitix" title="Analytics 2019 de Blog Bitix"  class="lozad"></a>
-
-    <a href="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/gadsense-2019_hu93d307567eb4898927b97f2f60790f43_39622_2560x1440_fit_box_2.png" data-gallery="data-gallery" title="AdSense 2019 de Blog Bitix"><img src="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/gadsense-2019_hu93d307567eb4898927b97f2f60790f43_39622_600x450_fit_box_2.png" width="600" height="205" alt="AdSense 2019 de Blog Bitix" title="AdSense 2019 de Blog Bitix"  class="lozad"></a></p>
-<figcaption>Evolución visitas e ingresos en 2019</figcaption>
-</figure>
-</div>
-<p>En cuanto a ingresos algunos menos 410€ frente a 480€ del año anterior, aún así todos los meses de forma consistente los ingresos están alrededor de entre 20 y 30 euros que no está mal.</p>
-<div class="media">
-<figure>
-<p>
-    <a href="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/gadsense-ingresos-2019_hu0aa956c9569059650f34c2752c61017b_152870_2560x1440_fit_box_2.png" data-gallery="data-gallery" title="Ingresos 2018 de Blog Bitix"><img src="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/gadsense-ingresos-2019_hu0aa956c9569059650f34c2752c61017b_152870_300x200_fit_box_2.png" width="113" height="200" alt="Ingresos 2018 de Blog Bitix" title="Ingresos 2018 de Blog Bitix"  class="lozad"></a>
-
-    <a href="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/gadsense-paginas-vistas-2019_hu0aa956c9569059650f34c2752c61017b_145755_2560x1440_fit_box_2.png" data-gallery="data-gallery" title="Páginas vistas 2018 de Blog Bitix"><img src="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/gadsense-paginas-vistas-2019_hu0aa956c9569059650f34c2752c61017b_145755_300x200_fit_box_2.png" width="113" height="200" alt="Páginas vistas 2018 de Blog Bitix" title="Páginas vistas 2018 de Blog Bitix"  class="lozad"></a>
-
-    <a href="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/gadsense-clics-2019_hu0aa956c9569059650f34c2752c61017b_132963_2560x1440_fit_box_2.png" data-gallery="data-gallery" title="Clics 2018 de Blog Bitix"><img src="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/gadsense-clics-2019_hu0aa956c9569059650f34c2752c61017b_132963_300x200_fit_box_2.png" width="113" height="200" alt="Clics 2018 de Blog Bitix" title="Clics 2018 de Blog Bitix"  class="lozad"></a></p>
-</figure>
-</div>
-<div class="media">
-<figure>
-<p>
-    <a href="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/gadsense-crt-2019_hu551692485b029c60d17a806c35ed45f1_135718_2560x1440_fit_box_2.png" data-gallery="data-gallery" title="CRT 2019 de Blog Bitix"><img src="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/gadsense-crt-2019_hu551692485b029c60d17a806c35ed45f1_135718_300x200_fit_box_2.png" width="113" height="200" alt="CRT 2019 de Blog Bitix" title="CRT 2019 de Blog Bitix"  class="lozad"></a>
-
-    <a href="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/gadsense-cpc-2019_hu551692485b029c60d17a806c35ed45f1_136700_2560x1440_fit_box_2.png" data-gallery="data-gallery" title="CPC 2019 de Blog Bitix"><img src="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/gadsense-cpc-2019_hu551692485b029c60d17a806c35ed45f1_136700_300x200_fit_box_2.png" width="113" height="200" alt="CPC 2019 de Blog Bitix" title="CPC 2019 de Blog Bitix"  class="lozad"></a>
-
-    <a href="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/gadsense-rpm-2019_hu4d0311e47a28d048756f6c372bf1e390_149757_2560x1440_fit_box_2.png" data-gallery="data-gallery" title="RPM 2019 de Blog Bitix"><img src="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/gadsense-rpm-2019_hu4d0311e47a28d048756f6c372bf1e390_149757_300x200_fit_box_2.png" width="113" height="200" alt="RPM 2019 de Blog Bitix" title="RPM 2019 de Blog Bitix"  class="lozad"></a></p>
-</figure>
-</div>
-<div class="media">
-<figure>
-<p>
-    <a href="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/gadsense-tipos-de-puja-2019_hu575030924d3b34d66186c7282c3aa5e6_28921_2560x1440_fit_box_2.png" data-gallery="data-gallery" title="Tipos de puja 2019 de Blog Bitix"><img src="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/gadsense-tipos-de-puja-2019_hu575030924d3b34d66186c7282c3aa5e6_28921_300x200_fit_box_2.png" width="269" height="200" alt="Tipos de puja 2019 de Blog Bitix" title="Tipos de puja 2019 de Blog Bitix"  class="lozad"></a>
-
-    <a href="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/gadsense-plataformas-2019_hu1498e501818e09698b427f346bd2eb00_23757_2560x1440_fit_box_2.png" data-gallery="data-gallery" title="Plataformas 2019 de Blog Bitix"><img src="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/gadsense-plataformas-2019_hu1498e501818e09698b427f346bd2eb00_23757_300x200_fit_box_2.png" width="270" height="200" alt="Plataformas 2019 de Blog Bitix" title="Plataformas 2019 de Blog Bitix"  class="lozad"></a></p>
-<figcaption>Métricas de AdSense</figcaption>
-</figure>
-</div>
-<p>En los ingresos por enlaces de afiliado de <a href="https://amzn.to/2flFhHA">Amazon</a> ha habido algunos meses especialmente notables y me sorprende que un solo blog como este le proporcione a Amazon facturar esa cantidad de dinero.</p>
-<p>Aparte de la publicidad de AdSense la monetización por afiliación es una gran estrategia para conseguir ventas en un negocio beneficioso para las tres partes el editor que obtiene una recompensa por la venta motivándole a seguir escribiendo artículos que los usuarios consideren buenos como para finalizar en una compra, el usuario que dependiendo del artículo obtiene información objetiva que le disipa las dudas como para realizar con mayores garantías de hacer una buena compra y el vendedor que aumenta su facturación y en caso de que no se produzca la venta coloca enlaces dando su página de comercio electrónico a conocer con los enlaces disponibles para una futura ocasión u otros usuarios.</p>
-<div class="media">
-<figure>
-<p>
-    <a href="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/amazon-2019_hu1f7631baac4fc4eec3dca222c90f695d_72924_2560x1440_fit_box_2.png" data-gallery="data-gallery" title="Facturación e ingresos Amazon"><img src="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/amazon-2019_hu1f7631baac4fc4eec3dca222c90f695d_72924_600x450_fit_box_2.png" width="600" height="289" alt="Facturación e ingresos Amazon" title="Facturación e ingresos Amazon"  class="lozad"></a></p>
-</figure>
-</div>
-<p>Esto es todo, ¡buen 2020!</p>
-<div class="media">
-<figure>
-<p>
-    <a href="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/christmas-tux-2019_huecfaa36dd6ae7c1b61b7a88cd415ec19_534749_2560x1440_fit_q90_box.jpg" data-gallery="data-gallery" title="Christmas Tux 2019"><img src="https://picodotdev.github.io/blog-bitix/2019/12/hemeroteca-16/images/christmas-tux-2019_huecfaa36dd6ae7c1b61b7a88cd415ec19_534749_600x450_fit_q90_box.jpg" width="600" height="338" alt="Christmas Tux 2019" title="Christmas Tux 2019"  class="lozad"></a></p>
-<figcaption>¡Buen 2020! Fuente: klowner.com</figcaption>
-</figure>
-</div>
-]]>
-        </content>
-        
-            
-                <category term="blog"/>
-            
-                <category term="gnu-linux"/>
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo"/>
             
         
     </entry>

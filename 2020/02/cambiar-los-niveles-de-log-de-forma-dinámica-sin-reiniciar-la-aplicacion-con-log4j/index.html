@@ -1,0 +1,528 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta name="base" href="/blog-bitix/">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="picodotdev">
+  <meta name="keywords" content="java, programacion, software, hardware, tapestry, software libre, gnu, linux, gnu/linux, unix, arch, arch linux, html, css, javascript">
+  <meta name="description" content="Ocurre un bug en producción o en un entorno de pruebas se desea obtener más información. Actualizar el archivo de trazas para obtener más información requiere modificar el archivo de configuración, desplegarlo en el entorno y reiniciar la aplicación, este proceso consume tiempo dependiendo del nivel de automatización de la organización. Para reducir el tiempo necesario para obtener la información con Log4j hay dos posibilidades para cambiar dinámicamente los niveles de trazas de la aplicación sin necesidad de reiniciarla. &hellip;">
+
+  <title>Cambiar los niveles de log de forma dinámica sin reiniciar la aplicación con Log4j</title>
+
+  <link rel="shortcut icon" href="/blog-bitix/assets/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/blog-bitix/assets/apple-touch-icon-144-precomposed.png">
+  <link rel="canonical" type="text/html" href="https://picodotdev.github.io/blog-bitix/2020/02/cambiar-los-niveles-de-log-de-forma-din%C3%A1mica-sin-reiniciar-la-aplicacion-con-log4j/">
+  <link rel="alternate" type="application/rss&#43;xml" href="https://picodotdev.github.io/blog-bitix/index.xml" title="Blog Bitix">
+  <link rel="amphtml" type="text/html" href="https://picodotdev.github.io/blog-bitix/2020/02/cambiar-los-niveles-de-log-de-forma-din%C3%A1mica-sin-reiniciar-la-aplicacion-con-log4j/index-amp.html" title="Cambiar los niveles de log de forma dinámica sin reiniciar la aplicación con Log4j">
+  
+  <link rel="humans" type="text/plain" href="/blog-bitix/humans.txt">
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i&display=swap" rel="stylesheet"> 
+
+  
+
+  <!-- Social -->
+<meta property="og:title" content="Cambiar los niveles de log de forma dinámica sin reiniciar la aplicación con Log4j">
+<meta property="og:url" content="https://picodotdev.github.io/blog-bitix/2020/02/cambiar-los-niveles-de-log-de-forma-din%C3%A1mica-sin-reiniciar-la-aplicacion-con-log4j/">
+<meta property="og:image" content="https://picodotdev.github.io/blog-bitix/https://picodotdev.github.io/blog-bitix/assets/images/structured-data/blogbitix-1200.png">
+
+<meta property="og:site_name" content="Blog Bitix">
+<meta property="og:description" content="Ocurre un bug en producción o en un entorno de pruebas se desea obtener más información. Actualizar el archivo de trazas para obtener más información requiere modificar el archivo de configuración, desplegarlo en el entorno y reiniciar la aplicación, este proceso consume tiempo dependiendo del nivel de automatización de la organización. Para reducir el tiempo necesario para obtener la información con Log4j hay dos posibilidades para cambiar dinámicamente los niveles de trazas de la aplicación sin necesidad de reiniciarla. &hellip;">
+<meta property="og:type" content="article">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://picodotdev.github.io/blog-bitix/https://picodotdev.github.io/blog-bitix/assets/images/structured-data/blogbitix-1200.png">
+
+<meta name="twitter:site" content="@picodotdev">
+<meta name="twitter:title" content="Cambiar los niveles de log de forma dinámica sin reiniciar la aplicación con Log4j">
+<meta name="twitter:description" content="Ocurre un bug en producción o en un entorno de pruebas se desea obtener más información. Actualizar el archivo de trazas para obtener más información requiere modificar el archivo de configuración, desplegarlo en el entorno y reiniciar la aplicación, este proceso consume tiempo dependiendo del nivel de automatización de la organización. Para reducir el tiempo necesario para obtener la información con Log4j hay dos posibilidades para cambiar dinámicamente los niveles de trazas de la aplicación sin necesidad de reiniciarla. &hellip;">
+<meta name="twitter:creator" content="@picodotdev">
+
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://picodotdev.github.io/blog-bitix/2020/02/cambiar-los-niveles-de-log-de-forma-din%C3%A1mica-sin-reiniciar-la-aplicacion-con-log4j/"
+    },
+    "headline": "Cambiar los niveles de log de forma dinámica sin reiniciar la aplicación con Log4j",
+    "image": {
+        "@type": "ImageObject",
+          "url": "https://picodotdev.github.io/blog-bitix/assets/images/structured-data/blogbitix-1200.png"
+        
+      },
+    "datePublished": "2020-02-28T19:00:00+01:00",
+    "dateModified": "2020-02-28T19:00:00+01:00",
+    "inLanguage": "es",
+    
+    "wordCount": "626",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "author": {
+        "@type": "Person",
+        "name": "picodotdev",
+        "url": "https://twitter.com/picodotdev/"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Blog Bitix",
+        "logo": {
+        "@type": "ImageObject",
+        "url": "https://picodotdev.github.io/blog-bitix/assets/images/structured-data/blogbitix-1200.png"
+        }
+    },
+    "description": "Ocurre un bug en producción o en un entorno de pruebas se desea obtener más información. Actualizar el archivo de trazas para obtener más información requiere modificar el archivo de configuración, desplegarlo en el entorno y reiniciar la aplicación, este proceso consume tiempo dependiendo del nivel de automatización de la organización. Para reducir el tiempo necesario para obtener la información con Log4j hay dos posibilidades para cambiar dinámicamente los niveles de trazas de la aplicación sin necesidad de reiniciarla."
+}
+  </script>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Blog Bitix",
+    "url": "https://picodotdev.github.io/blog-bitix/",
+    "logo": {
+        "@type": "ImageObject",
+        "url": "https://picodotdev.github.io/blog-bitix/assets/images/structured-data/blogbitix-1200.png"
+    }
+}
+  </script>
+
+  <!-- css -->
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/libs/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/libs/Gallery-2.36.0/css/blueimp-gallery.min.css">
+  <!-- theme -->
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/syntax.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/main-cookieconsent.css">
+
+  <!-- javascript -->
+  <script type="text/javascript" src="/blog-bitix/assets/js/require-config.js" defer></script>
+  <script type="text/javascript" src="/blog-bitix/assets/libs/require.js" data-main="/blog-bitix/assets/js/main" defer></script>
+
+  <script type="text/javascript" defer>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-12874075-4', 'picodotdev.github.io');
+    ga('send', 'pageview');
+</script>
+  <script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" defer></script>
+<script type="text/javascript" defer>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: 'ca-pub-3533636310991304',
+    enable_page_level_ads: true
+  });
+</script>
+
+  
+  <script type="text/javascript" src="/blog-bitix/assets/js/app.js" defer></script>
+</head>
+<body>  
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        
+
+
+
+
+
+<header>
+  <div class="row">
+    <div class="col-12 col-lg-4"></div>
+    <div class="col-12 col-lg-4">
+      <h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2>
+      <div class="links">
+        
+          <a href="https://picodotdev.github.io/blog-bitix/index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+        
+        
+          <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
+        
+        
+          <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="/blog-bitix/assets/images/github.svg" width="50" height="50" class="icon"></a>
+        
+        
+        
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      
+<nav class="nav nav-pills nav-fill">
+  <a href="/blog-bitix/tags/java/" class="nav-item nav-link">Java</a>
+  <a href="/blog-bitix/tags/gnu-linux/" class="nav-item nav-link">GNU/Linux</a>
+  <a href="/blog-bitix/tags/javascript/" class="nav-item nav-link">JavaScript</a>
+  <a href="/blog-bitix/tags/tapestry/" class="nav-item nav-link">Tapestry</a>
+  <a href="/blog-bitix/archive/" class="nav-item nav-link">Archivo y hemeroteca</a>
+  <a href="/blog-bitix/pages/links/" class="nav-item nav-link">Enlaces</a>
+  <a href="/blog-bitix/pages/about/" class="nav-item nav-link">Acerca de...</a>
+  
+</nav>
+
+    </div>
+  </div>
+</header>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 adblock-container-billboard">
+        <div class="adsense adsense-billboard">
+    <ins class="adsbygoogle"
+        data-ad-client="ca-pub-3533636310991304"
+        data-ad-slot="4052324337"
+        data-full-width-responsive="true"></ins>
+</div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-12">
+        <div class="adblock-sidebar-container">
+          <div class="adblock-sidebar-container-left"></div>
+          <div class="adblock-sidebar-container-right">
+            <div class="adsense adsense-vertical">
+    <ins class="adsbygoogle"
+        data-ad-client="ca-pub-3533636310991304"
+        data-ad-slot="7450235768"
+        data-full-width-responsive="true"></ins>
+</div>
+          </div>
+        </div>
+        
+<article>
+    <h1>Cambiar los niveles de log de forma dinámica sin reiniciar la aplicación con Log4j</h1>
+    <p class="information">
+      
+        Escrito por
+       
+      <span>picodotdev</span> el <time>28/02/2020</time>.
+      
+        <br>
+        
+          <a href="/blog-bitix/tags/java/">java</a>
+        
+          <a href="/blog-bitix/tags/planeta-codigo/">planeta-codigo</a>
+        
+      
+      <br>
+      <a href="/blog-bitix/2020/02/cambiar-los-niveles-de-log-de-forma-din%C3%A1mica-sin-reiniciar-la-aplicacion-con-log4j/">Enlace permanente</a>
+      
+        <a href="/blog-bitix/2020/02/cambiar-los-niveles-de-log-de-forma-din%C3%A1mica-sin-reiniciar-la-aplicacion-con-log4j/#comments">Comentarios</a>
+      
+      
+    </p>
+
+    
+      <p class="summary">Ocurre un bug en producción o en un entorno de pruebas se desea obtener más información. Actualizar el archivo de trazas para obtener más información requiere modificar el archivo de configuración, desplegarlo en el entorno y reiniciar la aplicación, este proceso consume tiempo dependiendo del nivel de automatización de la organización. Para reducir el tiempo necesario para obtener la información con Log4j hay dos posibilidades para cambiar dinámicamente los niveles de trazas de la aplicación sin necesidad de reiniciarla.</p>
+    
+    
+
+    
+      <div class="adblock-container-leaderboard">
+      <div class="adsense adsense-leaderboard">
+    <ins class="adsbygoogle"
+        data-ad-client="ca-pub-3533636310991304"
+        data-ad-slot="8238629013"
+        data-full-width-responsive="true"></ins>
+</div>
+      </div>
+    
+
+    <div class="content">
+      
+
+
+      <div class="logotypes">
+<p><img data-src="/blog-bitix/assets/images/logotypes/java.svg" width="200" alt="Java" title="Java"  class="lozad"></p>
+</div>
+<p>Las trazas son muy útiles para tener un registro de lo que ha realizado una aplicación, también son muy útiles en tiempo de desarrollo y para depurar la aplicación. Cada traza se emite con un nivel de prioridad, en el momento de desarrollo puede que nos interese las trazas de más bajo nivel de <em>debug</em>, <em>trace</em> o <em>info</em>, en el entorno de producción donde la aplicación debe funcionar correctamente las trazas de <em>debug</em> e <em>info</em> se omiten y las aplicaciones se suele configuran con un nivel mínimo de <em>warn</em> o <em>error</em> para que las trazas sean registradas.</p>
+<p>Sin embargo, cuando se descubre un error en producción o se quiere obtener más información con los niveles de <em>info</em> de qué es lo que está ocurriendo la aplicación requiere al menos cambiar el archivo de configuración de las trazas con su <em>commit</em> al un repositorio de control de versiones, la actualización del archivo de configuración desplegado en el entorno de producción y un reinicio de la aplicación. Este proceso de desarrollo y operaciones requiere tiempo más o menos dependiendo del nivel de automatización que posee la aplicación, en cualquier caso consume tiempo de personas y retrasa el tiempo necesario para obtener información y por tanto para resolver el problema.</p>
+<p>¿Te imaginas lo bueno que sería que cuando hay un <em>bug</em> en producción o se necesita poder reconfigurar los niveles de trazas de dinámicamente sin reiniciar la aplicación ni despliegues? Una de las librerías más populares en Java para emitir trazas <a href="https://logging.apache.org/log4j/2.x/">Log4j</a> permite cambiar de forma dinámica el nivel de las trazas para cada <em>logger</em>.</p>
+<p>El requisito para que cambiar el nivel de las trazas sea útil es que deben estar incluidas previamente en la aplicación, con un nivel de traza y mensaje adecuado.</p>
+<p>Hay dos posibilidades:</p>
+<ul>
+<li>Utilizar la opción <em>monitorInterval</em> con la que Log4j monitoriza según el tiempo configurado el archivo de configuración de las trazas para conocer si ha tenido cambios y reconfigurar los niveles de trazas cuando detecta cambios.</li>
+<li>Utilizar la clase <a href="https://logging.apache.org/log4j/2.x/log4j-core/apidocs/org/apache/logging/log4j/core/config/Configurator.html">Configurator</a>. Esta clase no es parte de la API pública lo que implica que puede cambiar pero permite cambiar los niveles de trazas de forma programática.</li>
+</ul>
+<p>En este ejemplo de código se utiliza la clase <em>Configurator</em>.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span><span class="lnt">22&#10;</span><span class="lnt">23&#10;</span><span class="lnt">24&#10;</span><span class="lnt">25&#10;</span><span class="lnt">26&#10;</span><span class="lnt">27&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix.log4j</span><span class="o">;</span>&#10;&#10;<span class="o">...</span>&#10;&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">LogManager</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="n">Main</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">...</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Main</span><span class="o">.</span><span class="na">changeLogLevelDynamically</span><span class="o">();</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">...</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">changeLogLevelDynamically</span><span class="o">()</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Configurator</span><span class="o">.</span><span class="na">setLevel</span><span class="o">(</span><span class="n">logger</span><span class="o">.</span><span class="na">getName</span><span class="o">(),</span> <span class="n">Level</span><span class="o">.</span><span class="na">ERROR</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&#34;info trace&#34;</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&#34;error trace&#34;</span><span class="o">);</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">);</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Configurator</span><span class="o">.</span><span class="na">setLevel</span><span class="o">(</span><span class="n">logger</span><span class="o">.</span><span class="na">getName</span><span class="o">(),</span> <span class="n">Level</span><span class="o">.</span><span class="na">INFO</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&#34;info trace&#34;</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&#34;error trace&#34;</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;<span class="o">}</span>&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>Main.java</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">configuration</span><span class="p">:</span><span class="w">&#10;</span><span class="w">  </span><span class="k">status</span><span class="p">:</span><span class="w"> </span>warn<span class="w">&#10;</span><span class="w">&#10;</span><span class="w">  </span>...<span class="w">&#10;</span><span class="w">&#10;</span><span class="w">  </span><span class="k">loggers</span><span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="k">root</span><span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span><span class="k">level</span><span class="p">:</span><span class="w"> </span>info<span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;  </span><span class="k">appenderRef</span><span class="p">:</span><span class="w">&#10;</span><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="k">ref</span><span class="p">:</span><span class="w"> </span>STDOUT</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>log4j2.yaml</span>
+    </div>
+</div>
+<p>El nivel de trazas según se inicia la aplicación para el <em>logger</em> es <em>info</em> por configuración, según se ejecuta el programa se cambia el nivel de trazas a <em>error</em> y finalmente se restablece el nivel de trazas a <em>info</em>. Se observa que cuando el nivel de las trazas está a nivel <em>error</em> la traza de nivel <em>info</em> no se emite, como es lo esperado. Al restablecer el nivel a <em>info</em> se emiten ambas trazas.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">2020-02-28 19:43:38,465  ERROR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;io.github.picodotdev.blogbitix.log4j.Main error trace&#10;2020-02-28 19:43:38,465  ERROR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;io.github.picodotdev.blogbitix.log4j.Main &#10;2020-02-28 19:43:38,465  INFO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; io.github.picodotdev.blogbitix.log4j.Main info trace&#10;2020-02-28 19:43:38,466  ERROR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;io.github.picodotdev.blogbitix.log4j.Main error trace</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>System.out</span>
+    </div>
+</div>
+<p>Para cambiar el nivel de trazas de una aplicación de forma programática se puede <a href="https://picodotdev.github.io/blog-bitix/2019/11/interfaz-de-monitorizacion-e-instrumentalizacion-con-jmx-en-aplicaciones-java/">ofrecer una interfaz JMX en la aplicación</a> o si se trata de una aplicación web una página de configuración que ofrezca la funcionalidad.</p>
+<p>La reconfiguración de los niveles de trazas deben ser temporales ya que la aplicación dependiendo de su carga emite más trazas que con los niveles <em>warn</em> y <em>error</em>. Si las trazas se guardan en un archivo, guardar mayor cantidad de ellas hace que su tamaño pueda ser significativo e incluso llenar el almacenamiento provocando malfuncionamiento en la aplicación. Para evitar que el archivo de trazas llene el almacenamiento persistente es posible <a href="https://picodotdev.github.io/blog-bitix/2019/11/rotar-los-archivos-de-trazas-con-log4j-por-fecha-o-tamano/">limitar por tamaño, por fecha y rotar los archivos de trazas</a>.</p>
+<div class="reference">
+    Referencia:<br>
+    <ul>
+<li><a href="https://logging.apache.org/log4j/2.x/manual/configuration.html">Log4j Configuration</a></li>
+<li><a href="https://logging.apache.org/log4j/2.x/faq.html#reconfig_level_from_code">How do I set a logger’s level programmatically?</a></li>
+<li><a href="https://stackoverflow.com/questions/4598702/dynamically-changing-log4j-log-level">Dynamically Changing log4j log level</a></li>
+</ul>
+</div>
+
+    </div>
+  </article>
+        
+
+        
+    
+    
+    <div class="row related"><div class="col-12"><p>Artículos relacionados:</p></div></div>
+    <div class="row related">
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2020/02/las-convenciones-y-guia-de-estilos-para-el-codigo-fuente-de-java/">
+                <img data-src="/blog-bitix/2020/02/las-convenciones-y-guia-de-estilos-para-el-codigo-fuente-de-java/images/intellij-code-style-1_hub3c93504c54463ee69418644e411e985_160721_875x0_resize_box_2.png" height="125" layout="fixed-height"  class="lozad">
+                <h3>Las convenciones y guía de estilos para el código fuente de Java</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2020/02/el-recolector-de-basura-de-java-que-hace-y-como-funciona-en-cada-version/">
+                <img data-src="/blog-bitix/2020/02/el-recolector-de-basura-de-java-que-hace-y-como-funciona-en-cada-version/images/treenode-3_hud8657e5c40ac59b935a4c973e33e4cd5_41824_875x0_resize_box_2.png" height="125" layout="fixed-height"  class="lozad">
+                <h3>El recolector de basura de Java, que hace y como funciona en cada versión</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2020/02/programacion-orientada-a-aspectos-con-aspectj-spring-aop-y-la-clase-proxy/">
+                <img data-src="/blog-bitix/2020/02/programacion-orientada-a-aspectos-con-aspectj-spring-aop-y-la-clase-proxy/images/aop-proxy-call_hu9c337a518ccda55733c57e94ef41c3af_3052_875x0_resize_box_2.png" height="125" layout="fixed-height"  class="lozad">
+                <h3>Programación orientada a aspectos con AspectJ, Spring AOP y la clase Proxy</h3>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="row related">
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2020/01/los-modificadores-de-acceso-de-clases-propiedades-y-metodos-en-java/">
+                <img data-src="/blog-bitix/2020/01/los-modificadores-de-acceso-de-clases-propiedades-y-metodos-en-java/images/java-access-specifier_hua4dc7e14397aa21078ef211e311b7b0c_57114_875x0_resize_q90_box.jpg" height="125" layout="fixed-height"  class="lozad">
+                <h3>Los modificadores de acceso de clases, propiedades y métodos en Java</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2019/12/hemeroteca-16/">
+                <img data-src="/blog-bitix/assets/images/logotypes/hugo.svg" height="125" layout="fixed-height"  class="lozad">
+                <h3>Hemeroteca #16</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2019/12/generar-documentos-informes-y-facturas-en-formato-pdf-con-jasperreports-y-java/">
+                <img data-src="/blog-bitix/2019/12/generar-documentos-informes-y-facturas-en-formato-pdf-con-jasperreports-y-java/images/jaspersoft-studio_hubad11cc07d8ec91ef5d7f2e895a88282_221533_875x0_resize_box_2.png" height="125" layout="fixed-height"  class="lozad">
+                <h3>Generar documentos, informes y facturas en formato PDF con JasperReports y Java</h3>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+    
+
+        
+<div class="row">
+  <div class="col-md-12">
+    <div class="sharethis-inline-share-buttons"></div>
+  </div>
+</div>
+
+
+        <div class="row">
+          <div class="col-12 adblock-container-billboard">
+            <a id="pageBottom"></a>
+            <div class="adsense adsense-billboard">
+    <ins class="adsbygoogle"
+        data-ad-client="ca-pub-3533636310991304"
+        data-ad-slot="4052324337"
+        data-full-width-responsive="true"></ins>
+</div>
+          </div>
+        </div>
+        
+  <div class="row">
+    <div class="col-md-12">
+      <a id="comments"></a>
+      <div id="disqus_thread"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript" async>
+    var disqus_shortname = 'blog-bitix';
+    var disqus_identifier = 'blog-bitix-467';
+    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2020\/02\/cambiar-los-niveles-de-log-de-forma-dinámica-sin-reiniciar-la-aplicacion-con-log4j\/';
+    var disqus_script = 'embed.js';
+  </script>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <hr>
+      </div>
+    </div>
+    
+
+
+
+
+
+<footer>
+  <div class="row">
+    <div class="col-12 col-sm-4">
+      <p><strong>Blog Bitix</strong></p>
+      <p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática. El contenido puede contener trazas de asuntos fuera de tema.</p>
+      <p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p>
+    </div>
+    <div class="col-12 col-sm-4 text-center menu">
+      <ul class="list-unstyled">
+        <li><a href="/blog-bitix/tags/java/">Java</a></li>
+        <li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li>
+        <li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li>
+        <li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li>
+        <li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li>
+        <li><a href="/blog-bitix/pages/links/">Enlaces</a></li>
+        <li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li>
+        <li><a href="/blog-bitix/pages/donate/">Donaciones</a></li>
+        <li><a href="/blog-bitix/pages/about/">Acerca de...</a></li>
+        
+      </ul>
+    </div>
+    <div class="col-12 col-sm-4 text-center links">
+      
+        <a href="https://picodotdev.github.io/blog-bitix/index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+      
+      
+        <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
+      
+      
+      
+        <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="/blog-bitix/assets/images/github.svg" width="50" height="50" class="icon"></a>
+      
+      
+      
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      Copyleft <span class="copyleft">&copy;</span> 2020 - <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="nofollow"><img src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" width="80" height="15" alt="Creative Commons License" title="Creative Commons License"></a><br />
+      <a href="https://www.planetacodigo.com/" rel="nofollow"><img src="/blog-bitix/assets/images/planeta-codigo.png" width="80" height="15" alt="Planeta código" title="Planeta código"></a>
+      <br/>
+      <a href="https://picodotdev.github.io/blog-bitix/" rel="nofollow">Blog Bitix</a> by <a href="https://picodotdev.github.io/blog-bitix/">pico.dev</a> is licensed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.
+      <br/>
+      <span class="credit">Powered by <a href="https://gohugo.io/" rel="nofollow" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a>.</span>
+      <span class="credit">Background patterns from <a href="https://www.toptal.com/designers/subtlepatterns/" rel="nofollow">Subtle Patterns</a>.</span>
+    </div>
+  </div>
+</footer>
+
+  </div>
+  
+<div class="blueimp-gallery-container">
+  <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false">
+    
+    <div class="slides"></div>
+    
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    
+    <div class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body next"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left prev">
+              <i class="glyphicon glyphicon-chevron-left"></i>
+              Anterior
+            </button>
+            <button type="button" class="btn btn-primary next">
+              Siguiente
+              <i class="glyphicon glyphicon-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  <!-- Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+<script type="text/javascript">
+    window.cookieconsent_options = {
+        "message": "Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.",
+        "dismiss": "Aceptar",
+        "learnMore": "Más información",
+        "link": null,
+        "theme": "dark-bottom"
+    };
+</script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script>
+</body>
+</html>
