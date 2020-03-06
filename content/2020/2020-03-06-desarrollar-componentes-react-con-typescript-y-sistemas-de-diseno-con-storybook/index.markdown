@@ -4,7 +4,7 @@ type: "post"
 title: "Desarrollar componentes React con TypeScript y sistemas de diseño con Storybook"
 url: "/2020/03/desarrollar-componentes-react-con-typescript-y-sistemas-de-diseno-con-storybook/"
 date: 2020-03-06T16:00:00+01:00
-updated: 2020-03-06T20:30:00+01:00
+updated: 2020-03-06T21:00:00+01:00
 language: "es"
 rss: true
 sharing: true
