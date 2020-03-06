@@ -13,7 +13,6 @@ promoted: false
 imagePost: "image:calibre.png"
 tags: ["javascript", "planeta-codigo", "web"]
 summary: "Con Storybook los componentes de React, Vue o Angular es posible desarrollarlos de forma aislada sin necesidad de hacerlo una una de las aplicaciones finales donde se usen. Esto permite independizar su desarrollo de las aplicaciones finales y proporciona un entorno donde hacerlo. Con complementos permite realizar pruebas unitarias y pruebas visuales."
-draft: true
 ---
 
 {{% post %}}
