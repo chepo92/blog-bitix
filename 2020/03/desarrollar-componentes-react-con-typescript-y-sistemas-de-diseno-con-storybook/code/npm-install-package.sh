@@ -1,0 +1,1 @@
+$ npm install --save-dev build/pack/storybook-1.0.0.tgz

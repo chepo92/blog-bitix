@@ -1,0 +1,1 @@
+$ npm install --save-dev @storybook/addon-storyshots-puppeteer jest puppeteer jest-puppeteer jest-image-snapshot jest-transform-stub puppeteer-extra start-server-and-test ts-jest @types/jest @types/puppeteer @types/jest-environment-puppeteer @types/expect-puppeteer

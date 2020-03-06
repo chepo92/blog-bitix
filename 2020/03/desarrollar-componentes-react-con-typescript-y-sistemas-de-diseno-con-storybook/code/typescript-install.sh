@@ -1,0 +1,1 @@
+$ npm install --save-dev @storybook/preset-typescript typescript ts-loader tslint @types/node @types/react @types/react-dom
