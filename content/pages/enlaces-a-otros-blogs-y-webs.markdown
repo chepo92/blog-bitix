@@ -46,7 +46,8 @@ Aunque no hace falta actualizar cada día es aconsejable seguirlo para conocer s
 * [Foro Noticias 3D](https://foro.noticias3d.com/): el foro de la página anterior donde podrás preguntar a usuarios con muchos conocimientos sobre cualquier problema en tu ordenador o consejos para
 uno nuevo según tus necesidades y restricciones de presupuesto.
 * [Incognitosis](https://javipas.com/): el blog personal de un editor de Xataka con artículos de opinión sobre tecnología.
-* [Hardware 360º](https://www.youtube.com/channel/UC40Ztmc_11leuUR-tHh_irQ): canal de YouTube especializado en hardware de consumo como procesadores y targetas gráficas pero también consolas. Son exhaustivos y de fácil comprensión con los que informarse en profundidad del hardware de las computadoras.
+* [Hardware 360º](https://www.youtube.com/channel/UC40Ztmc_11leuUR-tHh_irQ/videos): canal de YouTube especializado en hardware de consumo como procesadores y targetas gráficas pero también consolas. Son exhaustivos y de fácil comprensión con los que informarse en profundidad del hardware de las computadoras.
+* [Coreteks](https://www.youtube.com/channel/UCX_t3BvnQtS5IHzto_y7tbw/videos): canal de YouTube en inglés con información avanzada y profunda sobre tecnológía hardware de procesadores, gráficos y computación, también incluye información de actualidad.
 * Barrapunto (actualmente discontinuada): era la web al estilo de [slashdot](https://slashdot.org/) en español donde tan importante como la noticia eran los comentarios de sus usuarios.
 
 ## Software libre y GNU/Linux
