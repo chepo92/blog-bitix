@@ -4,6 +4,7 @@ type: "post"
 title: "Microservicios con Spring Cloud, Consul, Nomad y Traefik"
 url: "/2019/10/microservicios-con-spring-cloud-consul-nomad-y-traefik/"
 date: 2019-10-12T02:30:00+02:00
+updated: 2020-03-11T11:00:00+01:00
 language: "es"
 rss: true
 sharing: true
@@ -73,7 +74,7 @@ Enviar a Nomad los _job_ de Traefik tras lo cual se puede acceder a su consola d
 
 Definición de un servicio en un _job_ para Nomad. _count_ define cuantas instancias del servicio se inicia, la _stanza_ _update_ define como será la actualización cuando se actualice el servicio, la _stanza_ _labels_ contiene la configuración para Traefik, _check_ define los parámetros para la monitorización.
 
-{{< code file="service.nomad" language="HCL" options="" >}}
+{{< code file="service.nomad" language="hcl" options="" >}}
 
 Tanto Consul, Nomad como Traefik ofrecen una consola para ver su estado ubicadas en las siguientes direcciones respectivamente accesibles con el navegador _http\://127.0.0.1:8500_, _http\://127.0.0.1:4646_, _http\://127.0.0.1:8092_.
 
