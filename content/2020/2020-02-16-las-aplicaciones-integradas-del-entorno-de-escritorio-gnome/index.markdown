@@ -374,6 +374,6 @@ Para que las aplicaciones de vídeos y música soporten más formatos de archivo
 
 Las aplicaciones de terceros proporcionan funcionalidades adicionales, son una alternativa a las de GNOME con más funcionalidades o complementan a estas que algunos usuarios necesitan como paquete ofimático con procesador de documentos, hoja de cálculo y presentaciones, edición de vídeo, editor de fotos,  editor de imágenes vectoriales, editor de animación 3D, gestor de biblioteca de libros electrónicos, descargas de archivos, mensajería instantánea, videoconferencia, nube privada, otro reproductor de audio y vídeo, conversores entre formatos de audio y vídeo, compiladores, bases de datos, gestor de contraseñas, ...
 
-En otro artículo recojo un _listado de programas básicos según categoría en GNU/Linux_ de terceros que no son específicos de ningún entorno de escritorio. Todos esos programas son software libre sin coste de licencia de uso para cualquier propósito incluyendo que sea personal o empresarial con fines lucrativos.
+En otro artículo recojo un [listado de programas esenciales según categoría para GNU/Linux][blogbitix-469] de terceros que no son específicos de ningún entorno de escritorio. Todos esos programas son software libre sin coste de licencia de uso para cualquier propósito incluyendo que sea personal o empresarial con fines lucrativos.
 
 {{% /post %}}
