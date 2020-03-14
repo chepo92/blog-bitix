@@ -166,6 +166,7 @@ Después de instalar Ubuntu es necesario conocer como realizar algunas tareas b�
 
 * [Tareas básicas después de instalar una distribución GNU/Linux][blogbitix-462]
 * [Las aplicaciones del entorno de escritorio de GNOME][blogbitix-464]
+* [Listado de programas esenciales según categoría para GNU/Linux][blogbitix-469]
 
 Ubuntu por defecto ya incorpora una buena cantidad de software preinstalado. En cualquier caso con la aplicación _Software de Ubuntu_ se puede instalar más. Al cabo de un tiempo de haber instalado Ubuntu se publicarán actualizaciones del software que tengas instalado con mejoras y correcciones de seguridad que son recomendables instalarlas usando la aplicación _Actualizciones de software_. Ubuntu comprueba periódicamente si hay nuevas actualizaciones, si las hay muestra una notificación con cuales son y permite realizar la actualización a conveniencia del usuario. Una vez aplicadas las actualizaciones puede se requieredo reiniciar el sistema para que surtan efecto.
 
