@@ -218,7 +218,7 @@ Las contraseñas deben ser únicas para cada sitio web, tener una longitud de en
 
 * [Cifrar archivos con EncFS en GNU/Linux][blogbitix-126]
 
-#### Firewall
+#### Cortafuegos
 
 [UFW][ufw] permite restringir el tráfico de red aceptado por la computadora tanto entrante como saliente, para exponer únicamente en interner los recusos imprescindibles de la computadora. Es fácil de utilizar e incluso tiene una [interfaz gráfica][gufw].
 
