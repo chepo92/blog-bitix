@@ -88,7 +88,7 @@ Con los registros se define de la siguiente forma.
 
 {{< code file="Records-2.java" language="java" options="" >}}
 
-### Pattern Matching para operador instanceof
+### Pattern Matching para el operador instanceof
 
 Al usar el operador _instanceOf_ para comprobar si un objeto es una instancia de una clase si se realiza en un _if_ posteriormente es necesario hacer un _cast_ del objeto a la clase.
 
