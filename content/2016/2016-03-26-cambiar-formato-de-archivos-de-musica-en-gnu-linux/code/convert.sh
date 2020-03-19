@@ -1,3 +1,4 @@
-$ ffmpeg -i archivo.wav -acodec libmp3lame archivo.mp3
-$ ffmpeg -i archivo.wav -acodec libvorbis archivo.ogg
-$ ffmpeg -i archivo.mp3 -acodec libvorbis archivo.ogg
+$ ffmpeg -i entrada.wav -codec:a libmp3lame salida.mp3
+$ ffmpeg -i entrada.wav -codec:a libvorbis salida.ogg
+$ ffmpeg -i entrada.mp3 -codec:a libvorbis salida.ogg
+$ ffmpeg -i entrada.mp3 -codec:a libmp3lame -b:a 128k salida.mp3

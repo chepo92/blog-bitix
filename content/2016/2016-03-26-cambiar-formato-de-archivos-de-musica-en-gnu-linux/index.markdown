@@ -22,7 +22,7 @@ En algún momento puede que necesitemos o queramos convertir archivos de audio a
 
 Si extraemos las canciones de un CD de música dependiendo del programa obtendremos los archivos en formato wav o quizá directamente en mp3, si no las queremos en mp3 para no perder calidad es mejor extraer las canciones en el formato sin pérdida wav y luego realizar la conversión al formato que queramos. En este artículo explicaré como de forma sencilla desde la línea de comandos y con [FFmpeg][ffmpeg] podemos hacer las conversiones, de forma masiva para múltiples archivos y de forma recursiva en múltiples directorios queremos cambiar el formato de una biblioteca de música entera. Hay páginas que sin necesidad de tener instalar nada en el equipo salvo un navegador ofrecen como servicio hacer las conversiones pero hay que hacerlo para cada archivo de forma individual y es más lento por tener que realizar la transmisión a través de internet de algunos pocos megas.
 
-La herramienta FFmpeg nos permite hacer las conversiones, por ejemplo para convertir de wav a mp3, de wav a ogg o de mp3 a ogg ejecutaríamos los siguientes comandos:
+La herramienta FFmpeg nos permite hacer las conversiones, por ejemplo para convertir de wav a mp3, de wav a ogg o de mp3 a ogg  ejecutaríamos los siguientes comandos. El último de ellos permite cambiar el _bitrate_ para que ocupen menos, se pierde algo de calidad pero hay que tener buen oído para apreciar significativamente la diferencia entre 320k y 128k, entre estas dos calidades la reducción de tamaño llega a la mitad.
 
 {{< code file="convert.sh" language="bash" options="" >}}
 
