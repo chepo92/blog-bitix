@@ -33,7 +33,7 @@ Las mejoras incluídas en esta versión son:
 * JEP 354: [Switch Expressions (Preview)](https://openjdk.java.net/jeps/354)
 * JEP 355: [Text Blocks (Preview)](https://openjdk.java.net/jeps/355)
 
-Casi coincidiendo con la publicación de Java 13 se publicado [Jakarta EE][jakarta] 8 que únicamente tiene como novedad que su propiedad ha pasado a estar baja la fundación Eclipse, es totalmente compatible con [Java EE 8 y sus últimas mejoras][blogbitix-360], las novedades vendrán en versiones posteriores de Jakarta EE en las que se dará importancia a la tendencia de las aplicaciones para su funcionamiento en entornos orientados a la nube. Casi al mismo tiempo se ha publicado [JavaFX](https://openjfx.io/) 13 ya fuera del JDK en onde puede seguir su propio ciclo de publicaciones independiente del JDK.
+Casi coincidiendo con la publicación de Java 13 se publicado [Jakarta EE][jakartaee] 8 que únicamente tiene como novedad que su propiedad ha pasado a estar baja la fundación Eclipse, es totalmente compatible con [Java EE 8 y sus últimas mejoras][blogbitix-360], las novedades vendrán en versiones posteriores de Jakarta EE en las que se dará importancia a la tendencia de las aplicaciones para su funcionamiento en entornos orientados a la nube. Casi al mismo tiempo se ha publicado [JavaFX](https://openjfx.io/) 13 ya fuera del JDK en onde puede seguir su propio ciclo de publicaciones independiente del JDK.
 
 ### Bloques de texto
 

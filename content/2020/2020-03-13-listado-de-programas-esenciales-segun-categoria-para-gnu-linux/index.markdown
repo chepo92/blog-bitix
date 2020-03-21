@@ -151,7 +151,7 @@ Al igual que en otros formatos de archivos es posible necesitar realizar convers
 
 #### Otros programas específicos
 
-[Audacity][audacity] es un programa para la edición de audio y [Blender][blender] un programa de modelado 3D. [EasyTAG][easytag] permite editar los metadatos de los archivos de música para que los reproductores muestren la información correta del título, álbum, grupo musical o género.
+[Audacity][audacity] es un programa para la edición de audio y [Blender][blender] un programa de modelado 3D. [MusicBrainz Picard][picard] permite editar los metadatos de los archivos de música para que los reproductores muestren la información correta del título, álbum, grupo musical o género.
 
 ### Juegos
 
