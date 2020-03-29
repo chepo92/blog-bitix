@@ -57,6 +57,8 @@ En la página de prueba que hace uso del JavaScript producido por Webpack se car
     image1="image:hello-world-page.png" optionsthumb1="300x200" title1=""
     caption="Componente desarrollado en Storybook en una página" >}}
 
+{{% sourcecode git="blog-ejemplos/tree/master/StorybookComponente" command="npm install && npm run start" %}}
+
 {{% reference %}}
 * [React Js Tutorial – Environment SetUp Using Webpack](https://watchdown.com/react-js-environment-setup-using-webpack/)
 * [Managing Dev and Production Builds with Webpack](https://atendesigngroup.com/blog/managing-dev-and-production-builds-webpack)
