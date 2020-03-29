@@ -130,8 +130,8 @@ En la imagen a revisar se muestra a la izquierda la versión anterior válida, a
 
 {{< image
     gallery="true"
-    image1="image:hello-world-test-visual-ts-visually-looks-correct-1-snap.png" optionsthumb1="300x200" title1="Imagen válida capturda"
-    image2="image:hello-world-test-visual-ts-visually-looks-correct-1-differences.png" optionsthumb2="300x200" title2="Diferencias visuales entre válida capturada anterior y nueva con cambios"
+    image1="image:hello-world-test-visual-snap.png" optionsthumb1="300x200" title1="Imagen válida capturda"
+    image2="image:hello-world-test-visual-differences.png" optionsthumb2="300x200" title2="Diferencias visuales entre válida capturada anterior y nueva con cambios"
     caption="Imagen válida capturada y diferencias visuales por cambios" >}}
 
 Para lanzar las tareas de ejecución de las pruebas unitarias y visuales hay que añadir unos scripts al archivo _package.json_. Posteriormente con estos comandos de npm se ejecutan y se comprueba si hay cambios visuales.
