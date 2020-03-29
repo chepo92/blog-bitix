@@ -1,1 +1,0 @@
-$ sudo pacman -S libreoffice-fresh libreoffice-fresh-es
