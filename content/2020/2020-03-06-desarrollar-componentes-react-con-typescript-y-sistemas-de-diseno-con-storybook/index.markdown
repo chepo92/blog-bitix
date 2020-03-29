@@ -10,7 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "image:calibre.png"
+imagePost: "image:storybook-helloworld.png"
 tags: ["javascript", "planeta-codigo", "web"]
 summary: "Con Storybook los componentes de React, Vue o Angular es posible desarrollarlos de forma aislada sin necesidad de hacerlo una una de las aplicaciones finales donde se usen. Esto permite independizar su desarrollo de las aplicaciones finales y proporciona un entorno donde hacerlo. Con complementos permite realizar pruebas unitarias y pruebas visuales."
 ---
@@ -19,7 +19,7 @@ summary: "Con Storybook los componentes de React, Vue o Angular es posible desar
 
 {{< logotype image1="typescript.svg" image2="react.svg" title2="html.svg" image3="storybook.svg" >}}
 
-La web ha evolucionado enormemente desde las simples páginas estáticas con contenido HTML, imágenes y hojas de estilos. Con posterioridad se añadió  un lenguaje de programación en el navegador del lado del cliente para realizar tareas en las propias páginas como validaciones de formulario. A medida que el tiempo ha pasado los navegadores han implementado nuevos estándares y a través de JavaScript ahora hay posibilidad de desarrollar tareas en el lado de cliente que rivalizan con las aplicaciones tradicionales de escritorio.
+La web ha evolucionado enormemente desde las simples páginas estáticas con contenido HTML, imágenes y hojas de estilos. Con posterioridad se añadió un lenguaje de programación en el navegador del lado del cliente para realizar tareas en las propias páginas como validaciones de formulario. A medida que el tiempo ha pasado los navegadores han implementado nuevos estándares y a través de JavaScript ahora hay posibilidad de desarrollar tareas en el lado de cliente que rivalizan con las aplicaciones tradicionales de escritorio.
 
 Algunas de estas nuevas capacidades de JavaScript son nuevas versiones del lenguaje con [ECMAScript][ecmascript] con soporte para módulos, [WebGL][webgl] o componentes de lado de cliente con [Web Components][web-components]. Con las nuevas capacidades de JavaScript han surgido una comunidad de JavaScript con numerosas librerías entre las que elegir para realizar tareas. Una de las áreas son los componentes de lado del cliente, [el estándar que define la W3C son los Web Components][blogbitix-388] pero hay algunas otras alternativas que sustituyen o complementan como [React][react], [Vue][vuejs] o [Angular][angular].
 
@@ -155,6 +155,8 @@ Storybook permite utilizar archivos de hojas de estilo _less_. Para realizar la 
 ### Creación del paquete NPM
 
 El objetivo final es crear un paquete npm que incluya los componentes de React para ser utilizados en una aplicación. Para crear el paquete npm basta ejecutar el comando _npm pack_ pero este lo crea usando la misma estructura de directorios del código fuente lo que hace que al usar los componentes los _imports_ reflejen la estructura del código fuente. Si esto no se desea hay que crear un directorio con el contenido del paquete npm y ejecutar el comando _npm pack_ desde él, esto es lo que hacen los diferentes _scripts_ _build_.
+
+* [Uso de un paquete npm con Webpack creado con Storybook, React y TypeScript][blogbitix-472]
 
 Otros _scripts_ contiene el comando real que se ejecuta cuando se invoca desde la linea de comandos con _npm run [script]_, entre ellos están los de Jest y Storybook.
 

@@ -1,0 +1,1 @@
+$ npm install --save-dev storybook-1.0.0.tgz
