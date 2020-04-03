@@ -5,12 +5,74 @@
     <link rel="self" href="https://picodotdev.github.io/blog-bitix/index.xml"/>
     <link href="https://picodotdev.github.io/blog-bitix/" />
     <id>https://picodotdev.github.io/blog-bitix/tags/</id>
-    <updated>2020-03-29T14:00:00+01:00</updated>
+    <updated>2020-04-03T18:30:00+01:00</updated>
     <author><name>picodotdev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix/assets/favicon.ico</icon>
     <logo>https://picodotdev.github.io/blog-bitix/assets/images/structured-data/blogbitix-1200.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2020/04/generar-enlaces-a-paginas-y-de-eventos-en-apache-tapestry/</id>
+        <title>Generar enlaces a páginas y de eventos en Apache Tapestry</title>
+        <updated>2020-04-03T18:30:00+01:00</updated>
+        <published>2020-04-03T18:30:00+01:00</published>
+        <link rel="alternate" type="text/html" href="https://picodotdev.github.io/blog-bitix/2020/04/generar-enlaces-a-paginas-y-de-eventos-en-apache-tapestry/"/>
+        <author><name>picodotdev</name></author>
+        <content type="html">
+        
+        <![CDATA[<div class="logotypes">
+<p><img src="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/apache-tapestry-5.png" width="300" alt="Apache Tapestry" title="Apache Tapestry"  class="lozad"></p>
+</div>
+<p>Una de las partes esenciales de una aplicación web es generar enlaces a otras páginas, enlaces a los manejadores de los formularios que procesan los datos enviados, enlaces a manejadores de solicitudes AJAX. Generar enlaces no solo es necesario para ser usados dentro de la misma aplicación web sino también para ser usados en el código JavaScript, en correos electrónicos u informes.</p>
+<p>La ventaja de utilizar un framework es que estos facilitan el desarrollo y en el caso de generar enlaces suelen incluir soporte. Pero también es importante que la facilidad que proporcionan los frameworks para generarlos no sea concatenando y hardcodeado cadenas. Si es así en el momento de querer renombrar una página o manejador de evento se convierte en un problema por la inseguridad que plantea para realizar el <em>refactor</em>, más en una aplicación grande. Y esto puede dar el caso de que algunos <em>refactors</em> no se aborden por miedo a romper cosas, a la larga es un problema para el desarrollo futuro y el mantenimiento de la aplicación.</p>
+<p>En el caso del framework <a href="https://tapestry.apache.org/">Apache Tapestry</a> se proporciona un amplio soporte para generar enlaces y evitar concatenaciones y hardcodeos al menos en el código Java. Por otra parte al ser el framework el encargado de construir las URLs si por una nueva versión de framework las URLs cambiar no es necesario realizar ningún cambio en el código.</p>
+<p>Lo más básico son los componentes <a href="https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/corelib/components/PageLink.html">PageLink</a>, <a href="https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/corelib/components/ActionLink.html">ActionLink</a>, <a href="https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/corelib/components/EventLink.html">EventLink</a> y <a href="https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/corelib/components/Form.html">From</a> con los que generar enlaces a páginas, acciones y eventos en las plantillas de las páginas y componentes.</p>
+<p>En las plantillas que generan el contenido HTML solo en el caso de un enlace a una página hay que hacer un hardcodeo con el nombre de la página. En el caso del formulario es el propio framework el encargado de generar la URL y en caso de los eventos hacen referencia a la página y componente donde están incluidos.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span><span class="lnt">6&#10;</span><span class="lnt">7&#10;</span><span class="lnt">8&#10;</span><span class="lnt">9&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">a</span> <span class="na">t:type</span><span class="o">=</span><span class="s">&#34;pagelink&#34;</span> <span class="na">page</span><span class="o">=</span><span class="s">&#34;user/view&#34;</span> <span class="na">context</span><span class="o">=</span><span class="s">&#34;user.id&#34;</span><span class="p">&gt;</span>${user.lastname}<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>&#10;&#10;<span class="p">&lt;</span><span class="nt">a</span> <span class="na">t:type</span><span class="o">=</span><span class="s">&#34;actionlink&#34;</span> <span class="na">t:id</span><span class="o">=</span><span class="s">&#34;delete&#34;</span> <span class="na">context</span><span class="o">=</span><span class="s">&#34;user.id&#34;</span><span class="p">&gt;</span>Delete<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>&#10;<span class="p">&lt;</span><span class="nt">a</span> <span class="na">t:type</span><span class="o">=</span><span class="s">&#34;eventlink&#34;</span> <span class="na">t:event</span><span class="o">=</span><span class="s">&#34;event&#34;</span> <span class="na">t:zone</span><span class="o">=</span><span class="s">&#34;zone&#34;</span> <span class="na">t:parameters</span><span class="o">=</span><span class="s">&#34;prop:{&#39;t:sid&#39;:&#39;id&#39;}&#34;</span><span class="p">&gt;</span>Delete<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>&#10;&#10;<span class="p">&lt;</span><span class="nt">t:form</span> <span class="na">t:id</span><span class="o">=</span><span class="s">&#34;form&#34;</span> <span class="na">clientValidation</span><span class="o">=</span><span class="s">&#34;none&#34;</span><span class="p">&gt;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;...&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="p">&lt;</span><span class="nt">t:submit</span> <span class="na">value</span><span class="o">=</span><span class="s">&#34;Seleccionar&#34;</span><span class="p">/&gt;</span>&#10;<span class="p">&lt;/</span><span class="nt">t:form</span><span class="p">&gt;</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>Page.tml</span>
+    </div>
+</div>
+<p>Mediante código también se pueden generar enlaces en el caso de querer incluirlos en un coreo electrónico para uso fuera de la aplicación, para las páginas con la clase <a href="https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/services/PageRenderLinkSource.html">PageRenderLinkSource</a>, para acciones y eventos con la clase <a href="https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/ComponentResources.html">ComponentResources</a>. En el caso de <em>PageRenderLinkSource</em> tiene métodos para hacer referencia a las páginas con su clase de modo que si se hiciese un renombrado de la página el IDE se encargaría de hacer el renombrado, en el caso de usar <em>ComponentResources</em> solo hace falta indicar el nombre del evento el framework se encarga de establecerlo según la página en la que se realiza la acción.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="o">...</span>&#10;&#10;<span class="kn">import</span> <span class="nn">org.apache.tapestry5.ioc.annotations.Inject</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">org.apache.tapestry5.Link</span><span class="o">;</span>&#10;&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Component</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">...</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@Inject</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">ComponentResources</span> <span class="n">resources</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">...</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="kt">void</span> <span class="nf">method</span><span class="o">()</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">...</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Link</span> <span class="n">actionLink</span> <span class="o">=</span> <span class="n">resources</span><span class="o">.</span><span class="na">createEventLink</span><span class="o">(</span><span class="n">EventConstants</span><span class="o">.</span><span class="na">ACTION</span><span class="o">,</span> <span class="n">contextArray</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Link</span> <span class="n">eventLink</span> <span class="o">=</span> <span class="n">resources</span><span class="o">.</span><span class="na">createEventLink</span><span class="o">(</span><span class="s">&#34;event&#34;</span><span class="o">,</span> <span class="n">contextArray</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">...</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;<span class="o">}</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>Events.java</span>
+    </div>
+</div>
+<p>Para generar enlaces de eventos a páginas hay que inyectar esa página y obtener su <em>ComponentResources</em>, el enlace se genera de la misma forma que los casos anteriores.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span><span class="lnt">22&#10;</span><span class="lnt">23&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="o">...</span>&#10;&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Page</span> <span class="o">{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@Inject</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">PageRenderLinkSource</span> <span class="n">pageLinkSource</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@Inject</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">AnotherPage</span> <span class="n">anotherPage</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">...</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="n">AnotherPage</span> <span class="kt">void</span> <span class="nf">onActionFromDelete</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Link</span> <span class="n">anotherPageLink</span> <span class="o">=</span> <span class="n">pageLinkSource</span><span class="o">.</span><span class="na">createPageRenderLink</span><span class="o">(</span><span class="n">AnotherPage</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">ComponentResources</span> <span class="n">anotherPageResources</span> <span class="o">=</span> <span class="n">anotherPage</span><span class="o">.</span><span class="na">getRootComponent</span><span class="o">().</span><span class="na">getComponentResources</span><span class="o">();</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Link</span> <span class="n">actionLink</span> <span class="o">=</span> <span class="n">anotherPageResources</span><span class="o">.</span><span class="na">createEventLink</span><span class="o">(</span><span class="s">&#34;delete&#34;</span><span class="o">);</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">...</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">AnotherPage</span><span class="o">.</span><span class="na">class</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;<span class="o">}</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>Page.java</span>
+    </div>
+</div>
+<p>Todos estos métodos devuelven una clase del tipo <a href="https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/Link.html">Link</a> que con los métodos <em>toAbsoluteURI()</em>, <em>toRedirectURI()</em>, <em>toRedirectURI(bool)</em> y <em>toURI()</em> permiten obtener la cadena que representa el enlace. Esta clase tiene otros métodos para en caso de necesidad acceder a los diferentes elementos del enlace evitando tener que interpretarlo para acceder a ellos. Estos cadenas son las que se incluirían en los correos electrónicos, informes y otras aplicaciones puede que también otras páginas y JavaScript.</p>
+<p>Desde el lado del cliente en JavaScript también puede ser necesario lanzar eventos, pare evitar generar algunos de los enlaces en lado de servidor y enviarlos al lado del cliente para que estos los usen. En el lado del cliente también se ofrece soporte para lanzar eventos lo que simplifica algunos casos.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="nx">require</span><span class="p">([</span><span class="s2">&#34;t5/core/ajax&#34;</span><span class="p">,</span> <span class="s2">&#34;jquery&#34;</span><span class="p">],</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">ajax</span><span class="p">,</span> <span class="nx">$</span><span class="p">)</span> <span class="p">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#result&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nx">ajax</span><span class="p">(</span><span class="s1">&#39;answer&#39;</span><span class="p">,</span> <span class="p">{</span> &#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nx">element</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span> <span class="c1">// $(&#39;#result&#39;)&#10;</span><span class="c1"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#result&#39;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">.</span><span class="nx">origin</span><span class="p">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="p">}</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="p">});</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="p">});</span>&#10;<span class="p">});</span>&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>events.js</span>
+    </div>
+</div>
+<div class="reference">
+    Referencia:<br>
+    <ul>
+<li><a href="http://tapestry.apache.org/ajax-and-zones.html">Ajax and Zones</a></li>
+</ul>
+</div>
+]]>
+        </content>
+        
+            
+                <category term="tapestry"/>
+            
+                <category term="planeta-codigo"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2020/03/usar-un-paquete-npm-con-webpack-creado-con-storybook-react-y-typescript/</id>
@@ -2292,113 +2354,6 @@ El recolector de basura Shenandoah es un proyecto de OpenJDK que forma parte del
         
             
                 <category term="juegos"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2020/01/los-modificadores-de-acceso-de-clases-propiedades-y-metodos-en-java/</id>
-        <title>Los modificadores de acceso de clases, propiedades y métodos en Java</title>
-        <updated>2020-02-04T20:00:00+01:00</updated>
-        <published>2020-01-31T17:00:00+01:00</published>
-        <link rel="alternate" type="text/html" href="https://picodotdev.github.io/blog-bitix/2020/01/los-modificadores-de-acceso-de-clases-propiedades-y-metodos-en-java/"/>
-        <author><name>picodotdev</name></author>
-        <content type="html">
-        
-        <![CDATA[<div class="logotypes">
-<p><img src="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/java.svg" width="200" alt="Java" title="Java"  class="lozad"></p>
-</div>
-<p>Uno de los principios básicos de los lenguajes orientados a objetos es la encapsulación, mediante la cual se garantiza que los datos de una clase solo son modificados por las operaciones apropiadas implementadas en los métodos de sus clases para preservar su invariante, las reglas que define la clase y el estado consistente de su estado.</p>
-<p>El acceso a las propiedades y métodos se determina mediante las palabras reservadas de los modificadores de acceso, en Java hay cuatro modificadores de acceso que definen ámbitos de visibilidad de más restrictivos a menos restrictivos:</p>
-<ul>
-<li><code>private</code>: únicamente la clase puede acceder a la propiedad o método.</li>
-<li><code>package private</code> (valor por defecto si no se indica ninguno): solo las clases en el mismo paquete pueden acceder a la propiedad o método.</li>
-<li><code>protected</code>: las clases del mismo paquete y que heredan de la clase pueden acceder a la propiedad o método.</li>
-<li><code>public</code>: la propiedad o método es accesible desde cualquier método de otra clase.</li>
-</ul>
-<p>Las clases tienen uno de los modificadores de acceso <code>public</code> o <code>package private</code> con el mismo significado que en las propiedades y métodos, visibles desde cualquier otro paquete y solo visible desde su propio paquete.</p>
-<p>Los modificadores de acceso son una palabra reservada del lenguaje y se colocan delante de la propiedad o método, el modificador de acceso <code>package private</code> no tiene palabra reservada se aplica en caso de que no se especifique un modificador de acceso explícitamente.</p>
-<div class="code">
-    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span><span class="lnt">22&#10;</span><span class="lnt">23&#10;</span><span class="lnt">24&#10;</span><span class="lnt">25&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix</span><span class="o">;</span>&#10;&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Foo</span> <span class="o">{</span>&#10;&#10;  <span class="kd">private</span> <span class="n">String</span> <span class="n">property1</span><span class="o">;</span>&#10;  <span class="n">String</span> <span class="n">property2</span><span class="o">;</span>&#10;  <span class="kd">protected</span> <span class="n">String</span> <span class="n">property3</span><span class="o">;</span>&#10;  <span class="kd">public</span> <span class="n">property4</span><span class="o">;</span>&#10;&#10;  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getProperty1</span><span class="o">()</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp; <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">format</span><span class="o">;</span>&#10;  <span class="o">}</span>&#10;&#10;  <span class="n">String</span> <span class="nf">getProperty2</span><span class="o">()</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp; <span class="k">return</span> <span class="n">property2</span><span class="o">;</span>&#10;  <span class="o">}</span>&#10;&#10;  <span class="kd">protected</span> <span class="n">String</span> <span class="nf">getProperty3</span><span class="o">()</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp; <span class="k">return</span> <span class="n">property3</span><span class="o">;</span>&#10;  <span class="o">}</span>&#10;&#10;  <span class="kd">private</span> <span class="n">String</span> <span class="nf">getProperty4</span><span class="o">()</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp; <span class="k">return</span> <span class="n">property4</span><span class="o">;</span>&#10;  <span class="o">}</span>&#10;<span class="o">}</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
-    <div class="highlight-meta">
-        <span>Foo.java</span>
-    </div>
-</div>
-<p>Los ámbitos de visibilidad según el modificador de acceso y el origen de acceso a la propiedad o método son los siguientes.</p>
-<table class="table">
-   <thead class="thead-light">
-       <th class="thead-light" width="250px">Modificador de acceso</th>
-       <th>Misma clase o anidada</th>
-       <th>Clase en el mismo paquete</th>
-       <th>Clase que hereda en otro paquete</th>
-       <th>Clase que no hereda en otro paquete</th>
-   </thead>
-   <tbody>
-       <tr>
-           <td>private</td>
-           <td>Sí</td>
-           <td>No</td>
-           <td>No</td>
-           <td>No</td>
-       </tr>
-       <tr>
-           <td>default (package private)</td>
-           <td>Sí</td>
-           <td>Sí</td>
-           <td>No</td>
-           <td>No</td>
-       </tr>
-       <tr>
-           <td>protected</td>
-           <td>Sí</td>
-           <td>Sí</td>
-           <td>Sí</td>
-           <td>No</td>
-       </tr>
-       <tr>
-           <td>public</td>
-           <td>Sí</td>
-           <td>Sí</td>
-           <td>Sí</td>
-           <td>Sí</td>
-       </tr>
-   </tbody>
-</table>
-<p>En este gráfico hay representados paquetes que contienen clases, clases con rectángulos, las flechas indican herencia entre clases y las clases que están coloreadas indican que tienen visibilidad de la propiedad y método según el ámbito de acceso, la ubicación de la clase que accede y si hay una relación de herencia. En esencia es la misma información de la tabla pero representada de forma gráfica.</p>
-<div class="media">
-<figure>
-<p>
-    <a href="https://picodotdev.github.io/blog-bitix/2020/01/los-modificadores-de-acceso-de-clases-propiedades-y-metodos-en-java/images/java-access-specifier_hua4dc7e14397aa21078ef211e311b7b0c_57114_2560x1440_fit_q90_box.jpg" data-gallery="data-gallery" title="Modificadores de acceso en Java"><img src="https://picodotdev.github.io/blog-bitix/2020/01/los-modificadores-de-acceso-de-clases-propiedades-y-metodos-en-java/images/java-access-specifier_hua4dc7e14397aa21078ef211e311b7b0c_57114_600x450_fit_q90_box.jpg" width="537" height="409" alt="Modificadores de acceso en Java" title="Modificadores de acceso en Java"  class="lozad"></a></p>
-<figcaption>Modificadores de acceso en Java Fuente: wikipedia.org</figcaption>
-</figure>
-</div>
-<p>Una detalle a tener en cuenta es que los modificadores afectan a las clases, una propiedad privada de una clase es accesible para todas las instancias de esa clase. En concreto, este código es válido y el resultado es <em>two</em>, <em>bar1</em> puede acceder a la propiedad <em>thing</em> de la instancia <em>bar2</em> aún siendo privada en la clase.</p>
-<div class="code">
-    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span><span class="lnt">22&#10;</span><span class="lnt">23&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix</span><span class="o">;</span>&#10;&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Bar</span> <span class="o">{</span>&#10;&#10;   <span class="kd">private</span> <span class="n">String</span> <span class="n">thing</span><span class="o">;</span>&#10;&#10;   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">Bar</span><span class="o">(</span><span class="n">String</span> <span class="n">thing</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;   <span class="k">this</span><span class="o">.</span><span class="na">thing</span> <span class="o">=</span> <span class="n">thing</span><span class="o">;</span>&#10;   <span class="o">}</span>&#10;&#10;   <span class="kd">public</span> <span class="n">String</span> <span class="nf">getOtherThing</span><span class="o">(</span><span class="n">Bar</span> <span class="n">other</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;   <span class="k">return</span> <span class="n">other</span><span class="o">.</span><span class="na">thing</span><span class="o">;</span>&#10;   <span class="o">}</span>&#10;&#10;   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;   <span class="n">Bar</span> <span class="n">bar1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Bar</span><span class="o">(</span><span class="s">&#34;one&#34;</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;   <span class="n">Bar</span> <span class="n">bar2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Bar</span><span class="o">(</span><span class="s">&#34;two&#34;</span><span class="o">);</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;   <span class="n">String</span> <span class="n">thing</span> <span class="o">=</span> <span class="n">bar1</span><span class="o">.</span><span class="na">getOtherThing</span><span class="o">(</span><span class="n">bar2</span><span class="o">);</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;   <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">thing</span><span class="o">);</span>&#10;   <span class="o">}</span>&#10;<span class="o">}</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
-    <div class="highlight-meta">
-        <span>Bar.java</span>
-    </div>
-</div>
-<p>No hay encapsulación entre las instancias de la misma clase, la encapsulación es para la clase accedida desde otras clases según los modificadores de acceso. Pero aunque una instancia tenga acceso y capacidad de modificar las propiedades de otra instancia se ha de seguir manteniendo la invariante, si una instancia modifica los datos de otra instancia ha de seguir manteniendo la invariante de la clase de esa otra instancia. Para mantener la invariante y la encapsulación generalmente se proporciona acceso a un método y no directamente a las propiedades.</p>
-<h3 id="la-modularidad-a-partir-java-9">La modularidad a partir Java 9</h3>
-<p>Los ámbitos de visbilidad es un mecanismo bastante limitado ni es suficiente para proporcionar encapsulación. No hay ningún impedimento a que cualquiera pueda crear una clase en un paquete que contiene clases privadas de paquete o métodos <em>package private</em> o heredar de esas clases y de esta menera tener acceso a clases, métodos y propiedades que el autor original no las diseñó para esos propósitos. Puede ser incluso un problema de seguridad.</p>
-<p><a href="https://picodotdev.github.io/blog-bitix/2017/09/novedades-y-nuevas-caracteristicas-de-java-9-los-modulos/">La modularidad añadida en Java 9</a> viene a complementar y dar una solución más completa a los ámbitos de visibilidad así como garantizar mejor la encapsulación tal y como el programador del paquete original ha diseñado.</p>
-<div class="reference">
-    Referencia:<br>
-    <ul>
-<li><a href="https://en.wikipedia.org/wiki/Java_syntax">Java syntax</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Class_invariant">Class invariant</a></li>
-</ul>
-</div>
-]]>
-        </content>
-        
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo"/>
-            
-                <category term="programacion"/>
             
         
     </entry>
