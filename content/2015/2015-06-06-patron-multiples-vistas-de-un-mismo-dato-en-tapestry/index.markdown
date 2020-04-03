@@ -9,14 +9,14 @@ rss: true
 sharing: true
 comments: true
 language: "es"
-imagePost: "logotype:apache-tapestry-5.svg"
+imagePost: "logotype:apache-tapestry-5.png"
 tags: ["java", "planeta-codigo", "programacion", "tapestry"]
 summary: "Un proyecto grande contendrá muchos archivos de código fuente, poseer gran cantidad de archivos puede ser una molestia al trabajar con ellos al tener que buscarlos o abrilos. En el caso de las aplicaciones web puede darse el caso de que un mismo dato tenga un archivo diferente por cada forma de visualizarlo, para reducir el número de archivos en estos casos uso el siguiente patrón cuando trabajo con Apache Tapestry con el soporte que ofrece pero que puede ser igualmente aplicado de forma similar a otros _frameworks_."
 ---
 
 {{% post %}}
 
-{{< logotype image="apache-tapestry-5.svg" title="Apache Tapestry" width="400" >}}
+{{< logotype image="apache-tapestry-5.png" >}}
 
 Al desarrollar una aplicación web puede que necesitemos mostrar un mismo dato de diferentes formas. Una posibilidad es crear una vista por cada forma diferente que se haya de mostrar el dato. Sin embargo, de esta forma tendremos que crear un archivo diferente por cada forma a visualizar, si esto mismo nos ocurre en múltiples datos nos encontraremos en la situación de que el número de archivos del proyecto crecerá suponiendo una pequeña molestia tener que trabajar con tantos, también y peor aún es que múltiples archivos relacionados no lo estarán salvo que les demos una nomenclatura similar para mantenerlos ordenados por nombre y sean fáciles de encontrar si queremos abrir varios.
 

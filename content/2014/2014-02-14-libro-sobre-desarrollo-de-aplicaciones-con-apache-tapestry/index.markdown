@@ -8,13 +8,13 @@ updated: 2015-04-10T20:00:00+02:00
 rss: true
 sharing: true
 comments: true
-imagePost: "logotype:apache-tapestry-5.svg"
+imagePost: "logotype:apache-tapestry-5.png"
 tags: ["java", "planeta-codigo", "programacion", "tapestry"]
 ---
 
 {{% post %}}
 
-{{< logotype image="apache-tapestry-5.svg" title="Apache Tapestry" width="400" >}}
+{{< logotype image1="apache-tapestry-5.png" >}}
 
 Hace unos meses publiqué el libro PlugIn Tapestry, un libro acerca del desarrollo de aplicaciones y páginas web en el lenguaje Java y con el _framework_ [Apache Tapestry](http://tapestry.apache.org/).
 

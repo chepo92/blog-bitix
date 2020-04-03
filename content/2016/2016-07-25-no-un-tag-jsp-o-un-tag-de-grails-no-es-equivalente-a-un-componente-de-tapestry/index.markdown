@@ -8,14 +8,14 @@ rss: true
 sharing: true
 comments: true
 language: "es"
-imagePost: "logotype:apache-tapestry-5.svg"
+imagePost: "logotype:apache-tapestry-5.png"
 tags: ["java", "opinion", "planeta-codigo", "tapestry", "programacion"]
 summary: "Alguna vez que he dado una presentación sobre Apache Tapestry después de la misma me comentaron que eso mismo que explicaba se podía hacer con el _framework_ que esa persona usaba. En un proyecto la tecnología no es es lo más importante pero es una herramienta que puede facilitar en gran medida el desarrollo. Respecto a los componentes de Tapestry alguien puede pensar que son iguales a los _tag_ que existen en las tecnologías de presentación como JSP o Grails. En este artículo comentaré algunas diferencias importantes que los hace más y muy interesantes junto con otras características de _framework_."
 ---
 
 {{% post %}}
 
-{{< logotype image1="apache-tapestry-5.svg" title1="Apache Tapestry" width1="400" image2="java.svg" >}}
+{{< logotype image1="apache-tapestry-5.png" image2="java.svg" >}}
 
 Viendo el panel [Kanban](https://es.wikipedia.org/wiki/Kanban_(desarrollo)) de la herramienta de peticiones [JIRA][jira] que usamos para registrar y priorizar las siguiente tareas en la empresa que trabajo hay unas cuantas que consisten en dado un listado de compras poder realizar operaciones sobre múltiples filas sin salir de la pantalla del listado. La necesidad es evitar que los usuarios de la aplicación hagan las acciones de forma individual de forma repetitiva, evitarles esto harán que sean más productivos y podrán desarrollar su trabajo mejor y más rápido. Así de sencillo, aparentemente.
 

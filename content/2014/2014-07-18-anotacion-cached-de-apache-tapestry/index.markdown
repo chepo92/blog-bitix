@@ -8,13 +8,13 @@ updated: 2015-05-27T23:00:00+02:00
 rss: true
 sharing: true
 comments: true
-imagePost: "logotype:apache-tapestry-5.svg"
+imagePost: "logotype:apache-tapestry-5.png"
 tags: ["software", "java", "programacion", "tapestry", "planeta-codigo"]
 ---
 
 {{% post %}}
 
-{{< logotype image="apache-tapestry-5.svg" title="Apache Tapestry" width="400" >}}
+{{< logotype image="apache-tapestry-5.png" >}}
 
 Como he comentado en un artículo anterior sobre los [modelos push y pull empleados en los motores de plantillas][blogbitix-31] donde comentaba algunas diferencias entre ellos, en el modelo pull es la vista la que pide los datos al controlador y no el controlador el que proporciona los datos a la vista como se hace en el modelo push. Un problema que puede plantear el que la vista pida los datos al controlador es que si la devolución de los datos solicitados son costosos en tiempo del cálculo, carga para el sistema en CPU o memoria, o intensivos en entrada/salida de disco o red y se piden varias veces puede suponer como resultado que el tiempo empleado para generar la página sea elevado o la aplicación consuma recursos innecesarios.
 

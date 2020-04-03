@@ -8,13 +8,13 @@ updated: 2015-05-27T23:00:00+02:00
 rss: true
 sharing: true
 comments: true
-imagePost: "logotype:apache-tapestry-5.svg"
+imagePost: "logotype:apache-tapestry-5.png"
 tags: ["java", "programacion", "tapestry", "software", "planeta-codigo"]
 ---
 
 {{% post %}}
 
-{{< logotype image="apache-tapestry-5.svg" title="Apache Tapestry" width="400" >}}
+{{< logotype image="apache-tapestry-5.png" >}}
 
 El 10 de febrero tuve la oportunidad de dar una charla, la primera, sobre [Apache Tapestry](http://tapestry.apache.org/) para el equipo de desarrolladores de la empresa en la que trabajo. Que en el equipo de desarrollo tengamos la posibilidad de vez en cuando dedicar un par de horas para juntarnos y compartir conocimiento es una buena iniciativa ya que siendo ya un equipo bastante grande de personas y con un nivel técnico elevado cada uno tiene un conocimiento que los demás pueden estar interesados en conocer al menos a nivel superficial, es motivador tener estas oportunidades.
 

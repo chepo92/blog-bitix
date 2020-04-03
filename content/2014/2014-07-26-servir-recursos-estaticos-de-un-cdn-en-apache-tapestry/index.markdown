@@ -9,13 +9,13 @@ updated: 2015-10-19T19:00:00+02:00
 rss: true
 sharing: true
 comments: true
-imagePost: "logotype:apache-tapestry-5.svg"
+imagePost: "logotype:apache-tapestry-5.png"
 tags: ["software", "java", "programacion", "tapestry", "planeta-codigo"]
 ---
 
 {{% post %}}
 
-{{< logotype image="apache-tapestry-5.svg" title="Apache Tapestry" width="400" >}}
+{{< logotype image="apache-tapestry-5.png" >}}
 
 Un [Content Delivery Network](https://en.wikipedia.org/wiki/Content_delivery_network) (CDN) no es más que un servidor, servidores o servicio dedicado a servir el contenido estático o actuar de cache para los clientes. Alguno de los motivos por los que podríamos querer usar un CDN en una aplicación son:
 

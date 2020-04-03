@@ -17,7 +17,7 @@ tags: ["gnu-linux", "hardware", "planeta-codigo"]
 
 {{% post %}}
 
-{{< logotype image1="linux.svg" image2="gnu.svg" image3="arm.svg" title3="ARM" width3="350"  >}}
+{{< logotype image1="linux.svg" image2="gnu.svg" image3="arm.svg" title3="ARM" width3="350" >}}
 
 Una de las tendencias de la tecnología desde sus inicios es que en todo momento está en constante evolución y mejora. Cada vez es más potente, más pequeña y más barata. Hay multitud de ejemplos en cualquier dispositivo electrónico que se use para ver su evolución desde [discos duros de 5 megas que ocupaban un armario y pesaban varias decenas de kilos](https://en.wikipedia.org/wiki/History_of_IBM_magnetic_disk_drives#IBM's_first_HDD_versus_its_last_HDDs) a ahora las tarjetas microSD del tamaño de una uña con una capacidad de 256 GiB, de procesadores que en los años 70 funcionaban a una frecuencia de unos pocos megahercios a ahora varios gigahercios, de memorias RAM de unos pocos kilobytes a ahora varios gigabytes, de _chips_ con [unos miles de transistores](https://en.wikipedia.org/wiki/Transistor_count), ya no digamos válvulas de vacío, a varios miles de millones de transistores que emplean ahora las GPU de las tarjetas gráficas.
 

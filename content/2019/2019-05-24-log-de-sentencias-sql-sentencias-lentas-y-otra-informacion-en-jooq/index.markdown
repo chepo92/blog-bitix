@@ -43,7 +43,7 @@ Estas sentencias se ejecutan en unos pocos milisegundos, en una aplicación con 
 
 La clase [ExecuteContext](https://www.jooq.org/javadoc/latest/org/jooq/ExecuteContext.html) proporciona numerosa información sobre la ejecución de la sentencia como número de filas afectadas, si se ha producido una excepción, el tipo de sentencia (_READ_, _WRITE_, _DDL_, _BATCH_, _ROUTINE_ u _OTHER_), sentencias _batch_ u obtener los parámetros a través del objeto [Query](https://www.jooq.org/javadoc/latest/org/jooq/Query.html).
 
-Simplemente mostrando las trazas de sentencias me ha permitido detectar que en el ejemplo se estaba realizando una pequeña ineficiencia. La sentencia _select count(*)_ se lanzaba dos veces en la página de listado, una al querer saber si hay alguna fila y otra usada por el [componente Grid](https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/corelib/components/Grid.html) de [Tapestry][tapestry]. Para resolverlo se cachea el resultado en la clase anónima _JooqGridDataSource_ con el siguiente código.
+Simplemente mostrando las trazas de sentencias me ha permitido detectar que en el ejemplo se estaba realizando una pequeña ineficiencia. La sentencia _select count(*)_ se lanzaba dos veces en la página de listado, una al querer saber si hay alguna fila y otra usada por el [componente Grid](tapestry:org/apache/tapestry5/corelib/components/Grid.html) de [Tapestry][tapestry]. Para resolverlo se cachea el resultado en la clase anónima _JooqGridDataSource_ con el siguiente código.
 
 {{< code file="ProductoAdmin.java" language="java" options="" >}}
 
