@@ -191,7 +191,7 @@ Según el tipo de navío unos capitanes son más adecuados que otros, por ejempl
 
 ### Tipos de munición y consumibles en batalla
 
-Hay dos tipos de munición, la altamente explosiva o HP (_high-explosive_) que explota en la superficie según impacta y tiene una probabilidad de dañar armamento, motor o tiempo y causar incendios. No llega a hacer tanto daño como la perforante pero garantiza con mayor regularidad el daño que hace por impacto. Los destructores tienen mayor probabilidad de quedar inutilizados por timón o motor si son impactados por munición HP en la proa, en esta situación son un blanco fácil y para sobrevivir han de utilizar el consumible de reparación u ocultarse con el de humo.
+Hay dos tipos de munición, la altamente explosiva o HP (_high-explosive_) que explota en la superficie según impacta y tiene una probabilidad de dañar armamento, motor o tiempo y causar incendios. No llega a hacer tanto daño como la perforante pero garantiza con mayor regularidad el daño que hace por impacto. Los destructores tienen mayor probabilidad de quedar inutilizados por timón o motor si son impactados por munición HE en la proa, en esta situación son un blanco fácil y para sobrevivir han de utilizar el consumible de reparación u ocultarse con el de humo.
 
 La munición altamente perforante  o AP (_armor-piercing_) tiene la capacidad de traspasar el casco de los barcos y explotar en su interior causando mayor de daño. Además si impacta en la ciudadela causar un importante nivel de daños por impacto en ella, la ciudadela es el lugar de los barcos especialmente protegida por armadura donde se aloja la munición y maquinaria del barco. Cuando un barco expone su lateral tiene mucha mayor probabilidad de recibir impactos en la ciudadela.
 
