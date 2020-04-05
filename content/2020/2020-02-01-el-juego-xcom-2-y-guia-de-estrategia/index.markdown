@@ -12,6 +12,7 @@ promoted: false
 imageHead: "image:XCOM-2.jpg"
 imagePost: "image:XCOM-2.jpg"
 tags: ["juegos"]
+series: ["analisis-juegos"]
 summary: "XCOM 2 es un juego de estrategia, con combates de acción por turnos, una parte de rol al permitir personalizar los soldados y elegir sus nuevas habilidades al subir de rango, también para las armas, y otra parte de gestión de los limitados recursos ambientado en una lucha contra una invasión alienígena a la tierra. Sin una guía el juego el nivel difícil del juego se convierte en tormento siendo muy difícil de terminar con éxito."
 ---
 

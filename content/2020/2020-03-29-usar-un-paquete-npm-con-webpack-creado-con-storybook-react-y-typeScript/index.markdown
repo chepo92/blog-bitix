@@ -3,7 +3,7 @@ pid: 472
 type: "post"
 title: "Uso de un paquete npm con Webpack creado con Storybook, React y TypeScript"
 url: "/2020/03/usar-un-paquete-npm-con-webpack-creado-con-storybook-react-y-typeScript/"
-date: 2020-03-29T14:00:00+01:00
+date: 2020-03-29T14:00:00+02:00
 language: "es"
 rss: true
 sharing: true

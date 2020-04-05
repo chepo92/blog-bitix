@@ -3,7 +3,7 @@ pid: 473
 type: "post"
 title: "Generar enlaces a páginas y de eventos en Apache Tapestry"
 url: "/2020/04/generar-enlaces-a-paginas-y-de-eventos-en-apache-tapestry/"
-date: 2020-04-03T18:30:00+01:00
+date: 2020-04-03T18:30:00+02:00
 language: "es"
 rss: true
 sharing: true
