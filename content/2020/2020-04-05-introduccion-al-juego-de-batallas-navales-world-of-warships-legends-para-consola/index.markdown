@@ -28,8 +28,7 @@ El juego posee una notable calidad gráfica, cada navío es un modelo distinto m
 
 {{< image
     gallery="true"
-    image1="image:world-of-warships-legends.jpg" optionsthumb1="300x250" title1="Imagen inicial del juego World of Warships en PlayStation 4"
-    image2="image:inicio-batalla.jpg" optionsthumb2="300x200" title2=""
+    image1="image:world-of-warships-legends.jpg" optionsthumb1="600x450" title1="Imagen inicial del juego World of Warships en PlayStation 4"
     caption="Imagen inicial del juego World of Warships en PlayStation 4 y del juego" >}}
 
 ### Objetivo
@@ -58,7 +57,7 @@ En la versión de consola hay tres tipos de navíos, cada uno por sus caracterí
 
 {{< image
     gallery="true"
-    image1="image:alemania-crucero-hipper.jpg" optionsthumb1="600x450" title1="Crucero alemán de nivel VII Hipper"
+    image1="image:seleccion-navio.jpg" optionsthumb1="600x450" title1="Crucero alemán de nivel VII Hipper"
     caption="Selección de navío para la batalla" >}}
 
 #### Cruceros
@@ -67,7 +66,7 @@ Son la unidad media de las tres, versátil, ágil y con una relativa potencia de
 
 {{< image
     gallery="true"
-    image1="image:alemania-destructor-z-23.jpg" optionsthumb1="600x450" title1="Destructor alemán de nivel VII Z-23"
+    image1="image:alemania-crucero-hipper.jpg" optionsthumb1="600x450" title1="Destructor alemán de nivel VII Z-23"
     caption="Destructor de la nación alemana de nivel VII" >}}
 
 #### Destructores
@@ -76,7 +75,7 @@ Son la unidad con menos puntos de vida de los tres pero es ágil, difícil de de
 
 {{< image
     gallery="true"
-    image1="image:seleccion-navio.jpg" optionsthumb1="600x450" title1="Selección de navío para la batalla, crucero alemán de nivel VII Hipper"
+    image1="image:alemania-destructor-z-23.jpg" optionsthumb1="600x450" title1="Selección de navío para la batalla, crucero alemán de nivel VII Hipper"
     caption="Destructor, crucero y acorazado de la nación alemana de nivel VII" >}}
 
 #### Acorazados
