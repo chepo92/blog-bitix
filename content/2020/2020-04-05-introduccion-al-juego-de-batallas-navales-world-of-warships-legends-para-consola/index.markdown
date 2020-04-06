@@ -58,7 +58,7 @@ En la versión de consola hay tres tipos de navíos, cada uno por sus caracterí
 
 {{< image
     gallery="true"
-    image1="image:seleccion-navio.jpg" optionsthumb1="600x450" title1="Crucero alemán de nivel VII Hipper"
+    image1="image:seleccion-navio.jpg" optionsthumb1="600x450" title1="Selección de navío para la batalla, crucero alemán de nivel VII Hipper"
     caption="Selección de navío para la batalla" >}}
 
 #### Cruceros
@@ -67,8 +67,8 @@ Son la unidad media de las tres, versátil, ágil y con una relativa potencia de
 
 {{< image
     gallery="true"
-    image1="image:alemania-crucero-hipper.jpg" optionsthumb1="600x450" title1="Destructor alemán de nivel VII Z-23"
-    caption="Destructor de la nación alemana de nivel VII" >}}
+    image1="image:alemania-crucero-hipper.jpg" optionsthumb1="600x450" title1="Crucero de la nación alemana de nivel VII"
+    caption="Crucero de la nación alemana de nivel VII" >}}
 
 #### Destructores
 
@@ -76,7 +76,7 @@ Son la unidad con menos puntos de vida de los tres pero es ágil, difícil de de
 
 {{< image
     gallery="true"
-    image1="image:alemania-destructor-z-23.jpg" optionsthumb1="600x450" title1="Selección de navío para la batalla, crucero alemán de nivel VII Hipper"
+    image1="image:alemania-destructor-z-23.jpg" optionsthumb1="600x450" title1="Destructor de la nación alemana de nivel VII"
     caption="Destructor de la nación alemana de nivel VII" >}}
 
 #### Acorazados
@@ -85,8 +85,8 @@ Son la unidad con mayor potencia de fuego, más puntos de vida y pueden hacer gr
 
 {{< image
     gallery="true"
-    image1="image:alemania-acorazado-bismark.jpg" optionsthumb1="600x450" title1="Acorazado alemán de nivel VII Bismark"
-    caption="Acorazado alemán de nivel VII Bismark" >}}
+    image1="image:alemania-acorazado-bismark.jpg" optionsthumb1="600x450" title1="Acorazado de la nación alemana nivel VII Bismark"
+    caption="Acorazado de la nación alemana nivel VII Bismark" >}}
 
 #### Navíos premium
 
