@@ -4,6 +4,7 @@ type: "post"
 title: "Introducción al juego de batallas navales World of Warships Legends para consola"
 url: "/2020/04/introduccion-al-juego-de-batallas-navales-world-of-warships-legends-para-consola/"
 date: 2020-04-05T19:00:00+02:00
+updated: 2020-04-06T18:30:00+02:00
 language: "es"
 rss: true
 sharing: true
@@ -20,7 +21,7 @@ summary: "World of Warships es un juego de competición entre jugadores ambienta
 
 Desde que [compre una PlayStation 4][blogbitix-432] uno de los juegos que más entretenido me tiene es [World of Warships Legends](https://wowslegends.com/) en su versión para consola de la existente de [World of Warships](https://worldofwarships.com/) para PC. La versión para consola es una versión un poco más simplificada de la de PC pero unas cuantas mecánicas de juego que son similares lo hace igualmente interesante y divertido para algunas partidas con un tiempo corto e independientes ni tener un modo historia. World of Warships para PC también se puede [jugar en GNU/Linux a través de Steam][blogbitix-431].
 
-Es un juego gratuito o _free-to-play_ que al igual que juegos en esta categoría ofrece compras opcionales integradas que permiten avanzar en el juego más rápido o algunos añadidos que aú así no hacen del juego pagar para ganar o _pay-to-win_. También como es habitual en estos juegos tiene un componente de experiencia con el que hay que emplear gran cantidad de tiempo para alcanzar los niveles más altos, aún así planificando gran parte puede ser obviado y centrase en el área de interés.
+Es un juego gratuito o _free-to-play_ ni requiere pagar la suscripción de PlayStation Network o PSN para jugar por internet que al igual que juegos en esta categoría ofrece compras opcionales integradas que permiten avanzar en el juego más rápido o algunos añadidos que aú así no hacen del juego pagar para ganar o _pay-to-win_. También como es habitual en estos juegos tiene un componente de experiencia con el que hay que emplear gran cantidad de tiempo para alcanzar los niveles más altos, aún así planificando gran parte puede ser obviado y centrase en el área de interés.
 
 Posee un componente de habilidad pero una mayor parte viene de tener buenas nociones de estrategia en la batalla. También tiene un componente de recursos de consumibles, diferentes tipos de navíos, diferentes naciones con pequeñas variaciones en las características de los barcos y un componente de mejoras para los barcos y personalización de los navíos con capitanes e inspiraciones de capitanes que mejoran algunas características de los barcos según el estilo de juego preferido que dotan al juego de muchas combinaciones posibles, con en cierta similitud de un componente de rol y construcción de fichas que gusta a muchos jugadores en otros juegos.
 
@@ -29,7 +30,7 @@ El juego posee una notable calidad gráfica, cada navío es un modelo distinto m
 {{< image
     gallery="true"
     image1="image:world-of-warships-legends.jpg" optionsthumb1="600x450" title1="Imagen inicial del juego World of Warships en PlayStation 4"
-    caption="Imagen inicial del juego World of Warships en PlayStation 4 y del juego" >}}
+    caption="Imagen inicial del juego World of Warships en PlayStation 4" >}}
 
 ### Objetivo
 
@@ -76,7 +77,7 @@ Son la unidad con menos puntos de vida de los tres pero es ágil, difícil de de
 {{< image
     gallery="true"
     image1="image:alemania-destructor-z-23.jpg" optionsthumb1="600x450" title1="Selección de navío para la batalla, crucero alemán de nivel VII Hipper"
-    caption="Destructor, crucero y acorazado de la nación alemana de nivel VII" >}}
+    caption="Destructor de la nación alemana de nivel VII" >}}
 
 #### Acorazados
 
