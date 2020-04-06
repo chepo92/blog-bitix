@@ -67,7 +67,7 @@ Son la unidad media de las tres, versátil, ágil y con una relativa potencia de
 
 {{< image
     gallery="true"
-    image1="image:alemania-crucero-hipper.jpg" optionsthumb1="600x450" title1="Crucero de la nación alemana de nivel VII"
+    image1="image:alemania-crucero-hipper.jpg" optionsthumb1="600x450" title1="Crucero de la nación alemana de nivel VII Hipper"
     caption="Crucero de la nación alemana de nivel VII" >}}
 
 #### Destructores
@@ -76,7 +76,7 @@ Son la unidad con menos puntos de vida de los tres pero es ágil, difícil de de
 
 {{< image
     gallery="true"
-    image1="image:alemania-destructor-z-23.jpg" optionsthumb1="600x450" title1="Destructor de la nación alemana de nivel VII"
+    image1="image:alemania-destructor-z-23.jpg" optionsthumb1="600x450" title1="Destructor de la nación alemana de nivel VII Z-23"
     caption="Destructor de la nación alemana de nivel VII" >}}
 
 #### Acorazados
