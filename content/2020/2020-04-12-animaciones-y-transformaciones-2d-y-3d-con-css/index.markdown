@@ -11,7 +11,6 @@ comments: true
 promoted: false
 imagePost: "image:css-animations-transformations.png"
 tags: ["planeta-codigo", "web"]
-summary: ""
 ---
 
 {{% post %}}
