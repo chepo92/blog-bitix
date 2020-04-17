@@ -27,6 +27,8 @@
 {{- $options := default "2560x1440" (index $attributes "options") -}}
 {{- $optionsthumb := index $attributes "size" -}}
 {{- $gallery := eq "true" (index $attributes "gallery") -}}
+{{- $class := index $attributes "class" -}}
+{{- $class := replace $class "." " " -}}
 {{- $layout := index $attributes "layout" -}}
 
 {{- if or (hasPrefix $url "logotype:") (hasPrefix $url "resource:") (hasPrefix $url "image:") (hasPrefix $url "asset:") -}}
@@ -38,12 +40,12 @@
     {{- $src = print "assets/images/logotypes/" $image | relURL -}}
     {{- $srcthumb = cond (eq $imagethumb nil) $src (print "assets/images/logotypes/" $imagethumb | relURL) -}}
   {{- else if or (eq $binding "resource") (eq $binding "image") -}}
-    {{ $p := cond (eq $page "") .Page (.Page.GetPage $page) }}
-    {{ $path := cond (eq $binding "image") "images/" "" }}
+    {{- $p := cond (eq $page "") .Page (.Page.GetPage $page) -}}
+    {{- $path := cond (eq $binding "image") "images/" "" -}}
 
     {{- if (findRE "\\.svg$|\\.webp$" $image) -}}
-      {{- $src = print $path $image -}}
-      {{- $srcthumb = cond (eq $imagethumb nil) $image (print $path $imagethumb) -}}
+      {{- $src = print .Page.Permalink $path $image | relURL -}}
+      {{- $srcthumb = cond (eq $imagethumb nil) $src (print .Page.Permalink $path $imagethumb | relURL) -}}
     {{- else -}}
       {{- $resource := $p.Resources.GetMatch (print $path $image) -}}
       {{- $resourcethumb := $p.Resources.GetMatch (print $path $image) -}}
@@ -99,5 +101,5 @@
 {{- end -}}
 
 {{- if $gallery }}<a href="{{ $srca }}" data-gallery="data-gallery"{{ with $title }} title="{{ . }}"{{ end }}>{{ end -}}
-{{- $imgtagopen | safeHTML }} {{ $imgtagsrc }}="{{ $srcimg }}"{{ with $width }} width="{{ . }}"{{ end }}{{ with $height }} height="{{ . }}"{{ end }}{{ with $title }} alt="{{ . }}" title="{{ . }}"{{ end }}{{ with $layout }} layout="{{ . }}"{{ end }}  class="lozad">{{ $imgtagclose | safeHTML -}}
+  {{- $imgtagopen | safeHTML }} {{ $imgtagsrc }}="{{ $srcimg }}"{{ with $width }} width="{{ . }}"{{ end }}{{ with $height }} height="{{ . }}"{{ end }}{{ with $title }} alt="{{ . }}" title="{{ . }}"{{ end }}{{ with $layout }} layout="{{ . }}"{{ end }}  class="{{ with $class }}{{ . }} {{ end }}lozad">{{ $imgtagclose | safeHTML -}}
 {{- if $gallery }}</a>{{ end -}}
