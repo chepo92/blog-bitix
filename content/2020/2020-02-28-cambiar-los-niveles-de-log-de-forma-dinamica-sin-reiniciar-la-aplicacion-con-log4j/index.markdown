@@ -10,7 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "image:java.svg"
+imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo"]
 summary: "Ocurre un bug en producción o en un entorno de pruebas se desea obtener más información. Actualizar el archivo de trazas para obtener más información requiere modificar el archivo de configuración, desplegarlo en el entorno y reiniciar la aplicación, este proceso consume tiempo dependiendo del nivel de automatización de la organización. Para reducir el tiempo necesario para obtener la información con Log4j hay dos posibilidades para cambiar dinámicamente los niveles de trazas de la aplicación sin necesidad de reiniciarla."
 ---
