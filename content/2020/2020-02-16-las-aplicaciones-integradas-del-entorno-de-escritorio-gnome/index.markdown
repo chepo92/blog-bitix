@@ -68,6 +68,7 @@ En GNOME se opta por la simplicidad, a veces criticada por la falta de opciones 
 * [Notas de publicación 3.30](https://help.gnome.org/misc/release-notes/3.30/)
 * [Notas de publicación 3.32](https://help.gnome.org/misc/release-notes/3.32/)
 * [Notas de publicación 3.34](https://help.gnome.org/misc/release-notes/3.34/)
+* [Notas de publicación 3.36](https://help.gnome.org/misc/release-notes/3.36/)
 
 Continúan realizándose mejoras, algunas de las cuales son aplicadas en cada nueva versión y otras registradas para tenerlas en cuenta en futuras versiones.
 

@@ -111,6 +111,8 @@ Además, los comandos se pueden componer de modo que la salida de un comando sea
 
 La parte de GNU de GNU/Linux incluye una colección importante y numerosa de comandos algunos de estos son: _cal, date, at, head, tail, vim, nano, sort, alias, grep, cd, chmod, chown, curl, diff, echo, find, history, kill, less, ls, man, mkdir, rmdir, mv, rm, cp, ping, pwd, ssh, sudo, tail, tar, gzip, top, iotp, uname, awk, xargs, unzip, crontab, systemd, mount, whatis, locate, uniq, seq, jq, traceroute_. No es necesario conocerlos todos y sus opciones pero es muy util que existen y saber al menos que hacen, al necesitar usarlos basta con hacer una búsqueda en internet para evr un ejemplo de uso con sus opciones.
 
+[50+ comandos básicos y útiles de GNU/Linux][blogbitix-476]
+
 Los programas de línea de comandos ofrecen páginas de manual para aprender qué hacen, cuáles son sus parámetros y cómo utilizarlos con el comando _man_.
 
 {{< code file="man.sh" language="bash" options="" >}}
