@@ -8,13 +8,13 @@ updated: 2015-05-27T23:00:00+02:00
 rss: true
 sharing: true
 comments: true
-imagePost: "logotype:apache-tapestry-5.png"
+imagePost: "logotype:apache-tapestry-icon-light.svg"
 tags: ["software", "java", "programacion", "tapestry", "planeta-codigo"]
 ---
 
 {{% post %}}
 
-{{< logotype image1="apache-tapestry-5.png" image2="wildfly.svg" title2="WildFly" width2="200" >}}
+{{< logotype image1="apache-tapestry-icon-light.svg" image2="wildfly.svg" title2="WildFly" width2="200" >}}
 
 Los class loaders del [servidor de aplicaciones JBoss/WildFly][blogbitix-10] habitualmente han dado algún problema en la ejecución de las aplicaciones y la carga de clases. En versiones antiguas como la 4 se podían producir conflictos entre las librerías de las aplicaciones y las librerías instaladas en el servidor ya que en [JBoss](http://jbossas.jboss.org/) se buscaba las clases por defecto y primero en el class loader del servidor en vez de en el classloader de la aplicación (war). Ya en las últimas versiones como JBoss 7 y [WildFly](http://wildfly.org/) la forma de cargar las clases es más parecido al modelo habitual que se sigue en las aplicaciones Java EE y en servidores como Tomcat buscando primero en el directorio classes WEB-INF/classes y entre las librerías de la carpeta WEB-INF/lib del archivo war. Además, con la inclusión de JBoss Modules se puede seguir un esquema OSGi con lo que incluso podríamos usar simultaneamente en el servidor diferentes versiones de la misma librería.
 

@@ -8,13 +8,13 @@ updated: 2015-05-30T00:00:00+02:00
 rss: true
 sharing: true
 comments: true
-imagePost: "logotype:apache-tapestry-5.png"
+imagePost: "logotype:apache-tapestry-icon-light.svg"
 tags: ["java", "programacion", "tapestry", "planeta-codigo"]
 ---
 
 {{% post %}}
 
-{{< logotype image="apache-tapestry-5.png" >}}
+{{< logotype image="apache-tapestry-icon-light.svg" >}}
 
 [Apache Tapestry][tapestry] es un _framework_ de desarrollo para aplicaciones o páginas web en el que habitualmente se emplea el lenguaje Java y se despliega en un servidor de aplicaciones como entorno de ejecución. Pero Tapestry es una pieza de software que se compone de diferentes partes algunas de las cuales pueden ser utilizadas fuera del contexto de una aplicación web. Este es el caso del contenedor de dependencias que proporciona [IoC](https://en.wikipedia.org/wiki/Inversion_of_control) (IoC, «Inversion of Control») en Tapestry, podemos usarlo en una aplicación «standalone», es decir, en un programa que se inicia con el típico «public static void main(String[] args)» de las aplicaciones Java.
 

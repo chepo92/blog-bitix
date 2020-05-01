@@ -8,14 +8,14 @@ rss: true
 sharing: true
 comments: true
 language: "es"
-imagePost: "logotype:apache-tapestry-5.png"
+imagePost: "logotype:apache-tapestry-icon-light.svg"
 tags: ["java", "opinion", "planeta-codigo", "tapestry"]
 summary: "React y Polymer son dos librerías JavaScript para construir interfaces complejas en el lado cliente basadas en componentes. Los componentes son interesantes porque hace que el código sea reutilizable, fácil de entender y más fácil de modificar sin introducir errores entre otras cosas. Aunque en el desarrollo web en el lado del servidor la mayoría de los _frameworks_ se basan en acciones también hay algunos que se basan en componentes, uno de ellos Apache Tapestry para la plataforma Java. Si de React y Polymer se está hablando bastante bien y forman parte del actual estado del arte JavaScript, si la gente conociese y usase Tapestry que tiene varias similitudes con ellos creo que también les facilitaría el desarrollo de aplicaciones web pequeñas o grandes, simples o complejas en la parte del servidor."
 ---
 
 {{% post %}}
 
-{{< logotype image="apache-tapestry-5.png" >}}
+{{< logotype image="apache-tapestry-icon-light.svg" >}}
 
 La librería JavaScript [ReactJS][react] es una de las que más se está hablando para bien y utilizando para construir aplicaciones complejas en el navegador. Personalmente después de haberla probado en el [ejemplo lista de tareas con React y Backbone][blogbitix-20] me ha parecido que está muy bien. Otra de las librerías que suele mencionarse y que en un futuro puede emplearse mucho más es [Polymer][polymer]. ¿Cuál es el éxito de estas librerías?
 

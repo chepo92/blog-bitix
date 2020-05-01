@@ -8,13 +8,13 @@ updated: 2015-04-10T20:00:00+02:00
 rss: true
 sharing: true
 comments: true
-imagePost: "logotype:apache-tapestry-5.png"
+imagePost: "logotype:apache-tapestry-icon-light.svg"
 tags: ["java", "planeta-codigo", "programacion", "tapestry"]
 ---
 
 {{% post %}}
 
-{{< logotype image1="apache-tapestry-5.png" >}}
+{{< logotype image1="apache-tapestry-icon-light.svg" >}}
 
 Hace unos meses publiqué el libro PlugIn Tapestry, un libro acerca del desarrollo de aplicaciones y páginas web en el lenguaje Java y con el _framework_ [Apache Tapestry](http://tapestry.apache.org/).
 
@@ -57,10 +57,10 @@ Puedes obtenerlo desde los enlaces que proporciono de forma totalmente libre y a
 <div class="share-this" style="text-align: center; margin-bottom: 20px">
   <h3>¡Y luego compártelo!</h3>
   <div class="sharethis-inline-share-buttons">
-  <span class="st_twitter_vcount" st_title="He descargado el libro sobre desarrollo de apps web con Apache Tapestry. ¡Obtén tu copia! #PlugIn" st_summary="Desarrollo de aplicaciones y páginas web con Apache Tapestry" st_url="https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/" st_image="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/apache-tapestry-5.png" st_via="picodotdev"></span>
-  <span class="st_facebook_vcount" st_title="Libro PlugIn Tapestry" st_summary="Desarrollo de aplicaciones y páginas web con Apache Tapestry" st_url="https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/" st_image="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/apache-tapestry-5.png"></span>
-  <span class="st_googleplus_vcount" st_title="Libro PlugIn Tapestry" st_summary="Desarrollo de aplicaciones y páginas web con Apache Tapestry" st_url="https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/" st_image="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/apache-tapestry-5.png"></span>
-  <span class="st_linkedin_vcount" st_title="Libro PlugIn Tapestry" st_summary="Desarrollo de aplicaciones y páginas web con Apache Tapestry" st_url="https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/" st_image="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/apache-tapestry-5.png"></span>
+  <span class="st_twitter_vcount" st_title="He descargado el libro sobre desarrollo de apps web con Apache Tapestry. ¡Obtén tu copia! #PlugIn" st_summary="Desarrollo de aplicaciones y páginas web con Apache Tapestry" st_url="https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/" st_image="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/apache-tapestry-icon-light.svg" st_via="picodotdev"></span>
+  <span class="st_facebook_vcount" st_title="Libro PlugIn Tapestry" st_summary="Desarrollo de aplicaciones y páginas web con Apache Tapestry" st_url="https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/" st_image="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/apache-tapestry-icontext-600.png"></span>
+  <span class="st_googleplus_vcount" st_title="Libro PlugIn Tapestry" st_summary="Desarrollo de aplicaciones y páginas web con Apache Tapestry" st_url="https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/" st_image="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/apache-tapestry-icontext-600.png"></span>
+  <span class="st_linkedin_vcount" st_title="Libro PlugIn Tapestry" st_summary="Desarrollo de aplicaciones y páginas web con Apache Tapestry" st_url="https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/" st_image="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/apache-tapestry-icontext-600.png"></span>
   </div>
 </div>
 

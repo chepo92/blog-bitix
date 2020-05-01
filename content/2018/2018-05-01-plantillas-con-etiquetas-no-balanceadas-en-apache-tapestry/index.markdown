@@ -9,14 +9,14 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "logotype:apache-tapestry-5.png"
+imagePost: "logotype:apache-tapestry-icon-light.svg"
 tags: ["java", "planeta-codigo", "programacion", "tapestry"]
 summary: "Apache Tapestry es uno de los mejores _frameworks_ web para Java que he usado, sin embargo, también tiene algún incordio o curiosidad. Una de ellas es que las plantillas han de ser XML bien formado y en este caso que comento en el que necesitaríamos una plantilla con etiquetas desbalanceadas nos obliga a buscar una solución, esta es la que uso."
 ---
 
 {{% post %}}
 
-{{< logotype image1="apache-tapestry-5.png" >}}
+{{< logotype image1="apache-tapestry-icon-light.svg" >}}
 
 Las plantillas en [Apache Tapestry][tapestry] son XHTML, esto quere decir que al ser [archivos xml han de estar bien formados](https://es.wikipedia.org/wiki/Validaci%C3%B3n_XML#Documento_Bien_Formado) con sus etiquetas bien balanceadas y anidadas. Esto tiene la ventaja de que Tapestry nos avisará cuando se intente generar código HTML mal formado con el contenido de plantilla, una especie de compilación que si no es correcta no pasará desapercibida como en otros _frameworks_ y que puede generar otro tipo de errores. Sin embargo, también tiene una desventaja y es que si necesitamos generar una etiqueta de inicio dentro de un componente _if_ la plantilla no será válida.
 

@@ -8,14 +8,14 @@ rss: true
 sharing: true
 comments: true
 language: "es"
-imagePost: "logotype:apache-tapestry-5.png"
+imagePost: "logotype:apache-tapestry-icon-light.svg"
 tags: ["java", "planeta-codigo", "tapestry", "programacion"]
 summary: "En la mayoría de aplicaciones no solo es habitual sino algo muy usado el mostrar listados de elementos de forma tabular con paginación y columnas ordenables. En estos listados el complejo componente internamente _Grid_ de Apache Tapestry pero a la vez muy sencillo de usar puede marcar una diferencia significativa en el número de líneas de código necesarias a escribir, la flexibilidad, funcionalidad ofrecida, la productividad al hacer la implementación o modificarla comparándolo con lo necesario en otros _frameworks_ web en los que no hay nada comparable de serie."
 ---
 
 {{% post %}}
 
-{{< logotype image1="apache-tapestry-5.png" title1="Apache Tapstry" width1="400" >}}
+{{< logotype image1="apache-tapestry-icon-light.svg" title1="Apache Tapstry" width1="400" >}}
 
 [Apache Tapestry][tapestry] es uno de los muchos _frameworks_ disponibles en Java para el desarrollo de aplicaciones y páginas web. A diferencia de la mayoría se basa en componentes y proporciona una larga lista de ellos listos para usar de serie, pero también se pueden crear componentes nuevos basados en los propios de Tapestry o los que desarrollemos nosotros muy fácilmente. Los componentes son piezas reusables de código que se pueden reutilizar bien directamente o para formar nuevos componentes y es uno de los motivos por los que en Tapestry se consigue una alta productividad además de otros beneficios como la encapsulación.
 

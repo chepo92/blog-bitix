@@ -9,13 +9,13 @@ rss: true
 sharing: true
 comments: true
 language: "es"
-imagePost: "logotype:apache-tapestry-5.png"
+imagePost: "logotype:apache-tapestry-icon-light.svg"
 tags: ["java", "javascript", "planeta-codigo", "programacion", "tapestry"]
 ---
 
 {{% post %}}
 
-{{< logotype image1="apache-tapestry-5.png" image2="java.svg" >}}
+{{< logotype image1="apache-tapestry-icon-light.svg" image2="java.svg" >}}
 
 La librería [bootstrap-select](https://silviomoreto.github.io/bootstrap-select/) nos permite crear elementos _select_ enriquecidos con más funcionalidades que las propias ofrecidas por el navegador para seleccionar una única opción o para seleccionar múltiples opciones. Usando esta librería y añadiendo algunos atributos a las etiquetas HTML _select_, _optgroup_ y _option_ añadirá varias funcionalidades interesantes como comento en [Componente select de Apache Tapestry con funcionalidades adicionales usando bootstrap-select][blogbitix-187].
 

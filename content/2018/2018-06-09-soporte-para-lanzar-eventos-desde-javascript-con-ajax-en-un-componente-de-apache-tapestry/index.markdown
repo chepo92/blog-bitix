@@ -9,13 +9,13 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "logotype:apache-tapestry-5.png"
+imagePost: "logotype:apache-tapestry-icon-light.svg"
 tags: ["java", "javascript", "planeta-codigo", "programacion", "tapestry"]
 ---
 
 {{% post %}}
 
-{{< logotype image1="apache-tapestry-5.png" image2="java.svg" >}}
+{{< logotype image1="apache-tapestry-icon-light.svg" image2="java.svg" >}}
 
 Para desarrollar aplicaciones web con el lenguaje de programación Java hay gran cantidad de _frameworks_ que proponen un marco de trabajo para proporcionar la mayor parte de la funcionalidad de infraestructura necesaria para una aplicación. La mayoría basados en acciones y unos pocos basados en componentes. Una aplicación web no solo consta de la parte del servidor y desde hace tiempo la parte de cliente ha cobrado gran importancia.
 

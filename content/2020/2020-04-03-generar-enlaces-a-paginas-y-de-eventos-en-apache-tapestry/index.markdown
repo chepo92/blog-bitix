@@ -9,13 +9,13 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "logotype:apache-tapestry-5.png"
+imagePost: "logotype:apache-tapestry-icon-light.svg"
 tags: ["tapestry", "planeta-codigo"]
 ---
 
 {{% post %}}
 
-{{< logotype image1="apache-tapestry-5.png" >}}
+{{< logotype image1="apache-tapestry-icon-light.svg" >}}
 
 Una de las partes esenciales de una aplicación web es generar enlaces a otras páginas, enlaces a los manejadores de los formularios que procesan los datos enviados, enlaces a manejadores de solicitudes AJAX. Generar enlaces no solo es necesario para ser usados dentro de la misma aplicación web sino también para ser usados en el código JavaScript, en correos electrónicos u informes.
 

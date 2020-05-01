@@ -8,13 +8,13 @@ updated: 2015-05-27T23:00:00+02:00
 rss: true
 sharing: true
 comments: true
-imagePost: "logotype:apache-tapestry-5.png"
+imagePost: "logotype:apache-tapestry-icon-light.svg"
 tags: ["java", "programacion", "tapestry", "planeta-codigo"]
 ---
 
 {{% post %}}
 
-{{< logotype image="apache-tapestry-5.png" >}}
+{{< logotype image="apache-tapestry-icon-light.svg" >}}
 
 El [protocolo seguro https](https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol_Secure) hace que los datos que viajan entre el servidor y el cliente a través de internet estén cifrados de modo que nadie más pueda saber cual es es la información intercambiada ni se pueda alterar sin el conocimiento entre las dos partes. Estas propiedades nos son de interés para ciertas partes de una aplicación o en algunos casos la aplicación entera. ¿Cuales son estos casos? Son aquellos en los que queramos garantizar una mayor seguridad, estos pueden ser para proteger usuarios y contraseñas de autenticación para iniciar sesión, ciertos datos sensibles como datos personales, datos de tarjetas de crédito, ... evitando que una tercera parte los obtenga y los utilice para su provecho propio y supongan un problema de seguridad en la aplicación.
 

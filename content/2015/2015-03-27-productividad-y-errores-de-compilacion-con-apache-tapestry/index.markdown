@@ -8,13 +8,13 @@ updated: 2015-12-11T22:30:00+01:00
 rss: true
 sharing: true
 comments: true
-imagePost: "logotype:apache-tapestry-5.png"
+imagePost: "logotype:apache-tapestry-icon-light.svg"
 tags: ["java", "planeta-codigo", "programacion", "tapestry"]
 ---
 
 {{% post %}}
 
-{{< logotype image1="apache-tapestry-5.png" image2="java.svg" >}}
+{{< logotype image1="apache-tapestry-icon-light.svg" image2="java.svg" >}}
 
 Hace ya unos años comentaba [varios motivos para elegir Apache Tapestry][elblogdepicodev-motivos-para-elegir-apache-tapestry] como _framework_ para desarrollar una aplicación o página web. Entre las varias razones comentaba la productividad como característica destacada. Uno de los motivos de esta productividad era por la alta reutilización de código que se puede conseguir al usar los componentes múltiples veces en un mismo proyecto o en diferentes proyectos creando una librería de componentes como comento más detalladamente en el [libro PugIn Tapestry][blogbitix-12]. Otra parte de la productividad que comentaba más ligeramente era poder detectar de forma rápida errores de compilación no solo en el código Java a través del IDE sino porque con [Tapestry][tapestry] es posible detectar errores de compilación en todas las plantillas tml que generan el html fácil y rápidamente con un botón sin tener que probar manualmente toda la funcionalidad. El tema de este artículo es mostrar más en detalle como detectar los errores de compilación en las vistas con este _framework_.
 
