@@ -4,6 +4,7 @@ type: "post"
 title: "Tres contribuciones al proyecto Apache Tapestry, actualización de la página web, artwork del logotipo y arquetipo Maven quickstart"
 url: "/2020/05/tres-contribuciones-al-proyecto-apache-tapestry-actualizacion-de-la-pagina-web-artwork-del-logotipo-y-arquetipo-maven-quickstart/"
 date: 2020-05-01T10:30:00+02:00
+updated: 2020-05-01T12:00:00+02:00
 language: "es"
 rss: true
 sharing: true
