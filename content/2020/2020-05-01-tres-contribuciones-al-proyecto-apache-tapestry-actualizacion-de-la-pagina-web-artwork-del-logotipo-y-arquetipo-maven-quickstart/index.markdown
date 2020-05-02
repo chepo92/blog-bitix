@@ -4,7 +4,7 @@ type: "post"
 title: "Tres contribuciones al proyecto Apache Tapestry, actualización de la página web, artwork del logotipo y arquetipo Maven quickstart"
 url: "/2020/05/tres-contribuciones-al-proyecto-apache-tapestry-actualizacion-de-la-pagina-web-artwork-del-logotipo-y-arquetipo-maven-quickstart/"
 date: 2020-05-01T10:30:00+02:00
-updated: 2020-05-01T12:00:00+02:00
+updated: 2020-05-02T21:00:00+02:00
 language: "es"
 rss: true
 sharing: true
@@ -28,7 +28,7 @@ Con el paso del tiempo y continuando siguiendo el proyecto otras formas en las q
 
 ### Página web del proyecto
 
-Entre esas cosas que consideraba mejorables era la página web del proyecto y documentación. Con el paso del tiempo el diseño de la misma estaba desfasado, no era adaptable para dispositivos móviles y tiene algunos errores como que la búsqueda personalizada de Google no funcionaba y algunos enlaces rotos.
+Entre esas cosas que consideraba mejorables era la página web del proyecto y documentación. Con el paso del tiempo el diseño de la misma estaba desfasado, no era adaptable para dispositivos móviles y tiene algunos errores como que la búsqueda personalizada de Google no funcionaba y algunos enlaces rotos. Otra mejora ha sido redirigir el tráfico del protocolo http a https con JavaScript.
 
 Más o menos conocía como estaba montada la página y cuál era el proceso de publicación. El contenido se edita en [Confluence][atlassian-confluence], se exporta con un _script_ y unas plantillas y el resultado es incorporado en un repositorio de [Subversion][subversion] desde el cual es servido con algún servidor web.
 
@@ -44,16 +44,8 @@ El resultado ha sido este, antes y después. El actual lo puedes ver en la [pág
     image2="image:tapestry-site-index-new.png" optionsthumb2="300x200" title2="Página nueva" >}}
 {{< image
     gallery="true"
-    image1="image:tapestry-site-getting-started-old.png" optionsthumb1="300x200" title1="Página antigua"
-    image2="image:tapestry-site-getting-started-new.png" optionsthumb2="300x200" title2="Página nueva" >}}
-{{< image
-    gallery="true"
     image1="image:tapestry-site-documentation-old.png" optionsthumb1="300x200" title1="Página antigua"
-    image2="image:tapestry-site-documentation-new.png" optionsthumb2="300x200" title2="Página nueva" >}}
-{{< image
-    gallery="true"
-    image1="image:tapestry-site-component-classes-old.png" optionsthumb1="300x200" title1="Página antigua"
-    image2="image:tapestry-site-component-classes-new.png" optionsthumb2="300x200" title2="Página nueva"
+    image2="image:tapestry-site-documentation-new.png" optionsthumb2="300x200" title2="Página nueva"
     caption="Comparación entre la versión antigua (izquierda) y nueva (derecha)" >}}
 
 
@@ -102,13 +94,15 @@ En un contribución anterior había realizado cambios en el artefacto de Maven q
 
 Las mejoras que he realizado ha sido refactorizar el artefacto de Maven, usar [Spring Boot][spring-boot] para iniciar la aplicación, añadir [Gradle][gradle] como herramienta de construcción y algunos teses de ejemplo. El nuevo artefacto está incluido en la versión 5.5.0.
 
+{{< code file="quickstart.sh" language="bash" options="" >}}
+
 {{< image
     gallery="true"
     image1="image:apache-tapestry-quickstart.png" optionsthumb1="300x200" title1="Aplicación de inicio rápido" >}}
 
 ### Conclusión
 
-Los que trabajan en proyecto _open source_ tienen mucho conocimiento deben tenerlo si son capaces de construir un proyecto que en algunos casos utilizan miles de desarrolladores y empresas pero su tiempo es limitado, ni en muchos casos es su trabajo principal y en algunos aspectos no tienen por qué saber más que tú en todo. Contribuir a un proyecto es sencillo solo requiere tiempo y algo de conocimiento para conocer que cambios hay que realizar.
+Los que trabajan en proyecto _open source_ tienen mucho conocimiento deben tenerlo si son capaces de construir un proyecto que en algunos casos utilizan miles de desarrolladores y empresas pero su tiempo es limitado, ni en muchos casos es su trabajo principal y en algunos aspectos no tienen por qué saber más que tú en todo. Contribuir a un proyecto es sencillo solo requiere tiempo y algo de conocimiento para conocer que cambios hay que realizar, con interés y tiempo poco a poco uno va conocienco más detalles del proyecto que permiten realizar contribuciones como estas.
 
 Estas contribuciones no aportan código al proyecto pero la documentación y página web es también importante como muestra del estado del proyecto. Si usase a diario una aplicación con Apache Tapestry en el trabajo es posible que pudiese realizar algunas contribuciones al código fuente del framework pero si tener esa posibilidad mi motivación para realizarlas no es tan alta.
 
