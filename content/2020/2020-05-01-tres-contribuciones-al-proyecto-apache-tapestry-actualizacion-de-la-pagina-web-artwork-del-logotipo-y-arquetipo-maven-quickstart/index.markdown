@@ -36,7 +36,7 @@ Con mi experiencia con [Hugo][hugo] me planteaba reescribir la forma de edición
 
 Debido a la mayor complejidad de los cambios y que la persona del proyecto encargada de la página web y documentación requería que el proceso siguiese siendo parecido pudiendo editar desde un dispositivo móvil la opción ha sido mejorar lo actual aun sabiendo las limitaciones de Confluence y el proceso actual. Con esta opción sabía que únicamente podría mejorar el diseño, para corregir algunos otros fallos es necesario hacer los cambios editando el contenido en Confluence.
 
-El resultado ha sido este, antes y después. El actual lo puedes ver en la [página web del proyecto][tapestry].
+El resultado ha sido este, antes y después. El actual lo puedes ver en la [página web de Tapestry][tapestry].
 
 {{< image
     gallery="true"
