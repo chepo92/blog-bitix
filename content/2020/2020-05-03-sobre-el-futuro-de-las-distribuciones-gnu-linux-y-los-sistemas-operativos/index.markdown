@@ -73,6 +73,12 @@ Lenguajes más recientes como [Go][go] o [Rust][rust] los más conocidos es posi
 
 Es difícil que surja un nuevo sistema operativo que sustituya rápidamente a los existentes pero es posible que los existentes vayan cambiando su lenguaje de programación o surjan nuevos con esos lenguajes.
 
+{{< image
+    gallery="false"
+    image1="logotype:rust.svg" optionsthumb1="200x150" title1="Rust"
+    image2="logotype:go.svg" optionsthumb2="200x150" title2="Go"
+    caption="Lenguajes de sistemas que pueden reemplazar a C" >}}
+
 ### Kernel
 
 El kernel de Linux es monolítico no porque sea lo mejor sino porque como [Linus Torvalds][linus-torvalds] considera es lo más pragmático por su mayor facilidad de desarrollo. Pero un fallo en cualquier parte de su gran cantidad de código sobre todo el los controladores de dispositivos hace que el sistema produzca un volvado del sistema y deje de funcionar completamente. También es más inseguro ya que cualquier código que el kernel cargue y funcione en modo superusuario supone un potencial problema ya que es capaz de realizar cualquier cosa.
@@ -82,6 +88,12 @@ Los kernels basados en microkernels son más seguros al ser su núcleo mucho má
 Ejemplos de kernels basados en microkernel son [Minix][minix], [GNU/Hurd][gnu-hurd], el propio Redox o [Genode][genode]. A pesar de todo ninguno de ellos ha tomado suficiente relevancia para hacer no ya sombra a Linux sino tampoco a los BSD. Sus desventajas es que hasta ahora no han demostrado alcanzar el mismo rendmiento que los kernels monolíticos y como en el caso de GNU/Hurd su desarrollo esté muy lejos de completarse por su mayor dificultad de desarrollo.
 
 Si a Linux le surge una alternativa no será porque es malo sino porque no tiene algunas características. Un ámbito puede ser el de coches autónomos en los que un fallo puede suponer un accidente con víctimas mortales o algún sistema que necesite gran fiabilidad como operaciones bursátiles.
+
+{{< image
+    gallery="false"
+    image1="logotype:minix.svg" optionsthumb1="200x150" title1="Minix"
+    image2="logotype:hurd.svg" optionsthumb2="200x150" title2="GNU/hurd"
+    caption="Sistemas operativos basados en microkernel" >}}
 
 ### Sistema de archivos
 
