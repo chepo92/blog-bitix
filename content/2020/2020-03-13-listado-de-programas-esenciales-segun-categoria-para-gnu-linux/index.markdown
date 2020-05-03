@@ -33,7 +33,7 @@ Los programas incluidos en esta lista solo son una pequeña muestra seleccionada
 * [Aplicaciones para internet](https://wiki.archlinux.org/index.php/List_of_applications/Internet)
 * [Lista de juegos](https://wiki.archlinux.org/index.php/List_of_games)
 
-Todos estos programas están disponibles como paquete para cada distribución GNU/Linux, si no lo estuviera quizá esté disponible como paquete [Flatpak][flatpak], [snaps][snaps] o [AppImage][appimage] para instalar el software independientemente de la distribución.
+Todos estos programas están disponibles como paquete para cada distribución GNU/Linux, si no lo estuviera quizá esté disponible como paquete [Flatpak][flatpak], [Snapcraft][snapcraft] o [AppImage][appimage] para instalar el software independientemente de la distribución.
 
 * [Flatpak, distribución e instalación de programas de escritorio en las distribuciones GNU/Linux][blogbitix-362]
 

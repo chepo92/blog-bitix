@@ -61,11 +61,15 @@ Con las ventajas de Flatpak tanto para usuarios, desarrolladores y mantenedores 
 
 En la página de [preguntas frecuentes](https://www.flatpak.org/faq/) está el curioso origen del nombre de Flatpak en relación con una de las innovaciones de paquetes planos de IKEA. Es una tecnología acoplada a Linux ya que utiliza varias de las tecnologías propias de Linux y por tanto no está para las [distribuciones BSD][bsd] como ocurre en otros casos. El entorno de desarrollo [GNOME Builder][gnome-builder] soporta la programación para Flatpak.
 
-Flatpak está más apoyada por [Red Hat][redhat], [Canonical][canonical] tiene su tecnología similar con [snaps][snaps]. Ha ocurrido igual en anteriores casos con [systemd][systemd] y [Upstart][upstart] o [Wayland][wayland] y [Mir][mir] donde las tecnologías más apoyadas por Red Hat han sido las que mayor éxito han tenido y han prevalecido. Si nada cambia en [Red Hat al ser adquirida por parte de IBM][blogbitix-358] puede que se produzca el mismo resultado no tanto por que las tecnologías de Red Hat sean mejores sino porque tiene más peso en la comunidad que Canonical. Por el momento la [adopción para snap contra la de Flatpak](https://kamikazow.wordpress.com/2018/06/08/adoption-of-flatpak-vs-snap-2018-edition/) no produce buenos augurios para la primera donde solo en Ubuntu es buena como no podría ser de otra forma.
+Flatpak está más apoyada por [Red Hat][redhat], [Canonical][canonical] tiene su tecnología similar con [Snapcraft][snapcraft]. Ha ocurrido igual en anteriores casos con [systemd][systemd] y [Upstart][upstart] o [Wayland][wayland] y [Mir][mir] donde las tecnologías más apoyadas por Red Hat han sido las que mayor éxito han tenido y han prevalecido. Si nada cambia en [Red Hat al ser adquirida por parte de IBM][blogbitix-358] puede que se produzca el mismo resultado no tanto por que las tecnologías de Red Hat sean mejores sino porque tiene más peso en la comunidad que Canonical. Por el momento la [adopción para snap contra la de Flatpak](https://kamikazow.wordpress.com/2018/06/08/adoption-of-flatpak-vs-snap-2018-edition/) no produce buenos augurios para la primera donde solo en Ubuntu es buena como no podría ser de otra forma.
 
 Si usas Arch Linux e instalas el entorno de escritorio GNOME con los paquetes _gnome_ y _gnome-extra_ ya tendrás instalado Flatpak ya que se instala como dependencia. Se puede instalar directamente con el gestor de paquetes _pacman_ con el siguiente comando:
 
 {{< code file="install.sh" language="bash" options="" >}}
+
+Las distribuciones tal y como las conocemos van a cambiar mucho, entre esos cambios están una nueva forma de sistema base inmutable y actualizaciones con [OSTree][ostree] o sistema de archivos con [OpenZFS][openzfs].
+
+* [Sobre el futuro de las distribuciones GNU/Linux y los sistemas operativos][blogbitix-479]
 
 {{< reference >}}
 * [Flatpak vs Snap - Which format is "Better"? A rather excellent in-depth comparison](https://www.reddit.com/r/linux/comments/60qdtw/flatpak_vs_snap_which_format_is_better_a_rather/)
