@@ -9,7 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "logotype:gnu.svg"
+imagePost: "image:unix-linux-command-reference.jpg"
 tags: ["gnu-linux", "planeta-codigo"]
 summary: "Desde la línea de comandos hay disponibles una colección de comandos útiles para realizar ciertas tareas de forma rápida y sencilla. Los comandos se pueden incluir en _scripts_ de bash o pequeños programas para el intérprete de comandos y componer la entrada de unos comandos con la salida de otros a través de tuberías dándoles más versatilidad."
 ---
@@ -29,6 +29,11 @@ Algunos ejemplos de lo que es posible realizar desde la línea de comandos son e
 * [Cambiar el formato de archivos de música o audio en GNU/Linux][blogbitix-134]
 * [Cambiar el formato de archivos de vídeo o películas en GNU/Linux][blogbitix-135]
 * [Comando para convertir imágenes a WebP con menor tamaño desde JPEG y PNG][blogbitix-447]
+
+{{< image
+    gallery="true"
+    image1="image:unix-linux-command-reference.jpg" optionsthumb1="650x450" title1="Referencia de comandos Unix/Linux"
+    caption="Referencia de comandos Unix/Linux" >}}
 
 ### Sistema de archivos
 
@@ -62,6 +67,7 @@ Los comandos son procesados por un intérprete de comandos algunos están relaci
 * `traceroute`: muestra los host por los que pasan los paquetes TCP/IP hasta llegar al destino.
 * `wget`: permite realizar descargas de páginas y archivos accesibles mediante el protocolo HTTP.
 * `curl`: permite realizar peticiones del protocolo HTTP a un servidor.
+* `dig`: devuelve información de un dominio del sistema DNS.
 
 ### Tratamiento de archivos
 
@@ -73,6 +79,7 @@ Los comandos son procesados por un intérprete de comandos algunos están relaci
 * `sort`, `uniq`, `seq`. `shuf`: ordena ascendentemente o descendentemente las líneas de un archivo. _seq_ genera una secuencia de números, _shuf_ ordena de forma aleatoria las líneas de entrada.
 * `head`, `tail`, `less`: muestran las primeras o últimas líneas de un archivo de texto. _less_ permite paginar para navegar archivos de texto en la terminal.
 * `wc`: cuenta palabras, líneas, caracteres o bytes de un archivo.
+* `df`, `du`: muestra información de uso en el almacenamiento persistente.
 
 ### Editores de texto
 

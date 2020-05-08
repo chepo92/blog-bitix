@@ -10,7 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "logotype:linux.png"
+imagePost: "logotype:linux.svg"
 tags: ["gnu-linux", "planeta-codigo"]
 summary: "Linux es uno de los mejores sistemas operativos actuales y sobre todo usable y completo. Eso no quiere decir que en el futuro no tan lejano haya cambios importantes en como hemos conocido las distribuciones de GNU/Linux hasta hoy. Ya se están produciendo cambios y surgiendo nuevas basadas en tecnologías y pricipios significativamente diferentes que mejoran algunas deficiencias de la actual generación en la que están basadas la mayoría de las distribuciones más populares actuales."
 ---
@@ -91,7 +91,7 @@ Si a Linux le surge una alternativa no será porque es malo sino porque no tiene
 
 {{< image
     gallery="false"
-    image1="logotype:minix.svg" optionsthumb1="200x150" title1="Minix"
+    image1="logotype:minix.jpg" optionsthumb1="200x150" title1="Minix"
     image2="logotype:hurd.svg" optionsthumb2="200x150" title2="GNU/hurd"
     caption="Sistemas operativos basados en microkernel" >}}
 
