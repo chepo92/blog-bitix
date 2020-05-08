@@ -4,6 +4,7 @@ type: "post"
 title: "Renombrar múltiples archivos en GNOME"
 url: "/2020/05/renombrar-multiples-archivos-en-gnome/"
 date: 2020-05-08T16:00:00+02:00
+updated: 2020-05-08T22:00:00+02:00
 language: "es"
 rss: true
 sharing: true
