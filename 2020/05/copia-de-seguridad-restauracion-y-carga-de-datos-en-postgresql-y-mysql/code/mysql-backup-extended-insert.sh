@@ -1,0 +1,1 @@
+$ mysqldump --extended-insert database > database.sql
