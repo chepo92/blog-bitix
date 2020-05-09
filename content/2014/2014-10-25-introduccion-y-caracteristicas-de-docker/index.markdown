@@ -37,7 +37,7 @@ Para los desarrolladores tiene las siguientes ventajas:
 * Al estar los servicios en contenedores no hace falta instalarlos en la máquina en la que son alojados, de forma que podemos disponer de los servicios y después eliminarlos de forma sencilla sin "ensuciar" el sistema huésped.
 * Nos permite tener versiones más parecidas o iguales a las usadas en producción. Por ejemplo, en Arch Linux nos permite tener un mysql de la distribución [Ubuntu][ubuntu] usando la misma versión.
 
-El [registro de contenedores de Docker](https://registry.hub.docker.com/) es una forma colaborativa de ofrecer imágenes. Hay disponibles multitud de contenedores con los servicios más populares: [MySql][mysql], [PostgreSQL][postgresql], [Redis][redis], [Nginx][nginx], [WordPress][wordpress], ...
+El [registro de contenedores de Docker](https://registry.hub.docker.com/) es una forma colaborativa de ofrecer imágenes. Hay disponibles multitud de contenedores con los servicios más populares: [MySQL][mysql], [PostgreSQL][postgresql], [Redis][redis], [Nginx][nginx], [WordPress][wordpress], ...
 
 Para los administradores de sistemas tiene las siguientes ventajas:
 

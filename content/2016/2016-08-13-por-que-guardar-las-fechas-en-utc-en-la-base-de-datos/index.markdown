@@ -15,7 +15,7 @@ tags: ["java", "planeta-codigo", "programacion"]
 
 {{% post %}}
 
-{{< logotype image1="java.svg" image2="postgresql.svg" title2="PostgreSQL" width2="200" >}}
+{{< logotype image1="java.svg" image2="postgresql.svg" >}}
 
 Es rara la aplicación que trabajado con bases de datos no maneje fechas, quizá es menos habitual aplicaciones que trabajan con fechas y diferentes horarias, esto es haciendo alguna conversión entre zonas horarias. Si se nos presenta el caso de trabajar con fechas y diferentes zonas horarias haremos bien en hacer que las fechas que guardemos en la base de datos estén en la misma zona horaria al menos y convertirla posteriormente a la zona horaria que necesite la aplicación. <abbr title="Coordinated Universal Time">UTC</abbr> además de ser una zona horaria neutra evita el problema de que algunas bases de datos o lenguajes de programación para los campos fecha no guarda las zonas horarias con lo que puede ocurrirnos que guardemos la fecha en una zona horaria y la recuperemos en otra produciendo posiblemente incoherencias en las fechas por una hora.
 

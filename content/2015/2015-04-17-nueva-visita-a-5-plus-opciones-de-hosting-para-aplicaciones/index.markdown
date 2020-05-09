@@ -31,7 +31,7 @@ Con esta opción tendremos un control total del _software_ instalado sin ninguna
 
 ### Proveedor de _hosting_
 
-La siguiente opción a considerar puede ser un servidor ofrecido por muchos registradores de dominios. Si el tráfico del servicio que planeamos ofrecer no es muy alto (y así serán en los inicios) es una opción adecuada. En la mayoría de las opciones de este tipo estaremos limitados en el lenguaje de programación que podremos usar generalmente [PHP][php] o la base de datos generalmente [MySql][mysql].
+La siguiente opción a considerar puede ser un servidor ofrecido por muchos registradores de dominios. Si el tráfico del servicio que planeamos ofrecer no es muy alto (y así serán en los inicios) es una opción adecuada. En la mayoría de las opciones de este tipo estaremos limitados en el lenguaje de programación que podremos usar generalmente [PHP][php] o la base de datos generalmente [MySQL][mysql].
 
 Mucha gente usa esta opción para albergar su bitácora con [WordPress][wordpress] que incluso para un tráfico considerable es suficiente, por supuesto es válida para las empresas que quieran tener presencia en internet aunque solo sea para incluir su dirección teléfono de contacto y una breve descripción y los productos que ofrece. Para estos usos el coste de esta opción puede estar entre 1€/mes y 20€/mes aparte del coste del dominio.
 

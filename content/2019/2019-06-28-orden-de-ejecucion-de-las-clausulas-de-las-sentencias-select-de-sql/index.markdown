@@ -15,7 +15,7 @@ tags: ["planeta-codigo", "programacion"]
 
 {{% post %}}
 
-{{< logotype image1="postgresql.svg" title1="PostgreSQL" width1="200" image2="mysql.svg" title2="MySQL" width2="200" >}}
+{{< logotype image1="postgresql.svg" image2="mysql.svg" >}}
 
 El lenguaje SQL es un potente lenguaje declarativo usado en las bases de datos relacionales como [MySQL][mysql] o [PostgreSQL][postgresql]. En el lenguaje SQL se declara que datos se quieren recuperar, qué condiciones han de cumplir cumplir y qué funciones se aplican a los datos pero no se define como han de recuperarse los datos, es la base de datos la que decide como guardarlos e interpretando la sentencia SQL la que decide cómo recuperarlos.
 

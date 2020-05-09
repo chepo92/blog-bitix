@@ -15,7 +15,7 @@ tags: ["planeta-codigo", "programacion"]
 
 {{% post %}}
 
-{{< logotype image1="mysql.svg" title1="MySQL" width1="300" image2="postgresql.svg" title2="PotgreSQL" width2="200" >}}
+{{< logotype image1="mysql.svg" title1="MySQL" width1="300" image2="postgresql.svg" >}}
 
 La información generalmente y en la mayoría de los casos es de las cosas más importantes de una aplicación. Para guardarla se suelen emplear bases de datos relacionales por sus propiedades de consistencia, transaccionalidad y propiedades ACID aunque más recientemente se ha popularizado otros sistemas no SQL como [Redis][redis] o [Mongo][mongodb] para diferentes casos de uso.
 

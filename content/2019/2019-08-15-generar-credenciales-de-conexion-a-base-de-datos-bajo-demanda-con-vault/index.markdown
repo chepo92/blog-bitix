@@ -17,7 +17,7 @@ summary: "Una de las funcionalidades proporcionada por Vault es generar credenci
 
 {{% post %}}
 
-{{< logotype image1="vault.svg" title1="Vault" width1="200" image2="postgresql.svg" title2="PostgreSQL" width2="200" >}}
+{{< logotype image1="vault.svg" title1="Vault" width1="200" image2="postgresql.svg" >}}
 
 Las base de datos para proteger los datos realizan autenticación del usuario que se conecta. Normalmente utilizando un usuario y contraseña, una vez autenticado el usuario mediante permisos se realiza la autorización de las operaciones que puede realizar, a que bases de datos se puede conectar, que tablas puede acceder y que operaciones puede realizar.
 

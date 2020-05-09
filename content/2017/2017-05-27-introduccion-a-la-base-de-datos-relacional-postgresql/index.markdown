@@ -17,7 +17,7 @@ summary: "De todas las funcionalidades que tiene SQL muchos desarrolladores solo
 
 {{% post %}}
 
-{{< logotype image1="postgresql.svg" title1="PostgreSQL" width1="200" >}}
+{{< logotype image1="postgresql.svg" >}}
 
 Aún con el reciente auge de las bases de datos NoSQL las bases de datos relacionales siguen siendo la opción usada mayoritariamente para persistir los datos de una aplicación. El potente [lenguaje SQL][sql] permite obtener, modificar, insertar y eliminar datos de forma declarativa. Una característica deseada de las bases de datos relacionales es la de mantener con transacciones la integridad referencial y consistencia de los datos en todo momento que las bases de datos NoSQL no ofrecen aunque estas últimas a cambio ofrecen mejores opciones para escalar. Por otro lado los datos ya sean en una base de datos relacional o NoSQL seguirán un esquema aunque en este último caso no se exija, las bases de datos relacionales al exigir que los datos sigan un esquema evitará inconsistencias y los tipos de los datos serán los definidos en la tabla de datos en las que se guarden.
 
