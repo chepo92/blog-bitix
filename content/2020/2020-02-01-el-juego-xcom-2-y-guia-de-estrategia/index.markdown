@@ -26,6 +26,17 @@ En el modo de veterano ya es difícil, en las dificultades comandante y leyenda 
 
 Cada partida es distinta ya que el juego tiene cierta aleatoriedad en los eventos oscuros que ocurren, la ubicación diferente de la base en el mapa del mundo y los mapas de las misiones lo que de da al juego con los niveles de dificultad cierta rejugabilidad.
 
+Si hay algo que no me ha convencido del juego es las tácticas en las batallas, una vez el pelotón ha perdido la ventaja de la ocultación las patrullas de alienígenas se activan en cuanto las tenemos a la vista de modo que es difícil preparar más emboscadas después de la primera y con mala suerte no queda más remedio que cargar la partida y realizar los movimientos del pelotón sabiendo donde están los enemigos. Esto le resta parte de la diversión al juego ya que básicamente consite en guardar y cargar la partida hasta finalizar la misión sin ninguna baja importante. Algunas habilidades y objetos permiten en parte suplir estas carencias pero  en la forma en que me he pasado el juego no he llegado a comprarlas. También la probabilidad de acierto aún siendo de un 95% no es extraño fallar, y un fallo en este juego significa la pérdica de un soldado que supone un lastre para futuras misiones. 
+
+Si te gusta el modo de juego de XCOM 2 otros juegos similares son:
+
+* [Phantom Doctrine](https://www.youtube.com/results?search_query=Phantom+Doctrine)
+* [Phoenix Point](https://www.youtube.com/results?search_query=Phoenix+Point)
+* [Mutant Year Zero: Road to Eden](https://www.youtube.com/results?search_query=Mutant+Year+Zero)
+* [Wasteland 2](https://www.youtube.com/results?search_query=Wasteland+2)
+* [Wasteland 3](https://www.youtube.com/results?search_query=Wasteland+3)
+* [Divinity: Original Sin 2](https://www.youtube.com/results?search_query=Divinity%3A+Original+Sin+2)
+
 {{< image
     gallery="true"
     image1="image:XCOM-2.jpg" optionsthumb1="300x250" title1="Pantalla inicial"
@@ -35,6 +46,8 @@ Cada partida es distinta ya que el juego tiene cierta aleatoriedad en los evento
 En un momento de oferta en la [Play Station Store][playstation-store] en formato digital está en por 13€ desde un precio original de 50€, un gran precio precio para un gran juego que ofrece una buena cantidad de horas de entretenimiento, más si una vez acabado el juego se optar por rejugarlo en un nivel más difícil. En [Amazon][amazon] está en formato físico. Al menos en la versión de la PlayStation 4 del juego en momentos concretos se producen tirones no se si por capacidad de la la PS4 o por un _port_ deficiente en la consola, además los tiempos de carga y guardado incluso para mostrar los menús es significativo en parte puede ser debido a que la PS4 tiene disco duro mecánico y es común a todos los juegos de esta generación de consolas.
 
 Esta es mi guía de estrategia del juego para que he seguido para acabar el juego. Algunos aspectos pueden variar según la preferencia o gusto de juego aunque en ciertas partes importantes será muy parecida.
+
+{{< game-spoiler >}}
 
 ### Recursos
 
@@ -162,6 +175,21 @@ El granadero es uno de los soldados más importantes ya que con sus lanzagranada
     image1="image:granadero.jpg" optionsthumb1="600x450" title1="Granadero"
     caption="Granadero" >}}
 
+{{< image
+    gallery="true"
+    image1="image:granadero-habilidades-1.jpg" optionsthumb1="200x150" title1="Habilidades granadero"
+    image2="image:granadero-habilidades-2.jpg" optionsthumb2="200x150" title2="Habilidades granadero"
+    image3="image:granadero-habilidades-3.jpg" optionsthumb3="200x150" title3="Habilidades granadero" >}}
+{{< image
+    gallery="true"
+    image1="image:granadero-habilidades-4.jpg" optionsthumb1="200x150" title1="Habilidades granadero"
+    image2="image:granadero-habilidades-5.jpg" optionsthumb2="200x150" title2="Habilidades granadero"
+    image3="image:granadero-habilidades-6.jpg" optionsthumb3="200x150" title3="Habilidades granadero" >}}
+{{< image
+    gallery="true"
+    image1="image:granadero-habilidades-7.jpg" optionsthumb1="200x150" title1="Habilidades granadero"
+    caption="Habilidades granadero" >}}
+
 {{< youtube
     video="rUl5N9WGTuk" >}}
 
@@ -173,6 +201,21 @@ Están equipados con un fusil que les permite disparar a largas distancias sin e
     gallery="true"
     image1="image:francotirador.jpg" optionsthumb1="600x450" title1="Francotirador"
     caption="Francotirador" >}}
+
+{{< image
+    gallery="true"
+    image1="image:francotirador-habilidades-1.jpg" optionsthumb1="200x150" title1="Habilidades francotirador"
+    image2="image:francotirador-habilidades-2.jpg" optionsthumb2="200x150" title2="Habilidades francotirador"
+    image3="image:francotirador-habilidades-3.jpg" optionsthumb3="200x150" title3="Habilidades francotirador" >}}
+{{< image
+    gallery="true"
+    image1="image:francotirador-habilidades-4.jpg" optionsthumb1="200x150" title1="Habilidades francotirador"
+    image2="image:francotirador-habilidades-5.jpg" optionsthumb2="200x150" title2="Habilidades francotirador"
+    image3="image:francotirador-habilidades-6.jpg" optionsthumb3="200x150" title3="Habilidades francotirador" >}}
+{{< image
+    gallery="true"
+    image1="image:francotirador-habilidades-7.jpg" optionsthumb1="200x150" title1="Habilidades francotirador"
+    caption="Habilidades francotirador" >}}
 
 {{< youtube
     video="db2izydVkpY" >}}
@@ -186,6 +229,21 @@ Los especialistas aparte de poder disparar con su fusil tiene la misión de pira
     image1="image:especialista.jpg" optionsthumb1="600x450" title1="Especialista"
     caption="Especialista" >}}
 
+{{< image
+    gallery="true"
+    image1="image:especialista-habilidades-1.jpg" optionsthumb1="200x150" title1="Habilidades especialista"
+    image2="image:especialista-habilidades-2.jpg" optionsthumb2="200x150" title2="Habilidades especialista"
+    image3="image:especialista-habilidades-3.jpg" optionsthumb3="200x150" title3="Habilidades especialista" >}}
+{{< image
+    gallery="true"
+    image1="image:especialista-habilidades-4.jpg" optionsthumb1="200x150" title1="Habilidades especialista"
+    image2="image:especialista-habilidades-5.jpg" optionsthumb2="200x150" title2="Habilidades especialista"
+    image3="image:especialista-habilidades-6.jpg" optionsthumb3="200x150" title3="Habilidades especialista" >}}
+{{< image
+    gallery="true"
+    image1="image:especialista-habilidades-7.jpg" optionsthumb1="200x150" title1="Habilidades especialista"
+    caption="Habilidades especialista" >}}
+
 {{< youtube
     video="2rc1JFZlVcY" >}}
 
@@ -197,6 +255,21 @@ Los comandos por defecto van equipados con una escopeta y una espada lo que les 
     gallery="true"
     image1="image:comando.jpg" optionsthumb1="600x450" title1="Comando"
     caption="Comando" >}}
+
+{{< image
+    gallery="true"
+    image1="image:comando-habilidades-1.jpg" optionsthumb1="200x150" title1="Habilidades comando"
+    image2="image:comando-habilidades-2.jpg" optionsthumb2="200x150" title2="Habilidades comando"
+    image3="image:comando-habilidades-3.jpg" optionsthumb3="200x150" title3="Habilidades comando" >}}
+{{< image
+    gallery="true"
+    image1="image:comando-habilidades-4.jpg" optionsthumb1="200x150" title1="Habilidades comando"
+    image2="image:comando-habilidades-5.jpg" optionsthumb2="200x150" title2="Habilidades comando"
+    image3="image:comando-habilidades-6.jpg" optionsthumb3="200x150" title3="Habilidades comando" >}}
+{{< image
+    gallery="true"
+    image1="image:comando-habilidades-7.jpg" optionsthumb1="200x150" title1="Habilidades comando"
+    caption="Habilidades comando" >}}
 
 {{< youtube
     video="9XHqpjHwlSI" >}}
