@@ -18,7 +18,7 @@ summary: "XCOM 2 es un juego de estrategia, con combates de acción por turnos, 
 
 {{% post %}}
 
-El juego [XCOM 2](https://en.wikipedia.org/wiki/XCOM_2) continuación del juego [XCOM: Enemy Unknown](https://en.wikipedia.org/wiki/XCOM:_Enemy_Unknown) para la PlayStation 3 ha sido uno de mis primeros juegos que he jugado en [la PlayStation 4 que compré en el 2019][blogbitix-432]. La temática basada en la invasión de la tierra de los alienígenas en un género de juego es uno de los que me atraen, con una parte de estrategia tanto a la hora de gestionar recursos así como en el los combates por turnos junto con otra parte de rol en la que los soldados van adquiriendo nuevas habilidades, armas y componentes para hacerlas más poderosas.
+El juego [XCOM 2](https://en.wikipedia.org/wiki/XCOM_2) continuación del juego [XCOM: Enemy Unknown](https://en.wikipedia.org/wiki/XCOM:_Enemy_Unknown) para la PlayStation 3 ha sido uno de mis primeros juegos que he jugado en [la PlayStation 4 que compré en el 2019][blogbitix-432]. La temática basada en la invasión de la tierra de los alienígenas en un género de juego es uno de los que me atraen, con una parte de estrategia tanto a la hora de gestionar recursos así como en el los combates por turnos junto con otra parte de rol en la que los soldados van adquiriendo nuevas habilidades, armas y componentes para hacerlas más poderosas. Tanto los textos como los diálogos están doblados al español lo que es de agradecer.
 
 Fue publicado en el año 2016, desarrollado por [Firaxis Games](https://en.wikipedia.org/wiki/Firaxis_Games) y publicado por [2K Games](https://en.wikipedia.org/wiki/2K_Games), disponible en Windows, macOS, Linux, Xbox One y Play Station 4. Tiene una expansión, [XCOM 2 : War of the Choosen](https://en.wikipedia.org/wiki/XCOM_2:_War_of_the_Chosen). El juego está completamente traducido al español tanto en los textos como las voces. Posee una música que proporciona un ambiente épico en las batallas.
 
@@ -40,10 +40,10 @@ Si te gusta el modo de juego de XCOM 2 otros juegos similares son:
 {{< image
     gallery="true"
     image1="image:XCOM-2.jpg" optionsthumb1="300x250" title1="Pantalla inicial"
-    image2="image:menu.jpg" optionsthumb2="300x250" title2="Menú"
+    image2="image:xcom-2-menu.jpg" optionsthumb2="300x250" title2="Menú"
     caption="Pantalla inicial y menú" >}}
 
-En un momento de oferta en la [Play Station Store][playstation-store] en formato digital está en por 13€ desde un precio original de 50€, un gran precio precio para un gran juego que ofrece una buena cantidad de horas de entretenimiento, más si una vez acabado el juego se optar por rejugarlo en un nivel más difícil. En [Amazon][amazon] está en formato físico. Al menos en la versión de la PlayStation 4 del juego en momentos concretos se producen tirones no se si por capacidad de la la PS4 o por un _port_ deficiente en la consola, además los tiempos de carga y guardado incluso para mostrar los menús es significativo en parte puede ser debido a que la PS4 tiene disco duro mecánico y es común a todos los juegos de esta generación de consolas.
+En un momento de oferta en la [PlayStation Store][playstation-store] en formato digital está en por 13€ desde un precio original de 50€, un gran precio precio para un gran juego que ofrece una buena cantidad de horas de entretenimiento, más si una vez acabado el juego se optar por rejugarlo en un nivel más difícil. En [Amazon][amazon] está en formato físico. Al menos en la versión de la PlayStation 4 del juego en momentos concretos se producen tirones no se si por capacidad de la la PS4 o por un _port_ deficiente en la consola, además los tiempos de carga y guardado incluso para mostrar los menús es significativo en parte puede ser debido a que la PS4 tiene disco duro mecánico y es común a todos los juegos de esta generación de consolas.
 
 Esta es mi guía de estrategia del juego para que he seguido para acabar el juego. Algunos aspectos pueden variar según la preferencia o gusto de juego aunque en ciertas partes importantes será muy parecida.
 
@@ -309,7 +309,7 @@ En el modo de juego difícil y hombre de hierro supone una dificultad adicional 
 
 ### XCOM Wiki 
 
-En la [Wiki de XCOM 2 de Fandom](https://xcom.fandom.com/wiki/XCOM_2) están recogidos con detalle las armas, armaduras, habilidades de de las clases de soldados así como armas, armaduras y elementos de utilidad. Esta información resulta muy útil para elegir la que consideremos la mejor estrategia o revisarla si no es del todo efectiva.
+En la [Wiki de XCOM 2 de Fandom](https://xcom.fandom.com/wiki/XCOM_2) están recogidos con detalle las armas, armaduras, habilidades de de las clases de soldados así como armas, armaduras y elementos de utilidad. Esta información resulta muy útil para elegir la que consideremos la mejor estrategia o revisar si la que utilizamos no es del todo efectiva.
 
 * [Clase granadero](https://xcom.fandom.com/wiki/Grenadier_Class_(XCOM_2))
 * [Clase francotirador](https://xcom.fandom.com/wiki/Sharpshooter_Class_(XCOM_2))
