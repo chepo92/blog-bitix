@@ -2,8 +2,9 @@
 pid: 483
 type: "post"
 title: "Introducción y uso básico de la distribución GNU/Linux Fedora Silverblue"
-url: "/2020/05/introducción-y-uso-basico-de-la-distribucion-gnu-linux-fedora-silverblue/"
+url: "/2020/05/introduccion-y-uso-basico-de-la-distribucion-gnu-linux-fedora-silverblue/"
 date: 2020-05-15T16:00:00+02:00
+updated: 2020-05-15T18:45:00+02:00
 language: "es"
 rss: true
 sharing: true
