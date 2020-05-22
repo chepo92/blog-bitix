@@ -1,0 +1,575 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta name="base" href="/blog-bitix/">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="picodotdev">
+  <meta name="keywords" content="java, programacion, software, hardware, tapestry, software libre, gnu, linux, gnu/linux, unix, arch, arch linux, html, css, javascript">
+  <meta name="description" content="Desde la publicación de Java 8 junto con el nuevo calendario de publicación las mejoras en la plataforma Java y en el lenguaje han sido constantes y significativas. Las mejoras continúan en cada nueva versión y hay muchas otras en preparación para ser publicadas cuando estén listas. Una de ellas muy prometedoras es una nueva implementación de los threads mucho más ligera que han existido desde la primera versión. Estos harán innecesarios en la mayoría de los casos los más complicados modelos programación asíncrona, la programación reactiva, la programación mediante callbacks y las construcciones async/await. &hellip;">
+
+  <title>La concurrencia en la plataforma Java con Project Loom</title>
+
+  <link rel="shortcut icon" href="/blog-bitix/assets/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/blog-bitix/assets/apple-touch-icon-144-precomposed.png">
+  <link rel="canonical" type="text/html" href="https://picodotdev.github.io/blog-bitix/2020/05/la-concurrencia-en-la-plataforma-java-con-project-loom/">
+  <link rel="alternate" type="application/rss&#43;xml" href="https://picodotdev.github.io/blog-bitix/index.xml" title="Blog Bitix">
+  <link rel="amphtml" type="text/html" href="https://picodotdev.github.io/blog-bitix/2020/05/la-concurrencia-en-la-plataforma-java-con-project-loom/index-amp.html" title="La concurrencia en la plataforma Java con Project Loom">
+  
+  <link rel="humans" type="text/plain" href="/blog-bitix/humans.txt">
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i&display=swap" rel="stylesheet"> 
+
+  
+
+  <!-- Social -->
+<meta property="og:title" content="La concurrencia en la plataforma Java con Project Loom">
+<meta property="og:url" content="https://picodotdev.github.io/blog-bitix/2020/05/la-concurrencia-en-la-plataforma-java-con-project-loom/">
+<meta property="og:image" content="https://picodotdev.github.io/blog-bitix/https://picodotdev.github.io/blog-bitix/assets/images/structured-data/blogbitix-750.png">
+
+<meta property="og:site_name" content="Blog Bitix">
+<meta property="og:description" content="Desde la publicación de Java 8 junto con el nuevo calendario de publicación las mejoras en la plataforma Java y en el lenguaje han sido constantes y significativas. Las mejoras continúan en cada nueva versión y hay muchas otras en preparación para ser publicadas cuando estén listas. Una de ellas muy prometedoras es una nueva implementación de los threads mucho más ligera que han existido desde la primera versión. Estos harán innecesarios en la mayoría de los casos los más complicados modelos programación asíncrona, la programación reactiva, la programación mediante callbacks y las construcciones async/await. &hellip;">
+<meta property="og:type" content="article">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://picodotdev.github.io/blog-bitix/https://picodotdev.github.io/blog-bitix/assets/images/structured-data/blogbitix-750.png">
+
+<meta name="twitter:site" content="@picodotdev">
+<meta name="twitter:title" content="La concurrencia en la plataforma Java con Project Loom">
+<meta name="twitter:description" content="Desde la publicación de Java 8 junto con el nuevo calendario de publicación las mejoras en la plataforma Java y en el lenguaje han sido constantes y significativas. Las mejoras continúan en cada nueva versión y hay muchas otras en preparación para ser publicadas cuando estén listas. Una de ellas muy prometedoras es una nueva implementación de los threads mucho más ligera que han existido desde la primera versión. Estos harán innecesarios en la mayoría de los casos los más complicados modelos programación asíncrona, la programación reactiva, la programación mediante callbacks y las construcciones async/await. &hellip;">
+<meta name="twitter:creator" content="@picodotdev">
+
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://picodotdev.github.io/blog-bitix/2020/05/la-concurrencia-en-la-plataforma-java-con-project-loom/"
+    },
+    "headline": "La concurrencia en la plataforma Java con Project Loom",
+    "image": {
+        "@type": "ImageObject",
+          "url": "https://picodotdev.github.io/blog-bitix/assets/images/structured-data/blogbitix-750.png"
+        
+      },
+    "datePublished": "2020-05-22T17:00:00+02:00",
+    "dateModified": "2020-05-22T17:00:00+02:00",
+    "inLanguage": "es",
+    
+    "wordCount": "1694",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "author": {
+        "@type": "Person",
+        "name": "picodotdev",
+        "url": "https://twitter.com/picodotdev/"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Blog Bitix",
+        "logo": {
+        "@type": "ImageObject",
+        "url": "https://picodotdev.github.io/blog-bitix/assets/images/structured-data/blogbitix-750.png"
+        }
+    },
+    "description": "Desde la publicación de Java 8 junto con el nuevo calendario de publicación las mejoras en la plataforma Java y en el lenguaje han sido constantes y significativas. Las mejoras continúan en cada nueva versión y hay muchas otras en preparación para ser publicadas cuando estén listas. Una de ellas muy prometedoras es una nueva implementación de los <em>threads</em> mucho más ligera que han existido desde la primera versión. Estos harán innecesarios en la mayoría de los casos los más complicados modelos programación asíncrona, la programación reactiva, la programación mediante <em>callbacks</em> y las construcciones <em>async/await</em>."
+}
+  </script>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Blog Bitix",
+    "url": "https://picodotdev.github.io/blog-bitix/",
+    "logo": {
+        "@type": "ImageObject",
+        "url": "https://picodotdev.github.io/blog-bitix/assets/images/structured-data/blogbitix-750.png"
+    }
+}
+  </script>
+
+  <!-- css -->
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/libs/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/libs/Gallery-2.38.0/css/blueimp-gallery.min.css">
+  <!-- theme -->
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/syntax.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/main-cookieconsent.css">
+
+  <!-- javascript -->
+  <script type="text/javascript" src="/blog-bitix/assets/js/require-config.js" defer></script>
+  <script type="text/javascript" src="/blog-bitix/assets/libs/require.js" data-main="/blog-bitix/assets/js/main" defer></script>
+
+  <script type="text/javascript">
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-12874075-4', 'picodotdev.github.io');
+    ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+  <script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" defer></script>
+<script type="text/javascript" defer>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: 'ca-pub-3533636310991304',
+    enable_page_level_ads: true
+  });
+</script>
+
+  
+  <script type="text/javascript" src="/blog-bitix/assets/js/app.js" defer></script>
+</head>
+<body>  
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        
+
+
+
+
+
+<header>
+  <div class="row">
+    <div class="col-12 col-lg-4"></div>
+    <div class="col-12 col-lg-4">
+      <h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2>
+      <div class="links">
+        
+          <a href="https://picodotdev.github.io/blog-bitix/index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+        
+        
+          <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
+        
+        
+          <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="/blog-bitix/assets/images/github.svg" width="50" height="50" class="icon"></a>
+        
+        
+        
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 text-center">
+      <form name="query" class="form-inline search" onsubmit="return false;">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Buscar en Blog Bitix">
+        </div>
+      </form>
+      <form name="search" action="https://duckduckgo.com/" method="get" class="hidden" data-site="https://picodotdev.github.io/blog-bitix/">
+        <input type="hidden" name="q" value="">
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      
+<nav class="nav nav-pills nav-fill">
+  <a href="/blog-bitix/tags/java/" class="nav-item nav-link">Java</a>
+  <a href="/blog-bitix/tags/gnu-linux/" class="nav-item nav-link">GNU/Linux</a>
+  <a href="/blog-bitix/tags/javascript/" class="nav-item nav-link">JavaScript</a>
+  <a href="/blog-bitix/tags/tapestry/" class="nav-item nav-link">Tapestry</a>
+  <a href="/blog-bitix/archive/" class="nav-item nav-link">Archivo y hemeroteca</a>
+  <a href="/blog-bitix/pages/links/" class="nav-item nav-link">Enlaces</a>
+  <a href="/blog-bitix/pages/about/" class="nav-item nav-link">Acerca de...</a>
+  
+</nav>
+
+    </div>
+  </div>
+</header> 
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 adblock-container-billboard">
+        <div class="adsense adsense-billboard">
+    <ins class="adsbygoogle"
+        data-ad-client="ca-pub-3533636310991304"
+        data-ad-slot="4052324337"
+        data-full-width-responsive="true"></ins>
+</div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-12">
+        <div class="adblock-sidebar-container">
+          <div class="adblock-sidebar-container-left"></div>
+          <div class="adblock-sidebar-container-right">
+            <div class="adsense adsense-vertical">
+    <ins class="adsbygoogle"
+        data-ad-client="ca-pub-3533636310991304"
+        data-ad-slot="7450235768"
+        data-full-width-responsive="true"></ins>
+</div>
+          </div>
+        </div>
+        
+<article>
+    <h1>La concurrencia en la plataforma Java con Project Loom</h1>
+    <p class="information">
+      
+        Escrito por
+       
+      <span>picodotdev</span> el <time>22/05/2020</time>.
+      
+        <br>
+        
+          <a href="/blog-bitix/tags/java/">java</a>
+        
+          <a href="/blog-bitix/tags/planeta-codigo/">planeta-codigo</a>
+        
+      
+      <br>
+      <a href="/blog-bitix/2020/05/la-concurrencia-en-la-plataforma-java-con-project-loom/">Enlace permanente</a>
+      
+        <a href="/blog-bitix/2020/05/la-concurrencia-en-la-plataforma-java-con-project-loom/#comments">Comentarios</a>
+      
+      
+    </p>
+
+    
+      <p class="summary">Desde la publicación de Java 8 junto con el nuevo calendario de publicación las mejoras en la plataforma Java y en el lenguaje han sido constantes y significativas. Las mejoras continúan en cada nueva versión y hay muchas otras en preparación para ser publicadas cuando estén listas. Una de ellas muy prometedoras es una nueva implementación de los <em>threads</em> mucho más ligera que han existido desde la primera versión. Estos harán innecesarios en la mayoría de los casos los más complicados modelos programación asíncrona, la programación reactiva, la programación mediante <em>callbacks</em> y las construcciones <em>async/await</em>.</p>
+    
+    
+
+    
+      <div class="adblock-container-leaderboard">
+      <div class="adsense adsense-leaderboard">
+    <ins class="adsbygoogle"
+        data-ad-client="ca-pub-3533636310991304"
+        data-ad-slot="8238629013"
+        data-full-width-responsive="true"></ins>
+</div>
+      </div>
+    
+
+    <div class="content">
+      
+
+
+      <div class="logotypes">
+<p><img data-src="/blog-bitix/assets/images/logotypes/java.svg" width="200" alt="Java" title="Java"  class="lozad"></p>
+</div>
+<p>Los <em>threads</em> han existido en Java desde la primera versión siendo uno de sus componentes esenciales. Los <em>threads</em> representan una unidad de trabajo concurrente como una abstracción de los recursos computacionales disponibles y que ocultan la complejidad de gestionar esos recursos.</p>
+<p>Ya se usen de forma directa o dentro de un framework como JAX-RS la concurrencia en Java significan <em>threads</em>. En realidad, la plataforma Java entera, desde la máquina virtual al lenguaje y librerías incluidos depuradores y <em>profilers</em> está construida alrededor de los <em>threads</em> como componente esencial de ejecutar un programa.</p>
+<p>En general la plataforma Java se basa en:</p>
+<ul>
+<li>Las APIs son síncronas y describen operaciones E/S de inicio y espera a sus resultados como una secuencia ordenada de sentencias por <em>threads</em> que se bloquean.</li>
+<li>Las operaciones de memoria con efectos colaterales son ordenadas secuencialmente por las acciones del <em>thread</em>.</li>
+<li>Las excepciones proporcionan información útil indicando la operación fallida en el contexto del <em>thread</em> actual.</li>
+<li>Los depuradores siguen el orden de ejecución aunque se realice procesado de E/S.</li>
+</ul>
+<h3 id="los-problemas-de-los-threads-y-sus-alternativas">Los problemas de los threads y sus alternativas</h3>
+<p>En la implementación de Linux los <em>threads</em> no se diferencian de los procesos. Los <em>threads</em> son costosos de crear y pesados por lo que el sistema operativo solo es capaz de mantener unos pocos miles activos. Por este motivo ha surgido la programación asíncrona, la programación reactiva, la programación mediante <em>callbacks</em> y las construcciones <em>async/await</em> y frameworks basándose en estos principios como <a href="https://vertx.io/">Vert.x</a> o <a href="https://spring.io/reactive">Spring Reactive</a> o librerías como <a href="http://reactivex.io/">RxJava</a>. El resultado es una proliferación de APIs asíncronas desde NIO en el JDK a los <em>servlets</em> asíncronos a las librerías denominadas reactivas para no bloquear los <em>threads</em>.</p>
+<p>Sin embargo, estas formas de programación tienen un costo mayor que el tradicional y simple modelo secuencial. Son más difíciles de programar, más difíciles de mantener e implican cambios importantes en el modelo de programación. Por otro lado es más difícil depurarlos ya que no se mantiene en una única pila de llamadas toda la tarea.</p>
+<p>Estos estilos de programación no han sido inventados porque sean más fáciles de entender, son más difíciles también de depurar y de hacer <em>profile</em>. Son muy intrusivos y hacen la integración con el código síncrono virtualmente imposible simplemente porque la implementación de los <em>threads</em> es simplemente inadecuada en Java tanto en carga del sistema como rendimiento. La programación asíncrona es contraria al modelo original diseñado en la programación de la plataforma Java en varios aspectos con un alto coste de mantenibilidad y observabilidad. Pero lo hacen por una buena razón, para conseguir la escalabilidad y el rendimiento haciendo buen uso de los costosos recursos hardware.</p>
+<h3 id="la-nueva-implementación-de-los-threads">La nueva implementación de los threads</h3>
+<p>El <a href="https://wiki.openjdk.java.net/display/loom">proyecto Loom</a> persigue crear unos <em>threads</em> que eliminen los costes de los hilos tradicionales del sistema operativo. Serán mucho más ligeros, con ellos Java será capaz de mantener varios órdenes de magnitud superior, millones de <em>threads</em> en vez de solo unos pocos miles. Estos <em>threads</em> virtuales de la plataforma Java son también simplemente <em>threads</em> pero que crearlos y bloquearlos es mucho más barato. Son gestionados por el entorno de ejecución de Java y no son una representación uno a uno de un envoltorio de los <em>threads</em> del sistema operativo, en vez de eso están implementados en el espacio de usuario del JDK.</p>
+<p>Los hilos de los sistemas operativos son pesados porque deben soportar todos los lenguajes y tipo de cargas de forma genérica. Un <em>thread</em> requiere la habilidad de suspender y reactivar su ejecución de la computación. Esto requiere preservar su estado, lo que incluye su puntero de instrucciones así como todo los datos locales de computación que son almacenados en la pila. Dado que el sistema operativo no conoce cómo implementa el lenguaje su pila debe reservar una suficientemente grande.</p>
+<p>Loom añade la habilidad de controlar la ejecución, suspensión y reactivación manteniendo su estado no como un recurso del sistema operativo sino como un objeto Java conocido por la máquina virtual bajo el control directo del entorno de ejecución. El conocimiento de las estructuras internas del lenguaje hace que mantener su estado sea más pequeño en comparación con el que mantiene el sistema operativo. Cuando un <em>thread</em> invoca una operación bloqueante se traspasa el control a otro <em>thread</em> con un coste mucho menor que el realizado por el sistema operativo.</p>
+<p>El proyecto Loom modificará muchas de las clases de forma interna para implementar los <em>threads</em> con los <em>thread</em> virtuales. Las librerías y aplicaciones que hagan uso de estas clases se beneficiarán de estas mejoras sin necesidad de realizar ninguna modificación.</p>
+<p>Estos párrafos son varios extractos del magnífico artículo <a href="http://cr.openjdk.java.net/~rpressler/loom/loom/sol1_part1.html">State of Loom</a>.</p>
+<blockquote>
+<p>Programmers are forced to choose between modeling a unit of domain concurrency directly as a thread and wasting considerable throughput that their hardware can support, or using other ways to implement concurrency on a very fine-grained level but relinquishing the strengths of the Java platform. Both choices have a considerable financial cost, either in hardware or in development and maintenance effort.</p>
+</blockquote>
+<blockquote>
+<p>We can do better.</p>
+</blockquote>
+<blockquote>
+<p>Project Loom intends to eliminate the frustrating tradeoff between efficiently running concurrent programs and efficiently writing, maintaining and observing them. It leans into the strengths of the platform rather than fight them, and also into the strengths of the efficient components of asynchronous programming. It lets you write programs in a familiar style, using familiar APIs, and in harmony with the platform and its tools — but also with the hardware — to reach a balance of write-time and runtime costs that, we hope, will be widely appealing. It does so without changing the language, and with only minor changes to the core library APIs. A simple, synchronous web server will be able to handle many more requests without requiring more hardware.</p>
+</blockquote>
+<blockquote>
+<p>Whereas the OS can support up to a few thousand active threads, the Java runtime can support millions of virtual threads. Every unit of concurrency in the application domain can be represented by its own thread, making programming concurrent applications easier. Forget about thread-pools, just spawn a new thread, one per task. You’ve already spawned a new virtual thread to handle an incoming HTTP request, but now, in the course of handling the request, you want to simultaneously query a database and issue outgoing requests to three other services? No problem — spawn more threads. You need to wait for something to happen without wasting precious resources? Forget about callbacks or reactive stream chaining — just block. Write straightforward, boring code. All the benefits threads give us — control flow, exception context, debugging flow, profiling organization — are preserved by virtual threads; only the runtime cost in footprint and performance is gone. There is no loss in flexibility compared to asynchronous programming because, as we’ll see, we have not ceded fine-grained control over scheduling.</p>
+</blockquote>
+<blockquote>
+<p>However, the existence of threads that are so lightweight compared to the threads we’re used to does require some mental adjustment. First, we no longer need to avoid blocking, because blocking a (virtual) thread is not costly. We can use all the familiar synchronous APIs without paying a high price in throughput. Second, creating these threads is cheap. Every task, within reason, can have its own thread entirely to itself; there is never a need to pool them. If we don’t pool them, how do we limit concurrent access to some service? Instead of breaking the task down and running the service-call subtask in a separate, constrained pool, we just let the entire task run start-to-finish, in its own thread, and use a semaphore in the service-call code to limit concurrency — this is how it should be done.</p>
+</blockquote>
+<blockquote>
+<p>Using virtual threads well does not require learning new concepts so much as it demands we unlearn old habits developed over the years to cope with the high cost of threads and that we’ve come to automatically associate with threads merely because we’ve only had the one implementation.</p>
+</blockquote>
+<h3 id="la-api-de-threads">La API de threads</h3>
+<p>La forma de programación con los nuevos <em>threads</em> es muy parecida a la tradicional que ha existido siempre. En estos ejemplos se ejecutan tareas de dos formas diferentes y en la tercera se envían tareas para su ejecución  y posteriormente se espera a obtener el resultado.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">Thread</span> <span class="n">thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">.</span><span class="na">startVirtualThread</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Hello&#34;</span><span class="o">));</span>&#10;<span class="n">thread</span><span class="o">.</span><span class="na">join</span><span class="o">();</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>threads-api-1.java</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span><span class="lnt">6&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">Thread</span> <span class="n">thread1</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">.</span><span class="na">builder</span><span class="o">().</span><span class="na">virtual</span><span class="o">().</span><span class="na">task</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Hello&#34;</span><span class="o">)).</span><span class="na">build</span><span class="o">();</span>&#10;<span class="n">Thread</span> <span class="n">thread2</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">.</span><span class="na">builder</span><span class="o">()</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span class="o">.</span><span class="na">virtual</span><span class="o">()</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span class="o">.</span><span class="na">name</span><span class="o">(</span><span class="s">&#34;bob&#34;</span><span class="o">)</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span class="o">.</span><span class="na">task</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;I&#39;m Bob!&#34;</span><span class="o">))</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span class="o">.</span><span class="na">start</span><span class="o">();</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>threads-api-2.java</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">ThreadFactory</span> <span class="n">tf</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">.</span><span class="na">builder</span><span class="o">().</span><span class="na">virtual</span><span class="o">().</span><span class="na">factory</span><span class="o">();</span>&#10;<span class="n">ExecutorService</span> <span class="n">e</span> <span class="o">=</span> <span class="n">Executors</span><span class="o">.</span><span class="na">newUnboundedExecutor</span><span class="o">(</span><span class="n">tf</span><span class="o">);</span>&#10;<span class="n">Future</span><span class="o">&lt;</span><span class="n">Result</span><span class="o">&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="na">submit</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="o">{</span> <span class="o">...</span> <span class="k">return</span> <span class="n">result</span><span class="o">;</span> <span class="o">});</span> <span class="c1">// spawns a new virtual thread&#10;</span><span class="c1"></span><span class="o">...</span>&#10;<span class="n">Result</span> <span class="n">y</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="na">get</span><span class="o">();</span> <span class="o">//</span> <span class="n">joins</span> <span class="n">the</span> <span class="n">virtual</span> <span class="n">thread</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>threads-api-3.java</span>
+    </div>
+</div>
+<h3 id="conclusión">Conclusión</h3>
+<p>Esta nueva implementación de los <em>threads</em> es una mejora significativa sobre la implementación original basada en el sistema operativo. Una vez esté disponible en una versión del JDK muchas aplicaciones se beneficiarán de forma transparente de sus mejoras simplemente por usar un JDK más reciente. Como es principio en la plataforma Java estos cambios están implementados de forma que sean compatibles hacia atrás para que no haya que realizar ningún cambio o muy pocos en las aplicaciones o librerías para beneficiarse de ellos.</p>
+<p>El modelo secuencial de los <em>threads</em> más simple que la programación reactiva, asíncrona, <em>callbacks</em> o las construcciones <em>async/await</em> tiene ventajas en la creación del software en su mantenibilidad, legibilidad y es beneficioso desde el punto de vista económico.</p>
+<p>Loom es un nuevo ejemplo de que Java no adopta las nuevas tendencias de forma inmediata sino que espera a ver como se desarrollan, y después de evaluar todas las posibilidades opta por una que en este caso es mejor que la programación reactiva o asíncrona que otros lenguajes para permitirlas han tenido que realizar modificaciones comprometiendo la compatibilidad en el futuro del código fuente o desaconsejando el uso de funcionalidades para eliminarlas en el futuro.</p>
+<p>Este artículo es simplemente un resumen de otros dos magníficos artículos <em>State of Loom</em> que explica todo esto en mayor profundidad. Muy recomendables su lectura junto a otros relacionados con Loom.</p>
+<ul>
+<li><a href="http://cr.openjdk.java.net/~rpressler/loom/loom/sol1_part1.html">State of Loom: Parte 1</a></li>
+<li><a href="http://cr.openjdk.java.net/~rpressler/loom/loom/sol1_part2.html">State of Loom: Parte 2</a></li>
+<li><a href="https://cr.openjdk.java.net/~rpressler/loom/Loom-Proposal.html">Project Loom: Fibers and Continuations for the Java Virtual Machine</a></li>
+</ul>
+<p>Y otros artículos sobre Loom.</p>
+<ul>
+<li><a href="https://developers.redhat.com/blog/2019/06/19/project-loom-lightweight-java-threads/">Project Loom: Lightweight Java threads</a></li>
+<li><a href="https://blog.softwaremill.com/will-project-loom-obliterate-java-futures-fb1a28508232">Will Project Loom obliterate Java Futures?</a></li>
+<li><a href="https://dzone.com/articles/a-new-java-with-a-stronger-fiber">Project Loom: Java With a Stronger Fiber</a></li>
+</ul>
+<div class="reference">
+    Referencia:<br>
+    <ul>
+<li><a href="https://www.informit.com/articles/article.aspx?p=370047&amp;seqNum=3">The Linux Implementation of Threads</a></li>
+</ul>
+</div>
+
+    </div>
+  </article>
+        
+
+        
+    
+    
+    <div class="row related"><div class="col-12"><p>Artículos relacionados:</p></div></div>
+    <div class="row related">
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2020/04/argumentos-de-linea-de-comandos-con-jcommander-en-una-aplicacion-java/">
+                <img data-src="/blog-bitix/2020/04/argumentos-de-linea-de-comandos-con-jcommander-en-una-aplicacion-java/images/jcommander_hu94faf96db0cdfcf701034a6e4074ee5e_52948_875x0_resize_box_2.png" height="125" layout="fixed-height"  class="lozad">
+                <h3>Argumentos de línea de comandos con JCommander en una aplicación Java</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2020/03/novedades-de-java-14/">
+                <img data-src="/blog-bitix/assets/images/logotypes/hugo.svg" height="125" layout="fixed-height"  class="lozad">
+                <h3>Novedades de Java 14</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2020/02/cambiar-los-niveles-de-log-de-forma-dinamica-sin-reiniciar-la-aplicacion-con-log4j/">
+                <img data-src="/blog-bitix/assets/images/logotypes/java.svg" height="125" layout="fixed-height"  class="lozad">
+                <h3>Cambiar los niveles de log de forma dinámica sin reiniciar la aplicación con Log4j</h3>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="row related">
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2020/02/las-convenciones-y-guia-de-estilos-para-el-codigo-fuente-de-java/">
+                <img data-src="/blog-bitix/2020/02/las-convenciones-y-guia-de-estilos-para-el-codigo-fuente-de-java/images/intellij-code-style-1_hub3c93504c54463ee69418644e411e985_160721_875x0_resize_box_2.png" height="125" layout="fixed-height"  class="lozad">
+                <h3>Las convenciones y guía de estilos para el código fuente de Java</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2020/02/el-recolector-de-basura-de-java-que-hace-y-como-funciona-en-cada-version/">
+                <img data-src="/blog-bitix/2020/02/el-recolector-de-basura-de-java-que-hace-y-como-funciona-en-cada-version/images/treenode-3_hud8657e5c40ac59b935a4c973e33e4cd5_41824_875x0_resize_box_2.png" height="125" layout="fixed-height"  class="lozad">
+                <h3>El recolector de basura de Java, que hace y como funciona en cada versión</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2020/02/programacion-orientada-a-aspectos-con-aspectj-spring-aop-y-la-clase-proxy/">
+                <img data-src="/blog-bitix/2020/02/programacion-orientada-a-aspectos-con-aspectj-spring-aop-y-la-clase-proxy/images/aop-proxy-call_hu9c337a518ccda55733c57e94ef41c3af_3052_875x0_resize_box_2.png" height="125" layout="fixed-height"  class="lozad">
+                <h3>Programación orientada a aspectos con AspectJ, Spring AOP y la clase Proxy</h3>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+    
+
+        
+<div class="row">
+  <div class="col-md-12">
+    <div class="sharethis-inline-share-buttons"></div>
+  </div>
+</div>
+
+
+        <div class="row">
+          <div class="col-12 adblock-container-billboard">
+            <a id="pageBottom"></a>
+            <div class="adsense adsense-billboard">
+    <ins class="adsbygoogle"
+        data-ad-client="ca-pub-3533636310991304"
+        data-ad-slot="4052324337"
+        data-full-width-responsive="true"></ins>
+</div>
+          </div>
+        </div>
+        
+  <div class="row">
+    <div class="col-md-12">
+      <a id="comments"></a>
+      <div id="disqus_thread"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript" async>
+    var disqus_shortname = 'blog-bitix';
+    var disqus_identifier = 'blog-bitix-485';
+    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2020\/05\/la-concurrencia-en-la-plataforma-java-con-project-loom\/';
+    var disqus_script = 'embed.js';
+  </script>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <hr>
+      </div>
+    </div>
+    
+
+
+
+
+
+<footer>
+  <div class="row">
+    <div class="col-12 col-sm-4">
+      <p><strong>Blog Bitix</strong></p>
+      <p>Blog dedicado a la distribución GNU/Linux que uso habitualmente, Arch Linux, a mis andanzas alrededor del software libre, la programación y a otros temas relacionados con la tecnología y la informática. El contenido puede contener trazas de asuntos fuera de tema.</p>
+      <p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p>
+    </div>
+    <div class="col-12 col-sm-4 text-center menu">
+      <ul class="list-unstyled">
+        <li><a href="/blog-bitix/tags/java/">Java</a></li>
+        <li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li>
+        <li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li>
+        <li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li>
+        <li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li>
+        <li><a href="/blog-bitix/pages/links/">Enlaces</a></li>
+        <li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li>
+        <li><a href="/blog-bitix/pages/donate/">Donaciones</a></li>
+        <li><a href="/blog-bitix/pages/about/">Acerca de...</a></li>
+        
+      </ul>
+    </div>
+    <div class="col-12 col-sm-4 text-center links">
+      
+        <a href="https://picodotdev.github.io/blog-bitix/index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+      
+      
+        <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
+      
+      
+      
+        <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="/blog-bitix/assets/images/github.svg" width="50" height="50" class="icon"></a>
+      
+      
+      
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      Copyleft <span class="copyleft">&copy;</span> 2020 - <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="nofollow"><img src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" width="80" height="15" alt="Creative Commons License" title="Creative Commons License"></a><br />
+      <a href="https://www.planetacodigo.com/" rel="nofollow"><img src="/blog-bitix/assets/images/planeta-codigo.png" width="80" height="15" alt="Planeta código" title="Planeta código"></a>
+      <br/>
+      <a href="https://picodotdev.github.io/blog-bitix/" rel="nofollow">Blog Bitix</a> by <a href="https://picodotdev.github.io/blog-bitix/">pico.dev</a> is licensed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.
+      <br/>
+      <span class="credit">Powered by <a href="https://gohugo.io/" rel="nofollow" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a>.</span>
+      <span class="credit">Background patterns from <a href="https://www.toptal.com/designers/subtlepatterns/" rel="nofollow">Subtle Patterns</a>.</span>
+    </div>
+  </div>
+</footer>
+
+  </div>
+  
+<div class="blueimp-gallery-container">
+  <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false">
+    
+    <div class="slides"></div>
+    
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    
+    <div class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body next"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left prev">
+              <i class="glyphicon glyphicon-chevron-left"></i>
+              Anterior
+            </button>
+            <button type="button" class="btn btn-primary next">
+              Siguiente
+              <i class="glyphicon glyphicon-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  <!-- Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+<script type="text/javascript">
+    window.cookieconsent_options = {
+        "message": "Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.",
+        "dismiss": "Aceptar",
+        "learnMore": "Más información",
+        "link": null,
+        "theme": "dark-bottom"
+    };
+</script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script>
+</body>
+</html>

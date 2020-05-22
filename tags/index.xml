@@ -5,12 +5,114 @@
     <link rel="self" href="https://picodotdev.github.io/blog-bitix/index.xml"/>
     <link href="https://picodotdev.github.io/blog-bitix/" />
     <id>https://picodotdev.github.io/blog-bitix/tags/</id>
-    <updated>2020-05-17T12:00:00+02:00</updated>
+    <updated>2020-05-22T17:00:00+02:00</updated>
     <author><name>picodotdev</name></author>
     <generator>Hugo</generator>
     <icon>https://picodotdev.github.io/blog-bitix/assets/favicon.ico</icon>
-    <logo>https://picodotdev.github.io/blog-bitix/assets/images/structured-data/blogbitix-1200.png</logo>
+    <logo>https://picodotdev.github.io/blog-bitix/assets/images/structured-data/blogbitix-750.png</logo>
     <rights>https://creativecommons.org/licenses/by-sa/4.0/</rights>
+    
+    <entry>
+        <id>https://picodotdev.github.io/blog-bitix/2020/05/la-concurrencia-en-la-plataforma-java-con-project-loom/</id>
+        <title>La concurrencia en la plataforma Java con Project Loom</title>
+        <updated>2020-05-22T17:00:00+02:00</updated>
+        <published>2020-05-22T17:00:00+02:00</published>
+        <link rel="alternate" type="text/html" href="https://picodotdev.github.io/blog-bitix/2020/05/la-concurrencia-en-la-plataforma-java-con-project-loom/"/>
+        <author><name>picodotdev</name></author>
+        <content type="html">
+        <![CDATA[<p><strong>Desde la publicación de Java 8 junto con el nuevo calendario de publicación las mejoras en la plataforma Java y en el lenguaje han sido constantes y significativas. Las mejoras continúan en cada nueva versión y hay muchas otras en preparación para ser publicadas cuando estén listas. Una de ellas muy prometedoras es una nueva implementación de los <em>threads</em> mucho más ligera que han existido desde la primera versión. Estos harán innecesarios en la mayoría de los casos los más complicados modelos programación asíncrona, la programación reactiva, la programación mediante <em>callbacks</em> y las construcciones <em>async/await</em>.</strong></p>]]>
+        <![CDATA[<div class="logotypes">
+<p><img src="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/java.svg" width="200" alt="Java" title="Java"  class="lozad"></p>
+</div>
+<p>Los <em>threads</em> han existido en Java desde la primera versión siendo uno de sus componentes esenciales. Los <em>threads</em> representan una unidad de trabajo concurrente como una abstracción de los recursos computacionales disponibles y que ocultan la complejidad de gestionar esos recursos.</p>
+<p>Ya se usen de forma directa o dentro de un framework como JAX-RS la concurrencia en Java significan <em>threads</em>. En realidad, la plataforma Java entera, desde la máquina virtual al lenguaje y librerías incluidos depuradores y <em>profilers</em> está construida alrededor de los <em>threads</em> como componente esencial de ejecutar un programa.</p>
+<p>En general la plataforma Java se basa en:</p>
+<ul>
+<li>Las APIs son síncronas y describen operaciones E/S de inicio y espera a sus resultados como una secuencia ordenada de sentencias por <em>threads</em> que se bloquean.</li>
+<li>Las operaciones de memoria con efectos colaterales son ordenadas secuencialmente por las acciones del <em>thread</em>.</li>
+<li>Las excepciones proporcionan información útil indicando la operación fallida en el contexto del <em>thread</em> actual.</li>
+<li>Los depuradores siguen el orden de ejecución aunque se realice procesado de E/S.</li>
+</ul>
+<h3 id="los-problemas-de-los-threads-y-sus-alternativas">Los problemas de los threads y sus alternativas</h3>
+<p>En la implementación de Linux los <em>threads</em> no se diferencian de los procesos. Los <em>threads</em> son costosos de crear y pesados por lo que el sistema operativo solo es capaz de mantener unos pocos miles activos. Por este motivo ha surgido la programación asíncrona, la programación reactiva, la programación mediante <em>callbacks</em> y las construcciones <em>async/await</em> y frameworks basándose en estos principios como <a href="https://vertx.io/">Vert.x</a> o <a href="https://spring.io/reactive">Spring Reactive</a> o librerías como <a href="http://reactivex.io/">RxJava</a>. El resultado es una proliferación de APIs asíncronas desde NIO en el JDK a los <em>servlets</em> asíncronos a las librerías denominadas reactivas para no bloquear los <em>threads</em>.</p>
+<p>Sin embargo, estas formas de programación tienen un costo mayor que el tradicional y simple modelo secuencial. Son más difíciles de programar, más difíciles de mantener e implican cambios importantes en el modelo de programación. Por otro lado es más difícil depurarlos ya que no se mantiene en una única pila de llamadas toda la tarea.</p>
+<p>Estos estilos de programación no han sido inventados porque sean más fáciles de entender, son más difíciles también de depurar y de hacer <em>profile</em>. Son muy intrusivos y hacen la integración con el código síncrono virtualmente imposible simplemente porque la implementación de los <em>threads</em> es simplemente inadecuada en Java tanto en carga del sistema como rendimiento. La programación asíncrona es contraria al modelo original diseñado en la programación de la plataforma Java en varios aspectos con un alto coste de mantenibilidad y observabilidad. Pero lo hacen por una buena razón, para conseguir la escalabilidad y el rendimiento haciendo buen uso de los costosos recursos hardware.</p>
+<h3 id="la-nueva-implementación-de-los-threads">La nueva implementación de los threads</h3>
+<p>El <a href="https://wiki.openjdk.java.net/display/loom">proyecto Loom</a> persigue crear unos <em>threads</em> que eliminen los costes de los hilos tradicionales del sistema operativo. Serán mucho más ligeros, con ellos Java será capaz de mantener varios órdenes de magnitud superior, millones de <em>threads</em> en vez de solo unos pocos miles. Estos <em>threads</em> virtuales de la plataforma Java son también simplemente <em>threads</em> pero que crearlos y bloquearlos es mucho más barato. Son gestionados por el entorno de ejecución de Java y no son una representación uno a uno de un envoltorio de los <em>threads</em> del sistema operativo, en vez de eso están implementados en el espacio de usuario del JDK.</p>
+<p>Los hilos de los sistemas operativos son pesados porque deben soportar todos los lenguajes y tipo de cargas de forma genérica. Un <em>thread</em> requiere la habilidad de suspender y reactivar su ejecución de la computación. Esto requiere preservar su estado, lo que incluye su puntero de instrucciones así como todo los datos locales de computación que son almacenados en la pila. Dado que el sistema operativo no conoce cómo implementa el lenguaje su pila debe reservar una suficientemente grande.</p>
+<p>Loom añade la habilidad de controlar la ejecución, suspensión y reactivación manteniendo su estado no como un recurso del sistema operativo sino como un objeto Java conocido por la máquina virtual bajo el control directo del entorno de ejecución. El conocimiento de las estructuras internas del lenguaje hace que mantener su estado sea más pequeño en comparación con el que mantiene el sistema operativo. Cuando un <em>thread</em> invoca una operación bloqueante se traspasa el control a otro <em>thread</em> con un coste mucho menor que el realizado por el sistema operativo.</p>
+<p>El proyecto Loom modificará muchas de las clases de forma interna para implementar los <em>threads</em> con los <em>thread</em> virtuales. Las librerías y aplicaciones que hagan uso de estas clases se beneficiarán de estas mejoras sin necesidad de realizar ninguna modificación.</p>
+<p>Estos párrafos son varios extractos del magnífico artículo <a href="http://cr.openjdk.java.net/~rpressler/loom/loom/sol1_part1.html">State of Loom</a>.</p>
+<blockquote>
+<p>Programmers are forced to choose between modeling a unit of domain concurrency directly as a thread and wasting considerable throughput that their hardware can support, or using other ways to implement concurrency on a very fine-grained level but relinquishing the strengths of the Java platform. Both choices have a considerable financial cost, either in hardware or in development and maintenance effort.</p>
+</blockquote>
+<blockquote>
+<p>We can do better.</p>
+</blockquote>
+<blockquote>
+<p>Project Loom intends to eliminate the frustrating tradeoff between efficiently running concurrent programs and efficiently writing, maintaining and observing them. It leans into the strengths of the platform rather than fight them, and also into the strengths of the efficient components of asynchronous programming. It lets you write programs in a familiar style, using familiar APIs, and in harmony with the platform and its tools — but also with the hardware — to reach a balance of write-time and runtime costs that, we hope, will be widely appealing. It does so without changing the language, and with only minor changes to the core library APIs. A simple, synchronous web server will be able to handle many more requests without requiring more hardware.</p>
+</blockquote>
+<blockquote>
+<p>Whereas the OS can support up to a few thousand active threads, the Java runtime can support millions of virtual threads. Every unit of concurrency in the application domain can be represented by its own thread, making programming concurrent applications easier. Forget about thread-pools, just spawn a new thread, one per task. You’ve already spawned a new virtual thread to handle an incoming HTTP request, but now, in the course of handling the request, you want to simultaneously query a database and issue outgoing requests to three other services? No problem — spawn more threads. You need to wait for something to happen without wasting precious resources? Forget about callbacks or reactive stream chaining — just block. Write straightforward, boring code. All the benefits threads give us — control flow, exception context, debugging flow, profiling organization — are preserved by virtual threads; only the runtime cost in footprint and performance is gone. There is no loss in flexibility compared to asynchronous programming because, as we’ll see, we have not ceded fine-grained control over scheduling.</p>
+</blockquote>
+<blockquote>
+<p>However, the existence of threads that are so lightweight compared to the threads we’re used to does require some mental adjustment. First, we no longer need to avoid blocking, because blocking a (virtual) thread is not costly. We can use all the familiar synchronous APIs without paying a high price in throughput. Second, creating these threads is cheap. Every task, within reason, can have its own thread entirely to itself; there is never a need to pool them. If we don’t pool them, how do we limit concurrent access to some service? Instead of breaking the task down and running the service-call subtask in a separate, constrained pool, we just let the entire task run start-to-finish, in its own thread, and use a semaphore in the service-call code to limit concurrency — this is how it should be done.</p>
+</blockquote>
+<blockquote>
+<p>Using virtual threads well does not require learning new concepts so much as it demands we unlearn old habits developed over the years to cope with the high cost of threads and that we’ve come to automatically associate with threads merely because we’ve only had the one implementation.</p>
+</blockquote>
+<h3 id="la-api-de-threads">La API de threads</h3>
+<p>La forma de programación con los nuevos <em>threads</em> es muy parecida a la tradicional que ha existido siempre. En estos ejemplos se ejecutan tareas de dos formas diferentes y en la tercera se envían tareas para su ejecución  y posteriormente se espera a obtener el resultado.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">Thread</span> <span class="n">thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">.</span><span class="na">startVirtualThread</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Hello&#34;</span><span class="o">));</span>&#10;<span class="n">thread</span><span class="o">.</span><span class="na">join</span><span class="o">();</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>threads-api-1.java</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span><span class="lnt">6&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">Thread</span> <span class="n">thread1</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">.</span><span class="na">builder</span><span class="o">().</span><span class="na">virtual</span><span class="o">().</span><span class="na">task</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Hello&#34;</span><span class="o">)).</span><span class="na">build</span><span class="o">();</span>&#10;<span class="n">Thread</span> <span class="n">thread2</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">.</span><span class="na">builder</span><span class="o">()</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span class="o">.</span><span class="na">virtual</span><span class="o">()</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span class="o">.</span><span class="na">name</span><span class="o">(</span><span class="s">&#34;bob&#34;</span><span class="o">)</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span class="o">.</span><span class="na">task</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;I&#39;m Bob!&#34;</span><span class="o">))</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span class="o">.</span><span class="na">start</span><span class="o">();</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>threads-api-2.java</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">ThreadFactory</span> <span class="n">tf</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">.</span><span class="na">builder</span><span class="o">().</span><span class="na">virtual</span><span class="o">().</span><span class="na">factory</span><span class="o">();</span>&#10;<span class="n">ExecutorService</span> <span class="n">e</span> <span class="o">=</span> <span class="n">Executors</span><span class="o">.</span><span class="na">newUnboundedExecutor</span><span class="o">(</span><span class="n">tf</span><span class="o">);</span>&#10;<span class="n">Future</span><span class="o">&lt;</span><span class="n">Result</span><span class="o">&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="na">submit</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="o">{</span> <span class="o">...</span> <span class="k">return</span> <span class="n">result</span><span class="o">;</span> <span class="o">});</span> <span class="c1">// spawns a new virtual thread&#10;</span><span class="c1"></span><span class="o">...</span>&#10;<span class="n">Result</span> <span class="n">y</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="na">get</span><span class="o">();</span> <span class="o">//</span> <span class="n">joins</span> <span class="n">the</span> <span class="n">virtual</span> <span class="n">thread</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>threads-api-3.java</span>
+    </div>
+</div>
+<h3 id="conclusión">Conclusión</h3>
+<p>Esta nueva implementación de los <em>threads</em> es una mejora significativa sobre la implementación original basada en el sistema operativo. Una vez esté disponible en una versión del JDK muchas aplicaciones se beneficiarán de forma transparente de sus mejoras simplemente por usar un JDK más reciente. Como es principio en la plataforma Java estos cambios están implementados de forma que sean compatibles hacia atrás para que no haya que realizar ningún cambio o muy pocos en las aplicaciones o librerías para beneficiarse de ellos.</p>
+<p>El modelo secuencial de los <em>threads</em> más simple que la programación reactiva, asíncrona, <em>callbacks</em> o las construcciones <em>async/await</em> tiene ventajas en la creación del software en su mantenibilidad, legibilidad y es beneficioso desde el punto de vista económico.</p>
+<p>Loom es un nuevo ejemplo de que Java no adopta las nuevas tendencias de forma inmediata sino que espera a ver como se desarrollan, y después de evaluar todas las posibilidades opta por una que en este caso es mejor que la programación reactiva o asíncrona que otros lenguajes para permitirlas han tenido que realizar modificaciones comprometiendo la compatibilidad en el futuro del código fuente o desaconsejando el uso de funcionalidades para eliminarlas en el futuro.</p>
+<p>Este artículo es simplemente un resumen de otros dos magníficos artículos <em>State of Loom</em> que explica todo esto en mayor profundidad. Muy recomendables su lectura junto a otros relacionados con Loom.</p>
+<ul>
+<li><a href="http://cr.openjdk.java.net/~rpressler/loom/loom/sol1_part1.html">State of Loom: Parte 1</a></li>
+<li><a href="http://cr.openjdk.java.net/~rpressler/loom/loom/sol1_part2.html">State of Loom: Parte 2</a></li>
+<li><a href="https://cr.openjdk.java.net/~rpressler/loom/Loom-Proposal.html">Project Loom: Fibers and Continuations for the Java Virtual Machine</a></li>
+</ul>
+<p>Y otros artículos sobre Loom.</p>
+<ul>
+<li><a href="https://developers.redhat.com/blog/2019/06/19/project-loom-lightweight-java-threads/">Project Loom: Lightweight Java threads</a></li>
+<li><a href="https://blog.softwaremill.com/will-project-loom-obliterate-java-futures-fb1a28508232">Will Project Loom obliterate Java Futures?</a></li>
+<li><a href="https://dzone.com/articles/a-new-java-with-a-stronger-fiber">Project Loom: Java With a Stronger Fiber</a></li>
+</ul>
+<div class="reference">
+    Referencia:<br>
+    <ul>
+<li><a href="https://www.informit.com/articles/article.aspx?p=370047&amp;seqNum=3">The Linux Implementation of Threads</a></li>
+</ul>
+</div>
+]]>
+        </content>
+        
+            
+                <category term="java"/>
+            
+                <category term="planeta-codigo"/>
+            
+        
+    </entry>
     
     <entry>
         <id>https://picodotdev.github.io/blog-bitix/2020/05/la-controversia-sobre-el-sistema-de-inicio-systemd-adoptado-en-gnu-lnux/</id>
@@ -1037,7 +1139,7 @@
     </div>
 </div>
 <div class="alert alert-secondary sourcecode">
-    <img data-src="https://picodotdev.github.io/blog-bitix/assets/images/icons/terminal.svg" width="64" height="64" alt="Terminal" title="Terminal" class="lozad sourcecode-icon">
+    <img src="https://picodotdev.github.io/blog-bitix/assets/images/icons/terminal.svg" width="64" height="64" alt="Terminal" title="Terminal" class="lozad sourcecode-icon">
     <p>
         El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/JCommander">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en GitHub y probarlo en tu equipo ejecutando siguiente comando:<br><code>./gradlew run --args=&#39;--required --values a1 b2 c3 d4 --help&#39;</code></p>
 </div>
@@ -1596,13 +1698,13 @@
 </div>
 <p>El archivo <em>index.tsx</em> sería un punto de entrada para Webpack, en el se importa el componente <em>App</em> y se incluye en la página.</p>
 <div class="code">
-    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-tsx" data-lang="tsx"><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span><span class="p">;</span>&#10;<span class="kr">import</span> <span class="nx">ReactDOM</span> <span class="nx">from</span> <span class="s1">&#39;react-dom&#39;</span><span class="p">;</span>&#10;<span class="kr">import</span> <span class="nx">App</span> <span class="nx">from</span> <span class="s1">&#39;./App&#39;</span><span class="p">;</span>&#10;&#10;<span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">App</span> <span class="o">/&gt;</span><span class="p">,</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;root&#39;</span><span class="p">));</span>&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-tsx" data-lang="tsx"><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span><span class="p">;</span>&#10;<span class="kr">import</span> <span class="nx">ReactDOM</span> <span class="nx">from</span> <span class="s1">&#39;react-dom&#39;</span><span class="p">;</span>&#10;<span class="kr">import</span> <span class="nx">App</span> <span class="nx">from</span> <span class="s1">&#39;./App&#39;</span><span class="p">;</span>&#10;&#10;<span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(&lt;</span><span class="nt">App</span> <span class="p">/&gt;,</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;root&#39;</span><span class="p">));</span>&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
     <div class="highlight-meta">
         <span>index.tsx</span>
     </div>
 </div>
 <div class="code">
-    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-tsx" data-lang="tsx"><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span><span class="p">;</span>&#10;<span class="kr">import</span> <span class="nx">HelloWorld</span> <span class="nx">from</span> <span class="s1">&#39;storybook/components/HelloWorld&#39;</span><span class="p">;</span>&#10;&#10;<span class="kr">import</span> <span class="s1">&#39;./App.css&#39;</span><span class="p">;</span>&#10;&#10;<span class="kd">function</span> <span class="nx">App() {</span>&#10;  <span class="k">return</span> <span class="p">(</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&#34;App&#34;</span><span class="o">&gt;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;  <span class="o">&lt;</span><span class="nx">HelloWorld</span> <span class="o">/&gt;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">&lt;</span><span class="err">/div&gt;</span>&#10;  <span class="p">);</span>&#10;<span class="p">}</span>&#10;&#10;<span class="kr">export</span> <span class="k">default</span> <span class="nx">App</span><span class="p">;</span>&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-tsx" data-lang="tsx"><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span><span class="p">;</span>&#10;<span class="kr">import</span> <span class="nx">HelloWorld</span> <span class="nx">from</span> <span class="s1">&#39;storybook/components/HelloWorld&#39;</span><span class="p">;</span>&#10;&#10;<span class="kr">import</span> <span class="s1">&#39;./App.css&#39;</span><span class="p">;</span>&#10;&#10;<span class="kd">function</span> <span class="nx">App() {</span>&#10;  <span class="k">return</span> <span class="p">(</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="o">=</span><span class="s">&#34;App&#34;</span><span class="p">&gt;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;  <span class="p">&lt;</span><span class="nt">HelloWorld</span> <span class="p">/&gt;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>&#10;  <span class="p">);</span>&#10;<span class="p">}</span>&#10;&#10;<span class="kr">export</span> <span class="k">default</span> <span class="nx">App</span><span class="p">;</span>&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
     <div class="highlight-meta">
         <span>App.tsx</span>
     </div>
@@ -1629,7 +1731,7 @@
 </figure>
 </div>
 <div class="alert alert-secondary sourcecode">
-    <img data-src="https://picodotdev.github.io/blog-bitix/assets/images/icons/terminal.svg" width="64" height="64" alt="Terminal" title="Terminal" class="lozad sourcecode-icon">
+    <img src="https://picodotdev.github.io/blog-bitix/assets/images/icons/terminal.svg" width="64" height="64" alt="Terminal" title="Terminal" class="lozad sourcecode-icon">
     <p>
         El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/StorybookComponente">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en GitHub y probarlo en tu equipo ejecutando siguiente comando:<br><code>npm install &amp;&amp; npm run start</code></p>
 </div>
@@ -1723,163 +1825,6 @@
         
             
                 <category term="juegos"/>
-            
-        
-    </entry>
-    
-    <entry>
-        <id>https://picodotdev.github.io/blog-bitix/2020/03/novedades-de-java-14/</id>
-        <title>Novedades de Java 14</title>
-        <updated>2020-03-19T13:00:00+01:00</updated>
-        <published>2020-03-19T13:00:00+01:00</published>
-        <link rel="alternate" type="text/html" href="https://picodotdev.github.io/blog-bitix/2020/03/novedades-de-java-14/"/>
-        <author><name>picodotdev</name></author>
-        <content type="html">
-        
-        <![CDATA[<div class="logotypes">
-<p><img src="https://picodotdev.github.io/blog-bitix/assets/images/logotypes/java.svg" width="200" alt="Java" title="Java"  class="lozad"></p>
-</div>
-<p>Entre las novedades más destacadas que incorpora Java 14 están los <em>records</em>, la incorporación definitiva de las expresiones <em>switch</em> o el <em>pattern matching</em> para el operador <em>instanceof</em>. Otra de las novedades más destacadas es una traza de <em>NullPointerException</em> más útil, también destaca la posibilidad de utilizar el recolector de basura ZGC en Windows y macOS. El resto de novedades son la eliminación de algunas funcionalidades con poco uso y la preparación marcando como desaconsejado su uso con <em>deprecated</em>.</p>
-<ul>
-<li><a href="https://openjdk.java.net/projects/jdk/14/">Características de Java 14</a></li>
-<li><a href="https://jdk.java.net/14/release-notes">Notas de publicación de Java 14</a></li>
-<li><a href="https://docs.oracle.com/en/java/javase/14/docs/api/">Java 14 Javadoc</a></li>
-</ul>
-<p>Las mejoras incluídas en esta versión son:</p>
-<ul>
-<li>305: <a href="https://openjdk.java.net/jeps/305">Pattern Matching for instanceof (Preview)</a></li>
-<li>343: <a href="https://openjdk.java.net/jeps/343">Packaging Tool (Incubator)</a></li>
-<li>345: <a href="https://openjdk.java.net/jeps/345">NUMA-Aware Memory Allocation for G1</a></li>
-<li>349: <a href="https://openjdk.java.net/jeps/349">JFR Event Streaming</a></li>
-<li>352: <a href="https://openjdk.java.net/jeps/352">Non-Volatile Mapped Byte Buffers</a></li>
-<li>358: <a href="https://openjdk.java.net/jeps/358">Helpful NullPointerExceptions</a></li>
-<li>359: <a href="https://openjdk.java.net/jeps/359">Records (Preview)</a></li>
-<li>361: <a href="https://openjdk.java.net/jeps/361">Switch Expressions (Standard)</a></li>
-<li>362: <a href="https://openjdk.java.net/jeps/362">Deprecate the Solaris and SPARC Ports</a></li>
-<li>363: <a href="https://openjdk.java.net/jeps/363">Remove the Concurrent Mark Sweep (CMS) Garbage Collector</a></li>
-<li>364: <a href="https://openjdk.java.net/jeps/364">ZGC on macOS</a></li>
-<li>365: <a href="https://openjdk.java.net/jeps/365">ZGC on Windows</a></li>
-<li>366: <a href="https://openjdk.java.net/jeps/366">Deprecate the ParallelScavenge + SerialOld GC Combination</a></li>
-<li>367: <a href="https://openjdk.java.net/jeps/367">Remove the Pack200 Tools and API</a></li>
-<li>368: <a href="https://openjdk.java.net/jeps/368">Text Blocks (Second Preview)</a></li>
-<li>370: <a href="https://openjdk.java.net/jeps/370">Foreign-Memory Access API (Incubator)</a></li>
-</ul>
-<h3 id="excepciones-nullpointerexception-más-útiles">Excepciones NullPointerException más útiles</h3>
-<p>Cuando se produce una excepción <em>NullPointerException</em> por usar una referencia de objeto cuyo valor es <em>null</em> Java emite una traza indicando la línea de código donde se ha producido, la clase y método donde se ha intentado referenciar pero no se ha podido.</p>
-<div class="code">
-    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">Exception in thread &#34;main&#34; java.lang.NullPointerException&#10;&nbsp;&nbsp;&nbsp;&nbsp;at Prog.main(Prog.java:5)</code></pre></td></tr></table>&#10;</div>&#10;</div>
-    <div class="highlight-meta">
-        <span>NullPointerException-1.out</span>
-    </div>
-</div>
-<p>Sin embargo, hay casos en los que la trazas de NullPointerException no es lo suficientemente precisa para determinar la causa de la excepción sin usar el <em>debugger</em>. En los siguientes ejemplos con elementos encadenados no es posible determinar cuál es la variable que ha originado la excepción por tener valor nulo.</p>
-<div class="code">
-    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">a.b.c.i = 99;&#10;a[i][j][k] = 99;&#10;a.i = b.j;&#10;x().y().i = 99;</code></pre></td></tr></table>&#10;</div>&#10;</div>
-    <div class="highlight-meta">
-        <span>NullPointerException-2.out</span>
-    </div>
-</div>
-<p>A partir de Java 14 las excepciones NullPointerException son más útiles e indican de forma precisa cual es el miembro de la línea de código que ha producido la excepción.</p>
-<div class="code">
-    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">Exception in thread &#34;main&#34; java.lang.NullPointerException:&#10;&nbsp;&nbsp;&nbsp;&nbsp;   Cannot assign field &#34;i&#34; because &#34;a&#34; is null&#10;   at Prog.main(Prog.java:5)&#10;&#10;Exception in thread &#34;main&#34; java.lang.NullPointerException:&#10;&nbsp;&nbsp;&nbsp;&nbsp;   Cannot read field &#34;c&#34; because &#34;a.b&#34; is null&#10;   at Prog.main(Prog.java:5)&#10;&#10;Exception in thread &#34;main&#34; java.lang.NullPointerException:&#10;&nbsp;&nbsp;&nbsp;&nbsp;  Cannot load from object array because &#34;a[i][j]&#34; is null&#10;   at Prog.main(Prog.java:5)&#10;&#10;Exception in thread &#34;main&#34; java.lang.NullPointerException:&#10;&nbsp;&nbsp;&nbsp;&nbsp;   Cannot read field &#34;j&#34; because &#34;b&#34; is null&#10;   at Prog.main(Prog.java:5)</code></pre></td></tr></table>&#10;</div>&#10;</div>
-    <div class="highlight-meta">
-        <span>NullPointerException-3.out</span>
-    </div>
-</div>
-<h3 id="records">Records</h3>
-<p>Esta es la característica más destacada añadida al lenguaje que permite reducir significativamente el código necesario para algunas clases.</p>
-<p>Los registros son clases que no contienen más datos que los públicos declarados. Evitan mucho del código que es necesario en Java para definir los constructores, los métodos <em>getter</em>, los <em>setter</em> e <a href="https://picodotdev.github.io/blog-bitix/2016/12/como-implementar-correctamente-y-por-que-los-metodos-equals-y-hashcode-de-los-objetos-java/">implementar de forma correcta los métodos equals y hashCode</a>.</p>
-<p>Para reducir el código de las clases de datos los registros adquieren automáticamente varios miembros:</p>
-<ul>
-<li>Un campo privado y final para cada componente del estado en la descripción.</li>
-<li>Un método de acceso de lectura para cada componente del estado de la descripción, con el mismo nombre y tipo.</li>
-<li>Un constructor público cuya firma es la misma que el estado de la descripción que inicializa cada campo de su correspondiente argumento.</li>
-<li>Una implementación de <em>equals</em> y <em>hashCode</em> de tal forma que dos registros son iguales si son del mismo tipo y contienen el mismo estado.</li>
-<li>Una implementación de <em>toString</em> que incluye una representación de todos los componentes del registro con sus nombres.</li>
-</ul>
-<p>Los registros tienen algunas restricciones:</p>
-<ul>
-<li>No pueden extender ninguna otra clase y no pueden declarar campos que no sean los privados automáticos que corresponden a los componentes de la descripción del estado en la descripción. Cualquier otro campo debe ser declarado como <em>static</em>. estas restricciones aseguran que la descripción del estado define su representación.</li>
-<li>Los registros son implícitamente <em>final</em> y no pueden ser <em>abstract</em>. Esto significa que no pueden ser mejorados por otra clase o registro.</li>
-<li>Los componentes de un registro son implícitamente <em>final</em>. Esta restricción hace que sean inmutables.</li>
-</ul>
-<p>Más allá de esta restricciones los registros se comportan como clases normales pudiendo declararse en su propio archivo de código fuente o anidada en otra clase, pueden ser genéricos, implementar interfaces e instanciarse con la palabra clave <em>new</em>. Pueden declarar métodos estáticos, propiedades estáticas, inicializadores estáticos, constructores, métodos de instancia y tipos anidados. El registro y los componentes individuales de los componentes pueden ser anotados.</p>
-<p>Para dar soporte a los <em>records</em> al realizar tareas de <em>reflection</em> se añaden los siguientes métodos en la clase <em>Class</em>: <em>RecordComponent[] getRecordComponents()</em> y <em>boolean isRecord()</em></p>
-<p>De una clase como esta.</p>
-<div class="code">
-    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span><span class="lnt">22&#10;</span><span class="lnt">23&#10;</span><span class="lnt">24&#10;</span><span class="lnt">25&#10;</span><span class="lnt">26&#10;</span><span class="lnt">27&#10;</span><span class="lnt">28&#10;</span><span class="lnt">29&#10;</span><span class="lnt">30&#10;</span><span class="lnt">31&#10;</span><span class="lnt">32&#10;</span><span class="lnt">33&#10;</span><span class="lnt">34&#10;</span><span class="lnt">35&#10;</span><span class="lnt">36&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">...</span><span class="o">;</span>&#10;&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">PhoneNumber</span> <span class="o">{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">Integer</span> <span class="n">lineNumber</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">Integer</span> <span class="n">prefix</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">Integer</span> <span class="n">areaCode</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="n">Integer</span> <span class="nf">getLineNumber</span><span class="o">()</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">lineNumber</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="n">Integer</span> <span class="nf">getPrefix</span><span class="o">()</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">prefix</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="n">Integer</span> <span class="nf">getAreaCode</span><span class="o">()</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">areaCode</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10; &#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@Override</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="n">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">if</span> <span class="o">(</span><span class="k">this</span> <span class="o">==</span> <span class="n">o</span><span class="o">)</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="kc">true</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">if</span> <span class="o">(</span><span class="n">o</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">if</span> <span class="o">(</span><span class="n">getClass</span><span class="o">()</span> <span class="o">!=</span> <span class="n">o</span><span class="o">.</span><span class="na">getClass</span><span class="o">())</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">PhoneNumber</span> <span class="n">that</span> <span class="o">=</span> <span class="o">(</span><span class="n">PhoneNumber</span><span class="o">)</span> <span class="n">o</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">that</span><span class="o">)</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">&amp;&amp;</span> <span class="n">Objects</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">lineNumber</span><span class="o">,</span> <span class="n">that</span><span class="o">.</span><span class="na">lineNumber</span><span class="o">)</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">&amp;&amp;</span> <span class="n">Objects</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">prefix</span><span class="o">,</span> <span class="n">that</span><span class="o">.</span><span class="na">prefix</span><span class="o">)</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">&amp;&amp;</span> <span class="n">Objects</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">areaCode</span><span class="o">,</span> <span class="n">that</span><span class="o">.</span><span class="na">areaCode</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;<span class="o">}</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
-    <div class="highlight-meta">
-        <span>Records-1.java</span>
-    </div>
-</div>
-<p>Con los registros se define de la siguiente forma.</p>
-<div class="code">
-    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">...</span><span class="o">;</span>&#10;&#10;<span class="kd">public</span> <span class="n">record</span> <span class="nf">PhoneNumber</span><span class="o">(</span><span class="n">Integer</span> <span class="n">lineNumber</span><span class="o">,</span> <span class="n">Integer</span> <span class="n">prefix</span><span class="o">,</span> <span class="n">Integer</span> <span class="n">areaCode</span><span class="o">)</span> <span class="o">{</span>&#10;<span class="o">}</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
-    <div class="highlight-meta">
-        <span>Records-2.java</span>
-    </div>
-</div>
-<h3 id="pattern-matching-para-el-operador-instanceof">Pattern Matching para el operador instanceof</h3>
-<p>Al usar el operador <em>instanceOf</em> para comprobar si un objeto es una instancia de una clase si se realiza en un <em>if</em> posteriormente es necesario hacer un <em>cast</em> del objeto a la clase.</p>
-<div class="code">
-    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="k">if</span> <span class="o">(</span><span class="n">obj</span> <span class="k">instanceof</span> <span class="n">String</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="o">(</span><span class="n">String</span><span class="o">)</span> <span class="n">obj</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c1">// use s&#10;</span><span class="c1"></span><span class="o">}</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
-    <div class="highlight-meta">
-        <span>IfPatternMatching-1.java</span>
-    </div>
-</div>
-<p>Ahora el operador <em>instanceOf</em> permite renombrar la variable y dentro de la rama usarla sin necesidad de realizar el <em>cast</em>, esto simplifica el código y evita posibles errores.</p>
-<div class="code">
-    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="k">if</span> <span class="o">(</span><span class="n">obj</span> <span class="k">instanceof</span> <span class="n">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c1">// use s&#10;</span><span class="c1"></span><span class="o">}</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
-    <div class="highlight-meta">
-        <span>IfPatternMatching-2.java</span>
-    </div>
-</div>
-<p>En futuras proposiciones de mejoras para el lenguaje de programación Java está planificado soportar <em>pattern matching</em> para otras construcciones del lenguaje como expresiones <em>switch</em> y sentencias. La incorporación de <em>pattern matching</em> permitirá reducir la <em>verbosidad</em> del código haciéndolo más fácil de leer y modificar.</p>
-<p>La posible implementación en Java quizá sea similar a la <a href="https://docs.microsoft.com/en-us/dotnet/csharp/pattern-matching">implementación de C# para pattern matching</a>.</p>
-<h3 id="bloques-de-texto">Bloques de texto</h3>
-<p>En esta nueva revisión de los bloques de texto se definen dos nuevos caracteres de escape. El <em>terminador de línea</em> para poder definir bloques de texto en varias líneas pero sin insertar saltos de línea en el bloque de texto y <em>\s</em> para evitar que los espacios en blanco sean eliminados por la operación <em>trim</em>.</p>
-<div class="code">
-    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">String</span> <span class="n">text</span> <span class="o">=</span> <span class="s">&#34;&#34;&#34;&#10;</span><span class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   Lorem ipsum dolor sit amet, consectetur adipiscing \&#10;</span><span class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   elit, sed do eiusmod tempor incididunt ut labore \&#10;</span><span class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   et dolore magna aliqua.\&#10;</span><span class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   &#34;&#34;&#34;</span><span class="o">;</span>&#10;&#10;<span class="n">String</span> <span class="n">colors</span> <span class="o">=</span> <span class="s">&#34;&#34;&#34;&#10;</span><span class="s">   red  \s&#10;</span><span class="s">   green\s&#10;</span><span class="s">   blue \s&#10;</span><span class="s">   &#34;&#34;&#34;</span><span class="o">;</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
-    <div class="highlight-meta">
-        <span>TextBlocks.java</span>
-    </div>
-</div>
-<h3 id="expresiones-switch">Expresiones switch</h3>
-<p>La características de expresiones <em>switch</em> introducida en modo vista previa en las versiones de Java 12 y 13 se califica como estándar.</p>
-<div class="code">
-    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span><span class="lnt">6&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">String</span> <span class="n">numericString</span> <span class="o">=</span> <span class="k">switch</span><span class="o">(</span><span class="n">integer</span><span class="o">)</span> <span class="o">{</span> &#10;   <span class="k">case</span> <span class="n">0</span> <span class="o">-&gt;</span> <span class="s">&#34;zero&#34;</span><span class="o">;</span> &#10;   <span class="k">case</span> <span class="n">1</span><span class="o">,</span> <span class="n">3</span><span class="o">,</span> <span class="n">5</span><span class="o">,</span> <span class="n">7</span><span class="o">,</span> <span class="n">9</span> <span class="o">-&gt;</span> <span class="s">&#34;odd&#34;</span><span class="o">;</span> &#10;   <span class="k">case</span> <span class="n">2</span><span class="o">,</span> <span class="n">4</span><span class="o">,</span> <span class="n">6</span><span class="o">,</span> <span class="n">8</span><span class="o">,</span> <span class="n">10</span> <span class="o">-&gt;</span> <span class="s">&#34;even&#34;</span><span class="o">;</span> &#10;   <span class="k">default</span> <span class="o">-&gt;</span> <span class="s">&#34;N/A&#34;</span><span class="o">;</span> &#10;<span class="o">};</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
-    <div class="highlight-meta">
-        <span>Switch-1.java</span>
-    </div>
-</div>
-<div class="code">
-    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">String</span> <span class="n">numericString</span> <span class="o">=</span> <span class="k">switch</span><span class="o">(</span><span class="n">integer</span><span class="o">)</span> <span class="o">{</span> &#10;   <span class="k">case</span> <span class="n">0</span> <span class="o">-&gt;</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;   <span class="n">String</span> <span class="n">value</span> <span class="o">=</span> <span class="n">calculateZero</span><span class="o">();</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;   <span class="n">yield</span> <span class="n">value</span><span class="o">;</span>&#10;   <span class="o">}</span> <span class="o">;</span> &#10;   <span class="k">case</span> <span class="n">1</span><span class="o">,</span> <span class="n">3</span><span class="o">,</span> <span class="n">5</span><span class="o">,</span> <span class="n">7</span><span class="o">,</span> <span class="n">9</span> <span class="o">-&gt;</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;   <span class="n">String</span> <span class="n">value</span> <span class="o">=</span> <span class="n">calculateOdd</span><span class="o">();</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;   <span class="n">yield</span> <span class="n">value</span><span class="o">;</span>&#10;   <span class="o">};</span>&#10;   <span class="k">case</span> <span class="n">2</span><span class="o">,</span> <span class="n">4</span><span class="o">,</span> <span class="n">6</span><span class="o">,</span> <span class="n">8</span><span class="o">,</span> <span class="n">10</span> <span class="o">-&gt;</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;   <span class="n">String</span> <span class="n">value</span> <span class="o">=</span> <span class="n">calculateEven</span><span class="o">();</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;   <span class="n">yield</span> <span class="n">value</span><span class="o">;</span>&#10;   <span class="o">};</span>&#10;   <span class="k">default</span> <span class="o">-&gt;</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;   <span class="n">String</span> <span class="n">value</span> <span class="o">=</span> <span class="n">calculateDefault</span><span class="o">();</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;   <span class="n">yield</span> <span class="n">value</span><span class="o">;</span>&#10;   <span class="o">};</span>&#10;<span class="o">};</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
-    <div class="highlight-meta">
-        <span>Switch-2.java</span>
-    </div>
-</div>
-<h3 id="zgc-para-windows-y-macos">ZGC para Windows y macOS</h3>
-<p>La versión del recolector de basura ZGC que permite pausas muy reducidas en memorias de unos pocos MB hasta varios TB ahora es posible utilizarla en los sistemas operativos macOS y Windows.</p>
-<ul>
-<li><a href="https://picodotdev.github.io/blog-bitix/2020/02/el-recolector-de-basura-de-java-que-hace-y-como-funciona-en-cada-version/">El recolector de basura de Java, que hace y como funciona en cada versión</a></li>
-</ul>
-<div class="reference">
-    Referencia:<br>
-    <ul>
-<li><a href="https://jaxenter.com/java-14-update-news-163585.html">Java 14: All the new features of JDK 14 as it hits GA</a></li>
-<li><a href="https://www.infoq.com/articles/java-14-feature-spotlight/">Java 14 Feature Spotlight: Records</a></li>
-<li><a href="https://blogs.oracle.com/javamagazine/records-come-to-java">Records Come to Java</a></li>
-<li><a href="https://www.azul.com/whats-new-in-jdk14-latest-release/">What’s New In JDK 14 Latest Release? 80 New Features &amp; APIs</a></li>
-<li><a href="https://medium.com/@youngty1997/jdk-14-foreign-memory-access-api-overview-70951fe221c9">JDK 14 Foreign-Memory Access API Overview</a></li>
-</ul>
-</div>
-]]>
-        </content>
-        
-            
-                <category term="java"/>
-            
-                <category term="planeta-codigo"/>
             
         
     </entry>
