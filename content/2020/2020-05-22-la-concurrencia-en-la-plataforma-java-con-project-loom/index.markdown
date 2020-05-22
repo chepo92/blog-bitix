@@ -64,7 +64,7 @@ Estos párrafos son varios extractos del magnífico artículo [State of Loom](ht
 
 ### La API de threads
 
-La forma de programación con los nuevos _threads_ es muy parecida a la tradicional que ha existido siempre. Se parece tanto a los _threads_ de siempre que incluso ni siquiera cambia la clase que los representa, que sigue siendo [Thread](javadoc11:java.base/java/lang/Thread.html), las diferencias de implementación están de forma interna y en el JDK. En estos ejemplos se ejecutan tareas de dos formas diferentes y en la tercera se envían tareas para su ejecución  y posteriormente se espera a obtener el resultado.
+La forma de programación con los nuevos _threads_ es muy parecida a la tradicional que ha existido siempre. Se parece tanto a los _threads_ de siempre que incluso ni siquiera cambia la clase que los representa, que sigue siendo [Thread](javadoc11:java.base/java/lang/Thread.html), las diferencias de implementación son internas a la clase y en la JVM. En estos ejemplos se ejecutan tareas de dos formas diferentes y en la tercera se envían tareas para su ejecución  y posteriormente se espera a obtener el resultado.
 
 {{< code file="threads-api-1.java" language="java" options="" >}}
 {{< code file="threads-api-2.java" language="java" options="" >}}
