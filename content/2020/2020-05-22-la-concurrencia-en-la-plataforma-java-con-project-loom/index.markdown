@@ -76,7 +76,7 @@ Esta nueva implementación de los _threads_ es una mejora significativa sobre la
 
 El modelo secuencial de los _threads_ más simple que la programación reactiva, asíncrona, _callbacks_ o las construcciones _async/await_ tiene ventajas en la creación del software en su mantenibilidad, legibilidad y es beneficioso desde el punto de vista económico.
 
-Loom es un nuevo ejemplo de que Java no adopta las nuevas tendencias de forma inmediata sino que espera a ver como se desarrollan, y después de evaluar todas las posibilidades opta por una que en este caso es mejor que la programación reactiva o asíncrona que otros lenguajes para permitirlas han tenido que realizar modificaciones comprometiendo la compatibilidad en el futuro del código fuente o desaconsejando el uso de funcionalidades para eliminarlas en el futuro.
+Loom es un nuevo ejemplo de que Java no adopta las nuevas tendencias de forma inmediata sino que espera a ver como se desarrollan, y después de evaluar todas las posibilidades opta por una que en este caso es mejor que la programación reactiva o asíncrona que otros lenguajes para permitirlas han tenido que realizar modificaciones comprometiendo la compatibilidad en el futuro del código fuente o desaconsejando el uso de funcionalidades para eliminarlas en el futuro. Esto mismo lo mencionaba en [10 razones para seguir usando Java][blogbitix-81].
 
 Este artículo es simplemente un resumen de otros dos magníficos artículos _State of Loom_ que explica todo esto en mayor profundidad. Muy recomendables su lectura junto a otros relacionados con Loom.
 
