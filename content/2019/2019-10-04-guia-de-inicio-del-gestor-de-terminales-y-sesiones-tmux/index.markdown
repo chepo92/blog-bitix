@@ -47,6 +47,9 @@ Para automatizar la configuración inicial de tmux soporta un archivo para perso
 
 En el [manpage de tmux](http://man.openbsd.org/OpenBSD-current/man1/tmux.1) y los enlaces de referencia hay guías con una lista más completa que las operaciones básicas que incluyo en este artículo.
 
+{{< youtube
+    video="gmjyMxezIWU" >}}
+
 {{< reference >}}
 * [A tmux Crash Course](https://robots.thoughtbot.com/a-tmux-crash-course)
 * [A Quick and Easy Guide to tmux](http://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/)
