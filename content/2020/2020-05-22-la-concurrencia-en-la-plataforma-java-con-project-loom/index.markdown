@@ -4,7 +4,7 @@ type: "post"
 title: "La concurrencia en la plataforma Java con Project Loom"
 url: "/2020/05/la-concurrencia-en-la-plataforma-java-con-project-loom/"
 date: 2020-05-22T17:00:00+02:00
-updated: 2020-05-22T19:30:00+02:00
+updated: 2020-05-23T15:30:00+02:00
 language: "es"
 rss: true
 sharing: true
@@ -32,9 +32,9 @@ En general la plataforma Java se basa en:
 
 ### Los problemas de los threads y sus alternativas
 
-En la implementación de Linux los _threads_ no se diferencian de los procesos. Los _threads_ son costosos de crear y pesados por lo que el sistema operativo solo es capaz de mantener unos pocos miles activos. Por este motivo ha surgido la programación asíncrona, la programación reactiva, la programación mediante _callbacks_ y las construcciones _async/await_ y frameworks basándose en estos principios como [Vert.x][vertx] o [Spring Reactive][spring-reactive] o librerías como [RxJava][reactivex]. El resultado es una proliferación de APIs asíncronas desde NIO en el JDK a los _servlets_ asíncronos a las librerías denominadas reactivas para no bloquear los _threads_.
+En la implementación de Linux los _threads_ no se diferencian de los procesos. Los _threads_ son costosos de crear y pesados aún empleando _pools_ de _threads_ por lo que el sistema operativo solo es capaz de mantener unos pocos miles activos. Esto afecta especialmente en las aplicaciones Java en el lado de servidor ya que para procesar cada petición se le asigna un _thread_ de modo que el número de peticiones simultáneas se ve limitado por el número de _threads_ que soporta el sistema operativo. En aplicaciones con un número elevado de usuarios y peticiones la escalabilidad se ve limitada.
 
-Sin embargo, estas formas de programación tienen un costo mayor que el tradicional y simple modelo secuencial. Son más difíciles de programar, más difíciles de mantener e implican cambios importantes en el modelo de programación. Por otro lado es más difícil depurarlos ya que no se mantiene en una única pila de llamadas toda la tarea.
+Por este motivo ha surgido la programación asíncrona, la programación reactiva, la programación mediante _callbacks_ y las construcciones _async/await_ y frameworks basándose en estos principios como [Vert.x][vertx] o [Spring Reactive][spring-reactive] o librerías como [RxJava][reactivex]. El resultado es una proliferación de APIs asíncronas desde NIO en el JDK a los _servlets_ asíncronos a las librerías denominadas reactivas para no bloquear los _threads_. Sin embargo, estas formas de programación tienen un costo mayor que el tradicional y simple modelo secuencial. Son más difíciles de programar, más difíciles de mantener e implican cambios importantes en el modelo de programación. Por otro lado es más difícil depurarlos ya que no se mantiene en una única pila de llamadas toda la tarea.
 
 Estos estilos de programación no han sido inventados porque sean más fáciles de entender, son más difíciles también de depurar y de hacer _profile_. Son muy intrusivos y hacen la integración con el código síncrono virtualmente imposible simplemente porque la implementación de los _threads_ es simplemente inadecuada en Java tanto en carga del sistema como rendimiento. La programación asíncrona es contraria al modelo original diseñado en la programación de la plataforma Java en varios aspectos con un alto coste de mantenibilidad y observabilidad. Pero lo hacen por una buena razón, para conseguir la escalabilidad y el rendimiento haciendo buen uso de los costosos recursos hardware.
 
