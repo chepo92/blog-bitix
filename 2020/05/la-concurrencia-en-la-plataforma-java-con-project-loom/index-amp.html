@@ -56,10 +56,10 @@
         
       },
     "datePublished": "2020-05-22T17:00:00+02:00",
-    "dateModified": "2020-05-22T19:30:00+02:00",
+    "dateModified": "2020-05-23T15:30:00+02:00",
     "inLanguage": "es",
     
-    "wordCount": "1742",
+    "wordCount": "1806",
     "license": "https://creativecommons.org/licenses/by-sa/4.0/",
     "author": {
         "@type": "Person",
@@ -232,7 +232,7 @@
       
         Escrito por
        
-      <span>picodotdev</span> el <time>22/05/2020</time>, actualizado el <time>22/05/2020</time>.
+      <span>picodotdev</span> el <time>22/05/2020</time>, actualizado el <time>23/05/2020</time>.
       
         <br>
         
@@ -314,8 +314,8 @@
 <li>Los depuradores siguen el orden de ejecución aunque se realice procesado de E/S.</li>
 </ul>
 <h3 id="los-problemas-de-los-threads-y-sus-alternativas">Los problemas de los threads y sus alternativas</h3>
-<p>En la implementación de Linux los <em>threads</em> no se diferencian de los procesos. Los <em>threads</em> son costosos de crear y pesados por lo que el sistema operativo solo es capaz de mantener unos pocos miles activos. Por este motivo ha surgido la programación asíncrona, la programación reactiva, la programación mediante <em>callbacks</em> y las construcciones <em>async/await</em> y frameworks basándose en estos principios como <a href="https://vertx.io/">Vert.x</a> o <a href="https://spring.io/reactive">Spring Reactive</a> o librerías como <a href="http://reactivex.io/">RxJava</a>. El resultado es una proliferación de APIs asíncronas desde NIO en el JDK a los <em>servlets</em> asíncronos a las librerías denominadas reactivas para no bloquear los <em>threads</em>.</p>
-<p>Sin embargo, estas formas de programación tienen un costo mayor que el tradicional y simple modelo secuencial. Son más difíciles de programar, más difíciles de mantener e implican cambios importantes en el modelo de programación. Por otro lado es más difícil depurarlos ya que no se mantiene en una única pila de llamadas toda la tarea.</p>
+<p>En la implementación de Linux los <em>threads</em> no se diferencian de los procesos. Los <em>threads</em> son costosos de crear y pesados aún empleando <em>pools</em> de <em>threads</em> por lo que el sistema operativo solo es capaz de mantener unos pocos miles activos. Esto afecta especialmente en las aplicaciones Java en el lado de servidor ya que para procesar cada petición se le asigna un <em>thread</em> de modo que el número de peticiones simultáneas se ve limitado por el número de <em>threads</em> que soporta el sistema operativo. En aplicaciones con un número elevado de usuarios y peticiones la escalabilidad se ve limitada.</p>
+<p>Por este motivo ha surgido la programación asíncrona, la programación reactiva, la programación mediante <em>callbacks</em> y las construcciones <em>async/await</em> y frameworks basándose en estos principios como <a href="https://vertx.io/">Vert.x</a> o <a href="https://spring.io/reactive">Spring Reactive</a> o librerías como <a href="http://reactivex.io/">RxJava</a>. El resultado es una proliferación de APIs asíncronas desde NIO en el JDK a los <em>servlets</em> asíncronos a las librerías denominadas reactivas para no bloquear los <em>threads</em>. Sin embargo, estas formas de programación tienen un costo mayor que el tradicional y simple modelo secuencial. Son más difíciles de programar, más difíciles de mantener e implican cambios importantes en el modelo de programación. Por otro lado es más difícil depurarlos ya que no se mantiene en una única pila de llamadas toda la tarea.</p>
 <p>Estos estilos de programación no han sido inventados porque sean más fáciles de entender, son más difíciles también de depurar y de hacer <em>profile</em>. Son muy intrusivos y hacen la integración con el código síncrono virtualmente imposible simplemente porque la implementación de los <em>threads</em> es simplemente inadecuada en Java tanto en carga del sistema como rendimiento. La programación asíncrona es contraria al modelo original diseñado en la programación de la plataforma Java en varios aspectos con un alto coste de mantenibilidad y observabilidad. Pero lo hacen por una buena razón, para conseguir la escalabilidad y el rendimiento haciendo buen uso de los costosos recursos hardware.</p>
 <h3 id="la-nueva-implementación-de-los-threads">La nueva implementación de los threads</h3>
 <p>El <a href="https://wiki.openjdk.java.net/display/loom">proyecto Loom</a> persigue crear unos <em>threads</em> que eliminen los costes de los hilos tradicionales del sistema operativo. Serán mucho más ligeros, con ellos Java será capaz de mantener varios órdenes de magnitud superior, millones de <em>threads</em> en vez de solo unos pocos miles. Estos <em>threads</em> virtuales o fibras de la plataforma Java son también simplemente <em>threads</em> pero que crearlos y bloquearlos es mucho más barato. Son gestionados por el entorno de ejecución de Java y no son una representación uno a uno de un envoltorio de los <em>threads</em> del sistema operativo, en vez de eso están implementados en el espacio de usuario del JDK.</p>
