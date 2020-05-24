@@ -26,7 +26,7 @@ Aún así no son los únicos importantes, algunos ni siquiera requieren compleja
 
 {{< image
     gallery="true"
-    image1="image:link-target-blank-1.png" optionsthumb1="600x450" title1="Página con enlaces a otras páginas abiertas en una ueva pestaña"
+    image1="image:link-target-blank-1.png" optionsthumb1="300x200" title1="Página con enlaces a otras páginas abiertas en una ueva pestaña"
     caption="Página con enlaces a otras páginas abiertas en una ueva pestaña" >}}
 
 El problema es que los navegadores cuando se abre un enlace en una página en blanco o nueva, el navegador hace accesible a la ventana abierta el [objeto Window](https://developer.mozilla.org/en-US/docs/Web/API/Window) de la página que lo abre. Y teniendo acceso al objeto _Window_ una página maliciosa cargada tiene la posibilidad de cargar una nueva página en la página original o acceder a las cookies entre ellas las que permiten mantener la sesión en el servidor. Por ejemplo, con la variable _window.location_ es posible cargar una página de autenticación falsa que le pida al usuario introducir sus datos y realmente realice el robo de la contraseña.
@@ -41,17 +41,17 @@ El enlace que abre una página en una nueva pestaña es vulnerable a _tabnabbing
 
 {{< image
     gallery="true"
-    image1="image:link-target-blank-2.png" optionsthumb1="600x450" title1="Problema de tabnnabing en enlaces que abren páginas en uneva pestaña" >}}
+    image1="image:link-target-blank-2.png" optionsthumb1="300x200" title1="Problema de tabnnabing en enlaces que abren páginas en uneva pestaña" >}}
 {{< image
     gallery="true"
-    image1="image:link-target-blank-3.png" optionsthumb1="600x450" title1="Problema de tabnnabing en enlaces que abren páginas en uneva pestaña"
+    image1="image:link-target-blank-3.png" optionsthumb1="300x200" title1="Problema de tabnnabing en enlaces que abren páginas en uneva pestaña"
     caption="Problema de tabnnabing en enlaces que abren páginas en uneva pestaña" >}}
 
 La solución más sencilla es añadir el atributo _rel="noopener noreferrer"_ a los enlaces que se abran en una nueva página, esto informa al navegador para que no proporcione a la página abierta el acceso a la variable _window.opener_, como se muestra en el segundo enlace del ejemplo de código _page.html_, si la página abierta hace uso de ella se produce un error de JavaScript.
 
 {{< image
     gallery="true"
-    image1="image:link-target-blank-4.png" optionsthumb1="600x450" title1="La variable window.opener es nula en el enlace seguro"
+    image1="image:link-target-blank-4.png" optionsthumb1="300x200" title1="La variable window.opener es nula en el enlace seguro"
     caption="La variable window.opener es nula en el enlace seguro" >}}
 
 Otras medidas recomendables son [codificar los datos para evitar ataques XSS][blogbitix-392] y [filtrar el contenido enviado por los usuarios o devuelto por la página][blogbitix-48] sobre todo si proviene de fuentes externas a la aplicación ya sea de formularios introducidos por el usuario, parámetros, cabeceras u otras aplicaciones.
