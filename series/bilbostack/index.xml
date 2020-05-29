@@ -35,6 +35,13 @@
 </div>
 <h3 id="las-ventajas">Las ventajas</h3>
 <p>Con el patrón <em>Open Session in View</em> durante toda la petición se mantiene la conexión a la base de datos abierta de modo que al solicitar las relaciones de una entidad las excepciones <a href="https://docs.jboss.org/hibernate/stable/core/javadocs/org/hibernate/LazyInitializationException.html">LazyInitializationException</a> de Hibernate no se producen en las relaciones cargadas en modo <em>lazy</em>. Sin mantener la conexión abierta todos los datos que se necesiten han de cargarse con antelación de lo contrario al acceder a las relaciones de un objeto provocará esa excepción <em>LazyInitializationException</em>. El modo <em>lazy</em> permite solicitar los datos según se necesiten sin necesidad de hacerlo con antelación.</p>
+<p>En Spring hay una variable de configuración con la que se aciva o desactiva un filtro que implement el patrón <em>Open Session in View</em>.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">spring.jpa.open-in-view=false&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>SpringJpaOpenSessionInView.properties</span>
+    </div>
+</div>
 <h3 id="los-problemas-por-que-se-considera-una-mala-práctica">Los problemas, por que se considera una mala práctica</h3>
 <p>El patrón <em>Open Session in View</em> tiene varios problemas. Uno de ellos es que al mantener la sesión abierta durante toda la petición y permitir en todo momento acceso a la base de datos no se es consciente de las consultas que se lanzan más usando Hibernate que hace precisamente esto más fácil. El resultado es que hay que tener especial cuidado en no generar el problema 1+N donde se ejecuta una consulta para recuperar una lista de objetos y N para cargar una relación de cada uno de los objetos de la lista anteriores recuperados.</p>
 <p>Estos problemas tienen solución en cierta medida con la anotación <a href="https://docs.jboss.org/hibernate/stable/orm/javadocs/org/hibernate/annotations/BatchSize.html">@BatchSize</a> para recuperar listas de objetos en lotes y <a href="https://docs.jboss.org/hibernate/stable/orm/javadocs/org/hibernate/annotations/FetchMode.html">FetchMode.SUBSELECT</a> para lanzar una consulta adicional que recupere los objetos de las relaciones. Su inconveniente es que es poco flexible ya que su uso con anotaciones afectan a todas las consultas.</p>
@@ -1083,10 +1090,12 @@
 <li><a href="https://issues.apache.org/jira/browse/TAP5-2608">TAP5-2608 Fix and update quickstart</a></li>
 </ul>
 <div class="alert alert-warning">
-    <img data-src="https://picodotdev.github.io/blog-bitix/assets/images/misc/PugInTapestry.png" alt="Portada libro: PlugIn Tapestry" title="Portada libro: PlugIn Tapestry" style="float: left; margin-right: 1.5em;" class="lozad">
     <h3>Libro PlugIn Tapestry</h3>
-    <p>Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este <i>framework</i> en el formato que prefieras, <a href="https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/">PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry</a>, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.</p>
-    <br style="clear: both;">
+    <p>
+        <img src="https://picodotdev.github.io/blog-bitix/assets/images/misc/PugInTapestry.png" alt="Portada libro: PlugIn Tapestry" title="Portada libro: PlugIn Tapestry" width="141" height="200" style="float: left; margin-right: 1.5em;" class="lozad">
+        Si te interesa Apache Tapestry descarga gratis el libro de más de 300 páginas que he escrito sobre este <i>framework</i> en el formato que prefieras, <a href="https://picodotdev.github.io/blog-bitix/2014/02/libro-sobre-desarrollo-de-aplicaciones-con-apache-tapestry/">PlugIn Tapestry: Desarrollo de aplicaciones y páginas web con Apache Tapestry</a>, y el código de ejemplo asociado. En el libro comento detalladamente muchos aspectos que son necesarios en una aplicación web como persistencia, pruebas unitarias y de integración, inicio rápido, seguridad, formularios, internacionalización (i18n) y localización (l10n), AJAX, ... y como abordarlos usando Apache Tapestry.
+    </p>
+    <p><br style="clear: both;"></p>
     <div class="buttons">
         <a href="https://picodotdev.github.io/blog-bitix/assets/custom/PlugInTapestry.pdf" class="btn btn-lg btn-success">PDF</a>
         <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/PlugInTapestry" class="btn btn-lg btn-success">Código fuente ejemplos</a>
@@ -1270,7 +1279,7 @@
     </div>
 </div>
 <div class="alert alert-secondary sourcecode">
-    <img src="https://picodotdev.github.io/blog-bitix/assets/images/icons/terminal.svg" width="64" height="64" alt="Terminal" title="Terminal" class="lozad sourcecode-icon">
+    <img data-src="https://picodotdev.github.io/blog-bitix/assets/images/icons/terminal.svg" width="64" height="64" alt="Terminal" title="Terminal" class="lozad sourcecode-icon">
     <p>
         El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/JCommander">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en GitHub y probarlo en tu equipo ejecutando siguiente comando:<br><code>./gradlew run --args=&#39;--required --values a1 b2 c3 d4 --help&#39;</code></p>
 </div>
