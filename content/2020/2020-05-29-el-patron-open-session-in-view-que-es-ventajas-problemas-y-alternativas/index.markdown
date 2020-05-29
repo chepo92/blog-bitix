@@ -4,6 +4,7 @@ type: "post"
 title: "El patrón Open Session in View, qué es, ventajas, problemas y alternativas"
 url: "/2020/05/el-patron-open-session-in-view-que-es-ventajas-problemas-y-alternativas/"
 date: 2020-05-29T16:00:00+02:00
+updated: 2020-05-29T22:30:00+02:00
 language: "es"
 rss: true
 sharing: true
@@ -23,6 +24,10 @@ La librería [Hibernate][hibernate] proporciona persistencia del modelo de objet
 El modo _lazy_ tiene la ventaja de que los datos de las relaciones solo se cargan si se necesitan pero tiene el inconveniente de producir más SQLs a la base de datos. El modelo _eager_ carga los datos con menos SQLs pero carga más datos de los necesarios si no se necesitan.
 
 Para que el modo _lazy_ funcione se ha de mantener la conexión a la base de datos abierta para cargar los datos cuando se soliciten. Mantener la sesión y conexión de base de datos abierta es lo que define el patrón _Open Session in View_. Sin embargo, mantener la conexión abierta durante toda la petición incluida la parte de generación de la vista tiene inconvenientes, incluso llegando a considerar el patrón _Open Session in View_ un antipatrón que no se de debe usar.
+
+### Qué es y como funciona
+
+En este diagrama se aprecia su funcionamiento. La primera acción en una petición es abrir una sesión para obtener datos de la base de datos, lo que se traduce en apropiarse de una conexión a la base de datos. El flujo del programa procesa la petición invocando la lógica de la aplicación y empleando los diferentes servicios en las diferentes capas formadas por el controlador, servicio y DAO para el acceso a la base de datos. El último paso es generar el resultado que es devuelto al cliente, puede ser contenido HTML o un resultado en formato JSON si es un servicio REST. En este punto se accede de nuevo a la base de datos para recuperar las relaciones _lazy_ de los objetos que fueron devueltas por el servicio, esto es habitual en el caso de emplear un ORM como Hibernate o JPA.
 
 {{< image
     gallery="true"
