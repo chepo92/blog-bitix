@@ -1,14 +1,18 @@
 {{ $expression := split .Params.imagePost ":" }}
-{{ $binding := default "data" (index $expression 0) }}
+{{ $binding := default "default" (index $expression 0) }}
 {{ $value := default "blogbitix.png" (index $expression 1) }}
 
-{{ if (eq $binding "resource") }}
-    {{ $resource := .Page.Resources.GetMatch $value }}
-    {{ $resource1x1 := $resource.Fit "1200x1200" }}
+{{ if (eq $binding "image") }}
+    {{ $resource := .Page.Resources.GetMatch (print "images/" $value) }}
 
+    {{ if eq $resource nil }}
+        {{ errorf "Missing image post: %s" $value }}
+    {{ end }}
+
+    {{ $resource1x1 := $resource.Fit "750x750" }}
     {{ .Scratch.Set "image1x1" $resource1x1.Permalink }}
 {{ end }}
-{{ if (eq $binding "data") }}
+{{ if (eq $binding "default") }}
     {{ $value1x1 := replaceRE "\\.(png|jpg)$" "-750.$1" $value }}
     {{ $image1x1 := print "assets/images/structured-data/" $value1x1 }}
 

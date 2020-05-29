@@ -9,7 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "image:calibre.png"
+imagePost: "logotype:postgresql.svg"
 tags: ["planeta-codigo", "programacion"]
 summary: "Siempre es recomedable tener una copia de seguridad de algo tan importante como suelen ser los datos en una base de datos. Esa copia de seguridad sirve para en caso de desastre restaurar la mayor parte de los datos, también sirven para restaurarlos en otras máquinas diferentes a la principal. Tanto PostgreSQL como MySQL tienen comandos para hacer copias de seguridad y restaurarlas, también tiene opciones para cargar datos de forma masiva de forma rápida y más eficiente que con sentencias SQL."
 ---
