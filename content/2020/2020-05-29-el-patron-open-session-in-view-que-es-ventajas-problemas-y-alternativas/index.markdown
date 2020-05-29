@@ -33,6 +33,10 @@ Para que el modo _lazy_ funcione se ha de mantener la conexión a la base de dat
 
 Con el patrón _Open Session in View_ durante toda la petición se mantiene la conexión a la base de datos abierta de modo que al solicitar las relaciones de una entidad las excepciones [LazyInitializationException](https://docs.jboss.org/hibernate/stable/core/javadocs/org/hibernate/LazyInitializationException.html) de Hibernate no se producen en las relaciones cargadas en modo _lazy_. Sin mantener la conexión abierta todos los datos que se necesiten han de cargarse con antelación de lo contrario al acceder a las relaciones de un objeto provocará esa excepción _LazyInitializationException_. El modo _lazy_ permite solicitar los datos según se necesiten sin necesidad de hacerlo con antelación.
 
+En Spring hay una variable de configuración con la que se aciva o desactiva un filtro que implement el patrón _Open Session in View_.
+
+{{< code file="SpringJpaOpenSessionInView.properties" language="plaintext" options="" >}}
+
 ### Los problemas, por que se considera una mala práctica
 
 El patrón _Open Session in View_ tiene varios problemas. Uno de ellos es que al mantener la sesión abierta durante toda la petición y permitir en todo momento acceso a la base de datos no se es consciente de las consultas que se lanzan más usando Hibernate que hace precisamente esto más fácil. El resultado es que hay que tener especial cuidado en no generar el problema 1+N donde se ejecuta una consulta para recuperar una lista de objetos y N para cargar una relación de cada uno de los objetos de la lista anteriores recuperados.
