@@ -1,8 +1,9 @@
 ---
 pid: 488
 type: "post"
-title: "Copiar datos de un tipo de objeto a otro con ModdelMapper"
-url: "/2020/05/copiar-datos-de-un-tipo-de-objeto-a-otro-con-moddelmapper/"
+title: "Copiar datos de un tipo de objeto a otro con ModelMapper"
+url: "/2020/05/copiar-datos-de-un-tipo-de-objeto-a-otro-con-modelmapper/"
+aliases: ["/2020/05/copiar-datos-de-un-tipo-de-objeto-a-otro-con-moddelmapper/"]
 date: 2020-05-31T10:00:00+02:00
 language: "es"
 rss: true
