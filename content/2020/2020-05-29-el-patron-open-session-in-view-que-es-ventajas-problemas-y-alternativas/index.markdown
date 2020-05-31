@@ -70,6 +70,8 @@ Cada vista necesitará unos datos específicos de modo que serán necesarias con
 
 En muchas aplicaciones usar el patrón _Open Session in View_ con Hibernate no supone un gran problema y simplifica el código. Para aquellas aplicaciones que necesitan escalabilidad y soportar un gran número de usuarios concurrentes o hagan operaciones que impliquen operaciones de red se aconseja usar DTO en las vistas ya sean mapeando las entidades Hibernate recuperadas por el controlador a esos DTO con una librería específica para el propósito como [ModdelMapper][modelmapper] y recuperar únicamente los datos que necesita la vista usando librerías como jOOQ que ofrecen mayor control sobre las columnas de la base de datos datos recuperadas para reducir los datos recuperados de la base de datos a únicamente lo necesario.
 
+* [Copiar datos de un tipo de objeto a otro con ModdelMapper][blogbitix-488]
+
 {{% reference %}}
 * [Why is Hibernate Open Session in View considered a bad practice?](https://stackoverflow.com/questions/1103363/why-is-hibernate-open-session-in-view-considered-a-bad-practice)
 * [The OpenSessionInView antipattern](https://blog.frankel.ch/the-opensessioninview-antipattern/)
