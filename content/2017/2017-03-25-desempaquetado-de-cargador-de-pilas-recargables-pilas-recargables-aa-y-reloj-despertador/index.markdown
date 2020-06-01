@@ -17,8 +17,6 @@ summary: "Otros productos que he comprado han sido un cargador de pilas recargab
 
 {{% post %}}
 
-{{< logotype image1="" title1="" width1="200" image2="" title2="" width2="200">}}
-
 Una de las ventajas de comprar en [Amazon][amazon] es que casi siempre hay una cantidad muy amplia de modelos de cada producto con algunas diferencias entre ellos además del precio, una cantidad de modelos mucho mayor que en las tiendas físicas o incluso grandes almacenes. Encontrar entre las muchas opciones que hay la mejor opción requiere dedicarle algo de tiempo y fijarse bien en las descripciones del producto y comentarios tanto positivos y casi más en los negativos.
 
 ### Cargador de pilas recargables

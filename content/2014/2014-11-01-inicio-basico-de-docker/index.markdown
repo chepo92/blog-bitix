@@ -81,7 +81,6 @@ Continuando esta serie de artículos sobre docker explicaré como construir una 
 * [Integración entre Ansible y Docker][blogbitix-53]
 * [Introducción a Bitnami][blogbitix-54]
 * [Docker Hub Registry](https://registry.hub.docker.com/)
-* http://phusion.github.io/baseimage-docker/
 {{< /reference >}}
 
 {{% /post %}}

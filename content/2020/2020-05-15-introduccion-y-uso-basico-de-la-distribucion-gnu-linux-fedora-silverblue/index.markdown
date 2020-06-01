@@ -17,7 +17,7 @@ summary: "Fedora Silbervlue es una distribución innovadora es su forma de siste
 
 {{% post %}}
 
-{{< logotype image1="" title1="" width1="200" image2="" title2="" width2="200" >}}
+{{< logotype image1="fedora.svg" >}}
 
 Distribuciones [GNU][gnu]/[Linux][linux] hay muchas con diferencias en algunos aspectos, el más cercano al usuario es entorno de escritorio entre los más populares [GNOME][gnome], [KDE][kde], [XFCE][xfce], [MATE][mate] o [Cinnamon][cinnamon] entre otros pero hay otros aspectos relevantes entre ellos el gestor de paquetes que utiliza, el modelo de actualización, en que otra distribución está basada, cual es su periodo de publicación de nuevas versiones, su popularidad, tiempo de vida o si está respaldada por una empresa.
 
