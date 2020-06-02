@@ -57,9 +57,11 @@ El siguiente programa muestra las cuatro opciones, su salida en la consola serí
 
 {{< code file="Main.java" language="java" options="" >}}
 
+Para cualquiera de las formas de hacer el bucle _for_ el comportamiento es el mismo, iterar un número finito de veces o sobre los elementos de una colección. Elegir cual usar entre los diferentes tipos de bucles depende del caso y de las preferencias personales pero también considerando la legibilidad y expresividad del código fuente.
+
 {{< image
     gallery="true"
-    image1="image:bucles-java.png" optionsthumb1="300x200" title1="4 formas de hacer un bucle en Java"
+    image1="image:bucles-java.png" optionsthumb1="650x450" title1="4 formas de hacer un bucle en Java"
     caption="4 formas de hacer un bucle en Java" >}}
 
 {{< sourcecode git="blog-ejemplos/tree/master/JavaForeach" command="./gradlew run" >}}
