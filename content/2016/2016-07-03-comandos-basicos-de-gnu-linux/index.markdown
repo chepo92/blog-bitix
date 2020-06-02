@@ -5,6 +5,7 @@ title: "Comandos básicos de GNU/Linux"
 url: "/2016/07/comandos-basicos-de-gnu-linux/"
 date: 2016-07-03T12:00:00+02:00
 updated: 2016-07-10T10:00:00+02:00
+expiryDate: 2020-06-02T23:00:00+02:00
 rss: true
 sharing: true
 comments: true
@@ -23,51 +24,51 @@ El proyecto <abbr title="GNU Is Not Unix">[GNU][gnu]</abbr> promovido por la <ab
 
 En la colección de [utilidades que forman el núcleo de GNU](https://www.gnu.org/software/coreutils/manual/coreutils.html) hay una lista completa junto con su documentación. A continuación una lista no exhaustiva de algunos comandos que disponemos pero son de los más utilizados (algunos más que otros) que tengamos que usar directamente o en _scripts_ de bash. En orden alfabético.
 
-* _apropos_: muestra una lista de comandos relacionados con una palabra.
-* _at_: programa una tarea a una determinada hora.
-* _cal_: emite en la terminal un calendario.
-* _cat_: concatena archivos y emite sus contenidos en la salida.
-* _cd_: cambia el directorio de trabajo actual de la terminal.
-* _chgrp_: cambia el grupo propietario del archivo.
-* _chmod_: cambia los permisos del archivo.
-* _chown_: cambia el usuario propietario del archivo.
-* _cp_: copia el contenido de un fichero a otro nuevo o sobrescribiendo uno existente.
-* _date_: muestra la fecha del sistema.
-* _df_: muestra el uso del disco.
-* _du_: estima el espacio usado por los archivos.
-* _echo_: emite un mensaje en la salida.
-* _find_: busca archivos en la jerarquía de directorios.
-* _free_: muestra el estado de la memoria del sistema.
-* _grep_: aplica expresiones regulares al contenido y filtra las que que no la cumplen.
-* _head_: muestra el principio del contenido.
-* _history_: lista el historial de comandos introducidos con anterioridad.
-* _htop_: monitor de procesos similar a _top_ un poco más avanzado y más personalizable.
-* _kill_: envía una señal a un proceso, por ejemplo de terminación.
-* _less_: permite el movimiento adelante y atrás del contenido a visualizar cuando es más grande que el tamaño de la terminal.
-* _ln_: crea enlaces simbólicos.
-* _lsblk_: lista los dispositivos de bloques.
-* _ls_: lista ficheros y directorios del sistema de ficheros. Con diferentes opciones podremos visualizar además de los nombres más información como permisos, fecha de última modificación y tamaño.
-* _man_: muestra la página de manual de un comando. En las páginas de manual incluye una descripción de lo que hace el comando, sus opciones, parámetros y en algunos casos ejemplos de uso.
-* _md5sum_: calcula el _hash_ _md5_ de un contenido.
-* _mkdir_: crea un directorio opcionalmente con toda la ruta de carpetas hasta él si no existen.
-* _mv_: renombra un archivo y/ lo cambia de directorio.
-* _printf_: formatea un mensaje y lo emite en la salida.
-* _ps_: lista los procesos del sistema e información relacionada.
-* _pwd_: emite en la salida el directorio actual de trabajo.
-* _rmdir_: elimina un directorio
-* _sha1sum_: calcula el _hash_ _sh1_ de un contenido.
-* _shuf_: emite las líneas de entrada en la salida de forma aleatoria.
-* _sort_: ordena líneas de texto.
-* _tail_: muestra el final del contenido pudiendo verlo en tiempo real cuando se añade más. Útil para monitorizar la salida de un archivo de trazas.
-* _tar_: guarda varios archivos en uno solo.
-* _tmux_: permite ver varias terminales dividiendo el área disponible verticalmente u horizontalmente, desconectarse de una terminal sin dejar de ejecutar los comandos que estuviesen corriendo y volver a conectarse de nuevo.
-* _top_: monitor de procesos del sistema. Muestra el uso de cada núcleo del procesador, memoria usada, libre, procesos del sistema y su consumo de recursos de CPU y memoria. Un poco más básico que _htop_.
-* _touch_: cambia la fecha de acceso y modificación a la actual del sistema, opcionalmente si el fichero no existe se crea con contenido vacío.
-* _uniq_: informa o emite las ocurrencias repetidas.
-* _vim_: es un editor de texto avanzado.
-* _xargs_: construye comandos y los ejecuta con las líneas de la entrada.
-* _yes_: repite indefinidamente el mensaje _yes_ en la salida hasta que se finaliza. Útil para ejecutar comandos de forma desatendida que requieren la intervención del usuario.
-* _zip_: crea un archivador comprimiendo el contenido de los archivos.
+* `apropos`: muestra una lista de comandos relacionados con una palabra.
+* `at`: programa una tarea a una determinada hora.
+* `cal`: emite en la terminal un calendario.
+* `cat`: concatena archivos y emite sus contenidos en la salida.
+* `cd`: cambia el directorio de trabajo actual de la terminal.
+* `chgrp`: cambia el grupo propietario del archivo.
+* `chmod`: cambia los permisos del archivo.
+* `chown`: cambia el usuario propietario del archivo.
+* `cp`: copia el contenido de un fichero a otro nuevo o sobrescribiendo uno existente.
+* `date`: muestra la fecha del sistema.
+* `df`: muestra el uso del disco.
+* `du`: estima el espacio usado por los archivos.
+* `echo`: emite un mensaje en la salida.
+* `find`: busca archivos en la jerarquía de directorios.
+* `free`: muestra el estado de la memoria del sistema.
+* `grep`: aplica expresiones regulares al contenido y filtra las que que no la cumplen.
+* `head`: muestra el principio del contenido.
+* `history`: lista el historial de comandos introducidos con anterioridad.
+* `htop`: monitor de procesos similar a _top_ un poco más avanzado y más personalizable.
+* `kill`: envía una señal a un proceso, por ejemplo de terminación.
+* `less`: permite el movimiento adelante y atrás del contenido a visualizar cuando es más grande que el tamaño de la terminal.
+* `ln`: crea enlaces simbólicos.
+* `lsblk`: lista los dispositivos de bloques.
+* `ls`: lista ficheros y directorios del sistema de ficheros. Con diferentes opciones podremos visualizar además de los nombres más información como permisos, fecha de última modificación y tamaño.
+* `man`: muestra la página de manual de un comando. En las páginas de manual incluye una descripción de lo que hace el comando, sus opciones, parámetros y en algunos casos ejemplos de uso.
+* `md5sum`: calcula el _hash_ _md5_ de un contenido.
+* `mkdir`: crea un directorio opcionalmente con toda la ruta de carpetas hasta él si no existen.
+* `mv`: renombra un archivo y/ lo cambia de directorio.
+* `printf`: formatea un mensaje y lo emite en la salida.
+* `ps`: lista los procesos del sistema e información relacionada.
+* `pwd`: emite en la salida el directorio actual de trabajo.
+* `rmdir`: elimina un directorio
+* `sha1sum`: calcula el _hash_ _sh1_ de un contenido.
+* `shuf`: emite las líneas de entrada en la salida de forma aleatoria.
+* `sort`: ordena líneas de texto.
+* `tail`: muestra el final del contenido pudiendo verlo en tiempo real cuando se añade más. Útil para monitorizar la salida de un archivo de trazas.
+* `tar`: guarda varios archivos en uno solo.
+* `tmux`: permite ver varias terminales dividiendo el área disponible verticalmente u horizontalmente, desconectarse de una terminal sin dejar de ejecutar los comandos que estuviesen corriendo y volver a conectarse de nuevo.
+* `top`: monitor de procesos del sistema. Muestra el uso de cada núcleo del procesador, memoria usada, libre, procesos del sistema y su consumo de recursos de CPU y memoria. Un poco más básico que _htop_.
+* `touch`: cambia la fecha de acceso y modificación a la actual del sistema, opcionalmente si el fichero no existe se crea con contenido vacío.
+* `uniq`: informa o emite las ocurrencias repetidas.
+* `vim`: es un editor de texto avanzado.
+* `xargs`: construye comandos y los ejecuta con las líneas de la entrada.
+* `yes`: repite indefinidamente el mensaje _yes_ en la salida hasta que se finaliza. Útil para ejecutar comandos de forma desatendida que requieren la intervención del usuario.
+* `zip`: crea un archivador comprimiendo el contenido de los archivos.
 
 En sus respectivas páginas de manual, `man [comando]`, podemos conocer las opciones que permite cada uno de ellos junto con algunos ejemplos de uso. Estos comandos se pueden combinar haciendo que la salida de un comando sea la entrada del siguiente mediante tuberías, por ejemplo, para ordenar un fichero de texto y mostrar las 5 primeras líneas con los comandos _sort_ y _head_ usaríamos `sort fichero.txt | head -5`. Precisamente el comando `sort` es lo que he utilizado para ordenar alfabéticamente la lista de comandos anterior.
 

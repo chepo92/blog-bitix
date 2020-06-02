@@ -46,7 +46,6 @@ He añadido a la serie de artículos sobre desarrollo web varios interesantes qu
 
 La sección de artículos sobre GNU/Linux destaca la [serie sobre juegos][blogbitix-serie-juegos] en el sistema del pingüino. He empezado a usar por obligación en el trabajo macOS que me ha servido como excusa para escribir un par de artículos sobre el sistema operativo de Apple.
 
-* [Comandos básicos de GNU/Linux][blogbitix-156]
 * [Guía básica del intérprete de comandos Bash][blogbitix-158]
 * [Jugar al ajedrez en GNU/Linux con GNOME][blogbitix-160]
 * [Cómo crear vistas previas de imágenes con ImageMagick][blogbitix-161]

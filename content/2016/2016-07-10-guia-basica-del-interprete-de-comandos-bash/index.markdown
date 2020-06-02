@@ -20,9 +20,10 @@ summary: "La línea de comandos sigue siendo una poderosa herramienta que aunque
 
 Automatizar las tareas que realizamos permite ahorrarnos el tiempo de tener que hacerlo manualmente y evita los errores que se puede producir. En [GNU][gnu]/[Linux][linux] el uso de la terminal no es algo extraño y muchas tareas son realizadas más fácil y rápido con un comando que con un programa con interfaz gráfica, además tiene la ventaja de que puede automatizarse creando un _script_ [Bash][bash].
 
-El intérprete de comandos Bash junto con la combinación de otros programas proporcionados por la parte GNU de los sistemas Linux presentes en la mayoría de las distribuciones por defecto es suficiente para automatizar la mayor parte de tareas que necesitemos. Conociendo las posibilidades que ofrece junto con [las combinaciones de teclas del intérprete Bash y del emulador de la terminal][blogbitix-152] junto con [los comandos básicos de GNU][blogbitix-156] subiremos un nivel en el manejo de los sistemas GNU/Linux.
+El intérprete de comandos Bash junto con la combinación de otros programas proporcionados por la parte GNU de los sistemas Linux presentes en la mayoría de las distribuciones por defecto es suficiente para automatizar la mayor parte de tareas que necesitemos conociendo que hacen [50 comandos útiles de línea de comandos][blogbitix-477]. Para aumentar la productividad es necesario aprender [las combinaciones de teclas del intérprete Bash y del emulador de la terminal][blogbitix-152].
 
 ### Tuberías y redirecciones
+
 Al ejecutar un comando podemos querer encadenar la salida de un comando con la entrada de otro, mediante una tubería. Uno de los puntos de la filosofía de los programas de los sistemas Unix es que realicen una o pocas tareas pero que lo hagan muy bien. Usando varios programas especializados en una tarea podemos juntarlos como si fuese piezas de Lego para realizarla tarea compleja que necesitamos, encadenando la salida de un comando como la entrada del siguiente.
 
 Una de las cosas buenas de Bash es que está presente por defecto en la mayoría de las distribuciones Linux y si no es este intérprete de comandos será otro similar por lo que no necesitamos instalar nada más adicional para usarlo. Aún así si necesitaremos algo más potente que Bash como lenguaje de programación podemos optar por un lenguaje de programación como [Python] para realizar los _scripts_ aunque necesitaremos instalar su paquete y las dependencias que los _scripts_ usen.
@@ -45,6 +46,7 @@ Además de la salida estándar los programas tienen la salida de errores que pod
 {{< code file="sorteo-3.sh" language="bash" options="" >}}
 
 ### Múltiples comandos
+
 Si necesitamos ejecutar dos comandos seguidos podemos introducirlos en la misma línea en vez de individualmente, ejecutar un comando si el anterior se ha ejecutado correctamente con `&&` o al contrario ejecutar un comando si el anterior ha fallado con `||`. Si en la ubicación de trabajo que estamos existe un directorio no se podrá crear otro con el mismo nombre, dependiendo de las opciones de encadenamiento según el resultado del comando anterior se ejecutará o no el siguiente comando.
 
 {{< code file="multiples-comandos.sh" language="bash" options="" >}}
@@ -55,6 +57,7 @@ Si necesitamos ejecutar dos comandos seguidos podemos introducirlos en la misma 
     caption="Múltiples comandos en la misma línea" >}}
 
 ### Variables e interpolación de cadenas
+
 Podemos definir variables locales en el _script_ o exportarlas para que estén accesibles en otros procesos e incluso interpolarlas en cadenas de la siguiente forma:
 
 {{< code file="variables-1.sh" language="bash" options="" >}}
@@ -69,6 +72,7 @@ También podemos interpolar la salida de un comando dentro de una cadena:
     caption="Interpolación en cadenas de variables y comandos" >}}
 
 ### Invocaciones de comandos anteriores
+
 Con el comando `history` podemos ver el historial completo de comandos que hemos ejecutado con anterioridad. Al lado de cada comando vemos un identificador numérico que podemos usar para ejecutarlo de nuevo con `![identificador]`. Con el siguiente historial podemos ejecutar el comando con identificador 512 indicando una exclamación y el identificador, `!512`. Si queremos ejecutar el último comando introducido podemos usar la doble exclamación `!!`. Si queremos ejecutar el último comando completo de cierto comando podemos usar `![comando]` en vez de su identificador.
 
 {{< image
@@ -79,6 +83,7 @@ Con el comando `history` podemos ver el historial completo de comandos que hemos
 Hay más [formas de ejecutar comandos del historial](http://www.softpanorama.org/Scripting/Shellorama/bash_command_history_reuse.shtml). Si quisieramos invocar un comando del historial cambiando algún argumento podemos hacer una búsqueda en orden inverso con <kbd>Ctrl+r</kbd>.
 
 ### Scripts
+
 Los _scritps_ son archivos de texto con permisos de ejecución interpretados por Bash u otro intérprete que ejecuta los comandos del _script_, es la forma de automatizar varios comandos. Al inicio de los _scripts_ se suele incluir el [shebang](https://es.wikipedia.org/wiki/Shebang) donde se indica el programa encargado de interpretar el _script_, puede ser Bash o un programa escrito en un lenguaje de programación como [Python][python]. Se puede indicar de varias formas pero las preferidas son las siguientes:
 
 {{< code file="scripts-1.sh" language="bash" options="" >}}
@@ -98,6 +103,7 @@ Al igual que los comandos pueden recibir opciones y argumentos los _scripts_ tam
 * $?: valor del estado de salida del último comando ejecutado. Normalmente se usa _0_ para los comandos ejecutados correctamente y _1_ para los que han terminado incorrectamente.
 
 ### Funciones, _for_, _switch_, _if_, comparaciones
+
 En los _scripts_ Bash se pueden definir funciones para reutilizar parte del _script_. Pueden incluir argumentos.
 
 {{< code file="funciones-1.sh" language="bash" options="" >}}
@@ -159,6 +165,7 @@ Las expresiones anteriores se pueden combinar:
 * [ EXPR1 -o EXPR2 ]: verdadero si alguna de _EXPR1_ y _EXPR2_ son verdadero, operador _or_.
 
 ### Control de trabajos
+
 El comando `jobs` obtenemos una lista de trabajos que se está ejecutando junto con su identificador y estado, con la combinación de teclas <kbd>Ctrl+z</kbd> dejamos el proceso actual detenido y en segundo plano, con `fg` lo devolvemos a primer plano y si estaba detenido se continua su ejecución, con `bg` si estaba detenido continua su ejecución en segundo plano.
 
 {{< image

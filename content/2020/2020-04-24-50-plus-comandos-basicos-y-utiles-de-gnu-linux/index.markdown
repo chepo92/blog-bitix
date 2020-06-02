@@ -3,6 +3,7 @@ pid: 477
 type: "post"
 title: "50+ comandos básicos y útiles de GNU/Linux"
 url: "/2020/04/50-plus-comandos-basicos-y-utiles-de-gnu-linux/"
+aliases: ["/2016/07/comandos-basicos-de-gnu-linux/"]
 date: 2020-04-24T16:00:00+02:00
 language: "es"
 rss: true
@@ -48,6 +49,7 @@ Los comandos suelen recibir como parámetros de entrada archivos, los archivos s
 * `mkdir`, `rmdir`: permiten crear nuevos directorios y eliminar directorios.
 * `ln`: este comando crea enlaces simbólicos, son archivos que apuntan a otro archivo o directorio.
 * `chmod`, `chown`: estos comandos permiten cambiar los permisos de lectura, escritura y ejecución de los archivos, el segundo cambia el usuario y grupo del propietario del archivo.
+* `du`: estima el espacio usado por los archivos.
 
 ### Intérprete bash
 
@@ -57,6 +59,7 @@ Los comandos son procesados por un intérprete de comandos algunos están relaci
 * `history`: muestra el historial de comandos ejecutados con anterioridad. Usado junto con el comando _grep_ se puede filtrar en todo en historial. El historial se guarda en _~/.bash\_history_.
 * `echo`: imprime un texto en la salida de la consola.
 * `whatis`: muestra una descripción de el comando indicado.
+* `apropos`: muestra una lista de comandos relacionados con una palabra.
 * `locate`: muestra la ubicación en el sistema de archivos del comando indicado.
 * `man`: páginas de manual y uso de un comando. Incluye la descripción de un comando, sus parámetros y opciones que posee.
 
@@ -80,6 +83,7 @@ Los comandos son procesados por un intérprete de comandos algunos están relaci
 * `head`, `tail`, `less`: muestran las primeras o últimas líneas de un archivo de texto. _less_ permite paginar para navegar archivos de texto en la terminal.
 * `wc`: cuenta palabras, líneas, caracteres o bytes de un archivo.
 * `df`, `du`: muestra información de uso en el almacenamiento persistente.
+* `free`: muestra el estado de la memoria del sistema.
 
 ### Editores de texto
 
@@ -90,6 +94,7 @@ Los comandos son procesados por un intérprete de comandos algunos están relaci
 ### Monitorización y sistema
 
 * `top`: monitor de los procesos del sistema en ejecución, en el se muestra el tiempo de CPU que están usando y la memoria que están consumiendo.
+* `htop`: monitor de procesos similar a _top_ un poco más avanzado y más personalizable.
 * `iotp`: monitor de procesos del sistema para la entrada/salida a almacenamiento persistente, disco duro o SSD.
 * `watch`: permite ejecutar un comando cada pocos segundos mostrando en la pantalla su salida.
 * `uname`: muestra la versión del kernel que está usando el sistema.
@@ -109,5 +114,11 @@ Los comandos son procesados por un intérprete de comandos algunos están relaci
 ### Compresión de archivos y directorios
 
 * `tar`, `gzip`, `unzip`: permiten realizar operaciones de compresión sobre archivos para reducir su tamaño y agrupar múltiples archivos en uno solo.
+
+### Utilidades
+
+* `yes`: repite indefinidamente el mensaje _yes_ en la salida hasta que se finaliza. Útil para ejecutar comandos de forma desatendida que requieren la intervención del usuario.
+* `md5sum`: calcula el _hash_ _md5_ de un contenido.
+* `sha1sum`: calcula el _hash_ _sh1_ de un contenido.
 
 {{% /post %}}
