@@ -1,10 +1,11 @@
 ---
 pid: 356
 type: "post"
-title: "Desempaquetado y análisis de monitor Benq PD2700Q"
-url: "/2018/10/desempaquetado-y-analisis-de-monitor-benq-pd2700q/"
+title: "Desempaquetado y análisis de monitor BenQ PD2700Q, 2K/QHD, IPS, 27 pulgadas"
+url: "/2018/10/desempaquetado-y-analisis-de-monitor-benq-pd2700q-2k-qhd-ips-27-pulgadas/"
+aliases: ["/2018/10/desempaquetado-y-analisis-de-monitor-benq-pd2700q/"]
 date: 2018-10-23T11:00:00+02:00
-updated: 2018-11-10T22:00:00+01:00
+updated: 2020-06-02T14:00:00+02:00
 language: "es"
 rss: true
 sharing: true
@@ -19,7 +20,7 @@ summary: "La siguiente pieza que he adquirido para completar lo que será mi ord
 
 {{% post %}}
 
-{{< logotype image1="benq.svg" title1="Benq" width1="300" >}}
+{{< logotype image1="benq.svg" title1="BenQ" width1="300" >}}
 
 [El ordenador que tenía intención de comprar, un Intel NUC][blogbitix-329] entre las [opciones entre portátil, ITX o NUC que evalué hace ya más de seis meses][blogbitix-309] ha sido finalmente uno de sus modelos que me decidí a comprar, [el ordenador Intel NUC NUC8i5BEK del cual he realizado su desempaquetado][blogbitix-363]. Mientras espero a su comercialización ya estoy comprando las otras piezas que en cualquier caso necesito como [teclado y ratón inalámbrico, alfombrilla para la mesa][blogbitix-348] y ahora otra pieza más importante, el monitor.
 
@@ -31,17 +32,17 @@ He mirado varias opciones y modelos de  monitor y aún así tampoco estoy seguro
 
 Partía de unos requerimientos de que fuera IPS por su calidad de colores, de 27 pulgadas y con resolución 2K o 2560x1440 en un rango de precio de hasta unos 300€. En otro orden de cosas menos importantes que valoraba era que tuviese conexión [HDMI][hdmi] y [DisplayPort][displayport], marcos finos y compatibilidad con soporte VESA. Hay opciones en formato ultrapanorámico de 29 pulgadas y resolución 2560x1080. He visto alguno de estos pero finalmente he preferido que tenga más resolución vertical y no sea tan ancho para no tener que girar la cabeza.
 
-Con estos requerimientos iniciales me quedé con unos pocos candidatos. Básicamente monitores 2K en formato de 27 pulgadas e IPS muy similares en cuanto a características, son IPS de resolución QHD 2560x1440, tienen entrada HDMI 1.4 y DisplayPort 1.2, soporte VESA 100x100, con algunas pequeñas diferencias en cuanto a especificaciones. El [Benq PD2500Q](https://amzn.to/2D0VQEf) es de 25 pulgadas, panel de 8 bits y tiene sensor para adaptar automáticamente el brillo a la luz ambiental, posee un _hub_ USB 3.1 de cuatro puertos, el [Benq PD2700Q](https://amzn.to/2OFdFi9) posee un _hub_ USB 2.0 de dos puertos y un panel de 10 bits. Los dos modelos de Benq son muy parecidos sino iguales en cuanto al panel de monitor, varía en cuanto al marco que en el caso del GW s brillante y en el PD mate, también cambian las conexiones que tienen el GW tiene D-Sub, DVI-DL (Dual Link), DisplayPort, HDMI y el PD DisplayPort, mini DisplayPort y HDMI. Ambos soportan 100% Rec.709 y sRGB, sin parpadeos, son regulables en altura, gira, inclinación y pivotable para ponerlo en modo vertical. Tienen un precio similar.
+Con estos requerimientos iniciales me quedé con unos pocos candidatos. Básicamente monitores 2K en formato de 27 pulgadas e IPS muy similares en cuanto a características, son IPS de resolución QHD 2560x1440, tienen entrada HDMI 1.4 y DisplayPort 1.2, soporte VESA 100x100, con algunas pequeñas diferencias en cuanto a especificaciones. El [BenQ PD2500Q](https://amzn.to/2D0VQEf) es de 25 pulgadas, panel de 8 bits y tiene sensor para adaptar automáticamente el brillo a la luz ambiental, posee un _hub_ USB 3.1 de cuatro puertos, el [BenQ PD2700Q](https://amzn.to/2OFdFi9) posee un _hub_ USB 2.0 de dos puertos y un panel de 10 bits. Los dos modelos de BenQ son muy parecidos sino iguales en cuanto al panel de monitor, varía en cuanto al marco que en el caso del GW s brillante y en el PD mate, también cambian las conexiones que tienen el GW tiene D-Sub, DVI-DL (Dual Link), DisplayPort, HDMI y el PD DisplayPort, mini DisplayPort y HDMI. Ambos soportan 100% Rec.709 y sRGB, sin parpadeos, son regulables en altura, gira, inclinación y pivotable para ponerlo en modo vertical. Tienen un precio similar.
 
 De las opciones con las que me quedé todos con panel de 10 bits (u 8 + 2, salvo el PD2500Q que es de 8), función de no parpadeo, filtro de luz azul y altavoces sencillos. El PD2700Q es un modelo más antiguo, los PD2500Q y PD2700U son más modernos y se notan en los biseles más reducidos y el _hub_ con una versión mayor de USB.
 
 Tanto el [Viewsonic VG2719-2K](https://amzn.to/2OIyidi) como el [V7 L27HAS2K-2E](https://amzn.to/2CZj8dx) tienen un precio más económico pero en cuanto a especificaciones técnicas no eran malas. Sin embargo, de estos modelos no hay mucha información ni de análisis en páginas web, desempaquetados en Youtube, ni opiniones en Amazon. Del V7 hay [dos opiniones en Amazon alemania](https://www.amazon.de/dp/B079P3YSTK/) y ambas no son buenas y coinciden en que el texto y la imagen se ve borrosa. La falta de información me ha hecho tener reticencias con estos modelos.
 
-El Viewsonic es un modelo del 2015 con dos HDMI 1.3 y DisplayPort 1.2. El Benq PD2700Q es un modelo del año 2016, tiene HDMI 1.4 y DisplayPort 1.2, no es muy relevante ya que de HDMI 1.3 a 1.4 varía la resolución soportada pero en estos monitores en ambos casos es suficiente cualquiera de ellas en esta resolución y a 60 Hz. El Viewsonic es una opción algo menor pero considerando su precio y el del Benq hubiese sido otra buena elección. El Viewsonic en contra tiene la falta de información aún habiendo un comentario positivo en Amazon.
+El Viewsonic es un modelo del 2015 con dos HDMI 1.3 y DisplayPort 1.2. El BenQ PD2700Q es un modelo del año 2016, tiene HDMI 1.4 y DisplayPort 1.2, no es muy relevante ya que de HDMI 1.3 a 1.4 varía la resolución soportada pero en estos monitores en ambos casos es suficiente cualquiera de ellas en esta resolución y a 60 Hz. El Viewsonic es una opción algo menor pero considerando su precio y el del BenQ hubiese sido otra buena elección. El Viewsonic en contra tiene la falta de información aún habiendo un comentario positivo en Amazon.
 
-* [Benq PD2700Q](https://amzn.to/2OFdFi9) ([página fabricante](https://www.benq.eu/es-es/monitor/designer/pd2700q.html))
-* [Benq PD2500Q](https://amzn.to/2D0VQEf) ([página fabricante](https://www.benq.eu/es-es/monitor/designer/pd2500q.html))
-* [Benq GW2765HT](https://amzn.to/2NXG9hR) ([página fabricante](https://www.benq.eu/es-es/monitor/home-office/gw2765ht.html))
+* [BenQ PD2700Q](https://amzn.to/2OFdFi9) ([página fabricante](https://www.benq.eu/es-es/monitor/designer/pd2700q.html))
+* [BenQ PD2500Q](https://amzn.to/2D0VQEf) ([página fabricante](https://www.benq.eu/es-es/monitor/designer/pd2500q.html))
+* [BenQ GW2765HT](https://amzn.to/2NXG9hR) ([página fabricante](https://www.benq.eu/es-es/monitor/home-office/gw2765ht.html))
 * [Viewsonic VG2719-2K](https://amzn.to/2OIyidi) ([página fabricante](https://www.viewsonic.com/es/products/lcd/VG2719-2K.php))
 * [V7 L27HAS2K-2E](https://amzn.to/2CZj8dx) ([página fabricante](http://www.v7world.com/es/productos/monitores/27-qhd-widescreen-led-monitor.html))
 
@@ -59,7 +60,7 @@ Los otros candidatos destacables que he visto han sido alguno en formato panorá
     linkids="508f802016832287212a9dcd4d793770,24fc95197f28f3d4d9db6514153de223,9560c7d04ae8f76ee1e3cd4a20abe387"
     asins="B0798R91FD,B00T5P1USW,B01N2Z7OZT" >}}
 
-Los monitores UHD para un tamaño de 27 pulgadas a máxima resolución el texto y elementos gráficos se ven muy pequeños con lo que para uso ofimático hay que escalar a una más pequeña. Hay en un rango de precios muy amplio, desde 200€ a 700+€. Dos modelos en 4K de los anteriores son el [Benq PD2700U](https://amzn.to/2Pik820) que es el que hubiese elegido en caso de haber optado por UHD, el [Benq BL2711U](https://amzn.to/2yBnLq7), el [LG 27UK600-W](https://amzn.to/2PbNIGB) o el [LG 27UK650-W](https://amzn.to/2Jcu1sP), nótese la _U_ en estos modelos. Estos monitores aún siendo UHD no llegan a los 192 dpi, se quedan en 163, para considerarse [HiDPI](https://wiki.gnome.org/HowDoI/HiDpi) ni tienen una pantalla retina. Otras opciones son optar por 32" UHD y en formato panorámico. 
+Los monitores UHD para un tamaño de 27 pulgadas a máxima resolución el texto y elementos gráficos se ven muy pequeños con lo que para uso ofimático hay que escalar a una más pequeña. Hay en un rango de precios muy amplio, desde 200€ a 700+€. Dos modelos en 4K de los anteriores son el [BenQ PD2700U](https://amzn.to/2Pik820) que es el que hubiese elegido en caso de haber optado por UHD, el [BenQ BL2711U](https://amzn.to/2yBnLq7), el [LG 27UK600-W](https://amzn.to/2PbNIGB) o el [LG 27UK650-W](https://amzn.to/2Jcu1sP), nótese la _U_ en estos modelos. Estos monitores aún siendo UHD no llegan a los 192 dpi, se quedan en 163, para considerarse [HiDPI](https://wiki.gnome.org/HowDoI/HiDpi) ni tienen una pantalla retina. Otras opciones son optar por 32" UHD y en formato panorámico. 
 
 {{< amazon
     linkids="c69a55a9bb5bf63725b1bdffaa567444,b0cf487ca59691649f2507aa3837a2cf,3160f5b6618d07e065b1f81192395611,2386c7d19354b2df0dbbe4e5cf268ab4"
@@ -78,12 +79,12 @@ En [PcComponentes][pccomponentes] los precios no varían tanto pero en Amazon en
 
 {{< image
     gallery="true"
-    image1="image:camelcamelcamel-benq-pd2700q.png" optionsthumb1="300x200" title1="Evolución del precio del monitor Benq PD2700Q"
-    caption="Evolución del precio del monitor Benq PD2700Q" >}}
+    image1="image:camelcamelcamel-benq-pd2700q.png" optionsthumb1="300x200" title1="Evolución del precio del monitor BenQ PD2700Q"
+    caption="Evolución del precio del monitor BenQ PD2700Q" >}}
 
-### Benq PD2700Q
+### BenQ PD2700Q
 
-Teniendo en cuenta todo finalmente me he decidido por el [Benq PD2700Q](https://www.benq.eu/es-es/monitor/designer/pd2700q.html). Tiene buena conectividad, sin conexiones obsoletas como en el caso del Benq GW. Es un monitor orientado a diseñadores aunque mi uso es principalmente en tareas ofimáticas y posiblemente algún juego ocasional. Los monitores ultra anchos no los he usado pero se me hacen demasiado anchos obligando a mover la cabeza para cubrir su área de visualización. Ya con 27" el monitor se me hace grande aunque me acostumbraré a este tamaño pasado un tiempo, para la gente que aún quiere un monitor más grande los hay de 32" aunque en estos ya hay que ir a una resolución de UHD 3840x2160.
+Teniendo en cuenta todo finalmente me he decidido por el [BenQ PD2700Q](https://www.benq.eu/es-es/monitor/designer/pd2700q.html). Tiene buena conectividad, sin conexiones obsoletas como en el caso del BenQ GW. Es un monitor orientado a diseñadores aunque mi uso es principalmente en tareas ofimáticas y posiblemente algún juego ocasional. Los monitores ultra anchos no los he usado pero se me hacen demasiado anchos obligando a mover la cabeza para cubrir su área de visualización. Ya con 27" el monitor se me hace grande aunque me acostumbraré a este tamaño pasado un tiempo, para la gente que aún quiere un monitor más grande los hay de 32" aunque en estos ya hay que ir a una resolución de UHD 3840x2160.
 
 Sus [especificaciones](https://www.benq.eu/es-es/monitor/designer/pd2700q/specifications.html) más destacables son:
 
@@ -227,7 +228,7 @@ Los botones para ajustar los parámetros del monitor y OSD están detrás del mo
     image2="image:benq-pd2700q-osd-8.jpg" optionsthumb2="200x150" title2="OSD"
     caption="Configuración en pantalla (OSD)" >}}
 
-Habitualmente estoy trabajando con un portátil MacBook Pro con pantalla retina y anteriormente he usado un Sony VAIO E 14P con panel TN de resolución 1600x900 y un monitor [LG 2351](https://www.lg.com/hk_en/monitor/lg-E2351VR-home) también TN de resolución 1920x1080. Con respecto a los dos paneles TN que he usado hasta el momento la mejora es apreciable en sus ángulos de visión, colores más intensos, este es el motivo de requerir un panel tipo IPS. Si tengo que destacar algo del MacBook es la pantalla, la pantalla del Benq cumple pero al no ser retina la diferencia es clara, aún conservando buena vista la definición del texto no es mala pero no llega a la calidad de la pantalla del MacBook, eso si en cuanto a colores no tiene nada que envidiar a la pantalla del Mac.
+Habitualmente estoy trabajando con un portátil MacBook Pro con pantalla retina y anteriormente he usado un Sony VAIO E 14P con panel TN de resolución 1600x900 y un monitor [LG 2351](https://www.lg.com/hk_en/monitor/lg-E2351VR-home) también TN de resolución 1920x1080. Con respecto a los dos paneles TN que he usado hasta el momento la mejora es apreciable en sus ángulos de visión, colores más intensos, este es el motivo de requerir un panel tipo IPS. Si tengo que destacar algo del MacBook es la pantalla, la pantalla del BenQ cumple pero al no ser retina la diferencia es clara, aún conservando buena vista la definición del texto no es mala pero no llega a la calidad de la pantalla del MacBook, eso si en cuanto a colores no tiene nada que envidiar a la pantalla del Mac.
 
 ### Análisis
 
@@ -262,7 +263,7 @@ Con una resolución QHD hay más espacio que en una Full HD que agradecen los pr
     image3="image:benq-pd2700q-screen-7.png" optionsthumb3="200x150" title3="Espacio en resolución QHD"
     caption="Espacio en resolución QHD" >}}
 
-En un futuro probablemente aparezcan nuevos monitores que soporten HDR y con resolución retina que supondrá otro salto en la calidad de la imagen. Me va a quedar la duda de si un monitor con resolución UHD de 27 pulgadas bajando la resolución sería una buena opción en cuanto a definición de texto, se suele comentar que no, usar una resolución escalada del panel no es lo mismo que en la resolución nativa pero me gustaría experimentarlo. Al menos en el Mac de resolución nativa 2560x1440 cambiar a 1600x900 se sigue viendo perfectamente el texto y en este Benq de 27" bajando la resolución no aprecio que el texto se vea peor. En cualquier caso los monitores UHD por el momento tienen un precio mayor, más del doble o al menos unos cientos de euros más según el modelo comparado, y este Benq PD2700Q es de buena calidad acorde a su precio mayor que algunos otros QHD y que muchos Full HD pero de todas formas asequible para alguien que le da buen uso.
+En un futuro probablemente aparezcan nuevos monitores que soporten HDR y con resolución retina que supondrá otro salto en la calidad de la imagen. Me va a quedar la duda de si un monitor con resolución UHD de 27 pulgadas bajando la resolución sería una buena opción en cuanto a definición de texto, se suele comentar que no, usar una resolución escalada del panel no es lo mismo que en la resolución nativa pero me gustaría experimentarlo. Al menos en el Mac de resolución nativa 2560x1440 cambiar a 1600x900 se sigue viendo perfectamente el texto y en este BenQ de 27" bajando la resolución no aprecio que el texto se vea peor. En cualquier caso los monitores UHD por el momento tienen un precio mayor, más del doble o al menos unos cientos de euros más según el modelo comparado, y este BenQ PD2700Q es de buena calidad acorde a su precio mayor que algunos otros QHD y que muchos Full HD pero de todas formas asequible para alguien que le da buen uso.
 
 ### Detección de píxeles muertos o vagos
 

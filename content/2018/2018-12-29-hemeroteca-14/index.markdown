@@ -18,7 +18,7 @@ library: "true"
 
 {{% post %}}
 
-Casi 9 años publicando de forma constante un artículo a la semana, dos artículos algunas semanas. Durante casi está década creo que ha habido pocas semanas en las que no he publicado. Este último años no ha sido distinto, el siguiente espero... espero que sea parecido o mejor ahora que tengo mi propio equipo personal que he estado mucho tiempo esperando hasta que fuese comercializado, un [Intel NUC Bean Canyon][blogbitix-363] del que en este semestre he publicado un artículo con de su desempaquetado junto con otros artículos del [monitor Benq PD2700Q][blogbitix-356] y [teclado ratón][blogbitix-348] pero también comentando las opciones que he barajado.
+Casi 9 años publicando de forma constante un artículo a la semana, dos artículos algunas semanas. Durante casi está década creo que ha habido pocas semanas en las que no he publicado. Este último años no ha sido distinto, el siguiente espero... espero que sea parecido o mejor ahora que tengo mi propio equipo personal que he estado mucho tiempo esperando hasta que fuese comercializado, un [Intel NUC Bean Canyon][blogbitix-363] del que en este semestre he publicado un artículo con de su desempaquetado junto con otros artículos del [monitor BenQ PD2700Q][blogbitix-356] y [teclado ratón][blogbitix-348] pero también comentando las opciones que he barajado.
 
 Casi 9 años publicando artículos algunos mejor que otros pero siempre intentando compartir lo que sé o voy aprendiendo, para llegar a esta cifra hay que tener constancia para llegar a escribir tanto tiempo, dedicación, no abandonar fácil para no empezar una cosa y dejarlo al cabo de poco e incluso de publicar aún cuando el ánimo no es el de los mejores momentos, planificación y organización para saber que publicar, tiempo ya que cuesta escribir los artículos, motivación y perseverancia para tener más visitas, comentarios de algunos usuarios, más ingresos de AdSense, compartir, ... No es fácil, en mi caso sabiendo que mucho de lo que escribo no lo aplico en el trabajo, donde actualmente tengo un Mac por obligación y no trabajo con Java y mis temas principales son GNU/Linux y Java, con lo que a veces tengo la sensación de no serme útil. Al finalizar este 2018 ya van 371 artículos publicados desde finales del 2013 que empecé a hacerlo en Blog Bitix.
 
@@ -27,7 +27,7 @@ Ahora que tengo mi propio equipo y como de nuevo estoy usando [Arch Linux][archl
 Durante [el año 2018 he escrito múltiples artículos][blogbitix-section-2018] y este semestre he escrito varios relacionados con el ordenador que necesitaba y finalmente he comprado al final de año pero del que había noticias desde muchos meses antes, la espera de varios meses hasta que se comercializase se me hizo larga.
 
 * [Desempaquetado y análisis de teclado y ratón inalámbrico V7 CKW200][blogbitix-348]
-* [Desempaquetado y análisis de monitor Benq PD2700Q][blogbitix-356]
+* [Desempaquetado y análisis de monitor BenQ PD2700Q 2K/QHD, IPS, 27 pulgadas][blogbitix-356]
 * [Desempaquetado Intel NUC8i5BEK (Bean Canyon), HyperX Impact (RAM) y Samsung 970 EVO NVMe (SSD)][blogbitix-363]
 
 He completado con algún artículo más la [serie sobre GraphQL][blogbitix-serie-graphql].
