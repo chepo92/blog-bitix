@@ -4,7 +4,7 @@ type: "post"
 title: "4 formas de hacer un bucle for en Java"
 url: "/2017/07/4-formas-de-hacer-un-bucle-for-en-java/"
 date: 2017-07-16T12:30:00+02:00
-updated: 2020-02-04T19:00:00+02:00
+updated: 2020-06-02T17:30:00+02:00
 language: "es"
 rss: true
 sharing: true
@@ -20,6 +20,8 @@ summary: "La forma habitual en Java de hacer un bucle es con una sentecia _for_ 
 {{< logotype image1="java.svg" >}}
 
 Hasta Java 5 para hacer un bucle desde 0 a N elementos había que usar una variable para mantener un contador, hacer una comparación para comprobar si se había llegado al límite e incrementar la variable en la siguiente ejecución. El código era bastante verboso y dado que los bucles son una construcción básica de cualquier lenguaje de programación es empleada numerosas veces en cualquier algoritmo.
+
+Algunos de estos ejemplos de bucles son utilizables a partir de Java 5, en versiones más recientes se han añadido muchas otras novedades como [las _lamdas_, _streams_, metodos en interfaces y API para fechas en Java 8][blogbitix-17], [la modularidad, _try-with-resource_ mejorado, jlink o un nuevo modelo de publicación en Java 9][blogbitix-263], [inferencia de tipos para variables locales en Java 10][blogbitix-306], [un cliente HTTP en Java 11][blogbitix-350] y otras [novedades en el lenguaje y la plataforma Java][blogbitix-serie-java-platform].
 
 ### Bucle for
 
