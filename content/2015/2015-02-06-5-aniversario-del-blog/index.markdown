@@ -10,7 +10,7 @@ rss: true
 sharing: true
 comments: true
 imagePost: "logotype:octopress.png"
-tags: ["planeta-codigo"]
+tags: ["blog", "planeta-codigo"]
 series: ["aniversario"]
 ---
 

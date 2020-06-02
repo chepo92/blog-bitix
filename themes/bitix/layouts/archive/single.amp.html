@@ -4,16 +4,41 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        {{ partial "head.amp.html" . }}
+        {{ partial "head.html" . }}
         <div class="row">
           <div class="col-md-12 text-center">
-            {{ partial "adsense/billboard.amp.html" . }}
+            {{ partial "adsense/billboard.html" . }}
           </div>
         </div>
         <div class="row">
           <div class="col-md-12">
+            <div class="adblock-sidebar-container">
+              <div class="adblock-sidebar-container-left">
+                {{ partial "adsense/auto-vertical.html" . }}
+              </div>
+              <div class="adblock-sidebar-container-right">
+                {{ partial "adsense/auto-vertical.html" . }}
+              </div>
+            </div>
             <h1>{{ .Title }}</h1>
-            <h3>{{ i18n "library" }}</h3>
+            <h3>{{ i18n "tags_title" }}</h3>
+            <p>{{ i18n "tags_description" }}</p>
+            <ul class="tags">
+              {{ range $tag, $taxonomy := .Site.Taxonomies.tags -}}
+                {{ $url := print "tags/" $tag "/" $urlsuffix | relURL }}
+                <li><a href="{{ $url | urlize }}">{{ $tag }}</a> <small>({{ $taxonomy.Count }})</small></li>
+              {{ end }}
+            </ul>
+            <h3>{{ i18n "series_title" }}</h3>
+            <p>{{ i18n "series_description" }}</p>
+            <ul class="series">
+            {{ range $serie, $taxonomy := .Site.Taxonomies.series -}}
+              {{ $url := print "series/" $serie "/" $urlsuffix | relURL }}
+              <li><a href="{{ $url | urlize }}">{{ $serie }}</a> <small>({{ $taxonomy.Count }})</small></li>
+            {{ end }}
+            </ul>
+            <h3>{{ i18n "library_title" }}</h3>
+            <p>{{ i18n "library_description" }}</p>
             <ul class="library">
             {{ range where .Site.Pages "Params.library" "true" -}}
               <li>
@@ -24,31 +49,20 @@
               </li>
             {{ end }}
             </ul>
-            <h3>{{ i18n "tags" }}</h3>
-            <ul class="tags">
-              {{ range $name, $taxonomy := .Site.Taxonomies.tags -}}
-                {{ $url := print "tags/" $name "/" $urlsuffix | relURL }}
-                <li><a href="{{ $url | urlize }}">{{ $name }}</a> <small>({{ $taxonomy.Count }})</small></li>
-              {{ end }}
-              </ul>
-              <h3>Series</h3>
-              <ul class="tags">
-              {{ range $name, $taxonomy := .Site.Taxonomies.series -}}
-                {{ $url := print "series/" $name "/" $urlsuffix | relURL }}
-                <li><a href="{{ $url | urlize }}">{{ $name }}</a> <small>({{ $taxonomy.Count }})</small></li>
-              {{ end }}
-            </ul>
+            <h3>{{ i18n "archive_title" }}</h3>
+            <p>{{ i18n "archive_description" }}</p>
             {{ range (where .Site.Pages "Section" "in" (split "2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027,2028,2029" ",")).GroupByDate "2006" "desc" -}}
               <h3>{{ .Key }}</h3>
               <ul>
-              {{ range where .Pages "Type" "in" (slice "post") -}}
+                {{ range where .Pages "Type" "in" (slice "post") -}}
                 <li>
                   <article class="h-entry">
+                    {{ partial "icon-post.html" . }}
                     <a href="{{ .Permalink }}" class="p-name u-url">{{ .Title }}</a>
                   </article>
                 </li>
-              {{ end }}
-            </ul>
+                {{ end }}
+              </ul>
             {{ end }}
           </div>
         </div>
