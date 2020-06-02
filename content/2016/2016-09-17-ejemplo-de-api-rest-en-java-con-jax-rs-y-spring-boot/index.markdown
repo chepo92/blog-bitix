@@ -49,7 +49,7 @@ Al diseñar APIs REST más complejas que este sencillo ejemplo conviene conocer 
 
 Una vez que disponemos del servicio REST podemos [añadir autenticación y autorización con Keycloak como proveedor de OAuth][blogbitix-180]. 
 
-Otra alternativa a una interfaz REST es usar [GraphQL][graphql] que muestro en el artículo [Ejemplo de GraphQL para una interfaz de un servicio con Spring Boot y Java][blogbitix-275]
+Otra alternativa a una interfaz REST es usar [GraphQL][graphql] que muestro en el artículo [Qué es GraphQL y ejemplo para una interfaz de un servicio con Spring Boot y Java][blogbitix-275]
 
 {{< sourcecode git="blog-ejemplos/tree/master/SpringBootJaxrs" command="./gradlew run" >}}
 

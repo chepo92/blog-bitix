@@ -71,7 +71,7 @@ Para el desarrollo de una página o aplicación web seguiría usando [Apache Tap
 * [Aplicación web Java autocontenida con Tomcat Embedded][blogbitix-71]
 * [Ejemplo sencillo de servicio web con RESTEasy][elblogdepicodev-142]
 * [Aplicación Java autocontenida con Spring Boot][blogbitix-103]
-* [Ejemplo de GraphQL para una interfaz de un servicio con Spring Boot y Java][blogbitix-275]
+* [Qué es GraphQL y ejemplo para una interfaz de un servicio con Spring Boot y Java][blogbitix-275]
 + [Dependencias sobre librerías de lado de cliente con Webjars en una aplicación web Java][blogbitix-325]
 
 ### Base de datos

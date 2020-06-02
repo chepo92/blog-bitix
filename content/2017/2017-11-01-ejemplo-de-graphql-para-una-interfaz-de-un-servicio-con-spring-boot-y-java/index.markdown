@@ -1,10 +1,11 @@
 ---
 pid: 275
 type: "post"
-title: "Ejemplo de GraphQL para una interfaz de un servicio con Spring Boot y Java"
-url: "/2017/11/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java/"
+title: "Qué es GraphQL y ejemplo para una interfaz de un servicio con Spring Boot y Java"
+url: "/2017/11/que-es-graphql-y-ejemplo-para-una-interfaz-de-un-servicio-con-spring-boot-y-java/"
+aliases: ["/2017/11/ejemplo-de-graphql-para-una-interfaz-de-un-servicio-con-spring-boot-y-java/"]
 date: 2017-11-01T12:00:00+01:00
-updated: 2019-06-15T00:55:00+02:00
+updated: 2020-06-01T23:00:00+02:00
 language: "es"
 rss: true
 sharing: true
@@ -13,7 +14,7 @@ promoted: false
 imagePost: "logotype:graphql.svg"
 tags: ["java", "planeta-codigo", "programacion", "spring"]
 series: ["graphql"]
-summary: "GraphQL es una alternativa a una interfaz REST con las ventajas de poder realizar varias consultas en una misma petición y devolviendo únicamente los datos que requiera el cliente. Es una especificación y hay una implementación para los lenguajes de programación más populares entre ellos Java. Este artículo es una introducción con un ejemplo completo que muestra cómo se hacen consultas y modificaciones en los datos."
+summary: "GraphQL es una forma alternativa a una interfaz REST para crear una interfaz de un servicio basado en la comunicación utilizando los protocolos web HTTP y JSON como formato de intercambio de datos. Tiene varias ventajas sobre REST al poder realizar varias consultas en una misma petición y devolviendo únicamente los datos que requiera el cliente. Es una especificación y hay una implementación para los lenguajes de programación más populares entre ellos Java. Este artículo es una introducción con un ejemplo completo que muestra cómo se hacen consultas y modificaciones en los datos."
 ---
 
 {{% post %}}

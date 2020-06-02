@@ -67,7 +67,7 @@ Este [año 2017 he escrito los artículos][blogbitix-section-2017] y este semest
 
 Una serie de artículos sobre [GraphQL][graphql] como alternativa a una API REST que tiene algunas ventajas. Aún me queda publicar uno de esta serie, en cuanto se acepte un _pull request_ a raíz de una petición que cree con [un problema que me encontré](https://github.com/graphql-java/graphql-java-tools/issues/93).
 
-* [Ejemplo de GraphQL para una interfaz de un servicio con Spring Boot y Java][blogbitix-275]
+* [Qué es GraphQL y ejemplo para una interfaz de un servicio con Spring Boot y Java][blogbitix-275]
 * [Usar un resolver para recuperar propiedades en GraphQL][blogbitix-280]
 * [Consultas con parámetros para filtrar datos en GraphQL][blogbitix-282]
 * [Paginación usando cursores en GraphQL y Java][blogbitix-283]
