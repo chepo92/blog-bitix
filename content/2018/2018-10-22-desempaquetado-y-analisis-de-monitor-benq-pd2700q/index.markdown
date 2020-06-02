@@ -84,11 +84,13 @@ En [PcComponentes][pccomponentes] los precios no varían tanto pero en Amazon en
 
 ### BenQ PD2700Q
 
-Teniendo en cuenta todo finalmente me he decidido por el [BenQ PD2700Q](https://www.benq.eu/es-es/monitor/designer/pd2700q.html). Tiene buena conectividad, sin conexiones obsoletas como en el caso del BenQ GW. Es un monitor orientado a diseñadores aunque mi uso es principalmente en tareas ofimáticas y posiblemente algún juego ocasional. Los monitores ultra anchos no los he usado pero se me hacen demasiado anchos obligando a mover la cabeza para cubrir su área de visualización. Ya con 27" el monitor se me hace grande aunque me acostumbraré a este tamaño pasado un tiempo, para la gente que aún quiere un monitor más grande los hay de 32" aunque en estos ya hay que ir a una resolución de UHD 3840x2160.
+Teniendo en cuenta todo finalmente me he decidido por el [BenQ PD2700Q](https://www.benq.eu/es-es/monitor/designer/pd2700q.html). Tiene buena conectividad, sin conexiones obsoletas como en el caso del BenQ GW. Es un monitor orientado a diseñadores aunque mi uso es principalmente en tareas ofimáticas y posiblemente algún juego ocasional. Los monitores ultra anchos no los he usado pero se me hacen demasiado anchos obligando a mover la cabeza para cubrir su área de visualización. Ya con 27" el monitor se me hace grande aunque me acostumbraré a este tamaño pasado un tiempo, para la gente que aún quiere un monitor 
+más grande los hay de 32" aunque en estos ya hay que ir a una resolución de UHD 3840x2160. Dentro de la categoría de monitores de 27 pulgadas, con resolución 2560x1440, IPS y con conectividad HDMI y DisplayPort el BenQ PD2700Q es uno de los más baratos y con una mejor relación calidad precio.
 
 Sus [especificaciones](https://www.benq.eu/es-es/monitor/designer/pd2700q/specifications.html) más destacables son:
 
 * Tamaño de la pantalla, 27
+* Resolución 2560x1440.
 * Tipo de panel, IPS
 * Brillo, 350 cd/㎡
 * Colores de la pantalla, 1.07 billion colors

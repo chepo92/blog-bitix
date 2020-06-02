@@ -25,20 +25,20 @@ Algunos de estos ejemplos de bucles son utilizables a partir de Java 5, en versi
 
 ### Bucle for
 
-Antes de Java 5 un bucle _for_ de 0 a 5 y de una colección se realizaba de la siguiente manera:
+Antes de Java 5 un bucle _for_ de 0 a 5 y de una colección se realizaba de la siguiente manera manteniendo una variable normalmente de nombre _i_ que hace de contador y _j_ si el bucle _for_ está anidado en otro. Además de la variable de contador requiere establecer la condición que permita salir del bucle cuando se llegue al final de la iteración, la condición es muy importante para no crear un bucle infinito.
 
 {{< code file="For.java" language="java" options="" >}}
 {{< code file="Iterator.java" language="java" options="" >}}
 
 ### Bucle foreach
 
-En Java 5 el bucle _for_ se enriqueció notablemente, con el _foreach_ se puede recorrer una colección y cualquier objeto que implemente la interfaz [Iterable](javadoc8:java/lang/Iterable.html). Con el bucle _foreach_ una [Collection](javadoc8:java/util/Collection.html) se recorre de la siguiente manera.
+En Java 5 el bucle _for_ se enriqueció notablemente, el bucle _foreach_ es un bucle _for_ mejorado con el que se puede recorrer una colección y cualquier objeto que implemente la interfaz [Iterable](javadoc8:java/lang/Iterable.html). Este bucle tiene la ventaja de que no hay que mantener una variable que haga de contador ni requiere establecer una condición para comprobar si se ha llegado al final de la iteración, esto evita la posibilidad de crear un bucle infinito. Con el bucle _foreach_ una [Collection](javadoc8:java/util/Collection.html) se recorre de la siguiente manera.
 
 {{< code file="Foreach.java" language="java" options="" >}}
 
 ### Bucle con Iterable
 
-Pero esto es para las colecciones si se quiere hacer un bucle un número fijo de veces como en el primer caso de 0 a 5 conociendo que para usar el _foreach_ basta que le indiquemos un objeto que implemente la interfaz _Iterable_ podemos usar la siguiente expresión y su implementación que tiene la ventaja de no tener que incluir la expresión de comparación y el incremento de la variable, la clase _Counter_ implementa la interfaz _Iterable_ y devuelve un _Iterator_ sobre los valores del rango indicado:
+Pero el _forearch_ es para las colecciones si se quiere hacer un bucle de un número fijo de iteraciones como en el primer caso, de 0 a 5, conociendo que para usar el _foreach_ basta que le indiquemos un objeto que implemente la interfaz _Iterable_ podemos usar la siguiente expresión y su implementación que tiene la ventaja de no tener que incluir el valir inicial del contador, la expresión de condición y el incremento o decremento de la variable. La clase _Counter_ implementa la interfaz _Iterable_ y devuelve un _Iterator_ sobre los valores del rango indicado.
 
 {{< code file="CounterIterable.java" language="java" options="" >}}
 {{< code file="Counter.java" language="java" options="" >}}

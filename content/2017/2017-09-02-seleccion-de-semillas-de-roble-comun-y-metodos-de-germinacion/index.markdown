@@ -1,10 +1,10 @@
 ---
 pid: 256
 type: "post"
-title: "Selección de semillas de roble común y métodos de germinación"
+title: "Cómo selecionar y hacer germinar fácil semillas de roble"
 url: "/2017/09/seleccion-de-semillas-de-roble-comun-y-metodos-de-germinacion/"
 date: 2017-09-02T11:00:00+02:00
-updated: 2017-09-03T00:20:00+02:00
+updated: 2020-06-02T22:20:00+02:00
 language: "es"
 rss: true
 sharing: true
@@ -13,7 +13,7 @@ promoted: false
 imagePost: "logotype:quercus-robur.png"
 tags: ["jardineria", "fuera-de-tema"]
 series: ["quercus-robur"]
-summary: "Las semillas de roble son sencillas de hacer germinar, básicamnte lo único que necesitan es humedad durante unas semanas. Puede emplearse algodón u otro material que haga que la bellota permanezca húmeda. En el caso de querer hacer germinar muchas bellotas el algodón en mis pruebas no es lo más adecuado por tener que gastar este elemento y no ofrecer el mejor resultado. No hace falta más que una simple bolsa de plástico cerrada con algo de agua sin que las belletas esten encharcadas pero si húmedas es suficiente y da muy buen resultado."
+summary: "Las semillas de roble son sencillas de hacer germinar, básicamente lo único que necesitan es humedad durante unas semanas. Puede emplearse algodón u otro material que haga que la bellota permanezca húmeda. En el caso de querer hacer germinar muchas bellotas el algodón en mis pruebas no es lo más adecuado por tener que gastar este elemento y no ofrecer el mejor resultado. No hace falta más que una simple bolsa de plástico cerrada con algo de agua sin que las belletas esten encharcadas pero si húmedas es suficiente y da muy buen resultado."
 ---
 
 {{% post %}}
@@ -99,9 +99,7 @@ También hay que vigilar los plantones para que no les crezcan hongos o se gener
 
 Para finalizar un par de vídeos de como plantar un roble y vídeo en tiempo acelerado del nacimiento de una bellota hasta los 8 primeros meses de vida.
 
-
 {{< youtube video="QRCDilvqa5E" >}}
-
 
 {{< youtube video="MB-BvkOyHww" >}}
 
