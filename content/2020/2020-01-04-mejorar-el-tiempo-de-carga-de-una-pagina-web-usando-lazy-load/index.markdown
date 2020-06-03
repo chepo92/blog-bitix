@@ -2,7 +2,7 @@
 pid: 453
 type: "post"
 title: "Mejorar el tiempo de carga de una página web usando lazy load"
-url: "/2020/01//mejorar-el-tiempo-de-carga-de-una-pagina-web-usando-lazy-load/"
+url: "/2020/01/mejorar-el-tiempo-de-carga-de-una-pagina-web-usando-lazy-load/"
 date: 2020-01-04T12:30:00+01:00
 updated: 2020-01-04T14:30:00+01:00
 language: "es"
