@@ -1,8 +1,9 @@
 ---
 pid: 256
 type: "post"
-title: "Cómo selecionar y hacer germinar fácil semillas de roble"
-url: "/2017/09/seleccion-de-semillas-de-roble-comun-y-metodos-de-germinacion/"
+title: "Cómo seleccionar y hacer germinar fácil semillas de roble"
+url: "/2017/09/como-seleccionar-y-hacer-germinar-semillas-de-roble/"
+aliases: ["/2017/09/seleccion-de-semillas-de-roble-comun-y-metodos-de-germinacion/"]
 date: 2017-09-02T11:00:00+02:00
 updated: 2020-06-02T22:20:00+02:00
 language: "es"

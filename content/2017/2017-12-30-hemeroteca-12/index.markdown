@@ -92,7 +92,7 @@ Algunos artículos de tema alternativos en la temática principal de este blog p
 
 * [Desempaquetado maletín herramientas Mannesmann y bandejas melamina Balvi][blogbitix-249]
 * [La búsqueda de ejemplares de roble común][blogbitix-250]
-* [Selección de semillas de roble común y métodos de germinación][blogbitix-256]
+* [Cómo seleccionar y hacer germinar fácil semillas de roble][blogbitix-256]
 * [Sustituir caldera de gas por un termo eléctrico Fleck Duo 7 50][blogbitix-251]
 * [Comparando la factura entre caldera de gas y termo eléctrico][blogbitix-277]
 * [Me cambio a la eléctrica Holaluz][blogbitix-278]
