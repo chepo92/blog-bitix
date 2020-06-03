@@ -41,6 +41,11 @@ require(['jquery', 'lozad'], function($, lozad) {
         var pageBottomObserver = lozad('#pageBottom', {
             rootMargin: '50px 0px',
             load: function(el) {
+                const element = $('#pageBottom');
+                if (element.attr('data-lozad') === 'observed') {
+                    return;
+                }
+                element.attr('data-lozad', 'observed');
                 ga('send', 'event', 'page', 'show', 'bottom', {'nonInteraction': 1});
             }
         });
