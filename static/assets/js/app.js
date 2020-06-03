@@ -26,14 +26,18 @@ require(['jquery', 'lozad'], function($, lozad) {
             ga('send', 'event', 'ad', 'click', $(this).attr('data-type'));
         });
       
-        $('div.share-this-begin').on('click', function() {
-            ga('send', 'event', 'share-this', 'click', 'begin');
-        });
-      
-        $('div.share-this-end').on('click', function() {
-            ga('send', 'event', 'share-this', 'click', 'end');
+        $('div.sharethis').on('click', function() {
+            ga('send', 'event', 'share-this', 'click', 'default');
         });
 
+        $('div.related-article a').on('click', function() {
+            ga('send', 'event', 'link', 'click', 'related');
+        });
+
+        $('ol.serie-articles a').on('click', function() {
+            ga('send', 'event', 'link', 'click', 'serie');
+        });
+     
         var pageBottomObserver = lozad('#pageBottom', {
             rootMargin: '50px 0px',
             load: function(el) {
