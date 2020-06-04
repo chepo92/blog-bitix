@@ -4,14 +4,14 @@ type: "post"
 title: "Script de instalación de Arch Linux desatendido, automatizado y personalizable"
 url: "/2017/01/script-de-instalacion-de-arch-linux-desatendido-automatizado-y-personalizable/"
 date: 2017-01-13T00:00:00+01:00
-updated: 2018-07-26T12:00:00+02:00
+updated: 2020-06-20T20:30:00+02:00
 language: "es"
 rss: true
 sharing: true
 comments: true
 imagePost: "logotype:archlinux.svg"
 tags: ["gnu-linux", "planeta-codigo", "software-libre"]
-summary: "Arch Linux es una de las distribuciones más personalizables de GNU/Linux pero cuya instalación requiere leer una buena cantidad de documentación para saber que comandos ejecutar en el _prompt_ del sistema en el que te deja se medio de instalación. Algunos usuarios eligen una distribución como Antergos, KaOS o Manjaro con un instalalador gráfico y guiado simplemente por el hecho de no enfrentarse al instalador de Arch Linux. Ejecutar un comando y esperar a que termine para introducir otro es lento y requiere de atención. "
+summary: "Arch Linux es una de las distribuciones más personalizables de GNU/Linux pero cuya instalación requiere leer una buena cantidad de documentación, guías o manuales para saber que comandos ejecutar paso a paso en el _prompt_ del sistema en el que te deja se medio de instalación. Algunos usuarios eligen una distribución como Antergos, KaOS o Manjaro con un instalalador gráfico y guiado simplemente por el hecho de no enfrentarse al instalador de Arch Linux. Ejecutar un comando y esperar a que termine para introducir otro es lento y requiere de atención. "
 ---
 
 {{% post %}}
@@ -37,7 +37,7 @@ En multitud de blogs y vídeos de YouTube hay guías que contienen los comandos 
 
 Hace unos meses conocí [arch-anywhere][arch-anywhere] que básicamente es un _script_ de bash, con un instalador guiado y basado en texto que hace menos laboriosa la instalación de Arch Linux de forma similar a las existentes en otras distribuciones más amigables. Sin embargo, hay un dos cosas que no me convencen de _arch-anywhere_, una es que no es desatendido requiriendo contestar a varias preguntas de forma interactiva, esperar a que termine ejecute algún comando según la contestación anterior y contestar a la siguiente pregunta. Por lo demás, ofrece un buen nivel de personalización cubriendo las necesidades más comunes de los usuarios como personalizar el particionado, elegir el sistema de archivos, si se quiere LVM, cifrado, el entorno de escritorio (GNOME, KDE, XFCE, ...), kernel, cargador de arranque (GRUB) y programas a instalar. Otra cosa que no me convence es que usa una imagen ISO propia y no la original de Arch Linux.
 
-Basándome en _arch-anywhere_ y dedicando un poco de tiempo he creado un _script_ en [bash][bash] para instalar Arch Linux de forma automatizada, desatendida y personalizable hasta cierto punto aunque siendo útil para los casos de configuraciones más comunes. Algunas de las funcionalidades que soporta son:
+Basándome en _arch-anywhere_ y dedicando un poco de tiempo he creado un _script_ en [bash][bash] para instalar Arch Linux de forma automatizada, desatendida y personalizable hasta cierto punto aunque siendo útil para los casos de configuraciones más comunes, sin ser imprecindible leer unas decenas de páginas de la wiki de Arch Linux ni seguir ninguna guía o tutorial paso a paso. Algunas de las funcionalidades que soporta son:
 
 * BIOS con [particionado](https://wiki.archlinux.org/index.php/Partitioning) GPT
 * [UEFI](https://wiki.archlinux.org/index.php/Unified_Extensible_Firmware_Interface)

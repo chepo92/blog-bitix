@@ -90,7 +90,7 @@ Otros que no entran en las categorias anteriores y otro de opinión.
 
 * [Conferencia BilboStack 2019][blogbitix-377]
 * [De un móvil Samsung Galaxy S3 a un Samsung Galaxy S6][blogbitix-402]
-* [Conocer la evolución de los precios de los productos en Amazon con CamelCamelCamel][blogbitix-414]
+* [Historial y evolución de los precios en Amazon con CamelCamelCamel][blogbitix-414]
 * [Sobre la PlayStation 4, PlayStation 5 y Google Stadia][blogbitix-417]
 
 Los dedicados al blog.

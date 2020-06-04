@@ -4,14 +4,14 @@ type: "post"
 title: "Introducción a JavaFX, aplicaciones de escritorio en Java"
 url: "/2015/10/introduccion-a-javafx-aplicaciones-de-escritorio-en-java/"
 date: 2015-10-02T19:00:00+02:00
-updated: 2015-11-10T19:00:00+01:00
+updated: 2020-06-04T21:00:00+01:00
 rss: true
 sharing: true
 comments: true
 language: "es"
 imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
-summary: "Java tiene una fuerte presencia en el ámbito de desarrollo para aplicaciones web, más recientemente ha sido empleado por la plataforma Android. En la misma medida que han crecido las aplicaciones web y móviles nativas las aplicaciones de escritorio han perdido presencia, sin embargo, para ciertos casos son la opción adecuada. Con la aparición de JavaFX aportando varias mejoras sobre Swing o AWT en la plataforma Java se pueden desarrollar aplicaciones de escritorio multiplataforma «ricas». Podemos empezar por el ejemplo Hola Mundo de JavaFX de este artículo."
+summary: "Java tiene una fuerte presencia en el ámbito de desarrollo para aplicaciones web, más recientemente ha sido empleado por la plataforma Android. En la misma medida que han crecido las aplicaciones web y móviles nativas las aplicaciones de escritorio han perdido presencia, sin embargo, para ciertos casos son la opción adecuada. JavaFX es una nueva colección de clases para desarrollar aplicaciones de escritorio multiplataforma «ricas» en la plataforma Java que sustituyen y mejoran las anteriores Swing o AWT. Podemos empezar por el ejemplo Hola Mundo de JavaFX de este artículo."
 ---
 
 {{% post %}}
@@ -19,6 +19,8 @@ summary: "Java tiene una fuerte presencia en el ámbito de desarrollo para aplic
 {{< logotype image="java.svg" >}}
 
 El lenguaje de programación Java es ampliamente usado en el ámbito empresarial destacando la programación de aplicaciones web. Las aplicaciones web se han extendido tanto por su fácil despliegue a los clientes (un navegador basta), un desarrollo no excesivamente complicado, fácil actualización (solo hace falta actualizar la aplicación en el servidor) y su seguridad tanto para el cliente (al ser el navegador el marco que limita las acciones de la aplicación) como para el servidor (al proteger los accesos a la base de datos por ejemplo). Sin embargo, las aplicaciones web también tienen algunas limitaciones a pesar de que mejoran con cada nueva versión de <abbr title="HyperText Markup Language">HTML</abbr>, <abbr title="Cascading Style Sheets">CSS</abbr>, JavaScript así como de los propios navegadores a medida que evolucionan incorporando nuevas APIs como el manejo de vídeo, audio e incluso aceleración 3D. Las aplicaciones web cada vez son más «ricas» pero aún no han llegado a las capacidades de las aplicaciones de escritorio tradicionales y en algún caso puede ser la solución elegida. En Java primeramente teníamos [<abbr title="Abstract Window Toolkit">AWT</abbr>][awt], luego [Swing][swing] y ahora [JavaFX][javafx] con mejoras notables. Las aplicaciones web también tiene el problema de que si el servidor no está disponible o la conexión de red se pierde salvo que la aplicación esté preparada (como Google Docs) para ello será imposible usarla.
+
+JavaFX es una tecnología Java para el desarrollo de aplicaciones con intefaz gráfica para el escritorio y aplicaciones móviles. Está formada por un conjunto de clases y API junto con un editor gráfico _Scene Builder_ para crear las interfaces visualmente.
 
 Algunas de las características notables de JavaFX son:
 

@@ -25,7 +25,7 @@ Para comprimir aún más el tamaño de las imágenes con la misma calidad apreci
 
 Los navegadores modernos como [Google Chrome][google-chrome], [Firefox][firefox], [Microsoft Edge][microsoft-edge] y versiones para Android ya soportan WebP en los formatos con pérdida, sin pérdida y con animaciones.
 
-Una imagen que usé para [crear una imagen reducida o vista previa][blogbitix-161] tiene un tamaño de 1600 píxeles de ancho y 1067 de alto ocupando 1018 KiB, la imagen en formato _png_ tiene un tamaño de 1426 píxeles por 947 ocupando 78 KiB.
+Una imagen que usé para [crear imagen miniatura o _thumbnail_][blogbitix-161] tiene un tamaño de 1600 píxeles de ancho y 1067 de alto ocupando 1018 KiB, la imagen en formato _png_ tiene un tamaño de 1426 píxeles por 947 ocupando 78 KiB.
 
 {{< image
     gallery="true"

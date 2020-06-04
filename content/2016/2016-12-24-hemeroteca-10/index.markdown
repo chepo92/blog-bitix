@@ -48,7 +48,7 @@ La sección de artículos sobre GNU/Linux destaca la [serie sobre juegos][blogbi
 
 * [Guía básica del intérprete de comandos Bash][blogbitix-158]
 * [Jugar al ajedrez en GNU/Linux con GNOME][blogbitix-160]
-* [Cómo crear vistas previas de imágenes con ImageMagick][blogbitix-161]
+* [Cómo crear miniaturas o vistas previas de imágenes con ImageMagick][blogbitix-161]
 * [Jugar al clásico de estrategia de tablero Go en GNU/Linux][blogbitix-163]
 * [Juegos incluidos en el entorno de escritorio GNOME][blogbitix-167]
 * [Jugar a videojuegos clásicos y míticos de arcade con Mame en GNU/Linux][blogbitix-170]
