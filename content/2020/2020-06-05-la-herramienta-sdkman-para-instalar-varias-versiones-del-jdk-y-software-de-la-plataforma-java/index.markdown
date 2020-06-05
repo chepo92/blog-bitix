@@ -3,7 +3,8 @@ pid: 489
 type: "post"
 title: "La herramienta SDKMAN para instalar varias versiones del JDK y software de la plataforma Java"
 url: "/2020/06/la-herramienta-sdkman-para-instalar-varias-versiones-del-jdk-y-software-de-la-plataforma-java/"
-date: 2020-06-05T12:00:00+02:00
+date: 2020-06-05T18:00:00+02:00
+date: 2020-06-05T23:00:00+02:00
 language: "es"
 rss: true
 sharing: true
@@ -33,6 +34,8 @@ En los últimos años hasta ahora siempre he usado el paquete de la distribució
 ### Instalación
 
 La instalación de SDKMAN consiste en ejecutar los siguientes comandos, el primero descarga e instala los _scripts_ de SDKMAM en la carpeta personal del usuario, _~/.sdkman_. También modifica los archivos de configuración del intérprete de comandos _bash_ o _zsh_ que permiten establecer las variables de entorno que necesita cuando se inicia una nueva terminal. Los dos últimos permiten comprobar que la instalación se ha realizado correctamente.
+
+SDKMAN solo está disponible de forma nativa para los sistemas UNIX entre ellos GNU/Linux pero no Windows dado que está basado en _scripts_ de bash. Para Windows es necesario utilizar _Windows Linux Subsystem_ o WLS, Cygwin o MSYS+MinGW.
 
 {{< code file="install.sh" language="bash" options="" >}}
 
