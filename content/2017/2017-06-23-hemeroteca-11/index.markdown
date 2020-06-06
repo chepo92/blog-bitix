@@ -63,7 +63,7 @@ La otra serie de varios artículos publicados durante otras tantas semanas ha si
 
 Entre otros artículos que he publicado está un _script_ para instalar [Arch Linux][archlinux] de forma desatendida, automatizada y personalizable. Dado que Arch Linux no posee un instalador y hay que introducir los comandos directamente en la terminal para realizar la instalación después de leer una buena cantidad de documentación de la estupenda [wiki de Arch Linux][archlinux-wiki], este _script_ sirve para instalar Arch Linux de forma sencilla o como consulta de los comandos a ejecutar paso a paso para instalar esta distribución.
 
-* [Script de instalación de Arch Linux desatendido, automatizado y personalizable][blogbitix-204]
+* [Script para instalar Arch Linux fácil, rápido, desatendido, automatizado y personalizable][blogbitix-204]
 
 También he publicado algún que otro artículo de opinión de dos noticias relevantes que se han producido en este periodo de tiempo, como son el ataque del _ransomware_ WannaCry y que afectó a algunas empresas y organizaciones y relacionado con este tema me preguntaba si las distribuciones GNU/Linux son más seguras que Windows. También daba mi opinión sobre el el anuncio de Shuttleworth de abandonar la convergencia con el servidor gráfico Mir y el entorno de escritorio Unity. Y un último sobre la diferencia de trato para bien de [Pepephone][pepephone] con lo que es habitual en otras empresas de telecomunicaciones para mal.
 

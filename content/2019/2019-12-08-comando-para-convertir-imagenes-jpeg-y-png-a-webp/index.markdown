@@ -1,8 +1,9 @@
 ---
 pid: 447
 type: "post"
-title: "Comando para convertir imágenes a WebP con menor tamaño desde JPEG y PNG"
-url: "/2019/12/comando-para-convertir-imagenes-a-webp-con-menor-tamano-desde-jpeg-y-png/"
+title: "Comando para convertir imágenes JPEG y PNG a WebP"
+url: "/2019/12/comando-para-convertir-imagenes-jpeg-y-png-a-webp/"
+aliases: ["/2019/12/comando-para-convertir-imagenes-a-webp-con-menor-tamano-desde-jpeg-y-png/"]
 date: 2019-12-08T14:00:00+01:00
 updated: 2019-12-30T22:00:00+01:00
 language: "es"
@@ -41,7 +42,7 @@ Las mismas imágenes comprimidas con WebP ocupan 826 KiB, un 18% menos, para la 
     image2="image:image-2.webp" thumb2="image-2-thumb.webp" optionsthumb2="300x200" title2="Captura de pantalla en formato WebP"
     caption="Mismas imágenes en formato WebP" >}}
 
-[ImageMagick][imagemagick] permite convertir las imágenes entre estos formatos. Con este comando se convierten todas las imágenes _jpg_ y _png_ de un directorio a formato WebP.
+[ImageMagick][imagemagick] permite convertir las imágenes entre estos formatos. Con este comando se convierten todas las imágenes _jpg_ y _png_ de un directorio a formato WebP de forma masiva.
 
 {{< code file="convert-to-webp.sh" language="bash" options="" >}}
 

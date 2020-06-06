@@ -1,8 +1,9 @@
 ---
 pid: 204
 type: "post"
-title: "Script de instalación de Arch Linux desatendido, automatizado y personalizable"
-url: "/2017/01/script-de-instalacion-de-arch-linux-desatendido-automatizado-y-personalizable/"
+title: "Script para instalar Arch Linux fácil, rápido, desatendido, automatizado y personalizable"
+url: "/2017/01/script-para-instalar-arch-linux-facil-rapido-desatendido-automatizado-y-personalizable/"
+aliases: ["/2017/01/script-de-instalacion-de-arch-linux-desatendido-automatizado-y-personalizable/"]
 date: 2017-01-13T00:00:00+01:00
 updated: 2020-06-20T20:30:00+02:00
 language: "es"

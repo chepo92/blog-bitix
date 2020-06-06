@@ -38,7 +38,7 @@ Arch Linux es una de las distribuciones más populares pero no proporciona ning�
 
 Por esos motivos creé un _script_ de instalación de Arch Linux completamente automatizado y desatendido con cierto grado de personalización en las opciones más comunes, es un simple _script_ bash con todos los comandos que componen el proceso de instalación y que simplemente revisarlo sirve como documentación que además si se desea se puede ejecutar.
 
-* [Script de instalación de Arch Linux desatendido, automatizado y personalizable][blogbitix-204]
+* [Script para instalar Arch Linux fácil, rápido, desatendido, automatizado y personalizable][blogbitix-204]
 
 Pero a pesar de todo Arch Linux se basa en los principios básicos de los que hasta hoy han estado basadas las distribuciones. Gestor de paquetes, repositorio de paquetes y actualizaciones frágiles. Es muy posible que las distribuciones cambien tal y como las hemos conocido hasta ahora, ya se está produciendo cambios con Flatpak como sistema de instalar aplicaciones independientemente de la distribución y mantenidos por los propios desarrolladores del software y no los mantenedores de la distribución.
 

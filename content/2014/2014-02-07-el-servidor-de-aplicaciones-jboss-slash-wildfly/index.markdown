@@ -1,8 +1,9 @@
 ---
 pid: 10
 type: "post"
-title: "Servidor de aplicaciones JBoss/WildFly"
-url: "/2014/02/servidor-de-aplicaciones-jboss-slash-wildfly/"
+title: "El servidor de aplicaciones JBoss/WildFly"
+url: "/2014/02/el-servidor-de-aplicaciones-jboss-slash-wildfly/"
+aliases: ["/2014/02/servidor-de-aplicaciones-jboss-slash-wildfly/"]
 date: 2014-02-07T22:35:31+01:00
 updated: 2016-03-14T18:00:00+01:00
 rss: true
@@ -39,7 +40,9 @@ De la plataforma Java EE hay varias versiones que a medida que se van publicando
 * JAX-WS (1.3): especificación sobre servicios web basados en XML.
 * JavaMail (1.5): especificación para el envío de mensajes de correo electrónico.
 
-De entre los servidores de aplicaciones mencionados anteriormente JBoss o WildFly, la versión para la comunidad, es una muy buena opción, arranca tremendamente rápido (unos 10 segundos, no mucho más que un Tomcat que ofrece muchas menos funcionalidades), tiene una licencia de software libre, ofrece soporte empresarial y detrás está una compañía que claramente apuesta por el software libre en su modelo de negocio. En la última versión de JBoss, la 7.1, y 8 de WildFly ya no se producen los errores de conflictos entre librerías que se producían anteriormente con el _classpath hell_, ya que en vez de seguir un modelo jerárquico como antes sigue un modelo OSGi con JBoss Modules. Ahora se basa en módulos y cada war, ear o jar está aislado del resto. Puede administrarse mediante linea de comandos y a través de una consola web evitándose los conflictos. Para diferenciar más claramente la versión comercial de la ofrecida a la comunidad JBoss ha pasado a llamarse WildFly para la versión de la comunidad y la relación con JBoss será similar a la que tienen [RHEL](http://www.redhat.com/products/enterprise-linux/) con [Fedora](https://fedoraproject.org/) y desde hace poco con [CentOS](http://www.centos.org/).
+De entre los servidores de aplicaciones mencionados anteriormente está JBoss. WildFly es un servidor de aplicaciones Java desarrollado por [Red Hat][redhat] que implementa las especificaciones Java EE. Es un servidor con una licencia libre y es la versión para la comunidad que Red Hat renombra como JBoss para su catálogo de productos destinados a las empresas.
+
+WildFly arranca tremendamente rápido (unos 10 segundos, no mucho más que un Tomcat que ofrece muchas menos funcionalidades), tiene una licencia de software libre, ofrece soporte y detrás está una compañía que claramente apuesta por el software libre en su modelo de negocio. En sus versiones de JBoss, la 7.1, y 8 de WildFly ya no se producen los errores de conflictos entre librerías que se producían anteriormente con el _classpath hell_, ya que en vez de seguir un modelo jerárquico como antes sigue un modelo OSGi con JBoss Modules. Ahora se basa en módulos y cada war, ear o jar está aislado del resto. Puede administrarse mediante linea de comandos y a través de una consola web evitándose los conflictos. Para diferenciar más claramente la versión comercial de la ofrecida a la comunidad JBoss ha pasado a llamarse WildFly para la versión de la comunidad y la relación con JBoss será similar a la que tienen [RHEL](http://www.redhat.com/products/enterprise-linux/) con [Fedora](https://fedoraproject.org/) y desde hace poco con [CentOS](http://www.centos.org/).
 
 A continuación unas pocas capturas de pantalla de la página de inicio de WildFly y de la consola de administración:
 
@@ -62,9 +65,6 @@ En posteriores entradas y siguiendo la serie de entradas de seguridad ([I][elblo
 * [Configurar HTTP/2 en Nginx, Apache HTTPD, WildFly o Jetty][blogbitix-129]
 * [WildFly](http://wildfly.org/)
 * [JBoss](http://jbossas.jboss.org/)
-* http://www.jboss.org/overview/<br>
-* https://en.wikipedia.org/wiki/Java_Platform,_Enterprise_Edition<br>
-* https://www.oracle.com/technetwork/java/javaee/tech/index.html
 {{< /reference >}}
 
 {{% /post %}}

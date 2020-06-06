@@ -29,7 +29,7 @@ Algunos ejemplos de lo que es posible realizar desde la línea de comandos son e
 
 * [Cambiar el formato de archivos de música o audio en GNU/Linux][blogbitix-134]
 * [Cambiar el formato de archivos de vídeo o películas en GNU/Linux][blogbitix-135]
-* [Comando para convertir imágenes a WebP con menor tamaño desde JPEG y PNG][blogbitix-447]
+* [Comando para convertir imágenes JPEG y PNG a WebP][blogbitix-447]
 
 {{< image
     gallery="true"

@@ -141,7 +141,7 @@ Por cierto, como nota para técnicos, reclutadores, empresas y páginas de emple
 * [10 motivos para seguir usando Java][blogbitix-81]
 * [Introducción al protocolo HTTP/2][blogbitix-127]
 * [Configurar HTTP/2 en Nginx, Apache HTTPD, WildFly o Jetty][blogbitix-129]
-* [Servidor de aplicaciones JBoss/WildFly][blogbitix-10]
+* [El servidor de aplicaciones JBoss/WildFly][blogbitix-10]
 * [Alternativa a Hibernate u ORM y ejemplo de jOOQ][blogbitix-82]
 {{< /reference >}}
 

@@ -98,7 +98,7 @@ El centro de software de GNOME instala los [programas empaquetados con Flatpak][
 
 La línea de comandos de GNU/Linux al principio es difícil de utilizar dado que no es muy amigable al tener que conocer los comandos y sus parámetros para realizar la acción, las interfaces gráficas son más simples de utilizar dado que ofrecen una guía al usuario sin necesidad de que tenga un conocimiento previo de cómo utilizarlo.
 
-Sin embargo, para tareas repetitivas o masivas es mas rápido y sencillo utilizar la linea de comandos conociendo el comando y los parámetros a utilizar. Un ejemplo de tarea para que se puede utilizar la línea de comandos es para [convertir de forma masiva el formato de imágenes][blogbitix-447], [música][blogbitix-134] o [vídeos][blogbitix-135].
+Sin embargo, para tareas repetitivas o masivas es mas rápido y sencillo utilizar la linea de comandos conociendo el comando y los parámetros a utilizar. Un ejemplo de tarea para que se puede utilizar la línea de comandos es para [convertir de forma masiva el formato de imágenes de JPEG y PNG a WebP][blogbitix-447], [música][blogbitix-134] o [vídeos][blogbitix-135].
 
 {{< code file="audio-masive-convert.sh" language="bash" options="" >}}
 {{< code file="video-masive-convert.sh" language="bash" options="" >}}

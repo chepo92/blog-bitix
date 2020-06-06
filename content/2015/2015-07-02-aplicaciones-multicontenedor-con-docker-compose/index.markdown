@@ -31,7 +31,9 @@ Continuando la [serie de artículos sobre docker][blogbitix-serie-docker] que es
 
 ### Introducción a Docker Compose
 
-Las aplicaciones basadas en microservicios se prestan a usar múltiples contenedores cada uno con un servicio, uno puede contener la base de datos [postgresql][postgresql], otro una base de datos clave/valor [redis][redis] o de documentos como [elasticsearch][elasticsearch] para hacer búsquedas, otro un sistema de mensajería como [rabbitmq][rabbitmq], otro [tomcat][tomcat] o [wildfly][wildfly] que use los anteriores y un servidor web como [Nginx][nginx]. Teniendo múltiples contenedores usar el comando `docker run` para cada uno de ellos nos resultará incómodo. En este punto entra Docker Compose permitiéndonos definir nuestra aplicación multicontenedor en un archivo con las mismas propiedades que indicaríamos con el comando `docker run` individualmente. Con un único comando podremos iniciar todos los contenedores y en el orden que los especifiquemos.
+Las aplicaciones basadas en microservicios se prestan a usar múltiples contenedores cada uno con un servicio, uno puede contener la base de datos [postgresql][postgresql], otro una base de datos clave/valor [redis][redis] o de documentos como [elasticsearch][elasticsearch] para hacer búsquedas, otro un sistema de mensajería como [rabbitmq][rabbitmq], otro [tomcat][tomcat] o [wildfly][wildfly] que use los anteriores y un servidor web como [Nginx][nginx]. Teniendo múltiples contenedores usar el comando `docker run` para cada uno de ellos nos resultará incómodo.
+
+En este punto entra Docker Compose que es una herramienta que permite definir nuestra aplicación multicontenedor en un archivo de texto con las mismas propiedades que indicaríamos con el comando `docker run` individualmente. Con un único comando podremos iniciar todos los contenedores y en el orden que los especifiquemos.
 
 El archivo descriptor nos puede servir no solo como forma de iniciar los contenedores en un entorno de desarrollo sino como de documentación de la aplicación en la que veremos qué contenedores, imágenes, volúmenes, enlaces y demás propiedades tienen.
 
