@@ -1,9 +1,11 @@
 ---
 pid: 276
 type: "post"
-title: "Ordenar alfabéticamente cadenas con la clase Collator en Java"
-url: "/2017/11/ordenar-alfabeticamente-cadenas-con-la-clase-collator-en-java/"
+title: "Ordenar correctamente cadenas con la clase Collator en Java"
+url: "/2017/11/ordenar-correctamente-cadenas-con-la-clase-collator-en-java/"
+aliases: ["/2017/11/ordenar-alfabeticamente-cadenas-con-la-clase-collator-en-java/"]
 date: 2017-11-04T11:00:00+01:00
+updated: 2020-06-06T14:00:00+02:00
 language: "es"
 rss: true
 sharing: true
@@ -11,7 +13,7 @@ comments: true
 promoted: false
 imagePost: "logotype:java.svg"
 tags: ["java", "planeta-codigo", "programacion"]
-summary: "Sin usar la clase _Collator_ incluida en el JDK al ordenar alfabéticamente una lista de palabras obtendremos en algún caso un resultado que nos extrañará y seguramente no sea lo que esperamos. La clase _String_ implementa la interfaz Comprable pero esta ordenación es en base al valor del código _unicode_ sin tener en cuenta los diferentes niveles de diferencias que se pueden usar según el _Locale_ y la clase _Collator_."
+summary: "Sin usar la clase _Collator_ incluida en el JDK al ordenar alfabéticamente una lista de cadenas obtendremos en algún caso un resultado que nos extrañará y seguramente no sea lo esperado. La clase _String_ implementa la interfaz _Comprable_ pero esta ordenación es en base al valor del código _unicode_ sin tener en cuenta los diferentes niveles de diferencias propios del idioma para algunos caracteres de la cadena como tildes o caracteres únicos como la _ñ_. La forma correcta de ordenar cadenas en Java es utilizando la clase _Collator_."
 ---
 
 {{% post %}}
@@ -22,7 +24,7 @@ Quizá algunos digan que la aparentemente sencilla tarea de ordenar una lista de
 
 {{< code file="Sort.java" language="java" options="" >}}
 
-Primeramente nos daremos cuenta de que la siguiente lista de nombres de provincias las ordena de una forma que quizá no es la que esperamos. En algunas páginas web se puede observar este error en algunos elementos de selección de opciones de nombres de paises, ciudades, provincias u otro conjunto de elementos que suelen estar ordenados alfabéticamente para facilitar el encontrar el elemento a seleccionar pero que si se da el caso de que hay variación de palabras con tildes y sin ellas y minúsculas y mayúsculas se presenta la ordenación incorrecta.
+Primeramente nos daremos cuenta de que la siguiente lista de nombres de provincias las ordena de una forma que quizá no es la que esperamos. En algunas páginas web se puede observar este error en algunos elementos de selección de opciones de nombres de paises, ciudades, provincias u otro conjunto de elementos que suelen estar ordenados de forma alfabética para facilitar el encontrar el elemento a seleccionar pero que si se da el caso de que hay variación de palabras con tildes y sin ellas y minúsculas y mayúsculas se presenta la ordenación incorrecta.
 
 {{< code file="Sort.out" language="plaintext" options="" >}}
 
