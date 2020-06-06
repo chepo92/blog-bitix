@@ -1,8 +1,8 @@
 ---
 pid: 276
 type: "post"
-title: "Ordenar correctamente cadenas con la clase Collator en Java"
-url: "/2017/11/ordenar-correctamente-cadenas-con-la-clase-collator-en-java/"
+title: "La forma correcta de ordenar alfabéticamente cadenas en Java"
+url: "/2017/11/la-forma-correcta-de-ordenar-alfabeticamente-cadenas-en-java/"
 aliases: ["/2017/11/ordenar-alfabeticamente-cadenas-con-la-clase-collator-en-java/"]
 date: 2017-11-04T11:00:00+01:00
 updated: 2020-06-06T14:00:00+02:00

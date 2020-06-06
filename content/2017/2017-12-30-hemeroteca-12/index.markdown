@@ -62,7 +62,7 @@ Este [año 2017 he escrito los artículos][blogbitix-section-2017] y este semest
 * [Obtener información de la pila de las excepciones][blogbitix-271]
 * [Implementar funcionalidades comunes en Java con la librería Lombok][blogbitix-272]
 * [Visualizar datos y generar gráficas en Java con JFreeChart][blogbitix-273]
-* [Ordenar correctamente cadenas con la clase Collator en Java][blogbitix-276]
+* [La forma correcta de ordenar alfabéticamente cadenas en Java][blogbitix-276]
 * [Introducción a la programación funcional con Java y la librería Vavr][blogbitix-288]
 
 Una serie de artículos sobre [GraphQL][graphql] como alternativa a una API REST que tiene algunas ventajas. Aún me queda publicar uno de esta serie, en cuanto se acepte un _pull request_ a raíz de una petición que cree con [un problema que me encontré](https://github.com/graphql-java/graphql-java-tools/issues/93).
