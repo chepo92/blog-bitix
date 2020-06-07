@@ -50,9 +50,9 @@ La clase _DefaultPostgresContainer_ permite encapsular el inicio del contenedor 
 
 {{< code file="DefaultPostgresContainer.java" language="java" options="" >}}
 
-Se puede iniciar cualquier contenedor de forma genérica con el siguiente código, indicando la imagen del contenedor y etiqueta además del puerto que expone. Testcontainer los expone de forma local usando un puerto aleatorio, se necesita el _host_ y puerto que permite la conexión al servicio obtenidos de la referencia del contenedor. En este caso se inicia un contenedor [Redis][redis] accedido con la librería [ Jedis][jedis]. 
+Se puede iniciar cualquier contenedor de forma genérica con el siguiente código, indicando la imagen del contenedor y etiqueta además del puerto que expone. Testcontainer los expone de forma local usando un puerto aleatorio, se necesita el _host_ y puerto que permite la conexión al servicio obtenidos de la referencia del contenedor. En este caso se inicia un contenedor [Redis][redis] accedido con la librería [Jedis][jedis]. 
 
-{{< code file="GenericContainer.java" language="java" options="" >}}
+{{< code file="RedisTest.java" language="java" options="" >}}
 
 La prueba está implementada con JUnit 5 y Spring Boot, con la anotación _ContextConfiguration_ se indica a JUnit y a Spring que inicie el contenedor de PostgreSQL antes de iniciar el contexto de Spring que configura las variables de conexión a la base de datos y antes de ejecutar los métodos de prueba. Los métodos de prueba son muy sencillos simplemente persisten en la base de datos varias entidades y se prueba que el número de entidades presentes en la base de datos al contarlas es el esperado.
 
