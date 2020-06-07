@@ -4,6 +4,7 @@ type: "post"
 title: "Qué es un SUT, fake, stub, mock y spy en las pruebas con un ejemplo"
 url: "/2018/07/que-es-un-sut-fake-stub-mock-y-spy-en-las-pruebas-con-un-ejemplo/"
 date: 2018-07-04T10:00:00+02:00
+updated: 2020-06-07T11:00:00+02:00
 language: "es"
 rss: true
 sharing: true
@@ -20,7 +21,7 @@ Al desarrollar pruebas unitarias o de integración se emplean varios términos q
 
 En una prueba el objeto bajo prueba es el elemento del que se quiere probar su comportamiento y que las pruebas verificarán que para los casos de prueba funciona según lo esperado. Dado que raramente el sujeto bajo prueba funciona de forma aislada sino que que se comunica con otros elementos estos colaboradores han de reemplazarse preprogramado su comportamiento, a los colaboradores se les denomina impostores o _fakes_ ya que no son los objetos reales que se usan en el programa en ejecución pero simulan su comportamiento.
 
-Según el tipo de _fake_ que sea un objeto están los siguientes tipos:
+Según el tipo de doble o _fake_ que sea un objeto están los siguientes tipos:
 
 * _Stub_: es un _fake_ al que se le reprograman sus valores de retorno y se proporciona al objeto bajo prueba teniendo control sobre cuales son los valores que usa el sujeto bajo control.
 * _Mock_: es un _fake_ que después de terminada la prueba puede ser examinado para comprobar si las interacciones con el sujeto bajo prueba han sido las correctas, se puede probar si un método ha sido llamado o cuántas veces ha sido llamado junto con sus parámetros. Adicionalmente al igual que los _stub_ puede preprogramarse su comportamiento. Si solo se necesita preprogramar los resultados se suele utilizar un _stub_ y solo cuando además se necesitan verificar las interacciones se usa un _mock_.
@@ -43,6 +44,8 @@ En el ejemplo se quiere probar un sistema de alarma que cuando detecte en tres m
 Se pueden hacer más casos de prueba como por ejemplo probar que tras dos temperaturas altas siendo la siguiente baja y posteriormente otra alta la alarma no es disparada.
 
 En el libro [Java Testing with Spock](https://amzn.to/2MMSV2J) explican toda esta teoría básica de pruebas además de explicar bastante detalladamente todas las posibilidades de la herramienta de _testing_ [Spock][spock].
+
+Los dobles permiten susituir dependencias y programar su comportamiento, en algunos casos no es posibler o no es deseable. Si se quiere probar un componente que accede a una base de datos el doble puede tener diferencias con la base de datos real. Para estos casos se usan pruebas de integración, la dificultad está disponer de estas dependencias en el entorno de prueba. La herramienta [Testcontainers sirve para realizar pruebas de intergración en Java usando contendores Docker][blogbitix-490].
 
 {{< amazon
     linkids="b57d8e90599c681fc8e794027e17bea3"
