@@ -1,4 +1,3 @@
-
 package io.github.picodotdev.blogbitix.testcontainers;
 
 import org.springframework.data.jpa.repository.Modifying;

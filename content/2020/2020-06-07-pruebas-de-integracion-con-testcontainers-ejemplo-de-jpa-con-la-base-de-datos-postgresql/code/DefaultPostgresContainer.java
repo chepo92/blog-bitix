@@ -11,18 +11,18 @@ public class DefaultPostgresContainer extends PostgreSQLContainer<DefaultPostgre
 
     private static final String IMAGE_VERSION = "postgres:12";
     private static DefaultPostgresContainer container;
- 
+
     private DefaultPostgresContainer() {
         super(IMAGE_VERSION);
     }
- 
+
     public static DefaultPostgresContainer getInstance() {
         if (container == null) {
             container = new DefaultPostgresContainer();
         }
         return container;
     }
- 
+
     @Override
     public void start() {
         super.start();
