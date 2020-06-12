@@ -54,8 +54,8 @@ Por cada condición hay una implementación de la interfaz.
 
 En el objeto _Product_ se implementa el patrón _Visitor_ con la interfaz _Specificable_ donde cada implementación de la clase _Specification_ trata la lógica y la clase _Product_ solo tiene el método _satisfies_ que invoca a la instancia de _specification_ recibida como parámetro.
 
-{{< code file="Product.java" language="java" options="" >}}
 {{< code file="Specificable.java" language="java" options="" >}}
+{{< code file="Product.java" language="java" options="" >}}
 
 Para realizar combinaciones con operaciones lógicas _and_, _or_ o _not_ se utiliza el patrón _Composite_. De entre las operaciones básicas solo se muestra la operación _equals_, sería neesario implementar otro tipo de operaciones como _lessThan_, _greaterThan_, _contains_ u otras si es necesario.
 
