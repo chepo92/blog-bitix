@@ -1,8 +1,9 @@
 ---
 pid: 491
 type: "post"
-title: "El patrón Specification, ejemplo de implementación y uso en JPA con Spring Data"
-url: "/2020/06/el-patron-specification-ejemplo-de-implementacion-y-uso-en-jpa-con-spring-data/"
+title: "El patrón de diseño Specification, ejemplo de implementación y uso en JPA con Spring Data"
+url: "/2020/06/el-patron-de-diseno-specification-ejemplo-de-implementacion-y-uso-en-jpa-con-spring-data/"
+aliases: ["/2020/06/el-patron-specification-ejemplo-de-implementacion-y-uso-en-jpa-con-spring-data/"]
 date: 2020-06-12T16:00:00+02:00
 language: "es"
 rss: true
@@ -22,7 +23,7 @@ Dado un objeto suele ser necesario comprobar si cumple una o más condiciones. E
 
 Esta aproximación tiene dos inconvenientes, el número de métodos de consulta crece significativamente en las aplicaciones grandes y las consultas son conjunto fijo sin posibilidad de extensión salvo añadir nuevos métodos, las consultas no son fáciles de externalizar y reutilizar.
 
-En estos casos implementar el patrón _Specification_ ayuda a hacer el código más mantenible, extensible, simple y de más fácil lectura.
+En estos casos implementar el patrón de diseño _Specification_ ayuda a hacer el código más mantenible, extensible, simple y de más fácil lectura.
 
 Los siguientes ejemplos implementan el patrón _Specification_ para comprobar si un objeto cumple una serie de condiciones de negocio y como Spring Data hace uso del patrón para construir las condiciones de las consultas de JPA. Los ejemplos incluyen teses que usan [la herramienta TestConainers para hacer pruebas de integración en Java][blogbitix-490] con la base de datos [PostgreSQL][postgresql] en un contenedor [Docker][docker].
 
@@ -34,13 +35,13 @@ Suponiendo que se tiene la siguiente entidad del dominio con una serie de campos
 
 Esta aproximación sencilla de implementar y suficiente en aplicaciones pequeñas tiene dos inconvenientes. El número de métodos a escribir crece significativamente para aplicaciones grandes o complejas y los criterios de los métodos de consulta son fijos, no son extensibles. Para solventar estos dos problemas se opta por crear métodos con los criterios individuales y se combinan entre ellos dinámicamente para obtener la consulta deseada.
 
-Aquí es donde el patrón _Specification_ es de utilidad. El patrón _Specificaion_ también es aplicable a las consultas presentes en las clases repositorio de acceso a la base de datos donde seguramente es más probable repetir la misma lógica de condiciones en varias consultas _hardcodeado_ en las SQLs. Con los mismos problemas, condiciones repetidas en varios métodos y proliferación de métodos de consulta. Esta es la razón de que [Spring Data][spring-data] implemente el patrón _Specification_.
+Aquí es donde el patrón  de diseño _Specification_ es de utilidad. Este patrón también es aplicable a las consultas presentes en las clases repositorio de acceso a la base de datos donde seguramente es más probable repetir la misma lógica de condiciones en varias consultas _hardcodeado_ en las SQLs. Con los mismos problemas, condiciones repetidas en varios métodos y proliferación de métodos de consulta. Esta es la razón de que [Spring Data][spring-data] implemente el patrón _Specification_.
 
-### Qué es y ventajas del patrón Specification
+### Qué es y ventajas del patrón de diseño Specification
 
-El patrón _Specification_ permite encapsular una pieza del conocimiento del dominio y rehusarla en diferentes partes de la aplicación. Usando el patrón _Specificaction_ se mueven estas reglas de negocio a clases llamadas _specifications_.
+El patrón de diseño _Specification_ permite encapsular una pieza del conocimiento del dominio y rehusarla en diferentes partes de la aplicación. Utilizándolo se mueven estas reglas de negocio a clases llamadas _specifications_.
 
-El patrón _Specification_ parte de una interfaz con un método a implementar para encapsular la lógica de negocio que comprueba si la condición se cumple.
+El patrón de diseño _Specification_ parte de una interfaz con un método a implementar para encapsular la lógica de negocio que comprueba si la condición se cumple.
 
 {{< code file="Specification.java" language="java" options="" >}}
 
