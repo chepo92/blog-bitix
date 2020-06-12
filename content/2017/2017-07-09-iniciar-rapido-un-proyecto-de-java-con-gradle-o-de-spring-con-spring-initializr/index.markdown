@@ -15,7 +15,7 @@ tags: ["java", "planeta-codigo", "programacion"]
 
 {{% post %}}
 
-{{< logotype image1="gradle.svg" title1="Gradle" width1="200" image2="spring.svg" title2="Spring" width2="200" image3="java.svg" >}}
+{{< logotype image1="gradle.svg" title1="Gradle" width1="200" image2="spring.svg"  image3="java.svg" >}}
 
 Cuando se empieza un proyecto nuevo desde cero se debe disponer de una herramienta de construcción, una estructura de directorios que siga las convenciones de la herramienta de construcción, añadir las dependencias que vayamos a utilizar y alguna clase que muestre algo al ejecutarlo para comprobar que disponemos de la infraestructura básica de compilación, teses, generación de artefactos e inicio de proyecto.
 

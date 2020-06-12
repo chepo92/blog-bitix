@@ -17,7 +17,7 @@ summary: "Desarrollar una aplicación no solo implica implementar su funcionalid
 
 {{% post %}}
 
-{{< logotype image1="spring.svg" title1="Spring" width1="200" image2="java.svg" >}}
+{{< logotype image1="spring.svg"  image2="java.svg" >}}
 
 Es conveniente tener monitorizado el estado de una aplicación para conocer si el servicio que ofrece está funcionando o en caso de que no conocerlo cuanto antes para restaurarlo además de conocer otra serie de métricas básicas como la cantidad de <abbr title="Central Processing Unit">CPU</abbr> que se está usando, la cantidad de memoria usada y libre, número de _threads_ instanciados, espacio ocupado y libre en disco, actividad de entrada y salida ya sea de red o de disco, tiempo de inicio del sistema y de la aplicación. Otras métricas a nivel de aplicación que puede interesarnos conocer es número de usuarios conectados, número de sesiones, páginas vistas, sentencias SQL o transacciones ejecutadas, ... que podemos obtener directamente desde la aplicación o combinándolo con otras herramientas como [Google Analytics][google-analytics].
 

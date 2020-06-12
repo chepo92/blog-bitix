@@ -16,7 +16,7 @@ summary: "El segundo factor de autenticación es una medida adicional en la aute
 
 {{% post %}}
 
-{{< logotype image1="java.svg" image2="spring.svg" title2="Spring" width2="200" >}}
+{{< logotype image1="java.svg" image2="spring.svg"  >}}
 
 Comúnmente para realizar el proceso de autenticar a un usuario se ha realizado simplemente con el método de usuario y contraseña. Sin embargo, verificar la identidad mediante usuario y contraseña para algunos usuarios no es suficientemente seguro dado que los usuarios pueden elegir contraseñas débiles con pocos caracteres o sin usar una combinación que incluya letras, números y símbolos, pueden elegir contraseñas comunes muy utilizadas fáciles de adivinar con un ataque de diccionario, pueden usar la misma contraseña para varios servicios de modo que si las contraseñas de un servicio son descubiertas cualquier otro servicio que las utilice potencialmente corre un riesgo de seguridad. Usar solo usuario y contraseña no proporciona la suficiente seguridad para ciertos servicios que permiten realizar transacciones que involucra dinero, tratan datos sensibles o son servicios atractivos para ser atacados.
 

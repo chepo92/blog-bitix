@@ -17,7 +17,7 @@ series: ["spring-cloud"]
 
 {{% post %}}
 
-{{< logotype image1="spring.svg" title1="Spring" width1="200" image2="java.svg" >}}
+{{< logotype image1="spring.svg"  image2="java.svg" >}}
 
 La arquitectura de las aplicaciones está cambiando en lo que era lo habitual hace no tanto. Con el desarrollo de las redes de comunicación entre computadoras tanto en una red local con ethernet como en internet con el protocolo TCP/IP se desarrollaron las primeras aplicaciones cliente/servidor como es un servidor web y un navegador o una base de datos y una aplicación.
 

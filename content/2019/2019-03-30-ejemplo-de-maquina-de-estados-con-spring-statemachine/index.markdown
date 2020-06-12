@@ -16,7 +16,7 @@ tags: ["java", "planeta-codigo", "spring"]
 
 {{% post %}}
 
-{{< logotype image1="spring.svg" title1="Spring" width1="200" image2="java.svg" >}}
+{{< logotype image1="spring.svg"  image2="java.svg" >}}
 
 Hace ya unos años escribí un [ejemplo y un artículo con una implementación propia de una máquina de estado en Java][blogbitix-93], para algún caso muy básico puede ser suficiente pero para algo serio no es la opción a elegir. Pasado un tiempo de ese ejemplo y artículo descubrí uno de los muchos proyectos de [Spring][spring] útiles para una aplicación, para las necesidades más habítuales tiene un proyecto que lo proporciona y para las menos habituales es también posible que la proporcione como en el caso del proyecto [Spring Statemachine][spring-statemachine] que precisamente tiene el mismo objetivo de implementar una máquina de estados cubriendo muchos casos de uso.
 

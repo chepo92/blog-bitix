@@ -16,7 +16,7 @@ summary: "Tradicionalmente el conectar un servicio con sus servicios dependiente
 
 {{% post %}}
 
-{{< logotype image1="spring.svg" title1="Spring" width1="200" image2="java.svg" >}}
+{{< logotype image1="spring.svg"  image2="java.svg" >}}
 
 En una aplicación con una arquitectura de microservicios esta se compone de múltiples partes cambiantes. Los microservicios pueden aparecer, desaparecer, variar en número o cambiar de ubicación, la aplicación debe ser tolerante a esos cambios y seguir proporcionando su servicio. Por tanto, la configuración de red de los servicios no se puede realizar usando direcciones <abbr title="Internet Protocol">IP</abbr> ya que no se conocen las que utilizarán los microservicios y usar nombres de dominio de <abbr title="Domain Name System">DNS</abbr> puede no ser viable ya que los cambios tardan en propagarse. Conocer el nombre de _host_ y puerto reales de los microservicios es proporcionado por la funcionalidad de descubrimiento de servicios o _service discovery_ que proporcionan algunos servicios como [Eureka](https://github.com/Netflix/eureka), [Consul][consul] o [Apache Zookeper](https://zookeeper.apache.org/).
 

@@ -17,7 +17,7 @@ summary: "Si queremos una aplicación Java autocontenida ya sea una aplicación 
 
 {{% post %}}
 
-{{< logotype image1="spring.svg" title1="Spring" width1="200" image2="java.svg" >}}
+{{< logotype image1="spring.svg" image2="java.svg" >}}
 
 Tradicionalmente las aplicaciones Java web han sido instaladas en un contenedor de _servlets_ como [Tomcat][tomcat] o [Jetty][jetty] y [Wildfly][wildfly], [JBoss][jboss] o [Weblogic][weblogic] si necesita más servicios que son ofrecidos por la plataforma <abbr title="Java Enterprise Edition">Java EE</abbr> completa como <abbr title="Java Message Service">JMS</abbr>, <abbr title="Java Persistence API">JPA</abbr>, <abbr title="Java Transaction API">JTA</abbr> o <abbr title="Enterprise JavaBeans">EJB</abbr>. Aunque las aplicaciones se ejecutan independientemente unas de otras comparten el entorno de ejecución del servidor de aplicaciones, algunas aplicaciones no necesitarán todos los servicios que ofrecen los servidores de aplicaciones en su implementación del perfil completo Java EE y algunas nuevas aplicaciones pueden necesitar hacer uso de una nueva versión de un servicio como JMS con funcionalidades mejoradas. En el primer caso algunos servicios son innecesarios y en el segundo la actualización del servidor de aplicaciones se ha de producir para todas las aplicaciones que en él se ejecuten o tener varias versiones del mismo servidor de aplicaciones e ir instalando las aplicaciones en la versión del servidor según las versiones de los servicios para las que se desarrolló la aplicación.
 

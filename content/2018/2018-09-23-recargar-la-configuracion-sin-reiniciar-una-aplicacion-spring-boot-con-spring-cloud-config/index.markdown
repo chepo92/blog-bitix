@@ -18,7 +18,7 @@ series: ["spring-cloud"]
 
 {{% post %}}
 
-{{< logotype image1="spring.svg" title1="Spring" width1="200" image2="java.svg" >}}
+{{< logotype image1="spring.svg"  image2="java.svg" >}}
 
 No es raro la necesidad de querer cambiar algunos valores de la configuración de una aplicación sin ningún cambio adicional en el código. Normalmente la configuración se externaliza en un archivo de texto en un determinado formato como _properties_ o _yaml_ que se lee al iniciarse la aplicación pero que al querer hacer cambios y hacerlos efectivos requiere reiniciar la aplicación.
 

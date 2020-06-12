@@ -16,7 +16,7 @@ series: ["spring-cloud"]
 
 {{% post %}}
 
-{{< logotype image1="spring.svg" title1="Spring" width1="200" image2="java.svg" >}}
+{{< logotype image1="spring.svg"  image2="java.svg" >}}
 
 Los microservicios en una aplicación con una arquitectura de microservicios son efímeros, se crean, se escalan para atender picos de mayor demanda, pueden desaparecer por problemas de la red de comunicaciones que no es fiable y volverse a crear en una ubicación diferente. Por esta naturaleza efímera es necesario un servicio con el cual los clientes de los microservicios puedan encontrarlos y que los microservicios utilizan para registrarse cuando se inician.
 

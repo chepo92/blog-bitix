@@ -17,7 +17,7 @@ summary: "En una arquitectura basada en microservicios es normal iniciar varias 
 
 {{% post %}}
 
-{{< logotype image1="spring.svg" title1="Spring" width1="200" image2="java.svg" >}}
+{{< logotype image1="spring.svg"  image2="java.svg" >}}
 
 Mediante configuración se puede especificar el puerto en el que se desea iniciar una aplicación de [Spring Boot][spring-boot] que ofrece un servicio de red. El puerto por convención suele ser el _8080_ y la propiedad de configuración de Spring Boot para modificarlo es _server.port_.
 

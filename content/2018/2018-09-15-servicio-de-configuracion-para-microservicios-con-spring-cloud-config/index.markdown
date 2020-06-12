@@ -17,7 +17,7 @@ series: ["spring-cloud"]
 
 {{% post %}}
 
-{{< logotype image1="spring.svg" title1="Spring" width1="200" image2="java.svg" >}}
+{{< logotype image1="spring.svg"  image2="java.svg" >}}
 
 Al igual que un servicio de registro y descubrimiento es esencial para los microservicios un servicio de obtención de configuración de donde puedan obtener su configuración es también básico. Dado el gran número de microservicios de los que puede estar compuesta una aplicación, su carácter efímero, los varios entornos de ejecución (desarrollo, pruebas, producción, ...) mantener centralizada la configuración en un único sitio hace las cosas mucho más sencillas cuando hay que cambiar el valor de alguna propiedad, en vez de la alternativa aún externalizada del artefacto del microservicio en el sistema de archivos del entorno de ejecución.
 

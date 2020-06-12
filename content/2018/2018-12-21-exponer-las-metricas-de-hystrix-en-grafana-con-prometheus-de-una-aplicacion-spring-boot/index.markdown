@@ -16,7 +16,7 @@ series: ["spring-cloud"]
 
 {{% post %}}
 
-{{< logotype image1="java.svg" image2="spring.svg" title2="Spring" width2="200" >}}
+{{< logotype image1="java.svg" image2="spring.svg"  >}}
 
 [Hystrix][netflix-hystrix] es una implementación del patrón _circuit breaker_ para hacer que un servicio sea tolerante fallos cuando aquellos que utiliza fallan. Es conveniente tener una herramienta de monitorización para conocer el estado del sistema y actuar pronto o conocer si el comportamiento del sistema es diferente al hacer algún cambio. Hystrix proporciona varios datos como el número de peticiones realizadas, cuantas han fallado o cual es el estado del patrón _circuit breaker_. [Prometheus][prometheus] es una herramienta de monitorización que recoge las métricas de los servicios de forma periódica y las almacena para una consulta posterior, [Grafana][grafana] es otra herramienta de monitorización que permite visualizar en gráficas las métricas almacenadas en Prometheus y observar los valores a lo largo del tiempo.
 

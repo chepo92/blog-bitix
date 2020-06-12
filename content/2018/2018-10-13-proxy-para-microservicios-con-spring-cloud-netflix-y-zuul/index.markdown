@@ -16,7 +16,7 @@ series: ["spring-cloud"]
 
 {{% post %}}
 
-{{< logotype image1="spring.svg" title1="Spring" width1="200" image2="java.svg" >}}
+{{< logotype image1="spring.svg"  image2="java.svg" >}}
 
 Teniendo una buen número de microservicios con múltiples instancias ofreciendo cada uno una API y en una ubicación diferente para simplificar la visión de los que actúen clientes de los microservicios se puede utilizar un _proxy_. Con un _proxy_ es posible centralizar todas las peticiones, que sea éste el encargado de conocer la ubicación de todas las instancias de los microservicios y de hacer la llamada allí donde se encuentre cada una de ellas.
 

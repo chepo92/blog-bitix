@@ -17,7 +17,7 @@ summary: "La configuración de una aplicación suele varíar según el entorno e
 
 {{% post %}}
 
-{{< logotype image1="spring.svg" title1="Spring" width1="200" image2="java.svg" >}}
+{{< logotype image1="spring.svg" image2="java.svg" >}}
 
 Desarrollar una aplicación no consiste solo en programar el código que proporciona su funcionalidad, con igual de importancia está como poner en producción esa aplicación para que preste su servicio, algo de lo que el desarrollador no debería ser ajeno. Casi siempre hay algo de configuración que varia entre entornos siendo estos al menos el de desarrollo y producción. En el ciclo de vida de una aplicación esta pasa por varios entornos de ejecución hasta llegar a producción, desde desarrollo, pruebas, <abbr title="Quality assurance">QA</abbr> y finalmente en producción. Casi seguro que la aplicación en cada uno de estos entornos la configuración varía, por ejemplo, las direcciones ya sean IP o nombres de dominio de las bases de datos relacional u otros servicios externos. Para que en el entorno de pruebas y QA se use exactamente el mismo artefacto (en Java un archivo war o jar) que el que se enviaría al entorno de producción la configuración de la aplicación no debería ser incluida en el propio artefacto, si la configuración fuese incluida en el propio artefacto sería distinto que el que se enviaría a producción y las pruebas no válidas, podría haber alguna diferencia en la construcción del artefacto para cada entorno.
 

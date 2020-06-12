@@ -17,7 +17,7 @@ summary: "Spring Cloud Vault facilita la integración con Vault, una de sus usos
 
 {{% post %}}
 
-{{< logotype image1="spring.svg" title1="Spring" width1="200" image2="vault.svg" title2="Vault" width2="200" >}}
+{{< logotype image1="spring.svg"  image2="vault.svg" title2="Vault" width2="200" >}}
 
 La herramienta [Vault][vault] de [HashiCorp][hashicorp] permite almacenar secretos, otra de sus funcionalidad es ser capaz de generar credenciales de forma dinámica. Habitualmente una aplicación para conectarse a una base de datos incluye en su configuración las credenciales, usuario y contraseña, para autenticarse y crear las conexiones, estas credenciales tiene un tiempo de vida indefinido y comprometidas proporcionan acceso a la base de datos.
 

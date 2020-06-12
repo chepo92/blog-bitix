@@ -17,7 +17,7 @@ series: ["spring-cloud"]
 
 {{% post %}}
 
-{{< logotype image1="spring.svg" title1="Spring" width1="200" image2="java.svg" >}}
+{{< logotype image1="spring.svg"  image2="java.svg" >}}
 
 Para no tener que hacer cambios en el código que implica recompilar la aplicación y generar de nuevos los artefactos al cambiar algunos valores de la aplicación se utilizan los archivos de configuración. Los archivos de configuración son archivos de texto plano que pueden seguir algún formato como _properties_, _xml_ o _yaml_, externos a la aplicación pero que lee sus propiedades al iniciarse. Algunas propiedades de configuración de ejemplo pueden ser la cadena de conexión a una base de datos, el usuario y contraseña.
 

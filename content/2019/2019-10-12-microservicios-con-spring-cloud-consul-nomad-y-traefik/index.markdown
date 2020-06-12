@@ -18,7 +18,7 @@ summary: "Sin entrar a si los microservicios son adecuados o no son adecuados en
 
 {{% post %}}
 
-{{< logotype image1="java.svg" image2="spring.svg" title2="Spring" width2="200" >}}
+{{< logotype image1="java.svg" image2="spring.svg"  >}}
 
 En otro artículo mostraba un ejemplo de [microservicios con Spring Cloud][blogbitix-344] usando únicamente herramientas de [Spring][spring]. Cada una de esas herramientas cubren una funcionalidad que necesitan los microservicios. Entre ellas:
 

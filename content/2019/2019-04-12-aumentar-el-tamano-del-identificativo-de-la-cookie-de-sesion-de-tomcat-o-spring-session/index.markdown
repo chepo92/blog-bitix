@@ -16,7 +16,7 @@ tags: ["java", "planeta-codigo", "seguridad", "spring"]
 
 {{% post %}}
 
-{{< logotype image1="tomcat.svg" title1="Tomcat" width1="200" image2="java.svg" image3="spring-boot.svg" title3="Spring Boot" width3="200" >}}
+{{< logotype image1="tomcat.svg" title1="Tomcat" width1="200" image2="java.svg" image3="spring-boot.svg"  >}}
 
 El protocolo HTTP es un protocolo sin estado que quiere decir que entre las peticiones no se comparte estado ni se recuerda ningún dato. Por otro lado las _cookies_ es pequeño conjunto de datos que son almacenados en el cliente y son enviados en cada petición que se hace a un sitio web, cada sitio web mantiene su propia colección de _cookies_, dos sitios distintos no comparten sus _cookies_. Para mantener estado entre dos peticiones se hace uso de las _cookies_.
 

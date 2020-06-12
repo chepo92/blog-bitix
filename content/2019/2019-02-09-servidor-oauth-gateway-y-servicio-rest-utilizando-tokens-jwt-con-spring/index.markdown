@@ -17,7 +17,7 @@ series: ["spring-cloud"]
 
 {{% post %}}
 
-{{< logotype image1="spring.svg" title1="Spring" width1="200" image2="java.svg" >}}
+{{< logotype image1="spring.svg"  image2="java.svg" >}}
 
 Hace unos días encontré un [articulo del blog técnido de los desarrolladores de Idealista](https://www.idealista.com/labs/blog/spring-framework/autenticando-el-api-de-idealista-hipotecas-con-spring-oauth2-y-zuul/). En él comentaban que tenían una API para realizar simulaciones hipotecarias usando [Spring][spring] como _framework_, [Spring Security OAuth][spring-security-oauth] como forma de autenticación y autorización y JWT como forma de codificar el _token_ que otorga el servidor OAuth y contiene la información necesaria para que el servidor de recursos permita o no el acceso al recurso que aloja.
 
