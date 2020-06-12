@@ -87,6 +87,7 @@ Las clases _EqualsSpecification_, _IsCheapSpecification_, _IsLongTermSpecificati
 La siguiente prueba de integración con [Testcontainers][testcontainers], PostgresSQL y Docker prueba el repositorio con las implementaciones de las clases del patrón _Specification_ para JPA de Spring Data.
 
 {{< code file="ProductJpaSpecificationTest.java" language="java" options="" >}}
+{{< code file="products.sql" language="sql" options="" >}}
 
 En la salida de los teses se muestran la traducción de los objetos _specification_ a las condiciones de las consultas.
 
