@@ -5,6 +5,7 @@ title: "El patrón de diseño Specification, ejemplo de implementación y uso en
 url: "/2020/06/el-patron-de-diseno-specification-ejemplo-de-implementacion-y-uso-en-jpa-con-spring-data/"
 aliases: ["/2020/06/el-patron-specification-ejemplo-de-implementacion-y-uso-en-jpa-con-spring-data/"]
 date: 2020-06-12T16:00:00+02:00
+udapted: 2020-06-12T18:30:00+02:00
 language: "es"
 rss: true
 sharing: true
@@ -75,7 +76,7 @@ La siguiente prueba unitaria muestra con código el uso del patrón _Specificati
 
 ### Implementación para JPA con Spring Data
 
-El proyecto Spring Data para el acceso a bases de datos con JPA hace uso del patrón _Specification_, la interfaz [JpaSpecificationExecutor](https://docs.spring.io/spring-data/jpa/docs/current/api/org/springframework/data/jpa/repository/JpaSpecificationExecutor.html) añade a los repositorios métodos de búsqueda que reciben un argumento de tipo [Specification](https://docs.spring.io/spring-data/jpa/docs/current/api/org/springframework/data/jpa/domain/Specification.html).
+El proyecto Spring Data para el acceso a bases de datos con JPA implementa el patrón de diseño _Specification_, la interfaz [JpaSpecificationExecutor](https://docs.spring.io/spring-data/jpa/docs/current/api/org/springframework/data/jpa/repository/JpaSpecificationExecutor.html) añade a los repositorios métodos de búsqueda que reciben un argumento de tipo [Specification](https://docs.spring.io/spring-data/jpa/docs/current/api/org/springframework/data/jpa/domain/Specification.html).
 
 Esta clase _Specification_ transforma las condiciones en un objeto [Predicate](javaee8:javax/persistence/criteria/Predicate.html) que es el que JPA usa para las condiciones de la consulta SQL que se genera. La interfaz _JpaSpecificationExecutor_ también añade métodos para hacer búsquedas paginadas y con ordenación.
 
