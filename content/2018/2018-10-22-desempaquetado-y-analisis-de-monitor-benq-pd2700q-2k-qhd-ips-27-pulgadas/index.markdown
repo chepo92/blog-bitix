@@ -60,11 +60,11 @@ Los otros candidatos destacables que he visto han sido alguno en formato panorá
     linkids="508f802016832287212a9dcd4d793770,24fc95197f28f3d4d9db6514153de223,9560c7d04ae8f76ee1e3cd4a20abe387"
     asins="B0798R91FD,B00T5P1USW,B01N2Z7OZT" >}}
 
-Los monitores UHD para un tamaño de 27 pulgadas a máxima resolución el texto y elementos gráficos se ven muy pequeños con lo que para uso ofimático hay que escalar a una más pequeña. Hay en un rango de precios muy amplio, desde 200€ a 700+€. Dos modelos en 4K de los anteriores son el [BenQ PD2700U](https://amzn.to/2Pik820) que es el que hubiese elegido en caso de haber optado por UHD, el [BenQ BL2711U](https://amzn.to/2yBnLq7), el [LG 27UK600-W](https://amzn.to/2PbNIGB) o el [LG 27UK650-W](https://amzn.to/2Jcu1sP), nótese la _U_ en estos modelos. Estos monitores aún siendo UHD no llegan a los 192 dpi, se quedan en 163, para considerarse [HiDPI](https://wiki.gnome.org/HowDoI/HiDpi) ni tienen una pantalla retina. Otras opciones son optar por 32" UHD y en formato panorámico. 
+Los monitores UHD para un tamaño de 27 pulgadas a máxima resolución el texto y elementos gráficos se ven muy pequeños con lo que para uso ofimático hay que escalar a una más pequeña. Hay en un rango de precios muy amplio, desde 200€ a 700+€. Dos modelos en 4K de los anteriores son el [BenQ PD2700U](https://amzn.to/2Pik820) que es el que hubiese elegido en caso de haber optado por UHD, el [LG 27UK600-W](https://amzn.to/2PbNIGB) o el [LG 27UK650-W](https://amzn.to/2Jcu1sP), nótese la _U_ en estos modelos. Estos monitores aún siendo UHD no llegan a los 192 dpi, se quedan en 163, para considerarse [HiDPI](https://wiki.gnome.org/HowDoI/HiDpi) ni tienen una pantalla retina. Otras opciones son optar por 32" UHD y en formato panorámico. 
 
 {{< amazon
-    linkids="c69a55a9bb5bf63725b1bdffaa567444,b0cf487ca59691649f2507aa3837a2cf,3160f5b6618d07e065b1f81192395611,2386c7d19354b2df0dbbe4e5cf268ab4"
-    asins="B07GLR6RQF,B00RORBPEW,B0798RDRMH,B0798QLW64" >}}
+    linkids="c69a55a9bb5bf63725b1bdffaa567444,3160f5b6618d07e065b1f81192395611,2386c7d19354b2df0dbbe4e5cf268ab4"
+    asins="B07GLR6RQF,B0798RDRMH,B0798QLW64" >}}
 
 En monitores de 27 pulgadas la recomendación en varios foros es de 2K. Menos con 1K o _full hd_ es ver píxeles como centollos, más es ver las cosas pequeñas a máxima resolución para tareas ofimáticas y es habitual tener que escalar a una resolución más baja aunque tenga mayor definición aprovechando la mayor densidad de píxeles o DPI. Estos son unos hilos en foros y dos artículos que me han parecido interesantes y que me han resuelto alguna duda o confirmado lo que ya suponía.
 
@@ -281,13 +281,13 @@ Para probar la calidad del monitor (o televisor) en cuanto a colores o resoluci�
 
 {{< youtube video="Bey4XXJAqS8" >}}
 
-### Switch HDMI, monitor con el ordenador y consola
+### Switch HDMI y cables, monitor con el ordenador y consola
 
 Si el monitor es compartido tanto por el [ordenador como un Intel NUC][blogbitix-363] como por [una consola como la PlayStation 4 como muestro en su desempaquetado][blogbitix-432] es necesario un adaptador o _switch_ HDMI de múltiples entradas y una salida para usar ambos sin necesidad de conectar y desconectar cables, no son caros y ofrecen mucha comodidad, con un botón se alterna entre la entrada del ordenador y la consola, además detecta la entrada y se cambia automáticamente.
 
 {{< amazon
-    linkids="3a5a1b554cb717c2763220c81be8b6fa"
-    asins="B07KSYS2L4" >}}
+    linkids="3a5a1b554cb717c2763220c81be8b6fa,3954e70941543ecb9ada5c76d26024e9,f5c9c155adf728e8d3217ab7e723d14c,87c2e46fa9d13984b35d29ce7d5761ae"
+    asins="B07KSYS2L4,B00NO73MUQ,B07RY2X9LF,B01J8S6X2I" >}}
 
 ### Soporte VESA
 
@@ -296,16 +296,16 @@ En todos los modelos he buscado que sea compatible con la norma VESA 100x100 por
 Algunos soportes compatibles con VESA que he mirado son los siguientes.
 
 {{< amazon
-    linkids="0d2db11714bff4c47c1ffe1efc1f795c,f457dd5a087e2880f54ffc2105e0999b"
-    asins="B01N9KKQH5,B01MZ70QJB" >}}
+    linkids="5fb68fe768b45db8b566a4d25ea47f9b,5ffbf7e3e57e2565ffb8cb05943edac2"
+    asins="B07DHK5DHN,B076B3Q8JR" >}}
 
 ### _Hub_ de puertos USB
 
 Teniendo el monitor un _hub_ USB 2.0 no merece la pena un _hub_ externo USB 3.0 o 3.1, sin embargo, con otros monitores puede ser una opción como con el PD2500Q o el PD2700U. Los discos duros externos que tengo son USB 2.0 y por limitaciones del disco duro si fuesen 3.0 el rendimiento adicional no se si sería mucho mayor. Hay hubs de 4, 7 y 10 puertos pero con esta candidad de puertos es recomendable que sea alimentado sobre todo si se conectan discos duros externos sin alimentación propia, también hay algunos con interruptor individual de encendido por puerto.
 
 {{< amazon
-    linkids="c0347223e569327beb79d01b30cd549e,32d93c1c8151c7d869e32b061d0d08b4,3e9560e254b297e251314782a4ae4044,9b678e32ccc83f551b57e34aa2db3296"
-    asins="B00E0NHMNQ,B00LI4O9EA,B00E0NHKEM,B075NYCWQ6" >}}
+    linkids="c0347223e569327beb79d01b30cd549e,32d93c1c8151c7d869e32b061d0d08b4"
+    asins="B00E0NHMNQ,B00LI4O9EA" >}}
 
 {{< reference >}}
 * [Calculadora DPI y PPI](https://www.sven.de/dpi/)

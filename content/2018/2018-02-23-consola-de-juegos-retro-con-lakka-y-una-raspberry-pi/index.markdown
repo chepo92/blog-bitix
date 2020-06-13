@@ -30,12 +30,12 @@ Lo primero que he hecho es comprar unos [mandos similares a los de la antigua Su
     gallery="false"
     image1="logotype:retroarch.png" optionsthumb1="658x378" title1="RetroArch" >}}
 
-Los elementos necesarios para tener tener una consola retro son los siguientes: una [Raspberry Pi][amazon-raspberrypi], un [cargador USB](http://amzn.to/2Cf9Vxp) adecuado, una [tarjeta microSD de 32 GiB](http://amzn.to/2EP9uXX) o más, [dos mandos para consola USB](http://amzn.to/2Cg6035) o un [teclado USB](http://amzn.to/2ou0QHD), un [cable HDMI](http://amzn.to/2sPcjqz) y si se quiere una [caja](http://amzn.to/2Fvtyjy). Por unos 65 € se pueden adquirir los elementos imprescindibles en la tienda de [Amazon][amazon].
+Los elementos necesarios para tener tener una consola retro son los siguientes: una [Raspberry Pi][amazon-raspberrypi], un [cargador USB](https://amzn.to/2YvYMRw) adecuado, una [tarjeta microSD de 64 GiB](https://amzn.to/3ecB3wp) o más, [dos mandos para consola USB](http://amzn.to/2Cg6035) o un [teclado USB](http://amzn.to/2ou0QHD), un [cable HDMI](http://amzn.to/2sPcjqz) y si se quiere una [caja](http://amzn.to/2Fvtyjy). Por unos 65 € se pueden adquirir los elementos imprescindibles en la tienda de [Amazon][amazon].
 
 * [Raspberry Pi][amazon-raspberrypi]
-* [Cargador USB](http://amzn.to/2Cf9Vxp)
-* [Tarjeta microSD de 32 GiB](http://amzn.to/2EP9uXX)
-* [Cable HDMI](http://amzn.to/2sPcjqz)
+* [Cargador USB](https://amzn.to/2YvYMRw)
+* [Tarjeta microSD de 64 GiB](https://amzn.to/3ecB3wp)
+* [Cable HDMI](https://amzn.to/2UCN0n6)
 * [Mandos USB](http://amzn.to/2Cg6035)
 * [Teclado USB](http://amzn.to/2ou0QHD)
 * [Software Lakka][lakka]

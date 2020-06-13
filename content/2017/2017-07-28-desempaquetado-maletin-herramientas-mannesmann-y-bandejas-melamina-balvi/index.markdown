@@ -80,7 +80,7 @@ También necesitaba unas bandejas para llevar platos, cubiertos, vaso, pan o el 
 En algún comentario de Amazon un usuario le ponía a estas bandejas una sola estrella porque decía que las cosas resbalaban, la superficie es muy pulida y no tiene rugosidades pero de ahí que las cosas resbalen creo que no salvo que en algún momento no mantengas la horizontalidad de la bandeja al transportar las cosas.
 
 {{< amazon
-    linkids="4afc8997f60c2f79ebd49a4ab268f301,08548a86ec994f108ffa1108ec5632c9,e820bb92593490fa7f9642552fbcf71c,37d23db1081013fa14e81ec2eaa16b20"
-    asins="B00SYWANB2,B00SYWAJSE,B00SYWALPA,B00SYWAP6K" >}}
+    linkids="4afc8997f60c2f79ebd49a4ab268f301,08548a86ec994f108ffa1108ec5632c9"
+    asins="B00SYWANB2,B00SYWAJSE" >}}
 
 {{% /post %}}

@@ -165,8 +165,4 @@ De entre todos estos y otros de la lista de más vendidos por una cosa u otra al
     linkids="d83fcfb5b254583b4923a15aee46b182,96032d684a9a1e19798dbac1b6dd7200,462e180975e635483e5ef4deb5cfc240"
     asins="B006LNTSP8,B01C4HCV58,B00D2PX8C2" >}}
 
-{{< amazon
-    linkids="fef22f9dceaf02ca8fe23b2285cd5b39,3888acfe30769c40b25d1ad2a5d4c46c,2128ae4eb526f24ba89b82cb7b4109fa"
-    asins="B07CSMZ9NC,B079ZZG71M,B07FY9TNY2" >}}
-
 {{% /post %}}

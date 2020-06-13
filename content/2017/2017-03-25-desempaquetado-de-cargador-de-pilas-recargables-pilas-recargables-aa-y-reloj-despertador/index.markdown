@@ -21,7 +21,7 @@ Una de las ventajas de comprar en [Amazon][amazon] es que casi siempre hay una c
 
 ### Cargador de pilas recargables
 
-En cuanto al cargador lo que quería era que admitiese al menos pilas del tipo AA, que son las tradicionales, y AAA que son similares pero algo más pequeñas y con algo menos de capacidad. También quería que diese algo de información al menos para saber si estaba completamente cargada. Después de ver casi todos los modelos que hay disponibles en Amazon me decidí por un modelo de [HXK-H2](https://amzn.to/2ng7pwd) con capacidad para cargar dos pilas simultáneamente e independientemente. Me gustó que no es muy caro uno 20€, cumple con las necesidades básicas que tenía y además de los tipos de pilas AA y AAA Ni-MH y Ni-CD admite otros tipos de pilas como Li-ion, LiFePO. También que admite pilas de diferentes tamaños ya que el cargador se ajusta al maño de la pila. También me gusto que se puede seleccionar si se quieren cargar las pilas con 1000mA o con 500mA que hace la carga más lenta pero hace que las pilas duren más. Tiene un _display_ que muestra un indicador aproximado de la carga de la batería actual, el tipo de batería que detecta automáticamente, el voltaje de carga, el tiempo de carga y la intensidad de la carga seleccionada. Este modelo de cargador posee varias versiones yo elegí la de dos pilas ya que muchos aparatos no necesitan más pero también hay un [modelo cargar hasta 4 pilas de forma simultánea](https://amzn.to/2nR9Zw7) con un precio algo mayor o de 1 si es suficiente según la necesidad más algo más barato. La única función que no tiene es la de descargar las pilas antes de cargarlas pero para la mayoría de usuarios es más que suficiente. El material y construcción del cargador da una sensación de buena calidad.
+En cuanto al cargador lo que quería era que admitiese al menos pilas del tipo AA, que son las tradicionales, y AAA que son similares pero algo más pequeñas y con algo menos de capacidad. También quería que diese algo de información al menos para saber si estaba completamente cargada. Después de ver casi todos los modelos que hay disponibles en Amazon me decidí por el modelo [HXK-H2](https://amzn.to/2zv3ma1) para dos pilas con capacidad para cargar dos pilas simultáneamente e independientemente. Me gustó que no es muy caro uno 20€, cumple con las necesidades básicas que tenía y además de los tipos de pilas AA y AAA Ni-MH y Ni-CD admite otros tipos de pilas como Li-ion, LiFePO. También que admite pilas de diferentes tamaños ya que el cargador se ajusta al maño de la pila. También me gusto que se puede seleccionar si se quieren cargar las pilas con 1000mA o con 500mA que hace la carga más lenta pero hace que las pilas duren más. Tiene un _display_ que muestra un indicador aproximado de la carga de la batería actual, el tipo de batería que detecta automáticamente, el voltaje de carga, el tiempo de carga y la intensidad de la carga seleccionada. La única función que no tiene es la de descargar las pilas antes de cargarlas pero para la mayoría de usuarios es más que suficiente. El material y construcción del cargador da una sensación de buena calidad.
 
 {{< image
     gallery="true"
@@ -32,15 +32,11 @@ En cuanto al cargador lo que quería era que admitiese al menos pilas del tipo A
     image1="image:cargador-3.jpg" optionsthumb1="300x200"
     image2="image:cargador-4.jpg" optionsthumb2="300x200" >}}
 
-{{< amazon
-    linkids="0bfa2d5bd06eb2605fb1139281987bf5,5c3dcd6a3b17aca40628ad288a0947ed,0ffb4d325c98b4193eeee9efc053355a"
-    asins="B01NGYNI1T,B01NBNILL7,B01NCP0MXC" >}}
-
 Otros modelos de cargador en los que me fijé son los siguientes pero el que elegí en su rango de precios considero que es de lo mejor que hay disponible:
 
 {{< amazon
-    linkids="a49721d23c6f391be7fa88bd2a268c3a,9edbbd320011598567b8f2ee39ef5770,83325d3495624728f2271932495963e6"
-    asins="B00PY5RYXW,B01KUKZMVQ,B01NBV8V93" >}}
+    linkids="0ffb4d325c98b4193eeee9efc053355a,f0a5a7649c2c427ca48918de8e94be1f,f7b8d434b0f52cc88ad84f89028c4764"
+    asins="B01NCP0MXC,B008GZ4BII,B07C2QTTJZ" >}}
 
 ### Relog analógico
 
@@ -63,8 +59,8 @@ Por ello, finalmente me decidí por el siguiente modelo de [reloj de manecillas 
 Otros modelos de relojes digitales de pared y mesa que ví son los siguientes, casi todos tienen como función adicional indicar la temperatura interior y la fecha.
 
 {{< amazon
-    linkids="bd6a22abb84218e18458f0f33b5c6354,e06285646693f16ed8dca012e2afb91b,ab0420b22a221629ea512e5d00dca56f,e4c59a48332124cead194f867605cde6"
-    asins="B00J8Q59R6,B019Q6ZPNA,B00I023BB0,B00D2PIA7U" >}}
+    linkids="bd6a22abb84218e18458f0f33b5c6354,fc9f4b5c9696b82aa015faf870993e91,ab0420b22a221629ea512e5d00dca56f,e4c59a48332124cead194f867605cde6"
+    asins="B00J8Q59R6,B00D8ZMNH2,B00I023BB0,B00D2PIA7U" >}}
 
 ### Pilas recargables AA
 

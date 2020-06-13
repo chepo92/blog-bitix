@@ -341,7 +341,7 @@ En cualquier caso no entraba dentro de mis planes un Mac mini ni aunque tuviese 
 
 ### Slimbook One
 
-También hubiese podido optar por un [Slimbook One](https://slimbook.es/en/power-minipc-one) per no me convenció porque solo tienen un _slot_ de memoria, admite hasta 32GB pero aún no hay módulos de esa cantidad si no es en _kit_, lo que en la práctica limita su memoria a 16GB. La tarjeta gráfica que tienen es una UHD 630 como comentaba la mitad de potente en teoría que la Iris Graphics 655. El diseño que tiene no es muy atractivo y no tiene tarjeta microSD como una forma de ampliarle el almacenamiento. El ONE sin descuento parte de 480€ más caro que los 400€ del Intel NUC.
+También hubiese podido optar por un [Slimbook One](https://slimbook.es/one) per no me convenció porque solo tienen un _slot_ de memoria, admite hasta 32GB pero aún no hay módulos de esa cantidad si no es en _kit_, lo que en la práctica limita su memoria a 16GB. La tarjeta gráfica que tienen es una UHD 630 como comentaba la mitad de potente en teoría que la Iris Graphics 655. El diseño que tiene no es muy atractivo y no tiene tarjeta microSD como una forma de ampliarle el almacenamiento. El ONE sin descuento parte de 480€ más caro que los 400€ del Intel NUC.
 
 {{< image
     gallery="true"
@@ -350,13 +350,13 @@ También hubiese podido optar por un [Slimbook One](https://slimbook.es/en/power
     image3="image:slimbook-one-3.jpg" optionsthumb3="200x150" title3="Slimbook ONE (v2)"
     caption="Slimbook ONE (v2)" >}}
 
-### Switch HDMI, monitor con el ordenador y consola
+### Switch HDMI y cables, monitor con el ordenador y consola
 
 Si el monitor es compartido tanto por el ordenador como por [una consola como la PlayStation 4 como muestro en su desempaquetado][blogbitix-432] es necesario un adaptador o [_switch_ HDMI de múltiples entradas](https://amzn.to/2S7G0g5) y una salida para usar ambos sin necesidad de conectar y desconectar cables, no son caros y ofrecen mucha comodidad, con un botón se alterna entre la entrada del ordenador y la consola, además detecta la entrada pdesey se cambia automáticamente.
 
 {{< amazon
-    linkids="3a5a1b554cb717c2763220c81be8b6fa"
-    asins="B07KSYS2L4" >}}
+    linkids="3a5a1b554cb717c2763220c81be8b6fa,3954e70941543ecb9ada5c76d26024e9,f5c9c155adf728e8d3217ab7e723d14c,87c2e46fa9d13984b35d29ce7d5761ae"
+    asins="B07KSYS2L4,B00NO73MUQ,B07RY2X9LF,B01J8S6X2I" >}}
 
 Otro accesorio de utilidad es un [teclado pequeño con soporte dual para bluetooth y comunicación inalámbrica 2.4 Ghz](https://amzn.to/36SUMMN) que es compatible tanto con el ordenador como una _smart tv_, teléfono Android o una PlayStation 4. En mi caso un uso sería tener el teclado pequeño con soporte de ratón para ver películas desde la cama y poder controlar el PC a distancia, incluye teclas multimedia y una rueda específica para hacer desplazamiento vertical muy cómoda al visualizar páginas web, además es retroiluminado perfecto para utilizarlo a oscuras si se está viendo una película. Funciona con una batería recargable.
 
