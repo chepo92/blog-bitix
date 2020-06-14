@@ -4,7 +4,7 @@ type: "post"
 title: "Comando para convertir una imagen SVG a PNG y JPG con diferentes tamaños, formatos y color de fondo con Inkskape"
 url: "/2020/07/comando-para-convertir-una-imagen-svg-a-png-y-jpg-con-diferentes-tamanos-formatos-y-color-de-fondo-con-inkskape/"
 date: 2020-06-14T09:00:00+02:00
-updated: 2020-06-14T10:30:00+02:00
+updated: 2020-06-14T10:40:00+02:00
 language: "es"
 rss: true
 sharing: true
@@ -33,7 +33,7 @@ Los navegadores y dispositivos móviles ya soportan como formato de imagen el SV
 
 Aún con los beneficios que posee el formato SVG algunas aplicaciones no soportan el formato SVG y en este caso es necesario hacer una conversión de SVG a los formatos binarios _rasterizados_ PNG o JPG. El formato SVG permite obtener estas imágenes PNG y JPG en diferentes tamaños sin pérdida de calidad.
 
-[Inkscape][inkscape] es un editor de imágenes vectoriales con una utilidad de línea de comandos que permite convertir y exportar imágenes en formato SVG a PNG y JPG en el tamaño y con el color de fondo deseado. El siguiente comando convierte todos los archivos SVG a PNG de una carpeta, posteriormente hay que [convertir las imágenes en formato PNG a JPG][blogbitix-447]. En el comando se indican varios parámetros como la anchura deseada de la imagen, el color de fondo, los identificativos de las capas a exportar, el formato de salida y el nombre del archivo creado.
+[Inkscape][inkscape] es un editor de imágenes vectoriales con una utilidad de línea de comandos que permite convertir y exportar imágenes en formato SVG a PNG y JPG en el tamaño y con el color de fondo deseado. El siguiente comando convierte todos los archivos SVG a PNG de una carpeta. En el comando se indican varios parámetros como la anchura deseada de la imagen, el color de fondo, los identificativos de las capas a exportar, el formato de salida y el nombre del archivo creado. Posteriormente con un segundo comando hay que [convertir las imágenes de formato PNG a JPG][blogbitix-447], dependiendo del tipo de imagen, los colores y degradados de la imagen el tamaño en formato PNG será mayor o menor que en formato JPG.
 
 {{< code file="inkscape-convert-svg-png.sh" language="bash" options="" >}}
 
