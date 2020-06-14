@@ -1,0 +1,9 @@
+BASENAME="apache-tapestry"
+ARTWORK_FILE="$BASENAME-artwork.svg"
+
+$ (cp "$ARTWORK_FILE" "$BASENAME-icon-light.svg" && inkscape "$BASENAME-icon-light.svg" --verb LayerHideAll --verb DialogLayers --verb LayerToggleHide --verb FitCanvasToDrawing --verb FileSave --verb FileQuit)
+$ (cp "$ARTWORK_FILE" "$BASENAME-icon-dark.svg" && inkscape "$BASENAME-icon-dark.svg" --verb LayerHideAll --verb DialogLayers --verb LayerPrev --verb LayerToggleHide --verb FitCanvasToDrawing --verb FileSave --verb FileQuit)
+$ (cp "$ARTWORK_FILE" "$BASENAME-text-light.svg" && inkscape "$BASENAME-text-light.svg" --verb LayerHideAll --verb DialogLayers --verb LayerPrev --verb LayerPrev --verb LayerToggleHide --verb EditDeselect --verb FitCanvasToDrawing --verb FileSave --verb FileQuit)
+$ (cp "$ARTWORK_FILE" "$BASENAME-text-dark.svg" && inkscape "$BASENAME-text-dark.svg" --verb LayerHideAll --verb DialogLayers --verb LayerPrev --verb LayerPrev --verb LayerPrev --verb LayerToggleHide --verb FitCanvasToDrawing --verb FileSave --verb FileQuit)
+$ (cp "$ARTWORK_FILE" "$BASENAME-icontext-light.svg" && inkscape "$BASENAME-icontext-light.svg" --verb LayerHideAll --verb DialogLayers --verb LayerPrev --verb LayerPrev --verb LayerPrev --verb LayerPrev --verb LayerToggleHide --verb FitCanvasToDrawing --verb FileSave --verb FileQuit)
+$ (cp "$ARTWORK_FILE" "$BASENAME-icontext-dark.svg" && inkscape "$BASENAME-icontext-dark.svg" --verb LayerHideAll --verb DialogLayers --verb LayerPrev --verb LayerPrev --verb LayerPrev --verb LayerPrev --verb LayerPrev --verb LayerToggleHide --verb FitCanvasToDrawing --verb FileSave --verb FileQuit)
