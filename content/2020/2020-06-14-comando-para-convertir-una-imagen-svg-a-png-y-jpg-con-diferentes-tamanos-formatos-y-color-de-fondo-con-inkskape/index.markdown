@@ -16,7 +16,7 @@ summary: "El formato de imagen SVG tiene la ventaja de permitir el escalado de l
 
 {{% post %}}
 
-{{< logotype image1="gnu.svg" >}}
+{{< logotype image1="inkscape.svg" image2="gnu.svg" >}}
 
 El formato de imagen SVG es un formato de imagen vectorial donde las líneas, formas, posición y colores se describen en formato texto, tiene la ventaja de ser un formato escalable que no pierde resolución independiente del tamaño de imagen en la que se represente, es decir, la imagen tiene la misma calidad al tamaño _full hd_ 1920x1080 que a 4K 3840x2560 que en 800x600 píxeles.
 
