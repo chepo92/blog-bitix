@@ -48,7 +48,7 @@ Las mismas imágenes comprimidas con WebP ocupan 826 KiB, un 18% menos, para la 
 
 {{< reference >}}
 * [Convertir imágenes entre formatos y cambiar tamaño con ImageMagick][elblogdepicodev-129]
-* [Comando para convertir una iamge SVG a PNG y JPG con diferentes tamaños, formatos y color de fondo con Inkskape][blogbitix-492]
+* [Comando para convertir una iamge SVG a PNG y JPG con diferentes tamaños y color de fondo con Inkskape][blogbitix-492]
 {{< /reference >}}
 
 {{% /post %}}
