@@ -4,7 +4,7 @@ type: "post"
 title: "Comando para convertir una imagen SVG a PNG y JPG con diferentes tamaños, formatos y color de fondo con Inkskape"
 url: "/2020/07/comando-para-convertir-una-imagen-svg-a-png-y-jpg-con-diferentes-tamanos-formatos-y-color-de-fondo-con-inkskape/"
 date: 2020-06-14T09:00:00+02:00
-updated: 2020-06-14T10:40:00+02:00
+updated: 2020-06-14T10:45:00+02:00
 language: "es"
 rss: true
 sharing: true
