@@ -1,0 +1,587 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta name="base" href="/blog-bitix/">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="picodotdev">
+  <meta name="keywords" content="java, programacion, software, hardware, tapestry, software libre, gnu, linux, gnu/linux, unix, arch, arch linux, web, html, css, javascript, tutorial, guía, básico, avanzado, análisis, tecnología, juegos, productos">
+  <meta name="description" content="Las bases de datos tiene la capacidad de generar identificativos para los datos que se insertan. En el caso de las bases de datos relacionales con secuencias que generan en el momento de inserción la clave primaria de la fila en una tabla, normalmente es un número y utilizando Java con JPA con las anotaciones Id, GeneratedValue y SequenceGenerator en la clase Java que representa a la entidad. Para Domain Driven Design delegar en el momento de inserción la generación del identificativo de la entidad es un problema ya que hace que la entidad sea inválida al no tener identidad hasta persistirla y la base de datos es un elemento externo que debe ser independizado del dominio de la aplicación. En este artículo comento una implementación siguiendo los principios de DDD para dar solución a estos dos problemas. &hellip;">
+
+  <title>Generar en el dominio los identificativos de las entidades aplicando DDD antes de persistirlas en la base de datos</title>
+
+  <link rel="shortcut icon" href="/blog-bitix/assets/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/blog-bitix/assets/apple-touch-icon-144-precomposed.png">
+  <link rel="canonical" type="text/html" href="https://picodotdev.github.io/blog-bitix/2020/06/generar-en-el-dominio-los-identificativos-de-las-entidades-aplicando-ddd-antes-de-persistirlas-en-la-base-de-datos/">
+  <link rel="alternate" type="application/rss&#43;xml" href="https://picodotdev.github.io/blog-bitix/index.xml" title="Blog Bitix">
+  <link rel="amphtml" type="text/html" href="https://picodotdev.github.io/blog-bitix/2020/06/generar-en-el-dominio-los-identificativos-de-las-entidades-aplicando-ddd-antes-de-persistirlas-en-la-base-de-datos/index-amp.html" title="Generar en el dominio los identificativos de las entidades aplicando DDD antes de persistirlas en la base de datos">
+  
+  <link rel="humans" type="text/plain" href="/blog-bitix/humans.txt">
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i&display=swap" rel="stylesheet"> 
+
+  
+
+  <!-- Social -->
+<meta property="og:title" content="Generar en el dominio los identificativos de las entidades aplicando DDD antes de persistirlas en la base de datos">
+<meta property="og:url" content="https://picodotdev.github.io/blog-bitix/2020/06/generar-en-el-dominio-los-identificativos-de-las-entidades-aplicando-ddd-antes-de-persistirlas-en-la-base-de-datos/">
+<meta property="og:image" content="https://picodotdev.github.io/blog-bitix/2020/06/generar-en-el-dominio-los-identificativos-de-las-entidades-aplicando-ddd-antes-de-persistirlas-en-la-base-de-datos/images/entities-id_hu114300abf2292e7288699ebad8ad1975_98747_750x750_fit_box_2.png">
+
+<meta property="og:site_name" content="Blog Bitix">
+<meta property="og:description" content="Las bases de datos tiene la capacidad de generar identificativos para los datos que se insertan. En el caso de las bases de datos relacionales con secuencias que generan en el momento de inserción la clave primaria de la fila en una tabla, normalmente es un número y utilizando Java con JPA con las anotaciones Id, GeneratedValue y SequenceGenerator en la clase Java que representa a la entidad. Para Domain Driven Design delegar en el momento de inserción la generación del identificativo de la entidad es un problema ya que hace que la entidad sea inválida al no tener identidad hasta persistirla y la base de datos es un elemento externo que debe ser independizado del dominio de la aplicación. En este artículo comento una implementación siguiendo los principios de DDD para dar solución a estos dos problemas. &hellip;">
+<meta property="og:type" content="article">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta property="twitter:image" content="https://picodotdev.github.io/blog-bitix/2020/06/generar-en-el-dominio-los-identificativos-de-las-entidades-aplicando-ddd-antes-de-persistirlas-en-la-base-de-datos/images/entities-id_hu114300abf2292e7288699ebad8ad1975_98747_750x750_fit_box_2.png">
+
+<meta name="twitter:site" content="@picodotdev">
+<meta name="twitter:title" content="Generar en el dominio los identificativos de las entidades aplicando DDD antes de persistirlas en la base de datos">
+<meta name="twitter:description" content="Las bases de datos tiene la capacidad de generar identificativos para los datos que se insertan. En el caso de las bases de datos relacionales con secuencias que generan en el momento de inserción la clave primaria de la fila en una tabla, normalmente es un número y utilizando Java con JPA con las anotaciones Id, GeneratedValue y SequenceGenerator en la clase Java que representa a la entidad. Para Domain Driven Design delegar en el momento de inserción la generación del identificativo de la entidad es un problema ya que hace que la entidad sea inválida al no tener identidad hasta persistirla y la base de datos es un elemento externo que debe ser independizado del dominio de la aplicación. En este artículo comento una implementación siguiendo los principios de DDD para dar solución a estos dos problemas. &hellip;">
+<meta name="twitter:creator" content="@picodotdev">
+
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://picodotdev.github.io/blog-bitix/2020/06/generar-en-el-dominio-los-identificativos-de-las-entidades-aplicando-ddd-antes-de-persistirlas-en-la-base-de-datos/"
+    },
+    "headline": "Generar en el dominio los identificativos de las entidades aplicando DDD antes de persistirlas en la base de datos",
+    "image": {
+        "@type": "ImageObject",
+          "url": "https://picodotdev.github.io/blog-bitix/2020/06/generar-en-el-dominio-los-identificativos-de-las-entidades-aplicando-ddd-antes-de-persistirlas-en-la-base-de-datos/images/entities-id_hu114300abf2292e7288699ebad8ad1975_98747_750x750_fit_box_2.png"
+        
+      },
+    "datePublished": "2020-06-19T17:00:00+02:00",
+    "dateModified": "2020-06-19T17:00:00+02:00",
+    "inLanguage": "es",
+    
+    "wordCount": "1176",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "author": {
+        "@type": "Person",
+        "name": "picodotdev",
+        "description": "Ingeniero de software. I ♥ Java, GNU/Linux and libre software.",
+        "url": "https://twitter.com/picodotdev/"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Blog Bitix",
+        "logo": {
+        "@type": "ImageObject",
+        "url": "https://picodotdev.github.io/blog-bitix/assets/images/structured-data/blogbitix-750.png"
+        }
+    },
+    "description": "Las bases de datos tiene la capacidad de generar identificativos para los datos que se insertan. En el caso de las bases de datos relacionales con secuencias que generan en el momento de inserción la clave primaria de la fila en una tabla, normalmente es un número y utilizando Java con JPA con las anotaciones <em>Id</em>, <em>GeneratedValue</em> y <em>SequenceGenerator</em> en la clase Java que representa a la entidad. Para Domain Driven Design delegar en el momento de inserción la generación del identificativo de la entidad es un problema ya que hace que la entidad sea inválida al no tener identidad hasta persistirla y la base de datos es un elemento externo que debe ser independizado del dominio de la aplicación. En este artículo comento una implementación siguiendo los principios de DDD para dar solución a estos dos problemas."
+}
+  </script>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Blog Bitix",
+    "description": "Blog sobre al lenguaje de programación Java y la distribución GNU/Linux que uso habitualmente, Arch Linux, lo que aprendo sobre el software libre, la programación web y a otros temas relacionados con la tecnología y la informática. El contenido puede contener trazas de asuntos fuera de tema.",
+    "url": "https://picodotdev.github.io/blog-bitix/",
+    "logo": {
+        "@type": "ImageObject",
+        "url": "https://picodotdev.github.io/blog-bitix/assets/images/structured-data/blogbitix-750.png"
+    }
+}
+  </script>
+
+  <!-- css -->
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/libs/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/libs/Gallery-2.38.0/css/blueimp-gallery.min.css">
+  <!-- theme -->
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/syntax.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/blog-bitix/assets/css/main-cookieconsent.css">
+
+  <!-- javascript -->
+  <script type="text/javascript" src="/blog-bitix/assets/js/require-config.js" defer></script>
+  <script type="text/javascript" src="/blog-bitix/assets/libs/require.js" data-main="/blog-bitix/assets/js/main" defer></script>
+
+  <script type="text/javascript">
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-12874075-4', 'picodotdev.github.io');
+    ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+  <script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" defer></script>
+<script type="text/javascript" defer>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: 'ca-pub-3533636310991304',
+    enable_page_level_ads: true
+  });
+</script>
+
+  
+  <script type="text/javascript" src="/blog-bitix/assets/js/app.js" defer></script>
+</head>
+<body>  
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        
+
+
+
+
+
+<header>
+  <div class="row">
+    <div class="col-12 col-lg-4"></div>
+    <div class="col-12 col-lg-4">
+      <h2 class="title"><a href="https://picodotdev.github.io/blog-bitix/">Blog Bitix</a></h2>
+      <div class="links">
+        
+          <a href="https://picodotdev.github.io/blog-bitix/index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+        
+        
+          <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
+        
+        
+          <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="/blog-bitix/assets/images/github.svg" width="50" height="50" class="icon"></a>
+        
+        
+        
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 text-center">
+      <form name="query" class="form-inline search" onsubmit="return false;">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Buscar en Blog Bitix">
+        </div>
+      </form>
+      <form name="search" action="https://duckduckgo.com/" method="get" class="hidden" data-site="https://picodotdev.github.io/blog-bitix/">
+        <input type="hidden" name="q" value="">
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      
+<nav class="nav nav-pills nav-fill">
+  <a href="/blog-bitix/tags/java/" class="nav-item nav-link">Java</a>
+  <a href="/blog-bitix/tags/gnu-linux/" class="nav-item nav-link">GNU/Linux</a>
+  <a href="/blog-bitix/tags/javascript/" class="nav-item nav-link">JavaScript</a>
+  <a href="/blog-bitix/tags/tapestry/" class="nav-item nav-link">Tapestry</a>
+  <a href="/blog-bitix/archive/" class="nav-item nav-link">Archivo y hemeroteca</a>
+  <a href="/blog-bitix/pages/links/" class="nav-item nav-link">Enlaces</a>
+  <a href="/blog-bitix/pages/about/" class="nav-item nav-link">Acerca de...</a>
+  
+</nav>
+
+    </div>
+  </div>
+</header> 
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 adblock-container-billboard">
+        <div class="adsense adsense-billboard">
+    <ins class="adsbygoogle"
+        data-ad-client="ca-pub-3533636310991304"
+        data-ad-slot="4052324337"
+        data-full-width-responsive="true"></ins>
+</div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-12">
+        <div class="adblock-sidebar-container">
+          <div class="adblock-sidebar-container-left"></div>
+          <div class="adblock-sidebar-container-right">
+            <div class="adsense adsense-vertical">
+    <ins class="adsbygoogle"
+        data-ad-client="ca-pub-3533636310991304"
+        data-ad-slot="7450235768"
+        data-full-width-responsive="true"></ins>
+</div>
+          </div>
+        </div>
+        
+<article>
+    <h1>Generar en el dominio los identificativos de las entidades aplicando DDD antes de persistirlas en la base de datos</h1>
+    <p class="information">
+      
+        Escrito por
+       
+      <span>picodotdev</span> el <time>19/06/2020</time>.
+      
+        <br>
+        
+          <a href="/blog-bitix/tags/java/">java</a>
+        
+          <a href="/blog-bitix/tags/planeta-codigo/">planeta-codigo</a>
+        
+      
+      <br>
+      <a href="/blog-bitix/2020/06/generar-en-el-dominio-los-identificativos-de-las-entidades-aplicando-ddd-antes-de-persistirlas-en-la-base-de-datos/">Enlace permanente</a>
+      
+        <a href="/blog-bitix/2020/06/generar-en-el-dominio-los-identificativos-de-las-entidades-aplicando-ddd-antes-de-persistirlas-en-la-base-de-datos/#comments">Comentarios</a>
+      
+      
+    </p>
+
+    
+      <p class="summary">Las bases de datos tiene la capacidad de generar identificativos para los datos que se insertan. En el caso de las bases de datos relacionales con secuencias que generan en el momento de inserción la clave primaria de la fila en una tabla, normalmente es un número y utilizando Java con JPA con las anotaciones <em>Id</em>, <em>GeneratedValue</em> y <em>SequenceGenerator</em> en la clase Java que representa a la entidad. Para Domain Driven Design delegar en el momento de inserción la generación del identificativo de la entidad es un problema ya que hace que la entidad sea inválida al no tener identidad hasta persistirla y la base de datos es un elemento externo que debe ser independizado del dominio de la aplicación. En este artículo comento una implementación siguiendo los principios de DDD para dar solución a estos dos problemas.</p>
+    
+    
+
+    
+      <div class="adblock-container-leaderboard">
+      <div class="adsense adsense-leaderboard">
+    <ins class="adsbygoogle"
+        data-ad-client="ca-pub-3533636310991304"
+        data-ad-slot="8238629013"
+        data-full-width-responsive="true"></ins>
+</div>
+      </div>
+    
+
+    <div class="content">
+      
+
+
+      <div class="logotypes">
+<p><img src="/blog-bitix/assets/images/logotypes/java.svg" width="200" height="366" alt="Java" title="Java"  class=""></p>
+</div>
+<p>Tradicionalmente la tarea de generar los identificativos de las entidades de dominio se delega en la base de datos en el momento de persistir la entidad. La base de datos en la columna de la tabla de la entidad para el identificativo generalmente es de tipo numérico y la base de datos le asigna un valor incremental para cada fila o entidad guardada.</p>
+<p>Este modelo de delegar en la base de datos el generar la identificativos de las entidades tiene dos problemas en la teoría de <a href="https://en.wikipedia.org/wiki/Domain-driven_design">Domain Driven Design</a> o <em>DDD</em>:</p>
+<ul>
+<li>La aplicación requiere y es dependiente de un sistema externo para asignar la identidad de una entidad del dominio creada en la aplicación.</li>
+<li>La entidad no tiene identidad inicialmente, lo que significa que la entidad es creada con un estado inválido por ser incompleto.</li>
+</ul>
+<p>Que la entidad no tenga identidad asignado y esté incompleta en el momento de creación tiene inconvenientes ya que al <a href="https://picodotdev.github.io/blog-bitix/2016/12/como-implementar-correctamente-y-por-que-los-metodos-equals-y-hashcode-de-los-objetos-java/">implementar los métodos <em>equals</em> y <em>hashCode</em> en Java</a> para una entidad estos se basa en el identificativo de la entidad para determinar si dos instancias de un objeto es la misma, si la entidad no tiene identidad el método <em>equals</em> es ineficaz. Al mismo tiempo el método <em>hashCode</em>, y también el método <em>equals</em>, es utilizado por la API de colecciones de Java en su mayoría con lo que la entidad no es posible guardarla en colecciones que dependan de estos métodos para su correcto funcionamiento. Para usar los métodos <em>equals</em> y <em>hashCode</em> de las entidades es necesario esperar a guardar la entidad en la base de datos para que se le asigne el identificativo.</p>
+<p>También en DDD se suelen utilizar eventos como mecanismo de comunicar que en el sistema se ha sucedido algo, si la entidad no tiene identificativo no es posible comunicar que ha ocurrido algo, al menos no incluyendo el identificativo.</p>
+<h3 id="identificativos-universales-como-identificadores">Identificativos universales como identificadores</h3>
+<p>Una posibilidad es generar identificativos universales para los identificativos de las entidades, sin embargo, la clase <a href="#ZgotmplZ">UUID</a> depende de elementos externos al dominio como el tiempo del sistema. Al mismo tiempo la entidad no es consciente de la existencia de otras entidades y no le es posible determinar la unicidad del identificativo.</p>
+<p>En DDD todo elemento que dependa de algo externo ha de se independizado del dominio. De modo que el UUID aplicando DDD no se genera en la entidad sino en la capa de servicio mediante un elemento externo que en la terminología de DDD es un adaptador, el identificativo se le proporciona a la entidad en el momento de creación en el constructor como parámetro.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">UUID</span><span class="o">.</span><span class="na">randomUUID</span><span class="o">().</span><span class="na">toString</span><span class="o">());</span>&#10;<span class="o">...</span>&#10;<span class="n">95ba87c1</span><span class="o">-</span><span class="n">f0ac</span><span class="o">-</span><span class="n">4c55</span><span class="o">-</span><span class="n">9efa</span><span class="o">-</span><span class="n">257dbe291a7d</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>UuidGenerator.java</span>
+    </div>
+</div>
+<h3 id="delegar-la-generación-de-identificativos-en-el-repositorio">Delegar la generación de identificativos en el repositorio</h3>
+<p>Dado que en DDD se utiliza un repositorio para persistir las entidades en una base de datos externa a la lógica de dominio, la tarea de generar los identificadores que depende de un elemento externo es posible ubicarla en la misma clase repositorio, de esta manera la lógica queda con cohesión ya que todo lo relativo a la entidad está ubicada en su repositorio.</p>
+<p>Al mismo tiempo delegar la tarea de crear el identificativo en el repositorio permite variar la implementación, una opción es delegar en la base de datos la obtención del identificativo o utilizar el método de identificativo universal anterior. En el caso de delegar en la base de datos la generación del identificativo, es la base de datos la que lo genera igual que en el caso de la autogeneración pero ahora no de manera implícita sino de forma explícita.</p>
+<h3 id="ejemplo-utilizando-jpa-y-spring-data">Ejemplo utilizando JPA y Spring Data</h3>
+<p>Utilizando <a href="https://spring.io/projects/spring-data">Spring Data</a> con JPA para añadir métodos personalizados en la clase del repositorio hay que crear una interfaz que los incluya y construir una implementación de esa interfaz. La misma interfaz es implementada por la interfaz de Spring Data, y Spring haciendo su magia y por composición crea un repositorio que tiene tanto los métodos implementados por Spring como la implementación de los métodos personalizados, en este caso el de generar el identificativo.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix.entitiesid.domain.product</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">org.springframework.data.jpa.repository.JpaSpecificationExecutor</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">org.springframework.data.jpa.repository.Modifying</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">org.springframework.data.jpa.repository.Query</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">org.springframework.data.repository.PagingAndSortingRepository</span><span class="o">;</span>&#10;&#10;<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">ProductRepository</span> <span class="kd">extends</span> <span class="n">PagingAndSortingRepository</span><span class="o">&lt;</span><span class="n">Product</span><span class="o">,</span> <span class="n">ProductId</span><span class="o">&gt;,</span> <span class="n">JpaSpecificationExecutor</span><span class="o">&lt;</span><span class="n">Product</span><span class="o">&gt;,</span> <span class="n">CustomProductRepository</span> <span class="o">{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@Override</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@Modifying</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@Query</span><span class="o">(</span><span class="s">&#34;delete from Product&#34;</span><span class="o">)</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kt">void</span> <span class="nf">deleteAll</span><span class="o">();</span>&#10;<span class="o">}</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>ProductRepository.java</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span><span class="lnt">4&#10;</span><span class="lnt">5&#10;</span><span class="lnt">6&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix.entitiesid.domain.product</span><span class="o">;</span>&#10;&#10;<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">CustomProductRepository</span> <span class="o">{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">ProductId</span> <span class="nf">generateId</span><span class="o">();</span>&#10;<span class="o">}</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>CustomProductRepository.java</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix.entitiesid.domain.product</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">org.springframework.beans.factory.annotation.Autowired</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">java.math.BigInteger</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">javax.persistence.EntityManager</span><span class="o">;</span>&#10;&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CustomProductRepositoryImpl</span> <span class="kd">implements</span> <span class="n">CustomProductRepository</span> <span class="o">{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@Autowired</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">EntityManager</span> <span class="n">entityManager</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@Override</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="n">ProductId</span> <span class="nf">generateId</span><span class="o">()</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">BigInteger</span> <span class="n">id</span> <span class="o">=</span> <span class="o">(</span><span class="n">BigInteger</span><span class="o">)</span> <span class="n">entityManager</span><span class="o">.</span><span class="na">createNativeQuery</span><span class="o">(</span><span class="s">&#34;select nextval(&#39;product_id_seq&#39;)&#34;</span><span class="o">).</span><span class="na">getSingleResult</span><span class="o">();</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">ProductId</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;<span class="o">}</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>CustomProductRepositoryImpl.java</span>
+    </div>
+</div>
+<p>En la clase de la entidad no se usa la anotación <a href="https://javaee.github.io/javaee-spec/javadocs/javax/persistence/GeneratedValue.html">GeneratedValue</a>. En vez de esa anotación en este ejemplo se utiliza la anotación <a href="https://javaee.github.io/javaee-spec/javadocs/javax/persistence/Embeddable.html">EmbeddedId</a> y la anotación <a href="https://javaee.github.io/javaee-spec/javadocs/javax/persistence/Embeddable.html">Embeddable</a>, aplicando otro de los principios de DDD que es <a href="https://picodotdev.github.io/blog-bitix/2019/10/ventajas-de-usar-un-tipo-especifico-para-los-identificadores-de-las-entidades-en-vez-de-un-tipo-basico/">utilizar un tipo especico que representa el identificativo de la entidad</a> en vez de un tipo proporcionado por el lenguaje como un <em>Long</em> o <em>BigInteger</em>. Un tipo específico para la identidad tiene varias ventajas como aprovechar los beneficios del compilador para detectar errores y de los IDE con asistencia de código.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span><span class="lnt">22&#10;</span><span class="lnt">23&#10;</span><span class="lnt">24&#10;</span><span class="lnt">25&#10;</span><span class="lnt">26&#10;</span><span class="lnt">27&#10;</span><span class="lnt">28&#10;</span><span class="lnt">29&#10;</span><span class="lnt">30&#10;</span><span class="lnt">31&#10;</span><span class="lnt">32&#10;</span><span class="lnt">33&#10;</span><span class="lnt">34&#10;</span><span class="lnt">35&#10;</span><span class="lnt">36&#10;</span><span class="lnt">37&#10;</span><span class="lnt">38&#10;</span><span class="lnt">39&#10;</span><span class="lnt">40&#10;</span><span class="lnt">41&#10;</span><span class="lnt">42&#10;</span><span class="lnt">43&#10;</span><span class="lnt">44&#10;</span><span class="lnt">45&#10;</span><span class="lnt">46&#10;</span><span class="lnt">47&#10;</span><span class="lnt">48&#10;</span><span class="lnt">49&#10;</span><span class="lnt">50&#10;</span><span class="lnt">51&#10;</span><span class="lnt">52&#10;</span><span class="lnt">53&#10;</span><span class="lnt">54&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix.entitiesid.domain.product</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">java.math.BigDecimal</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">java.time.LocalDate</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">java.util.Objects</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">javax.persistence.EmbeddedId</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">javax.persistence.Entity</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">javax.persistence.Id</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">javax.persistence.Table</span><span class="o">;</span>&#10;&#10;<span class="nd">@Entity</span>&#10;<span class="nd">@Table</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;Product&#34;</span><span class="o">)</span>&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Product</span> <span class="o">{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@Id</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@EmbeddedId</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">ProductId</span> <span class="n">id</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">LocalDate</span> <span class="n">date</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">BigDecimal</span> <span class="n">price</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">Integer</span> <span class="n">units</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="nf">Product</span><span class="o">()</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="nf">Product</span><span class="o">(</span><span class="n">ProductId</span> <span class="n">id</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">LocalDate</span> <span class="n">date</span><span class="o">,</span> <span class="n">BigDecimal</span> <span class="n">price</span><span class="o">,</span> <span class="n">Integer</span> <span class="n">units</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">this</span><span class="o">.</span><span class="na">date</span> <span class="o">=</span> <span class="n">date</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">this</span><span class="o">.</span><span class="na">price</span> <span class="o">=</span> <span class="n">price</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">this</span><span class="o">.</span><span class="na">units</span> <span class="o">=</span> <span class="n">units</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">...</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@Override</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">()</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">Objects</span><span class="o">.</span><span class="na">hash</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@Override</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="n">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">if</span> <span class="o">(</span><span class="k">this</span> <span class="o">==</span> <span class="n">o</span><span class="o">)</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="kc">true</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">if</span> <span class="o">(</span><span class="n">o</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">if</span> <span class="o">(!(</span><span class="n">o</span> <span class="k">instanceof</span> <span class="n">Product</span><span class="o">))</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Product</span> <span class="n">that</span> <span class="o">=</span> <span class="o">(</span><span class="n">Product</span><span class="o">)</span> <span class="n">o</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">Objects</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">id</span><span class="o">,</span> <span class="n">that</span><span class="o">.</span><span class="na">id</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;<span class="o">}</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>Product.java</span>
+    </div>
+</div>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span><span class="lnt">22&#10;</span><span class="lnt">23&#10;</span><span class="lnt">24&#10;</span><span class="lnt">25&#10;</span><span class="lnt">26&#10;</span><span class="lnt">27&#10;</span><span class="lnt">28&#10;</span><span class="lnt">29&#10;</span><span class="lnt">30&#10;</span><span class="lnt">31&#10;</span><span class="lnt">32&#10;</span><span class="lnt">33&#10;</span><span class="lnt">34&#10;</span><span class="lnt">35&#10;</span><span class="lnt">36&#10;</span><span class="lnt">37&#10;</span><span class="lnt">38&#10;</span><span class="lnt">39&#10;</span><span class="lnt">40&#10;</span><span class="lnt">41&#10;</span><span class="lnt">42&#10;</span><span class="lnt">43&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix.entitiesid.domain.product</span><span class="o">;</span>&#10;&#10;<span class="kn">import</span> <span class="nn">java.io.Serializable</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">java.math.BigInteger</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">java.util.Objects</span><span class="o">;</span>&#10;<span class="kn">import</span> <span class="nn">javax.persistence.Embeddable</span><span class="o">;</span>&#10;&#10;<span class="nd">@Embeddable</span>&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ProductId</span> <span class="kd">implements</span> <span class="n">Serializable</span>  <span class="o">{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">BigInteger</span> <span class="n">id</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">protected</span> <span class="nf">ProductId</span><span class="o">()</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">protected</span> <span class="nf">ProductId</span><span class="o">(</span><span class="n">BigInteger</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">...</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="kd">static</span> <span class="n">ProductId</span> <span class="nf">valueOf</span><span class="o">(</span><span class="n">BigInteger</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="k">new</span> <span class="n">ProductId</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@Override</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">()</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">Objects</span><span class="o">.</span><span class="na">hash</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@Override</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="n">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">if</span> <span class="o">(</span><span class="k">this</span> <span class="o">==</span> <span class="n">o</span><span class="o">)</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="kc">true</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">if</span> <span class="o">(</span><span class="n">o</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">if</span> <span class="o">(!(</span><span class="n">o</span> <span class="k">instanceof</span> <span class="n">ProductId</span><span class="o">))</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">ProductId</span> <span class="n">that</span> <span class="o">=</span> <span class="o">(</span><span class="n">ProductId</span><span class="o">)</span> <span class="n">o</span><span class="o">;</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">return</span> <span class="n">Objects</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">id</span><span class="o">,</span> <span class="n">that</span><span class="o">.</span><span class="na">id</span><span class="o">);</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;<span class="o">}</span>&#10;</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>ProductId.java</span>
+    </div>
+</div>
+<p>De esta forma ahora las entidades creadas son completamente válidas desde el momento de generación en el dominio ya que tienen su identificador. Dado que la entidad tiene su propio identificativo desde el inicio de su existencia es posible guardar la entidad en colecciones y lanzar eventos de dominio que incluyan su identificador sin tener que esperar que la base de datos le autogenere uno.</p>
+<p>En este caso de prueba se observa que la entidad <em>Product</em> creada se crea en el constructor con su identificativo asignado sin esperar a que la base de datos lo genere, la base de datos y JPA simplemente persisten el valor que tiene asignado.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt"> 1&#10;</span><span class="lnt"> 2&#10;</span><span class="lnt"> 3&#10;</span><span class="lnt"> 4&#10;</span><span class="lnt"> 5&#10;</span><span class="lnt"> 6&#10;</span><span class="lnt"> 7&#10;</span><span class="lnt"> 8&#10;</span><span class="lnt"> 9&#10;</span><span class="lnt">10&#10;</span><span class="lnt">11&#10;</span><span class="lnt">12&#10;</span><span class="lnt">13&#10;</span><span class="lnt">14&#10;</span><span class="lnt">15&#10;</span><span class="lnt">16&#10;</span><span class="lnt">17&#10;</span><span class="lnt">18&#10;</span><span class="lnt">19&#10;</span><span class="lnt">20&#10;</span><span class="lnt">21&#10;</span><span class="lnt">22&#10;</span><span class="lnt">23&#10;</span><span class="lnt">24&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">io.github.picodotdev.blogbitix.entitiesid.domain.product</span><span class="o">;</span>&#10;&#10;<span class="o">...</span>&#10;&#10;<span class="nd">@SpringBootTest</span>&#10;<span class="nd">@ContextConfiguration</span><span class="o">(</span><span class="n">initializers</span> <span class="o">=</span> <span class="o">{</span> <span class="n">DefaultPostgresContainer</span><span class="o">.</span><span class="na">Initializer</span><span class="o">.</span><span class="na">class</span> <span class="o">})</span>&#10;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ProductRepositoryTest</span> <span class="o">{</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@Autowired</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kd">private</span> <span class="n">ProductRepository</span> <span class="n">productRepository</span><span class="o">;</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nd">@Test</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kt">void</span> <span class="nf">testRepositoryGenerateId</span><span class="o">()</span> <span class="o">{</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c1">// given&#10;</span><span class="c1"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">ProductId</span> <span class="n">id</span> <span class="o">=</span> <span class="n">productRepository</span><span class="o">.</span><span class="na">generateId</span><span class="o">();</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">Product</span> <span class="n">product</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Product</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="s">&#34;Raspberry Pi&#34;</span><span class="o">,</span> <span class="n">LocalDate</span><span class="o">.</span><span class="na">now</span><span class="o">(),</span> <span class="k">new</span> <span class="n">BigDecimal</span><span class="o">(</span><span class="s">&#34;80.0&#34;</span><span class="o">),</span> <span class="n">10</span><span class="o">);</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c1">// and&#10;</span><span class="c1"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">productRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">product</span><span class="o">);</span>&#10;&#10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c1">// then&#10;</span><span class="c1"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">assertEquals</span><span class="o">(</span><span class="n">product</span><span class="o">,</span> <span class="n">productRepository</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="n">id</span><span class="o">).</span><span class="na">get</span><span class="o">());</span>&#10;&nbsp;&nbsp;&nbsp;&nbsp;<span class="o">}</span>&#10;<span class="o">}</span></code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>ProductRepositoryTest.java</span>
+    </div>
+</div>
+<p>En las trazas se observa la SQL para obtener el valor de la secuencia y la SQL de <em>insert</em> para guardar la entidad.</p>
+<div class="code">
+    <div class="highlight"><div class="chroma">&#10;<table class="lntable"><tr><td class="lntd">&#10;<pre class="chroma"><code><span class="lnt">1&#10;</span><span class="lnt">2&#10;</span><span class="lnt">3&#10;</span></code></pre></td>&#10;<td class="lntd">&#10;<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">Hibernate: select nextval(&#39;product_id_seq&#39;)&#10;Hibernate: select product0_.id as id1_0_0_, product0_.date as date2_0_0_, product0_.name as name3_0_0_, product0_.price as price4_0_0_, product0_.units as units5_0_0_ from product product0_ where product0_.id=?&#10;Hibernate: insert into product (date, name, price, units, id) values (?, ?, ?, ?, ?)</code></pre></td></tr></table>&#10;</div>&#10;</div>
+    <div class="highlight-meta">
+        <span>System.out</span>
+    </div>
+</div>
+<div class="alert alert-secondary sourcecode">
+    <img data-src="/blog-bitix/assets/images/icons/terminal.svg" width="64" height="64" alt="Terminal" title="Terminal" class="lozad sourcecode-icon">
+    <p>
+        El <a href="https://github.com/picodotdev/blog-ejemplos/tree/master/EntitiesId">código fuente completo del ejemplo</a> puedes descargarlo del repositorio de ejemplos de Blog Bitix alojado en GitHub y probarlo en tu equipo ejecutando siguiente comando:<br><code>./gradlew test</code></p>
+</div>
+<div class="reference">
+    Referencia:<br>
+    <ul>
+<li><a href="https://matthiasnoback.nl/2018/05/when-and-where-to-determine-the-id-of-an-entity/">When and where to determine the ID of an entity</a></li>
+<li><a href="https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.single-repository-behavior">Spring Data - Customizing Individual Repositories</a></li>
+<li><a href="https://www.objectdb.com/java/jpa/entity/id">JPA Primary Key</a></li>
+</ul>
+</div>
+
+    </div>
+  </article>
+        
+
+        
+<div class="row">
+  <div class="col-md-12">
+    <div class="sharethis sharethis-text">
+      Comparte el artículo:
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="sharethis sharethis-inline-share-buttons"></div>
+  </div>
+</div>
+
+
+        
+    
+    
+    <div class="row related"><div class="col-12"><p>Artículos relacionados:</p></div></div>
+    <div class="row related">
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2020/06/el-patron-de-diseno-specification-ejemplo-de-implementacion-y-uso-en-jpa-con-spring-data/">
+                <img data-src="/blog-bitix/2020/06/el-patron-de-diseno-specification-ejemplo-de-implementacion-y-uso-en-jpa-con-spring-data/images/specification_hu45616b24568f8b7d38357044c7708dca_59208_875x0_resize_box_2.png" height="125" layout="fixed-height"  class="lozad ">
+                <h3>El patrón de diseño Specification, ejemplo de implementación y uso en JPA con Spring Data</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2020/06/pruebas-de-integracion-con-testcontainers-ejemplo-de-jpa-con-la-base-de-datos-postgresql/">
+                <img data-src="/blog-bitix/assets/images/logotypes/testcontainers.svg" height="125" layout="fixed-height"  class="lozad ">
+                <h3>Pruebas de integración con Testcontainers, ejemplo de JPA con la base de datos PostgreSQL</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2020/06/la-herramienta-sdkman-para-instalar-varias-versiones-del-jdk-y-software-de-la-plataforma-java/">
+                <img data-src="/blog-bitix/assets/images/logotypes/sdkman.svg" height="125" layout="fixed-height"  class="lozad ">
+                <h3>La herramienta SDKMAN para instalar varias versiones del JDK y software de la plataforma Java</h3>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="row related">
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2020/05/copiar-datos-de-un-tipo-de-objeto-a-otro-con-modelmapper/">
+                <img data-src="/blog-bitix/assets/images/logotypes/java.svg" height="125" layout="fixed-height"  class="lozad ">
+                <h3>Copiar datos de un tipo de objeto a otro con ModelMapper</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2020/05/el-patron-open-session-in-view-que-es-ventajas-problemas-y-alternativas/">
+                <img data-src="/blog-bitix/2020/05/el-patron-open-session-in-view-que-es-ventajas-problemas-y-alternativas/images/opensessioninview_hu8070966044dcdbac5e387caf6b7057f5_108570_875x0_resize_box_2.png" height="125" layout="fixed-height"  class="lozad ">
+                <h3>El patrón Open Session in View, qué es, ventajas, problemas y alternativas</h3>
+                </a>
+                
+            </div>
+        </div>
+    
+    
+    
+    
+        <div class="col-12 col-sm-4">
+            <div class="related-article">
+                
+                <a href="/blog-bitix/2020/05/la-concurrencia-en-la-plataforma-java-con-project-loom/">
+                <img data-src="/blog-bitix/assets/images/logotypes/java.svg" height="125" layout="fixed-height"  class="lozad ">
+                <h3>La concurrencia en la plataforma Java con Project Loom</h3>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+    
+
+        <div class="row">
+          <div class="col-12 adblock-container-billboard">
+            <a id="pageBottom"></a>
+            <div class="adsense adsense-billboard">
+    <ins class="adsbygoogle"
+        data-ad-client="ca-pub-3533636310991304"
+        data-ad-slot="4052324337"
+        data-full-width-responsive="true"></ins>
+</div>
+          </div>
+        </div>
+        
+  <div class="row">
+    <div class="col-md-12">
+      <a id="comments"></a>
+      <div id="disqus_thread"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript" async>
+    var disqus_shortname = 'blog-bitix';
+    var disqus_identifier = 'blog-bitix-493';
+    var disqus_url = 'https:\/\/picodotdev.github.io\/blog-bitix\/2020\/06\/generar-en-el-dominio-los-identificativos-de-las-entidades-aplicando-ddd-antes-de-persistirlas-en-la-base-de-datos\/';
+    var disqus_script = 'embed.js';
+  </script>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <hr>
+      </div>
+    </div>
+    
+
+
+
+
+
+<footer>
+  <div class="row">
+    <div class="col-12 col-sm-4">
+      <p><strong>Blog Bitix</strong></p>
+      <p>Blog sobre al lenguaje de programación Java y la distribución GNU/Linux que uso habitualmente, Arch Linux, lo que aprendo sobre el software libre, la programación web y a otros temas relacionados con la tecnología y la informática. El contenido puede contener trazas de asuntos fuera de tema.</p>
+      <p>Publicando de uno a tres artículos únicos a la semana desde el año 2010.</p>
+    </div>
+    <div class="col-12 col-sm-4 text-center menu">
+      <ul class="list-unstyled">
+        <li><a href="/blog-bitix/tags/java/">Java</a></li>
+        <li><a href="/blog-bitix/tags/gnu-linux/">GNU/Linux</a></li>
+        <li><a href="/blog-bitix/tags/javascript/">JavaScript</a></li>
+        <li><a href="/blog-bitix/tags/tapestry/">Tapestry</a></li>
+        <li><a href="/blog-bitix/archive/">Archivo y hemeroteca</a></li>
+        <li><a href="/blog-bitix/pages/links/">Enlaces</a></li>
+        <li><a href="/blog-bitix/pages/advertising/">Publicidad</a></li>
+        <li><a href="/blog-bitix/pages/donate/">Donaciones</a></li>
+        <li><a href="/blog-bitix/pages/about/">Acerca de...</a></li>
+        
+      </ul>
+    </div>
+    <div class="col-12 col-sm-4 text-center links">
+      
+        <a href="https://picodotdev.github.io/blog-bitix/index.xml" title="¡Suscríbete a Blog Bitix!"><img src="/blog-bitix/assets/images/rss.png" width="50" height="50" class="icon"></a>
+      
+      
+        <a href="https://twitter.com/picodotdev/" title="¡Sígueme en twitter!"><img src="/blog-bitix/assets/images/twitter.svg" width="50" height="50" class="icon"></a>
+      
+      
+      
+        <a href="https://github.com/picodotdev/blog-ejemplos/" title="¡Obtén el código fuente de los ejemplos!"><img src="/blog-bitix/assets/images/github.svg" width="50" height="50" class="icon"></a>
+      
+      
+      
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      Copyleft <span class="copyleft">&copy;</span> 2020 - <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="nofollow"><img src="https://licensebuttons.net/l/by-sa/4.0/80x15.png" width="80" height="15" alt="Creative Commons License" title="Creative Commons License"></a><br />
+      <a href="https://www.planetacodigo.com/" rel="nofollow"><img src="/blog-bitix/assets/images/planeta-codigo.png" width="80" height="15" alt="Planeta código" title="Planeta código"></a>
+      <br/>
+      <a href="https://picodotdev.github.io/blog-bitix/" rel="nofollow">Blog Bitix</a> by <a href="https://picodotdev.github.io/blog-bitix/">pico.dev</a> is licensed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.
+      <br/>
+      <span class="credit">Powered by <a href="https://gohugo.io/" rel="nofollow" title="A fast and modern static website engine">Hugo</a> and <a href="https://pages.github.com/" title="Websites for you and your projects">GitHub Pages</a>.</span>
+      <span class="credit">Background patterns from <a href="https://www.toptal.com/designers/subtlepatterns/" rel="nofollow">Subtle Patterns</a>.</span>
+    </div>
+  </div>
+</footer>
+
+  </div>
+  
+<div class="blueimp-gallery-container">
+  <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false">
+    
+    <div class="slides"></div>
+    
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    
+    <div class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body next"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left prev">
+              <i class="glyphicon glyphicon-chevron-left"></i>
+              Anterior
+            </button>
+            <button type="button" class="btn btn-primary next">
+              Siguiente
+              <i class="glyphicon glyphicon-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  <!-- Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+<script type="text/javascript">
+    window.cookieconsent_options = {
+        "message": "Esta bitácora te informa de la obviedad de que utiliza «cookies», propias y de servicios como Google Analytics y Google AdSense entre otros.",
+        "dismiss": "Aceptar",
+        "learnMore": "Más información",
+        "link": null,
+        "theme": "dark-bottom"
+    };
+</script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js" async></script>
+</body>
+</html>
