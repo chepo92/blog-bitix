@@ -11,7 +11,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "images:specfication.svg"
+imagePost: "image:specification.png"
 tags: ["java", "planeta-codigo"]
 summary: "Los métodos de búsqueda y consulta permiten recuperar objetos de las bases de datos según los criterios deseados. Dependiendo del tamaño de la aplicación y sus casos de uso el número de consultas será más o menos grande. Con un número de consultas grande estas se vuelven complejas de mantener y generan duplicación de lógica de negocio. Para simplificar el mantenimiento de un número grande de consultas y evitar duplicidad de lógica de negocio una solución es implementar el patrón de diseño _Specification_."
 ---
