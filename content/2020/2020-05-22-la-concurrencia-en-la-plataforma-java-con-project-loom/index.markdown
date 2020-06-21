@@ -74,7 +74,7 @@ La forma de programación con los nuevos _threads_ es muy parecida a la tradicio
 
 Esta nueva implementación de los _threads_ es una mejora significativa sobre la implementación original basada en el sistema operativo. Una vez esté disponible en una versión del JDK muchas aplicaciones se beneficiarán de forma transparente de sus mejoras simplemente por usar un JDK más reciente. Como es principio en la plataforma Java estos cambios están implementados de forma que sean compatibles hacia atrás para que no haya que realizar ningún cambio o muy pocos en las aplicaciones o librerías para beneficiarse de ellos.
 
-El modelo secuencial de los _threads_ más simple que la programación reactiva, asíncrona, _callbacks_ o las construcciones _async/await_ tiene ventajas en la creación del software en su mantenibilidad, legibilidad y es beneficioso desde el punto de vista económico.
+El modelo secuencial de los _threads_ más simple que la programación reactiva, asíncrona, _callbacks_ o las construcciones _async/await_ tiene ventajas en la creación del software en su mantenibilidad, legibilidad y es beneficioso desde el punto de vista económico. Todas estas construcciones van a verse afectadas por la nueva implementación de _threads_ de Loom, las primeras versiones como anticipo están planificadas para Java 15.
 
 Loom es un nuevo ejemplo de que Java no adopta las nuevas tendencias de forma inmediata sino que espera a ver como se desarrollan, y después de evaluar todas las posibilidades opta por una que en este caso es mejor que la programación reactiva o asíncrona que otros lenguajes para permitirlas han tenido que realizar modificaciones comprometiendo la compatibilidad en el futuro del código fuente o desaconsejando el uso de funcionalidades para eliminarlas en el futuro. Esto mismo lo mencionaba en [10 razones para seguir usando Java][blogbitix-81].
 
@@ -89,6 +89,7 @@ Y otros artículos sobre Loom.
 * [Project Loom: Lightweight Java threads](https://developers.redhat.com/blog/2019/06/19/project-loom-lightweight-java-threads/)
 * [Will Project Loom obliterate Java Futures?](https://blog.softwaremill.com/will-project-loom-obliterate-java-futures-fb1a28508232)
 * [Project Loom: Java With a Stronger Fiber](https://dzone.com/articles/a-new-java-with-a-stronger-fiber)
+* [On Project Loom, the Reactive model and coroutines](https://blog.frankel.ch/project-loom-reactive-coroutines/)
 
 {{% reference %}}
 * [The Linux Implementation of Threads](https://www.informit.com/articles/article.aspx?p=370047&seqNum=3)
