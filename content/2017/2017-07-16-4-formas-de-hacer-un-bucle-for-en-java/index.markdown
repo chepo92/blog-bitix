@@ -23,6 +23,8 @@ Hasta Java 5 para hacer un bucle desde 0 a N elementos había que usar una varia
 
 Algunos de estos ejemplos de bucles son utilizables a partir de Java 5, en versiones más recientes se han añadido muchas otras novedades como [las _lamdas_, _streams_, metodos en interfaces y API para fechas][blogbitix-17] en Java 8, [la modularidad, _try-with-resource_ mejorado, jlink o un nuevo modelo de publicación][blogbitix-263]  en Java 9, [inferencia de tipos para variables locales][blogbitix-306] en Java 10, [un cliente HTTP][blogbitix-350] en Java 11 y otras [novedades en el lenguaje y la plataforma Java][blogbitix-serie-java-platform].
 
+Los bucles son uno de [los tipos de sentencias y estructuras de control de flujo básicas de Java][blogbitix-494] que permiten repetir la ejecución de un bloque de sentencias mientras se cumpla la expresión de condición de repetición, en cada iteración del bucle se evalua la expresión de condición y en el momento que no se cumple se continua con la siguiente sentencia del programa.
+
 ### Bucle for
 
 Antes de Java 5 un bucle _for_ de 0 a 5 y de una colección se realizaba de la siguiente manera manteniendo una variable normalmente de nombre _i_ que hace de contador y _j_ si el bucle _for_ está anidado en otro. Además de la variable de contador requiere establecer la condición que permita salir del bucle cuando se llegue al final de la iteración, la condición es muy importante para no crear un bucle infinito.

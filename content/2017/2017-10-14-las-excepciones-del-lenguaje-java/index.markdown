@@ -19,7 +19,7 @@ tags: ["java", "planeta-codigo", "programacion"]
 
 Las excepciones son un mecanismo para capturar y producir condiciones de error en un programa. Es una alternativa al retorno de valores especiales que indique errores y que en estos no son obligatorios su correcta comprobación.
 
-En Java las excepciones están incorporadas en el lenguaje desde la primera versión y que en posteriores se han mejorado. Las palabras reservadas del lenguaje para las excepciones son _try_, _catch_, _finally_ para la captura y _throw_ y _throws_ para lanzar excepciones en los métodos.
+En Java las excepciones están incorporadas en el lenguaje desde la primera versión y que en posteriores se han mejorado. Las palabras reservadas del lenguaje para las excepciones son _try_, _catch_, _finally_ para la captura y _throw_ y _throws_ para lanzar excepciones en los métodos. Las excepciones son uno de [los tipos de sentencias y estructuras de control de flujo básicas de Java][blogbitix-494].
 
 Las excepciones son objetos que extienden la clase [Throwable](https://docs.oracle.com/javase/9/docs/api/java/lang/Throwable.html) de la que en el JDK es extendida por la clase [Error](https://docs.oracle.com/javase/9/docs/api/java/lang/Error.html) y [Exception](https://docs.oracle.com/javase/9/docs/api/java/lang/Exception.html) de la que de esta última a su vez hereda [RuntimeException](https://docs.oracle.com/javase/9/docs/api/java/lang/RuntimeException.html). Entre las comprobaciones que realiza el compilador está que las excepciones _checked_ lanzadas por un método son capturadas por el código que lo llama.
 

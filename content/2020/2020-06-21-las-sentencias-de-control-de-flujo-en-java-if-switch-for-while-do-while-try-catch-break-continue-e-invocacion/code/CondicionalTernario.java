@@ -1,0 +1,1 @@
+variable = (condicionExpresionBoleana) ? expresionTrue : expresionFalse;
