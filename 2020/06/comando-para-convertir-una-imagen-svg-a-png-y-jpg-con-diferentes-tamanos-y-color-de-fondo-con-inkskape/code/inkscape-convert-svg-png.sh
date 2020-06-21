@@ -1,0 +1,2 @@
+$ for f in *.svg; do inkscape -w 750 "$f" --export-background white --export-background-opacity 1 --export-type png --export-filename "$(basename ${f%.*})-750.png"; done;
+$ for f in *.png; do convert "$f" "${f%.*}.jpg"; done;

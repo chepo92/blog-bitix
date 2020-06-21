@@ -1,0 +1,3 @@
+while (condicionExpresionBoleana) {
+   sentences
+}
