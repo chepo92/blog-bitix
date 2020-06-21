@@ -9,7 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "logotype:java.svg"
+imagePost: "image:sentencia-if-else.png"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "El lenguaje de programación Java utiliza un paradigma orientado a objetos pero también emplea otros paradigmas como el funcional con la incorporación de las _lambas_ en Java 8 y el imperativo en los bloques de sentencias de los métodos. En este artículo están los tipos de sentencias de control de flujo disponibles en el lenguaje de programación Java: condicionales, de repetición, de asignación, de gestión de excepciones e invocación de métodos en Java."
 ---
