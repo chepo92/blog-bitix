@@ -44,9 +44,20 @@ El operador ternario _?:_ es una expresión condicional que devuelve el valor de
 
 Las sentencias condicionales son un tipo de sentencia que evalua una expresión booleana y dependiendo de su valor verdadero o falso ejecuta o no su su bloque de sentencias asociado para cada caso. Las sentencias a continuación de la condición se ejecutan si la sentencia _if_ se evalúa como verdadero. La sentencia _if_ además puede tener otro bloque de sentencias a ejecutar si la expresión booleana se evalúa como falso, el bloque de sentencias _else_. Las sentencias _if_ y _else_ se pueden encadenar.
 
+{{< image
+    gallery="true"
+    image1="image:sentencia-if.png" optionsthumb1="300x200" title1="Diagrama sentencia if"
+    image2="image:sentencia-if-else.png" optionsthumb2="300x200" title2="Diagrama sentencia if-else"
+    caption="Diagramas sentencias if e if-else" source="beginnersbook.com" >}}
+
 {{< code file="CondicionalIf.java" language="java" options="" >}}
 
 Cuando una sentencia _if_ tiene muchas ramas y la expresión condicional comprueba en todos los casos diferentes valores de una misma variable se utiliza la sentencia _switch_. Si el valor de la variable coincide con el valor del bloque del caso se ejecutan las sentencias de ese bloque. Cada bloque ha de estar finalizado con sentencia _break_ para no evaluar las sentencias del siguiente bloque. El caso _default_ permite ejecutar un bloque de sentencias si el valor de la expresión no coincide con ninguno de los valores de los casos, siendo como la parte _else_ de las sentencias _if_.
+
+{{< image
+    gallery="true"
+    image1="image:sentencia-switch.png" optionsthumb1="650x450" title1="Diagrama sentencia switch"
+    caption="Diagrama sentencia switch" source="beginnersbook.com" >}}
 
 {{< code file="CondicionalSwitch.java" language="java" options="" >}}
 
@@ -62,17 +73,37 @@ Las sentencias de repetición permiten ejecutar un bloque de sentencias durante 
 
 La sentencia _while_ ejecuta un bloque de sentencias mientras se cumpla una condición, puede ocurrir el caso de que la condición de la sentencia _while_ no se cumpla y por tanto el bloque de sentencias de repetición no se ejecute ninguna vez. La comprobación de la condición se realiza antes de entrar al bucle.
 
+{{< image
+    gallery="true"
+    image1="image:sentencia-while.png" optionsthumb1="650x450" title1="Diagrama sentencia while"
+    caption="Diagrama sentencia while" source="beginnersbook.com" >}}
+
 {{< code file="RepeticionWhile.java" language="java" options="" >}}
 
 En el bucle _do-while_ la comprobación de la condición está después del bloque de sentencias de repetición, a diferencia del bucle _while_ en el _do-while_ el bloque de sentencias se ejecutan al menos una vez.
+
+{{< image
+    gallery="true"
+    image1="image:sentencia-do-while.png" optionsthumb1="650x450" title1="Diagrama sentencia do-while"
+    caption="Diagrama sentencia do-while" source="beginnersbook.com" >}}
 
 {{< code file="RepeticionDoWhile.java" language="java" options="" >}}
 
 La sentencia _for_ utilizan otra sintaxis para realizar bucles, una de las [4 formas de hacer un bucle for][blogbitix-247] contiene una inicialización, condición de repetición e incremento además del bloque de sentencias a ejecutar. Otras formas de bucle _for_ son el _forearch_ para colecciones de objetos.
 
+{{< image
+    gallery="true"
+    image1="image:sentencia-for.png" optionsthumb1="650x450" title1="Diagrama sentencia for"
+    caption="Diagrama sentencia for" source="beginnersbook.com" >}}
+
 {{< code file="RepeticionFor.java" language="java" options="" >}}
 
 Dentro de las sentencias de bucle se pueden emplear las palabras reservadas _break_ y _continue_. La sentencia _break_ permite salir del bucle inmediatamente sin necesidad de evaluar la condición. La palabra _continue_ dejar de ejecutar sentencias del bucle y evaluar de nuevo la condición de bucle, si se sigue cumpliendo la condición se ejecuta de nuevo el bloque de sentencias. Las sentencias _break_ y _continue_ normalmente se utilizan dentro de una sentencia condicional _if_.
+
+{{< image
+    gallery="true"
+    image1="image:sentencia-continue.png" optionsthumb1="650x450" title1="Diagrama sentencia continue"
+    caption="Diagrama sentencia continue" source="beginnersbook.com" >}}
 
 {{< code file="BreakContinue.java" language="java" options="" >}}
 
