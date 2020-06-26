@@ -18,7 +18,7 @@ summary: "Haciendo un seguimiento de los precios en Amazon los de algunos produc
 
 {{% post %}}
 
-{{< logotype image1="amazon.svg" title1="Amazon" width1="350" >}}
+{{< logotype image1="amazon.svg" >}}
 
 La tecnología avanza notablemente en periodos de meses y por este avance los precios se van reduciendo o aparecen nuevos productos con mejores prestaciones. Uno de estos ejemplos notables el de los dispositivos de almacenamiento SSD cuyo coste se está reduciendo rápidamente u ofreciendo mayor capacidad al mismo precio. Ocurre otro tanto de los mismo en los procesadores, para aumentar su rendimiento actualmente están evolucionando a incorporar más número de núcleos, las generaciones anteriores quedan superadas y se encuentran a unos precios rebajados. Las tarjetas gráficas suelen tener un precio similar que el de la anterior generación pero siendo sensiblemente más potentes y al igual que los procesadores para eliminar sus existencias de inventario reducen su precio.
 

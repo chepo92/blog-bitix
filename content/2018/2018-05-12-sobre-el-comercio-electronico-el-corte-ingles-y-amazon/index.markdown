@@ -17,7 +17,7 @@ summary: "Internet es la revolución de finales del sigo XX e inicio del siglo X
 
 {{% post %}}
 
-{{< logotype image1="amazon.svg" title1="Amazon" width1="400" image2="elcorteingles.svg" title2="El Corte Inglés" width2="400" >}}
+{{< logotype image1="amazon.svg" image2="elcorteingles.svg" >}}
 
 Inicialmente la _world wide web_ permitía acceder y compartir información de forma instantánea a nivel planetario. Uno de los primeros sectores cambiados por internet fue el de la música que junto con el formato de archivo _mp3_ permitió compartir entre los usuarios toda su colección de música. Al igual que la sustitución del correo tradicional por carta por el correo electrónico y la digitalización de documentos con el consiguiente ahorro en papel.
 
