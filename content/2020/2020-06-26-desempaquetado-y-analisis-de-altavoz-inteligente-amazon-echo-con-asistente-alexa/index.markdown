@@ -4,6 +4,7 @@ type: "post"
 title: "Desempaquetado y análisis de altavoz inteligente Amazon Echo con asistente Alexa"
 url: "/2020/06/desempaquetado-y-analisis-de-altavoz-inteligente-amazon-echo-con-asistente-alexa/"
 date: 2020-06-26T16:00:00+02:00
+updated: 2020-06-26T20:30:00+02:00
 language: "es"
 rss: true
 sharing: true
@@ -258,7 +259,7 @@ Además de los dispositivos inteligentes como enchufes y bombillas el Echo es ca
     linkids="710b081345c1115bc344bcc42ff80b1b,7a7cea572346dacf8ef2141263ab837a,be3368a7fe32cd1d3096846abb7d6ec3,93d88d8597b0da6936925ad0d6070c24,7284dbe8a31b1691523fb74bd6183c14"
     asins="B076TGXRWS,B07ZSG9Y67,B079D689VG,B07SPYB4TQ,B07MSCBGZP" >}}
 
-### Problemas y cosas que me gustaría que tuviese
+### Problemas, algunos que he resuelto y cosas que me gustaría que tuviese
 
 Y ahora unos problemas y cosas que me gustaría que tuviese después de los primeros momentos de uso. Algunos son por problemas con mi ordenador otros son mejoras que podrían tener los altavoces Echo.
 
@@ -267,7 +268,13 @@ La configuración que quería como altavoz para el ordenador funciona correctame
 * "Alexa, reproduce contenido desde la entrada de línea"
 * "Alexa, sube el volumen de la entrada de línea"
 
-En mi caso con [Arch Linux][archlinux] en el ordenador es capaz de conectarse al Echo por Bluetooth, lo reconoce como dispositivo de audio pero luego en la configuración del sonido no se puede seleccionar como dispositivo de audio de salida el altavoz Bluetooth. Esto quizá sea un problema del entorno de escritorio GNOME. El mismo problema le pasa a algunos usuarios de [Ubuntu][ubuntu]. Instalando el paquete _pavucontrol_ el Echo se reconoce como dispositivo de salida de audio pero no he conseguido que el sonido se escuche. Si funcionase el sonido del ordenador por Bluetooth solucionaría un problema que tengo ahora con el HDMI y es que cuando el monitor entra en modo reposo la señal del HDMI se apaga y afecta al sonido que también deja de emitirse. Usando mi móvil lo he conectado por Bluetooth para reproducir música perfectamente, si pongo el reproductor las canciones se escuchan sin problema y parando vuelve a reproducir la entrada de línea.
+En mi caso con [Arch Linux][archlinux] en el ordenador es capaz de conectarse al Echo por Bluetooth, lo reconoce como dispositivo de audio pero luego en la configuración del sonido a veces no se puede seleccionar como dispositivo de audio de salida el altavoz Bluetooth, en vez de esto aparece como dispositivo de entrada. Esto quizá sea un problema del entorno de escritorio GNOME, a la implementación de Bluetooth en [GNU][gnu]/[Linux][linux] o a [Amazon Echo Plus as bluetooth speaker on Ubuntu 20.04](https://manuelfedele.github.io/guides/2020/05/02/amazon-echo-plus-as-ubuntu-20.04-bluetooth-speaker.html). El mismo problema le pasa a algunos usuarios de [Ubuntu][ubuntu]. Después de varias pruebas he conseguido que me funcione, los pasos que he seguido están basados en el enlace anterior que han sido poner el Echo en modo emparejamiento, emparejarlos e iniciar la conexión por Bluetooth desde Linux mientras se reproduce sonido. La opción para realizar la conexión desde el panel de control de Bluetooth parece que lo intenta e inmediatamente la opción se desactiva de nuevo pero al cabo unos segundos se conecta y comienza la reproducción.
+
+El sonido del ordenador por Bluetooth soluciona un problema que tenía con el sonido por conexión HDMI. Por HDMI y sacando el sonido por _jack_ 3.5mm desde el monitor ocurre que cuando se activa el protector de pantalla o la pantalla de bloqueo la señal del HDMI se apaga y afecta al sonido que también deja de emitirse, por Bluetooth la reproducción continua perfectamente. Usando mi móvil lo he conectado por Bluetooth para reproducir música perfectamente, si pongo el reproductor las canciones se escuchan sin problema y parando vuelve a reproducir la entrada de línea si se usa esta forma de conexión.
+
+Los dispositivos Bluetooth al gual que la WiFi tiene la opción de hacerse visibles emitiendo su nombre esto está visible para cualquier persona que se encuentre en el rango de alcance con la posibilidad de intentar el emparejamiento y cuanto menos conocer la presencia del dispositivo que suele incluir su modelo, es un problema de privacidad. El Echo solo se hace visible en el momento de emparejamiento que se inicia desde la _app_ pero Linux por defecto se queda siempre en modo visible y posibilitando el emparejamiento, para desactivar esta visibilidad al cabo de un tiempo hay que modificar el archivo de configuración _/etc/bluetooth/main.conf_ con los siguientes valores.
+
+{{< code file="main.conf" language="cfg" options="" >}}
 
 * [Can't send audio to Amazon Echo via Bluetooth](https://bugs.launchpad.net/ubuntu/+source/bluez/+bug/1691556)
 * [Arch Linux, Bluetooth headset](https://wiki.archlinux.org/index.php/Bluetooth_headset)
