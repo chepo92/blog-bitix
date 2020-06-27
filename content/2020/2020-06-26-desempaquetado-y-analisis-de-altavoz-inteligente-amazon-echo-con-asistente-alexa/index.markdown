@@ -336,7 +336,7 @@ Y en otros no me convencen completamente, sobre todo los botones físicos adicio
 
 El Echo y Echo Studio son una buena consideración como altavoz para ver películas con una mejor calidad de sonido que la que ofrecen los altavoces integrados de las televisiones, la calidad de sonido y precio es similar que una barra de sonido pero tienen funciones adicionales.
 
-Cuando compré el Echo tenía dudas de si sería buena opción como sustituto de mis antiguos altavoces pero pasados unos días de uso por ahora estoy bastante contento con él.
+Cuando compré el Echo tenía dudas de si sería buena opción como sustituto de mis antiguos altavoces pero pasados unos días de uso por ahora estoy bastante contento con él. Si tienes cualquier duda de los Echo añade un comentario y trataré de darle respuesta.
 
 ### Vídeos
 
