@@ -340,7 +340,7 @@ Cuando compré el Echo tenía dudas de si sería buena opción como sustituto de
 
 ### Vídeos
 
-En YouTube hay numerosos vídeos con desempaquetados, analizando los altavoces y la familia de altavoces Echo y explicando como funcionan las _skills_ que se pueden activar..
+En YouTube hay numerosos vídeos con desempaquetados, analizando los altavoces y la familia de altavoces Echo y explicando como funcionan las _skills_ que se pueden activar.
 
 {{< youtube
     video="O52fB3KbD3c" >}}
