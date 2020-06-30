@@ -1,0 +1,1 @@
+$ inxi -Fpur -c 7

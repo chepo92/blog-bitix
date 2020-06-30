@@ -17,7 +17,7 @@ tags: ["gnu-linux", "planeta-codigo"]
 
 {{< logotype image1="gnu.svg" image2="linux.svg" >}}
 
-Los comandos [neofetch][neofetch] y [screenfetch][screenfetch] permiten obtener una información básica del sistema desde la terminal. Esta información incluye la distribución GNU/Linux que se esté usando, la versión del _kernel_ de Linux, el número de paquetes instalados, que intérprete de comandos se usa y su versión, la resolución de la pantalla, el gestor de ventanas y su tema, la colección de iconos, terminal y fuente de la terminal, CPU, GPU y cantidad de memoria usada y total del sistema.
+Los comandos [neofetch][neofetch] y [screenfetch][screenfetch] permiten obtener una información básica del sistema desde la terminal. Esta información permite saber la distribución GNU/Linux que se está usando, la versión del _kernel_ de Linux, el número de paquetes instalados, que intérprete de comandos se usa y su versión, la resolución de la pantalla, el gestor de ventanas y su tema, la colección de iconos, terminal y fuente de la terminal, CPU, GPU y cantidad de memoria usada y total del sistema.
 
 Al realizar una captura de pantalla del escritorio es muy interesante mostrar una terminal con esta información. Es habitual hacerlo al mostrar la personalización del escritorio con su tema de iconos, que entorno de escritorio es el usado, la configuración de colores de la terminal, etc. que permite a otros usuarios que vean esa captura obtener mucha información para obtener la misma personalización. O conocer la CPU, GPU y _kernel_ del sistema en que se tomó la captura.
 
@@ -33,6 +33,15 @@ En las imágenes se aprecia que mi distribución es [Arch Linux][archlinux], [mi
     image2="image:neofetch-2.png" optionsthumb2="300x250" title2="Información del sistema proporcionada por neofetch"
     caption="Información del sistema proporcionada por neofetch" >}}
 
-Ambos comandos están disponibles en los repositorios de paquetes de la distribución que se esté usando.
+[Inxi][inxi] es otra herramienta de línea de comandos que permite obtener información del sistema. Al pedir ayuda en un foro no está demás dar esta información básica de nuestro equipo para que nos puedan ayudar mejor a encontrar una solución al problema por el que preguntamos por si el error se debe a algún componente de nuestro equipo, del _kernel_ o la versión del servidor gráfico.
+
+{{< code file="inxi.sh" language="bash" options="" >}}
+
+{{< image
+    gallery="true"
+    image1="image:inxi-c7.png" optionsthumb1="300x250" title1="Información del sistema proporcionada por inxi"
+    caption="Información del sistema proporcionada por inxi" >}}
+
+Los comandos están disponibles en los repositorios de paquetes de la distribución que se esté usando.
 
 {{% /post %}}

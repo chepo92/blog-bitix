@@ -27,6 +27,8 @@ Un ejemplo atípico ha sido el de la memoria RAM que ha costado casi el doble qu
 
 Para hacer un seguimiento de los precios de los productos en [Amazon][amazon] está la página [CamelCamelCamel](https://camelcamelcamel.com/). Buscando el producto en Amazon, copiando su dirección o URL y pegándola en el buscador de CamelCamelCamel se obtiene una gráfica con la evolución de su precio a lo largo del tiempo que se ha estado vendiendo en esa tienda de internet. En la misma gráfica queda reflejado también la disponibilidad del producto y el precio de los vendedores terceros. Es especialmente útil en épocas señaladas de descuentos como el _black friday_, _cyber monday_ o época navideña a las que se espera para comprar ese capricho o regalo a mejor precio, permite conocer el descuento real aplicado comparándolo con periodos de tiempo más largos que los días inmediatamente anteriores y encontrar las mejores ofertas en Amazon.
 
+CamelCamelCamel permite ver la evolución de un precio para cada producto en Amazon, ver el precio más bajo y el mas alto que ha tenido cada producto y cuando, ver el historial de precios y sus variaciones a lo largo del tiempo. Esta información permite conocer muchos datos acerca de los precios de los productos. La herramienta proporciona un gráfica con un eje X que representa el tiempo y el eje Y represeta el precio del producto.
+
 Como ejemplo se puede mostrar el precio de un SDD [Samsung 970 EVO en formato M.2 de 250 GiB](https://amzn.to/2XuRE9p) o de [1 TB](https://amzn.to/2IvJJjU) y _kit_ de memorias de [HyperX Impact de 32 GiB DDR4 a 2400Mhz](https://amzn.to/2XwfQrS).
 
 {{< image

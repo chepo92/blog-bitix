@@ -33,13 +33,15 @@ Continuando la [serie de artículos sobre docker][blogbitix-serie-docker] que es
 
 Las aplicaciones basadas en microservicios se prestan a usar múltiples contenedores cada uno con un servicio, uno puede contener la base de datos [postgresql][postgresql], otro una base de datos clave/valor [redis][redis] o de documentos como [elasticsearch][elasticsearch] para hacer búsquedas, otro un sistema de mensajería como [rabbitmq][rabbitmq], otro [tomcat][tomcat] o [wildfly][wildfly] que use los anteriores y un servidor web como [Nginx][nginx]. Teniendo múltiples contenedores usar el comando `docker run` para cada uno de ellos nos resultará incómodo.
 
-En este punto entra Docker Compose que es una herramienta que permite definir nuestra aplicación multicontenedor en un archivo de texto con las mismas propiedades que indicaríamos con el comando `docker run` individualmente. Con un único comando podremos iniciar todos los contenedores y en el orden que los especifiquemos.
+En este punto entra Docker Compose que es una herramienta que sirve para definir nuestra aplicación multicontenedor en un archivo de texto con las mismas propiedades que indicaríamos con el comando `docker run` individualmente, así como las dependencias entre los contenedores. Una vez definidos los múltiples contenedores del servicio en el archivo Docker Compose permite iniciar con un único comando todos los contenedores y en el orden especificado según sus dependencias.
 
 El archivo descriptor nos puede servir no solo como forma de iniciar los contenedores en un entorno de desarrollo sino como de documentación de la aplicación en la que veremos qué contenedores, imágenes, volúmenes, enlaces y demás propiedades tienen.
 
 ### Instalar Docker Compose
 
-Tenemos varias formas de instalar Docker Compose. La que más me gusta y la que recomiendo por ser sencilla es [descargar el binario de docker compose](https://github.com/docker/compose/releases) según nuestra plataforma GNU/Linux o Mac.  Descargando el binario de Docker Compose deberemos darle permisos de ejecución y si nos interesa colocarlo en la variable de entorno _PATH_ del sistema:
+Una forma de instalar Docker Compose es [descargar el binario](https://github.com/docker/compose/releases) adecuado a nuestra plataforma GNU/Linux o Mac. Otra forma de instalación de Docker Compose es recurrir al paquete de la distribución ya sea [Ubuntu][ubuntu], [Arch Linux][archlinux] u otra, esta forma tiene la ventaja de que el paquete se mantiene actualizado en cada actualización del sistema.
+
+Descargando el binario de Docker Compose hay que darle permisos de ejecución y si interesa colocarlo en la variable de entorno _PATH_ del sistema:
 
 {{< code file="permisos.sh" language="bash" options="" >}}
 {{< code file="bashrc" language="plaintext" options="" >}}
