@@ -175,7 +175,8 @@ Ubuntu por defecto ya incorpora una buena cantidad de software preinstalado. En 
 {{< image
     gallery="true"
     image1="image:ubuntu-software.png" optionsthumb1="300x200" title1="Instalar y desinstalar software"
-    caption="Instalar software y actualizaciones de seguridad" >}}
+    image2="image:ubuntu-actualizaciones.png" optionsthumb2="300x200" title2="Notificación de actualizaciones de Ubuntu"
+    caption="Instalar software y notificación de actualizaciones de seguridad" >}}
 
 ### Ayuda
 
