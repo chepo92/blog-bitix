@@ -27,13 +27,17 @@ Debes saber es en GNU/Linux hay muchas versiones o distribuciones, muchas desarr
 
 El paso de Windows a GNU/Linux significa usar un nuevo entorno y es algo que muchos de los usuarios que hoy somos de GNU/Linux hemos dado en algún momento, yo empecé por pasar [De Windows a Arch Linux][elblogdepicodev-15] y aún me mantengo [De Arch Linux a Arch Linux][blogbitix-36]. GNU/Linux tiene sus puntos fuertes y algunos para los usuarios de escritorio menos fuertes, principalmente debido a no ser el sistema mayoritario los fabricantes tienen más en cuenta a Windows cuando lanzan un nuevo producto, en el caso de los juegos triple A o la excesiva fragmentación por la cantidad de opciones. En cualquier caso muchas distribuciones GNU/Linux son tan fáciles de usar como Windows o [macOS][macos] y tan o más capaces que estos.
 
-Lo primero que debes hacer es [decidir la distribución que quieres instalar][blogbitix-190], según tus preferencias y necesidades. Para los usuarios que van a tener su primer contacto con GNU/Linux algunas de las recomendadas son [Ubuntu][ubuntu] o [elementaryOS][elementary]. En este artículo explicaré como instalar Ubuntu en su versión 20.04 <abbr title="Long Term Support">LTS</abbr>.
+Lo primero que debes hacer es [decidir la distribución que quieres instalar][blogbitix-190], según tus preferencias y necesidades. Para los usuarios que van a tener su primer contacto con GNU/Linux algunas de las recomendadas son [Ubuntu][ubuntu] o [elementaryOS][elementary].
 
-Las versiones LTS de Ubuntu tienen [ciclo de desarrollo][ubuntu-release-cyle] con un soporte de largo plazo de 5 años para corrección de errores y fallos de seguridad. Las versiones LTS se publican cada dos años. Salvo que estés afectado por _versionitis_ y quieras tener las últimas versiones de los programas la versión LTS más reciente es la recomendable y suficiente en vez de la última versión no LTS.
+Ubuntu es una de las muchas distribuciones de GNU/Linux existentes y una de las recomendadas para los usuarios principiantes y con más conocimientos por su buen funcionamiento. Las versiones LTS de Ubuntu tienen [ciclo de desarrollo][ubuntu-release-cyle] con un soporte de largo plazo de 5 años para corrección de errores y fallos de seguridad. Las versiones LTS se publican cada dos años. Salvo que estés afectado por _versionitis_ y quieras tener las últimas versiones de los programas la versión LTS más reciente es la recomendable y suficiente en vez de la última versión no LTS.
+
+Para instalar Ubuntu solo se necesita una memoria USB de 4 GiB de capacidad, el medio de instalación y unos 30 minutos para completar el proceso de instalación. Ubuntu instalado ocupa unos 10 GiB de espacio pero dependiendo de las aplicaciones que se quieran instalar, los documentos personales, fotos, vídeos y otros archivos el espacio recomendado es mayor.
+
+En este artículo explicaré como instalar Ubuntu en su versión 20.04 <abbr title="Long Term Support">LTS</abbr>.
 
 ### Requisitos mínimos
 
-Los [requisitos mínimos de Ubuntu](https://help.ubuntu.com/community/Installation/SystemRequirements) son bastante bajos para cualquier sistema de unos pocos años. Aunque en la memoria es recomendable tener al menos 2 GiB o incluso 4 GiB.
+Los [requisitos mínimos de Ubuntu](https://help.ubuntu.com/community/Installation/SystemRequirements) son bastante bajos para cualquier sistema de unos pocos años, menores que los requeridos para instalar Windows. Aunque en la memoria es recomendable tener al menos 2 GiB o incluso 4 GiB. Cualquier equipo medio de de la última década cumple estos requisitos.
 
 * Procesador 2 GHz con dos núcleos o mejor
 * Memoria RAM del sistema de 4 GiB
@@ -42,20 +46,22 @@ Los [requisitos mínimos de Ubuntu](https://help.ubuntu.com/community/Installati
 * Unidad USB o CD/DVD
 * Acceso a internet es recomendable
 
-### Copia de seguridad
+### Crear una copia de seguridad
 
 Al instalar Ubuntu todos los datos que tuviese el equipo se perderán por lo que si quieres conservarlos debes copiarlos previamente a un disco duro externo o memoria USB de la capacidad que necesiten tus archivos, una vez finalizada la instalación de Ubuntu puedes recuperarlos y copiarlos al equipo de nuevo.
 
-### Descarga de Ubuntu
+* [Cómo realizar copias de seguridad en Windows con FreeFileSync][blogbitix-144]
 
-Antes de iniciar la instalación hay que [descargar la imágen ISO][ubuntu-download-desktop] de la versión de Ubuntu que queramos instalar. En la [página oficial de Ubuntu][ubuntu] se puede descargar de forma directa con el navegador o vía P2P en la red de compartición de archivos torrent. Ubuntu a su vez proporciona varias versiones de su distribución donde varía el entorno de escritorio que también debes elegir según tus preferencias, hay varias posibilidades entre ellas [GNOME][gnome] y [KDE][kde]. Cualquiera de ellas con un aspecto gráfico muy cuidado, intuitivas y fáciles de usar. La opción más similar al entorno de escritorio de Windows es KDE con la que te encontrarás bastante cómodo al usarla si provienes de Windows.
+### Descargar el medio de instalación de Ubuntu
+
+Antes de iniciar la instalación hay que [descargar la imágen ISO][ubuntu-download-desktop] de la versión de Ubuntu que queramos instalar desde la [página oficial de la distribución][ubuntu], solo es necesario un navegador web para descargar de forma directa el archivo que es la imagen del medio de instalación, un archio de extensión _iso_ que ocupa casi 3 GiB. El archivo también es descargable mediante la red de compartición de archivos entre usuarios _torrent_. Ubuntu proporciona [varias versiones de su distribución](https://ubuntu.com/download/flavours) donde varía principalmente el entorno de escritorio que también debes elegir según tus preferencias, hay varias posibilidades entre ellas dos de las más preferidas están [GNOME][gnome] y [KDE][kde]. Cualquiera de ellas con un aspecto gráfico muy cuidado, intuitivas y fáciles de usar. La opción más similar al entorno de escritorio de Windows es KDE con la que te encontrarás bastante cómodo al usarla si provienes de Windows.
 
 * [Ubuntu][ubuntu]
 * [Más sabores de Ubuntu](https://ubuntu.com/download/flavours)
 
-### Creación del medio de instalación
+### Crear el medio de instalación USB
 
-Para una mayor velocidad de instalación es mejor usar una memoria USB de al menos 8 GiB de capacidad en vez un CD o DVD que son más lentos y algunos equipos nuevos ya ni siquiera incorporan porque están en desuso con la aparición de las memorias USB. La memoria debe estar vacía ya que se perderán todos sus datos. Con el [programa Rufus para Windows](https://rufus.akeo.ie/) seleccionado el archivo de la imagen ISO descargada y la unidad USB se crea el medio de instalación, en la siguiente página está explicado como [crear una memoria USB arrancable en Windows](https://ubuntu.com/tutorials/tutorial-create-a-usb-stick-on-windows).
+Para una mayor velocidad de instalación es mejor usar una memoria USB de al menos 8 GiB de capacidad en vez un disco CD o DVD que son más lentos y algunos equipos nuevos ya ni siquiera incorporan estas unidades porque están en desuso con la aparición de las memorias USB más rápidas, fiables, de mayor capacidad y más pequeñas. La memoria debe estar vacía ya que se perderán todos sus datos. Con el [programa Rufus para Windows](https://rufus.akeo.ie/) seleccionado el archivo de la imagen ISO descargada y la unidad USB se crea el medio de instalación, en la siguiente página está explicado como [crear una memoria USB arrancable en Windows](https://ubuntu.com/tutorials/tutorial-create-a-usb-stick-on-windows).
 
 Hay que conectar una memoria USB, seleccionarla, seleccionar el archivo de la imagen ISO de Ubuntu y pulsar el botón _Empezar_, al cabo de unos minutos la memoria estará lista para empezar a instalar Ubuntu.
 
@@ -66,7 +72,7 @@ Hay que conectar una memoria USB, seleccionarla, seleccionar el archivo de la im
 
 ### Iniciar el sistema con el medio de instalación
 
-Con el equipo apagado y la memoria USB contactada hay que iniciar el equipo para que se inicie desde la memoria USB. La forma de hacer que el equipo se inicie desde la memoria USB depende de cual sea el fabricante. Pulsando una tecla dependiendo de caso como F2, F8, F10, F12, ESC u otra se puede entrar en la BIOS o seleccionar el medio de instalación. La BIOS es una zona de configuración donde se modifican algunos parámetros del equipo muy importantes con lo que hay que tener cuidado de que se modifica para evitar comportamientos anómalos, a pesar de todo suele ser bastante intuitiva y si es un equipo reciente incluso con interfaz gráfica.
+Con el equipo apagado y la memoria USB contactada a un puerto hay que iniciar el equipo para que se inicie desde la memoria USB. La forma de hacer que el equipo arranque desde la memoria USB depende de cual sea el fabricante. Pulsando una tecla dependiendo de caso como F2, F8, F10, F12, ESC u otra se puede entrar en la BIOS o seleccionar el medio de instalación. La BIOS es una zona de configuración donde se modifican algunos parámetros del equipo muy importantes con lo que hay que tener cuidado de que se modifica para evitar comportamientos anómalos, a pesar de todo suele ser bastante intuitiva y si es un equipo reciente incluso con interfaz gráfica.
 
 Según el fabricante e incluso modelos de la misma fabricante la tecla de acceso para iniciar desde el medio de instalación varía:
 
@@ -84,9 +90,11 @@ Puede ser el caso de que cuando se inicia el equipo muestre un mensaje con la te
 
 Si tu sistema tiene una BIOS de tipo UEFI, cualquier equipo del último lustro su BIOS será de este tipo, se debe [desactivar la opción llamada _Secure Boot_](https://help.ubuntu.com/community/UEFI) que utiliza Windows como medida de seguridad pero que no está soportada aún en GNU/Linux.
 
-### Instalación de Ubuntu
+### Instalar Ubuntu
 
-Una vez iniciado el programa que guía en la instalación de Ubuntu hay que responder a algunas preguntas e introducir algunos pocos datos y en cuestión de menos de una hora el equipo ya está listo para empezar a usarse. En el artículo he utilizado la versión 16.04 LTS.
+Al iniciar el instalador al pricipio de todo se ofrece la posibilidad de probar la distribución sin realizar ningún cambio al equipo, esto permite comprobar que funciona correctamente y no hay problemas de compatiilidad con el hardware importantes. La mayoría de hardware es reconocido sin necesidad de instalar controladores específicos. Una vez realizada la prueba se puede iniciar la instalación.
+
+El instalador que guía en la instalación de Ubuntu realiza varias preguntas a responder por el usuario e introducir algunos pocos datos y en cuestión de menos de una hora el equipo ya está listo para empezar a usarse. En el artículo he utilizado la versión 20.04 LTS.
 
 El asistente de instalación pregunta:
 
@@ -145,7 +153,7 @@ Al final de la instalación se solicita reiniciar para realizar el primer arranq
     image2="image:instalacion-ubuntu-20.png" optionsthumb2="300x200" title1="Instalación de Ubuntu"
     caption="Instalación de Ubuntu" >}}
 
-### Usando Ubuntu
+### Primer inicio de sesión Ubuntu
 
 Si se ha elegido cifrar el contenido del dispositivo de almacenamiento al realizar la instalación en el inicio del sistema Ubuntu pregunta por la contraseña para descifrar su contenido. Por seguridad se solicita el usuario y contraseña introducir en los pasos de la instalación.
 
@@ -162,7 +170,7 @@ Este es el aspecto del entorno de escritorio con GNOME de Ubuntu 20.04. En la pa
     image1="image:ubuntu-04.png" optionsthumb1="300x200" title1="Ubuntu 20.04 con entorno de escritorio GNOME"
     caption="Ubuntu 20.04 con entorno de escritorio GNOME" >}}
 
-### Realizar tareas básicas de mantenimiento, obtener actualizaciones e instalar programas
+### Realizar tareas básicas para instalar programas, obtener actualizaciones y mantenimiento
 
 Después de instalar Ubuntu es necesario conocer como realizar algunas tareas básicas de mantenimiento para tener actualizado el sistema, para obtener importantes actualizaciones de seguridad, correcciones de errores, nuevas funcionalidades, instalar nuevos programas y desinstalar los programas que se dejan de usar además empezar a conocer la terminal.
 
@@ -178,7 +186,7 @@ Ubuntu por defecto ya incorpora una buena cantidad de software preinstalado. En 
     image2="image:ubuntu-actualizaciones.png" optionsthumb2="300x200" title2="Notificación de actualizaciones de Ubuntu"
     caption="Instalar software y notificación de actualizaciones de seguridad" >}}
 
-### Ayuda
+### Obtener ayuda
 
 En internet hay cantidad de artículos en blogs o foros con ayuda que puedes encontrar con un buscador web como [Google][google] o [DuckDuckGo][duckduckgo]. En ellos seguramente encontrarás una respuesta que te resuelva o ayude en cualquier problema que se te presente o duda que te surja. Y si después de haber buscado no encuentras la solución deja un comentario en este blog e intentaré ayudarte.
 
