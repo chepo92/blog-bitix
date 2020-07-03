@@ -27,7 +27,7 @@ El propio JDK desde la versión 5 incorpora varias clases para ejecutar tareas p
 
 La programación de las tareas también se puede realizar a nivel de sistema operativo. En [GNU][gnu]/[Linux][linux] con la utilidad [cron](https://wiki.archlinux.org/index.php/Cron) y con [systemd][systemd] se puede programar tareas. Sin embargo, realizar la programación a nivel de sistema operativo se crean nuevos procesos y la configuración está externalizada de la aplicación. Utilizar Quartz, Spring o las clases del JDK tiene la ventaja de que la configuración de la programación de las tareas está más en el ámbito de la programación que en la de configuración de sistemas, el primer caso los cambios los hace el programador, en el segundo los hace la persona a cargo de los sistemas.
 
-### Tareas programadas con Quartz con Spring Boot
+### Tareas programadas con Quartz y Spring Boot
 
 Entre las muchas itegraciones que ofrece Spring una de ellas es para Quartz. Las clases importantes que ofrece Quartz son:
 
@@ -79,7 +79,7 @@ La ventaja de usar las clases del JDK es que ya están incluidas en el JDK y no 
 
 Dependiendo de las nacesidades de la aplicación será más adecuado usar las clases del JDK, Spring o Quartz.
 
-### Ejemplo de taras programadas con Quartz y Spring
+### Ejemplo de taras programadas con Quartz, Spring y las clases del JDK
 
 El ejemplo incluye varias tareas definidas con Quartz y con Spring. En las trazas se observan los tiempos de ejecución de cada tarea. La tarea de Quartz tiene dos _triggers_, uno que se ejecuta cada 10 segundos y otro cada minuto. Los _jobs_ de Spring _scheduleJobWithFixedRate_ se ejecuta cada dos segundos, _scheduleJobWithDelay_ se ejecuta cada dos segundos después de haber terminado la anterior ejecución que como tarda dos segundos en ejecutarse se ejecuta en realidad cada cuatro segundos y finalmente _scheduleJobWithCron_ se ejecuta cada minuto. Las tareas planificadas con las clases del JDK se ejecutan igual que las tareas de Spring cada dos y cada cuatro segundos.
 
