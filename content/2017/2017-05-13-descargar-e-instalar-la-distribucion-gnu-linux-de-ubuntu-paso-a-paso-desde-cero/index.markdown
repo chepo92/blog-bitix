@@ -4,6 +4,7 @@ type: "post"
 title: "Descargar e instalar la distribución Ubuntu de GNU/Linux paso a paso desde cero"
 url: "/2017/05/descargar-e-instalar-la-distribucion-ubuntu-de-gnu-linux-paso-a-paso-desde-cero/"
 date: 2017-05-13T09:00:00+02:00
+updated: 2020-07-03T19:00:00+02:00
 language: "es"
 rss: true
 sharing: true
@@ -26,19 +27,19 @@ Debes saber es en GNU/Linux hay muchas versiones o distribuciones, muchas desarr
 
 El paso de Windows a GNU/Linux significa usar un nuevo entorno y es algo que muchos de los usuarios que hoy somos de GNU/Linux hemos dado en algún momento, yo empecé por pasar [De Windows a Arch Linux][elblogdepicodev-15] y aún me mantengo [De Arch Linux a Arch Linux][blogbitix-36]. GNU/Linux tiene sus puntos fuertes y algunos para los usuarios de escritorio menos fuertes, principalmente debido a no ser el sistema mayoritario los fabricantes tienen más en cuenta a Windows cuando lanzan un nuevo producto, en el caso de los juegos triple A o la excesiva fragmentación por la cantidad de opciones. En cualquier caso muchas distribuciones GNU/Linux son tan fáciles de usar como Windows o [macOS][macos] y tan o más capaces que estos.
 
-Lo primero que debes hacer es [decidir la distribución que quieres instalar][blogbitix-190], según tus preferencias y necesidades. Para los usuarios que van a tener su primer contacto con GNU/Linux algunas de las recomendadas son [Ubuntu][ubuntu] o [elementaryOS][elementary]. En este artículo explicaré como instalar Ubuntu en su versión 16.04 <abbr title="Long Term Support">LTS</abbr>, los pasos son similares para elementaryOS ya que es una distribución que se basa en Ubuntu.
+Lo primero que debes hacer es [decidir la distribución que quieres instalar][blogbitix-190], según tus preferencias y necesidades. Para los usuarios que van a tener su primer contacto con GNU/Linux algunas de las recomendadas son [Ubuntu][ubuntu] o [elementaryOS][elementary]. En este artículo explicaré como instalar Ubuntu en su versión 20.04 <abbr title="Long Term Support">LTS</abbr>.
 
-Las versiones LTS de Ubuntu tienen un soporte de largo plazo de 5 años para corrección de errores y fallos de seguridad y se publican cada dos años siendo la siguiente LTS la 18.04 que se publicará en marzo del año 2018. Salvo que estés afectado por _versionitis_ y quieras tener las últimas versiones de los programas la versión LTS más reciente es recomendable y suficiente en vez de la última versión no LTS.
+Las versiones LTS de Ubuntu tienen [ciclo de desarrollo][ubuntu-release-cyle] con un soporte de largo plazo de 5 años para corrección de errores y fallos de seguridad. Las versiones LTS se publican cada dos años. Salvo que estés afectado por _versionitis_ y quieras tener las últimas versiones de los programas la versión LTS más reciente es la recomendable y suficiente en vez de la última versión no LTS.
 
 ### Requisitos mínimos
 
 Los [requisitos mínimos de Ubuntu](https://help.ubuntu.com/community/Installation/SystemRequirements) son bastante bajos para cualquier sistema de unos pocos años. Aunque en la memoria es recomendable tener al menos 2 GiB o incluso 4 GiB.
 
-* Procesador de 700 MHz (Intel Celeron o mejor)
-* Memoria del sistema 512 MiB RAM
-* 5 GB de espacio de almacenamiento (o memoria USB, tarjeta de memoria o unidad externa)
+* Procesador 2 GHz con dos núcleos o mejor
+* Memoria RAM del sistema de 4 GiB
+* 25 GB de espacio de almacenamiento
 * Gráficos con resolución de al menos 1024x768
-* Unidad CD/DVD o puerto USB
+* Unidad USB o CD/DVD
 * Acceso a internet es recomendable
 
 ### Copia de seguridad
@@ -47,17 +48,14 @@ Al instalar Ubuntu todos los datos que tuviese el equipo se perderán por lo que
 
 ### Descarga de Ubuntu
 
-Antes de iniciar la instalación hay que descargar la imágen ISO de la versión de Ubuntu que queramos instalar. En la [página oficial de Ubuntu][ubuntu] se puede descargar de forma directa con el navegador o vía P2P en la red de compartición de archivos torrent. Ubuntu a su vez proporciona varias versiones de su distribución donde varía el entorno de escritorio que también debes elegir según tus preferencias, hay varias posibilidades [Unitiy](http://unity.ubuntu.com/) (que en la versión 18.04 será sustituida por GNOME), [GNOME][gnome] y [KDE][kde] aunque recomiendo una de las dos últimas. Cualquiera de ellas con un aspecto gráfico muy cuidado, intuitivas y fáciles de usar. La opción más similar al entorno de escritorio de Windows es KDE con la que te encontrarás bastante cómodo al usarla si provienes de Windows.
+Antes de iniciar la instalación hay que [descargar la imágen ISO][ubuntu-download-desktop] de la versión de Ubuntu que queramos instalar. En la [página oficial de Ubuntu][ubuntu] se puede descargar de forma directa con el navegador o vía P2P en la red de compartición de archivos torrent. Ubuntu a su vez proporciona varias versiones de su distribución donde varía el entorno de escritorio que también debes elegir según tus preferencias, hay varias posibilidades entre ellas [GNOME][gnome] y [KDE][kde]. Cualquiera de ellas con un aspecto gráfico muy cuidado, intuitivas y fáciles de usar. La opción más similar al entorno de escritorio de Windows es KDE con la que te encontrarás bastante cómodo al usarla si provienes de Windows.
 
 * [Ubuntu][ubuntu]
-* [Ubuntu Unity](http://unity.ubuntu.com/)
-* [Ubuntu GNOME](https://ubuntugnome.org/)
-* [Ubuntu KDE](https://www.kubuntu.org/)
-* [Más sabores de Ubuntu](https://www.ubuntu.com/download/ubuntu-flavours)
+* [Más sabores de Ubuntu](https://ubuntu.com/download/flavours)
 
 ### Creación del medio de instalación
 
-Para una mayor velocidad de instalación es mejor usar una memoria USB de al menos 8 GiB de capacidad en vez un CD o DVD que son más lentos y algunos equipos nuevos ya ni siquiera incorporan porque están en desuso con la aparición de las memorias USB. La memoria debe estar vacía ya que se perderán todos sus datos. Con el [programa Rufus para Windows](https://rufus.akeo.ie/) seleccionado el archivo de la imagen ISO descargada y la unidad USB se crea el medio de instalación, en la siguiente página está explicado como [crear una memoria USB arrancable en Windows](https://www.ubuntu.com/download/desktop/create-a-usb-stick-on-windows).
+Para una mayor velocidad de instalación es mejor usar una memoria USB de al menos 8 GiB de capacidad en vez un CD o DVD que son más lentos y algunos equipos nuevos ya ni siquiera incorporan porque están en desuso con la aparición de las memorias USB. La memoria debe estar vacía ya que se perderán todos sus datos. Con el [programa Rufus para Windows](https://rufus.akeo.ie/) seleccionado el archivo de la imagen ISO descargada y la unidad USB se crea el medio de instalación, en la siguiente página está explicado como [crear una memoria USB arrancable en Windows](https://ubuntu.com/tutorials/tutorial-create-a-usb-stick-on-windows).
 
 Hay que conectar una memoria USB, seleccionarla, seleccionar el archivo de la imagen ISO de Ubuntu y pulsar el botón _Empezar_, al cabo de unos minutos la memoria estará lista para empezar a instalar Ubuntu.
 
@@ -100,13 +98,16 @@ El asistente de instalación pregunta:
 * La zona horaria del usuario y la disposición del teclado.
 * El nombre del equipo, del usuario y la contraseña para iniciar sesión.
 
-Los asistentes de instalación utilizan el entorno de escritorio del sabor que se está instalando pero los pasos son similares y piden la misma información.
+Inicio del asistente.
 
 {{< image
     gallery="true"
     image1="image:instalacion-ubuntu-01.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
     image2="image:instalacion-ubuntu-02.png" optionsthumb2="300x200" title2="Instalación de Ubuntu"
     image3="image:instalacion-ubuntu-03.png" optionsthumb3="300x200" title3="Instalación de Ubuntu" >}}
+
+Pasos en los que solicitan unos pocos datos como el idioma, la disposición del teclado, tipo de instalación, ubicación y el usuario y contraseña de inicio de sesión.
+
 {{< image
     gallery="true"
     image1="image:instalacion-ubuntu-04.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
@@ -117,6 +118,9 @@ Los asistentes de instalación utilizan el entorno de escritorio del sabor que s
     image1="image:instalacion-ubuntu-07.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
     image2="image:instalacion-ubuntu-08.png" optionsthumb2="300x200" title2="Instalación de Ubuntu"
     image3="image:instalacion-ubuntu-09.png" optionsthumb3="300x200" title3="Instalación de Ubuntu" >}}
+
+El resto de la instalación Ubuntu copia los archivos necesarios al dispositivo de almacenamiento.
+
 {{< image
     gallery="true"
     image1="image:instalacion-ubuntu-10.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
@@ -132,6 +136,9 @@ Los asistentes de instalación utilizan el entorno de escritorio del sabor que s
     image1="image:instalacion-ubuntu-16.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
     image2="image:instalacion-ubuntu-17.png" optionsthumb2="300x200" title2="Instalación de Ubuntu"
     image3="image:instalacion-ubuntu-18.png" optionsthumb3="300x200" title3="Instalación de Ubuntu" >}}
+
+Al final de la instalación se solicita reiniciar para realizar el primer arranque.
+
 {{< image
     gallery="true"
     image1="image:instalacion-ubuntu-19.png" optionsthumb1="300x200" title1="Instalación de Ubuntu"
@@ -140,41 +147,35 @@ Los asistentes de instalación utilizan el entorno de escritorio del sabor que s
 
 ### Usando Ubuntu
 
-Si se ha elegido cifrar el contenido del dispositivo de almacenamiento al realizar la instalación en el inicio del sistema Ubuntu pregunta por la contraseña para descifrar su contenido.
+Si se ha elegido cifrar el contenido del dispositivo de almacenamiento al realizar la instalación en el inicio del sistema Ubuntu pregunta por la contraseña para descifrar su contenido. Por seguridad se solicita el usuario y contraseña introducir en los pasos de la instalación.
 
 {{< image
     gallery="true"
-    image1="image:ubuntu-01.png" optionsthumb1="300x200" title1="Ubuntu 16.04"
-    image2="image:ubuntu-02.png" optionsthumb2="300x200" title1="Ubuntu 16.04"
-    image3="image:ubuntu-03.png" optionsthumb3="300x200" title3="Ubuntu 16.04 con entorno de escritorio Unity"
-    caption="Ubuntu 16.04 con entorno de escritorio Unity" >}}
+    image1="image:ubuntu-01.png" optionsthumb1="300x200" title1="Ubuntu 20.04"
+    image2="image:ubuntu-02.png" optionsthumb2="300x200" title1="Ubuntu 20.04"
+    image3="image:ubuntu-03.png" optionsthumb3="300x200" title3="Ubuntu 20.04 con entorno de escritorio Unity" >}}
+
+Este es el aspecto del entorno de escritorio con GNOME de Ubuntu 20.04. En la parte izquierda se encuentra el lanzador de aplicaciones con varios iconos. En la parte superior izquierda está a acción actividades con la que buscar el resto de aplicaciones instaladas, el la parte superior derecha el menú del sistema desde donde se puede apagar, reiniciar el equipo o variar el volumen del sistema entre otras opciones de configuración.
+
 {{< image
     gallery="true"
-    image1="image:ubuntu-04.png" optionsthumb1="300x200" title1="Ubuntu 16.04 con entorno de escritorio GNOME"
-    image2="image:ubuntu-05.png" optionsthumb2="300x200" title2="Ubuntu 16.04 con entorno de escritorio GNOME"
-    image3="image:ubuntu-06.png" optionsthumb3="300x200" title3="Ubuntu 16.04 con entorno de escritorio GNOME"
-    caption="Ubuntu 16.04 con entorno de escritorio GNOME" >}}
-{{< image
-    gallery="true"
-    image1="image:ubuntu-07.png" optionsthumb1="300x200" title1="Ubuntu 16.04 con entorno de escritorio KDE"
-    image2="image:ubuntu-08.png" optionsthumb2="300x200" title2="Ubuntu 16.04 con entorno de escritorio KDE"
-    caption="Ubuntu 16.04 con entorno de escritorio KDE" >}}
+    image1="image:ubuntu-04.png" optionsthumb1="300x200" title1="Ubuntu 20.04 con entorno de escritorio GNOME"
+    caption="Ubuntu 20.04 con entorno de escritorio GNOME" >}}
 
 ### Realizar tareas básicas de mantenimiento, obtener actualizaciones e instalar programas
 
-Después de instalar Ubuntu es necesario conocer como realizar algunas tareas básicas de matenimiento para tener actualizado el sistema, para obtener importantes actualizaciones de seguridad, correcciones de errores, nuevas funcionalidades, instalar nuevos programas y desisntalar los programas que se dejan de usar además empezar a conocer la terminal.
+Después de instalar Ubuntu es necesario conocer como realizar algunas tareas básicas de mantenimiento para tener actualizado el sistema, para obtener importantes actualizaciones de seguridad, correcciones de errores, nuevas funcionalidades, instalar nuevos programas y desinstalar los programas que se dejan de usar además empezar a conocer la terminal.
 
 * [Tareas básicas después de instalar una distribución GNU/Linux][blogbitix-462]
 * [Las aplicaciones del entorno de escritorio de GNOME][blogbitix-464]
 * [Listado de programas esenciales según categoría para GNU/Linux][blogbitix-469]
 
-Ubuntu por defecto ya incorpora una buena cantidad de software preinstalado. En cualquier caso con la aplicación _Software de Ubuntu_ se puede instalar más. Al cabo de un tiempo de haber instalado Ubuntu se publicarán actualizaciones del software que tengas instalado con mejoras y correcciones de seguridad que son recomendables instalarlas usando la aplicación _Actualizciones de software_. Ubuntu comprueba periódicamente si hay nuevas actualizaciones, si las hay muestra una notificación con cuales son y permite realizar la actualización a conveniencia del usuario. Una vez aplicadas las actualizaciones puede se requieredo reiniciar el sistema para que surtan efecto.
+Ubuntu por defecto ya incorpora una buena cantidad de software preinstalado. En cualquier caso con la aplicación _Software de Ubuntu_ se puede instalar más. Al cabo de un tiempo de haber instalado Ubuntu se publicarán actualizaciones del software que tengas instalado con mejoras y correcciones de seguridad que son recomendables instalarlas usando la aplicación _Ubuntu Software_. Ubuntu comprueba periódicamente si hay nuevas actualizaciones, si las hay muestra una notificación con cuales son y permite realizar la actualización a conveniencia del usuario. Una vez instaladas las actualizaciones algunas requieren reiniciar el sistema para que surtan efecto.
 
 {{< image
     gallery="true"
     image1="image:ubuntu-software.png" optionsthumb1="300x200" title1="Instalar y desinstalar software"
-    image2="image:ubuntu-actualizaciones.png" optionsthumb2="300x200" title2="Instalar actualizaciones de seguridad y software"
-    caption="Instalar actualizaciones de seguridad y software" >}}
+    caption="Instalar software y actualizaciones de seguridad" >}}
 
 ### Ayuda
 
