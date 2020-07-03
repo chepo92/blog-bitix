@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imageHead: "image:ubuntu-wallpaper.jpg"
 imagePost: "logotype:ubuntu.svg"
 tags: ["gnu-linux", "planeta-codigo", "software", "software-libre"]
 summary: "Pasar de usar Windows a usar una distribución GNU/Linux es un paso difícil para muchos usuarios, algunos usuarios desconocen incluso que tienen la posibilidad de usar un sistema operativo alternativo a Windows. O si lo conocen pueden creer erróneamente que instalar una distribución GNU/Linux es muy complicado... sabiendo algunas casas por lo demás es tan sencillo instalar como el sistema operativo Windows ya que muchas distribuciones incluyen una interfaz gráfica en su instalador y el proceso consiste en responder unas pocas preguntas, introducir algunos datos y pulsar varios botones siguiente."
