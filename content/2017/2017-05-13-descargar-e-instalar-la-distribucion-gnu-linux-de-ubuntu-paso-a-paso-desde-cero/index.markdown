@@ -92,7 +92,7 @@ Si tu sistema tiene una BIOS de tipo UEFI, cualquier equipo del último lustro s
 
 ### Instalar Ubuntu
 
-Al iniciar el instalador al pricipio de todo se ofrece la posibilidad de probar la distribución sin realizar ningún cambio al equipo, esto permite comprobar que funciona correctamente y no hay problemas de compatiilidad con el hardware importantes. La mayoría de hardware es reconocido sin necesidad de instalar controladores específicos. Una vez realizada la prueba se puede iniciar la instalación.
+Al iniciar el instalador al pricipio de todo se ofrece la posibilidad de probar Ubuntu sin realizar ningún cambio al equipo, esto permite comprobar que funciona correctamente y no hay problemas de compatibilidad con el hardware importantes. La mayoría de hardware es reconocido sin necesidad de instalar controladores específicos. Una vez realizada la prueba se puede iniciar la instalación.
 
 El instalador que guía en la instalación de Ubuntu realiza varias preguntas a responder por el usuario e introducir algunos pocos datos y en cuestión de menos de una hora el equipo ya está listo para empezar a usarse. En el artículo he utilizado la versión 20.04 LTS.
 
