@@ -9,7 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "logotype:java.svg"
+imagePost: "image:jobs.png"
 tags: ["java", "planeta-codigo"]
 ---
 
