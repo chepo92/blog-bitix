@@ -79,7 +79,7 @@ La ventaja de usar las clases del JDK es que ya están incluidas en el JDK y no 
 
 Dependiendo de las nacesidades de la aplicación será más adecuado usar las clases del JDK, Spring o Quartz.
 
-### Ejemplo de taras programadas con Quartz, Spring y las clases del JDK
+### Ejemplo de tareas programadas con Quartz, Spring y las clases del JDK
 
 El ejemplo incluye varias tareas definidas con Quartz y con Spring. En las trazas se observan los tiempos de ejecución de cada tarea. La tarea de Quartz tiene dos _triggers_, uno que se ejecuta cada 10 segundos y otro cada minuto. Los _jobs_ de Spring _scheduleJobWithFixedRate_ se ejecuta cada dos segundos, _scheduleJobWithDelay_ se ejecuta cada dos segundos después de haber terminado la anterior ejecución que como tarda dos segundos en ejecutarse se ejecuta en realidad cada cuatro segundos y finalmente _scheduleJobWithCron_ se ejecuta cada minuto. Las tareas planificadas con las clases del JDK se ejecutan igual que las tareas de Spring cada dos y cada cuatro segundos.
 
