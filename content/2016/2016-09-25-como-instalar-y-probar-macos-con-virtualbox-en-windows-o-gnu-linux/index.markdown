@@ -31,7 +31,7 @@ Si te gusta y convence macOS estos son varios de los equipos Apple en formato de
 
 En esta guía muestro como instalar y probar macOS 10.15 Catalina con VirtualBox, los pasos on similares para las versiones 10.14 Mojave y 10.13 High Sierra.
 
-### Requerimientos
+### Requerimientos mínimos
 
 Los requerimientos mínimos de macOS en la versión Catalina son los siguientes:
 
@@ -51,7 +51,7 @@ Dado que al virtualizar se están ejeutando dos sistemas operativos a la vez los
 
 Los pasos para instalar macOS en una máquina virtual con VirtualBox requieren descargar un archivo _torrent_ con la imagen del disco duro de macOS y una vez creada la máquina virtual en VirtualBox ejecutar unos comandos para cambiar algunos parámetros del sistema de arranque EFI. Hay que descomprimir la imagen del disco duro para obtener el archivo de extensión _vmdk_ y proceder a crear la máquina virtual. Hay que elegir crear una máquina virtual de tipo macOS, cambiando algunas opciones, asignando unos 2 o 3 GiB de memoria, seleccionar el disco duro con la imagen _vmdk_ descomprimida y cambiar la memoria asignada a la pantalla.
 
-De macOS hay múltiples versiones que con el tiempo Apple ha publicado inclorporando mejoras en el sistema operativo. Entre ellas:
+De macOS hay múltiples versiones que con el tiempo Apple ha publicado incorporando mejoras en el sistema operativo. Entre ellas:
 
 * 10.15, Catalina publicada en octubre de 2019
 * 10.14, Mojave con la ultima versión menor de actualización publicada en mayo de 2019
