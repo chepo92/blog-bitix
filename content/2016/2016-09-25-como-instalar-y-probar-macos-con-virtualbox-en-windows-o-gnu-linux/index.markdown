@@ -101,7 +101,7 @@ En el caso de Linux el archivo de comandos es similar aunque no es necesario eje
 
 Hecho estos dos pasos podemos proceder a iniciar la máquina virtual.
 
-### Instalación de macOS en una máquina virtual
+### Instalar macOS en una máquina virtual
 
 Al iniciar la ejecución de la máquina virtual de macOS en los primeros segundos empiezan a salir unos cuantos mensajes en modo texto hasta que se inicia el sistema gráfico con un proceso que inicia la instalación que tarda varios minutos pudiendo llegar a más de la media hora. 
 
@@ -165,7 +165,7 @@ También se puede probar a [instalar otros programas con Hombrew][blogbitix-195]
 
 Como partidario del software libre y la privacidad además de [los ínfimos impuestos que paga Apple][blogbitix-175] usando reprobable ingeniería fiscal y su software privativo no recomiendo usar un Mac pero si alguien quiere probar este sistema operativo antes de decidirse a hacer una compra usarlo de forma virtualizado es una buena ayuda para tomar una decisión y ver si nos gusta su sistema operativo aparte del propio equipo junto con su precio que podemos ver en las tiendas. Si no nos convence ni su software ni su abultado precio podemos optar por un portátil de [Slimbook][slimbook] mucho más económico y con características notables con los que no tendremos que pagar tampoco el [impuesto Windows][elblogdepicodev-57] ya que podemos elegir entre varias la distribución GNU/Linux preinstalada que deseamos.
 
-Hay que tener en cuenta que al probar macOS con VirtualBox que el rendimiento de la máquina virtual no será exactamente el mismo que en un equipo real por la sobrecarga impuesta por la virtualización. La experiencia de usuario puede cambiar significativamente junto con el hecho de que los portátiles Mac tiene una pantalla bastante mejor y con más resolución que la mayoría de portátiles diseñados para Windows o GNU/Linux y un SSD de gran rendimiento además de la falta de su _touchpad_, todo esto puede marcar diferencias en la experiencia de uso global.
+Hay que tener en cuenta que al probar macOS con VirtualBox el rendimiento de la máquina virtual no será exactamente el mismo que en un equipo real por la sobrecarga impuesta por la virtualización. La experiencia de usuario puede cambiar significativamente junto con el hecho de que los portátiles Mac tiene una pantalla bastante mejor y con más resolución que la mayoría de portátiles diseñados para Windows o GNU/Linux y un SSD de gran rendimiento además de la falta de su _touchpad_, todo esto puede marcar diferencias en la experiencia de uso global.
 
 {{< reference >}}
 * [Install macOS Catalina on VirtualBox on Windows PC](https://www.geekrar.com/install-macos-catalina-on-virtualbox-on-windows-pc/)
