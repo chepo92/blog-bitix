@@ -12,6 +12,7 @@ promoted: false
 imagePost: "logotype:hugo.svg"
 tags: ["blog", "planeta-codigo"]
 series: ["hemeroteca"]
+library: "true"
 ---
 
 {{% post %}}
