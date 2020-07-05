@@ -1,8 +1,9 @@
 ---
 pid: 498
 type: "post"
-title: "Diferencias entre GNU/Linux, BSD y sus distribuciones"
-url: "/2020/07/diferencias-entre-gnu-linux-bsd-y-sus-distribuciones/"
+title: "Las diferencias entre GNU/Linux, BSD y sus distribuciones"
+url: "/2020/07/las-diferencias-entre-gnu-linux-bsd-y-sus-distribuciones/"
+aliases: ["/2020/07/diferencias-entre-gnu-linux-bsd-y-sus-distribuciones/"]
 date: 2020-07-05T11:00:00+02:00
 language: "es"
 rss: true
