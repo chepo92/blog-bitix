@@ -11,7 +11,7 @@ sharing: true
 comments: true
 promoted: false
 imagePost: "logotype:beastie.png"
-tags: ["gnu-linux", "planeta-codigo"]
+tags: ["gnu-linux", "planeta-codigo", "software-libre"]
 summary: "Las distribuciones BSD tienen aún menor cuota de uso que las distribuciones GNU/Linux pero al igual que estas tiene una licencia de software libre aún más permisiva que las GNU/Linux y también se basan en la filosofía UNIX. Pero también tienen diferencias importantes en varios aspectos."
 ---
 
