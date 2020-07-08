@@ -189,6 +189,8 @@ Ubuntu por defecto ya incorpora una buena cantidad de software preinstalado. En 
 
 ### Obtener ayuda
 
-En internet hay cantidad de artículos en blogs o foros con ayuda que puedes encontrar con un buscador web como [Google][google] o [DuckDuckGo][duckduckgo]. En ellos seguramente encontrarás una respuesta que te resuelva o ayude en cualquier problema que se te presente o duda que te surja. Y si después de haber buscado no encuentras la solución deja un comentario en este blog e intentaré ayudarte.
+En internet hay gran cantidad de artículos en blogs o foros con ayuda que puedes encontrar con un buscador web como [Google][google] o [DuckDuckGo][duckduckgo]. En ellos seguramente encontrarás una respuesta que te resuelva o ayude en cualquier problema que se te presente o duda que te surja.
+
+Si has leído este artículo y te decides a dar el salto a GNU/Linux deja un comentario, me gusta leer que he ayudado a alguien y si tienes alguna duda y no encuentras una respuesta en la web pregúntame en un comentario e intentaré darle respuesta.
 
 {{% /post %}}

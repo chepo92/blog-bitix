@@ -21,7 +21,7 @@ summary: "Los aspectos permiten separar código con distintas funcionalidades y 
 
 Ciertas funcionalidades son transversales y están repartidas por toda la aplicación. Añadir y mezclar el código de esta funcionalidades con el código en los métodos hace que el código del método sea más complicado incluso puede que ese código de utilidad sea de mayor tamaño que el fundamental del método.
 
-Algunos ejemplos de funcionalidades transversales son trazas, métricas de rendimiento, seguridad, caches o transacciones. La [programación orientada a aspectos][wikipedia-aop] permite extraer este código transversal y aplicarlo en aquellos puntos de la aplicación donde sea necesario sin estar mezclado con el código al que se aplica. Esto facilita la legibilidad del código, su mantenimiento y la separación con conceptos.
+Algunos ejemplos de funcionalidades transversales son trazas, métricas de rendimiento, seguridad, caches o transacciones. La [programación orientada a aspectos][wikipedia-aop] es una técnica de programación que permite extraer este código transversal y aplicarlo en aquellos puntos de la aplicación donde sea necesario sin estar mezclado con el código al que se aplica. Un aspecto es el código transversal de utilidad aplicable a varios puntos de la aplicación. Esto facilita la legibilidad del código, su mantenimiento y la separación de conceptos.
 
 La programación orientada a aspectos se usa mucho en las aplicaciones que usan [Spring][spring] pero hay otras librerías que lo permiten, incluso el propio JDK tiene alguna clase sin necesitar de dependencias adicionales.
 

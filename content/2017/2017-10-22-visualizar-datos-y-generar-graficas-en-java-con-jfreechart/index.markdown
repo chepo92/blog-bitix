@@ -9,7 +9,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
-imagePost: "logotype:java.svg"
+imagePost: "image:xy-chart.png"
 tags: ["java", "planeta-codigo", "programacion"]
 summary: "Visualizar datos de forma gŕafica ayuda a comprender un conjunto de datos grande mucho mejor que leyendo los valores en una tabla con varias columnas. En Java con la librería JFreeChart podemos generar gráficas de diferentes tipos que podremos incluir en los archivos _pdf_ que generemos en un aplicación o podremos mostrar en forma de imagen en el navegador si se trata de una aplicación web."
 ---
@@ -81,7 +81,7 @@ Estos son los datos de la evolución de cuota de uso entre los usuarios de tres 
     </tr>
 </table>
 
-En Java, existe una librería que permite generar gráficas de diferentes tipos con la que visualizar datos, [JFreeChart][jfreechart]. Con esta librería de software libre que tiene una [licencia LGPL][lgpl] es posible generar gráficas de área, de barras, de barras apiladas, con ejes combinados, financieras, de Gantt, de líneas, diales, con múltiples ejes, sobrepuestas, tartas, estadísticas, de series temporales, xy y otros tipos, a algunas es posible darles un aspecto en tres dimensiones. Las gráficas las podemos exportar a archivos de imagen _png_, _jpg_ o formatos escalares como _svg_ con lo que serán utilizables de múltiples formas, por ejemplo, incluyendo las gráficas en archivos PDF o si la aplicación es una aplicación web devolver las imágenes al navegador para que las visualice, usando [JasperReports][jasperreports] para generar informes es posible incluir las imágenes generadas por JFreeChart.
+[JFreeChart][jfreechart] es una librería Java que permite generar gráficas de diferentes tipos con la que visualizar datos. Con esta librería de software libre que tiene una [licencia LGPL][lgpl] es posible generar gráficas de histograma, de área, de barras, de barras apiladas, con ejes combinados, financieras, de Gantt, de líneas, diales, con múltiples ejes, sobrepuestas, tartas, estadísticas, de series temporales, xy y otros tipos, a algunas es posible darles un aspecto en tres dimensiones. Las gráficas las podemos exportar a archivos de imagen _png_, _jpg_ o formatos escalares como _svg_ con lo que serán utilizables de múltiples formas, por ejemplo, incluyendo las gráficas en archivos PDF o si la aplicación es una aplicación web devolver las imágenes al navegador para que las visualice, usando [JasperReports][jasperreports] para generar informes es posible incluir las imágenes generadas por JFreeChart.
 
 Desde la propia página web de JFreeChart es posible ejecutar una [aplicación Java Web Start de demostración](http://www.jfree.org/jfreechart/jfreechart-1.0.16-demo.jnlp) que contiene múltiples ejemplos con datos para ver como son los diferentes tipos de gráficas, en la librería hay un archivo _jar_ con la misma aplicación de demostración junto con el código fuente de algunos ejemplos. En el [Javadoc](http://www.jfree.org/jfreechart/api/javadoc/overview-summary.html) está la documentación con la API ofrecida por la librería. El autor de la librería ofrece una [guía en formato PDF y el código fuente de los ejemplos](http://object-refinery.com/jfreechart/guide.html) pero estos son de pago. La última versión tiene unos años pero es compatible con Java 1.6.
 
