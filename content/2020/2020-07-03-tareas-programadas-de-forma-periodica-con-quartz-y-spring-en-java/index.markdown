@@ -19,7 +19,7 @@ tags: ["java", "planeta-codigo"]
 
 En las aplicaciones web basadas en el protocolo HTTP la petición al servidor es el desencadenante de la ejecución de la acción que le da respuesta. Algunas acciones no dependen de la solicitud de un usuario o de la recepción de un mensaje sino que se han de ejecutar de forma periódica cada cierto tiempo o de forma planificada en tiempos determinados. Por ejemplo, una tarea que necesite ejecutarse todos los días a las 3 de la mañana o cada 5 minutos.
 
-[Quartz][quartz] es una de las librerías en la plataforma Java que proporciona la funcionalidad de planificador de tareas, permite ejecutar tareas de forma periódica o de forma planificada en determinados tiempos. 
+[Quartz][quartz] es una de las librerías en la plataforma Java que proporciona la funcionalidad de planificador de tareas, permite ejecutar tareas de forma periódica o de forma planificada en determinados tiempos utilizando [expresiones cron][blogbitix-499].
 
 [Spring] también integra una solución sencilla para ejecutar tareas de forma programada disponible para las aplicaciones que usen [Spring Boot][spring-boot] sin necesidad de dependencias adicionales.
 
