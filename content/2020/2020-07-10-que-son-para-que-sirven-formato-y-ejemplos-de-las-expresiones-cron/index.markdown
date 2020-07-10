@@ -3,7 +3,7 @@ pid: 499
 type: "post"
 title: "Qué son, para qué sirven, formato y ejemplos de las expresiones cron"
 url: "/2020/07/que-son-para-que-sirven-formato-y-ejemplos-de-las-expresiones-cron/"
-date: 2020-07-10T17:00:00+02:00
+date: 2020-07-10T16:15:00+02:00
 language: "es"
 rss: true
 sharing: true
