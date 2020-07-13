@@ -1,10 +1,10 @@
 ---
 pid: 463
 type: "post"
-title: "El recolector de basura de Java, que hace y como funciona en cada versión"
+title: "El recolector de basura de Java, qué hace y cómo funciona en cada versión"
 url: "/2020/02/el-recolector-de-basura-de-java-que-hace-y-como-funciona-en-cada-version/"
 date: 2020-02-14T17:00:00+01:00
-updated: 2020-02-15T01:00:00+01:00
+updated: 2020-07-14T23:30:00+02:00
 language: "es"
 rss: true
 sharing: true
@@ -12,7 +12,7 @@ comments: true
 promoted: false
 imagePost: "image:treenode-3.png"
 tags: ["java", "planeta-codigo"]
-summary: "El recolector de basura o _garbage collector_ es una de las piezas fundamentales del lenguaje Java y su plataforma. Una ventaja sobre lenguajes que no poseen reflectores de basura y que se ha adoptado por los lenguajes desarrollados en la últimas décadas. Facilita a los programadores la creación de programas, una mayor productividad, evita errores y fallos de seguridad."
+summary: "El recolector de basura o _garbage collector_ es una de las piezas fundamentales del lenguaje Java y su plataforma, es la funcionalidad que libera al programador de la solicitud y liberación de memoria de forma explícita lo que facilita a los programadores la creación de programas, una mayor productividad, evita errores y fallos de seguridad. Una ventaja sobre lenguajes que no poseen recolectores de basura y que se ha adoptado por los lenguajes desarrollados en la últimas décadas."
 ---
 
 {{% post %}}
@@ -28,7 +28,7 @@ Esto para cada dato y en un programa grande serán muchos supone una dificultad 
 {{< code file="main.c" language="c" options="" >}}
 {{< code file="main.out" language="plaintext" options="" >}}
 
-Como desarrollador de Java apenas hay que preocuparse de fugas de memoria ni de fallos en el programa por liberar memoria antes de que dejar de usarla. En Java la solicitud de memoria al sistema se hace de forma explícita con la palabra reservada _new_ para crear una instancia de un objeto pero no hace falta especificar el tamaño de la memoria a reservar como en C. Tampoco hace falta liberar de forma explícita el objeto cuando dejar de usarse es el propio recolector de basura el que determina si una instancia ha quedado inaccesible desde el programa y lo libera en el proceso de recolección de basura que ejecuta la máquina virtual de forma periódica y automática sin la intervención del programa.
+Como desarrollador de Java apenas hay que preocuparse de fugas de memoria ni de fallos en el programa por liberar memoria antes de que dejar de usarla. En Java la solicitud de memoria al sistema se hace de forma explícita con la palabra reservada _new_ para crear una instancia de un objeto pero no hace falta especificar el tamaño de la memoria a reservar como en C. Tampoco hace falta liberar de forma explícita el objeto cuando dejar de usarse es el propio recolector de basura el que determina si una instancia ha quedado inaccesible desde el programa según por las referencias a objetos que siguen estando en uso, libera la memoria en el proceso de recolección de basura que ejecuta la máquina virtual de forma periódica y automática sin ninguna intervención.
 
 El recolector de basura además de simplificar el código de las aplicaciones, evita fallos en tiempo de ejecución con posibilidad de que sean difíciles de depurar, evita en gran medida las fugas de memoria y fallos graves de seguridad. En los programas en C es muy común errores de seguridad por casos en los que se sobreescriben zonas de memoria contiguas por no hacer comprobaciones en los límites de los arrays, muchos [boletines de seguridad CVE][cve] en muchas librerías tienen un origen de este tipo. En Java si se intenta acceder a un array fuera de sus límites se produce una excepción [ArrayIndexOutOfBoundsException](javadoc11:java.base/java/lang/ArrayIndexOutOfBoundsException.html), el programa sigue teniendo un error pero no tiene por que terminar su funcionamiento de forma drástica porque el sistema operativo lo mata y no son posibles los fallos de seguridad por sobreescribir una zona de memoria contigua al array pero fuera de sus límites.
 
