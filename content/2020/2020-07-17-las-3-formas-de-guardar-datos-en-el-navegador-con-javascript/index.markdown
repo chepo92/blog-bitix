@@ -4,6 +4,7 @@ type: "post"
 title: "Las 3 formas de guardar datos en el navegador con JavaScript"
 url: "/2020/07/las-3-formas-de-guardar-datos-en-el-navegador-con-javascript/"
 date: 2020-07-17T17:00:00+02:00
+updated: 2020-07-17T17:30:00+02:00
 language: "es"
 rss: true
 sharing: true
