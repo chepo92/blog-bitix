@@ -15,7 +15,7 @@ tags: ["javascript", "planeta-codigo"]
 
 {{% post %}}
 
-{{< logotype image1="javascript.svg" title1="JavaScript" width1="200" image2="html.svg" >}}
+{{< logotype image1="javascript.svg" image2="html.svg" >}}
 
 En la rapidez con la que evolucionan las tecnologías una tendencia es el usar componentes en el lado del cliente y en los navegadores de una aplicación o página web. Los componentes son muy útiles ya que siguen los principios de encapsulación deseables una la programación que hace que un componente oculte los detalles del funcionamiento interno. Esta encapsulación hace que su funcionamiento interno sea más fácilmente entendible, por otro lado son reutilizables conociendo únicamente la interfaz que exponen y componer otros más complejos con otros más simples.
 
