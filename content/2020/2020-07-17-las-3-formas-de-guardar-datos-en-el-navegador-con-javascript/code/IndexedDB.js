@@ -55,7 +55,6 @@ toRequestPromise(request).then(function(database) {
     // Eliminar todos los datos de un store
     var transaction = database.transaction('store', 'readwrite');
     var store = transaction.objectStore('store');
-    var item = { id: 1, name: 'picodotdev', dni: '00000000A' };
     store.clear();
     return toTransactionPromise(database, transaction);
 }).then(function(database) {
@@ -66,13 +65,13 @@ toRequestPromise(request).then(function(database) {
     store.add(item);
     return toTransactionPromise(database, transaction);
 }).then(function(database, e) {
-    // Obtener datos de un store y por índice
+    // Obtener datos de un store
     var transaction = database.transaction('store', 'readonly');
     var store = transaction.objectStore('store');
     store.get(1);
     return toTransactionPromise(database, transaction);
 }).then(function(database, e) {
-    // Obtener datos de un store y por índice
+    // Obtener datos de un store por índice
     var transaction = database.transaction('store', 'readonly');
     var store = transaction.objectStore('store');
     var index = store.index('dni');
@@ -89,6 +88,6 @@ toRequestPromise(request).then(function(database) {
     // Eliminar datos
     var transaction = database.transaction('store', 'readwrite');
     var store = transaction.objectStore('store');
-    store.delete(2);
+    store.delete(1);
     return toTransactionPromise(database, transaction);
 });
