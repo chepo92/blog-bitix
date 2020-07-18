@@ -101,6 +101,7 @@ Entre las razones para usar BSD están:
 * Alto rendimiento y gran desempeño en tareas de red.
 * Menos fragmentación en distribuciones como ocurren en Linux donde algunas no tiene objetivos claros diferenciadores.
 * La licencia BSD.
+* ZFS.
 
 Algunas de las razones por las que no usar BSD están:
 

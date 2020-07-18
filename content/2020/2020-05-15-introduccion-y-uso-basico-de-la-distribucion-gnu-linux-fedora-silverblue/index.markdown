@@ -10,6 +10,7 @@ rss: true
 sharing: true
 comments: true
 promoted: false
+imageHead: "image:fedora-silverblue-neofetch.png"
 imagePost: "image:fedora-silverblue-neofetch.png"
 tags: ["gnu-linux", "planeta-codigo"]
 summary: "Fedora Silbervlue es una distribución innovadora es su forma de sistema base usando OSTree e instalar aplicaciones gráficas con Flatpak y de paquetes de linea de comandos con Toolbox. Todas estas tecnologías le permiten considerarse una distribución _rolling-release_ tanto en el sistema como aplicaciones y paquetes. Estas tecnologias y forma de actualizar el sistema hace que sea mucho menos propenso a errores que los tradicionales en las distribuciones GNU/Linux de actualización de paquetes, ¿la siguiente generación de distribuciones serán como Fedora Silverblue?."
