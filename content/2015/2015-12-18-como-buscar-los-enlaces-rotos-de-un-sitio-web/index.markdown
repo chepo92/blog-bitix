@@ -45,6 +45,8 @@ Si el sitio web no está accesible en internet o queremos encontrar enlaces roto
 {{< code file="wget.sh" language="bash" options="" >}}
 {{< code file="wget.log" language="plaintext" options="" >}}
 
+`wget` es una herramienta con mútiples usos, otro uso que tiene es la de [descargar el contenido de un sitio web completo]
+
 ### Comprobar enlaces rotos con LinkChecker
 
 Otra opción es [LinkChecker](https://github.com/linkchecker/linkchecker) que además de comprobar los enlaces internos de un sitio web también tiene la opción de comprobar los enlaces del sitio web hacia a los externos. Un modo de ejecución es utilizando [Docker][docker] con lo que no hace falta instalar nada localmente salvo Docker.
