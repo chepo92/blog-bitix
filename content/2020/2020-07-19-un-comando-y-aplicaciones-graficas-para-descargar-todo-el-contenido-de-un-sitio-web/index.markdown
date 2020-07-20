@@ -1,8 +1,9 @@
 ---
 pid: 501
 type: "post"
-title: "Cómo descargar todo el contenido de una página web"
-url: "/2020/07/como-descargar-todo-el-contenido-de-una-pagina-web/"
+title: "Un comando y aplicaciones gráficas para descargar todo el contenido de un sitio web"
+url: "/2020/07/un-comando-y-aplicaciones-graficas-para-descargar-todo-el-contenido-de-un-sitio-web/"
+aliases: ["/2020/07/como-descargar-todo-el-contenido-de-una-pagina-web/"]
 date: 2020-07-19T10:00:00+02:00
 language: "es"
 rss: true
@@ -21,7 +22,7 @@ La necesidad puede ser hacer una copia de seguridad periódicas para conservar e
 
 Los navegadores web con el botón derecho del ratón ofrecen la posibilidad de descargar y guardar en el sistema de archivos la página que se está visualizando, está es la opción más simple ya que no se necesitan herramientas adicionales si solo se quiere guardar una página de las muchas de un sitio web. Su desventaja es que no sirve para guardar un sitio web completo por requerir hacer la operación manualmente por cada página, de forma que para realizar la operación de forma másiva y automatizada para el sitio web completo hay que utilizar alguna herramienta especializada.
 
-### Descargar un sitio web desde la línea de comandos con wget
+### Cómo descargar un sitio web desde la línea de comandos con wget
 
 La herramienta de línea de comandos [wget][wget] permite descargar un sitio web completo con un comando ejecutado desde la terminal incluyendo los archivos HTML y de recursos como imágenes, vídeos, contenido multimedia como audio o música, de estilos CSS o archivos JavaScript. El contenido que descarga wget es el referenciado a través de los enlaces presentes en el propio contenido, wget explora los archivos HTML en busca de enlaces a recursos u otras páginas HTML y de forma recursiva descarga el contenido completo al sistema de archivos local. Está disponible para los sistemas operativos [Windows][windows], [GNU][gnu]/[Linux][linux] y [macOS][macOS] y es una herramienta de software libre y gratuita.
 
@@ -38,7 +39,7 @@ Terminado el proceso de descarga el contenido del sitio web se guarda en el sist
 
 Descargar un sitio web no es la única funcionalidad que ofrece wget, otra necesidad habitual es [buscar los enlaces rotos de una página web][blogbitix-115] que con el paso del tiempo se van generando ya sea porque los sitios web externos desaparecen o por errores en la edición y enlazado interno. Conocer los enlaces rotos permite arreglarlos para ofrecer mejor experiencia de usuario al visitante y para mejorar el SEO en el posicionamiento en los buscadores.
 
-### Descargar un sitio web con programas de interfaz gráfica o páginas web
+### Cómo descargar un sitio web con programas de interfaz gráfica o páginas web
 
 Hay algunas herramientas con interfaz gráfica como [HTTrack](https://www.httrack.com/) o [Cyotek WebCopy](https://www.cyotek.com/cyotek-webcopy) que realizan la misma tarea que wget de forma más intutiva. Aún así el comando de wget es una forma sencilla y rápida de realizar la descarga de un sitio web completo.
 
