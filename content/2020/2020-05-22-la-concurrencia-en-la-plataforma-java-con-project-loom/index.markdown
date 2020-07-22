@@ -62,6 +62,9 @@ Estos párrafos son varios extractos del magnífico artículo [State of Loom](ht
 
 > Using virtual threads well does not require learning new concepts so much as it demands we unlearn old habits developed over the years to cope with the high cost of threads and that we’ve come to automatically associate with threads merely because we’ve only had the one implementation.
 
+{{< youtube
+    video="lIq-x_iI-kc" >}}
+
 ### La API de threads
 
 La forma de programación con los nuevos _threads_ es muy parecida a la tradicional que ha existido siempre. Se parece tanto a los _threads_ de siempre que incluso ni siquiera cambia la clase que los representa, que sigue siendo [Thread](javadoc11:java.base/java/lang/Thread.html), las diferencias de implementación son internas a la clase y en la JVM. En estos ejemplos se ejecutan tareas de dos formas diferentes y en la tercera se envían tareas para su ejecución  y posteriormente se espera a obtener el resultado.
